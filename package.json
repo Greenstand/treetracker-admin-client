@@ -63,6 +63,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@storybook/addon-actions": "^5.1.9",
     "@storybook/addon-links": "^5.1.9",
     "@storybook/addons": "^5.1.9",
@@ -75,7 +77,9 @@
     "eslint-plugin-cypress": "^2.10.3",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
+    "husky": "^4.3.5",
     "prettier": "2.0.5",
+    "pretty-quick": "^3.1.0",
     "react-inspector": "^3.0.2"
   },
   "engines": {
