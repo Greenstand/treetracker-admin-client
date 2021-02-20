@@ -164,6 +164,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '16px',
     paddingRight: '16px',
   },
+  sidePanelSubmitButton: {
+    width: '128px',
+  },
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -825,7 +828,21 @@ function SidePanel(props) {
             <TextField placeholder="Note (optional)"></TextField>
           </Grid>
         )}
-        <Grid className={`${classes.sidePanelItem}`}>
+        {/* <Grid className={`${classes.sidePanelItem}`}>
+        </Grid> */}
+        <Grid
+          container
+          className={`${classes.sidePanelItem}`}
+          justify="space-between"
+        >
+          <Button
+            onClick={handleSubmit}
+            color="primary"
+            disabled={!props.submitEnabled}
+            className={`${classes.sidePanelSubmitButton}`}
+          >
+            SUBMIT
+          </Button>
           <FormControlLabel
             control={
               <Checkbox
@@ -837,15 +854,6 @@ function SidePanel(props) {
             }
             label="Remember selection"
           />
-        </Grid>
-        <Grid className={`${classes.sidePanelItem}`}>
-          <Button
-            onClick={handleSubmit}
-            color="primary"
-            disabled={!props.submitEnabled}
-          >
-            SUBMIT
-          </Button>
         </Grid>
       </Grid>
     </Drawer>
