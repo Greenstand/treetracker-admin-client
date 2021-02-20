@@ -2,13 +2,13 @@
 Create-react-app using [rematch](http://rematch.gitbooks.io/), and [material ui](https://material-ui.com/) used to administer TreeTracker Data via TreeTracker's [loopback api](http://dev.treetracker.org/api/admin/explorer/#!/Tree) more to come.
 
 ## For More information on [users, design intent and goals see wiki]
-(https://github.com/Greenstand/treetracker-admin/wiki)
+(https://github.com/Greenstand/treetracker-admin-client/wiki)
 
 ## Commands
 
 ### Install
 Clone this repo, then inside it's directory:
-`npm intall`
+`npm install`
 
 
 ### Start
