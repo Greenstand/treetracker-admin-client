@@ -64,7 +64,7 @@ const species = {
       return state.species.speciesList.every((c) => c.name !== state.species.speciesInput)
     },
     async createSpecies(payload, state) {
-      const species = await api.createSpecies(state.species.speciesInput)
+      const species = await api.createSpecies(payload)
       console.debug('created new species:', species)
       //update the list
       this.setSpeciseList([species, ...state.species.speciesList])

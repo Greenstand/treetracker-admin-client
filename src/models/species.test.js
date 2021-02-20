@@ -62,11 +62,11 @@ describe('species', () => {
       describe('input: water melon, create species', () => {
         beforeEach(async () => {
           await store.dispatch.species.onChange('water melon')
-          await store.dispatch.species.createSpecies()
+          await store.dispatch.species.createSpecies({ name: 'water melon' })
         })
 
         it('api.createSpecies should be called with water melon', () => {
-          expect(api.createSpecies.mock.calls[0][0]).toBe('water melon')
+          expect(api.createSpecies.mock.calls[0][0].name).toBe('water melon')
         })
 
         it('species list should be 3(added)', () => {

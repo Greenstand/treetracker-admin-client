@@ -102,6 +102,7 @@ const SpeciesTable = (props) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [isEdit, setIsEdit] = React.useState(false)
+  const [isAdding, setIsAdding] = React.useState(false)
   const [speciesEdit, setSpeciesEdit] = React.useState(undefined)
   const [openDelete, setOpenDelete] = React.useState(false)
   const [sortedSpeciesList, setSortedSpeciesList] = React.useState([])
@@ -210,7 +211,7 @@ const SpeciesTable = (props) => {
               </Grid>
               <Grid item className={classes.addUserBox}>
                 <Button
-                  // onClick={handleAddUser}
+                  onClick={() => setIsAdding(true)}
                   variant="contained"
                   className={classes.addUser}
                   color="primary"
@@ -256,12 +257,12 @@ const SpeciesTable = (props) => {
         </Grid>
       </Grid>
       <EditModal
-        isEdit={isEdit}
-        setIsEdit={setIsEdit}
+        isEdit={isAdding || isEdit}
+        setIsEdit={isAdding ? setIsAdding : setIsEdit}
         speciesEdit={speciesEdit}
         setSpeciesEdit={setSpeciesEdit}
         styles={{ ...classes }}
-        editSpecies={props.speciesDispatch.editSpecies}
+        editSpecies={isAdding ? props.speciesDispatch.createSpecies : props.speciesDispatch.editSpecies}
         loadSpeciesList={props.speciesDispatch.loadSpeciesList}
       />
       <DeleteDialog

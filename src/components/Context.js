@@ -140,6 +140,7 @@ export const AppProvider = (props) => {
           headers: { Authorization: localToken },
         }
       ).then((response) => {
+        console.log('CONTEXT CHECK SESSION', response, 'localUser', localUser, 'localToken', localToken);
         if (response.status === 200) {
           if (response.data.token === undefined) {
             //the role has not changed
@@ -147,16 +148,14 @@ export const AppProvider = (props) => {
           } else {
             //role has changed, update the token
             context.login(localUser, response.data.token, true)
-          }  
+          }
         } else if (response.status === 401) {
           // Unauthorized - log out
           context.logout()
         }
       })
-
       return true
     }
-
     return false
   }
 
@@ -169,7 +168,7 @@ export const AppProvider = (props) => {
         if (rememberDetails) {
           localStorage.setItem('user', JSON.stringify(newUser))
         }
-  
+
         // By not updating routes object, we can memoize the menu and routes better
         setRoutes(getRoutes(newUser))
       }

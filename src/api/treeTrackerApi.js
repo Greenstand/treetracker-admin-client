@@ -11,7 +11,7 @@ export default {
     filter,
   }) {
     const where = filter.getWhereObj()
-   
+
     const lbFilter = {
       where,
       order: [`${orderBy} ${order}`],
@@ -31,7 +31,7 @@ export default {
         planterIdentifier: true,
       },
     }
-    
+
     const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`
     return fetch(query, {
       headers: {
@@ -45,7 +45,6 @@ export default {
   approveTreeImage(id, morphology, age, captureApprovalTag, speciesId) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
     console.log(query)
-
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -123,7 +122,7 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?where=${JSON.stringify(filter.getWhereObj())}`
-    console.log(query, session.token)
+    // console.log('getTreeCount --- ', filter)
     return fetch(query, {
       headers: {
         Authorization: session.token,
@@ -175,7 +174,7 @@ export default {
   /*
    * create new species
    */
-  createSpecies(name) {
+  createSpecies(payload) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species`
     return fetch(query, {
       method: 'POST',
@@ -184,8 +183,8 @@ export default {
         Authorization: session.token,
       },
       body: JSON.stringify({
-        name: name,
-        desc: name,
+        name: payload.name,
+        desc: payload.desc,
         active: 0,
         valueFactor: 0,
       }),

@@ -21,6 +21,17 @@ describe('EditPlanter', () => {
           effects: {
             updatePlanter(_payload, _state) { }
           }
+        },
+        organizations: {
+          state: {
+            organizationList: [{
+              id: 1,
+              name: 'test-org',
+            }]
+          },
+          effects: {
+            loadOrganizations(_payload, _state) { }
+          }
         }
       }
     })
