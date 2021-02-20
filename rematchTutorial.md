@@ -249,6 +249,7 @@ export default compose(
   withStyles(styles, { withTheme: true, name: 'ImageScrubber' })
 )(TreeImageScrubber)
 ```
+
 </details>
 
 This component was written in style of React Hook, and used the hook: useReducer, if you are not familiar about hook, please check the document on the official website. We will stick with the hook style, but change to use Rematch to control the state of this component.
@@ -337,21 +338,21 @@ const model = {
 		async loadMoreTreeImages(payload, state){
 			//{{{
 			log.debug('to load images')
-			const verityState		= state.verity
-			if (verityState.isLoading || !verityState.moreTreeImagesAvailable){
+			const verifyState		= state.verify
+			if (verifyState.isLoading || !verifyState.moreTreeImagesAvailable){
 				log.debug('cancel load because condition doesn\'t meet')
 				return true;
 			}
 			//set loading status
 			this.setLoading(true)
-			const nextPage = verityState.pagesLoaded + 1;
+			const nextPage = verifyState.pagesLoaded + 1;
 			const pageParams = {
 				page: nextPage,
-				rowsPerPage: verityState.pageSize
+				rowsPerPage: verifyState.pageSize
 			};
 			log.debug('load page with params:', pageParams)
 			const result		= await api.getTreeImages(pageParams)
-			//verityState.pagesLoaded = nextPage;
+			//verifyState.pagesLoaded = nextPage;
 			this.appendTreeImages(result);
 			//restore loading status
 			this.setLoading(false)
@@ -363,6 +364,7 @@ const model = {
 
 export default model
 ```
+
 </details>
 
 To add this model to Redux, we need init Rematch like this:
@@ -432,22 +434,22 @@ const styles = theme => ({
 
 const TreeImageScrubber = ({ classes, getScrollContainerRef, ...props }) => {
 	log.debug('render TreeImageScrubber...')
-	log.debug('complete:', props.verityState.approveAllComplete)
+	log.debug('complete:', props.verifyState.approveAllComplete)
 	const [complete, setComplete]		= React.useState(0)
-	
+
 	/*
 	 * effect to load page when mounted
 	 */
 	useEffect(() => {
 		log.debug('mounted')
-		props.verityDispatch.loadMoreTreeImages();
+		props.verifyDispatch.loadMoreTreeImages();
 	}, [])
 
 	/*
 	 * effect to set the scroll event
 	 */
 	useEffect(() => {
-		log.debug('verity state changed')
+		log.debug('verify state changed')
 		//move add listener to effect to let it refresh at every state change
 		let scrollContainerRef = getScrollContainerRef();
 		const handleScroll = e => {
@@ -459,13 +461,13 @@ const TreeImageScrubber = ({ classes, getScrollContainerRef, ...props }) => {
 			) {
 				return
 			}
-			props.verityDispatch.loadMoreTreeImages()
+			props.verifyDispatch.loadMoreTreeImages()
 		}
 		let isListenerAttached		= false
 		if (
 			scrollContainerRef &&
 			//should not listen scroll when loading
-			!props.verityState.isLoading
+			!props.verifyState.isLoading
 		) {
 			log.debug('attaching listener')
 			scrollContainerRef.addEventListener("scroll", handleScroll);
@@ -479,9 +481,9 @@ const TreeImageScrubber = ({ classes, getScrollContainerRef, ...props }) => {
 				scrollContainerRef.removeEventListener('scroll', handleScroll)
 			}
 		}
-	}, [props.verityState])
+	}, [props.verifyState])
 
-  let treeImageItems = props.verityState.treeImages.map(tree => {
+  let treeImageItems = props.verifyState.treeImages.map(tree => {
     if (tree.imageUrl) {
       return (
 				<div className={classes.cardWrapper} key={tree.id}>
@@ -494,14 +496,14 @@ const TreeImageScrubber = ({ classes, getScrollContainerRef, ...props }) => {
 							<Button
 								color="secondary"
 								size="small"
-								onClick={e => props.verityDispatch.rejectTreeImage(tree.id)}
+								onClick={e => props.verifyDispatch.rejectTreeImage(tree.id)}
 							>
 								Reject
 							</Button>
 							<Button
 								color="primary"
 								size="small"
-								onClick={e => props.verityDispatch.approveTreeImage(tree.id)}
+								onClick={e => props.verifyDispatch.approveTreeImage(tree.id)}
 							>
 								Approve
 							</Button>
@@ -520,16 +522,17 @@ export default compose(
 	connect(
 		//state
 		state		=> ({
-			verityState		: state.verity,
+			verifyState		: state.verify,
 		}),
 		//dispatch
 		dispatch		=> ({
-			verityDispatch		: dispatch.verity,
+			verifyDispatch		: dispatch.verify,
 		}),
 	),
   withStyles(styles, { withTheme: true, name: 'ImageScrubber' })
-)(TreeImageScrubber) 
+)(TreeImageScrubber)
 ```
+
 </details>
 
 That's all. We use Rematch api to wrap our model, the skeleton of model of Rematch like this:
@@ -556,11 +559,11 @@ Then, connect this model to component with 'connect', a common HOC (High Order C
 connect(
     //state
     state		=> ({
-        verityState		: state.verity,
+        verifyState		: state.verify,
     }),
     //dispatch
     dispatch		=> ({
-        verityDispatch		: dispatch.verity,
+        verifyDispatch		: dispatch.verify,
     }),
 ),
 ```
@@ -611,11 +614,12 @@ mapDispatch
 
 With this approach, we can:
 
-* Separate logic code and presentation code, by doing so, we make the component code pretty simple, as you see, the new TreeImageScrubber.js is less complicated than before. 
+- Separate logic code and presentation code, by doing so, we make the component code pretty simple, as you see, the new TreeImageScrubber.js is less complicated than before.
 
-* We can test the model by writing unit test code, so, we can test almost all the core code/logic about this tree list functionality. Also, we will get benefit from it for future maintenance and bug fixing. Below is a example to test model.js .
+- We can test the model by writing unit test code, so, we can test almost all the core code/logic about this tree list functionality. Also, we will get benefit from it for future maintenance and bug fixing. Below is a example to test model.js .
 
 ## Unit Test Example
+
 <details>
 <summary>
 model.test.js (click)
@@ -623,7 +627,7 @@ model.test.js (click)
 
 ```
 import {init}		from '@rematch/core';
-import verity		from './verity';
+import verify		from './verify';
 
 jest.mock('../api/treeTrackerApi')
 
@@ -635,50 +639,50 @@ api.getTreeImages		= () => Promise.resolve([{
 api.approveTreeImage		= () => Promise.resolve(true);
 api.rejectTreeImage		= () => Promise.resolve(true);
 
-describe('verity', () => {
+describe('verify', () => {
 	let store
 
 	beforeEach(() => {
 		store		= init({
 			models		: {
-				verity,
+				verify,
 			},
 		})
 	})
 
 	it('check initial state', () => {
-		expect(store.getState().verity.isLoading).toBe(false)
+		expect(store.getState().verify.isLoading).toBe(false)
 	})
 
 	describe('loadMoreTreeImages() ', () => {
 		beforeEach(async () => {
-			const result		= await store.dispatch.verity.loadMoreTreeImages() 
+			const result		= await store.dispatch.verify.loadMoreTreeImages()
 			expect(result).toBe(true)
 		})
 
 		it('should get some trees', () => {
-			expect(store.getState().verity.treeImages).toHaveLength(1)
+			expect(store.getState().verify.treeImages).toHaveLength(1)
 		})
 
 		describe('approveTreeImage(1)', () => {
 			beforeEach(async () => {
-				const result		= await store.dispatch.verity.approveTreeImage('1');
+				const result		= await store.dispatch.verify.approveTreeImage('1');
 				expect(result).toBe(true)
 			})
 
 			it('state tree list should removed the tree, so, get []', () => {
-				expect(store.getState().verity.treeImages).toHaveLength(0)
+				expect(store.getState().verify.treeImages).toHaveLength(0)
 			})
 		})
 
 		describe('rejectTreeImage(1)', () => {
 			beforeEach(async () => {
-				const result		= await store.dispatch.verity.rejectTreeImage('1');
+				const result		= await store.dispatch.verify.rejectTreeImage('1');
 				expect(result).toBe(true)
 			})
 
 			it('state tree list should removed the tree, so, get []', () => {
-				expect(store.getState().verity.treeImages).toHaveLength(0)
+				expect(store.getState().verify.treeImages).toHaveLength(0)
 			})
 		})
 	})
@@ -687,9 +691,8 @@ describe('verity', () => {
 
 </details>
 
-And we can also test the component using Storybook, please check our Storybook test for this component. 
+And we can also test the component using Storybook, please check our Storybook test for this component.
 
 <img alt='storybook example' src='https://raw.githubusercontent.com/Greenstand/treetracker-admin/infrastructure/rebuild/figure_storybook.png' width='600' >
 
 That's it, hope you enjoy coding with Rematch/Redux.
-
