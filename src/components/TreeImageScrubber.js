@@ -419,7 +419,7 @@ const TreeImageScrubber = (props) => {
 
   let imagePagination = (
     <TablePagination
-      rowsPerPageOptions={[12, 24, 48, 96]}
+      rowsPerPageOptions={[12, 24, 48, 96, 192]}
       component="div"
       count={props.verifyState.treeCount || 0}
       rowsPerPage={props.verifyState.pageSize}
