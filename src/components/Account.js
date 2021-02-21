@@ -181,34 +181,46 @@ function Account(props) {
     //loading permission from server
     async function load() {
       // Get the user's permissions
-      let res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
-        {
-          headers: { Authorization: token },
-        },
-      );
-      if (res.status === 200) {
-        setPermissions(res.data);
-      } else {
-        console.error('load fail:', res);
-        return;
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setPermissions(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching permissions:', e);
       }
+
       // Get the user based on the token
-      res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
-        {
-          headers: { Authorization: token },
-        },
-      );
-      if (res.status === 200) {
-        setUsers(res.data);
-      } else {
-        console.error('load fail:', res);
-        return;
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setUsers(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching admin_users:', e);
       }
     }
 
-    load();
+    // Don't try to load if there isn't a token
+    if (token) {
+      load();
+    }
   }, [token]);
 
   // Find the user if in the list, or use the given info if not found
@@ -228,7 +240,6 @@ function Account(props) {
           );
         }, undefined);
       });
-  console.log('ACCOUNT LOAD ROLES', roles);
 
   return (
     <>
