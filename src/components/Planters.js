@@ -1,28 +1,29 @@
 /*
  * Planter page
  */
-import React, {useEffect} from 'react'
-import clsx from 'clsx'
-import {connect} from 'react-redux'
-import {makeStyles} from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import TablePagination from '@material-ui/core/TablePagination'
+import React, { useEffect } from 'react';
+import clsx from 'clsx';
+import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import TablePagination from '@material-ui/core/TablePagination';
 
-import {selectedHighlightColor} from '../common/variables.js'
-import Grid from '@material-ui/core/Grid'
-import IconFilter from '@material-ui/icons/FilterList'
-import IconButton from '@material-ui/core/IconButton'
+import { selectedHighlightColor } from '../common/variables.js';
+import Grid from '@material-ui/core/Grid';
+import IconFilter from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
 
-import FilterTopPlanter from './FilterTopPlanter'
-import Person from "@material-ui/icons/Person";
-import Navbar from "./Navbar";
-import PlanterDetail from "./PlanterDetail"
+import FilterTopPlanter from './FilterTopPlanter';
+import Person from '@material-ui/icons/Person';
+import Navbar from './Navbar';
+import PlanterDetail from './PlanterDetail';
+import OptimizedImage from './OptimizedImage';
 
-const log = require('loglevel').getLogger('../components/Planters')
+const log = require('loglevel').getLogger('../components/Planters');
 
 const useStyles = makeStyles((theme) => ({
   outer: {
@@ -46,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     padding: 0,
+    height: '12rem',
+    position: 'relative',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -58,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
   },
   planterCard: {
     borderRadius: 16,
-    border: "1px solid rgba(0, 0, 0, 0.12)",
-    boxShadow: "none",
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    boxShadow: 'none',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -103,79 +106,82 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 16),
   },
   personBox: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "lightgray",
-    height: "100%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightgray',
+    height: '100%',
   },
   person: {
     height: 90,
     width: 90,
-    fill: "gray",
+    fill: 'gray',
   },
   name: {
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
-}))
+}));
 
 const Planters = (props) => {
-  log.debug('render Planters...')
-  const classes = useStyles(props)
-  const [isFilterShown, setFilterShown] = React.useState(false)
-  const [isDetailShown, setDetailShown] = React.useState(false)
+  log.debug('render Planters...');
+  const classes = useStyles(props);
+  const [isFilterShown, setFilterShown] = React.useState(false);
+  const [isDetailShown, setDetailShown] = React.useState(false);
   const [planterDetail, setPlanterDetail] = React.useState({});
 
   /*
    * effect to load page when mounted
    */
   useEffect(() => {
-    log.debug('mounted')
-    props.plantersDispatch.count()
-  }, [props.plantersDispatch])
+    log.debug('mounted');
+    props.plantersDispatch.count();
+  }, [props.plantersDispatch]);
 
   useEffect(() => {
     props.plantersDispatch.load({
       pageNumber: 0,
     });
-  }, [props.plantersDispatch, props.plantersState.pageSize])
+  }, [props.plantersDispatch, props.plantersState.pageSize]);
 
   useEffect(() => {
     props.plantersDispatch.count({
       filter: props.plantersState.filter,
-    })
-  }, [props.plantersDispatch, props.plantersState.filter])
+    });
+  }, [props.plantersDispatch, props.plantersState.filter]);
 
   function handlePlanterClick(planter) {
     setDetailShown(true);
     setPlanterDetail(planter);
   }
 
-  const placeholderPlanters = Array(props.plantersState.pageSize).fill().map((_, index) => {
-    return {
-      id: index,
-      placeholder: true,
-    };
-  });
+  const placeholderPlanters = Array(props.plantersState.pageSize)
+    .fill()
+    .map((_, index) => {
+      return {
+        id: index,
+        placeholder: true,
+      };
+    });
 
-  let plantersItems = (props.plantersState.isLoading ?
-    placeholderPlanters :
-    props.plantersState.planters
+  let plantersItems = (props.plantersState.isLoading
+    ? placeholderPlanters
+    : props.plantersState.planters
   ).map((planter) => {
     return (
       <Planter
         onClick={() => handlePlanterClick(planter)}
         key={planter.id}
         planter={planter}
-        placeholder={planter.placeholder} />
-    )
-  })
+        placeholder={planter.placeholder}
+      />
+    );
+  });
 
   function handleFilterClick() {
     if (isFilterShown) {
-      setFilterShown(false)
+      setFilterShown(false);
     } else {
-      setFilterShown(true)
+      setFilterShown(true);
     }
   }
 
@@ -187,7 +193,7 @@ const Planters = (props) => {
   }
 
   function handleChangePageSize(e, option) {
-    props.plantersDispatch.changePageSize({pageSize: option.props.value})
+    props.plantersDispatch.changePageSize({ pageSize: option.props.value });
   }
 
   function updateFilter(filter) {
@@ -218,23 +224,20 @@ const Planters = (props) => {
             buttons={[
               <IconButton onClick={handleFilterClick} key={1}>
                 <IconFilter />
-              </IconButton>
+              </IconButton>,
             ]}
           >
-            {isFilterShown &&
+            {isFilterShown && (
               <FilterTopPlanter
                 isOpen={isFilterShown}
-                onSubmit={filter => updateFilter(filter)}
+                onSubmit={(filter) => updateFilter(filter)}
                 filter={props.plantersState.filter}
                 onClose={handleFilterClick}
               />
-            }
+            )}
           </Navbar>
         </Grid>
-        <Grid
-          item
-          className={classes.body}
-        >
+        <Grid item className={classes.body}>
           <Grid container>
             <Grid
               item
@@ -242,69 +245,91 @@ const Planters = (props) => {
                 width: '100%',
               }}
             >
-              <Grid container justify='space-between' alignItems='center' className={classes.title}>
+              <Grid
+                container
+                justify="space-between"
+                alignItems="center"
+                className={classes.title}
+              >
                 <Grid item>
-                  <Typography variant='h5'>
-                    Planters
-                  </Typography>
+                  <Typography variant="h5">Planters</Typography>
                 </Grid>
                 <Grid item>{pagination}</Grid>
               </Grid>
             </Grid>
-            <Grid item container direction='row' justify='center'>
+            <Grid item container direction="row" justify="center">
               {plantersItems}
             </Grid>
           </Grid>
-          <Grid container className={classes.page} justify='flex-end' >
+          <Grid container className={classes.page} justify="flex-end">
             {pagination}
           </Grid>
         </Grid>
       </Grid>
-      <PlanterDetail open={isDetailShown} planterId={planterDetail.id} onClose={() => setDetailShown(false)} />
+      <PlanterDetail
+        open={isDetailShown}
+        planterId={planterDetail.id}
+        onClose={() => setDetailShown(false)}
+      />
     </React.Fragment>
-  )
-}
+  );
+};
 
 function Planter(props) {
-  const {
-    planter
-  } = props;
+  const { planter } = props;
   const classes = useStyles(props);
   return (
-    <div onClick={() => props.onClick()} className={clsx(classes.cardWrapper)} key={planter.id}>
+    <div
+      onClick={() => props.onClick()}
+      className={clsx(classes.cardWrapper)}
+      key={planter.id}
+    >
       <Card
         id={`card_${planter.id}`}
-        className={clsx(classes.card, props.placeholder && classes.placeholderCard)}
+        className={clsx(
+          classes.card,
+          props.placeholder && classes.placeholderCard,
+        )}
         classes={{
           root: classes.planterCard,
         }}
       >
         <CardContent className={classes.cardContent}>
-          {planter.imageUrl &&
-            <CardMedia className={classes.cardMedia} image={planter.imageUrl} />
-          }
-          {!planter.imageUrl &&
-            <CardMedia className={classes.cardMedia} >
-              <Grid container className={classes.personBox} >
+          {planter.imageUrl && (
+            <OptimizedImage
+              src={planter.imageUrl}
+              width={182}
+              height={192}
+              className={classes.cardMedia}
+              fixed
+            />
+          )}
+          {!planter.imageUrl && (
+            <CardMedia className={classes.cardMedia}>
+              <Grid container className={classes.personBox}>
                 <Person className={classes.person} />
               </Grid>
             </CardMedia>
-          }
+          )}
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Grid justify="flex-start" container >
+          <Grid justify="flex-start" container>
             <Grid container direction="column">
-              <Typography className={classes.name} >{planter.firstName} {planter.lastName}</Typography>
+              <Typography className={classes.name}>
+                {planter.firstName} {planter.lastName}
+              </Typography>
               <Typography>ID: {planter.id}</Typography>
-              {planter.organization && <Typography>Organization: {planter.organization}</Typography>}
+              {planter.organization && (
+                <Typography>Organization: {planter.organization}</Typography>
+              )}
             </Grid>
           </Grid>
         </CardActions>
       </Card>
     </div>
-  )
+  );
 }
-export {Planter};
+export { Planter };
 
 export default connect(
   //state
@@ -314,5 +339,5 @@ export default connect(
   //dispatch
   (dispatch) => ({
     plantersDispatch: dispatch.planters,
-  })
-)(Planters)
+  }),
+)(Planters);
