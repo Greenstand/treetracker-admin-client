@@ -15,29 +15,34 @@ export default function OptimizedImage(props) {
   if (!src) return <></>;
 
   const cdnPath = 'https://cdn.statically.io/img';
-  const domain = src.match(/\/\/(.*)\//)[1];
-  const imagePath = src.match(/.com\/(.*)/)[1];
-  const params =
-    `f=auto,w=${width}` +
-    (height ? `,h=${height}` : '') +
-    (quality ? `,q=${quality}` : '');
+  const matches = src.match(/\/\/(.*)\/(.*)/);
 
-  const cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
+  let cdnUrl, sizes, srcSet;
 
-  let sizes, srcSet;
-  if (!fixed && screenWidths.length === imageSizes.length) {
-    sizes = screenWidths
-      .map((size, i) => `(min-width: ${size}px) ${imageSizes[i]}px`)
-      .join(', ');
-    srcSet = imageSizes
-      .map((size) => `${cdnPath}/${domain}/${params}/${imagePath} ${size}w`)
-      .join(', ');
+  if (matches?.length > 1) {
+    const domain = matches[1];
+    const imagePath = matches[2];
+    const params =
+      `f=auto,w=${width}` +
+      (height ? `,h=${height}` : '') +
+      (quality ? `,q=${quality}` : '');
+
+    cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
+
+    if (!fixed && screenWidths.length === imageSizes.length) {
+      sizes = screenWidths
+        .map((size, i) => `(min-width: ${size}px) ${imageSizes[i]}px`)
+        .join(', ');
+      srcSet = imageSizes
+        .map((size) => `${cdnPath}/${domain}/${params}/${imagePath} ${size}w`)
+        .join(', ');
+    }
   }
 
   return (
     <>
       <img
-        src={cdnUrl}
+        src={cdnUrl || src}
         alt=".."
         srcSet={srcSet}
         sizes={sizes}
