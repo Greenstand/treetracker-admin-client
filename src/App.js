@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { ThemeProvider } from '@material-ui/core/styles'
-import Routers from './components/Routers'
-import theme from './components/common/theme'
-import { AppProvider } from './components/Context'
-import { BrowserRouter } from 'react-router-dom'
-import {setLocaleLanguage} from './common/locale'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { ThemeProvider } from '@material-ui/core/styles';
+import Routers from './components/Routers';
+import theme from './components/common/theme';
+import { AppProvider } from './components/Context';
+import { BrowserRouter } from 'react-router-dom';
+import { setLocaleLanguage } from './common/locale';
 
 class App extends Component {
   componentDidMount() {
@@ -25,14 +25,14 @@ class App extends Component {
           </BrowserRouter>
         </>
       </ThemeProvider>
-    )
+    );
   }
 }
 
 const mapState = (state) => {
-  return state
-}
+  return state;
+};
 
-const mapDispatch = (dispatch) => ({})
+const mapDispatch = (dispatch) => ({});
 
-export default connect(mapState, mapDispatch)(App)
+export default connect(mapState, mapDispatch)(App);

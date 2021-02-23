@@ -1,9 +1,7 @@
-import {
-  getOrganization,
-} from "../api/apiUtils";
-import Axios from 'axios'
-import { session } from '../models/auth'
-import FilterModel from '../models/Filter'
+import { getOrganization } from '../api/apiUtils';
+import Axios from 'axios';
+import { session } from '../models/auth';
+import FilterModel from '../models/Filter';
 
 const trees = {
   state: {
@@ -26,57 +24,63 @@ const trees = {
   },
   reducers: {
     selectAll(state) {
-      return { ...state }
+      return { ...state };
     },
     getTree(state, tree) {
-      return { ...state, tree }
+      return { ...state, tree };
     },
     getTrees(state, payload, request) {
       return {
         ...state,
         data: payload,
         ...request,
-      }
+      };
     },
     receiveTreeCount(state, payload) {
-      return { ...state, treeCount: payload, invalidateTreeCount: false }
+      return { ...state, treeCount: payload, invalidateTreeCount: false };
     },
     invalidateTreeCount(state, payload) {
-      return { ...state, invalidateTreeCount: payload }
+      return { ...state, invalidateTreeCount: payload };
     },
     receiveLocation(state, payload, { id, address }) {
       if (address === 'cached') {
-        return state
+        return state;
       } else {
-        const byId = Object.assign({}, state.byId)
-        if (byId[id] == null) byId[id] = {}
-        byId[id].location = payload.address
-        return { ...state, byId }
+        const byId = Object.assign({}, state.byId);
+        if (byId[id] == null) byId[id] = {};
+        byId[id].location = payload.address;
+        return { ...state, byId };
       }
     },
     // TODO: not quite sure if we need to keep this. I'll leave it until merge
     receiveStatus(state, payload) {
-      return { ...state, status: payload }
+      return { ...state, status: payload };
     },
     toggleDisplayDrawer(state) {
-      return { displayDrawer: { isOpen: !state.isOpen } }
+      return { displayDrawer: { isOpen: !state.isOpen } };
     },
     openDisplayDrawer(state) {
-      return { displayDrawer: { isOpen: true } }
+      return { displayDrawer: { isOpen: true } };
     },
     closeDisplayDrawer(state) {
-      return { displayDrawer: { isOpen: false } }
+      return { displayDrawer: { isOpen: false } };
     },
   },
   effects: {
-    async getTreesWithImagesAsync({ page, rowsPerPage, orderBy = 'id', order = 'desc' }) {
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}trees?filter[order]=${orderBy} ${order}&filter[limit]=${rowsPerPage}&filter[skip]=${
-        page * rowsPerPage
-      }&filter[fields][imageUrl]=true&filter[fields][lat]=true&filter[fields][lon]=true` +
-      `&filter[fields][id]=true&filter[fields][timeCreated]=true&filter[fields][timeUpdated]=true` +
-      `&filter[where][active]=true&field[imageURL]`
+    async getTreesWithImagesAsync({
+      page,
+      rowsPerPage,
+      orderBy = 'id',
+      order = 'desc',
+    }) {
+      const query =
+        `${
+          process.env.REACT_APP_API_ROOT
+        }/api/${getOrganization()}trees?filter[order]=${orderBy} ${order}&filter[limit]=${rowsPerPage}&filter[skip]=${
+          page * rowsPerPage
+        }&filter[fields][imageUrl]=true&filter[fields][lat]=true&filter[fields][lon]=true` +
+        `&filter[fields][id]=true&filter[fields][timeCreated]=true&filter[fields][timeUpdated]=true` +
+        `&filter[where][active]=true&field[imageURL]`;
       Axios.get(query, {
         headers: {
           'content-type': 'application/json',
@@ -88,13 +92,13 @@ const trees = {
           rowsPerPage: rowsPerPage,
           orderBy: orderBy,
           order: order,
-        })
-      })
+        });
+      });
     },
 
     async getTreeCount(payload, state) {
       // Destruct payload and fill in any gaps from rootState.trees
-      const { filter } = { ...state.trees, ...payload }
+      const { filter } = { ...state.trees, ...payload };
 
       /*
        * first load the page count
@@ -103,21 +107,24 @@ const trees = {
       this.invalidateTreeCount(false);
       let response = await Axios.get(
         `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/count?
-         where=${JSON.stringify(filter ? filter.getWhereObj(): {})}`,
+         where=${JSON.stringify(filter ? filter.getWhereObj() : {})}`,
         {
           headers: {
             'content-type': 'application/json',
             Authorization: session.token,
           },
-        }
-      )
-      const {count} = response.data
-      this.receiveTreeCount(count)
+        },
+      );
+      const { count } = response.data;
+      this.receiveTreeCount(count);
     },
 
     async getTreesAsync(payload, rootState) {
       // Destruct payload and fill in any gaps from rootState.trees
-      const { page, rowsPerPage, filter, orderBy, order } = { ...rootState.trees, ...payload }
+      const { page, rowsPerPage, filter, orderBy, order } = {
+        ...rootState.trees,
+        ...payload,
+      };
 
       /*
        * first load the page count
@@ -126,10 +133,10 @@ const trees = {
         await this.getTreeCount(payload, rootState);
       }
 
-      const where = filter ? filter.getWhereObj() : {}
-   
+      const where = filter ? filter.getWhereObj() : {};
+
       const lbFilter = {
-        where: {...where, active: true},
+        where: { ...where, active: true },
         order: [`${orderBy} ${order}`],
         limit: rowsPerPage,
         skip: page * rowsPerPage,
@@ -140,26 +147,30 @@ const trees = {
           planterId: true,
           treeTags: true,
         },
-      }
-      
-      const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`
-                
+      };
+
+      const query = `${
+        process.env.REACT_APP_API_ROOT
+      }/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`;
+
       const response = await Axios.get(query, {
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-      })
+      });
       this.getTrees(response.data, {
         page,
         rowsPerPage,
         orderBy,
         order,
         filter,
-      })
+      });
     },
     async getTreeAsync(id) {
-      const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
+      const query = `${
+        process.env.REACT_APP_API_ROOT
+      }/api/${getOrganization()}trees/${id}`;
       Axios.get(query, {
         headers: {
           'content-type': 'application/json',
@@ -167,9 +178,11 @@ const trees = {
         },
       })
         .then((res) => {
-          this.getTree(res.data)
+          this.getTree(res.data);
         })
-        .catch((err) => console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`))
+        .catch((err) =>
+          console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`),
+        );
     },
     async getLocationName(payload, rootState) {
       if (
@@ -180,34 +193,36 @@ const trees = {
         !rootState.trees.byId[payload.id] ||
         !rootState.trees.byId[payload.id].location
       ) {
-        const query = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${payload.latitude}&lon=${payload.longitude}`
+        const query = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${payload.latitude}&lon=${payload.longitude}`;
         Axios.get(query, {
           headers: {
             'content-type': 'application/json',
             Authorization: session.token,
           },
         }).then((response) => {
-          this.receiveLocation(response.data, payload)
-        })
+          this.receiveLocation(response.data, payload);
+        });
       } else {
-        this.receiveLocation(null, { id: payload.id, address: 'cached' })
+        this.receiveLocation(null, { id: payload.id, address: 'cached' });
       }
     },
     async markInactiveTree(id) {
-      const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}/`
-      const data = { active: false }
+      const query = `${
+        process.env.REACT_APP_API_ROOT
+      }/api/${getOrganization()}trees/${id}/`;
+      const data = { active: false };
       Axios.patch(query, data, {
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
       }).then((response) => {
-        this.receiveStatus(response.status)
+        this.receiveStatus(response.status);
         this.invalidateTreeCount(true);
-      })
+      });
     },
     async showTree(id) {},
   },
-}
+};
 
-export default trees
+export default trees;

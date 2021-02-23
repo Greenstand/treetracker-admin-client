@@ -1,5 +1,5 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from 'react';
+import { connect } from 'react-redux';
 import {
   Grid,
   TableContainer,
@@ -19,12 +19,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from '@material-ui/core'
-import Edit from '@material-ui/icons/Edit'
-import Delete from '@material-ui/icons/Delete'
+} from '@material-ui/core';
+import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 import SortIcon from '@material-ui/icons/Sort';
-import Menu from './common/Menu'
-import { withStyles } from '@material-ui/core/styles'
+import Menu from './common/Menu';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = (theme) => ({
   box: {
@@ -92,108 +92,127 @@ const styles = (theme) => ({
     position: 'relative',
     bottom: 12,
     left: 10,
-  }
-})
+  },
+});
 
 const SpeciesTable = (props) => {
-  const { classes } = props
-  const sortOptions = {byId:"id", byName:"name"}
+  const { classes } = props;
+  const sortOptions = { byId: 'id', byName: 'name' };
 
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [isEdit, setIsEdit] = React.useState(false)
-  const [isAdding, setIsAdding] = React.useState(false)
-  const [speciesEdit, setSpeciesEdit] = React.useState(undefined)
-  const [openDelete, setOpenDelete] = React.useState(false)
-  const [sortedSpeciesList, setSortedSpeciesList] = React.useState([])
-  const [option, setOption] = React.useState(sortOptions.byName)
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [isAdding, setIsAdding] = React.useState(false);
+  const [speciesEdit, setSpeciesEdit] = React.useState(undefined);
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [sortedSpeciesList, setSortedSpeciesList] = React.useState([]);
+  const [option, setOption] = React.useState(sortOptions.byName);
 
-  const tableRef = React.useRef(null)
+  const tableRef = React.useRef(null);
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, props.speciesState.speciesList.length - page * rowsPerPage)
+    rowsPerPage -
+    Math.min(
+      rowsPerPage,
+      props.speciesState.speciesList.length - page * rowsPerPage,
+    );
 
   React.useEffect(() => {
-    props.speciesDispatch.loadSpeciesList()
-  }, [props.speciesDispatch])
+    props.speciesDispatch.loadSpeciesList();
+  }, [props.speciesDispatch]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const sortBy = (option) => {
-      let sortedSpecies
-      if(option === sortOptions.byId){
-        sortedSpecies = [...props.speciesState.speciesList].sort((a, b) => a[option] - b[option]);
+      let sortedSpecies;
+      if (option === sortOptions.byId) {
+        sortedSpecies = [...props.speciesState.speciesList].sort(
+          (a, b) => a[option] - b[option],
+        );
       }
-      if(option === sortOptions.byName){
-        sortedSpecies = [...props.speciesState.speciesList].sort((a, b) => a[option].localeCompare(b[option]));
+      if (option === sortOptions.byName) {
+        sortedSpecies = [...props.speciesState.speciesList].sort((a, b) =>
+          a[option].localeCompare(b[option]),
+        );
       }
-      setSortedSpeciesList(sortedSpecies)
-    }
-    sortBy(option)
-  },[option, sortOptions.byId, sortOptions.byName, props.speciesState.speciesList])
+      setSortedSpeciesList(sortedSpecies);
+    };
+    sortBy(option);
+  }, [
+    option,
+    sortOptions.byId,
+    sortOptions.byName,
+    props.speciesState.speciesList,
+  ]);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const handleChangeRowsPerPage = (event) => {
     tableRef.current && tableRef.current.scrollIntoView();
 
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleEdit = (species) => {
-    setSpeciesEdit(species)
-    setIsEdit(true)
-  }
+    setSpeciesEdit(species);
+    setIsEdit(true);
+  };
 
   const openDeleteDialog = (species) => {
-    setSpeciesEdit(species)
-    setOpenDelete(true)
-  }
+    setSpeciesEdit(species);
+    setOpenDelete(true);
+  };
 
-  const renderSpecies = () => {    
-    return ( rowsPerPage > 0
-      ? sortedSpeciesList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  const renderSpecies = () => {
+    return (rowsPerPage > 0
+      ? sortedSpeciesList.slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage,
+        )
       : sortedSpeciesList
     ).map((species) => (
-        <TableRow key={species.id} role="listitem">
-          <TableCell component="th" scope="row">{species.id}
-          </TableCell>
-          <TableCell component="th" scope="row">{species.name}
-          </TableCell>
-          <TableCell>{species.desc}</TableCell>
-          <TableCell>{species.treeCount}</TableCell>
-          <TableCell>
-            <IconButton title="edit" onClick={() => handleEdit(species)}>
-              <Edit />
-            </IconButton>
-            <IconButton title="delete" onClick={() => openDeleteDialog(species)}>
-              <Delete />
-            </IconButton>
-          </TableCell>
-        </TableRow>
-    ))
-  }
+      <TableRow key={species.id} role="listitem">
+        <TableCell component="th" scope="row">
+          {species.id}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {species.name}
+        </TableCell>
+        <TableCell>{species.desc}</TableCell>
+        <TableCell>{species.treeCount}</TableCell>
+        <TableCell>
+          <IconButton title="edit" onClick={() => handleEdit(species)}>
+            <Edit />
+          </IconButton>
+          <IconButton title="delete" onClick={() => openDeleteDialog(species)}>
+            <Delete />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    ));
+  };
 
-  const tablePagination = () => 
-      <TablePagination
-        count={props.speciesState.speciesList.length}
-        rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
-        colSpan={3}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-        SelectProps={{
-          inputProps: { "aria-label": "rows per page" },
-          native: true
-        }}
-      />
-  
+  const tablePagination = () => (
+    <TablePagination
+      count={props.speciesState.speciesList.length}
+      rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+      colSpan={3}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      onChangePage={handleChangePage}
+      onChangeRowsPerPage={handleChangeRowsPerPage}
+      SelectProps={{
+        inputProps: { 'aria-label': 'rows per page' },
+        native: true,
+      }}
+    />
+  );
+
   return (
     <>
-      <Grid container className={classes.box} >
+      <Grid container className={classes.box}>
         <Grid item xs={3}>
           <Paper elevation={3} className={classes.menu}>
             <Menu variant="plain" />
@@ -201,7 +220,11 @@ const SpeciesTable = (props) => {
         </Grid>
         <Grid item xs={9} container className={classes.rightBox}>
           <Grid item xs={12}>
-            <Grid container justify="space-between" className={classes.titleBox}>
+            <Grid
+              container
+              justify="space-between"
+              className={classes.titleBox}
+            >
               <Grid item>
                 <Grid container>
                   <Grid item>
@@ -215,25 +238,34 @@ const SpeciesTable = (props) => {
                   variant="contained"
                   className={classes.addUser}
                   color="primary"
-                >ADD NEW SPECIES
+                >
+                  ADD NEW SPECIES
                 </Button>
               </Grid>
             </Grid>
             <Grid container direction="column" className={classes.bodyBox}>
               <TableContainer component={Paper} ref={tableRef}>
-                <Table className={classes.table} aria-label="simple table" >
+                <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID
-                        <IconButton title="sortbyId" onClick={()=>setOption(sortOptions.byId)} >
-                          <SortIcon />
-                          </IconButton>
-                      </TableCell>                   
-                      <TableCell>name
-                        <IconButton title="sortbyName" onClick={()=>setOption(sortOptions.byName)} >
+                      <TableCell>
+                        ID
+                        <IconButton
+                          title="sortbyId"
+                          onClick={() => setOption(sortOptions.byId)}
+                        >
                           <SortIcon />
                         </IconButton>
-                        </TableCell>
+                      </TableCell>
+                      <TableCell>
+                        name
+                        <IconButton
+                          title="sortbyName"
+                          onClick={() => setOption(sortOptions.byName)}
+                        >
+                          <SortIcon />
+                        </IconButton>
+                      </TableCell>
                       <TableCell>Description</TableCell>
                       <TableCell>Tagged Trees</TableCell>
                       <TableCell>Operations</TableCell>
@@ -262,7 +294,11 @@ const SpeciesTable = (props) => {
         speciesEdit={speciesEdit}
         setSpeciesEdit={setSpeciesEdit}
         styles={{ ...classes }}
-        editSpecies={isAdding ? props.speciesDispatch.createSpecies : props.speciesDispatch.editSpecies}
+        editSpecies={
+          isAdding
+            ? props.speciesDispatch.createSpecies
+            : props.speciesDispatch.editSpecies
+        }
         loadSpeciesList={props.speciesDispatch.loadSpeciesList}
       />
       <DeleteDialog
@@ -274,8 +310,8 @@ const SpeciesTable = (props) => {
         loadSpeciesList={props.speciesDispatch.loadSpeciesList}
       />
     </>
-  )
-}
+  );
+};
 
 const EditModal = ({
   isEdit,
@@ -287,26 +323,30 @@ const EditModal = ({
   editSpecies,
 }) => {
   const onNameChange = (e) => {
-    console.log(e.target.value)
-    setSpeciesEdit({ ...speciesEdit, name: e.target.value })
-  }
+    console.log(e.target.value);
+    setSpeciesEdit({ ...speciesEdit, name: e.target.value });
+  };
 
   const onDescChange = (e) => {
-    console.log(e.target.value)
-    setSpeciesEdit({ ...speciesEdit, desc: e.target.value })
-  }
+    console.log(e.target.value);
+    setSpeciesEdit({ ...speciesEdit, desc: e.target.value });
+  };
 
   const handleEditDetailClose = () => {
-    setIsEdit(false)
-    setSpeciesEdit(undefined)
-  }
+    setIsEdit(false);
+    setSpeciesEdit(undefined);
+  };
 
   const handleSave = async () => {
-    setIsEdit(false)
-    await editSpecies({ id: speciesEdit.id, name: speciesEdit.name, desc: speciesEdit.desc })
-    loadSpeciesList()
-    setSpeciesEdit(undefined)
-  }
+    setIsEdit(false);
+    await editSpecies({
+      id: speciesEdit.id,
+      name: speciesEdit.name,
+      desc: speciesEdit.desc,
+    });
+    loadSpeciesList();
+    setSpeciesEdit(undefined);
+  };
 
   return (
     <Dialog open={isEdit} aria-labelledby="form-dialog-title">
@@ -354,8 +394,8 @@ const EditModal = ({
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
 const DeleteDialog = ({
   speciesEdit,
@@ -366,16 +406,16 @@ const DeleteDialog = ({
   loadSpeciesList,
 }) => {
   const handleDelete = async () => {
-    await deleteSpecies({ id: speciesEdit.id })
-    loadSpeciesList()
-    setOpenDelete(false)
-    setSpeciesEdit(undefined)
-  }
+    await deleteSpecies({ id: speciesEdit.id });
+    loadSpeciesList();
+    setOpenDelete(false);
+    setSpeciesEdit(undefined);
+  };
 
   const closeDelete = () => {
-    setOpenDelete(false)
-    setSpeciesEdit(undefined)
-  }
+    setOpenDelete(false);
+    setSpeciesEdit(undefined);
+  };
 
   return (
     <Dialog
@@ -393,8 +433,8 @@ const DeleteDialog = ({
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
 export default withStyles(styles)(
   connect(
@@ -405,6 +445,6 @@ export default withStyles(styles)(
     //dispatch
     (dispatch) => ({
       speciesDispatch: dispatch.species,
-    })
-  )(SpeciesTable)
-)
+    }),
+  )(SpeciesTable),
+);

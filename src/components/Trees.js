@@ -15,28 +15,29 @@ import TreeTable from './TreeTable';
 
 function Trees(props) {
   return (
-    <Grid container direction="column" style={{flexWrap: 'nowrap', height: '100%' }}>
+    <Grid
+      container
+      direction="column"
+      style={{ flexWrap: 'nowrap', height: '100%' }}
+    >
       <Grid item>
         <Navbar />
       </Grid>
-      <Grid item container style={{height: '100%', overflow: 'hidden'}}>
+      <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
         <TreeTable />
       </Grid>
     </Grid>
-  )
+  );
 }
 
-const mapState = state => {
-  return { state: state }
-}
+const mapState = (state) => {
+  return { state: state };
+};
 
-const mapDispatch = dispatch => {
-  return {}
-}
+const mapDispatch = (dispatch) => {
+  return {};
+};
 
-Trees.propTypes = {}
+Trees.propTypes = {};
 
-export default connect(
-  mapState,
-  mapDispatch
-)(Trees)
+export default connect(mapState, mapDispatch)(Trees);

@@ -14,16 +14,16 @@ const POLICIES = {
   MANAGE_PLANTER: 'manage_planter',
 };
 
-function hasPermission(user, p){
+function hasPermission(user, p) {
   // Chris github - BirdTho 9/21 user may fail if called when logged out, as in the case in Context.js
   // console.assert(user, "Why user fail?", user);
-  if(!user) return false;
-  if(p instanceof Array){
-    return p.some(permission => {
-      return user.policy.policies.some(r => r.name === permission);
+  if (!user) return false;
+  if (p instanceof Array) {
+    return p.some((permission) => {
+      return user.policy.policies.some((r) => r.name === permission);
     });
-  }else{
-    return user.policy.policies.some(r => r.name === p) ? true : false;
+  } else {
+    return user.policy.policies.some((r) => r.name === p) ? true : false;
   }
 }
 
@@ -31,11 +31,11 @@ function hasPermission(user, p){
  * to save the token
  */
 const session = () => {
-  let token = localStorage.getItem('token') || ''
+  let token = localStorage.getItem('token') || '';
 
   return {
-    token
-  }
-}
+    token,
+  };
+};
 
-export {PERMISSIONS, POLICIES, hasPermission, session};
+export { PERMISSIONS, POLICIES, hasPermission, session };

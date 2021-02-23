@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
-import GenericMessagePage from './GenericMessagePage'
+import GenericMessagePage from './GenericMessagePage';
 
-export default () => (<GenericMessagePage text="404 Page Not Found :("/>)
+export default () => <GenericMessagePage text="404 Page Not Found :(" />;

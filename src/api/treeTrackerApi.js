@@ -1,5 +1,5 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils'
-import { session } from '../models/auth'
+import { handleResponse, handleError, getOrganization } from './apiUtils';
+import { session } from '../models/auth';
 
 export default {
   getTreeImages({
@@ -10,7 +10,7 @@ export default {
     //the filter model
     filter,
   }) {
-    const where = filter.getWhereObj()
+    const where = filter.getWhereObj();
 
     const lbFilter = {
       where,
@@ -30,21 +30,25 @@ export default {
         deviceId: true,
         planterIdentifier: true,
       },
-    }
+    };
 
-    const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`;
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
 
   approveTreeImage(id, morphology, age, captureApprovalTag, speciesId) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
-    console.log(query)
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees/${id}`;
+    console.log(query);
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -64,10 +68,12 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   rejectTreeImage(id, rejectionReason) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees/${id}`;
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -84,13 +90,15 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * to rollback from a wrong approving
    */
   undoTreeImage(id) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees/${id}`;
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -104,24 +112,26 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   getUnverifiedTreeCount() {
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`
+    }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`;
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   getTreeCount(filter) {
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/count?where=${JSON.stringify(filter.getWhereObj())}`
+    }/api/${getOrganization()}trees/count?where=${JSON.stringify(
+      filter.getWhereObj(),
+    )}`;
     // console.log('getTreeCount --- ', filter)
     return fetch(query, {
       headers: {
@@ -129,23 +139,25 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   getTreeById(id) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}trees/${id}`
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees/${id}`;
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get species list
    */
   getSpecies() {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -154,13 +166,13 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get species by id
    */
   getSpeciesById(id) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -169,13 +181,13 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * create new species
    */
   createSpecies(payload) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
     return fetch(query, {
       method: 'POST',
       headers: {
@@ -190,11 +202,11 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /* edit specie */
   editSpecies(id, name, desc) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -210,13 +222,13 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * delete a specie
    */
   deleteSpecies(id) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
       method: 'DELETE',
       headers: {
@@ -225,7 +237,7 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get tree count by species
@@ -233,22 +245,23 @@ export default {
   getTreeCountPerSpecies(speciesId) {
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`
+    }/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get tag list
    */
   getTags(filter) {
     const filterString =
-      `filter[limit]=25&` + (filter ? `filter[where][tagName][ilike]=${filter}%` : '')
-    const query = `${process.env.REACT_APP_API_ROOT}/api/tags?${filterString}`
+      `filter[limit]=25&` +
+      (filter ? `filter[where][tagName][ilike]=${filter}%` : '');
+    const query = `${process.env.REACT_APP_API_ROOT}/api/tags?${filterString}`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -257,13 +270,13 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get tag by id
    */
   getTagById(id) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/tags/${id}`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/tags/${id}`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -272,13 +285,13 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * create new tag
    */
   createTag(tagName) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/tags`
+    const query = `${process.env.REACT_APP_API_ROOT}/api/tags`;
     return fetch(query, {
       method: 'POST',
       headers: {
@@ -292,7 +305,7 @@ export default {
       }),
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * create new tree tags
@@ -312,8 +325,8 @@ export default {
         }),
       })
         .then(handleResponse)
-        .catch(handleError)
-    })
+        .catch(handleError);
+    });
   },
   /*
    * get tags for a given tree
@@ -331,7 +344,7 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
   /*
    * get organizations
@@ -346,6 +359,6 @@ export default {
       },
     })
       .then(handleResponse)
-      .catch(handleError)
+      .catch(handleError);
   },
-}
+};

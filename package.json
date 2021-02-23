@@ -54,7 +54,8 @@
     "build-storybook": "build-storybook -s public",
     "cypress": "DEBUG=cypress-react-unit-test cypress open",
     "lint": "eslint src",
-    "lint:fix": "eslint src --fix"
+    "lint:fix": "eslint src --fix",
+    "prettier:fix": "prettier src/ --write || true"
   },
   "browserslist": [
     ">0.2%",

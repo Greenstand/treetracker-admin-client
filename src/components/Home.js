@@ -1,19 +1,19 @@
-import React from 'react'
+import React from 'react';
 
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import Box from '@material-ui/core/Box'
-import { withStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import { withStyles } from '@material-ui/core/styles';
 
-import Menu, { MENU_WIDTH } from './common/Menu'
-import { AppContext } from './Context'
-import { hasPermission, POLICIES } from '../models/auth'
+import Menu, { MENU_WIDTH } from './common/Menu';
+import { AppContext } from './Context';
+import { hasPermission, POLICIES } from '../models/auth';
 import {
   DashStatPlanterCount,
   DashStatTotalTrees,
   DashStatUnprocessedTrees,
   DashStatVerifiedTrees,
-} from './DashStat.container'
+} from './DashStat.container';
 
 const logo = (
   <svg
@@ -42,7 +42,11 @@ const logo = (
         id="filter-2"
       >
         <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-        <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1" />
+        <feGaussianBlur
+          stdDeviation="0.5"
+          in="shadowOffsetOuter1"
+          result="shadowBlurOuter1"
+        />
         <feColorMatrix
           values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
           type="matrix"
@@ -54,14 +58,19 @@ const logo = (
       <g id="Desktop-HD-Copy-5" transform="translate(-39.000000, -50.000000)">
         <g id="logo" transform="translate(40.000000, 51.000000)">
           <g>
-            <use fill="black" fillOpacity="1" filter="url(#filter-2)" xlinkHref="#path-1" />
+            <use
+              fill="black"
+              fillOpacity="1"
+              filter="url(#filter-2)"
+              xlinkHref="#path-1"
+            />
             <use fill="#86C232" fillRule="evenodd" xlinkHref="#path-1" />
           </g>
         </g>
       </g>
     </g>
   </svg>
-)
+);
 
 const style = () => ({
   box: {
@@ -74,12 +83,12 @@ const style = () => ({
     width: MENU_WIDTH,
     position: 'absolute',
     left: 0,
-    top: 0
+    top: 0,
   },
   menu: {
     height: '100%',
     width: MENU_WIDTH,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   rightBox: {
     height: '100%',
@@ -103,11 +112,11 @@ const style = () => ({
     fontWeight: '400',
     lineHeight: '1.235',
   },
-})
+});
 
 function Home(props) {
-  const { classes } = props
-  const { user } = React.useContext(AppContext)
+  const { classes } = props;
+  const { user } = React.useContext(AppContext);
 
   // async function load() {
   //   const logoElement = d3.select('.logo')
@@ -160,7 +169,12 @@ function Home(props) {
             </Box>
           </Grid>
         </Grid>
-        <Grid container spacing={5} className={classes.welcomeBox} justify="center">
+        <Grid
+          container
+          spacing={5}
+          className={classes.welcomeBox}
+          justify="center"
+        >
           {hasPermission(user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.LIST_TREE,
@@ -175,13 +189,11 @@ function Home(props) {
           {hasPermission(user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.LIST_PLANTER,
-          ]) && (
-            <DashStatPlanterCount />
-          )}
+          ]) && <DashStatPlanterCount />}
         </Grid>
       </div>
     </div>
-  )
+  );
 }
 
 export default withStyles(style)(Home);

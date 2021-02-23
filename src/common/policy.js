@@ -33,6 +33,6 @@ const policy = {
       description: 'Can create/modify admin user',
     },
   ],
-}
+};
 
-export default policy
+export default policy;

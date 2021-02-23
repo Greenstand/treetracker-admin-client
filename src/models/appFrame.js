@@ -1,16 +1,15 @@
-
 const appFrame = {
   state: {
-    currentView: "imageScrubber",
+    currentView: 'imageScrubber',
     appDrawer: {
-      isOpen: false
-    }
+      isOpen: false,
+    },
   },
   reducers: {
     toggleAppDrawer(state) {
       return {
         currentView: state.currentView,
-        appDrawer: { isOpen: !state.isOpen }
+        appDrawer: { isOpen: !state.isOpen },
       };
     },
     openAppDrawer(state) {
@@ -22,10 +21,10 @@ const appFrame = {
     changeCurrentView(state, payload) {
       return {
         currentView: payload.newView,
-        appDrawer: { isOpen: state.isOpen }
+        appDrawer: { isOpen: state.isOpen },
       };
-    }
-  }
+    },
+  },
 };
 
 export default appFrame;

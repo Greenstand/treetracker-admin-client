@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import compose from 'recompose/compose'
-import { connect } from 'react-redux'
-import { withStyles } from '@material-ui/core/styles'
+import React, { Component } from 'react';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Table,
@@ -13,11 +13,11 @@ import {
   TablePagination,
   TableSortLabel,
   Typography,
-} from '@material-ui/core'
+} from '@material-ui/core';
 
-import { getDateTimeStringLocale } from '../common/locale'
-import Filter, { FILTER_WIDTH } from './Filter'
-import TreeDetails from './TreeDetails.js'
+import { getDateTimeStringLocale } from '../common/locale';
+import Filter, { FILTER_WIDTH } from './Filter';
+import TreeDetails from './TreeDetails.js';
 
 // change 88 to unit spacing,
 const styles = (theme) => ({
@@ -56,7 +56,7 @@ const styles = (theme) => ({
   title: {
     paddingLeft: theme.spacing(4),
   },
-})
+});
 
 const columns = [
   {
@@ -92,80 +92,83 @@ const columns = [
   {
     attr: 'timeCreated',
     label: 'Created',
-    renderer: val => getDateTimeStringLocale(val)
+    renderer: (val) => getDateTimeStringLocale(val),
   },
-]
+];
 
 class TreeTable extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isDetailsPaneOpen: false,
-    }
-    this.closeDrawer = this.closeDrawer.bind(this)
-    this.handleFilterSubmit = this.handleFilterSubmit.bind(this)
-    this.handlePageChange = this.handlePageChange.bind(this)
-    this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this)
-    this.createSortHandler = this.createSortHandler.bind(this)
-    this.scrollRef = React.createRef()
+    };
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.handleFilterSubmit = this.handleFilterSubmit.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
+    this.createSortHandler = this.createSortHandler.bind(this);
+    this.scrollRef = React.createRef();
   }
 
   loadTrees(payload) {
     this.props.getTreesAsync(payload).then(() => {
-      this.scrollRef.current && this.scrollRef.current.scrollTo(0,0)
-    })
+      this.scrollRef.current && this.scrollRef.current.scrollTo(0, 0);
+    });
   }
 
   componentDidMount() {
-    this.loadTrees()
+    this.loadTrees();
   }
 
   toggleDrawer(id) {
-    this.props.getTreeAsync(id)
-    const { isDetailsPaneOpen } = this.state
+    this.props.getTreeAsync(id);
+    const { isDetailsPaneOpen } = this.state;
     this.setState({
       isDetailsPaneOpen: !isDetailsPaneOpen,
-    })
+    });
   }
 
   createToggleDrawerHandler(id) {
     return () => {
-      this.toggleDrawer(id)
-    }
+      this.toggleDrawer(id);
+    };
   }
 
   closeDrawer() {
     this.setState({
       isDetailsPaneOpen: false,
-    })
+    });
   }
 
   handleFilterSubmit(filter) {
     this.loadTrees({
       page: 0,
       filter,
-    })
+    });
   }
 
   handlePageChange(_event, page) {
     this.loadTrees({
       page,
-    })
+    });
   }
 
   handleRowsPerPageChange(event) {
     this.loadTrees({
       page: 0,
       rowsPerPage: parseInt(event.target.value),
-    })
+    });
   }
 
   createSortHandler(attr) {
     return () => {
-      const order = this.props.orderBy === attr && this.props.order === 'asc' ? 'desc' : 'asc'
-      const orderBy = attr
-      this.loadTrees({order, orderBy})
-    }
+      const order =
+        this.props.orderBy === attr && this.props.order === 'asc'
+          ? 'desc'
+          : 'asc';
+      const orderBy = attr;
+      this.loadTrees({ order, orderBy });
+    };
   }
 
   tablePagination() {
@@ -179,14 +182,19 @@ class TreeTable extends Component {
         onChangePage={this.handlePageChange}
         onChangeRowsPerPage={this.handleRowsPerPageChange}
       />
-    )
+    );
   }
   render() {
-    const { treesArray, tree, classes, orderBy, order } = this.props
+    const { treesArray, tree, classes, orderBy, order } = this.props;
 
     return (
       <div className={classes.tableContainer} ref={this.scrollRef}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
           <Typography variant="h5" className={classes.title}>
             Trees
           </Typography>
@@ -196,7 +204,10 @@ class TreeTable extends Component {
           <TableHead>
             <TableRow>
               {columns.map(({ attr, label, noSort }, index) => (
-                <TableCell key={attr} sortDirection={orderBy === attr ? order : false}>
+                <TableCell
+                  key={attr}
+                  sortDirection={orderBy === attr ? order : false}
+                >
                   <TableSortLabel
                     active={orderBy === attr}
                     direction={orderBy === attr ? order : 'asc'}
@@ -217,9 +228,7 @@ class TreeTable extends Component {
                 className={classes.tableRow}
               >
                 {columns.map(({ attr, label, renderer }, index) => (
-                  <TableCell
-                    key={attr}
-                  >
+                  <TableCell key={attr}>
                     {renderer ? renderer(tree[attr]) : tree[attr]}
                   </TableCell>
                 ))}
@@ -228,30 +237,41 @@ class TreeTable extends Component {
           </TableBody>
         </Table>
         {this.tablePagination()}
-        <Drawer anchor="right" open={this.state.isDetailsPaneOpen} onClose={this.closeDrawer}>
+        <Drawer
+          anchor="right"
+          open={this.state.isDetailsPaneOpen}
+          onClose={this.closeDrawer}
+        >
           <TreeDetails tree={tree} />
         </Drawer>
-        <Filter isOpen={true} onSubmit={this.handleFilterSubmit} filter={this.props.filter} />
+        <Filter
+          isOpen={true}
+          onSubmit={this.handleFilterSubmit}
+          filter={this.props.filter}
+        />
       </div>
-    )
+    );
   }
 }
 
 const mapState = (state) => {
-  const keys = Object.keys(state.trees.data)
+  const keys = Object.keys(state.trees.data);
   return {
     treesArray: keys.map((id) => ({
       ...state.trees.data[id],
     })),
-    ...state.trees
-  }
-}
+    ...state.trees,
+  };
+};
 
 const mapDispatch = (dispatch) => ({
   getTreesAsync: (payload) => dispatch.trees.getTreesAsync(payload),
   getLocationName: (id, lat, lon) =>
     dispatch.trees.getLocationName({ id: id, latitude: lat, longitude: lon }),
   getTreeAsync: (id) => dispatch.trees.getTreeAsync(id),
-})
+});
 
-export default compose(withStyles(styles), connect(mapState, mapDispatch))(TreeTable)
+export default compose(
+  withStyles(styles),
+  connect(mapState, mapDispatch),
+)(TreeTable);
