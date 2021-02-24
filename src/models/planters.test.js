@@ -1,25 +1,24 @@
-import { init } from "@rematch/core";
-import planters from "./planters";
-import * as loglevel from "loglevel";
-import api from "../api/planters";
-import FilterPlanter from "./FilterPlanter";
+import { init } from '@rematch/core';
+import planters from './planters';
+import * as loglevel from 'loglevel';
+import api from '../api/planters';
+import FilterPlanter from './FilterPlanter';
 
-jest.mock("../api/planters");
+jest.mock('../api/planters');
 
-const log = loglevel.getLogger("../models/planter.test");
+const log = loglevel.getLogger('../models/planter.test');
 
-describe("planter", () => {
+describe('planter', () => {
   //{{{
   let store;
   let planter = {
-    name: "OK",
+    name: 'OK',
   };
   let filter;
 
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
-  describe("with a default store", () => {
+  describe('with a default store', () => {
     //{{{
     beforeEach(async () => {
       store = init({
@@ -33,13 +32,13 @@ describe("planter", () => {
       expect(store.getState().planters.pageSize).toBe(1);
     });
 
-    it("check initial state", () => {
+    it('check initial state', () => {
       expect(store.getState().planters.planters).toBeInstanceOf(Array);
       expect(store.getState().planters.planters).toHaveLength(0);
       expect(store.getState().planters.filter).toBeInstanceOf(FilterPlanter);
     });
 
-    describe("load(0) ", () => {
+    describe('load(0) ', () => {
       beforeEach(async () => {
         api.getPlanters.mockReturnValue([planter]);
         filter = new FilterPlanter({
@@ -52,11 +51,11 @@ describe("planter", () => {
         expect(result).toBe(true);
       });
 
-      it("should get some planters", () => {
+      it('should get some planters', () => {
         expect(store.getState().planters.planters).toHaveLength(1);
       });
 
-      it("should call api with param: skip = 0", () => {
+      it('should call api with param: skip = 0', () => {
         expect(api.getPlanters).toHaveBeenCalledWith({
           skip: 0,
           rowsPerPage: 1,
@@ -64,15 +63,15 @@ describe("planter", () => {
         });
       });
 
-      it("currentPage should be 0", () => {
+      it('currentPage should be 0', () => {
         expect(store.getState().planters.currentPage).toBe(0);
       });
 
-      it("Sould have filter be set to store", () => {
+      it('Sould have filter be set to store', () => {
         expect(store.getState().planters.filter).toBe(filter);
       });
 
-      describe("load(1)", () => {
+      describe('load(1)', () => {
         beforeEach(async () => {
           api.getPlanters.mockReturnValue([planter]);
           const result = await store.dispatch.planters.load({
@@ -82,11 +81,11 @@ describe("planter", () => {
           expect(result).toBe(true);
         });
 
-        it("should get some planters", () => {
+        it('should get some planters', () => {
           expect(store.getState().planters.planters).toHaveLength(1);
         });
 
-        it("should call api with param: skip = 1", () => {
+        it('should call api with param: skip = 1', () => {
           expect(api.getPlanters).toHaveBeenCalledWith({
             skip: 1,
             rowsPerPage: 1,
@@ -95,20 +94,19 @@ describe("planter", () => {
         });
       });
 
-      describe("count()", () => {
-
+      describe('count()', () => {
         beforeEach(async () => {
-          api.getCount.mockReturnValue({count: 2});
+          api.getCount.mockReturnValue({ count: 2 });
           expect(await store.dispatch.planters.count()).toBe(true);
         });
 
-        it("should call getCount api with param: filter", () => {
+        it('should call getCount api with param: filter', () => {
           expect(api.getCount).toHaveBeenCalledWith({
             filter,
           });
         });
 
-        it("Should get count = 2", async () => {
+        it('Should get count = 2', async () => {
           expect(store.getState().planters.count).toBe(2);
         });
       });

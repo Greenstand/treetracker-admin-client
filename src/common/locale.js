@@ -1,5 +1,5 @@
 import enLocale from 'date-fns/locale/en-US';
-import dateformat from 'dateformat'
+import dateformat from 'dateformat';
 
 // Per default set to EN
 var localeLanguage = 'en';
@@ -8,36 +8,41 @@ var localeLanguage = 'en';
 const defaultSqlDatePattern = 'yyyy-mm-dd';
 
 // Contains the locale for the DatePicker
-// now only EN is used, otherwise, many imports 
+// now only EN is used, otherwise, many imports
 // bloat up the application size
 // Later this should be rendered server side
 const localeMap = {
-  en: enLocale
+  en: enLocale,
 };
 
 // General display options for the date
-const dateOptions = { 
-  year: 'numeric', 
-  month: 'numeric', 
-  day: '2-digit'
+const dateOptions = {
+  year: 'numeric',
+  month: 'numeric',
+  day: '2-digit',
 };
 
 // General display options for the time
 const timeOptions = {
-  hour: 'numeric', 
-  minute: 'numeric' 
+  hour: 'numeric',
+  minute: 'numeric',
 };
 
 // Returns a date or dateTime format string depending on the locale
 // and options set in dateOptions and timeOptions
-const getDateTimeFormatString = (includeTime , forMuiDatepicker) => {
-  const intlOptions = includeTime ? {...dateOptions, ...timeOptions} : dateOptions;
-  const intlDateTimeFormat = new Intl.DateTimeFormat(localeLanguage, intlOptions);
+const getDateTimeFormatString = (includeTime, forMuiDatepicker) => {
+  const intlOptions = includeTime
+    ? { ...dateOptions, ...timeOptions }
+    : dateOptions;
+  const intlDateTimeFormat = new Intl.DateTimeFormat(
+    localeLanguage,
+    intlOptions,
+  );
   const formatDateTimeObj = intlDateTimeFormat.formatToParts(new Date());
   const is12HourTimeZone = intlDateTimeFormat.resolvedOptions().hour12;
 
   return formatDateTimeObj
-    .map(obj => {
+    .map((obj) => {
       switch (obj.type) {
         case 'day':
           return 'dd';
@@ -56,39 +61,39 @@ const getDateTimeFormatString = (includeTime , forMuiDatepicker) => {
           return obj.value;
       }
     })
-    .join("");
-}
+    .join('');
+};
 
 // set the locale language
 const setLocaleLanguage = (language) => {
   localeLanguage = language;
-}
+};
 
 // DatePicker Locale - default is 'en'
 const getDatePickerLocale = () => {
   return localeMap['en'];
-}
+};
 
 const getDateFormatLocale = (forMuiDatepicker = false) => {
   return getDateTimeFormatString(false, forMuiDatepicker);
-}
+};
 
 const getDateTimeFormatLocale = (forMuiDatepicker = false) => {
   return getDateTimeFormatString(true, forMuiDatepicker);
-}
+};
 
 const getDateStringLocale = (date, forMuiDatepicker = false) => {
   return dateformat(date, getDateFormatLocale(forMuiDatepicker));
-}
+};
 
 const getDateTimeStringLocale = (date, forMuiDatepicker = false) => {
   return dateformat(date, getDateTimeFormatLocale(forMuiDatepicker));
-}
+};
 
 // used for converting application date to sql readable date format
 const convertDateToDefaultSqlDate = (date) => {
   return dateformat(date, defaultSqlDatePattern);
-}
+};
 
 export {
   setLocaleLanguage,
@@ -97,5 +102,5 @@ export {
   getDateTimeFormatLocale,
   getDateStringLocale,
   getDateTimeStringLocale,
-  convertDateToDefaultSqlDate
-}
+  convertDateToDefaultSqlDate,
+};

@@ -1,6 +1,6 @@
 /*
  * run before all tests
  */
-import * as loglevel		from 'loglevel';
+import * as loglevel from 'loglevel';
 
-loglevel.setDefaultLevel('trace')
+loglevel.setDefaultLevel('trace');

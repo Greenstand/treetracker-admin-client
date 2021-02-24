@@ -250,7 +250,7 @@ const TreeImageScrubber = (props) => {
      */
     const isNew = await props.speciesDispatch.isNewSpecies();
     if (isNew) {
-      const answer = await new Promise((resolve, reject) => {
+      const answer = await new Promise((resolve) => {
         if (
           window.confirm(
             `The species ${props.speciesState.speciesInput} is a new one, create it?`,
@@ -320,7 +320,7 @@ const TreeImageScrubber = (props) => {
     });
   }
 
-  function handleChangePageSize(event, value) {
+  function handleChangePageSize(event) {
     props.verityDispatch.set({ pageSize: event.target.value });
   }
 

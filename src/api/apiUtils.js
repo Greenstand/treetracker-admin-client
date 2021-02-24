@@ -1,4 +1,4 @@
-import {session} from "../models/auth";
+import { session } from '../models/auth';
 
 export async function handleResponse(response) {
   if (response.status === 204) return {};
@@ -9,21 +9,20 @@ export async function handleResponse(response) {
     const error = await response.text();
     throw new Error(error);
   }
-  throw new Error("Network response was not ok.");
+  throw new Error('Network response was not ok.');
 }
 
 // we should call an error logging service, but
 export function handleError(error) {
   // eslint-disable-next-line no-console
-  console.error("API call failed. " + error);
+  console.error('API call failed. ' + error);
   throw error;
 }
 
-export function getOrganization(){
-  if(session.user?.policy?.organization?.id){
+export function getOrganization() {
+  if (session.user?.policy?.organization?.id) {
     return `organization/${session.user?.policy?.organization?.id}/`;
-  }else{
-    return "";
+  } else {
+    return '';
   }
 }
-

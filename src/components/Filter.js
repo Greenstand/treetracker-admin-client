@@ -1,21 +1,28 @@
-import React, { useState } from 'react'
-import Drawer from '@material-ui/core/Drawer'
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
-import IconClose from '@material-ui/icons/CloseRounded'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import FilterModel from '../models/Filter'
-import GSInputLabel from './common/InputLabel'
-import classNames from 'classnames'
-import DateFnsUtils from '@date-io/date-fns'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
-import { getDatePickerLocale, getDateFormatLocale, convertDateToDefaultSqlDate } from '../common/locale'
+import React, { useState } from 'react';
+import Drawer from '@material-ui/core/Drawer';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import IconClose from '@material-ui/icons/CloseRounded';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import FilterModel from '../models/Filter';
+import GSInputLabel from './common/InputLabel';
+import classNames from 'classnames';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import {
+  getDatePickerLocale,
+  getDateFormatLocale,
+  convertDateToDefaultSqlDate,
+} from '../common/locale';
 
-export const FILTER_WIDTH = 330
+export const FILTER_WIDTH = 330;
 
 const styles = (theme) => {
   return {
@@ -40,65 +47,69 @@ const styles = (theme) => {
     button: {
       marginTop: 5,
     },
-  }
-}
+  };
+};
 
 function Filter(props) {
-  const { classes, filter } = props
-  const dateStartDefault = null
-  const dateEndDefault = null
-  const [treeId, setTreeId] = useState(filter.treeId)
-  const [planterId, setPlanterId] = useState(filter.planterId)
-  const [deviceId, setDeviceId] = useState(filter.deviceId)
-  const [planterIdentifier, setPlanterIdentifier] = useState(filter.planterIdentifier)
-  const [status, setStatus] = useState(filter.status)
-  const [approved, setApproved] = useState(filter.approved)
-  const [active, setActive] = useState(filter.active)
-  const [dateStart, setDateStart] = useState(filter.dateStart || dateStartDefault)
-  const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault)
+  const { classes, filter } = props;
+  const dateStartDefault = null;
+  const dateEndDefault = null;
+  const [treeId, setTreeId] = useState(filter.treeId);
+  const [planterId, setPlanterId] = useState(filter.planterId);
+  const [deviceId, setDeviceId] = useState(filter.deviceId);
+  const [planterIdentifier, setPlanterIdentifier] = useState(
+    filter.planterIdentifier,
+  );
+  const [status, setStatus] = useState(filter.status);
+  const [approved, setApproved] = useState(filter.approved);
+  const [active, setActive] = useState(filter.active);
+  const [dateStart, setDateStart] = useState(
+    filter.dateStart || dateStartDefault,
+  );
+  const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
 
   const handleDateStartChange = (date) => {
-    setDateStart(date)
-  }
+    setDateStart(date);
+  };
 
   const handleDateEndChange = (date) => {
-    setDateEnd(date)
-  }
+    setDateEnd(date);
+  };
 
   const formatDate = (date) => {
-    return convertDateToDefaultSqlDate(date)
-  }
+    return convertDateToDefaultSqlDate(date);
+  };
 
   function handleClear() {
-    const filter = new FilterModel()
-    setTreeId('')
-    setPlanterId('')
-    setDeviceId('')
-    setPlanterIdentifier('')
-    setStatus('All')
-    setDateStart(dateStartDefault)
-    setDateEnd(dateEndDefault)
-    setApproved()
-    setActive()
-    props.onSubmit && props.onSubmit(filter)
+    const filter = new FilterModel();
+    setTreeId('');
+    setPlanterId('');
+    setDeviceId('');
+    setPlanterIdentifier('');
+    setStatus('All');
+    setDateStart(dateStartDefault);
+    setDateEnd(dateEndDefault);
+    setApproved();
+    setActive();
+    props.onSubmit && props.onSubmit(filter);
   }
 
   function handleSubmit() {
-    const filter = new FilterModel()
-    filter.treeId = treeId
-    filter.planterId = planterId
-    filter.deviceId = deviceId
-    filter.planterIdentifier = planterIdentifier
-    filter.status = status
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined
-    filter.approved = approved
-    filter.active = active
-    props.onSubmit && props.onSubmit(filter)
+    const filter = new FilterModel();
+    filter.treeId = treeId;
+    filter.planterId = planterId;
+    filter.deviceId = deviceId;
+    filter.planterIdentifier = planterIdentifier;
+    filter.status = status;
+    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
+    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
+    filter.approved = approved;
+    filter.active = active;
+    props.onSubmit && props.onSubmit(filter);
   }
 
   function handleCloseClick() {
-    props.onClose && props.onClose()
+    props.onClose && props.onClose();
   }
 
   return (
@@ -118,7 +129,7 @@ function Filter(props) {
         <Grid item>
           <Typography variant="h5">Filters</Typography>
         </Grid>
-        {props.onClose &&
+        {props.onClose && (
           <Grid item>
             <IconButton
               color="primary"
@@ -130,8 +141,8 @@ function Filter(props) {
               <IconClose />
             </IconButton>
           </Grid>
-        }
-        </Grid>
+        )}
+      </Grid>
       <Button variant="outlined" color="primary" onClick={handleSubmit}>
         Apply Filters
       </Button>
@@ -200,13 +211,19 @@ function Filter(props) {
       <GSInputLabel text="Approved" />
       <TextField
         select
-        value={approved === undefined ? 'All' : approved === true ? 'true' : 'false'}
+        value={
+          approved === undefined ? 'All' : approved === true ? 'true' : 'false'
+        }
         InputLabelProps={{
           shrink: true,
         }}
         onChange={(e) =>
           setApproved(
-            e.target.value === 'All' ? undefined : e.target.value === 'true' ? true : false
+            e.target.value === 'All'
+              ? undefined
+              : e.target.value === 'true'
+              ? true
+              : false,
           )
         }
       >
@@ -219,12 +236,20 @@ function Filter(props) {
       <GSInputLabel text="Rejected" />
       <TextField
         select
-        value={active === undefined ? 'All' : active === true ? 'false' : 'true'}
+        value={
+          active === undefined ? 'All' : active === true ? 'false' : 'true'
+        }
         InputLabelProps={{
           shrink: true,
         }}
         onChange={(e) =>
-          setActive(e.target.value === 'All' ? undefined : e.target.value === 'true' ? false : true)
+          setActive(
+            e.target.value === 'All'
+              ? undefined
+              : e.target.value === 'true'
+              ? false
+              : true,
+          )
         }
       >
         {['All', 'false', 'true'].map((name) => (
@@ -234,7 +259,10 @@ function Filter(props) {
         ))}
       </TextField>
       <GSInputLabel text="Time created" />
-      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getDatePickerLocale()}>
+      <MuiPickersUtilsProvider
+        utils={DateFnsUtils}
+        locale={getDatePickerLocale()}
+      >
         <Grid container justify="space-between">
           <KeyboardDatePicker
             margin="normal"
@@ -265,10 +293,10 @@ function Filter(props) {
         </Grid>
       </MuiPickersUtilsProvider>
     </Drawer>
-  )
+  );
 }
 
 //export default compose(
 //  withStyles(styles, { withTheme: true, name: 'Filter' })
 //)(Filter)
-export default withStyles(styles)(Filter)
+export default withStyles(styles)(Filter);
