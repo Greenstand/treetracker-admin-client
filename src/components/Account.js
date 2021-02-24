@@ -180,44 +180,66 @@ function Account(props) {
   React.useEffect(() => {
     //loading permission from server
     async function load() {
-      let res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
-        {
-          headers: { Authorization: token },
-        },
-      );
-      if (res.status === 200) {
-        setPermissions(res.data);
-        console.log(res.data);
-      } else {
-        console.error('load fail:', res);
-        return;
+      // Get the user's permissions
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setPermissions(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching permissions:', e);
       }
-      res = await axios.get(
-        `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
-        {
-          headers: { Authorization: token },
-        },
-      );
-      if (res.status === 200) {
-        setUsers(res.data);
-      } else {
-        console.error('load fail:', res);
-        return;
+
+      // Get the user based on the token
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setUsers(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching admin_users:', e);
       }
     }
 
-    load();
+    // Don't try to load if there isn't a token
+    if (token) {
+      load();
+    }
   }, [token]);
 
+  // Find the user if in the list, or use the given info if not found
+  // Match the user's roles to their assoc. permissions
   const freshUser = users.find((el) => el.userName === user.userName) || user;
-  const roles = freshUser.role.map((r, idx) => {
-    return permissions.reduce((el, p) => {
-      return (
-        el || (p && p.id === r && <Grid key={`role_${idx}`}>{p.roleName}</Grid>)
-      );
-    }, undefined);
-  });
+  const roles = !permissions
+    ? null
+    : freshUser.role.map((r, idx) => {
+        return permissions.reduce((el, p) => {
+          return (
+            el ||
+            (p && p.id === r && (
+              <Grid key={`role_${idx}`}>
+                <Typography className={classes.item}>{p.roleName}</Typography>
+              </Grid>
+            ))
+          );
+        }, undefined);
+      });
 
   return (
     <>
@@ -257,7 +279,7 @@ function Account(props) {
                 </Grid>
                 <Grid item>
                   <Typography className={classes.title}>Role</Typography>
-                  <Typography className={classes.item}>{roles}</Typography>
+                  {roles}
                 </Grid>
                 <Grid item>
                   <Typography className={classes.title}>Created</Typography>

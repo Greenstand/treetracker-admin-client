@@ -135,14 +135,7 @@ export const AppProvider = (props) => {
           },
         )
         .then((response) => {
-          console.log(
-            'CONTEXT CHECK SESSION',
-            response,
-            'localUser',
-            localUser,
-            'localToken',
-            localToken,
-          );
+          // console.log('CONTEXT CHECK SESSION', response.data, 'USER', localUser, 'TOKEN', localToken);
           if (response.status === 200) {
             if (response.data.token === undefined) {
               //the role has not changed
@@ -151,8 +144,7 @@ export const AppProvider = (props) => {
               //role has changed, update the token
               context.login(localUser, response.data.token, true);
             }
-          } else if (response.status === 401) {
-            // Unauthorized - log out
+          } else {
             context.logout();
           }
         });

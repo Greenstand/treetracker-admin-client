@@ -78,6 +78,13 @@ const Login = (props) => {
     setErrorMessage('');
   }, [userName, password]);
 
+  React.useEffect(() => {
+    // console.log("--- EFFECT when user changes", appContext.user, loading);
+    if (appContext.user) {
+      history.replace(from);
+    }
+  }, [appContext.user, history, from]);
+
   const submitClassname = classNames({
     [classes.submit]: loading,
   });
@@ -120,13 +127,9 @@ const Login = (props) => {
     setPasswordBlurred(true);
     setUsernameBlurred(true);
 
-    //Do not show loading spinner if username or password are empty
-    if (!loading && userName && password) {
-      setLoading(true);
-    }
-
     //Do not send request if username or password are empty
     if (userName && password) {
+      setLoading(true);
       (async () => {
         try {
           const res = await axios.post(
@@ -140,7 +143,6 @@ const Login = (props) => {
             const token = res.data.token;
             const user = res.data.user;
             appContext.login(user, token, isRemember);
-            setLoading(true);
           } else {
             setErrorMessage('Invalid username or password');
             setLoading(false);
@@ -149,21 +151,16 @@ const Login = (props) => {
           console.error('Undefined User error:', e);
           if (e.response.data.errorMessage) {
             setErrorMessage(e.response.data.errorMessage);
-            setLoading(false);
           } else {
             setErrorMessage(
               'Could not log in. Please check your username and password or contact the admin.',
             );
-            setLoading(false);
           }
+          setLoading(false);
         }
       })();
     }
     return false;
-  }
-
-  if (appContext.user) {
-    history.replace(from);
   }
 
   return (
