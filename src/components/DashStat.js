@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,7 +15,7 @@ const style = (theme) => ({
     marginLeft: '30px',
     marginBottom: '20px',
     float: 'left',
-    position: 'relative'
+    position: 'relative',
   },
   dashstatCircleIcon: {
     borderRadius: '29px',
@@ -25,7 +24,7 @@ const style = (theme) => ({
     opacity: '0.15',
     left: '0',
     top: '0',
-    position: 'absolute'
+    position: 'absolute',
   },
   dashstatIcon: {
     margin: '0 auto',
@@ -42,7 +41,7 @@ const style = (theme) => ({
     width: '90px',
     boxSizing: 'border-box',
     position: 'relative',
-    fontFamily: theme.typography.fontFamily
+    fontFamily: theme.typography.fontFamily,
   },
   dashstatData: {
     display: 'inline-block',
@@ -58,9 +57,9 @@ const style = (theme) => ({
     marginBlockStart: 0,
     marginBlockEnd: 0,
     width: '90px',
-    position: 'absolute'
-  }
-})
+    position: 'absolute',
+  },
+});
 
 /**
  * @param {{
@@ -72,24 +71,29 @@ const style = (theme) => ({
  * }} props
  */
 function DashStat(props) {
-  const {
-    data, Icon, label, color = '#000000', classes
-  } = props;
+  const { data, Icon, label, color = '#000000', classes } = props;
 
   return (
     <Grid item xs={3}>
       <div className={classes.dashstatContainer}>
         <div className={classes.dashstatIconContainer}>
-          <div className={classes.dashstatCircleIcon} style={{ backgroundColor: color }}></div>
-          <Icon className={classes.dashstatIcon} style={{ color: color }}></Icon>
+          <div
+            className={classes.dashstatCircleIcon}
+            style={{ backgroundColor: color }}
+          ></div>
+          <Icon
+            className={classes.dashstatIcon}
+            style={{ color: color }}
+          ></Icon>
         </div>
         <div className={classes.dashstatText}>
-          <h3 className={classes.dashstatData}>{data}</h3><br/>
+          <h3 className={classes.dashstatData}>{data}</h3>
+          <br />
           <p className={classes.dashstatLabel}>{label}</p>
         </div>
       </div>
     </Grid>
-  )
+  );
 }
 
 export default withStyles(style)(DashStat);

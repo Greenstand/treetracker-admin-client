@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
 import Slide from '@material-ui/core/Slide';
 
@@ -40,6 +39,7 @@ import PlanterDetail from './PlanterDetail';
 import TreeTags from './TreeTags';
 import TreeDetailDialog from './TreeDetailDialog';
 import withData from './common/withData';
+import OptimizedImage from './OptimizedImage';
 
 const log = require('loglevel').getLogger('../components/TreeImageScrubber');
 
@@ -343,13 +343,13 @@ const TreeImageScrubber = (props) => {
 
   const placeholderImages = props.verifyState.isLoading
     ? Array(props.verifyState.pageSize - treeImages.length)
-        .fill()
-        .map((_, index) => {
-          return {
-            id: index,
-            placeholder: true,
-          };
-        })
+      .fill()
+      .map((_, index) => {
+        return {
+          id: index,
+          placeholder: true,
+        };
+      })
     : [];
 
   const treeImageItems = treeImages.concat(placeholderImages).map((tree) => {
@@ -374,12 +374,11 @@ const TreeImageScrubber = (props) => {
             elevation={tree.placeholder ? 0 : 3}
           >
             <CardContent className={classes.cardContent}>
-              {tree.imageUrl && (
-                <CardMedia
-                  className={classes.cardMedia}
-                  image={tree.imageUrl}
-                />
-              )}
+              <OptimizedImage
+                src={tree.imageUrl}
+                width={320}
+                className={classes.cardMedia}
+              />
             </CardContent>
             <CardActions className={classes.cardActions}>
               <Grid justify="flex-end" container>
@@ -598,7 +597,6 @@ function SidePanel(props) {
     DEFAULT_REJECTION_REASON,
   );
   const [rememberSelection, setRememberSelection] = React.useState(false);
-  // const speciesRef = React.useRef(null)
 
   function resetSelection() {
     setSwitchApprove(DEFAULT_SWITCH_APPROVE);
@@ -612,17 +610,17 @@ function SidePanel(props) {
     const approveAction =
       switchApprove === 0
         ? {
-            isApproved: true,
-            morphology,
-            age,
-            captureApprovalTag,
-            rememberSelection,
-          }
+          isApproved: true,
+          morphology,
+          age,
+          captureApprovalTag,
+          rememberSelection,
+        }
         : {
-            isApproved: false,
-            rejectionReason,
-            rememberSelection,
-          };
+          isApproved: false,
+          rejectionReason,
+          rememberSelection,
+        };
     await props.onSubmit(approveAction);
     if (!rememberSelection) {
       resetSelection();
@@ -695,9 +693,7 @@ function SidePanel(props) {
         */}
         <Grid>
           <Typography variant="h6">Species (if known)</Typography>
-          <Species
-          // ref={speciesRef}
-          />
+          <Species />
         </Grid>
         <Grid>
           <Typography variant="h6">Additional tags</Typography>

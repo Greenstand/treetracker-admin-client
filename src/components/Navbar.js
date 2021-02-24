@@ -7,12 +7,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
 
-import IconLogo		from './IconLogo';
-import Menu from './common/Menu.js'
+import IconLogo from './IconLogo';
+import Menu from './common/Menu.js';
 
 const log = require('loglevel').getLogger('../components/Navbar');
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   toolbar: {
     minHeight: '48px',
   },
@@ -20,41 +20,37 @@ const useStyles = makeStyles(theme => ({
 
 const Navbar = (props) => {
   log.debug('render Navbar...');
-  const [isMenuShown, setMenuShown] = React.useState(false)
+  const [isMenuShown, setMenuShown] = React.useState(false);
   const classes = useStyles(props);
 
   function handleMenuClick() {
-    setMenuShown(!isMenuShown)
+    setMenuShown(!isMenuShown);
   }
 
   return (
     <React.Fragment>
-      <AppBar color='default' className={props.className}>
-        <Grid container direction='column'>
+      <AppBar color="default" className={props.className}>
+        <Grid container direction="column">
           <Toolbar className={classes.toolbar} disableGutters={true}>
-            <Grid container justify='space-between'>
+            <Grid container justify="space-between">
               <Grid item>
                 <IconButton title="menu" onClick={() => handleMenuClick()}>
-                  <MenuIcon/>
+                  <MenuIcon />
                 </IconButton>
-                <IconLogo/>
+                <IconLogo />
               </Grid>
-              <Grid item>
-                {props.buttons}
-              </Grid>
+              <Grid item>{props.buttons}</Grid>
             </Grid>
           </Toolbar>
-          <Grid item>
-            {props.children}
-          </Grid>
+          <Grid item>{props.children}</Grid>
         </Grid>
       </AppBar>
       {/* children duplicated behind the AppBar component to preserve height */}
-      <Toolbar className={classes.toolbar}/>
+      <Toolbar className={classes.toolbar} />
       {props.children}
       {isMenuShown && <Menu onClose={() => setMenuShown(false)} />}
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default Navbar;

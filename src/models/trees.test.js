@@ -1,18 +1,16 @@
-import { init } from "@rematch/core";
-import trees from "./trees";
-import * as loglevel from "loglevel";
+import { init } from '@rematch/core';
+import trees from './trees';
+import * as loglevel from 'loglevel';
 import Axios from 'axios';
 
-const log = loglevel.getLogger("../models/trees.test");
+const log = loglevel.getLogger('../models/trees.test');
 
 jest.mock('axios');
 
 describe('trees', () => {
-
   let store;
 
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   describe('with a default store', () => {
     beforeEach(async () => {
@@ -33,11 +31,15 @@ describe('trees', () => {
 
     describe('getTreesAsync()', () => {
       beforeEach(async () => {
-        const data = [{
-          id: '1'
-        }];
+        const data = [
+          {
+            id: '1',
+          },
+        ];
         // Mock the call to trees/count first
-        Axios.get.mockReturnValueOnce({data: {count: data.length}}).mockReturnValueOnce({data});
+        Axios.get
+          .mockReturnValueOnce({ data: { count: data.length } })
+          .mockReturnValueOnce({ data });
         await store.dispatch.trees.getTreesAsync();
       });
 
@@ -71,7 +73,9 @@ describe('trees', () => {
         // The first arg (URL) should include a stringified default filter object
         expect(Axios.get).toHaveBeenCalled();
         const lastCallIdx = Axios.get.mock.calls.length - 1;
-        expect(Axios.get.mock.calls[lastCallIdx][0]).toContain(`trees?filter=${filter}`);
+        expect(Axios.get.mock.calls[lastCallIdx][0]).toContain(
+          `trees?filter=${filter}`,
+        );
       });
     });
   });

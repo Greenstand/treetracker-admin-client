@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Paper from '@material-ui/core/Paper'
-import { withStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 
-import Menu, { MENU_WIDTH } from './common/Menu'
+import Menu, { MENU_WIDTH } from './common/Menu';
 
-const style = (theme) => ({
+const style = () => ({
   box: {
     width: '100%',
     height: '100%',
@@ -16,12 +16,12 @@ const style = (theme) => ({
     width: MENU_WIDTH,
     position: 'absolute',
     left: 0,
-    top: 0
+    top: 0,
   },
   menu: {
     height: '100%',
     width: MENU_WIDTH,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   rightBox: {
     height: '100%',
@@ -33,14 +33,14 @@ const style = (theme) => ({
     backgroundColor: 'rgb(239, 239, 239)',
     boxSizing: 'border-box',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text: {
     fontSize: '40px',
     alignSelf: 'center',
     textAlign: 'center',
-  }
-})
+  },
+});
 
 function GenericMessagePage({ classes, text }) {
   return (
@@ -51,7 +51,7 @@ function GenericMessagePage({ classes, text }) {
         </Paper>
       </div>
       <div className={classes.rightBox}>
-        <span className={classes.text}>{ text }</span>
+        <span className={classes.text}>{text}</span>
       </div>
     </div>
   );

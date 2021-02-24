@@ -1,13 +1,13 @@
-import React, { useCallback } from 'react'
-import { connect } from 'react-redux'
-import ChipInput from 'material-ui-chip-input'
-import Autosuggest from 'react-autosuggest'
-import MenuItem from '@material-ui/core/MenuItem'
-import Paper from '@material-ui/core/Paper'
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+import ChipInput from 'material-ui-chip-input';
+import Autosuggest from 'react-autosuggest';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import * as _ from 'lodash';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     flexGrow: 1,
     position: 'relative',
@@ -33,114 +33,115 @@ const useStyles = makeStyles(theme => ({
   },
   chipInput: {
     '&.MuiOutlinedInput-root': {
-      padding: theme.spacing(2,0,0,2),
+      padding: theme.spacing(2, 0, 0, 2),
     },
     '.MuiChip-root': {
       fontSize: '0.7rem',
     },
   },
-}))
+}));
 
-function renderSuggestion (suggestion, { query, isHighlighted }) {
-
+function renderSuggestion(suggestion, { isHighlighted }) {
   return (
     <MenuItem
       selected={isHighlighted}
-      component='div'
+      component="div"
       onMouseDown={(e) => e.preventDefault()} // prevent the click causing the input to be blurred
     >
-      <div>
-        {suggestion.tagName}
-      </div>
+      <div>{suggestion.tagName}</div>
     </MenuItem>
-  )
+  );
 }
 
-function renderSuggestionsContainer (options) {
-  const { containerProps, children } = options
+function renderSuggestionsContainer(options) {
+  const { containerProps, children } = options;
 
   return (
     <Paper {...containerProps} square>
       {children}
     </Paper>
-  )
+  );
 }
 
-function getSuggestionValue (suggestion) {
-  return suggestion.tagName
+function getSuggestionValue(suggestion) {
+  return suggestion.tagName;
 }
 
 // This is needed to pass the same function to debounce() each time
-const debounceCallback = ({value, callback}) => {
-  return callback && callback(value)
-}
+const debounceCallback = ({ value, callback }) => {
+  return callback && callback(value);
+};
 
 const TreeTags = (props) => {
-
   const classes = useStyles(props);
-  const [ textFieldInput, setTextFieldInput ] = React.useState('');
-  const [ error, setError ] = React.useState(false)
-  const debouncedInputHandler = useCallback(_.debounce(debounceCallback, 250), [])
-  const TAG_PATTERN = '^\\w*$'
+  const [textFieldInput, setTextFieldInput] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const debouncedInputHandler = useCallback(
+    _.debounce(debounceCallback, 250),
+    [],
+  );
+  const TAG_PATTERN = '^\\w*$';
 
-  function renderInput (inputProps) {
-    const { value, onChange, chips, pattern, ...other } = inputProps
-  
+  function renderInput(inputProps) {
+    const { onChange, chips, pattern, ...other } = inputProps;
+
     return (
       <ChipInput
         clearInputValueOnChange
         onUpdateInput={onChange}
         value={chips}
         {...other}
-        variant='outlined'
+        variant="outlined"
         fullWidth
-        classes={{inputRoot: classes.chipInput}}
+        classes={{ inputRoot: classes.chipInput }}
         allowDuplicates={false}
-        blurBehavior='add'
+        blurBehavior="add"
         InputProps={{
-          inputProps: {pattern},
+          inputProps: { pattern },
           error,
         }}
-        helperText={error && 'Tags may contain only letters, numbers and underscores'}
-        FormHelperTextProps={{error}}
+        helperText={
+          error && 'Tags may contain only letters, numbers and underscores'
+        }
+        FormHelperTextProps={{ error }}
       />
-    )
+    );
   }
-  
-  const isValidTagString = (value) => RegExp(TAG_PATTERN).test(value)
+
+  const isValidTagString = (value) => RegExp(TAG_PATTERN).test(value);
 
   let handleSuggestionsFetchRequested = ({ value }) => {
-    debouncedInputHandler({value,
+    debouncedInputHandler({
+      value,
       callback: (val) => {
         if (isValidTagString(val)) {
-          return props.tagDispatch.getTags(val)
+          return props.tagDispatch.getTags(val);
         }
-        return null
-      }
-    })
-  }
+        return null;
+      },
+    });
+  };
 
-  let handleSuggestionsClearRequested = () => {
-  }
+  let handleSuggestionsClearRequested = () => {};
 
   let handletextFieldInputChange = (event, { newValue }) => {
-    setTextFieldInput(newValue)
-    setError(!isValidTagString(newValue))
-  }
+    setTextFieldInput(newValue);
+    setError(!isValidTagString(newValue));
+  };
 
-  let handleBeforeAddChip = (chip) => {
+  let handleBeforeAddChip = () => {
     return !error;
-  }
+  };
 
   let handleAddChip = (chip) => {
-    props.tagDispatch.setTagInput(props.tagState.tagInput.concat([chip]))
-  }
+    props.tagDispatch.setTagInput(props.tagState.tagInput.concat([chip]));
+  };
 
-  let handleDeleteChip = (chip, index) => {
+  let handleDeleteChip = (_chip, index) => {
     const temp = props.tagState.tagInput;
-    temp.splice(index, 1)
-    props.tagDispatch.setTagInput(temp)
-  }
+    temp.splice(index, 1);
+    props.tagDispatch.setTagInput(temp);
+  };
 
   return (
     <Autosuggest
@@ -148,22 +149,26 @@ const TreeTags = (props) => {
         container: classes.container,
         suggestionsContainerOpen: classes.suggestionsContainerOpen,
         suggestionsList: classes.suggestionsList,
-        suggestion: classes.suggestion
+        suggestion: classes.suggestion,
       }}
       renderInputComponent={renderInput}
-      suggestions={
-        props.tagState.tagList.filter(t => {
-          const tagName = t.tagName.toLowerCase()
-          return (textFieldInput.length === 0 || tagName.startsWith(textFieldInput.toLowerCase()))
-            && !props.tagState.tagInput.find(i => i.toLowerCase() === tagName)
-        })
-      }
+      suggestions={props.tagState.tagList.filter((t) => {
+        const tagName = t.tagName.toLowerCase();
+        return (
+          (textFieldInput.length === 0 ||
+            tagName.startsWith(textFieldInput.toLowerCase())) &&
+          !props.tagState.tagInput.find((i) => i.toLowerCase() === tagName)
+        );
+      })}
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
       onSuggestionsClearRequested={handleSuggestionsClearRequested}
       renderSuggestionsContainer={renderSuggestionsContainer}
       getSuggestionValue={getSuggestionValue}
       renderSuggestion={renderSuggestion}
-      onSuggestionSelected={(e, { suggestionValue }) => { handleAddChip(suggestionValue); e.preventDefault() }}
+      onSuggestionSelected={(e, { suggestionValue }) => {
+        handleAddChip(suggestionValue);
+        e.preventDefault();
+      }}
       focusInputOnSuggestionClick
       inputProps={{
         classes,
@@ -177,15 +182,14 @@ const TreeTags = (props) => {
         placeholder: props.placeholder,
       }}
     />
-  )
-}
-
+  );
+};
 
 export default connect(
-  state => ({
-    tagState: state.tags
+  (state) => ({
+    tagState: state.tags,
   }),
-  dispatch => ({
-    tagDispatch: dispatch.tags
+  (dispatch) => ({
+    tagDispatch: dispatch.tags,
   }),
-)(TreeTags)
+)(TreeTags);

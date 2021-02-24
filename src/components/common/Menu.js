@@ -1,16 +1,16 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Box from '@material-ui/core/Box'
-import IconLogo from '../IconLogo'
-import { AppContext } from '../Context'
-import { Link } from 'react-router-dom'
-import Grid from '@material-ui/core/Grid'
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Box from '@material-ui/core/Box';
+import IconLogo from '../IconLogo';
+import { AppContext } from '../Context';
+import { Link } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
 
-export const MENU_WIDTH = 232
+export const MENU_WIDTH = 232;
 
 const useStyles = makeStyles((theme) => ({
   drawer: {},
@@ -56,11 +56,11 @@ const useStyles = makeStyles((theme) => ({
   disabledLinkItem: {
     pointerEvents: 'none',
   },
-}))
+}));
 
 export default function GSMenu(props) {
-  const classes = useStyles()
-  const appContext = React.useContext(AppContext)
+  const classes = useStyles();
+  const appContext = React.useContext(AppContext);
 
   const menu = (
     <>
@@ -68,34 +68,43 @@ export default function GSMenu(props) {
         <IconLogo />
       </Box>
       <Box height={20} />
-      {React.useMemo(() => (
-        appContext.routes
-          .filter(({disabled}) => !disabled)
-          .map((item, i) => (
-          <Link
-            key={`menu_${i}`}
-            className={classes.linkItemText + (item.disabled ? ' ' + classes.disabledLinkItem : '')}
-            to={`${item.disabled ? '/' : item.linkTo}`}>
-            <MenuItem
-              className={classes.menuItem}
-              selected={props.active === item.name}
-              disabled={item.disabled}
-            >
-                <Grid container>
-                  <Grid item>
-                    <ListItemIcon className={classes.listItemIcon}>
-                      {item.icon && <item.icon />}
-                    </ListItemIcon>
+      {React.useMemo(
+        () =>
+          appContext.routes
+            .filter(({ disabled }) => !disabled)
+            .map((item, i) => (
+              <Link
+                key={`menu_${i}`}
+                className={
+                  classes.linkItemText +
+                  (item.disabled ? ' ' + classes.disabledLinkItem : '')
+                }
+                to={`${item.disabled ? '/' : item.linkTo}`}
+              >
+                <MenuItem
+                  className={classes.menuItem}
+                  selected={props.active === item.name}
+                  disabled={item.disabled}
+                >
+                  <Grid container>
+                    <Grid item>
+                      <ListItemIcon className={classes.listItemIcon}>
+                        {item.icon && <item.icon />}
+                      </ListItemIcon>
+                    </Grid>
+                    <Grid item>
+                      <ListItemText className={classes.listItemText}>
+                        {item.name}
+                      </ListItemText>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <ListItemText className={classes.listItemText}>{item.name}</ListItemText>
-                  </Grid>
-                </Grid>
-            </MenuItem>
-          </Link>
-      ))), [appContext.routes, props.active, classes])}
+                </MenuItem>
+              </Link>
+            )),
+        [appContext.routes, props.active, classes],
+      )}
     </>
-  )
+  );
 
   return props.variant === 'plain' ? (
     <>{menu}</>
@@ -111,5 +120,5 @@ export default function GSMenu(props) {
     >
       {menu}
     </Drawer>
-  )
+  );
 }
