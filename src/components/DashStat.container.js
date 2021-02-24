@@ -12,6 +12,17 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
+function DashStatTotalTreesComponent(props, El) {
+  return (
+    <El
+      color={theme.palette.stats.green}
+      Icon={NatureOutlinedIcon}
+      label={'Total Trees'}
+      {...props}
+    />
+  );
+}
+
 export const DashStatTotalTrees = compose(
   connect(
     (state) => ({
@@ -26,15 +37,19 @@ export const DashStatTotalTrees = compose(
     }),
   ),
   withData,
-  (El) => (props) => (
+  (El) => (props) => DashStatTotalTreesComponent(props, El),
+)(DashStat);
+
+function DashStatUnprocessedTreesComponent(props, El) {
+  return (
     <El
-      color={theme.palette.stats.green}
-      Icon={NatureOutlinedIcon}
-      label={'Total Trees'}
+      color={theme.palette.stats.red}
+      Icon={LocalOfferOutlinedIcon}
+      label={'Untagged Trees'}
       {...props}
     />
-  ),
-)(DashStat);
+  );
+}
 
 export const DashStatUnprocessedTrees = compose(
   connect(
@@ -50,15 +65,19 @@ export const DashStatUnprocessedTrees = compose(
     }),
   ),
   withData,
-  (El) => (props) => (
+  (El) => (props) => DashStatUnprocessedTreesComponent(props, El),
+)(DashStat);
+
+function DashStatVerifiedTreesComponent(props, El) {
+  return (
     <El
-      color={theme.palette.stats.red}
-      Icon={LocalOfferOutlinedIcon}
-      label={'Untagged Trees'}
+      color={theme.palette.stats.orange}
+      Icon={CheckCircleOutlineOutlinedIcon}
+      label={'Verified Trees'}
       {...props}
     />
-  ),
-)(DashStat);
+  );
+}
 
 export const DashStatVerifiedTrees = compose(
   connect(
@@ -74,15 +93,19 @@ export const DashStatVerifiedTrees = compose(
     }),
   ),
   withData,
-  (El) => (props) => (
+  (El) => (props) => DashStatVerifiedTreesComponent(props, El),
+)(DashStat);
+
+function DashStatPlanterCountComponent(props, El) {
+  return (
     <El
       color={theme.palette.stats.orange}
-      Icon={CheckCircleOutlineOutlinedIcon}
-      label={'Verified Trees'}
+      Icon={PeopleOutlineOutlinedIcon}
+      label={'Planters'}
       {...props}
     />
-  ),
-)(DashStat);
+  );
+}
 
 export const DashStatPlanterCount = compose(
   connect(
@@ -97,12 +120,5 @@ export const DashStatPlanterCount = compose(
     }),
   ),
   withData,
-  (El) => (props) => (
-    <El
-      color={theme.palette.stats.orange}
-      Icon={PeopleOutlineOutlinedIcon}
-      label={'Planters'}
-      {...props}
-    />
-  ),
+  (El) => (props) => DashStatPlanterCountComponent(props, El),
 )(DashStat);

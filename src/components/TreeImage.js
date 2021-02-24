@@ -54,7 +54,7 @@ const menuItems = [
   },
 ];
 
-export default function TreeImage(props) {
+export default function TreeImage() {
   const classes = useStyles();
   const [isCollapsed, setCollapsed] = React.useState(true);
 

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function renderSuggestion(suggestion, { query, isHighlighted }) {
+function renderSuggestion(suggestion, { isHighlighted }) {
   return (
     <MenuItem
       selected={isHighlighted}
@@ -83,7 +83,7 @@ const TreeTags = (props) => {
   const TAG_PATTERN = '^\\w*$';
 
   function renderInput(inputProps) {
-    const { value, onChange, chips, pattern, ...other } = inputProps;
+    const { onChange, chips, pattern, ...other } = inputProps;
 
     return (
       <ChipInput
@@ -129,7 +129,7 @@ const TreeTags = (props) => {
     setError(!isValidTagString(newValue));
   };
 
-  let handleBeforeAddChip = (chip) => {
+  let handleBeforeAddChip = () => {
     return !error;
   };
 
@@ -137,7 +137,7 @@ const TreeTags = (props) => {
     props.tagDispatch.setTagInput(props.tagState.tagInput.concat([chip]));
   };
 
-  let handleDeleteChip = (chip, index) => {
+  let handleDeleteChip = (_chip, index) => {
     const temp = props.tagState.tagInput;
     temp.splice(index, 1);
     props.tagDispatch.setTagInput(temp);

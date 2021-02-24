@@ -59,10 +59,10 @@ const trees = {
     toggleDisplayDrawer(state) {
       return { displayDrawer: { isOpen: !state.isOpen } };
     },
-    openDisplayDrawer(state) {
+    openDisplayDrawer() {
       return { displayDrawer: { isOpen: true } };
     },
-    closeDisplayDrawer(state) {
+    closeDisplayDrawer() {
       return { displayDrawer: { isOpen: false } };
     },
   },
@@ -221,7 +221,7 @@ const trees = {
         this.invalidateTreeCount(true);
       });
     },
-    async showTree(id) {},
+    async showTree() {},
   },
 };
 

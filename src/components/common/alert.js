@@ -1,7 +1,7 @@
 /*
  * A utility just like window.alert()
  */
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,11 +11,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import * as d3 from 'd3-selection';
 import theme from './theme';
-import { ThemeProvider, useTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 export default function alert(title, message) {
-  return new Promise((resolve, reject) => {
-    function handleClose(isConfirmed: boolean) {
+  return new Promise((resolve) => {
+    function handleClose(isConfirmed) {
       d3.select('.confirm-container').remove();
       d3.select('#confirmDialog').remove();
       resolve(isConfirmed);

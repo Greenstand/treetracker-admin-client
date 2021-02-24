@@ -203,7 +203,7 @@ class TreeTable extends Component {
         <Table>
           <TableHead>
             <TableRow>
-              {columns.map(({ attr, label, noSort }, index) => (
+              {columns.map(({ attr, label, noSort }) => (
                 <TableCell
                   key={attr}
                   sortDirection={orderBy === attr ? order : false}
@@ -227,7 +227,7 @@ class TreeTable extends Component {
                 onClick={this.createToggleDrawerHandler(tree.id)}
                 className={classes.tableRow}
               >
-                {columns.map(({ attr, label, renderer }, index) => (
+                {columns.map(({ attr, renderer }) => (
                   <TableCell key={attr}>
                     {renderer ? renderer(tree[attr]) : tree[attr]}
                   </TableCell>

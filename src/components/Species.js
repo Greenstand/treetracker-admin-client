@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-const styles = (theme) => {
+const styles = () => {
   return {
     root: {
       color: 'red',
@@ -26,10 +26,10 @@ function Species(props) {
       options={props.speciesState.speciesList}
       getOptionLabel={(option) => option.name}
       style={{ width: 300 }}
-      onChange={(a, b, c) => {
-        props.speciesDispatch.onChange((b && b.name) || '');
+      onChange={(_event, value) => {
+        props.speciesDispatch.onChange((value && value.name) || '');
       }}
-      onInputChange={(a, b, c) => {
+      onInputChange={(a, b) => {
         props.speciesDispatch.onChange(b || '');
       }}
       className={props.classes.root}

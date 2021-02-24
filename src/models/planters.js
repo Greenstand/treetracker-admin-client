@@ -88,7 +88,7 @@ const planters = {
       this.setIsLoading(false);
       return true;
     },
-    async changePageSize(payload, _state) {
+    async changePageSize(payload) {
       this.setPageSize(payload.pageSize);
     },
     async count(_payload, state) {

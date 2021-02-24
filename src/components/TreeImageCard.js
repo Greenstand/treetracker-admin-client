@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 import { selectedHighlightColor } from '../../common/variables.js';
 
-const styles = (theme) => ({
+const styles = () => ({
   cardImg: {
     width: '100%',
     height: 'auto',

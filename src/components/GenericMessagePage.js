@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Menu, { MENU_WIDTH } from './common/Menu';
 
-const style = (theme) => ({
+const style = () => ({
   box: {
     width: '100%',
     height: '100%',

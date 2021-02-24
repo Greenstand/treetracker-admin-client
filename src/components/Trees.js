@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import Navbar from './Navbar';
 import TreeTable from './TreeTable';
 
-function Trees(props) {
+function Trees() {
   return (
     <Grid
       container
@@ -34,7 +34,7 @@ const mapState = (state) => {
   return { state: state };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = () => {
   return {};
 };
 

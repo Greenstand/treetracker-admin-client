@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
@@ -16,7 +14,7 @@ import Infinite from 'react-infinite';
 import { selectedHighlightColor } from '../../common/variables.js';
 import TreeImageCard from '../TreeImageCard/TreeImageCard';
 
-const styles = (theme) => ({
+const styles = () => ({
   wrapper: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -66,33 +64,13 @@ const ImageScrubber = (props) => {
     return props.getTreesWithImagesAsync(payload);
   };
 
-  const shouldComponentUpdate = (nextProps, nextState) => {
-    if (nextProps.treesArray !== props.treesArray) {
-      return true;
-    }
-
-    return false;
-  };
-
   const sortImages = (e, orderBy, order) => {
     e.preventDefault();
     let newOrder = order === 'asc' ? 'desc' : 'asc';
     getTreesWithImages(newOrder, orderBy);
   };
 
-  const {
-    numSelected,
-    classes,
-    rowsPerPage,
-    selected,
-    order,
-    orderBy,
-    treesArray,
-    getLocationName,
-    treeCount,
-    byId,
-    tree,
-  } = props;
+  const { classes, order, orderBy } = props;
 
   const idArrow =
     order === 'asc' && orderBy === 'id' ? (

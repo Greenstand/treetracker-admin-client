@@ -2,17 +2,11 @@
  * A utility just show some notificiation
  * TODO still not support show mutiple notification at the same time.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import * as d3 from 'd3-selection';
 import theme from './theme';
-import { ThemeProvider, useTheme } from '@material-ui/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
@@ -31,10 +25,10 @@ const icons = {
 };
 
 export default function notification(message, type = 'info', delay = 3000) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const Icon = icons[type];
 
-    function handleClose(isConfirmed: boolean) {
+    function handleClose(isConfirmed) {
       d3.select('.confirm-container').remove();
       d3.select('#confirmDialog').remove();
       resolve(isConfirmed);

@@ -33,6 +33,6 @@ const mapState = (state) => {
   return state;
 };
 
-const mapDispatch = (dispatch) => ({});
+const mapDispatch = () => ({});
 
 export default connect(mapState, mapDispatch)(App);

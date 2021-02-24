@@ -12,7 +12,7 @@ import Menu from './common/Menu.js';
 
 const log = require('loglevel').getLogger('../components/Navbar');
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   toolbar: {
     minHeight: '48px',
   },
