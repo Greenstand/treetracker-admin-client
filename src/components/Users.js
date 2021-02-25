@@ -1,47 +1,47 @@
-import React, { useCallback } from 'react'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import Box from '@material-ui/core/Box'
-import Table from '@material-ui/core/Table'
-import Typography from '@material-ui/core/Typography'
-import Group from '@material-ui/icons/Group'
-import Edit from '@material-ui/icons/Edit'
-import VpnKey from '@material-ui/icons/VpnKey'
-import Help from '@material-ui/icons/Help'
-import Delete from '@material-ui/icons/Delete'
-import EmojiObjects from '@material-ui/icons/EmojiObjects'
-import { withStyles } from '@material-ui/core/styles'
-import Menu from './common/Menu'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import Checkbox from '@material-ui/core/Checkbox'
-import FileCopyIcon from '@material-ui/icons/FileCopy'
-import axios from 'axios'
-import { AppContext } from './Context'
-import pwdGenerator from 'generate-password'
-import { getDateTimeStringLocale } from '../common/locale'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormLabel from '@material-ui/core/FormLabel'
-import Radio from '@material-ui/core/Radio'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Snackbar from '@material-ui/core/Snackbar'
-import CloseIcon from '@material-ui/icons/Close'
-import FormControl from '@material-ui/core/FormControl'
+import React, { useCallback } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import Typography from '@material-ui/core/Typography';
+import Group from '@material-ui/icons/Group';
+import Edit from '@material-ui/icons/Edit';
+import VpnKey from '@material-ui/icons/VpnKey';
+import Help from '@material-ui/icons/Help';
+import Delete from '@material-ui/icons/Delete';
+import EmojiObjects from '@material-ui/icons/EmojiObjects';
+import { withStyles } from '@material-ui/core/styles';
+import Menu from './common/Menu';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import axios from 'axios';
+import { AppContext } from './Context';
+import pwdGenerator from 'generate-password';
+import { getDateTimeStringLocale } from '../common/locale';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from '@material-ui/core/Radio';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import FormControl from '@material-ui/core/FormControl';
 
 const style = (theme) => ({
   box: {
@@ -110,168 +110,184 @@ const style = (theme) => ({
   },
   disabledUser: {
     color: 'red',
-  }
-})
+  },
+});
 
 function not(a, b) {
-  return a.filter((value) => b.every((bb) => bb.id !== value.id))
+  return a.filter((value) => b.every((bb) => bb.id !== value.id));
 }
 
 function intersection(a, b) {
-  return a.filter((value) => b.some((bb) => bb.id === value.id))
+  return a.filter((value) => b.some((bb) => bb.id === value.id));
 }
 
 function Users(props) {
-  const { classes } = props
-  const appContext = React.useContext(AppContext)
-  const { user, token } = appContext
+  const { classes } = props;
+  const appContext = React.useContext(AppContext);
+  const { user, token } = appContext;
 
-  const [userEditing, setUserEditing] = React.useState(undefined)
-  const [userPassword, setUserPassword] = React.useState(undefined)
-  const [userDelete, setUserDelete] = React.useState(undefined)
-  const [newPassword, setNewPassword] = React.useState('')
-  const [permissions, setPermissions] = React.useState([])
-  const [isPermissionsShow, setPermissionsShown] = React.useState(false)
-  const [users, setUsers] = React.useState([])
-  const [copyMsg, setCopyMsg] = React.useState('')
-  const [errorMessage, setErrorMessage] = React.useState('')
-  const passwordRef = React.useRef(null)
-  const [saveInProgress, setSaveInProgress] = React.useState(false)
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false)
-  const [snackbarMessage, setSnackbarMesssage] = React.useState('')
-  const [usersLoaded, setUsersLoaded] = React.useState(false)
+  const [userEditing, setUserEditing] = React.useState(undefined);
+  const [userPassword, setUserPassword] = React.useState(undefined);
+  const [userDelete, setUserDelete] = React.useState(undefined);
+  const [newPassword, setNewPassword] = React.useState('');
+  const [permissions, setPermissions] = React.useState([]);
+  const [isPermissionsShow, setPermissionsShown] = React.useState(false);
+  const [users, setUsers] = React.useState([]);
+  const [copyMsg, setCopyMsg] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const passwordRef = React.useRef(null);
+  const [saveInProgress, setSaveInProgress] = React.useState(false);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMesssage] = React.useState('');
+  const [usersLoaded, setUsersLoaded] = React.useState(false);
+  const [userNameValid, setUserNameValid] = React.useState(true);
 
-  const ENABLED = 'Enabled'
-  const DISABLED = 'Disabled'
+  const ENABLED = 'Enabled';
+  const DISABLED = 'Disabled';
 
   const load = useCallback(async () => {
-    let res = await axios.get(`${process.env.REACT_APP_API_ROOT}/auth/permissions`, {
-      headers: { Authorization: token },
-    })
+    let res = await axios.get(
+      `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
+      {
+        headers: { Authorization: token },
+      },
+    );
     if (res.status === 200) {
-      setPermissions(res.data)
+      setPermissions(res.data);
     } else {
-      console.error('load fail:', res)
-      return
+      console.error('load fail:', res);
+      return;
     }
-    res = await axios.get(`${process.env.REACT_APP_API_ROOT}/auth/admin_users`, {
-      headers: { Authorization: token },
-    })
+    res = await axios.get(
+      `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
+      {
+        headers: { Authorization: token },
+      },
+    );
     if (res.status === 200) {
-      setUsers(res.data)
+      setUsers(res.data);
     } else {
-      console.error('load fail:', res)
-      return
+      console.error('load fail:', res);
+      return;
     }
-    setUsersLoaded(true)
+    setUsersLoaded(true);
   }, [token]);
 
   React.useEffect(() => {
-    load()
-  }, [load])
+    load();
+  }, [load]);
 
   function handleEdit(user) {
-    setUserEditing(user)
-    setLeft(permissions.filter((p) => user.role.every((r) => r !== p.id)))
-    setRight(permissions.filter((p) => user.role.some((r) => r === p.id)))
+    setUserEditing(user);
+    setLeft(permissions.filter((p) => user.role.every((r) => r !== p.id)));
+    setRight(permissions.filter((p) => user.role.some((r) => r === p.id)));
   }
 
   function handleDelete(user) {
-    setUserDelete(user)
+    setUserDelete(user);
   }
 
   async function handleDeleteConfirm() {
     if (userDelete.id === user.id) {
-      setErrorMessage('Cannot delete active user.')
-      return
+      setErrorMessage('Cannot delete active user.');
+      return;
     }
     try {
-      setSaveInProgress(true)
+      setSaveInProgress(true);
       const res = await axios.delete(
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userDelete.id}`,
         {
           headers: { Authorization: token },
-        }
-      )
-      setSaveInProgress(false)
+        },
+      );
+      setSaveInProgress(false);
       if (res.status === 204) {
-        showSnackbar(`User ${userDelete.userName} successfully deleted`)
-        setUserDelete(undefined)
-        setErrorMessage('')
-        load()
+        showSnackbar(`User ${userDelete.userName} successfully deleted`);
+        setUserDelete(undefined);
+        setErrorMessage('');
+        load();
       } else {
-        console.error('delete fail:', res)
-        setErrorMessage('An error occured while deleting user. Please contact the system admin.')
-        return
+        console.error('delete fail:', res);
+        setErrorMessage(
+          'An error occured while deleting user. Please contact the system admin.',
+        );
+        return;
       }
     } catch (e) {
-      setSaveInProgress(false)
-      console.error(e)
-      setErrorMessage('An error occured while deleting user. Please contact the system admin.')
+      setSaveInProgress(false);
+      console.error(e);
+      setErrorMessage(
+        'An error occured while deleting user. Please contact the system admin.',
+      );
     }
   }
 
   function handleDeleteCancel() {
-    setUserDelete(undefined)
-    setErrorMessage('')
+    setUserDelete(undefined);
+    setErrorMessage('');
   }
 
   function handlePasswordClose() {
-    setUserPassword(undefined)
-    setCopyMsg('')
+    setUserPassword(undefined);
+    setCopyMsg('');
   }
 
   function handleClose() {}
 
-  const [checked, setChecked] = React.useState([])
-  const [left, setLeft] = React.useState(permissions)
-  const [right, setRight] = React.useState([])
+  const [checked, setChecked] = React.useState([]);
+  const [left, setLeft] = React.useState(permissions);
+  const [right, setRight] = React.useState([]);
 
-  const leftChecked = intersection(checked, left)
-  const rightChecked = intersection(checked, right)
+  const leftChecked = intersection(checked, left);
+  const rightChecked = intersection(checked, right);
 
   const handleToggle = (value) => () => {
-    const currentIndex = checked.findIndex((e) => e.id === value.id)
-    const newChecked = [...checked]
+    const currentIndex = checked.findIndex((e) => e.id === value.id);
+    const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value)
+      newChecked.push(value);
     } else {
-      newChecked.splice(currentIndex, 1)
+      newChecked.splice(currentIndex, 1);
     }
 
-    setChecked(newChecked)
-  }
+    setChecked(newChecked);
+  };
 
   const handleAllRight = () => {
-    setRight(right.concat(left))
-    setLeft([])
-  }
+    setRight(right.concat(left));
+    setLeft([]);
+  };
 
   const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked))
-    setLeft(not(left, leftChecked))
-    setChecked(not(checked, leftChecked))
-  }
+    setRight(right.concat(leftChecked));
+    setLeft(not(left, leftChecked));
+    setChecked(not(checked, leftChecked));
+  };
 
   const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked))
-    setRight(not(right, rightChecked))
-    setChecked(not(checked, rightChecked))
-  }
+    setLeft(left.concat(rightChecked));
+    setRight(not(right, rightChecked));
+    setChecked(not(checked, rightChecked));
+  };
 
   const handleAllLeft = () => {
-    setLeft(left.concat(right))
-    setRight([])
-  }
+    setLeft(left.concat(right));
+    setRight([]);
+  };
   const customList = (items) => (
     <Paper variant="outlined" className={classes.paper}>
       <List dense component="div" role="list">
         {items.map((value) => {
-          const labelId = `transfer-list-item-${value.id}-label`
+          const labelId = `transfer-list-item-${value.id}-label`;
 
           return (
-            <ListItem key={value.id} role="listitem" button onClick={handleToggle(value)}>
+            <ListItem
+              key={value.id}
+              role="listitem"
+              button
+              onClick={handleToggle(value)}
+            >
               <ListItemIcon>
                 <Checkbox
                   checked={checked.findIndex((e) => e.id === value.id) !== -1}
@@ -282,20 +298,24 @@ function Users(props) {
               </ListItemIcon>
               <ListItemText id={labelId} primary={value.roleName} />
             </ListItem>
-          )
+          );
         })}
         <ListItem />
       </List>
     </Paper>
-  )
+  );
   async function handleSave() {
-    if (userEditing.userName === '' || right === undefined || right.length === 0) {
-      setErrorMessage('Missing Field')
-      return
+    if (
+      userEditing.userName === '' ||
+      right === undefined ||
+      right.length === 0
+    ) {
+      setErrorMessage('Missing Field');
+      return;
     }
     //upload
 
-    setSaveInProgress(true)
+    setSaveInProgress(true);
     if (userEditing.id === undefined) {
       //add
       let res = await axios.post(
@@ -306,17 +326,17 @@ function Users(props) {
         },
         {
           headers: { Authorization: token },
-        }
-      )
-      setSaveInProgress(false)
+        },
+      );
+      setSaveInProgress(false);
       if (res.status === 201) {
-        showSnackbar(`User ${userEditing.userName} saved`)
-        setUserEditing(undefined)
-        setRight([])
-        load()
+        showSnackbar(`User ${userEditing.userName} saved`);
+        setUserEditing(undefined);
+        setRight([]);
+        load();
       } else {
-        console.error('load fail:', res)
-        return
+        console.error('load fail:', res);
+        return;
       }
     } else {
       let res = await axios.patch(
@@ -327,17 +347,17 @@ function Users(props) {
         },
         {
           headers: { Authorization: token },
-        }
-      )
-      setSaveInProgress(false)
+        },
+      );
+      setSaveInProgress(false);
       if (res.status === 200) {
-        showSnackbar(`User ${userEditing.userName} saved`)
-        setUserEditing(undefined)
-        setRight([])
-        load()
+        showSnackbar(`User ${userEditing.userName} saved`);
+        setUserEditing(undefined);
+        setRight([]);
+        load();
       } else {
-        console.error('load fail:', res)
-        return
+        console.error('load fail:', res);
+        return;
       }
     }
   }
@@ -347,14 +367,14 @@ function Users(props) {
     let pwd = pwdGenerator.generate({
       length: 10,
       numbers: true /*generated pwd comprised of number, upper/lowercase */,
-    })
-    setNewPassword(pwd)
-    setUserPassword(user)
+    });
+    setNewPassword(pwd);
+    setUserPassword(user);
   }
 
   async function handleSavePassword() {
     //upload
-    setSaveInProgress(true)
+    setSaveInProgress(true);
     let res = await axios.put(
       `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userPassword.id}/password`,
       {
@@ -362,41 +382,51 @@ function Users(props) {
       },
       {
         headers: { Authorization: token },
-      }
-    )
-    setSaveInProgress(false)
+      },
+    );
+    setSaveInProgress(false);
     if (res.status === 200) {
-      showSnackbar(`Password saved for ${userPassword.userName}`)
-      setUserPassword(undefined)
-      load()
+      showSnackbar(`Password saved for ${userPassword.userName}`);
+      setUserPassword(undefined);
+      load();
     } else {
-      console.error('load fail:', res)
-      return
+      console.error('load fail:', res);
+      return;
     }
   }
 
   function handlePermission() {
-    setPermissionsShown(true)
+    setPermissionsShown(true);
   }
 
   function handleUsernameChange(e) {
-    setUserEditing({ ...userEditing, userName: e.target.value })
+    handleUniqueUsername(e);
+    setUserEditing({ ...userEditing, userName: e.target.value });
+  }
+
+  function handleUniqueUsername(e) {
+    setUserNameValid(true);
+    users.forEach((user) => {
+      if (user.userName === e.target.value) {
+        setUserNameValid(false);
+      }
+    });
   }
 
   function handleFirstNameChange(e) {
-    setUserEditing({ ...userEditing, firstName: e.target.value })
+    setUserEditing({ ...userEditing, firstName: e.target.value });
   }
 
   function handleLastNameChange(e) {
-    setUserEditing({ ...userEditing, lastName: e.target.value })
+    setUserEditing({ ...userEditing, lastName: e.target.value });
   }
 
   function handleEmailChange(e) {
-    setUserEditing({ ...userEditing, email: e.target.value })
+    setUserEditing({ ...userEditing, email: e.target.value });
   }
 
   function handleStatusChange(e) {
-    setUserEditing({ ...userEditing, enabled: e.target.value === ENABLED })
+    setUserEditing({ ...userEditing, enabled: e.target.value === ENABLED });
   }
 
   function handleAddUser() {
@@ -407,36 +437,38 @@ function Users(props) {
       email: '',
       active: true,
       enabled: true,
-    })
-    setLeft(permissions)
+    });
+    setLeft(permissions);
   }
 
   function handleUserDetailClose() {
-    setErrorMessage('')
-    setRight([])
-    setLeft(permissions)
-    setChecked([])
-    setUserEditing(undefined)
-    setRight([])
+    setErrorMessage('');
+    setRight([]);
+    setLeft(permissions);
+    setChecked([]);
+    setUserEditing(undefined);
+    setRight([]);
   }
 
   const handleCopy = () => {
     /*get the deep nested <input> tag from <TextField/> */
-    passwordRef.current.childNodes[1].childNodes[0].select()
-    document.execCommand('copy')
-    setCopyMsg('Copied!')
-  }
+    passwordRef.current.childNodes[1].childNodes[0].select();
+    document.execCommand('copy');
+    setCopyMsg('Copied!');
+  };
 
   const handleError = (userEditing, key) => {
-    return userEditing && userEditing[key] && /\s/.test(userEditing[key]) ? true : false
-  }
+    return userEditing && userEditing[key] && /\s/.test(userEditing[key])
+      ? true
+      : false;
+  };
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
       return;
     }
-    setSnackbarOpen(false)
-    setSnackbarMesssage('')
+    setSnackbarOpen(false);
+    setSnackbarMesssage('');
   }
 
   function showSnackbar(message) {
@@ -445,8 +477,8 @@ function Users(props) {
   }
 
   function mapSortedUsrs(users, option = 'id') {
-    const sortedUsrs = users.sort((a, b) => a[option] - b[option])
-    return mapUsrs(sortedUsrs)
+    const sortedUsrs = users.sort((a, b) => a[option] - b[option]);
+    return mapUsrs(sortedUsrs);
   }
 
   function mapUsrs(users) {
@@ -459,14 +491,19 @@ function Users(props) {
           {user.firstName} {user.lastName}
         </TableCell>
         <TableCell>
-          {user.enabled ?
-            ENABLED : <span className={classes.disabledUser}>{DISABLED}</span>
-          }
+          {user.enabled ? (
+            ENABLED
+          ) : (
+            <span className={classes.disabledUser}>{DISABLED}</span>
+          )}
         </TableCell>
         <TableCell>
           {user.role.map((r, idx) => (
             <Grid key={`role_${idx}`}>
-              {permissions.reduce((a, c) => a || (c.id === r ? c.roleName : undefined), undefined)}
+              {permissions.reduce(
+                (a, c) => a || (c.id === r ? c.roleName : undefined),
+                undefined,
+              )}
             </Grid>
           ))}
         </TableCell>
@@ -480,14 +517,17 @@ function Users(props) {
           <IconButton title="delete" onClick={() => handleDelete(user)}>
             <Delete />
           </IconButton>
-          <IconButton title="change password" onClick={() => handleChangePassword(user)}>
+          <IconButton
+            title="change password"
+            onClick={() => handleChangePassword(user)}
+          >
             <VpnKey />
           </IconButton>
         </TableCell>
       </TableRow>
-    ))
+    ));
   }
-
+  console.log(userNameValid);
   return (
     <>
       <Grid container className={classes.box}>
@@ -499,7 +539,11 @@ function Users(props) {
         <Grid item xs={9}>
           <Grid container className={classes.rightBox}>
             <Grid item xs={12}>
-              <Grid container justify="space-between" className={classes.titleBox}>
+              <Grid
+                container
+                justify="space-between"
+                className={classes.titleBox}
+              >
                 <Grid item>
                   <Grid container>
                     <Grid item>
@@ -533,7 +577,10 @@ function Users(props) {
                           <Grid container justfy="center" alignItems="center">
                             <Grid item>Role</Grid>
                             <Grid item>
-                              <IconButton onClick={handlePermission} size="small">
+                              <IconButton
+                                onClick={handlePermission}
+                                size="small"
+                              >
                                 <Help />
                               </IconButton>
                             </Grid>
@@ -543,15 +590,15 @@ function Users(props) {
                         <TableCell>Operations</TableCell>
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {mapSortedUsrs(users)}
-                    </TableBody>
+                    <TableBody>{mapSortedUsrs(users)}</TableBody>
                   </Table>
                 </TableContainer>
               </Grid>
-              {!usersLoaded &&
-                <Grid item container className={classes.progressContainer}><CircularProgress /></Grid>
-              }
+              {!usersLoaded && (
+                <Grid item container className={classes.progressContainer}>
+                  <CircularProgress />
+                </Grid>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -572,23 +619,31 @@ function Users(props) {
           <TextField
             autoFocus
             id="userName"
-            label="Username"
+            label={userNameValid ? 'Username' : 'Error'}
             type="text"
             variant="outlined"
             fullWidth
             InputLabelProps={{
               shrink: true,
             }}
-            disabled={userEditing && userEditing.id !== undefined ? true : false}
+            disabled={
+              userEditing && userEditing.id !== undefined ? true : false
+            }
             value={(userEditing && userEditing.userName) || ''}
-            error={handleError(userEditing, ['userName'])}
-            helperText={handleError(userEditing, ['userName']) ? 'No space allowed' : ''}
+            error={handleError(userEditing, ['userName']) || !userNameValid}
+            helperText={
+              handleError(userEditing, ['userName'])
+                ? 'No space allowed'
+                : userNameValid
+                ? ''
+                : 'Username already exists'
+            }
             className={classes.input}
             onChange={handleUsernameChange}
           />
           <Grid container>
             <Grid item className={classes.firstName}>
-               <TextField
+              <TextField
                 id="firstName"
                 label="First Name"
                 type="text"
@@ -636,12 +691,17 @@ function Users(props) {
             <RadioGroup
               row
               name="User status radios"
-              value={(userEditing && userEditing.enabled ? ENABLED : DISABLED)}
+              value={userEditing && userEditing.enabled ? ENABLED : DISABLED}
               onChange={handleStatusChange}
-              >
-              {[ENABLED, DISABLED].map(val =>
-                <FormControlLabel key={val} value={val} control={<Radio />} label={val} />
-              )}
+            >
+              {[ENABLED, DISABLED].map((val) => (
+                <FormControlLabel
+                  key={val}
+                  value={val}
+                  control={<Radio />}
+                  label={val}
+                />
+              ))}
             </RadioGroup>
           </FormControl>
           {userEditing && userEditing.createdAt && (
@@ -651,12 +711,19 @@ function Users(props) {
               </Grid>
               <Grid item>
                 <Typography>
-                  {userEditing && getDateTimeStringLocale(userEditing.createdAt)}
+                  {userEditing &&
+                    getDateTimeStringLocale(userEditing.createdAt)}
                 </Typography>
               </Grid>
             </Grid>
           )}
-          <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            alignItems="center"
+            className={classes.root}
+          >
             <Grid item role="list">
               <Typography>Roles</Typography>
               {customList(left)}
@@ -712,9 +779,22 @@ function Users(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleUserDetailClose} disabled={saveInProgress}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained" color="primary"
-            disabled={saveInProgress || !userEditing || !userEditing.userName || !right || right.length === 0}>
+          <Button onClick={handleUserDetailClose} disabled={saveInProgress}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            color="primary"
+            disabled={
+              saveInProgress ||
+              !userEditing ||
+              !userEditing.userName ||
+              !right ||
+              right.length === 0 ||
+              !userNameValid
+            }
+          >
             {saveInProgress ? <CircularProgress size={21} /> : 'Save'}
           </Button>
         </DialogActions>
@@ -738,7 +818,8 @@ function Users(props) {
             </Grid>
             <Grid item xs={11}>
               <Typography className={classes.note}>
-                Please be careful. Once you save a new password, the current password for this user will no longer work.
+                Please be careful. Once you save a new password, the current
+                password for this user will no longer work.
               </Typography>
             </Grid>
           </Grid>
@@ -778,9 +859,15 @@ function Users(props) {
           <Box height={20} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handlePasswordClose} disabled={saveInProgress}>Cancel</Button>
-          <Button onClick={handleSavePassword} variant="contained" color="primary"
-            disabled={saveInProgress || !newPassword}>
+          <Button onClick={handlePasswordClose} disabled={saveInProgress}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSavePassword}
+            variant="contained"
+            color="primary"
+            disabled={saveInProgress || !newPassword}
+          >
             {saveInProgress ? <CircularProgress size={21} /> : 'Save'}
           </Button>
         </DialogActions>
@@ -801,17 +888,23 @@ function Users(props) {
         </DialogContent>
         <DialogActions>
           <Typography color="error">{errorMessage}</Typography>
-          <Button onClick={handleDeleteCancel} variant="contained" color="primary">
+          <Button
+            onClick={handleDeleteCancel}
+            variant="contained"
+            color="primary"
+          >
             Cancel
           </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            disabled={saveInProgress}>
+          <Button onClick={handleDeleteConfirm} disabled={saveInProgress}>
             {saveInProgress ? <CircularProgress size={21} /> : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={isPermissionsShow} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={isPermissionsShow}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Roles Description</DialogTitle>
         <DialogContent>
           <TableContainer component={Paper}>
@@ -848,14 +941,19 @@ function Users(props) {
         message={snackbarMessage}
         action={
           <React.Fragment>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
               <CloseIcon fontSize="small" />
             </IconButton>
           </React.Fragment>
         }
       />
     </>
-  )
+  );
 }
 
-export default withStyles(style)(Users)
+export default withStyles(style)(Users);
