@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.1.2...v1.2.0) (2021-02-25)
+
+
+### Features
+
+* header logo redirect to home ([#30](https://github.com/Greenstand/treetracker-admin-client/issues/30)) ([9e976a6](https://github.com/Greenstand/treetracker-admin-client/commit/9e976a641f126c8f46b3cb53d2ed833bd0ee662e))
+
 ## [1.1.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.1.1...v1.1.2) (2021-02-24)
 
 
