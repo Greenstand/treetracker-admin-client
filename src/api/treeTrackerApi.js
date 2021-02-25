@@ -239,6 +239,27 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  combineSpecies(combine, name, desc) {
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species/combine`;
+    return fetch(query, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify({
+        combine,
+        species: {
+          name,
+          desc,
+          active: 0,
+          valueFactor: 0,
+        },
+      }),
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   /*
    * get tree count by species
    */

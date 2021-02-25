@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  Checkbox,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   TableContainer,
   Table,
   TableHead,
@@ -52,6 +56,7 @@ const styles = (theme) => ({
   },
   addUser: {
     color: 'white',
+    marginLeft: '20px',
   },
   input: {
     margin: theme.spacing(0, 1, 4, 1),
@@ -93,6 +98,15 @@ const styles = (theme) => ({
     bottom: 12,
     left: 10,
   },
+  listItem: {
+    padding: '0 16px',
+  },
+  paddingBottom: {
+    paddingBottom: '24px',
+  },
+  minWidth: {
+    minWidth: '320px',
+  },
 });
 
 const SpeciesTable = (props) => {
@@ -107,6 +121,8 @@ const SpeciesTable = (props) => {
   const [openDelete, setOpenDelete] = React.useState(false);
   const [sortedSpeciesList, setSortedSpeciesList] = React.useState([]);
   const [option, setOption] = React.useState(sortOptions.byName);
+  const [selected, setSelected] = React.useState([]);
+  const [showCombine, setShowCombine] = React.useState(false);
 
   const tableRef = React.useRef(null);
 
@@ -165,6 +181,16 @@ const SpeciesTable = (props) => {
     setOpenDelete(true);
   };
 
+  const openCombineModal = () => {
+    if (selected.length > 1) setShowCombine(true);
+    else alert('Please select two or more species to be combined!');
+  };
+
+  const handleSelect = (checked, id) => {
+    if (checked) setSelected([...selected, id]);
+    else setSelected(selected.filter((item) => item !== id));
+  };
+
   const renderSpecies = () => {
     return (rowsPerPage > 0
       ? sortedSpeciesList.slice(
@@ -174,6 +200,11 @@ const SpeciesTable = (props) => {
       : sortedSpeciesList
     ).map((species) => (
       <TableRow key={species.id} role="listitem">
+        <TableCell>
+          <Checkbox
+            onChange={(e) => handleSelect(e.target.checked, species.id)}
+          />
+        </TableCell>
         <TableCell component="th" scope="row">
           {species.id}
         </TableCell>
@@ -234,6 +265,13 @@ const SpeciesTable = (props) => {
               </Grid>
               <Grid item className={classes.addUserBox}>
                 <Button
+                  onClick={openCombineModal}
+                  variant="outlined"
+                  color="primary"
+                >
+                  COMBINE SPECIES
+                </Button>
+                <Button
                   onClick={() => setIsAdding(true)}
                   variant="contained"
                   className={classes.addUser}
@@ -248,6 +286,7 @@ const SpeciesTable = (props) => {
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
+                      <TableCell></TableCell>
                       <TableCell>
                         ID
                         <IconButton
@@ -309,6 +348,15 @@ const SpeciesTable = (props) => {
         deleteSpecies={props.speciesDispatch.deleteSpecies}
         loadSpeciesList={props.speciesDispatch.loadSpeciesList}
       />
+      <CombineModal
+        show={showCombine}
+        setShow={setShowCombine}
+        data={sortedSpeciesList}
+        combineSpecies={props.speciesDispatch.combineSpecies}
+        loadSpeciesList={props.speciesDispatch.loadSpeciesList}
+        selected={selected}
+        styles={{ ...classes }}
+      />
     </>
   );
 };
@@ -323,12 +371,10 @@ const EditModal = ({
   editSpecies,
 }) => {
   const onNameChange = (e) => {
-    console.log(e.target.value);
     setSpeciesEdit({ ...speciesEdit, name: e.target.value });
   };
 
   const onDescChange = (e) => {
-    console.log(e.target.value);
     setSpeciesEdit({ ...speciesEdit, desc: e.target.value });
   };
 
@@ -371,7 +417,6 @@ const EditModal = ({
           </Grid>
           <Grid item className={styles.desc}>
             <TextField
-              autoFocus
               id="desc"
               label="Description"
               type="text"
@@ -390,6 +435,101 @@ const EditModal = ({
       <DialogActions>
         <Button onClick={handleEditDetailClose}>Cancel</Button>
         <Button onClick={handleSave} variant="contained" color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const CombineModal = ({
+  show,
+  setShow,
+  selected,
+  data,
+  combineSpecies,
+  loadSpeciesList,
+  styles,
+}) => {
+  const [name, setName] = React.useState('');
+  const [desc, setDesc] = React.useState('');
+
+  const list = data
+    .filter((species) => selected.includes(species.id))
+    .map((species) => species.name);
+
+  const handleClose = () => {
+    setShow(false);
+    setName('');
+    setDesc('');
+  };
+
+  const handleSave = async () => {
+    if (!name || !desc) return;
+
+    setShow(false);
+    await combineSpecies({ combine: selected, name, desc });
+    loadSpeciesList();
+    setName('');
+    setDesc('');
+  };
+
+  return (
+    <Dialog open={show} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Combine Species</DialogTitle>
+      <DialogContent>
+        <Grid container>
+          <Grid item>
+            <Typography variant="body1">Combining:</Typography>
+            <List>
+              {list.map((item) => (
+                <ListItem className={styles.listItem} key={item}>
+                  <ListItemText primary={item} />
+                </ListItem>
+              ))}
+            </List>
+            <Typography variant="body1" className={styles.paddingBottom}>
+              As:
+            </Typography>
+            <Grid container>
+              <Grid item className={styles.name}>
+                <TextField
+                  autoFocus
+                  id="name"
+                  label="Name"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={name}
+                  className={styles.input}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Grid>
+              <Grid item className={styles.desc}>
+                <TextField
+                  id="desc"
+                  label="Description"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={desc}
+                  className={styles.input}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button variant="contained" color="primary" onClick={handleSave}>
           Save
         </Button>
       </DialogActions>
