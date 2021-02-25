@@ -1,8 +1,8 @@
 /*
  * The model for planter page
  */
-import api from "../api/planters";
-import FilterPlanter from "./FilterPlanter";
+import api from '../api/planters';
+import FilterPlanter from './FilterPlanter';
 
 const planters = {
   state: {
@@ -14,42 +14,42 @@ const planters = {
     isLoading: false,
   },
   reducers: {
-    setPlanters(state, planters){
+    setPlanters(state, planters) {
       return {
         ...state,
-        planters
+        planters,
       };
     },
-    setCurrentPage(state, currentPage){
+    setCurrentPage(state, currentPage) {
       return {
         ...state,
         currentPage,
-      }
+      };
     },
-    setPageSize(state, pageSize){
+    setPageSize(state, pageSize) {
       return {
         ...state,
         pageSize,
-      }
+      };
     },
-    setCount(state, count){
+    setCount(state, count) {
       return {
         ...state,
         count,
-      }
+      };
     },
-    setFilter(state, filter){
+    setFilter(state, filter) {
       return {
         ...state,
         filter,
-      }
+      };
     },
-    setIsLoading(state, isLoading){
+    setIsLoading(state, isLoading) {
       return {
         ...state,
         isLoading,
-      }
-    }
+      };
+    },
   },
   effects: {
     /*
@@ -57,10 +57,10 @@ const planters = {
      *  pageNumber,
      * }
      */
-    async getPlanter(payload, state){
+    async getPlanter(payload, state) {
       const { id } = payload;
       // Look for a match in the local model first
-      let planter = state.planters.planters.find(p => p.id === id);
+      let planter = state.planters.planters.find((p) => p.id === id);
       if (!planter) {
         // Otherwise query the API
         planter = await api.getPlanter(id);
@@ -68,10 +68,14 @@ const planters = {
       return planter;
     },
 
-    async load(payload, state){
+    async load(payload, state) {
       this.setIsLoading(true);
-      const filter = payload.filter || state.planters.filter || new FilterPlanter()
-      const pageNumber = payload.pageNumber === undefined ? state.planters.currentPage : payload.pageNumber
+      const filter =
+        payload.filter || state.planters.filter || new FilterPlanter();
+      const pageNumber =
+        payload.pageNumber === undefined
+          ? state.planters.currentPage
+          : payload.pageNumber;
       const planters = await api.getPlanters({
         skip: pageNumber * state.planters.pageSize,
         rowsPerPage: state.planters.pageSize,
@@ -84,20 +88,26 @@ const planters = {
       this.setIsLoading(false);
       return true;
     },
-    async changePageSize(payload, _state){
+    async changePageSize(payload) {
       this.setPageSize(payload.pageSize);
     },
-    async count(_payload, state){
-      const {count} = await api.getCount({filter: state.planters.filter});
+    async count(_payload, state) {
+      const { count } = await api.getCount({ filter: state.planters.filter });
       this.setCount(count);
       return true;
     },
     async updatePlanter(payload, state) {
       await api.updatePlanter(payload);
       const updatedPlanter = await api.getPlanter(payload.id);
-      const index = state.planters.planters.findIndex((p) => p.id === updatedPlanter.id);
+      const index = state.planters.planters.findIndex(
+        (p) => p.id === updatedPlanter.id,
+      );
       if (index >= 0) {
-        this.setPlanters(Object.assign([], state.planters.planters, {[index]: updatedPlanter}));
+        this.setPlanters(
+          Object.assign([], state.planters.planters, {
+            [index]: updatedPlanter,
+          }),
+        );
       }
     },
   },

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
@@ -11,120 +11,127 @@ import {
   TextField,
   CircularProgress,
   MenuItem,
-} from '@material-ui/core'
-import api from '../api/planters'
-import ImageScroller from './ImageScroller'
+} from '@material-ui/core';
+import api from '../api/planters';
+import ImageScroller from './ImageScroller';
 import { getOrganization } from '../api/apiUtils';
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles((theme) => ({
   container: {
     position: 'relative',
     padding: theme.spacing(0, 4),
   },
   textInput: {
-    margin: theme.spacing(2,1),
+    margin: theme.spacing(2, 1),
     flexGrow: 1,
   },
 }));
 
 const EditPlanter = (props) => {
-  
-  const classes = useStyle()
-  const { isOpen, planter, onClose } = props
+  const classes = useStyle();
+  const { isOpen, planter, onClose } = props;
 
-  const [planterImages, setPlanterImages] = useState([])
-  const [planterUpdate, setPlanterUpdate] = useState(null)
-  const [loadingPlanterImages, setLoadingPlanterImages] = useState(false)
-  const [saveInProgress, setSaveInProgress] = useState(false)
+  const [planterImages, setPlanterImages] = useState([]);
+  const [planterUpdate, setPlanterUpdate] = useState(null);
+  const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
+  const [saveInProgress, setSaveInProgress] = useState(false);
 
   useEffect(() => {
-    props.organizationDispatch.loadOrganizations()
-  }, [props.organizationDispatch])
+    props.organizationDispatch.loadOrganizations();
+  }, [props.organizationDispatch]);
 
   useEffect(() => {
     async function loadPlanterImages() {
       if (planter?.id) {
-        setLoadingPlanterImages(true)
-        const selfies = await api.getPlanterSelfies(planter.id)
-        setLoadingPlanterImages(false)
+        setLoadingPlanterImages(true);
+        const selfies = await api.getPlanterSelfies(planter.id);
+        setLoadingPlanterImages(false);
 
         setPlanterImages([
           ...(planter.imageUrl ? [planter.imageUrl] : []),
-          ...selfies.filter(img => img !== planter.imageUrl),
-        ])
+          ...selfies.filter((img) => img !== planter.imageUrl),
+        ]);
       }
     }
 
-    setPlanterUpdate(null)
-    loadPlanterImages()
-  }, [planter])
+    setPlanterUpdate(null);
+    loadPlanterImages();
+  }, [planter]);
 
   async function handleSave() {
     if (planterUpdate) {
-      setSaveInProgress(true)
+      setSaveInProgress(true);
       // TODO handle errors
-      await props.plantersDispatch.updatePlanter({id: planter.id, ...planterUpdate})
-      setSaveInProgress(false)
+      await props.plantersDispatch.updatePlanter({
+        id: planter.id,
+        ...planterUpdate,
+      });
+      setSaveInProgress(false);
     }
-    onClose()
+    onClose();
   }
 
   function handleCancel() {
-    onClose()
+    onClose();
   }
 
   function handleChange(key, val) {
-    let newPlanter = {...planterUpdate}
-    newPlanter[key] = val
+    let newPlanter = { ...planterUpdate };
+    newPlanter[key] = val;
 
     const changed = Object.keys(newPlanter).some((key) => {
       return newPlanter[key] !== planter[key];
-    })
+    });
 
     if (changed) {
-      setPlanterUpdate(newPlanter)
+      setPlanterUpdate(newPlanter);
     } else {
-      setPlanterUpdate(null)
+      setPlanterUpdate(null);
     }
   }
 
   function handleSelectPlanterImage(img) {
-    handleChange('imageUrl', img)
+    handleChange('imageUrl', img);
   }
 
   function getValue(attr) {
     // Ensure empty strings are not overlooked
     if (planterUpdate?.[attr] != null) {
-      return planterUpdate[attr]
+      return planterUpdate[attr];
     } else if (planter[attr] != null) {
-      return planter[attr]
+      return planter[attr];
     }
-    return ''
+    return '';
   }
 
-  const inputs = [[
-    {
-      attr: 'firstName',
-      label: 'First Name',
-    },{
-      attr: 'lastName',
-      label: 'Last Name',
-    },
-  ],[
-    {
-      attr: 'email',
-      label: 'Email Address',
-      type: 'email'
-    },
-  ],[
-    {
-      attr: 'phone',
-      label: 'Phone Number',
-      type: 'tel'
-    },
-  ]]
+  const inputs = [
+    [
+      {
+        attr: 'firstName',
+        label: 'First Name',
+      },
+      {
+        attr: 'lastName',
+        label: 'Last Name',
+      },
+    ],
+    [
+      {
+        attr: 'email',
+        label: 'Email Address',
+        type: 'email',
+      },
+    ],
+    [
+      {
+        attr: 'phone',
+        label: 'Phone Number',
+        type: 'tel',
+      },
+    ],
+  ];
 
-  return(
+  return (
     <Dialog open={isOpen} aria-labelledby="form-dialog-title" maxWidth={false}>
       <DialogTitle id="form-dialog-title">Edit Planter</DialogTitle>
       <DialogContent>
@@ -149,44 +156,51 @@ const EditPlanter = (props) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  onChange={(e) => {handleChange(input.attr, e.target.value)}}
+                  onChange={(e) => {
+                    handleChange(input.attr, e.target.value);
+                  }}
                   value={getValue(input.attr)}
                 />
               ))}
             </Grid>
           ))}
           <Grid item container>
-            {!getOrganization() && <TextField
+            {!getOrganization() && (
+              <TextField
                 select
                 className={classes.textInput}
-                label='Organization'
+                label="Organization"
                 value={getValue('organizationId')}
-                onChange={(e) => {handleChange('organizationId', e.target.value)}}
-                >
-                {[
-                  ...props.organizationState.organizationList
-                ].map((org) => (
+                onChange={(e) => {
+                  handleChange('organizationId', e.target.value);
+                }}
+              >
+                {[...props.organizationState.organizationList].map((org) => (
                   <MenuItem key={org.id} value={org.id}>
                     {org.name}
                   </MenuItem>
                 ))}
-              </TextField>}
+              </TextField>
+            )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button id="save" onClick={handleSave} variant="contained" color="primary"
-                disabled={!planterUpdate || saveInProgress}>
+        <Button onClick={handleCancel}>Cancel</Button>
+        <Button
+          id="save"
+          onClick={handleSave}
+          variant="contained"
+          color="primary"
+          disabled={!planterUpdate || saveInProgress}
+        >
           {saveInProgress ? <CircularProgress size={21} /> : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
-export {EditPlanter}
+  );
+};
+export { EditPlanter };
 
 export default connect(
   (state) => ({
@@ -197,4 +211,4 @@ export default connect(
     plantersDispatch: dispatch.planters,
     organizationDispatch: dispatch.organizations,
   }),
-)(EditPlanter)
+)(EditPlanter);

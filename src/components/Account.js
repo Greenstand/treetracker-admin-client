@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import React, { lazy, Suspense } from 'react';
 import {
   Grid,
   Paper,
@@ -11,13 +11,13 @@ import {
   TextField,
   DialogTitle,
   CircularProgress,
-} from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
-import Menu from './common/Menu'
-import AccountIcon from '@material-ui/icons/Person'
-import { AppContext } from './Context'
-import axios from 'axios'
-import { getDateTimeStringLocale } from '../common/locale'
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import Menu from './common/Menu';
+import AccountIcon from '@material-ui/icons/Person';
+import { AppContext } from './Context';
+import axios from 'axios';
+import { getDateTimeStringLocale } from '../common/locale';
 
 const style = (theme) => ({
   box: {
@@ -54,57 +54,60 @@ const style = (theme) => ({
   logout: {
     width: 250,
   },
-})
+});
 
-const PasswordStrengthMeter = lazy(() => import('./PasswordStrengthMeter'))
+const PasswordStrengthMeter = lazy(() => import('./PasswordStrengthMeter'));
 const renderLoader = () => (
-  <CircularProgress size={24} classes={{ position: 'absolute', top: '50%', left: '50%' }} />
-)
+  <CircularProgress
+    size={24}
+    classes={{ position: 'absolute', top: '50%', left: '50%' }}
+  />
+);
 
 function Account(props) {
-  const { classes } = props
-  const appContext = React.useContext(AppContext)
-  const { user, token } = appContext
-  const [openPwdForm, setOpenPwdForm] = React.useState(false)
-  const [oldPassword, setOldPassword] = React.useState('')
-  const [newPassword, setNewPassword] = React.useState('')
-  const [confirmedPassword, setConfirmedPassword] = React.useState('')
-  const [errorMessage, setErrorMessage] = React.useState('')
+  const { classes } = props;
+  const appContext = React.useContext(AppContext);
+  const { user, token } = appContext;
+  const [openPwdForm, setOpenPwdForm] = React.useState(false);
+  const [oldPassword, setOldPassword] = React.useState('');
+  const [newPassword, setNewPassword] = React.useState('');
+  const [confirmedPassword, setConfirmedPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   function handleLogout() {
-    appContext.logout()
+    appContext.logout();
   }
 
   const handleClickOpen = () => {
-    setOpenPwdForm(true)
-  }
+    setOpenPwdForm(true);
+  };
 
   const handleClose = () => {
-    setOpenPwdForm(false)
-    setErrorMessage('')
-    setOldPassword('')
-    setNewPassword('')
-    setConfirmedPassword('')
-  }
+    setOpenPwdForm(false);
+    setErrorMessage('');
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmedPassword('');
+  };
 
   const onChangeOldPwd = (e) => {
-    setOldPassword(e.target.value)
-  }
+    setOldPassword(e.target.value);
+  };
 
   const onChangeNewPwd = (e) => {
-    setNewPassword(e.target.value)
-  }
+    setNewPassword(e.target.value);
+  };
 
   const onChangeConfirmedPwd = (e) => {
-    setConfirmedPassword(e.target.value)
-  }
+    setConfirmedPassword(e.target.value);
+  };
 
   const handleConfirm = async (e) => {
-    setErrorMessage('')
-    e.preventDefault()
-    e.stopPropagation()
-    const result1 = await isOldPwdReal(oldPassword)
-    const result2 = await doesNewPwdMatch(newPassword, confirmedPassword)
+    setErrorMessage('');
+    e.preventDefault();
+    e.stopPropagation();
+    const result1 = await isOldPwdReal(oldPassword);
+    const result2 = await doesNewPwdMatch(newPassword, confirmedPassword);
     if (result1 && result2) {
       //patch the new password
       let res = await axios.put(
@@ -114,36 +117,36 @@ function Account(props) {
         },
         {
           headers: { Authorization: token },
-        }
-      )
+        },
+      );
       if (res.status === 200) {
         /*WARN!no update on the appContext here*/
-        setErrorMessage('Success!')
+        setErrorMessage('Success!');
         /* remove Remember me and force re-login */
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        appContext.logout()
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        appContext.logout();
       } else {
-        console.error('load fail:', res)
-        return
+        console.error('load fail:', res);
+        return;
       }
     }
-  }
+  };
 
   const doesNewPwdMatch = (newPassword, confirmedPassword) => {
     if (!newPassword.length > 0 || !confirmedPassword.length > 0) {
-      setErrorMessage('Input cannot be empty')
-      return false
+      setErrorMessage('Input cannot be empty');
+      return false;
     } else if (newPassword !== confirmedPassword) {
-      setErrorMessage('New password does not match, please try again')
-      return false
+      setErrorMessage('New password does not match, please try again');
+      return false;
     } else {
-      return true
+      return true;
     }
-  }
+  };
 
   const isOldPwdReal = async (oldPassword) => {
-    let result
+    let result;
 
     try {
       /* TODO: login bypassing admin auth ?*/
@@ -154,64 +157,89 @@ function Account(props) {
         },
         {
           headers: { Authorization: token },
-        }
-      )
+        },
+      );
       if (res.status === 200) {
-        setErrorMessage('')
-        result = true
+        setErrorMessage('');
+        result = true;
       } else if (res.status === 401) {
-        setErrorMessage('Old password incorrect, please check')
-        result = false
+        setErrorMessage('Old password incorrect, please check');
+        result = false;
       }
     } catch (e) {
-      console.error(e)
-      setErrorMessage('Old password incorrect, please check')
-      result = false
+      console.error(e);
+      setErrorMessage('Old password incorrect, please check');
+      result = false;
     }
-    return result
-  }
+    return result;
+  };
 
-
-  const [permissions, setPermissions] = React.useState([])
-  const [users, setUsers] = React.useState([])
+  const [permissions, setPermissions] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
 
   React.useEffect(() => {
     //loading permission from server
     async function load() {
-      let res = await axios.get(`${process.env.REACT_APP_API_ROOT}/auth/permissions`, {
-        headers: { Authorization: token },
-      })
-      if (res.status === 200) {
-        setPermissions(res.data)
-        console.log(res.data);
-      } else {
-        console.error('load fail:', res)
-        return
+      // Get the user's permissions
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setPermissions(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching permissions:', e);
       }
-      res = await axios.get(`${process.env.REACT_APP_API_ROOT}/auth/admin_users`, {
-        headers: { Authorization: token },
-      })
-      if (res.status === 200) {
-        setUsers(res.data)
-      } else {
-        console.error('load fail:', res)
-        return
+
+      // Get the user based on the token
+      try {
+        let res = await axios.get(
+          `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
+          {
+            headers: { Authorization: token },
+          },
+        );
+        if (res.status === 200) {
+          setUsers(res.data);
+        } else {
+          console.error('load fail:', res);
+          return;
+        }
+      } catch (e) {
+        console.error('ERROR fetching admin_users:', e);
       }
     }
 
-    load()
-  }, [token])
+    // Don't try to load if there isn't a token
+    if (token) {
+      load();
+    }
+  }, [token]);
 
-  const freshUser = users.find(el => el.userName === user.userName) || user
-  const roles = freshUser.role.map((r,idx) => {
-    return permissions.reduce((el, p) => {
-      return el || (p && p.id === r &&
-        <Grid key={`role_${idx}`}>
-          {p.roleName}
-        </Grid>
-      )
-    }, undefined)
-  })
+  // Find the user if in the list, or use the given info if not found
+  // Match the user's roles to their assoc. permissions
+  const freshUser = users.find((el) => el.userName === user.userName) || user;
+  const roles = !permissions
+    ? null
+    : freshUser.role.map((r, idx) => {
+        return permissions.reduce((el, p) => {
+          return (
+            el ||
+            (p && p.id === r && (
+              <Grid key={`role_${idx}`}>
+                <Typography className={classes.item}>{p.roleName}</Typography>
+              </Grid>
+            ))
+          );
+        }, undefined);
+      });
 
   return (
     <>
@@ -235,7 +263,9 @@ function Account(props) {
               <Grid container direction="column" className={classes.bodyBox}>
                 <Grid item>
                   <Typography className={classes.title}>Username</Typography>
-                  <Typography className={classes.item}>{user.userName}</Typography>
+                  <Typography className={classes.item}>
+                    {user.userName}
+                  </Typography>
                 </Grid>
                 <Grid item>
                   <Typography className={classes.title}>Name</Typography>
@@ -249,9 +279,7 @@ function Account(props) {
                 </Grid>
                 <Grid item>
                   <Typography className={classes.title}>Role</Typography>
-                  <Typography className={classes.item}>
-                    {roles}
-                  </Typography>
+                  {roles}
                 </Grid>
                 <Grid item>
                   <Typography className={classes.title}>Created</Typography>
@@ -262,7 +290,9 @@ function Account(props) {
                 <Grid item xs={8}>
                   <Grid container justify="space-between">
                     <Grid item>
-                      <Typography className={classes.title}>Password</Typography>
+                      <Typography className={classes.title}>
+                        Password
+                      </Typography>
                     </Grid>
                     <Grid item>
                       <Grid
@@ -294,7 +324,11 @@ function Account(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Dialog open={openPwdForm} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={openPwdForm}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <Suspense fallback={renderLoader()}>
           <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
           <DialogContent>
@@ -354,7 +388,7 @@ function Account(props) {
         </Suspense>
       </Dialog>
     </>
-  )
+  );
 }
 
-export default withStyles(style)(Account)
+export default withStyles(style)(Account);
