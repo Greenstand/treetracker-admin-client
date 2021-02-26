@@ -197,7 +197,7 @@ export default {
       body: JSON.stringify({
         name: payload.name,
         desc: payload.desc,
-        active: 0,
+        active: true,
         valueFactor: 0,
       }),
     })
@@ -217,7 +217,7 @@ export default {
         id: id,
         name: name,
         desc: desc,
-        active: 0,
+        active: true,
         valueFactor: 0,
       }),
     })
@@ -252,7 +252,7 @@ export default {
         species: {
           name,
           desc,
-          active: 0,
+          active: true,
           valueFactor: 0,
         },
       }),
