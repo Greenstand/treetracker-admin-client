@@ -25,6 +25,7 @@ import Radio from '@material-ui/core/Radio';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 
 import FilterTop from './FilterTop';
@@ -163,6 +164,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: '16px',
     paddingRight: '16px',
   },
+  sidePanelSubmitButton: {
+    width: '128px',
+  },
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -174,8 +178,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const TreeImageScrubber = (props) => {
-  log.debug('render TreeImageScrubber...');
-  log.debug('complete:', props.verityState.approveAllComplete);
   const classes = useStyles(props);
   const [complete, setComplete] = React.useState(0);
   const [isFilterShown, setFilterShown] = React.useState(false);
@@ -191,33 +193,33 @@ const TreeImageScrubber = (props) => {
    */
   useEffect(() => {
     log.debug('mounted');
-    props.verityDispatch.loadTreeImages();
-  }, [props.verityDispatch]);
+    props.verifyDispatch.loadTreeImages();
+  }, [props.verifyDispatch]);
 
   /* to display progress */
   useEffect(() => {
-    setComplete(props.verityState.approveAllComplete);
-  }, [props.verityState.approveAllComplete]);
+    setComplete(props.verifyState.approveAllComplete);
+  }, [props.verifyState.approveAllComplete]);
 
   /* To update tree count */
   useEffect(() => {
-    props.verityDispatch.getTreeCount();
-  }, [props.verityDispatch, props.verityState.treeImages]);
+    props.verifyDispatch.getTreeCount();
+  }, [props.verifyDispatch, props.verifyState.treeImages]);
 
   /* load more trees when the page or page size changes */
   useEffect(() => {
-    props.verityDispatch.loadTreeImages();
+    props.verifyDispatch.loadTreeImages();
   }, [
-    props.verityDispatch,
-    props.verityState.pageSize,
-    props.verityState.currentPage,
+    props.verifyDispatch,
+    props.verifyState.pageSize,
+    props.verifyState.currentPage,
   ]);
 
   function handleTreeClick(e, treeId) {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click at tree:%d', treeId);
-    props.verityDispatch.clickTree({
+    props.verifyDispatch.clickTree({
       treeId,
       isShift: e.shiftKey,
       isCmd: e.metaKey,
@@ -241,8 +243,8 @@ const TreeImageScrubber = (props) => {
   async function handleSubmit(approveAction) {
     console.log('approveAction:', approveAction);
     //check selection
-    if (props.verityState.treeImagesSelected.length === 0) {
-      window.alert('Please select some tree');
+    if (props.verifyState.treeImagesSelected.length === 0) {
+      window.alert('Please select one or more trees');
       return;
     }
     /*
@@ -279,13 +281,13 @@ const TreeImageScrubber = (props) => {
      */
     approveAction.tags = await props.tagDispatch.createTags();
 
-    const result = await props.verityDispatch.approveAll({ approveAction });
+    const result = await props.verifyDispatch.approveAll({ approveAction });
     if (!result) {
       window.alert('sorry, failed to approve some picture');
-    } else {
+    } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
-    props.verityDispatch.loadTreeImages();
+    props.verifyDispatch.loadTreeImages();
   }
 
   async function handlePlanterDetail(e, tree) {
@@ -321,33 +323,33 @@ const TreeImageScrubber = (props) => {
   }
 
   function handleChangePageSize(event) {
-    props.verityDispatch.set({ pageSize: event.target.value });
+    props.verifyDispatch.set({ pageSize: event.target.value });
   }
 
   function handleChangePage(event, page) {
-    props.verityDispatch.set({ currentPage: page });
+    props.verifyDispatch.set({ currentPage: page });
   }
 
   function isTreeSelected(id) {
-    return props.verityState.treeImagesSelected.indexOf(id) >= 0;
+    return props.verifyState.treeImagesSelected.indexOf(id) >= 0;
   }
 
-  const treeImages = props.verityState.treeImages.filter((tree, index) => {
+  const treeImages = props.verifyState.treeImages.filter((tree, index) => {
     return (
-      index >= props.verityState.currentPage * props.verityState.pageSize &&
-      index < (props.verityState.currentPage + 1) * props.verityState.pageSize
+      index >= props.verifyState.currentPage * props.verifyState.pageSize &&
+      index < (props.verifyState.currentPage + 1) * props.verifyState.pageSize
     );
   });
 
-  const placeholderImages = props.verityState.isLoading
-    ? Array(props.verityState.pageSize - treeImages.length)
-        .fill()
-        .map((_, index) => {
-          return {
-            id: index,
-            placeholder: true,
-          };
-        })
+  const placeholderImages = props.verifyState.isLoading
+    ? Array(props.verifyState.pageSize - treeImages.length)
+      .fill()
+      .map((_, index) => {
+        return {
+          id: index,
+          placeholder: true,
+        };
+      })
     : [];
 
   const treeImageItems = treeImages.concat(placeholderImages).map((tree) => {
@@ -416,11 +418,11 @@ const TreeImageScrubber = (props) => {
 
   let imagePagination = (
     <TablePagination
-      rowsPerPageOptions={[12, 24, 48, 96]}
+      rowsPerPageOptions={[12, 24, 48, 96, 192]}
       component="div"
-      count={props.verityState.treeCount || 0}
-      rowsPerPage={props.verityState.pageSize}
-      page={props.verityState.currentPage}
+      count={props.verifyState.treeCount || 0}
+      rowsPerPage={props.verifyState.pageSize}
+      page={props.verifyState.currentPage}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Images per page:"
@@ -444,9 +446,9 @@ const TreeImageScrubber = (props) => {
                 <FilterTop
                   isOpen={isFilterShown}
                   onSubmit={(filter) => {
-                    props.verityDispatch.updateFilter(filter);
+                    props.verifyDispatch.updateFilter(filter);
                   }}
-                  filter={props.verityState.filter}
+                  filter={props.verifyState.filter}
                   onClose={handleFilterClick}
                 />
               )}
@@ -475,9 +477,9 @@ const TreeImageScrubber = (props) => {
                   <Grid item>
                     <Typography variant="h5">
                       <ToVerifyCounter
-                        needsRefresh={props.verityState.invalidateTreeCount}
-                        fetch={props.verityDispatch.getTreeCount}
-                        data={props.verityState.treeCount}
+                        needsRefresh={props.verifyState.invalidateTreeCount}
+                        fetch={props.verifyDispatch.getTreeCount}
+                        data={props.verifyState.treeCount}
                       />
                     </Typography>
                   </Grid>
@@ -500,9 +502,12 @@ const TreeImageScrubber = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        <SidePanel onSubmit={handleSubmit} />
+        <SidePanel
+          onSubmit={handleSubmit}
+          submitEnabled={props.verifyState.treeImagesSelected.length > 0}
+        />
       </Grid>
-      {props.verityState.isApproveAllProcessing && (
+      {props.verifyState.isApproveAllProcessing && (
         <AppBar
           position="fixed"
           style={{
@@ -516,15 +521,15 @@ const TreeImageScrubber = (props) => {
           />
         </AppBar>
       )}
-      {props.verityState.isApproveAllProcessing && (
+      {props.verifyState.isApproveAllProcessing && (
         <Modal open={true}>
           <div></div>
         </Modal>
       )}
       {false /* close undo */ &&
-        !props.verityState.isApproveAllProcessing &&
-        !props.verityState.isRejectAllProcessing &&
-        props.verityState.treeImagesUndo.length > 0 && (
+        !props.verifyState.isApproveAllProcessing &&
+        !props.verifyState.isRejectAllProcessing &&
+        props.verifyState.treeImagesUndo.length > 0 && (
           <Snackbar
             open
             autoHideDuration={15000}
@@ -535,10 +540,10 @@ const TreeImageScrubber = (props) => {
             message={
               <span id="snackbar-fab-message-id">
                 You have{' '}
-                {props.verityState.isBulkApproving
+                {props.verifyState.isBulkApproving
                   ? ' approved '
                   : ' rejected '}
-                {props.verityState.treeImagesUndo.length} trees
+                {props.verifyState.treeImagesUndo.length} trees
               </span>
             }
             color="primary"
@@ -547,7 +552,7 @@ const TreeImageScrubber = (props) => {
                 color="inherit"
                 size="small"
                 onClick={async () => {
-                  await props.verityDispatch.undoAll();
+                  await props.verifyDispatch.undoAll();
                   log.log('finished');
                 }}
               >
@@ -573,30 +578,53 @@ const TreeImageScrubber = (props) => {
 };
 
 function SidePanel(props) {
-  const classes = useStyles(props);
-  const [switchApprove, handleSwitchApprove] = React.useState(0);
-  const [morphology, handleMorphology] = React.useState('seedling');
-  const [age, handleAge] = React.useState('new_tree');
-  const [captureApprovalTag, handleCaptureApprovalTag] = React.useState(
-    'simple_leaf',
-  );
-  const [rejectionReason, handleRejectionReason] = React.useState('not_tree');
-  const speciesRef = React.useRef(null);
+  const DEFAULT_SWITCH_APPROVE = 0;
+  const DEFAULT_MORPHOLOGY = 'seedling';
+  const DEFAULT_AGE = 'new_tree';
+  const DEFAULT_CAPTURE_APPROVAL_TAG = 'simple_leaf';
+  const DEFAULT_REJECTION_REASON = 'not_tree';
 
-  function handleSubmit() {
+  const classes = useStyles(props);
+  const [switchApprove, setSwitchApprove] = React.useState(
+    DEFAULT_SWITCH_APPROVE,
+  );
+  const [morphology, setMorphology] = React.useState(DEFAULT_MORPHOLOGY);
+  const [age, setAge] = React.useState(DEFAULT_AGE);
+  const [captureApprovalTag, setCaptureApprovalTag] = React.useState(
+    DEFAULT_CAPTURE_APPROVAL_TAG,
+  );
+  const [rejectionReason, setRejectionReason] = React.useState(
+    DEFAULT_REJECTION_REASON,
+  );
+  const [rememberSelection, setRememberSelection] = React.useState(false);
+
+  function resetSelection() {
+    setSwitchApprove(DEFAULT_SWITCH_APPROVE);
+    setMorphology(DEFAULT_MORPHOLOGY);
+    setAge(DEFAULT_AGE);
+    setCaptureApprovalTag(DEFAULT_CAPTURE_APPROVAL_TAG);
+    setRejectionReason(DEFAULT_REJECTION_REASON);
+  }
+
+  async function handleSubmit() {
     const approveAction =
       switchApprove === 0
         ? {
-            isApproved: true,
-            morphology,
-            age,
-            captureApprovalTag,
-          }
+          isApproved: true,
+          morphology,
+          age,
+          captureApprovalTag,
+          rememberSelection,
+        }
         : {
-            isApproved: false,
-            rejectionReason,
-          };
-    props.onSubmit(approveAction);
+          isApproved: false,
+          rejectionReason,
+          rememberSelection,
+        };
+    await props.onSubmit(approveAction);
+    if (!rememberSelection) {
+      resetSelection();
+    }
   }
 
   return (
@@ -621,18 +649,18 @@ function SidePanel(props) {
           <RadioGroup value={morphology} className={classes.radioGroup}>
             <FormControlLabel
               value="seedling"
-              onClick={() => handleMorphology('seedling')}
+              onClick={() => setMorphology('seedling')}
               control={<Radio />}
               label="Seedling"
             />
             <FormControlLabel
               value="direct_seedling"
               control={<Radio />}
-              onClick={() => handleMorphology('direct_seedling')}
+              onClick={() => setMorphology('direct_seedling')}
               label="Direct seeding"
             />
             <FormControlLabel
-              onClick={() => handleMorphology('fmnr')}
+              onClick={() => setMorphology('fmnr')}
               value="fmnr"
               control={<Radio />}
               label="Pruned/tied (FMNR)"
@@ -642,13 +670,13 @@ function SidePanel(props) {
         <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
           <RadioGroup value={age} className={classes.radioGroup}>
             <FormControlLabel
-              onClick={() => handleAge('new_tree')}
+              onClick={() => setAge('new_tree')}
               value="new_tree"
               control={<Radio />}
               label="New tree(s)"
             />
             <FormControlLabel
-              onClick={() => handleAge('over_two_years')}
+              onClick={() => setAge('over_two_years')}
               value="over_two_years"
               control={<Radio />}
               label="> 2 years old"
@@ -665,7 +693,7 @@ function SidePanel(props) {
         */}
         <Grid>
           <Typography variant="h6">Species (if known)</Typography>
-          <Species ref={speciesRef} />
+          <Species />
         </Grid>
         <Grid>
           <Typography variant="h6">Additional tags</Typography>
@@ -682,61 +710,61 @@ function SidePanel(props) {
               label="APPROVE"
               id="full-width-tab-0"
               aria-controls="full-width-tabpanel-0"
-              onClick={() => handleSwitchApprove(0)}
+              onClick={() => setSwitchApprove(0)}
             />
             <Tab
               label="REJECT"
               id="full-width-tab-0"
               aria-controls="full-width-tabpanel-0"
-              onClick={() => handleSwitchApprove(1)}
+              onClick={() => setSwitchApprove(1)}
             />
           </Tabs>
           {switchApprove === 0 && (
             <RadioGroup value={captureApprovalTag}>
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('simple_leaf')}
+                onClick={() => setCaptureApprovalTag('simple_leaf')}
                 value="simple_leaf"
                 control={<Radio />}
                 label="Simple leaf"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('complex_leaf')}
+                onClick={() => setCaptureApprovalTag('complex_leaf')}
                 value="complex_leaf"
                 control={<Radio />}
                 label="Complex leaf"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('acacia_like')}
+                onClick={() => setCaptureApprovalTag('acacia_like')}
                 value="acacia_like"
                 control={<Radio />}
                 label="Acacia-like"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('conifer')}
+                onClick={() => setCaptureApprovalTag('conifer')}
                 value="conifer"
                 control={<Radio />}
                 label="Conifer"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('fruit')}
+                onClick={() => setCaptureApprovalTag('fruit')}
                 value="fruit"
                 control={<Radio />}
                 label="Fruit"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('mangrove')}
+                onClick={() => setCaptureApprovalTag('mangrove')}
                 value="mangrove"
                 control={<Radio />}
                 label="Mangrove"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('palm')}
+                onClick={() => setCaptureApprovalTag('palm')}
                 value="palm"
                 control={<Radio />}
                 label="Palm"
               />
               <FormControlLabel
-                onClick={() => handleCaptureApprovalTag('timber')}
+                onClick={() => setCaptureApprovalTag('timber')}
                 value="timber"
                 control={<Radio />}
                 label="Timber"
@@ -746,43 +774,43 @@ function SidePanel(props) {
           {switchApprove === 1 && (
             <RadioGroup value={rejectionReason}>
               <FormControlLabel
-                onClick={() => handleRejectionReason('not_tree')}
+                onClick={() => setRejectionReason('not_tree')}
                 value="not_tree"
                 control={<Radio />}
                 label="Not a tree"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('unapproved_tree')}
+                onClick={() => setRejectionReason('unapproved_tree')}
                 value="unapproved_tree"
                 control={<Radio />}
                 label="Not an approved tree"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('blurry_image')}
+                onClick={() => setRejectionReason('blurry_image')}
                 value="blurry_image"
                 control={<Radio />}
                 label="Blurry photo"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('dead')}
+                onClick={() => setRejectionReason('dead')}
                 value="dead"
                 control={<Radio />}
                 label="Dead"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('duplicate_image')}
+                onClick={() => setRejectionReason('duplicate_image')}
                 value="duplicate_image"
                 control={<Radio />}
                 label="Duplicate photo"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('flag_user')}
+                onClick={() => setRejectionReason('flag_user')}
                 value="flag_user"
                 control={<Radio />}
                 label="Flag user!"
               />
               <FormControlLabel
-                onClick={() => handleRejectionReason('needs_contact_or_review')}
+                onClick={() => setRejectionReason('needs_contact_or_review')}
                 value="needs_contact_or_review"
                 control={<Radio />}
                 label="Flag tree for contact/review"
@@ -796,10 +824,32 @@ function SidePanel(props) {
             <TextField placeholder="Note (optional)"></TextField>
           </Grid>
         )}
-        <Grid className={`${classes.sidePanelItem}`}>
-          <Button onClick={handleSubmit} color="primary">
+        {/* <Grid className={`${classes.sidePanelItem}`}>
+        </Grid> */}
+        <Grid
+          container
+          className={`${classes.sidePanelItem}`}
+          justify="space-between"
+        >
+          <Button
+            onClick={handleSubmit}
+            color="primary"
+            disabled={!props.submitEnabled}
+            className={`${classes.sidePanelSubmitButton}`}
+          >
             SUBMIT
           </Button>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={rememberSelection}
+                onChange={(event) => setRememberSelection(event.target.checked)}
+                name="remember"
+                color="secondary"
+              />
+            }
+            label="Remember selection"
+          />
         </Grid>
       </Grid>
     </Drawer>
@@ -809,14 +859,14 @@ function SidePanel(props) {
 export default connect(
   //state
   (state) => ({
-    verityState: state.verity,
+    verifyState: state.verify,
     speciesState: state.species,
     plantersState: state.planters,
     tagState: state.tags,
   }),
   //dispatch
   (dispatch) => ({
-    verityDispatch: dispatch.verity,
+    verifyDispatch: dispatch.verify,
     speciesDispatch: dispatch.species,
     plantersDispatch: dispatch.planters,
     tagDispatch: dispatch.tags,

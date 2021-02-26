@@ -1,7 +1,7 @@
 export { default as trees } from './trees';
 export { default as appFrame } from './appFrame';
 export { default as imageScrubber } from './imageScrubber';
-export { default as verity } from './verity';
+export { default as verify } from './verify';
 export { default as species } from './species';
 export { default as planters } from './planters';
 export { default as tags } from './tags';

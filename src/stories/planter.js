@@ -4,7 +4,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import AppBar from '@material-ui/core/AppBar';
 import Modal from '@material-ui/core/Modal';
 import TreeImageScrubber from '../components/TreeImageScrubber';
-import verity from '../models/verity';
+import verify from '../models/verify';
 import { ThemeProvider, useTheme } from '@material-ui/styles';
 import theme from '../components/common/theme';
 import { Provider } from 'react-redux';

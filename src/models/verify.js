@@ -337,7 +337,7 @@ const verify = {
         (verifyState.treeCount > 0 &&
           verifyState.treeImages.length >= verifyState.treeCount) ||
         verifyState.pageSize * (verifyState.currentPage + 1) <=
-        verifyState.treeImages.length
+          verifyState.treeImages.length
       ) {
         // No need to request more images
         log.debug("cancel load because condition doesn't meet");

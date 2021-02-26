@@ -29,11 +29,12 @@ function Species(props) {
       onChange={(_event, value) => {
         props.speciesDispatch.onChange((value && value.name) || '');
       }}
-      onInputChange={(a, b) => {
-        props.speciesDispatch.onChange(b || '');
+      onInputChange={(_event, value) => {
+        props.speciesDispatch.onChange(value || '');
       }}
       className={props.classes.root}
       freeSolo={true}
+      inputValue={props.speciesState.speciesInput}
       renderInput={(params) => (
         <TextField {...params} placeholder="e.g. Mango" variant="outlined" />
       )}

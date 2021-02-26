@@ -21,6 +21,6 @@ import FilterModel from '../models/Filter';
  */
 import './common';
 import './components';
-import './verity';
+import './verify';
 import './tests';
 import './planter';

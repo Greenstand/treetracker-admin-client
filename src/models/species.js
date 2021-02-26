@@ -13,7 +13,7 @@ const species = {
     speciesDesc: '',
   },
   reducers: {
-    setSpeciseList(state, speciesList) {
+    setSpeciesList(state, speciesList) {
       const sortedSpeciesList = speciesList
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name));
@@ -46,7 +46,7 @@ const species = {
           return species;
         }),
       );
-      this.setSpeciseList(sepcieListWithCount);
+      this.setSpeciesList(sepcieListWithCount);
     },
     onChange(text) {
       console.log('on change:"', text, '"');
@@ -68,10 +68,15 @@ const species = {
       );
     },
     async createSpecies(payload, state) {
-      const species = await api.createSpecies(payload);
+      const species = await api.createSpecies(
+        payload || {
+          name: state.species.speciesInput,
+          desc: '',
+        },
+      );
       console.debug('created new species:', species);
       //update the list
-      this.setSpeciseList([species, ...state.species.speciesList]);
+      this.setSpeciesList([species, ...state.species.speciesList]);
       return species;
     },
     /*

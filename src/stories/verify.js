@@ -4,7 +4,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import AppBar from '@material-ui/core/AppBar';
 import Modal from '@material-ui/core/Modal';
 import TreeImageScrubber from '../components/TreeImageScrubber';
-import verity from '../models/verity';
+import verify from '../models/verify';
 import { ThemeProvider, useTheme } from '@material-ui/styles';
 import theme from '../components/common/theme';
 import { Provider } from 'react-redux';
@@ -14,7 +14,7 @@ import api from '../api/treeTrackerApi';
 
 const store = init({ models });
 
-function TestVerity() {
+function TestVerify() {
   const refContainer = React.useRef();
 
   function getContainerRef() {
@@ -38,8 +38,8 @@ function TestVerity() {
   );
 }
 
-storiesOf('verity', module)
-  .add('verity', function () {
+storiesOf('verify', module)
+  .add('verify', function () {
     //mock the api
     api.getTreeImages = (() => {
       let counter = 0;
@@ -99,9 +99,9 @@ storiesOf('verity', module)
       };
     };
 
-    return <TestVerity />;
+    return <TestVerify />;
   })
-  .add('verityApproveAllWithError', function () {
+  .add('verifyApproveAllWithError', function () {
     //mock the api
     api.getTreeImages = (() => {
       let counter = 0;
@@ -152,5 +152,5 @@ storiesOf('verity', module)
     api.rejectTreeImage = () =>
       new Promise((r) => setTimeout(() => r(true), 500));
 
-    return <TestVerity />;
+    return <TestVerify />;
   });

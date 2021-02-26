@@ -55,13 +55,13 @@ export const DashStatUnprocessedTrees = compose(
   connect(
     (state) => ({
       data:
-        state.verity.treeCount !== null
-          ? countToLocaleString(state.verity.treeCount)
+        state.verify.treeCount !== null
+          ? countToLocaleString(state.verify.treeCount)
           : null,
-      needsRefresh: state.verity.invalidateTreeCount,
+      needsRefresh: state.verify.invalidateTreeCount,
     }),
     (dispatch) => ({
-      fetch: dispatch.verity.getTreeCount,
+      fetch: dispatch.verify.getTreeCount,
     }),
   ),
   withData,
@@ -83,13 +83,13 @@ export const DashStatVerifiedTrees = compose(
   connect(
     (state) => ({
       data:
-        state.verity.verifiedTreeCount !== null
-          ? countToLocaleString(state.verity.verifiedTreeCount)
+        state.verify.verifiedTreeCount !== null
+          ? countToLocaleString(state.verify.verifiedTreeCount)
           : null,
-      needsRefresh: state.verity.invalidateVerifiedCount,
+      needsRefresh: state.verify.invalidateVerifiedCount,
     }),
     (dispatch) => ({
-      fetch: dispatch.verity.getVerifiedTreeCount,
+      fetch: dispatch.verify.getVerifiedTreeCount,
     }),
   ),
   withData,
