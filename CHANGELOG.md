@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.2.0...v1.2.1) (2021-02-26)
+
+
+### Bug Fixes
+
+* species cleared on approval ([#17](https://github.com/Greenstand/treetracker-admin-client/issues/17)) ([207dd98](https://github.com/Greenstand/treetracker-admin-client/commit/207dd984fc27771acb39546f18983dd8de3f1074))
+
 # [1.2.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.1.2...v1.2.0) (2021-02-25)
 
 
