@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.3.0...v1.3.1) (2021-02-28)
+
+
+### Bug Fixes
+
+* replace require with import for logo ([#34](https://github.com/Greenstand/treetracker-admin-client/issues/34)) ([946d8a5](https://github.com/Greenstand/treetracker-admin-client/commit/946d8a58c3f71719255141ae5d06948082f8f750))
+
 # [1.3.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.2.1...v1.3.0) (2021-02-28)
 
 
