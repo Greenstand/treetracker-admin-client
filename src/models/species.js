@@ -111,6 +111,11 @@ const species = {
       let deletedSpecies = await api.deleteSpecies(id);
       console.debug('delete outdated species:', deletedSpecies);
     },
+
+    async combineSpecies(payload) {
+      const { combine, name, desc } = payload;
+      await api.combineSpecies(combine, name, desc);
+    },
   },
 };
 

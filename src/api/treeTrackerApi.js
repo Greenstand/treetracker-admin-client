@@ -197,7 +197,7 @@ export default {
       body: JSON.stringify({
         name: payload.name,
         desc: payload.desc,
-        active: 0,
+        active: true,
         valueFactor: 0,
       }),
     })
@@ -217,7 +217,7 @@ export default {
         id: id,
         name: name,
         desc: desc,
-        active: 0,
+        active: true,
         valueFactor: 0,
       }),
     })
@@ -235,6 +235,27 @@ export default {
         'content-type': 'application/json',
         Authorization: session.token,
       },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  combineSpecies(combine, name, desc) {
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species/combine`;
+    return fetch(query, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify({
+        combine,
+        species: {
+          name,
+          desc,
+          active: true,
+          valueFactor: 0,
+        },
+      }),
     })
       .then(handleResponse)
       .catch(handleError);
