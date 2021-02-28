@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.2.1...v1.3.0) (2021-02-28)
+
+
+### Features
+
+* add combine species ([#32](https://github.com/Greenstand/treetracker-admin-client/issues/32)) ([36f4135](https://github.com/Greenstand/treetracker-admin-client/commit/36f413568931a1236334cb885393b66b6b5b186d))
+
 ## [1.2.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.2.0...v1.2.1) (2021-02-26)
 
 
