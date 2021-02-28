@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from './images/logo.png';
 
 /*
  * Just a logo icon
@@ -14,7 +15,7 @@ export default function IconLogo() {
           maxHeight: 32,
           marginBottom: '-6px',
         }}
-        src={require('./images/logo.png')}
+        src={logo}
         alt="Greenstand logo"
       />
     </Link>
