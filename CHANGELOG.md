@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.3.1...v1.4.0) (2021-03-03)
+
+
+### Features
+
+* add disabled save button if userName not unique ([#31](https://github.com/Greenstand/treetracker-admin-client/issues/31)) ([b369a0a](https://github.com/Greenstand/treetracker-admin-client/commit/b369a0ae28c52e8c0bca9ab2f9a2211bfe502141))
+
 ## [1.3.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.3.0...v1.3.1) (2021-02-28)
 
 
