@@ -140,6 +140,7 @@ function Users(props) {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMesssage] = React.useState('');
   const [usersLoaded, setUsersLoaded] = React.useState(false);
+  const [userNameValid, setUserNameValid] = React.useState(true);
 
   const ENABLED = 'Enabled';
   const DISABLED = 'Disabled';
@@ -399,7 +400,14 @@ function Users(props) {
   }
 
   function handleUsernameChange(e) {
+    handleUniqueUsername(e);
     setUserEditing({ ...userEditing, userName: e.target.value });
+  }
+
+  function handleUniqueUsername(e) {
+    if (users.find((user) => user.userName === e.target.value)) {
+      setUserNameValid(false);
+    } else setUserNameValid(true);
   }
 
   function handleFirstNameChange(e) {
@@ -451,6 +459,10 @@ function Users(props) {
       ? true
       : false;
   };
+
+  function handelUserNameError() {
+    return userNameValid ? '' : 'Username already exists';
+  }
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -516,7 +528,7 @@ function Users(props) {
       </TableRow>
     ));
   }
-
+  console.log(userNameValid);
   return (
     <>
       <Grid container className={classes.box}>
@@ -608,7 +620,7 @@ function Users(props) {
           <TextField
             autoFocus
             id="userName"
-            label="Username"
+            label={userNameValid ? 'Username' : 'Error'}
             type="text"
             variant="outlined"
             fullWidth
@@ -619,9 +631,11 @@ function Users(props) {
               userEditing && userEditing.id !== undefined ? true : false
             }
             value={(userEditing && userEditing.userName) || ''}
-            error={handleError(userEditing, ['userName'])}
+            error={handleError(userEditing, ['userName']) || !userNameValid}
             helperText={
-              handleError(userEditing, ['userName']) ? 'No space allowed' : ''
+              handleError(userEditing, ['userName'])
+                ? 'No space allowed'
+                : handelUserNameError()
             }
             className={classes.input}
             onChange={handleUsernameChange}
@@ -776,7 +790,8 @@ function Users(props) {
               !userEditing ||
               !userEditing.userName ||
               !right ||
-              right.length === 0
+              right.length === 0 ||
+              !userNameValid
             }
           >
             {saveInProgress ? <CircularProgress size={21} /> : 'Save'}
