@@ -405,12 +405,9 @@ function Users(props) {
   }
 
   function handleUniqueUsername(e) {
-    setUserNameValid(true);
-    users.forEach((user) => {
-      if (user.userName === e.target.value) {
-        setUserNameValid(false);
-      }
-    });
+    if (users.find((user) => user.userName === e.target.value)) {
+      setUserNameValid(false);
+    } else setUserNameValid(true);
   }
 
   function handleFirstNameChange(e) {
@@ -462,6 +459,10 @@ function Users(props) {
       ? true
       : false;
   };
+
+  function handelUserNameError() {
+    return userNameValid ? '' : 'Username already exists';
+  }
 
   function handleSnackbarClose(event, reason) {
     if (reason === 'clickaway') {
@@ -634,9 +635,7 @@ function Users(props) {
             helperText={
               handleError(userEditing, ['userName'])
                 ? 'No space allowed'
-                : userNameValid
-                ? ''
-                : 'Username already exists'
+                : handelUserNameError()
             }
             className={classes.input}
             onChange={handleUsernameChange}
