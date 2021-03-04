@@ -31,7 +31,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: client-bundle
-        path: client/build
+        path: build
 
   deploy:
     name: Deploy to CDN
