@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.4.0...v1.4.1) (2021-03-04)
+
+
+### Bug Fixes
+
+* correct bath to build artifact ([c6d4d54](https://github.com/Greenstand/treetracker-admin-client/commit/c6d4d544f2dfb3e9e18839df4b476dd2397bded1))
+
 # [1.4.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.3.1...v1.4.0) (2021-03-03)
 
 
