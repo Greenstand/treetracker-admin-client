@@ -103,15 +103,17 @@ const verify = {
       };
     },
     setFilter(state, filter) {
-      return {
-        ...state,
-        filter,
-      };
+      log.debug('setFilter', state.filter, filter);
+      // ensure filter is a FilterModel
+      const newFilter = new FilterModel(filter);
+      return filter.getWhereObj()
+        ? { ...state, filter }
+        : { ...state, filter: newFilter };
     },
     setTreeCount(state, treeCount) {
       return {
         ...state,
-        treeCount,
+        treeCount: Number(treeCount),
         invalidateTreeCount: false,
       };
     },
@@ -332,6 +334,7 @@ const verify = {
       //{{{
       log.debug('to load images');
       const verifyState = state.verify;
+
       if (
         verifyState.isLoading ||
         (verifyState.treeCount > 0 &&
@@ -359,7 +362,7 @@ const verify = {
       };
       log.debug('load page with params:', pageParams);
       const result = await api.getTreeImages(pageParams);
-      log.debug('loaded trees:%d', result.length);
+      log.debug('loaded trees:', result.length);
       this.appendTreeImages(result);
       //restore loading status
       this.setLoading(false);

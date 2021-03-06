@@ -68,13 +68,11 @@ function Filter(props) {
   const { classes, filter } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const [treeId, setTreeId] = useState(filter.treeId);
-  const [planterId, setPlanterId] = useState(filter.planterId);
-  const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter.deviceIdentifier,
-  );
+  const [treeId, setTreeId] = useState(filter.treeId || '');
+  const [planterId, setPlanterId] = useState(filter.planterId || '');
+  const [deviceId, setDeviceId] = useState(filter.deviceIdentifier || '');
   const [planterIdentifier, setPlanterIdentifier] = useState(
-    filter.planterIdentifier,
+    filter.planterIdentifier || '',
   );
   const [approved, setApproved] = useState(filter.approved);
   const [active, setActive] = useState(filter.active);
@@ -83,7 +81,7 @@ function Filter(props) {
   );
   const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(ALL_SPECIES);
-  const [tagId, setTagId] = useState(0);
+  const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
 
@@ -111,15 +109,35 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.treeId = treeId;
     filter.planterId = planterId;
-    filter.deviceIdentifier = deviceIdentifier;
+    filter.deviceIdentifier = deviceId;
     filter.planterIdentifier = planterIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
     filter.active = active;
     filter.speciesId = speciesId;
-    filter.tagId = tagId;
+    filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
+    props.onSubmit && props.onSubmit(filter);
+  }
+
+  function handleReset() {
+    console.log('--- RESET filter and form ---');
+    // reset form values, except 'approved' and 'active' which we'll keep
+    setTreeId('');
+    setPlanterId('');
+    setDeviceId('');
+    setPlanterIdentifier('');
+    setDateStart(dateStartDefault);
+    setDateEnd(dateEndDefault);
+    setSpeciesId(ALL_SPECIES);
+    setOrganizationId(ALL_ORGANIZATIONS);
+    setTag(null);
+    setTagSearchString('');
+
+    const filter = new FilterModel();
+    filter.approved = approved; // keeps last value set
+    filter.active = active; // keeps last value set
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -227,8 +245,8 @@ function Filter(props) {
             <TextField
               label="Device Identifier"
               placeholder="e.g. 1234abcd"
-              value={deviceIdentifier}
-              onChange={(e) => setDeviceIdentifier(e.target.value)}
+              value={deviceId}
+              onChange={(e) => setDeviceId(e.target.value)}
             />
             <TextField
               label="Planter Identifier"
@@ -265,22 +283,18 @@ function Filter(props) {
                 },
                 ...props.tagsState.tagList,
               ]}
+              value={tag}
               getOptionLabel={(tag) => tag.tagName}
               onChange={(_oldVal, newVal) => {
-                console.log(newVal);
-                setTagId(newVal && newVal.id);
+                //triggered by onInputChange
+                setTag(newVal);
               }}
               onInputChange={(_oldVal, newVal) => {
                 setTagSearchString(newVal);
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Tag"
-                  value={tagId}
-                  onChange={(e) => setTagId(e.target.value)}
-                />
-              )}
+              renderInput={(params) => {
+                return <TextField {...params} label="Tag" />;
+              }}
             />
             {!getOrganization() && (
               <TextField
@@ -309,6 +323,14 @@ function Filter(props) {
               onClick={handleSubmit}
             >
               Apply
+            </Button>
+            <Button
+              className={classes.apply}
+              variant="outlined"
+              color="primary"
+              onClick={handleReset}
+            >
+              Reset
             </Button>
           </Grid>
         </Grid>
