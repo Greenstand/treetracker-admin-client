@@ -82,8 +82,9 @@ const PlanterDetail = (props) => {
         ) {
           setPlanterRegistration(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
+            console.log(registrations);
             if (registrations && registrations.length) {
-              setPlanterRegistration(registrations[0]);
+              setPlanterRegistration(registrations[registrations.length - 1]);
             }
           });
         }
@@ -171,6 +172,11 @@ const PlanterDetail = (props) => {
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Phone number</Typography>
+              <Typography variant="body1">{planter.phone || '---'}</Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Country</Typography>
               <Typography variant="body1">{planter.phone || '---'}</Typography>
             </Grid>
             <Divider />
