@@ -174,72 +174,11 @@ function Account(props) {
     return result;
   };
 
-  const [permissions, setPermissions] = React.useState([]);
-  const [users, setUsers] = React.useState([]);
-
-  React.useEffect(() => {
-    //loading permission from server
-    async function load() {
-      // Get the user's permissions
-      try {
-        let res = await axios.get(
-          `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
-          {
-            headers: { Authorization: token },
-          },
-        );
-        if (res.status === 200) {
-          setPermissions(res.data);
-        } else {
-          console.error('load fail:', res);
-          return;
-        }
-      } catch (e) {
-        console.error('ERROR fetching permissions:', e);
-      }
-
-      // Get the user based on the token
-      try {
-        let res = await axios.get(
-          `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
-          {
-            headers: { Authorization: token },
-          },
-        );
-        if (res.status === 200) {
-          setUsers(res.data);
-        } else {
-          console.error('load fail:', res);
-          return;
-        }
-      } catch (e) {
-        console.error('ERROR fetching admin_users:', e);
-      }
-    }
-
-    // Don't try to load if there isn't a token
-    if (token) {
-      load();
-    }
-  }, [token]);
-
-  // Find the user if in the list, or use the given info if not found
-  // Match the user's roles to their assoc. permissions
-  const freshUser = users.find((el) => el.userName === user.userName) || user;
-  const roles = !permissions
-    ? null
-    : freshUser.role.map((r, idx) => {
-        return permissions.reduce((el, p) => {
-          return (
-            el ||
-            (p && p.id === r && (
-              <Grid key={`role_${idx}`}>
-                <Typography className={classes.item}>{p.roleName}</Typography>
-              </Grid>
-            ))
-          );
-        }, undefined);
-      });
+  const roles = (
+    user.roleNames?.map((name, idx) =>
+      <Typography key={`role_${idx}`} className={classes.item}>{name}</Typography>
+    )
+  );
 
   return (
     <>
@@ -278,7 +217,7 @@ function Account(props) {
                   <Typography className={classes.item}>{user.email}</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography className={classes.title}>Role</Typography>
+                  <Typography className={classes.title}>Roles</Typography>
                   {roles}
                 </Grid>
                 <Grid item>
