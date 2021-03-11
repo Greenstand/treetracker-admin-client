@@ -69,7 +69,6 @@ const PlanterDetail = (props) => {
       if (planter && planter.id !== planterId) {
         setPlanter({});
       }
-
       if (planterId) {
         const match = await props.plantersDispatch.getPlanter({
           id: planterId,
@@ -78,19 +77,17 @@ const PlanterDetail = (props) => {
 
         if (
           !planterRegistration ||
-          planterRegistration.planterId !== planterId
+          planterRegistration[0].planter_id !== planterId
         ) {
           setPlanterRegistration(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
-            console.log(registrations);
             if (registrations && registrations.length) {
-              setPlanterRegistration(registrations[registrations.length - 1]);
+              setPlanterRegistration(registrations);
             }
           });
         }
       }
     }
-
     loadPlanterDetail();
     // eslint-disable-next-line
   }, [
@@ -176,11 +173,6 @@ const PlanterDetail = (props) => {
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Country</Typography>
-              <Typography variant="body1">{planter.phone || '---'}</Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Person ID</Typography>
               <Typography variant="body1">
                 {planter.personId || '---'}
@@ -202,10 +194,28 @@ const PlanterDetail = (props) => {
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Country</Typography>
+              <Typography variant="body1">
+                {(planterRegistration &&
+                  planterRegistration
+                    .map((item) => item.country)
+                    .filter(
+                      (country, i, arr) =>
+                        country && arr.indexOf(country) === i,
+                    )
+                    .join(', ')) ||
+                  '---'}
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Registered</Typography>
               <Typography variant="body1">
                 {(planterRegistration &&
-                  getDateTimeStringLocale(planterRegistration.createdAt)) ||
+                  getDateTimeStringLocale(
+                    planterRegistration[planterRegistration.length - 1]
+                      .created_at,
+                  )) ||
                   '---'}
               </Typography>
             </Grid>
