@@ -83,7 +83,10 @@ const PlanterDetail = (props) => {
           setPlanterRegistrations(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
             if (registrations && registrations.length) {
-              setPlanterRegistrations(registrations);
+              const sortedRegistrations = registrations.sort((a, b) =>
+                a.created_at > b.created_at ? 1 : -1,
+              );
+              setPlanterRegistrations(sortedRegistrations);
             }
           });
         }
@@ -91,12 +94,7 @@ const PlanterDetail = (props) => {
     }
     loadPlanterDetail();
     // eslint-disable-next-line
-  }, [
-    planterId,
-    planterRegistrations,
-    props.plantersState.planters,
-    props.plantersDispatch,
-  ]);
+  }, [planterId, props.plantersState.planters, props.plantersDispatch]);
 
   function handleEditClick() {
     setEditDialogOpen(true);
@@ -215,9 +213,7 @@ const PlanterDetail = (props) => {
                 {(planterRegistrations &&
                   planterRegistrations.length > 0 &&
                   getDateTimeStringLocale(
-                    planterRegistrations.sort((a, b) =>
-                      a.created_at > b.created_at ? -1 : 1,
-                    )[0].created_at,
+                    planterRegistrations[0].created_at,
                   )) ||
                   '---'}
               </Typography>
