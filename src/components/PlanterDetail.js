@@ -57,7 +57,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const PlanterDetail = (props) => {
-  const [planterRegistration, setPlanterRegistration] = React.useState(null);
+  const [planterRegistrations, setPlanterRegistrations] = React.useState(null);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [planter, setPlanter] = React.useState({});
   const classes = useStyle();
@@ -76,13 +76,14 @@ const PlanterDetail = (props) => {
         setPlanter(match);
 
         if (
-          !planterRegistration ||
-          planterRegistration[0].planter_id !== planterId
+          !planterRegistrations ||
+          (planterRegistrations.length > 0 &&
+            planterRegistrations[0].planter_id !== planterId)
         ) {
-          setPlanterRegistration(null);
+          setPlanterRegistrations(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
             if (registrations && registrations.length) {
-              setPlanterRegistration(registrations);
+              setPlanterRegistrations(registrations);
             }
           });
         }
@@ -92,7 +93,7 @@ const PlanterDetail = (props) => {
     // eslint-disable-next-line
   }, [
     planterId,
-    planterRegistration,
+    planterRegistrations,
     props.plantersState.planters,
     props.plantersDispatch,
   ]);
@@ -196,8 +197,8 @@ const PlanterDetail = (props) => {
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Country</Typography>
               <Typography variant="body1">
-                {(planterRegistration &&
-                  planterRegistration
+                {(planterRegistrations &&
+                  planterRegistrations
                     .map((item) => item.country)
                     .filter(
                       (country, i, arr) =>
@@ -211,10 +212,12 @@ const PlanterDetail = (props) => {
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Registered</Typography>
               <Typography variant="body1">
-                {(planterRegistration &&
+                {(planterRegistrations &&
+                  planterRegistrations.length > 0 &&
                   getDateTimeStringLocale(
-                    planterRegistration[planterRegistration.length - 1]
-                      .created_at,
+                    planterRegistrations.sort((a, b) =>
+                      a.created_at > b.created_at ? -1 : 1,
+                    )[0].created_at,
                   )) ||
                   '---'}
               </Typography>
