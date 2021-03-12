@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.4.1...v1.5.0) (2021-03-12)
+
+
+### Features
+
+* Add country ([#42](https://github.com/Greenstand/treetracker-admin-client/issues/42)) ([d9abefa](https://github.com/Greenstand/treetracker-admin-client/commit/d9abefa3534e04e35dd333725866d28946dd3995))
+
 ## [1.4.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.4.0...v1.4.1) (2021-03-04)
 
 
