@@ -87,10 +87,10 @@ const TreeTags = (props) => {
 
     return (
       <ChipInput
+        {...other}
         clearInputValueOnChange
         onUpdateInput={onChange}
         value={chips}
-        {...other}
         variant="outlined"
         fullWidth
         classes={{ inputRoot: classes.chipInput }}
@@ -122,7 +122,7 @@ const TreeTags = (props) => {
     });
   };
 
-  let handleSuggestionsClearRequested = () => {};
+  let handleSuggestionsClearRequested = () => { };
 
   let handletextFieldInputChange = (event, { newValue }) => {
     setTextFieldInput(newValue);
