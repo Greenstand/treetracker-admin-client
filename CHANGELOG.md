@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.5.0...v1.5.1) (2021-03-14)
+
+
+### Bug Fixes
+
+* prevent override of value in ChipInput ([#44](https://github.com/Greenstand/treetracker-admin-client/issues/44)) ([6181046](https://github.com/Greenstand/treetracker-admin-client/commit/61810460c7faee018af999a4909cd8d21919075b))
+
 # [1.5.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.4.1...v1.5.0) (2021-03-12)
 
 
