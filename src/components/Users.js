@@ -232,7 +232,7 @@ function Users(props) {
     setCopyMsg('');
   }
 
-  function handleClose() {}
+  function handleClose() { }
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState(permissions);
@@ -240,6 +240,13 @@ function Users(props) {
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
+
+  const allowedOrganizationIds = [...leftChecked, ...right].reduce((accumulator, role) => {
+    if (role.policy?.organization && !accumulator.some((roleId) => roleId === role.policy.organization.id)) {
+      return [...accumulator, role.policy.organization.id];
+    }
+    return accumulator;
+  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.findIndex((e) => e.id === value.id);
@@ -275,11 +282,14 @@ function Users(props) {
     setLeft(left.concat(right));
     setRight([]);
   };
+
   const customList = (items) => (
     <Paper variant="outlined" className={classes.paper}>
       <List dense component="div" role="list">
         {items.map((value) => {
           const labelId = `transfer-list-item-${value.id}-label`;
+          const disabled = value.policy?.organization && allowedOrganizationIds.length > 0
+            && !allowedOrganizationIds.some((orgId) => orgId === value.policy.organization.id);
 
           return (
             <ListItem
@@ -287,6 +297,7 @@ function Users(props) {
               role="listitem"
               button
               onClick={handleToggle(value)}
+              disabled={disabled}
             >
               <ListItemIcon>
                 <Checkbox
