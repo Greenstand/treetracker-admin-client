@@ -1,25 +1,25 @@
 /*
  * The whole app's frame
  */
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Filter from './Filter'
-import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
-import Table from '@material-ui/core/Table'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import TableBody from '@material-ui/core/TableBody'
-import TextField from '@material-ui/core/TextField'
-import TableFooter from '@material-ui/core/TableFooter'
-import TablePagination from '@material-ui/core/TablePagination'
-import IconSettings from '@material-ui/icons/Settings'
-import IconSearch from '@material-ui/icons/Search'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import IconCloudDownload from '@material-ui/icons/CloudDownload'
-import FilterModel from '../models/Filter'
-import Typography from '@material-ui/core/Typography'
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Filter from './Filter';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TextField from '@material-ui/core/TextField';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
+import IconSettings from '@material-ui/icons/Settings';
+import IconSearch from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconCloudDownload from '@material-ui/icons/CloudDownload';
+import FilterModel from '../models/Filter';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,10 +31,10 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 650,
     width: 724,
   },
-}))
+}));
 
 function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein }
+  return { name, calories, fat, carbs, protein };
 }
 
 const rows = [
@@ -43,9 +43,9 @@ const rows = [
   createData('Eclair', 262, 16.0, 24, 6.0),
   createData('Cupcake', 305, 3.7, 67, 4.3),
   createData('Gingerbread', 356, 16.0, 49, 3.9),
-]
+];
 function SimpleTable() {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Table className={classes.table}>
@@ -85,7 +85,7 @@ function SimpleTable() {
         </TableRow>
       </TableFooter>
     </Table>
-  )
+  );
 }
 
 export default function TreeTest() {
@@ -123,5 +123,5 @@ export default function TreeTest() {
         <Filter isOpen={true} filter={new FilterModel()} />
       </Grid>
     </React.Fragment>
-  )
+  );
 }

@@ -1,10 +1,10 @@
 /*
  * The model for organizations function
  */
-import * as loglevel from 'loglevel'
-import api from '../api/treeTrackerApi'
+import * as loglevel from 'loglevel';
+import api from '../api/treeTrackerApi';
 
-const log = loglevel.getLogger('../models/organizations')
+const log = loglevel.getLogger('../models/organizations');
 
 const organizations = {
   state: {
@@ -15,16 +15,16 @@ const organizations = {
       return {
         ...state,
         organizationList,
-      }
+      };
     },
   },
   effects: {
     async loadOrganizations() {
-      const organizationList = await api.getOrganizations()
-      log.debug('load organizations from api:', organizationList.length)
-      this.setOrganizationList(organizationList)
+      const organizationList = await api.getOrganizations();
+      log.debug('load organizations from api:', organizationList.length);
+      this.setOrganizationList(organizationList);
     },
   },
-}
+};
 
-export default organizations
+export default organizations;

@@ -3,33 +3,36 @@
  */
 
 export default class Filter {
-
   constructor(options) {
-    Object.assign(this, options)
+    Object.assign(this, options);
   }
 
-  getBackloopString(includeFilterString=true) {
+  getBackloopString(includeFilterString = true) {
     //{{{
-    let result = ''
-		const prefix = includeFilterString ? '&filter[where]' : '&where'
+    let result = '';
+    const prefix = includeFilterString ? '&filter[where]' : '&where';
 
     if (this.personId) {
-      result += `${prefix}[personId]=${this.personId}`
+      result += `${prefix}[personId]=${this.personId}`;
     }
 
     if (this.id) {
-      result += `${prefix}[id]=${this.id}`
+      result += `${prefix}[id]=${this.id}`;
     }
 
     if (this.firstName) {
-      result += `${prefix}[firstName]=${this.firstName}`
+      result += `${prefix}[firstName]=${this.firstName}`;
     }
 
     if (this.lastName) {
-      result += `${prefix}[lastName]=${this.lastName}`
+      result += `${prefix}[lastName]=${this.lastName}`;
     }
 
-    return result
+    if (this.organizationId) {
+      result += `${prefix}[organizationId]=${this.organizationId}`;
+    }
+
+    return result;
     //}}}
   }
 }

@@ -1,15 +1,13 @@
-import Menu from "./Menu";
-import { mount } from 'cypress-react-unit-test'
-import React from 'react'
-import theme from './theme'
-import { ThemeProvider } from '@material-ui/core/styles'
+import Menu from './Menu';
+import { mount } from 'cypress-react-unit-test';
+import React from 'react';
 
-describe("Menu", () => {
-  it("Menu", () => {
+describe('Menu', () => {
+  it('Menu', () => {
     mount(<Menu />);
   });
 
-  it("Menu plain", () => {
+  it('Menu plain', () => {
     mount(<Menu variant="plain" />);
   });
 });

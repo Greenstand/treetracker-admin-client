@@ -1,24 +1,25 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import CardMedia from '@material-ui/core/CardMedia'
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Box from '@material-ui/core/Box'
-import Drawer from '@material-ui/core/Drawer'
-import Close from '@material-ui/icons/Close'
-import Person from '@material-ui/icons/Person'
-import Divider from '@material-ui/core/Divider'
-import EditIcon from '@material-ui/icons/Edit'
-import Fab from '@material-ui/core/Fab'
+import React from 'react';
+import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+import Drawer from '@material-ui/core/Drawer';
+import Close from '@material-ui/icons/Close';
+import Person from '@material-ui/icons/Person';
+import Divider from '@material-ui/core/Divider';
+import EditIcon from '@material-ui/icons/Edit';
+import Fab from '@material-ui/core/Fab';
 import api from '../api/planters';
-import { getDateTimeStringLocale } from '../common/locale'
-import { hasPermission, POLICIES } from '../models/auth'
-import { AppContext } from './Context'
-import EditPlanter from './EditPlanter'
+import { getDateTimeStringLocale } from '../common/locale';
+import { hasPermission, POLICIES } from '../models/auth';
+import { AppContext } from './Context';
+import EditPlanter from './EditPlanter';
+import OptimizedImage from './OptimizedImage';
 
-const useStyle = makeStyles(theme => ({
+const useStyle = makeStyles((theme) => ({
   root: {
     width: 441,
   },
@@ -51,61 +52,68 @@ const useStyle = makeStyles(theme => ({
   },
   imageContainer: {
     position: 'relative',
-  }
+    height: '378px',
+  },
 }));
 
 const PlanterDetail = (props) => {
-  
-  const [planterRegistration, setPlanterRegistration] = React.useState(null)
-  const [editDialogOpen, setEditDialogOpen] = React.useState(false)
-  const [planter, setPlanter] = React.useState({})
-  const classes = useStyle()
-  const { planterId } = props
-  const { user } = React.useContext(AppContext)
+  const [planterRegistrations, setPlanterRegistrations] = React.useState(null);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [planter, setPlanter] = React.useState({});
+  const classes = useStyle();
+  const { planterId } = props;
+  const { user } = React.useContext(AppContext);
 
   React.useEffect(() => {
     async function loadPlanterDetail() {
       if (planter && planter.id !== planterId) {
-        setPlanter({})
+        setPlanter({});
       }
-
       if (planterId) {
-        const match = await props.plantersDispatch.getPlanter({id: planterId})
-        setPlanter(match)
+        const match = await props.plantersDispatch.getPlanter({
+          id: planterId,
+        });
+        setPlanter(match);
 
-        if (!planterRegistration || planterRegistration.planterId !== planterId) {
-          setPlanterRegistration(null)
-          api.getPlanterRegistrations(planterId).then(registrations => {
+        if (
+          !planterRegistrations ||
+          (planterRegistrations.length > 0 &&
+            planterRegistrations[0].planter_id !== planterId)
+        ) {
+          setPlanterRegistrations(null);
+          api.getPlanterRegistrations(planterId).then((registrations) => {
             if (registrations && registrations.length) {
-              setPlanterRegistration(registrations[0])
+              const sortedRegistrations = registrations.sort((a, b) =>
+                a.created_at > b.created_at ? 1 : -1,
+              );
+              setPlanterRegistrations(sortedRegistrations);
             }
-          })
+          });
         }
       }
     }
+    loadPlanterDetail();
+    // eslint-disable-next-line
+  }, [planterId, props.plantersState.planters, props.plantersDispatch]);
 
-    loadPlanterDetail()
-  // eslint-disable-next-line
-  }, [planterId, planterRegistration, props.plantersState.planters, props.plantersDispatch])
-    
   function handleEditClick() {
-    setEditDialogOpen(true)
+    setEditDialogOpen(true);
   }
 
   function handleEditClose() {
-    setEditDialogOpen(false)
+    setEditDialogOpen(false);
   }
 
-  return(
+  return (
     <React.Fragment>
-      <Drawer anchor='right' open={props.open} onClose={props.onClose}>
-        <Grid className={classes.root} >
-          <Grid container direction='column'>
+      <Drawer anchor="right" open={props.open} onClose={props.onClose}>
+        <Grid className={classes.root}>
+          <Grid container direction="column">
             <Grid item>
-              <Grid container justify='space-between' alignItems='center' >
+              <Grid container justify="space-between" alignItems="center">
                 <Grid item>
-                  <Box m={4} >
-                    <Typography color='primary' variant='h6' >
+                  <Box m={4}>
+                    <Typography color="primary" variant="h6">
                       Planter Detail
                     </Typography>
                   </Box>
@@ -118,69 +126,110 @@ const PlanterDetail = (props) => {
               </Grid>
             </Grid>
             <Grid item className={classes.imageContainer}>
-              {planter.imageUrl &&
-                <CardMedia className={classes.cardMedia} image={planter.imageUrl} />
-              }
-              {!planter.imageUrl &&
-                <CardMedia className={classes.cardMedia} >
-                  <Grid container className={classes.personBox} >
+              {planter.imageUrl && (
+                <OptimizedImage
+                  src={planter.imageUrl}
+                  width={441}
+                  height={378}
+                  className={classes.cardMedia}
+                  fixed
+                />
+              )}
+              {!planter.imageUrl && (
+                <CardMedia className={classes.cardMedia}>
+                  <Grid container className={classes.personBox}>
                     <Person className={classes.person} />
                   </Grid>
                 </CardMedia>
-              }
-              {hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.MANAGE_PLANTER]) &&
+              )}
+              {hasPermission(user, [
+                POLICIES.SUPER_PERMISSION,
+                POLICIES.MANAGE_PLANTER,
+              ]) && (
                 <Fab
                   className={classes.editButton}
                   onClick={() => handleEditClick()}
                 >
                   <EditIcon />
                 </Fab>
-              }
+              )}
             </Grid>
-            <Grid item className={classes.box} >
-              <Typography variant='h5' color='primary' className={classes.name} >{planter.firstName} {planter.lastName}</Typography>
-              <Typography variant='body2'>ID:{planter.id}</Typography>
-            </Grid>
-            <Divider/>
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Email address</Typography>
-              <Typography variant='body1' >{planter.email || '---'}</Typography>
-            </Grid>
-            <Divider/>
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Phone number</Typography>
-              <Typography variant='body1' >{planter.phone || '---'}</Typography>
-            </Grid>
-            <Divider/>
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Person ID</Typography>
-              <Typography variant='body1' >{planter.personId || '---'}</Typography>
-            </Grid>
-            <Divider/>
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Organization</Typography>
-              <Typography variant='body1' >{planter.organization || '---' }</Typography>
+            <Grid item className={classes.box}>
+              <Typography variant="h5" color="primary" className={classes.name}>
+                {planter.firstName} {planter.lastName}
+              </Typography>
+              <Typography variant="body2">ID:{planter.id}</Typography>
             </Grid>
             <Divider />
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Organization ID</Typography>
-              <Typography variant='body1' >{planter.organizationId || '---'}</Typography>
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Email address</Typography>
+              <Typography variant="body1">{planter.email || '---'}</Typography>
             </Grid>
             <Divider />
-            <Grid container direction='column' className={classes.box}>
-              <Typography variant='subtitle1' >Registered</Typography>
-              <Typography variant='body1' >
-                {(planterRegistration && getDateTimeStringLocale(planterRegistration.createdAt)) || '---'}
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Phone number</Typography>
+              <Typography variant="body1">{planter.phone || '---'}</Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Person ID</Typography>
+              <Typography variant="body1">
+                {planter.personId || '---'}
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Organization</Typography>
+              <Typography variant="body1">
+                {planter.organization || '---'}
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Organization ID</Typography>
+              <Typography variant="body1">
+                {planter.organizationId || '---'}
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Country</Typography>
+              <Typography variant="body1">
+                {(planterRegistrations &&
+                  planterRegistrations
+                    .map((item) => item.country)
+                    .filter(
+                      (country, i, arr) =>
+                        country && arr.indexOf(country) === i,
+                    )
+                    .join(', ')) ||
+                  '---'}
+              </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Registered</Typography>
+              <Typography variant="body1">
+                {(planterRegistrations &&
+                  planterRegistrations.length > 0 &&
+                  getDateTimeStringLocale(
+                    planterRegistrations[0].created_at,
+                  )) ||
+                  '---'}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
       </Drawer>
-      <EditPlanter isOpen={editDialogOpen} planter={planter} onClose={handleEditClose}></EditPlanter>
+      <EditPlanter
+        isOpen={editDialogOpen}
+        planter={planter}
+        onClose={handleEditClose}
+      ></EditPlanter>
     </React.Fragment>
-  )
-}
-export { PlanterDetail }
+  );
+};
+export { PlanterDetail };
 
 export default connect(
   (state) => ({
@@ -189,4 +238,4 @@ export default connect(
   (dispatch) => ({
     plantersDispatch: dispatch.planters,
   }),
-)(PlanterDetail)
+)(PlanterDetail);

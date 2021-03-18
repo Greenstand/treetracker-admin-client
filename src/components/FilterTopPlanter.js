@@ -4,33 +4,32 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FilterModel from '../models/FilterPlanter';
-import {connect} from 'react-redux';
-
+import { connect } from 'react-redux';
 
 export const FILTER_WIDTH = 330;
 
-const styles = theme => {
+const styles = (theme) => {
   return {
     root: {},
     drawer: {
-      flexShrink: 0
+      flexShrink: 0,
     },
     drawerPaper: {
       width: FILTER_WIDTH,
-      padding: theme.spacing(3, 2, 2, 2)
+      padding: theme.spacing(3, 2, 2, 2),
       /*
        * boxShadow: '0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)',
        * */
     },
     close: {
-      color: theme.palette.grey[500]
+      color: theme.palette.grey[500],
     },
     dateInput: {
       width: 158,
-      fontSize: 14
+      fontSize: 14,
     },
     button: {
-      marginTop: 5
+      marginTop: 5,
     },
     inputContaner: {
       padding: 5,
@@ -44,7 +43,7 @@ const styles = theme => {
     textField: {
       marginTop: 15,
       width: 142,
-      paddingBottom:2,
+      paddingBottom: 2,
     },
     textFieldSelect: {
       marginTop: 17,
@@ -59,11 +58,11 @@ const styles = theme => {
 
 function FilterTopPlanter(props) {
   const { classes } = props;
-  const [id, setId] = useState("");
-  const [personId, setPersonId] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [organizationId, setOrganizationId] = useState("");
+  const [id, setId] = useState('');
+  const [personId, setPersonId] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [organizationId, setOrganizationId] = useState('');
 
   function handleSubmit() {
     const filter = new FilterModel({
@@ -83,58 +82,62 @@ function FilterTopPlanter(props) {
           <Grid item className={classes.inputContainer}>
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
-              label='Planter ID'
-              placeholder='Planter ID'
+              label="Planter ID"
+              placeholder="Planter ID"
               value={id}
-              onChange={e => setId(e.target.value)}
+              onChange={(e) => setId(e.target.value)}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
-              label='Person ID'
-              placeholder='Person ID'
+              label="Person ID"
+              placeholder="Person ID"
               value={personId}
-              onChange={e => setPersonId(e.target.value)}
+              onChange={(e) => setPersonId(e.target.value)}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
-              label='Organization ID'
-              placeholder='Organization ID'
+              label="Organization ID"
+              placeholder="Organization ID"
               value={organizationId}
-              onChange={e => setOrganizationId(e.target.value)}
+              onChange={(e) => setOrganizationId(e.target.value)}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
-              label='First Name'
-              placeholder='First Name'
+              label="First Name"
+              placeholder="First Name"
               value={firstName}
-              onChange={e => setFirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.target.value)}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
-              label='Last Name'
-              placeholder='Last Name'
+              label="Last Name"
+              placeholder="Last Name"
               value={lastName}
-              onChange={e => setLastName(e.target.value)}
+              onChange={(e) => setLastName(e.target.value)}
             />
-            <Button 
+            <Button
               className={classes.apply}
-              variant='outlined' color='primary' onClick={handleSubmit}>
-              Apply 
+              variant="outlined"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Apply
             </Button>
           </Grid>
         </Grid>
       }
     </React.Fragment>
-  )
-
+  );
 }
 
 //export default compose(
 //  withStyles(styles, { withTheme: true, name: 'Filter' })
 //)(Filter)
-export default withStyles(styles)(connect(
-  //state
-  state => ({
-    speciesState: state.species
-  }),
- )(FilterTopPlanter));
+export default withStyles(styles)(
+  connect(
+    //state
+    (state) => ({
+      speciesState: state.species,
+    }),
+  )(FilterTopPlanter),
+);
