@@ -6,7 +6,7 @@
 # testing
 /coverage
 
-.DS_Store
+**/.DS_Store
 
 # production
 /build
