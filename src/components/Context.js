@@ -59,10 +59,12 @@ function getRoutes(user) {
       linkTo: '/captures',
       component: CaptureMatchingFrame,
       icon: CompareIcon,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.APPROVE_TREE,
-      ]),
+      disabled:
+        process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.APPROVE_TREE,
+        ]),
     },
     {
       name: 'Trees',
