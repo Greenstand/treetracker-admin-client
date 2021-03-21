@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Paper, Typography, Box, Icon } from '@material-ui/core';
+import { Paper, Typography, Box } from '@material-ui/core';
 
 function CurrentCaptureNumber(props) {
-  const [treeCount, setTreeCount] = useState(null);
-
   return (
     <Box>
       <Paper elevation={2} style={{ width: '160px' }}>
@@ -14,7 +12,7 @@ function CurrentCaptureNumber(props) {
             {props.treeIcon}
           </Box>
           <Typography
-            variant="p"
+            variant="h3"
             width="65%"
             style={{ fontSize: '14px', padding: '4px' }}
           >

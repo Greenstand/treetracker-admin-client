@@ -6,15 +6,13 @@
 # testing
 /coverage
 
-**/.DS_Store
-
 # production
 /build
 
 # misc
 
 .vs
-.DS_Store
+**/.DS_Store
 .env.local
 .env.development.local
 .env.test.local

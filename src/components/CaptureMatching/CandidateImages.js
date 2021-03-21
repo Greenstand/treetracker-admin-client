@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Box, Button, GridList, Grid } from '@material-ui/core';
+import { Typography, Box, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import CheckIcon from '@material-ui/icons/Check';
@@ -10,7 +10,6 @@ import theme from '../common/theme';
 const useStyles = makeStyles({
   containerBox: {
     margin: theme.spacing(5),
-    paddingBottom: '10px',
     paddingBottom: theme.spacing(2),
     background: '#fff',
     borderRadius: '4px',
@@ -18,7 +17,6 @@ const useStyles = makeStyles({
 
   headerBox: {
     display: 'flex',
-    flexDirection: 'spaceBetween',
   },
 
   imgContainer: {
@@ -50,9 +48,6 @@ function CandidateImages(props) {
   const classes = useStyles();
 
   const cadidateImgData = props.cadidateImgData;
-  const captureImages = props.captureImages;
-
-  // const [showBox, setShowBox] = useState(true)
 
   const [showBox, setShowBox] = useState([]);
 
@@ -60,27 +55,6 @@ function CandidateImages(props) {
     const initialCandidateData = cadidateImgData.map((tree) => tree.tree_id);
     setShowBox(initialCandidateData);
   }, [cadidateImgData]);
-
-  //const currentEl = useRef(null)
-
-  // Get current Date
-  let showdate = new Date();
-  let date =
-    showdate.getMonth() +
-    1 +
-    '-' +
-    showdate.getDate() +
-    '-' +
-    showdate.getFullYear();
-
-  // Get current time
-  let showTime = new Date();
-  let time =
-    showTime.getHours() +
-    ':' +
-    showTime.getMinutes() +
-    ':' +
-    showTime.getSeconds();
 
   const hideImgBox = (i) => {
     const newInitialState = showBox.filter((id) => id !== i);
@@ -120,17 +94,18 @@ function CandidateImages(props) {
             {showBox.includes(tree.tree_id) ? (
               <Box>
                 {typeof tree.captures === 'object' ? (
-                  <Box className={classes.gridList} cellHeight={160} cols={3}>
-                    {tree.captures.map((captureUrl) => {
+                  <Box className={classes.gridList} cols={3}>
+                    {tree.captures.map((capture) => {
                       // console.log(tree.captures)
                       return (
                         <Box
                           style={{ height: '300px' }}
-                          key={captureUrl.captureId}
+                          key={capture.captureId}
                         >
                           <img
                             className={classes.imgContainer}
-                            src={captureUrl.imageUrl}
+                            src={capture.imageUrl}
+                            alt={`Candidate capture ${capture.captureId}`}
                           />
                         </Box>
                       );
@@ -154,7 +129,7 @@ function CandidateImages(props) {
                     variant="outlined"
                     color="primary"
                     startIcon={<ClearIcon />}
-                    onClick={(e) => hideImgBox(tree.tree_id)}
+                    onClick={() => hideImgBox(tree.tree_id)}
                     value={i}
                   >
                     Different Tree

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
@@ -32,32 +32,11 @@ const useStyles = makeStyles({
 });
 
 function CaptureImage(props) {
-  // Get current Date
-  let showdate = new Date();
-  let date =
-    showdate.getMonth() +
-    1 +
-    '-' +
-    showdate.getDate() +
-    '-' +
-    showdate.getFullYear();
-
-  // Get current time
-  let showTime = new Date();
-  let time =
-    showTime.getHours() +
-    ':' +
-    showTime.getMinutes() +
-    ':' +
-    showTime.getSeconds();
-
   const {
     captureImages,
-    loading,
     currentPage,
     noOfPages,
     handleChange,
-    captureApiFetch,
     imgPerPage,
     imgCount,
     handleSkip,
@@ -80,7 +59,10 @@ function CaptureImage(props) {
         .slice((currentPage - 1) * imgPerPage, currentPage * imgPerPage)
         .map((capture) => {
           return (
-            <Box className={classes.containerBox}>
+            <Box
+              key={`capture_${capture.captureId}`}
+              className={classes.containerBox}
+            >
               <Box className={classes.headerBox}>
                 <Grid
                   container
@@ -97,12 +79,14 @@ function CaptureImage(props) {
                     </Typography>
                     <Box>
                       <AccessTimeIcon />
-                      <Typography variant="p">{capture.createdAt}</Typography>
+                      <Typography variant="body1">
+                        {capture.createdAt}
+                      </Typography>
                     </Box>
 
                     <Box>
                       <LocationOnOutlinedIcon />
-                      <Typography variant="p">USA</Typography>
+                      <Typography variant="body1">USA</Typography>
                     </Box>
                     {/* <UseLoocation/> */}
                   </Box>
@@ -132,6 +116,7 @@ function CaptureImage(props) {
                   key={capture.captureId}
                   className={classes.imgContainer}
                   src={capture.imageUrl}
+                  alt={`Capture ${capture.captureId}`}
                 />
               </Box>
             </Box>

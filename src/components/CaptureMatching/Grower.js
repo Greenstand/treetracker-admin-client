@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Typography, Box } from '@material-ui/core';
+import { Typography, Box } from '@material-ui/core';
 
 function Grower(props) {
   return (
@@ -11,10 +11,10 @@ function Grower(props) {
         style={{ borderRadius: '50%', width: '130px', height: '130px' }}
       />
       <Box style={{ margin: 'auto', paddingLeft: '10px' }}>
-        <Typography variant="p" style={{ display: 'block' }}>
+        <Typography variant="body1" style={{ display: 'block' }}>
           Grower Name
         </Typography>
-        <Typography variant="p">grower status </Typography>
+        <Typography variant="body1">grower status </Typography>
       </Box>
     </Box>
   );

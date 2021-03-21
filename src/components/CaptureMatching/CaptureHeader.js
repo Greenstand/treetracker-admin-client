@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import CurrentCaptureNumber from './CurrentCaptureNumber';
 
-import {
-  Paper,
-  Typography,
-  Box,
-  Button,
-  Grid,
-  Backdrop,
-} from '@material-ui/core';
+import { Box, Button, Grid } from '@material-ui/core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -28,14 +20,7 @@ const useStyles = makeStyles({
 function CaptureHeader(props) {
   const classes = useStyles();
 
-  const {
-    currentPage,
-    handleChange,
-    imgCount,
-    imageData,
-    handleSkip,
-    noOfPages,
-  } = props;
+  const { currentPage, handleChange, imgCount, noOfPages } = props;
 
   const iconImgLogo = (
     <PhotoCameraOutlinedIcon className={classes.captureImgIcon} />
@@ -51,20 +36,11 @@ function CaptureHeader(props) {
           justify="space-between"
           alignItems="baseline"
         >
-          <Box
-            style={
-              {
-                // paddingTop: '15px',
-                // marginLeft: '-22px'
-              }
-            }
-          >
+          <Box>
             <CurrentCaptureNumber
-              text="Unmatched Captures"
-              // style={{paddingTop: '10px'}}
+              text={`Unmatched Capture${imgCount !== 1 && 's'}`}
               cameraImg={iconImgLogo}
               imgCount={imgCount}
-              // className={classes.headerIconBox}
             />
           </Box>
 
@@ -81,19 +57,11 @@ function CaptureHeader(props) {
               My Organizations
             </Button>
 
-            {/* <FilterListIcon style={{
-                    color: "#666",
-                    fontSize: "40",
-                    margin: "0 20px 0 20px;"
-                    }}
-                /> */}
-
             <Pagination
               count={noOfPages}
               page={currentPage}
               onChange={handleChange}
               defaultPage={1}
-              color="#666"
               size="small"
               siblingCount={0}
             />
