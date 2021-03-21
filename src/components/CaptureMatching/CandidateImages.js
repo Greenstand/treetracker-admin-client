@@ -80,7 +80,7 @@ function CandidateImages(props) {
               >
                 <Box>
                   <Typography variant="h5" style={{ padding: '10px' }}>
-                    Captures {tree.tree_id}
+                    Tree {tree.tree_id}
                   </Typography>
                 </Box>
                 <Box>
