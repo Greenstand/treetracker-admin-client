@@ -51,11 +51,13 @@ function CaptureMachineFrame() {
 
   useEffect(() => {
     async function fetchCandidateTrees(captureId) {
-      // TODO: Add authorization header
+      // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(
-        `${CAPTURE_API}/${captureId}/potential_trees`,
-      ).then((res) => res.json());
+      const data = await fetch(`${CAPTURE_API}/${captureId}/potential_trees`, {
+        headers: {
+          // Authorization: session.token,
+        },
+      }).then((res) => res.json());
       setCandidateImgData(data.trees);
       setLoading(false);
     }
@@ -72,9 +74,13 @@ function CaptureMachineFrame() {
 
   useEffect(() => {
     async function fetchCaptures() {
-      // TODO: Add authorization header
+      // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}`).then((res) => res.json());
+      const data = await fetch(`${CAPTURE_API}`, {
+        headers: {
+          // Authorization: session.token,
+        },
+      }).then((res) => res.json());
       setCaptureImages(data.captures);
       setLoading(false);
     }
@@ -98,8 +104,20 @@ function CaptureMachineFrame() {
   };
 
   // Same Tree Capture function
-  const sameTreeHandler = (/*treeId*/) => {
-    // TODO: post match to API
+  const sameTreeHandler = (treeId) => {
+    // TODO: handle errors and give user feedback
+    const captureId = captureImages[currentPage - 1].captureId;
+    fetch(`${CAPTURE_API}/${captureId}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+        // Authorization: session.token,
+      },
+      body: JSON.stringify({
+        tree_id: treeId,
+      }),
+    });
+
     const newImgData = [
       ...captureImages.slice(0, currentPage - 1, 1),
       ...captureImages.slice(currentPage, captureImages.length),

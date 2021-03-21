@@ -77,14 +77,14 @@ function CaptureImage(props) {
                     >
                       Capture {capture.captureId}
                     </Typography>
-                    <Box>
+                    <Box display="flex">
                       <AccessTimeIcon />
                       <Typography variant="body1">
                         {capture.createdAt}
                       </Typography>
                     </Box>
 
-                    <Box>
+                    <Box display="flex">
                       <LocationOnOutlinedIcon />
                       <Typography variant="body1">USA</Typography>
                     </Box>
