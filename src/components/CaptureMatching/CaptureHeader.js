@@ -45,18 +45,6 @@ function CaptureHeader(props) {
           </Box>
 
           <Box style={{ display: 'flex', flexDirection: 'wrap' }}>
-            <Button
-              variant="contained"
-              style={{
-                height: '30px',
-                margin: '0 20px 0 20px',
-                textTransform: 'capitalize',
-                borderRadius: '15px',
-              }}
-            >
-              My Organizations
-            </Button>
-
             <Pagination
               count={noOfPages}
               page={currentPage}
