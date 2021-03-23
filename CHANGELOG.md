@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.5.1...v1.6.0) (2021-03-23)
+
+
+### Features
+
+* capture matching tool ([#45](https://github.com/Greenstand/treetracker-admin-client/issues/45)) ([2b9be12](https://github.com/Greenstand/treetracker-admin-client/commit/2b9be128ac2f92e0846886e9584211e1fa596d66))
+
 ## [1.5.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.5.0...v1.5.1) (2021-03-14)
 
 ### Bug Fixes
