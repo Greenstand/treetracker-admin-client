@@ -8,6 +8,7 @@ import Account from './Account';
 import Home from './Home';
 import Users from './Users';
 import SpeciesMgt from './SpeciesMgt';
+import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
 
 import IconSettings from '@material-ui/icons/Settings';
 import IconShowChart from '@material-ui/icons/ShowChart';
@@ -18,6 +19,7 @@ import IconCompareArrows from '@material-ui/icons/CompareArrows';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
+import CompareIcon from '@material-ui/icons/Compare';
 
 import { session, hasPermission, POLICIES } from '../models/auth';
 import axios from 'axios';
@@ -51,6 +53,18 @@ function getRoutes(user) {
         POLICIES.LIST_TREE,
         POLICIES.APPROVE_TREE,
       ]),
+    },
+    {
+      name: 'Capture Matching',
+      linkTo: '/captures',
+      component: CaptureMatchingFrame,
+      icon: CompareIcon,
+      disabled:
+        process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.APPROVE_TREE,
+        ]),
     },
     {
       name: 'Trees',

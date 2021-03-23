@@ -343,13 +343,13 @@ const TreeImageScrubber = (props) => {
 
   const placeholderImages = props.verifyState.isLoading
     ? Array(props.verifyState.pageSize - treeImages.length)
-      .fill()
-      .map((_, index) => {
-        return {
-          id: index,
-          placeholder: true,
-        };
-      })
+        .fill()
+        .map((_, index) => {
+          return {
+            id: index,
+            placeholder: true,
+          };
+        })
     : [];
 
   const treeImageItems = treeImages.concat(placeholderImages).map((tree) => {
@@ -610,17 +610,17 @@ function SidePanel(props) {
     const approveAction =
       switchApprove === 0
         ? {
-          isApproved: true,
-          morphology,
-          age,
-          captureApprovalTag,
-          rememberSelection,
-        }
+            isApproved: true,
+            morphology,
+            age,
+            captureApprovalTag,
+            rememberSelection,
+          }
         : {
-          isApproved: false,
-          rejectionReason,
-          rememberSelection,
-        };
+            isApproved: false,
+            rejectionReason,
+            rememberSelection,
+          };
     await props.onSubmit(approveAction);
     if (!rememberSelection) {
       resetSelection();

@@ -10,8 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconLogo from './IconLogo';
 import Menu from './common/Menu.js';
 
-const log = require('loglevel').getLogger('../components/Navbar');
-
 const useStyles = makeStyles(() => ({
   toolbar: {
     minHeight: '48px',
@@ -19,7 +17,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Navbar = (props) => {
-  log.debug('render Navbar...');
   const [isMenuShown, setMenuShown] = React.useState(false);
   const classes = useStyles(props);
 

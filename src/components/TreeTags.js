@@ -122,7 +122,7 @@ const TreeTags = (props) => {
     });
   };
 
-  let handleSuggestionsClearRequested = () => { };
+  let handleSuggestionsClearRequested = () => {};
 
   let handletextFieldInputChange = (event, { newValue }) => {
     setTextFieldInput(newValue);
