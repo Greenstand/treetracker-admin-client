@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.1...v1.6.2) (2021-03-25)
+
+
+### Bug Fixes
+
+* force a release ([7ddbd48](https://github.com/Greenstand/treetracker-admin-client/commit/7ddbd48a865a8315eedf7c76cf4401a573b7b952))
+
 ## [1.6.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.0...v1.6.1) (2021-03-25)
 
 
