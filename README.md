@@ -194,10 +194,9 @@ To run tests:
 
 `npm test`
 
-
 ## How to log
 
-We use [loglevel]((https://github.com/pimterry/loglevel)) for logging, with some conventions. Using loglevel, we will be able to open/close a single file's log by chaining the level of log on the fly, even in production env.
+We use [loglevel](<(https://github.com/pimterry/loglevel)>) for logging, with some conventions. Using loglevel, we will be able to open/close a single file's log by chaining the level of log on the fly, even in production env.
 
 The default of log level is set in the file: ./src/init.js
 
@@ -346,7 +345,6 @@ Here is our [wiki page for troubleshooting](https://github.com/Greenstand/treetr
 
 Help us to improve it by adding your experience solving this problem.
 
-
 ### Scripts
 
 Useful scripts are contained in /dev/scripts. Their uses are described here. Scripts are run from the repository root as /dev/scripts/{script-name}.sh
@@ -368,7 +366,6 @@ Useful scripts are contained in /dev/scripts. Their uses are described here. Scr
 **docker-clear-images.sh** clear out _all_ docker images
 
 **docker-remove-containers.sh** clear out _all_ docker containers
-
 
 ## Further reading
 
