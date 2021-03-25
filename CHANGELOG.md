@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.0...v1.6.1) (2021-03-25)
+
+
+### Bug Fixes
+
+* update api url for production ([87ed65b](https://github.com/Greenstand/treetracker-admin-client/commit/87ed65be164f630b0ad6002b338a97cc39a89ded))
+
 # [1.6.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.5.1...v1.6.0) (2021-03-23)
 
 
