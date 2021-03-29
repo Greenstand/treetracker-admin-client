@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.2...v1.6.3) (2021-03-29)
+
+
+### Bug Fixes
+
+* list user's own roles and restrict user to maximum of one organization ([#56](https://github.com/Greenstand/treetracker-admin-client/issues/56)) ([8caf860](https://github.com/Greenstand/treetracker-admin-client/commit/8caf8603eb260461ff67e60256c7cf46cab2a881))
+
 ## [1.6.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.1...v1.6.2) (2021-03-25)
 
 
