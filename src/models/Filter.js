@@ -16,7 +16,7 @@ export default class Filter {
   approved;
   active;
   planterId;
-  deviceId;
+  deviceIdentifier;
   planterIdentifier;
   speciesId;
   tagId;
@@ -64,8 +64,11 @@ export default class Filter {
       where.planterId = this.planterId;
     }
 
-    if (this.deviceId !== undefined && this.deviceId.length > 0) {
-      where.deviceId = this.deviceId;
+    if (
+      this.deviceIdentifier !== undefined &&
+      this.deviceIdentifier.length > 0
+    ) {
+      where.deviceIdentifier = this.deviceIdentifier;
     }
 
     if (
