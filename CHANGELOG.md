@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.3...v1.7.0) (2021-04-08)
+
+
+### Features
+
+* replace Device ID with Device Identifier ([#59](https://github.com/Greenstand/treetracker-admin-client/issues/59)) ([3ff400f](https://github.com/Greenstand/treetracker-admin-client/commit/3ff400f359ab364163426ab6a558f49744b1a1e2))
+
 ## [1.6.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.2...v1.6.3) (2021-03-29)
 
 
