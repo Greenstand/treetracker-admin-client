@@ -70,7 +70,9 @@ function Filter(props) {
   const dateEndDefault = null;
   const [treeId, setTreeId] = useState(filter.treeId);
   const [planterId, setPlanterId] = useState(filter.planterId);
-  const [deviceId, setDeviceId] = useState(filter.deviceId);
+  const [deviceIdentifier, setDeviceIdentifier] = useState(
+    filter.deviceIdentifier,
+  );
   const [planterIdentifier, setPlanterIdentifier] = useState(
     filter.planterIdentifier,
   );
@@ -109,7 +111,7 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.treeId = treeId;
     filter.planterId = planterId;
-    filter.deviceId = deviceId;
+    filter.deviceIdentifier = deviceIdentifier;
     filter.planterIdentifier = planterIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
@@ -223,10 +225,10 @@ function Filter(props) {
               onChange={(e) => setTreeId(e.target.value)}
             />
             <TextField
-              label="Device ID"
-              placeholder="e.g. 123456"
-              value={deviceId}
-              onChange={(e) => setDeviceId(e.target.value)}
+              label="Device Identifier"
+              placeholder="e.g. 1234abcd"
+              value={deviceIdentifier}
+              onChange={(e) => setDeviceIdentifier(e.target.value)}
             />
             <TextField
               label="Planter Identifier"

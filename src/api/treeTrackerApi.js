@@ -27,7 +27,7 @@ export default {
         active: true,
         approved: true,
         planterId: true,
-        deviceId: true,
+        deviceIdentifier: true,
         planterIdentifier: true,
       },
     };

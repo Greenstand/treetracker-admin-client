@@ -11,8 +11,8 @@ describe('treeDetail', () => {
   const TREE = {
     id: 0,
     planterId: 10,
-    planterIdentifier: 'plater@some.place',
-    deviceId: 20,
+    planterIdentifier: 'planter@some.place',
+    deviceIdentifier: 'abcdef123456',
     approved: true,
     active: true,
     status: 'planted',

@@ -11,7 +11,7 @@ describe('Filter, with initial values about this filter object', () => {
     filter.approved = true;
     filter.active = true;
     filter.planterId = '1';
-    filter.deviceId = '1';
+    filter.deviceIdentifier = '1';
     filter.planterIdentifier = '1';
   });
 
@@ -60,9 +60,9 @@ describe('Filter, with initial values about this filter object', () => {
     );
   });
 
-  it('getWhereObj() should match: deviceId=1', () => {
+  it('getWhereObj() should match: deviceIdentifier=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ deviceId: '1' }),
+      expect.objectContaining({ deviceIdentifier: '1' }),
     );
   });
 
@@ -97,14 +97,14 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set deviceId = ""', () => {
+  describe('set deviceIdentifier = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.deviceId = '';
+      filter.deviceIdentifier = '';
     });
 
-    it('loopback object should not match any deviceId', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('deviceId');
+    it('loopback object should not match any deviceIdentifier', () => {
+      expect(filter.getWhereObj()).not.toHaveProperty('deviceIdentifier');
     });
     //}}}
   });

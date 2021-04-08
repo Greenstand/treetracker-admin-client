@@ -122,7 +122,11 @@ function TreeDetailDialog(props) {
             value: tree.planterIdentifier,
             copy: true,
           },
-          { label: 'Device ID', value: tree.deviceId, copy: true },
+          {
+            label: 'Device Identifier',
+            value: tree.deviceIdentifier,
+            copy: true,
+          },
           { label: 'Approved', value: tree.approved ? 'true' : 'false' },
           { label: 'Active', value: tree.active ? 'true' : 'false' },
           { label: 'Status', value: tree.status },

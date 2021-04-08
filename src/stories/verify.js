@@ -51,7 +51,7 @@ storiesOf('verify', module)
               Array.from(new Array(6)).map((e, i) => ({
                 id: id--,
                 planterId: 2,
-                deviceId: 3,
+                deviceIdentifier: 'abcdef123456',
                 imageUrl: 'http://xxx',
                 i,
               })),
