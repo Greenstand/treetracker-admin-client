@@ -8,7 +8,6 @@ import { init } from '@rematch/core';
 import * as models from './models';
 import './index.css';
 import * as log from 'loglevel';
-import registerServiceWorker from 'registerServiceWorker';
 
 log.info('init redux...');
 const store = init({ models });
@@ -19,5 +18,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
-
-registerServiceWorker();
