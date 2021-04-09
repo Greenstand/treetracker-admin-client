@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.0...v1.7.1) (2021-04-09)
+
+
+### Bug Fixes
+
+* disable service worker ([#62](https://github.com/Greenstand/treetracker-admin-client/issues/62)) ([34d7121](https://github.com/Greenstand/treetracker-admin-client/commit/34d71216114e17eb568e25143bf8858cbc998265))
+
 # [1.7.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.6.3...v1.7.0) (2021-04-08)
 
 
