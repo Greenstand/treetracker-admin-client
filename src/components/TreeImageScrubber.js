@@ -389,7 +389,7 @@ const TreeImageScrubber = (props) => {
             <CardContent className={classes.cardContent}>
               <OptimizedImage
                 src={tree.imageUrl}
-                width={320}
+                width={480}
                 className={classes.cardMedia}
               />
             </CardContent>
