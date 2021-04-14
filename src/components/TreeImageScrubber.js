@@ -40,6 +40,7 @@ import TreeDetailDialog from './TreeDetailDialog';
 import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
+import { countToLocaleString } from '../common/numbers';
 
 const log = require('loglevel').getLogger('../components/TreeImageScrubber');
 
@@ -172,7 +173,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
-  <>{data !== null && `${data} trees to verify`}</>
+  <>
+    {data !== null &&
+      `${countToLocaleString(data)} capture${data === 1 ? '' : 's'}`}
+  </>
 ));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
