@@ -14,6 +14,7 @@ import IconSettings from '@material-ui/icons/Settings';
 import IconShowChart from '@material-ui/icons/ShowChart';
 import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
+import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
 import IconCompareArrows from '@material-ui/icons/CompareArrows';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
@@ -80,7 +81,7 @@ function getRoutes(user) {
       name: 'Planters',
       linkTo: '/planters',
       component: Planters,
-      icon: IconGroup,
+      icon: IconNaturePeople,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_PLANTER,
