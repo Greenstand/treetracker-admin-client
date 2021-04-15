@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.1...v1.7.2) (2021-04-15)
+
+
+### Bug Fixes
+
+* use NaturePeople icon for Planters in menu ([#68](https://github.com/Greenstand/treetracker-admin-client/issues/68)) ([753fa12](https://github.com/Greenstand/treetracker-admin-client/commit/753fa1210d51ddf66a0e6bc33329503004cb0e07))
+
 ## [1.7.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.0...v1.7.1) (2021-04-09)
 
 
