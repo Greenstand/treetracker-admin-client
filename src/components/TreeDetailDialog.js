@@ -198,7 +198,7 @@ function TreeDetailDialog(props) {
           <Grid item>
             <OptimizedImage
               src={renderTree.imageUrl}
-              width={480}
+              width={640}
               style={{ maxWidth: '100%' }}
               fixed
             />

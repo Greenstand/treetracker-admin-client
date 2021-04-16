@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
 import Slide from '@material-ui/core/Slide';
@@ -15,7 +14,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Modal from '@material-ui/core/Modal';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import IconFilter from '@material-ui/icons/FilterList';
-import Image from '@material-ui/icons/Image';
 import IconButton from '@material-ui/core/IconButton';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -29,9 +27,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 
 import FilterTop from './FilterTop';
-import { ReactComponent as TreePin } from '../components/images/highlightedPinNoStick.svg';
 import CheckIcon from '@material-ui/icons/Check';
 import Person from '@material-ui/icons/Person';
+import Nature from '@material-ui/icons/Nature';
+import Map from '@material-ui/icons/Map';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Navbar from './Navbar';
@@ -40,6 +39,8 @@ import TreeTags from './TreeTags';
 import TreeDetailDialog from './TreeDetailDialog';
 import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
+import { LocationOn } from '@material-ui/icons';
+import { countToLocaleString } from '../common/numbers';
 
 const log = require('loglevel').getLogger('../components/TreeImageScrubber');
 
@@ -58,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     cursor: 'pointer',
+    '&:hover $cardMedia': {
+      transform: 'scale(1.04)',
+    },
   },
   cardCheckbox: {
     position: 'absolute',
@@ -77,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     padding: '87% 0 0 0',
     position: 'relative',
+    overflow: 'hidden',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -87,17 +92,15 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     left: 0,
     right: 0,
+    transform: 'scale(1)',
+    transition: theme.transitions.create('transform', {
+      easing: theme.transitions.easing.easeInOut,
+      duration: '0.2s',
+    }),
   },
   cardWrapper: {
     position: 'relative',
     padding: theme.spacing(2),
-    transition: theme.transitions.create('padding', {
-      easing: theme.transitions.easing.easeInOut,
-      duration: '0.1s',
-    }),
-    '&:not($cardSelected):hover': {
-      padding: 0,
-    },
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -119,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardActions: {
     display: 'flex',
-    justifyContent: 'space-between',
+    padding: theme.spacing(0, 2),
   },
   button: {
     marginRight: '8px',
@@ -170,7 +173,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
-  <>{data !== null && `${data} trees to verify`}</>
+  <>
+    {data !== null &&
+      `${countToLocaleString(data)} capture${data === 1 ? '' : 's'}`}
+  </>
 ));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -181,7 +187,10 @@ const TreeImageScrubber = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = React.useState(0);
   const [isFilterShown, setFilterShown] = React.useState(false);
-  const [dialog, setDialog] = React.useState({ isOpen: false, tree: {} });
+  const [treeDetail, setTreeDetail] = React.useState({
+    isOpen: false,
+    tree: {},
+  });
   const [planterDetail, setPlanterDetail] = React.useState({
     isOpen: false,
     planter: {},
@@ -230,8 +239,16 @@ const TreeImageScrubber = (props) => {
   function handleTreePinClick(e, treeId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click at tree:%d', treeId);
+    log.debug('click on tree:%d', treeId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${treeId}`;
+    window.open(url, '_blank').opener = null;
+  }
+
+  function handlePlanterMapClick(e, planterId) {
+    e.stopPropagation();
+    e.preventDefault();
+    log.debug('click at planter:%d', planterId);
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${planterId}`;
     window.open(url, '_blank').opener = null;
   }
 
@@ -290,7 +307,7 @@ const TreeImageScrubber = (props) => {
     props.verifyDispatch.loadTreeImages();
   }
 
-  async function handlePlanterDetail(e, tree) {
+  async function handleShowPlanterDetail(e, tree) {
     e.preventDefault();
     e.stopPropagation();
     setPlanterDetail({
@@ -299,24 +316,24 @@ const TreeImageScrubber = (props) => {
     });
   }
 
-  function handlePlanterDetailClose() {
+  function handleClosePlanterDetail() {
     setPlanterDetail({
       isOpen: false,
       planterId: null,
     });
   }
 
-  function handleDialog(e, tree) {
+  function handleShowTreeDetail(e, tree) {
     e.preventDefault();
     e.stopPropagation();
-    setDialog({
+    setTreeDetail({
       isOpen: true,
       tree,
     });
   }
 
-  function handleDialogClose() {
-    setDialog({
+  function handleCloseTreeDetail() {
+    setTreeDetail({
       isOpen: false,
       tree: {},
     });
@@ -376,32 +393,49 @@ const TreeImageScrubber = (props) => {
             <CardContent className={classes.cardContent}>
               <OptimizedImage
                 src={tree.imageUrl}
-                width={320}
+                width={400}
                 className={classes.cardMedia}
               />
             </CardContent>
-            <CardActions className={classes.cardActions}>
-              <Grid justify="flex-end" container>
-                <Grid item>
-                  <Person
-                    color="primary"
-                    onClick={(e) => handlePlanterDetail(e, tree)}
-                  />
-                  <Image
-                    color="primary"
-                    onClick={(e) => handleDialog(e, tree)}
-                  />
-                  <TreePin
-                    width="25px"
-                    height="25px"
-                    title={`Open Webmap for Tree# ${tree.id}`}
-                    onClick={(e) => {
-                      handleTreePinClick(e, tree.id);
-                    }}
-                  />
-                </Grid>
+
+            <Grid justify="center" container className={classes.cardActions}>
+              <Grid item>
+                <IconButton
+                  onClick={(e) => handleShowPlanterDetail(e, tree)}
+                  aria-label={`Planter details`}
+                  title={`Planter details`}
+                >
+                  <Person color="primary" />
+                </IconButton>
+                <IconButton
+                  onClick={(e) => handleShowTreeDetail(e, tree)}
+                  aria-label={`Tree details`}
+                  title={`Tree details`}
+                >
+                  <Nature color="primary" />
+                </IconButton>
+                <IconButton
+                  variant="link"
+                  href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${tree.id}`}
+                  target="_blank"
+                  onClick={(e) => handleTreePinClick(e, tree.id)}
+                  aria-label={`Tree location`}
+                  title={`Tree location`}
+                >
+                  <LocationOn color="primary" />
+                </IconButton>
+                <IconButton
+                  variant="link"
+                  href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${tree.planterId}`}
+                  target="_blank"
+                  onClick={(e) => handlePlanterMapClick(e, tree.planterId)}
+                  aria-label={`Planter map`}
+                  title={`Planter map`}
+                >
+                  <Map color="primary" />
+                </IconButton>
               </Grid>
-            </CardActions>
+            </Grid>
           </Card>
         </div>
       </Grid>
@@ -565,13 +599,13 @@ const TreeImageScrubber = (props) => {
       <PlanterDetail
         open={planterDetail.isOpen}
         planterId={planterDetail.planterId}
-        onClose={() => handlePlanterDetailClose()}
+        onClose={() => handleClosePlanterDetail()}
       />
       <TreeDetailDialog
-        open={dialog.isOpen}
+        open={treeDetail.isOpen}
         TransitionComponent={Transition}
-        onClose={handleDialogClose}
-        tree={dialog.tree}
+        onClose={handleCloseTreeDetail}
+        tree={treeDetail.tree}
       />
     </React.Fragment>
   );
