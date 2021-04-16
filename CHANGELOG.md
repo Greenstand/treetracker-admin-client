@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.2...v1.8.0) (2021-04-16)
+
+
+### Features
+
+* add planter map link to capture thumbnail in Verify tool ([#67](https://github.com/Greenstand/treetracker-admin-client/issues/67)) ([33e7c65](https://github.com/Greenstand/treetracker-admin-client/commit/33e7c659518a4bc22eea0c363d877c557f6ea984))
+
 ## [1.7.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.1...v1.7.2) (2021-04-15)
 
 
