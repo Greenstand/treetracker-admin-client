@@ -8,7 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
 import Slide from '@material-ui/core/Slide';
 
-import { selectedHighlightColor } from '../common/variables.js';
+import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Modal from '@material-ui/core/Modal';
@@ -204,6 +204,11 @@ const TreeImageScrubber = (props) => {
     log.debug('mounted');
     props.verifyDispatch.loadTreeImages();
   }, [props.verifyDispatch]);
+
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `Verify - ${documentTitle}`;
+  });
 
   /* to display progress */
   useEffect(() => {

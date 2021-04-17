@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
 
 import Menu, { MENU_WIDTH } from './common/Menu';
+import { documentTitle } from '../common/variables';
 import { AppContext } from './Context';
 import { hasPermission, POLICIES } from '../models/auth';
 import {
@@ -152,6 +153,11 @@ function Home(props) {
   // React.useEffect(() => {
   //   load()
   // }, [])
+
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `${documentTitle}`;
+  });
 
   return (
     <div className={classes.box}>

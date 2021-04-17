@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -34,6 +34,7 @@ import axios from 'axios';
 import { AppContext } from './Context';
 import pwdGenerator from 'generate-password';
 import { getDateTimeStringLocale } from '../common/locale';
+import { documentTitle } from '../common/variables';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -177,6 +178,11 @@ function Users(props) {
     load();
   }, [load]);
 
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `User Manager - ${documentTitle}`;
+  });
+
   function handleEdit(user) {
     setUserEditing(user);
     setLeft(permissions.filter((p) => user.role.every((r) => r !== p.id)));
@@ -232,7 +238,7 @@ function Users(props) {
     setCopyMsg('');
   }
 
-  function handleClose() { }
+  function handleClose() {}
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState(permissions);
@@ -241,12 +247,18 @@ function Users(props) {
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 
-  const allowedOrganizationIds = [...leftChecked, ...right].reduce((accumulator, role) => {
-    if (role.policy?.organization && !accumulator.some((roleId) => roleId === role.policy.organization.id)) {
-      return [...accumulator, role.policy.organization.id];
-    }
-    return accumulator;
-  }, []);
+  const allowedOrganizationIds = [...leftChecked, ...right].reduce(
+    (accumulator, role) => {
+      if (
+        role.policy?.organization &&
+        !accumulator.some((roleId) => roleId === role.policy.organization.id)
+      ) {
+        return [...accumulator, role.policy.organization.id];
+      }
+      return accumulator;
+    },
+    [],
+  );
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.findIndex((e) => e.id === value.id);
@@ -288,8 +300,12 @@ function Users(props) {
       <List dense component="div" role="list">
         {items.map((value) => {
           const labelId = `transfer-list-item-${value.id}-label`;
-          const disabled = value.policy?.organization && allowedOrganizationIds.length > 0
-            && !allowedOrganizationIds.some((orgId) => orgId === value.policy.organization.id);
+          const disabled =
+            value.policy?.organization &&
+            allowedOrganizationIds.length > 0 &&
+            !allowedOrganizationIds.some(
+              (orgId) => orgId === value.policy.organization.id,
+            );
 
           return (
             <ListItem

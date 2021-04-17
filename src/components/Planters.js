@@ -12,7 +12,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import { selectedHighlightColor } from '../common/variables.js';
+import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import Grid from '@material-ui/core/Grid';
 import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
@@ -148,6 +148,11 @@ const Planters = (props) => {
       filter: props.plantersState.filter,
     });
   }, [props.plantersDispatch, props.plantersState.filter]);
+
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `Planters - ${documentTitle}`;
+  });
 
   function handlePlanterClick(planter) {
     setDetailShown(true);
