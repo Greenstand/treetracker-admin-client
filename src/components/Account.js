@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import {
   Grid,
   Paper,
@@ -18,6 +18,7 @@ import AccountIcon from '@material-ui/icons/Person';
 import { AppContext } from './Context';
 import axios from 'axios';
 import { getDateTimeStringLocale } from '../common/locale';
+import { documentTitle } from '../common/variables';
 
 const style = (theme) => ({
   box: {
@@ -174,11 +175,16 @@ function Account(props) {
     return result;
   };
 
-  const roles = (
-    user.roleNames?.map((name, idx) =>
-      <Typography key={`role_${idx}`} className={classes.item}>{name}</Typography>
-    )
-  );
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `Account - ${documentTitle}`;
+  });
+
+  const roles = user.roleNames?.map((name, idx) => (
+    <Typography key={`role_${idx}`} className={classes.item}>
+      {name}
+    </Typography>
+  ));
 
   return (
     <>

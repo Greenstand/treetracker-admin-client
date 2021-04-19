@@ -5,15 +5,21 @@ Trees is a container component (no visual representation of its own and concerne
 handling the comms between the tree view components and the store/models)
 
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
+import { documentTitle } from '../common/variables';
 import Grid from '@material-ui/core/Grid';
 
 import Navbar from './Navbar';
 import TreeTable from './TreeTable';
 
 function Trees() {
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `Trees - ${documentTitle}`;
+  }, []);
+
   return (
     <Grid
       container

@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import theme from '../common/theme';
+import { documentTitle } from '../../common/variables';
 
 const useStyle = makeStyles({
   container: {
@@ -129,6 +130,11 @@ function CaptureMachineFrame() {
   const handleSkip = () => {
     setCurrentPage(currentPage + 1);
   };
+
+  /* to update html document title */
+  useEffect(() => {
+    document.title = `Capture Matching - ${documentTitle}`;
+  }, []);
 
   return (
     <>
