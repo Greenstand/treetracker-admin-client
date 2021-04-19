@@ -208,7 +208,7 @@ const TreeImageScrubber = (props) => {
   /* to update html document title */
   useEffect(() => {
     document.title = `Verify - ${documentTitle}`;
-  });
+  }, []);
 
   /* to display progress */
   useEffect(() => {

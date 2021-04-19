@@ -18,7 +18,7 @@ function Trees() {
   /* to update html document title */
   useEffect(() => {
     document.title = `Trees - ${documentTitle}`;
-  });
+  }, []);
 
   return (
     <Grid

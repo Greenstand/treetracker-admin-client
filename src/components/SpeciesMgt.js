@@ -7,7 +7,7 @@ const SpeciesMgt = () => {
   /* to update html document title */
   useEffect(() => {
     document.title = `Species - ${documentTitle}`;
-  });
+  }, []);
 
   return (
     <Grid

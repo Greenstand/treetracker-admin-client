@@ -157,7 +157,7 @@ function Home(props) {
   /* to update html document title */
   useEffect(() => {
     document.title = `${documentTitle}`;
-  });
+  }, []);
 
   return (
     <div className={classes.box}>

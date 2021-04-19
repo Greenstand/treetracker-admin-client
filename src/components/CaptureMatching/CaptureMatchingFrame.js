@@ -134,7 +134,7 @@ function CaptureMachineFrame() {
   /* to update html document title */
   useEffect(() => {
     document.title = `Capture Matching - ${documentTitle}`;
-  });
+  }, []);
 
   return (
     <>

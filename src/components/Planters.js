@@ -152,7 +152,7 @@ const Planters = (props) => {
   /* to update html document title */
   useEffect(() => {
     document.title = `Planters - ${documentTitle}`;
-  });
+  }, []);
 
   function handlePlanterClick(planter) {
     setDetailShown(true);

@@ -181,7 +181,7 @@ function Users(props) {
   /* to update html document title */
   useEffect(() => {
     document.title = `User Manager - ${documentTitle}`;
-  });
+  }, []);
 
   function handleEdit(user) {
     setUserEditing(user);
