@@ -19,22 +19,27 @@ export default {
   },
 
   getPlanters({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
-    const query =
-      `${process.env.REACT_APP_API_ROOT}/api/${getOrganization()}planter?` +
-      `filter[order]=${orderBy} ${order}&` +
-      `filter[limit]=${rowsPerPage}&` +
-      `filter[skip]=${skip}&` +
-      `filter[fields][firstName]=true&` +
-      `filter[fields][lastName]=true&` +
-      `filter[fields][imageUrl]=true&` +
-      `filter[fields][email]=true&` +
-      `filter[fields][phone]=true&` +
-      `filter[fields][personId]=true&` +
-      `filter[fields][organization]=true&` +
-      `filter[fields][organizationId]=true&` +
-      `filter[fields][id]=true&` +
-      //the filter query
-      (filter ? filter.getBackloopString() : '');
+    const where = filter ? filter.getWhereObj() : {};
+    const planterFilter = {
+      where: { ...where, active: true },
+      order: [`${orderBy} ${order}`],
+      limit: rowsPerPage,
+      skip: skip,
+      fields: {
+        firstName: true,
+        lastName: true,
+        imageUrl: true,
+        email: true,
+        phone: true,
+        personId: true,
+        organization: true,
+        organizationId: true,
+        id: true,
+      },
+    };
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}planter?filter=${JSON.stringify(planterFilter)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
@@ -46,11 +51,10 @@ export default {
   },
 
   getCount({ filter }) {
+    const filterObj = filter ? filter.getWhereObj() : {};
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}planter/count?${
-      filter && filter.getBackloopString(false)
-    }`;
+    }/api/${getOrganization()}planter/count?where=${JSON.stringify(filterObj)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',

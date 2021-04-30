@@ -1,38 +1,38 @@
 /*
- * A simple model for tree filter
+ * A simple model for planter filter
  */
 
 export default class Filter {
   constructor(options) {
     Object.assign(this, options);
   }
-
-  getBackloopString(includeFilterString = true) {
-    //{{{
-    let result = '';
-    const prefix = includeFilterString ? '&filter[where]' : '&where';
+  getWhereObj() {
+    let where = {};
 
     if (this.personId) {
-      result += `${prefix}[personId]=${this.personId}`;
+      where.personId = this.personId;
     }
 
     if (this.id) {
-      result += `${prefix}[id]=${this.id}`;
+      where.id = this.id;
     }
 
     if (this.firstName) {
-      result += `${prefix}[firstName]=${this.firstName}`;
+      where.firstName = {
+        ilike: this.firstName,
+      };
     }
 
     if (this.lastName) {
-      result += `${prefix}[lastName]=${this.lastName}`;
+      where.lastName = {
+        ilike: this.lastName,
+      };
     }
 
     if (this.organizationId) {
-      result += `${prefix}[organizationId]=${this.organizationId}`;
+      where.organizationId = this.organizationId;
     }
 
-    return result;
-    //}}}
+    return where;
   }
 }
