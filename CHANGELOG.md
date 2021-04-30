@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.8.0...v1.9.0) (2021-04-30)
+
+
+### Features
+
+* add reset button to tree filter ([#38](https://github.com/Greenstand/treetracker-admin-client/issues/38)) ([8605d12](https://github.com/Greenstand/treetracker-admin-client/commit/8605d1211d1e4bdbfc4c77040d764586e2376a47))
+
 # [1.8.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.7.2...v1.8.0) (2021-04-16)
 
 
