@@ -1,3 +1,15 @@
+# [1.10.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.9.0...v1.10.0) (2021-04-30)
+
+
+### Bug Fixes
+
+* edit planter - clear planter organization ([#75](https://github.com/Greenstand/treetracker-admin-client/issues/75)) ([6305ddb](https://github.com/Greenstand/treetracker-admin-client/commit/6305ddb0d049966cda5c72b22074ff7a36f68a01))
+
+
+### Features
+
+* case insensitive name ([#76](https://github.com/Greenstand/treetracker-admin-client/issues/76)) ([e6577e0](https://github.com/Greenstand/treetracker-admin-client/commit/e6577e0ab4b5a7a82796048b0b0c9fed13b30846))
+
 # [1.9.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.8.0...v1.9.0) (2021-04-30)
 
 
