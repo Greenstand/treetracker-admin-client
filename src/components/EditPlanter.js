@@ -175,6 +175,9 @@ const EditPlanter = (props) => {
                   handleChange('organizationId', e.target.value);
                 }}
               >
+                <MenuItem key={'null'} value={'null'}>
+                  No organization
+                </MenuItem>
                 {[...props.organizationState.organizationList].map((org) => (
                   <MenuItem key={org.id} value={org.id}>
                     {org.name}
