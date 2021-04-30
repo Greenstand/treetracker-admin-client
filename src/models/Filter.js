@@ -52,9 +52,9 @@ export default class Filter {
       where.approved = this.approved;
     }
 
-    if (this.rejected !== undefined) {
-      where.rejected = this.rejected;
-    }
+    // if (this.rejected !== undefined) {
+    //   where.rejected = this.rejected;
+    // }
 
     if (this.active !== undefined) {
       where.active = this.active;

@@ -201,7 +201,9 @@ const TreeImageScrubber = (props) => {
    * effect to load page when mounted
    */
   useEffect(() => {
-    log.debug('mounted');
+    log.debug('mounted:');
+    // update filter right away to prevent non-Filter type objects loading
+    props.verifyDispatch.updateFilter(props.verifyState.filter);
     props.verifyDispatch.loadTreeImages();
   }, [props.verifyDispatch]);
 
