@@ -51,11 +51,10 @@ export default {
   },
 
   getCount({ filter }) {
+    const filterObj = filter ? filter.getWhereObj() : {};
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}planter/count?${
-      filter && filter.getBackloopString(false)
-    }`;
+    }/api/${getOrganization()}planter/count?where=${JSON.stringify(filterObj)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
