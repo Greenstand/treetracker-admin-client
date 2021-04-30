@@ -102,6 +102,9 @@ export default {
   },
 
   updatePlanter(planterUpdate) {
+    if (planterUpdate.organizationId === 'null') {
+      planterUpdate = { ...planterUpdate, organizationId: null };
+    }
     const { id } = planterUpdate;
     const planterQuery = `${
       process.env.REACT_APP_API_ROOT
