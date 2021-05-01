@@ -1,14 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Fab,
-  Grid,
-  CircularProgress,
-  Card,
-  CardMedia,
-  Button,
-} from '@material-ui/core';
+import { Fab, Grid, CircularProgress, Card, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import OptimizedImage from './OptimizedImage';
 
 /* This component currently uses fixed size cards and scroll window,
  * but it wouldn't be too difficult to make it more flexible.
@@ -129,7 +123,13 @@ export default function ImageScroller(props) {
                 img === selectedImage && classes.selectedImageCard
               }`}
             >
-              <CardMedia image={img} title={img} className={classes.image} />
+              <OptimizedImage
+                src={img}
+                width={182}
+                height={192}
+                className={classes.image}
+                fixed
+              />
             </Card>
           ))
         ) : (
