@@ -64,7 +64,8 @@ const species = {
         state.species.speciesList.length,
       );
       return state.species.speciesList.every(
-        (c) => c.name !== state.species.speciesInput,
+        (c) =>
+          c.name.toLowerCase() !== state.species.speciesInput.toLowerCase(),
       );
     },
     async createSpecies(payload, state) {
