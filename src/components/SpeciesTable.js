@@ -23,6 +23,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -339,6 +340,7 @@ const SpeciesTable = (props) => {
             : props.speciesDispatch.editSpecies
         }
         loadSpeciesList={props.speciesDispatch.loadSpeciesList}
+        data={sortedSpeciesList}
       />
       <DeleteDialog
         speciesEdit={speciesEdit}
@@ -369,8 +371,13 @@ const EditModal = ({
   styles,
   loadSpeciesList,
   editSpecies,
+  data,
 }) => {
+  const [error, setError] = React.useState(undefined);
+  const nameSpecies = data.map((species) => species.name);
+
   const onNameChange = (e) => {
+    setError(undefined);
     setSpeciesEdit({ ...speciesEdit, name: e.target.value });
   };
 
@@ -384,14 +391,19 @@ const EditModal = ({
   };
 
   const handleSave = async () => {
-    setIsEdit(false);
-    await editSpecies({
-      id: speciesEdit.id,
-      name: speciesEdit.name,
-      desc: speciesEdit.desc,
-    });
-    loadSpeciesList();
-    setSpeciesEdit(undefined);
+    if (nameSpecies.includes(speciesEdit.name.trim())) {
+      setError('Species already exist');
+    } else {
+      setError(undefined);
+      setIsEdit(false);
+      await editSpecies({
+        id: speciesEdit.id,
+        name: speciesEdit.name,
+        desc: speciesEdit.desc,
+      });
+      loadSpeciesList();
+      setSpeciesEdit(undefined);
+    }
   };
 
   return (
@@ -431,6 +443,7 @@ const EditModal = ({
             />
           </Grid>
         </Grid>
+        <DialogContentText>{error}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleEditDetailClose}>Cancel</Button>
