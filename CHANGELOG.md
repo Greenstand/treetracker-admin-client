@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.10.0...v1.10.1) (2021-05-01)
+
+
+### Bug Fixes
+
+* add optimize-image in image-scroller ([#78](https://github.com/Greenstand/treetracker-admin-client/issues/78)) ([13bb62c](https://github.com/Greenstand/treetracker-admin-client/commit/13bb62ce38c8b3bf00ccbfdd2156f50a4631549a))
+
 # [1.10.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.9.0...v1.10.0) (2021-04-30)
 
 
