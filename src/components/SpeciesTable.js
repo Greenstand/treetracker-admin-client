@@ -392,7 +392,7 @@ const EditModal = ({
 
   const handleSave = async () => {
     if (nameSpecies.includes(speciesEdit.name.trim())) {
-      setError('Species already exist');
+      setError('Species already exists');
     } else {
       setError(undefined);
       setIsEdit(false);
