@@ -22,7 +22,7 @@ import Person from '@material-ui/icons/Person';
 import Navbar from './Navbar';
 import PlanterDetail from './PlanterDetail';
 import OptimizedImage from './OptimizedImage';
-import LinkToWebmap from './common/LinkToWebmap.js';
+import LinkToWebmap from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('../components/Planters');
 
