@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.10.1...v1.11.0) (2021-05-05)
+
+
+### Features
+
+* planter and tree ids link to webmap ([#79](https://github.com/Greenstand/treetracker-admin-client/issues/79)) ([cb792f7](https://github.com/Greenstand/treetracker-admin-client/commit/cb792f7df848b48ef898164b0efd1d7730b4c885))
+
 ## [1.10.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.10.0...v1.10.1) (2021-05-01)
 
 
