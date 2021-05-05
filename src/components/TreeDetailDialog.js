@@ -18,6 +18,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import FileCopy from '@material-ui/icons/FileCopy';
 import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
+import LinkToWebmap from './common/LinkToWebmap';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -110,13 +111,18 @@ function TreeDetailDialog(props) {
       <Grid item container direction="column" spacing={4}>
         <Grid item>
           <Typography color="primary" variant="h6">
-            {`Tree ${tree.id}`}
+            Tree <LinkToWebmap value={tree.id} type="tree" />
             <CopyButton label="Tree ID" value={tree.id} />
           </Typography>
         </Grid>
         <Divider />
         {[
-          { label: 'Planter ID', value: tree.planterId, copy: true },
+          {
+            label: 'Planter ID',
+            value: tree.planterId,
+            copy: true,
+            link: true,
+          },
           {
             label: 'Planter Identifier',
             value: tree.planterIdentifier,
@@ -138,7 +144,11 @@ function TreeDetailDialog(props) {
             <Grid item>
               <Typography variant="subtitle1">{item.label}</Typography>
               <Typography variant="body1">
-                {item.value || '---'}
+                {item.link ? (
+                  <LinkToWebmap value={item.value} type="user" />
+                ) : (
+                  item.value || '---'
+                )}
                 {item.value && item.copy && (
                   <CopyButton label={item.label} value={item.value} />
                 )}
