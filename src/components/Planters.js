@@ -22,6 +22,7 @@ import Person from '@material-ui/icons/Person';
 import Navbar from './Navbar';
 import PlanterDetail from './PlanterDetail';
 import OptimizedImage from './OptimizedImage';
+import LinkToWebmap from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('../components/Planters');
 
@@ -323,7 +324,9 @@ function Planter(props) {
               <Typography className={classes.name}>
                 {planter.firstName} {planter.lastName}
               </Typography>
-              <Typography>ID: {planter.id}</Typography>
+              <Typography>
+                ID: <LinkToWebmap value={planter.id} type="user" />
+              </Typography>
               {planter.organization && (
                 <Typography>Organization: {planter.organization}</Typography>
               )}

@@ -18,6 +18,7 @@ import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from './Context';
 import EditPlanter from './EditPlanter';
 import OptimizedImage from './OptimizedImage';
+import LinkToWebmap from './common/LinkToWebmap';
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -158,7 +159,9 @@ const PlanterDetail = (props) => {
               <Typography variant="h5" color="primary" className={classes.name}>
                 {planter.firstName} {planter.lastName}
               </Typography>
-              <Typography variant="body2">ID:{planter.id}</Typography>
+              <Typography variant="body2">
+                ID: <LinkToWebmap value={planter.id} type="user" />
+              </Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>

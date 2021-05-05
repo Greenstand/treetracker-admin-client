@@ -18,6 +18,7 @@ import {
 import { getDateTimeStringLocale } from '../common/locale';
 import Filter, { FILTER_WIDTH } from './Filter';
 import TreeDetails from './TreeDetails.js';
+import LinkToWebmap from './common/LinkToWebmap';
 
 // change 88 to unit spacing,
 const styles = (theme) => ({
@@ -229,7 +230,7 @@ class TreeTable extends Component {
               >
                 {columns.map(({ attr, renderer }) => (
                   <TableCell key={attr}>
-                    {renderer ? renderer(tree[attr]) : tree[attr]}
+                    {formatCell(tree, attr, renderer)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -253,6 +254,16 @@ class TreeTable extends Component {
     );
   }
 }
+
+const formatCell = (tree, attr, renderer) => {
+  if (attr === 'id' || attr === 'planterId') {
+    return (
+      <LinkToWebmap value={tree[attr]} type={attr === 'id' ? 'tree' : 'user'} />
+    );
+  } else {
+    return renderer ? renderer(tree[attr]) : tree[attr];
+  }
+};
 
 const mapState = (state) => {
   const keys = Object.keys(state.trees.data);
