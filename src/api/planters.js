@@ -83,12 +83,13 @@ export default {
       order: 'timeUpdated DESC',
       limit: 100,
       fields: ['planterPhotoUrl'],
-      where: { planterId, planterPhotoUrl: { neq: null } },
     };
 
     const treeQuery = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/?filter=${JSON.stringify(filter)}`;
+    }/api/${getOrganization()}planter/${planterId}/selfies/?filter=${JSON.stringify(
+      filter,
+    )}`;
 
     return fetch(treeQuery, {
       method: 'GET',
