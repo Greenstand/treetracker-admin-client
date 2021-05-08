@@ -144,196 +144,199 @@ function Filter(props) {
   return (
     <React.Fragment>
       {
-        <Grid container wrap="nowrap" direction="row">
-          <Grid item className={classes.inputContainer}>
-            <TextField
-              select
-              label="Approved"
-              value={
-                approved === undefined
-                  ? 'All'
-                  : approved === true
-                  ? 'true'
-                  : 'false'
-              }
-              onChange={(e) =>
-                setApproved(
-                  e.target.value === 'All'
-                    ? undefined
-                    : e.target.value === 'true'
-                    ? true
-                    : false,
-                )
-              }
-            >
-              {['All', 'true', 'false'].map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Rejected"
-              value={
-                active === undefined
-                  ? 'All'
-                  : active === true
-                  ? 'false'
-                  : 'true'
-              }
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) =>
-                setActive(
-                  e.target.value === 'All'
-                    ? undefined
-                    : e.target.value === 'true'
-                    ? false
-                    : true,
-                )
-              }
-            >
-              {['All', 'false', 'true'].map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <MuiPickersUtilsProvider
-              utils={DateFnsUtils}
-              locale={getDatePickerLocale()}
-            >
-              <KeyboardDatePicker
-                margin="normal"
-                id="start-date-picker"
-                label="Start Date"
-                format={getDateFormatLocale(true)}
-                value={dateStart}
-                onChange={handleDateStartChange}
-                maxDate={dateEnd}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-              <KeyboardDatePicker
-                margin="normal"
-                id="end-date-picker"
-                label="End Date"
-                format={getDateFormatLocale(true)}
-                value={dateEnd}
-                onChange={handleDateEndChange}
-                minDate={dateStart}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-            </MuiPickersUtilsProvider>
-            <TextField
-              label="Planter ID"
-              placeholder="e.g. 7"
-              value={planterId}
-              onChange={(e) => setPlanterId(e.target.value)}
-            />
-            <TextField
-              label="Tree ID"
-              placeholder="e.g. 80"
-              value={treeId}
-              onChange={(e) => setTreeId(e.target.value)}
-            />
-            <TextField
-              label="Device Identifier"
-              placeholder="e.g. 1234abcd"
-              value={deviceId}
-              onChange={(e) => setDeviceId(e.target.value)}
-            />
-            <TextField
-              label="Planter Identifier"
-              placeholder="e.g. planter@example.com"
-              value={planterIdentifier}
-              onChange={(e) => setPlanterIdentifier(e.target.value)}
-            />
-            <TextField
-              select
-              label="Species"
-              value={speciesId}
-              onChange={(e) => setSpeciesId(e.target.value)}
-            >
-              {[
-                { id: ALL_SPECIES, name: 'All' },
-                { id: SPECIES_NOT_SET, name: 'Not set' },
-                ...props.speciesState.speciesList,
-              ].map((species) => (
-                <MenuItem key={species.id} value={species.id}>
-                  {species.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Autocomplete
-              classes={{
-                inputRoot: classes.autocompleteInputRoot,
-              }}
-              options={[
-                {
-                  id: TAG_NOT_SET,
-                  tagName: 'Not set',
-                  active: true,
-                  public: true,
-                },
-                ...props.tagsState.tagList,
-              ]}
-              value={tag}
-              getOptionLabel={(tag) => tag.tagName}
-              onChange={(_oldVal, newVal) => {
-                //triggered by onInputChange
-                setTag(newVal);
-              }}
-              onInputChange={(_oldVal, newVal) => {
-                setTagSearchString(newVal);
-              }}
-              renderInput={(params) => {
-                return <TextField {...params} label="Tag" />;
-              }}
-            />
-            {!getOrganization() && (
+        <form onSubmit={handleSubmit}>
+          <Grid container wrap="nowrap" direction="row">
+            <Grid item className={classes.inputContainer}>
               <TextField
                 select
-                label="Organization"
-                value={organizationId}
-                onChange={(e) => setOrganizationId(e.target.value)}
+                label="Approved"
+                value={
+                  approved === undefined
+                    ? 'All'
+                    : approved === true
+                    ? 'true'
+                    : 'false'
+                }
+                onChange={(e) =>
+                  setApproved(
+                    e.target.value === 'All'
+                      ? undefined
+                      : e.target.value === 'true'
+                      ? true
+                      : false,
+                  )
+                }
               >
-                {[
-                  { id: ALL_ORGANIZATIONS, name: 'All' },
-                  { id: ORGANIZATION_NOT_SET, name: 'Not set' },
-                  ...props.organizationState.organizationList,
-                ].map((org) => (
-                  <MenuItem key={org.id} value={org.id}>
-                    {org.name}
+                {['All', 'true', 'false'].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
                   </MenuItem>
                 ))}
               </TextField>
-            )}
+              <TextField
+                select
+                label="Rejected"
+                value={
+                  active === undefined
+                    ? 'All'
+                    : active === true
+                    ? 'false'
+                    : 'true'
+                }
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) =>
+                  setActive(
+                    e.target.value === 'All'
+                      ? undefined
+                      : e.target.value === 'true'
+                      ? false
+                      : true,
+                  )
+                }
+              >
+                {['All', 'false', 'true'].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <MuiPickersUtilsProvider
+                utils={DateFnsUtils}
+                locale={getDatePickerLocale()}
+              >
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="start-date-picker"
+                  label="Start Date"
+                  format={getDateFormatLocale(true)}
+                  value={dateStart}
+                  onChange={handleDateStartChange}
+                  maxDate={dateEnd}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="end-date-picker"
+                  label="End Date"
+                  format={getDateFormatLocale(true)}
+                  value={dateEnd}
+                  onChange={handleDateEndChange}
+                  minDate={dateStart}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+              <TextField
+                label="Planter ID"
+                placeholder="e.g. 7"
+                value={planterId}
+                onChange={(e) => setPlanterId(e.target.value)}
+              />
+              <TextField
+                label="Tree ID"
+                placeholder="e.g. 80"
+                value={treeId}
+                onChange={(e) => setTreeId(e.target.value)}
+              />
+              <TextField
+                label="Device Identifier"
+                placeholder="e.g. 1234abcd"
+                value={deviceId}
+                onChange={(e) => setDeviceId(e.target.value)}
+              />
+              <TextField
+                label="Planter Identifier"
+                placeholder="e.g. planter@example.com"
+                value={planterIdentifier}
+                onChange={(e) => setPlanterIdentifier(e.target.value)}
+              />
+              <TextField
+                select
+                label="Species"
+                value={speciesId}
+                onChange={(e) => setSpeciesId(e.target.value)}
+              >
+                {[
+                  { id: ALL_SPECIES, name: 'All' },
+                  { id: SPECIES_NOT_SET, name: 'Not set' },
+                  ...props.speciesState.speciesList,
+                ].map((species) => (
+                  <MenuItem key={species.id} value={species.id}>
+                    {species.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Autocomplete
+                classes={{
+                  inputRoot: classes.autocompleteInputRoot,
+                }}
+                options={[
+                  {
+                    id: TAG_NOT_SET,
+                    tagName: 'Not set',
+                    active: true,
+                    public: true,
+                  },
+                  ...props.tagsState.tagList,
+                ]}
+                value={tag}
+                getOptionLabel={(tag) => tag.tagName}
+                onChange={(_oldVal, newVal) => {
+                  //triggered by onInputChange
+                  setTag(newVal);
+                }}
+                onInputChange={(_oldVal, newVal) => {
+                  setTagSearchString(newVal);
+                }}
+                renderInput={(params) => {
+                  return <TextField {...params} label="Tag" />;
+                }}
+              />
+              {!getOrganization() && (
+                <TextField
+                  select
+                  label="Organization"
+                  value={organizationId}
+                  onChange={(e) => setOrganizationId(e.target.value)}
+                >
+                  {[
+                    { id: ALL_ORGANIZATIONS, name: 'All' },
+                    { id: ORGANIZATION_NOT_SET, name: 'Not set' },
+                    ...props.organizationState.organizationList,
+                  ].map((org) => (
+                    <MenuItem key={org.id} value={org.id}>
+                      {org.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            </Grid>
+            <Grid className={classes.inputContainer}>
+              <Button
+                type="submit"
+                className={classes.apply}
+                variant="outlined"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Apply
+              </Button>
+              <Button
+                className={classes.apply}
+                variant="outlined"
+                color="primary"
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            </Grid>
           </Grid>
-          <Grid className={classes.inputContainer}>
-            <Button
-              className={classes.apply}
-              variant="outlined"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Apply
-            </Button>
-            <Button
-              className={classes.apply}
-              variant="outlined"
-              color="primary"
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
+        </form>
       }
     </React.Fragment>
   );
