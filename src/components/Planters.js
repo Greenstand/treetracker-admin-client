@@ -230,6 +230,7 @@ const Planters = (props) => {
             buttons={[
               <IconButton onClick={handleFilterClick} key={1}>
                 <IconFilter />
+                <Typography variant="h6">Filter</Typography>
               </IconButton>,
             ]}
           >
