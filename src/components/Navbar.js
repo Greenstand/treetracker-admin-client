@@ -10,9 +10,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconLogo from './IconLogo';
 import Menu from './common/Menu.js';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
     minHeight: '48px',
+  },
+  buttons: {
+    display: 'flex',
+    margin: theme.spacing(1),
   },
 }));
 
@@ -36,7 +40,9 @@ const Navbar = (props) => {
                 </IconButton>
                 <IconLogo />
               </Grid>
-              <Grid item>{props.buttons}</Grid>
+              <Grid item className={classes.buttons}>
+                {props.buttons}
+              </Grid>
             </Grid>
           </Toolbar>
           <Grid item>{props.children}</Grid>

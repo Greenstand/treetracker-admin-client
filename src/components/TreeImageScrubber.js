@@ -479,7 +479,7 @@ const TreeImageScrubber = (props) => {
               className={classes.navbar}
               buttons={[
                 <Button
-                  variant="outlined"
+                  variant="text"
                   color="primary"
                   onClick={handleFilterClick}
                   startIcon={<IconFilter />}

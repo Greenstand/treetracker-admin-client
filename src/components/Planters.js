@@ -229,7 +229,7 @@ const Planters = (props) => {
           <Navbar
             buttons={[
               <Button
-                variant="outlined"
+                variant="text"
                 color="primary"
                 onClick={handleFilterClick}
                 startIcon={<IconFilter />}
