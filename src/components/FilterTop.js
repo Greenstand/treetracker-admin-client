@@ -105,7 +105,8 @@ function Filter(props) {
     return convertDateToDefaultSqlDate(date);
   };
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
     const filter = new FilterModel();
     filter.treeId = treeId;
     filter.planterId = planterId;
@@ -322,7 +323,7 @@ function Filter(props) {
                 className={classes.apply}
                 variant="outlined"
                 color="primary"
-                onClick={handleSubmit}
+                onClick={(e) => handleSubmit(e)}
               >
                 Apply
               </Button>

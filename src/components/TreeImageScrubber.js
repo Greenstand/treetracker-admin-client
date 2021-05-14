@@ -478,10 +478,15 @@ const TreeImageScrubber = (props) => {
             <Navbar
               className={classes.navbar}
               buttons={[
-                <IconButton onClick={handleFilterClick} key={1}>
-                  <IconFilter />
-                  <Typography variant="h6">Filter</Typography>
-                </IconButton>,
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleFilterClick}
+                  startIcon={<IconFilter />}
+                  key={1}
+                >
+                  Filter
+                </Button>,
               ]}
             >
               {isFilterShown && (
