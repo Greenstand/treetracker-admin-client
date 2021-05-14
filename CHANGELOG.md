@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.0...v1.11.1) (2021-05-14)
+
+
+### Bug Fixes
+
+* trigger Apply button in Verify tab using enter key and update filter button ([#85](https://github.com/Greenstand/treetracker-admin-client/issues/85)) ([0a36938](https://github.com/Greenstand/treetracker-admin-client/commit/0a36938b8a04d7fffd8893f57126f7ea006ba552))
+
 # [1.11.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.10.1...v1.11.0) (2021-05-05)
 
 
