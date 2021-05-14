@@ -11,11 +11,11 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import TablePagination from '@material-ui/core/TablePagination';
+import Button from '@material-ui/core/Button';
 
 import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import Grid from '@material-ui/core/Grid';
 import IconFilter from '@material-ui/icons/FilterList';
-import IconButton from '@material-ui/core/IconButton';
 
 import FilterTopPlanter from './FilterTopPlanter';
 import Person from '@material-ui/icons/Person';
@@ -228,9 +228,15 @@ const Planters = (props) => {
         <Grid item>
           <Navbar
             buttons={[
-              <IconButton onClick={handleFilterClick} key={1}>
-                <IconFilter />
-              </IconButton>,
+              <Button
+                variant="text"
+                color="primary"
+                onClick={handleFilterClick}
+                startIcon={<IconFilter />}
+                key={1}
+              >
+                Filter
+              </Button>,
             ]}
           >
             {isFilterShown && (

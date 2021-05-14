@@ -478,9 +478,15 @@ const TreeImageScrubber = (props) => {
             <Navbar
               className={classes.navbar}
               buttons={[
-                <IconButton onClick={handleFilterClick} key={1}>
-                  <IconFilter />
-                </IconButton>,
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={handleFilterClick}
+                  startIcon={<IconFilter />}
+                  key={1}
+                >
+                  Filter
+                </Button>,
               ]}
             >
               {isFilterShown && (
