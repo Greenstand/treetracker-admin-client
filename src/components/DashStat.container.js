@@ -114,6 +114,7 @@ export const DashStatPlanterCount = compose(
         state.planters.count !== null
           ? countToLocaleString(state.planters.count)
           : null,
+      needsRefresh: true,
     }),
     (dispatch) => ({
       fetch: dispatch.planters.count,
