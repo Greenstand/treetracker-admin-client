@@ -30,7 +30,7 @@ export const DashStatTotalTrees = compose(
         state.trees.treeCount !== null
           ? countToLocaleString(state.trees.treeCount)
           : null,
-      needsRefresh: state.trees.invalidateTreeCount,
+      needsRefresh: true,
     }),
     (dispatch) => ({
       fetch: dispatch.trees.getTreeCount,
@@ -58,7 +58,7 @@ export const DashStatUnprocessedTrees = compose(
         state.verify.treeCount !== null
           ? countToLocaleString(state.verify.treeCount)
           : null,
-      needsRefresh: state.verify.invalidateTreeCount,
+      needsRefresh: true,
     }),
     (dispatch) => ({
       fetch: dispatch.verify.getTreeCount,
@@ -86,7 +86,7 @@ export const DashStatVerifiedTrees = compose(
         state.verify.verifiedTreeCount !== null
           ? countToLocaleString(state.verify.verifiedTreeCount)
           : null,
-      needsRefresh: state.verify.invalidateVerifiedCount,
+      needsRefresh: true,
     }),
     (dispatch) => ({
       fetch: dispatch.verify.getVerifiedTreeCount,
@@ -114,6 +114,7 @@ export const DashStatPlanterCount = compose(
         state.planters.count !== null
           ? countToLocaleString(state.planters.count)
           : null,
+      needsRefresh: true,
     }),
     (dispatch) => ({
       fetch: dispatch.planters.count,
