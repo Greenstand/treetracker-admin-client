@@ -1,3 +1,11 @@
+## [1.11.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.1...v1.11.2) (2021-05-16)
+
+
+### Bug Fixes
+
+* set dashboard stats updating when logging with a different user ([#84](https://github.com/Greenstand/treetracker-admin-client/issues/84)) ([a30c722](https://github.com/Greenstand/treetracker-admin-client/commit/a30c72255aa5570c1e7ce72d11a81b4957e5f15f))
+* Set Planter Manager not update the selfie without Tree Manager Role ([#83](https://github.com/Greenstand/treetracker-admin-client/issues/83)) ([b3f6bbe](https://github.com/Greenstand/treetracker-admin-client/commit/b3f6bbe7f3fb946029f61c6342603a4b4ef83182))
+
 ## [1.11.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.0...v1.11.1) (2021-05-14)
 
 
