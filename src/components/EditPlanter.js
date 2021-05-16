@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -15,8 +15,6 @@ import {
 import api from '../api/planters';
 import ImageScroller from './ImageScroller';
 import { getOrganization } from '../api/apiUtils';
-import { AppContext } from './Context';
-import { hasPermission, POLICIES } from '../models/auth';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -30,10 +28,9 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const EditPlanter = (props) => {
-  const appContext = useContext(AppContext);
-  const { user } = appContext;
   const classes = useStyle();
   const { isOpen, planter, onClose } = props;
+
   const [planterImages, setPlanterImages] = useState([]);
   const [planterUpdate, setPlanterUpdate] = useState(null);
   const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
@@ -94,16 +91,7 @@ const EditPlanter = (props) => {
   }
 
   function handleSelectPlanterImage(img) {
-    // Planter Manager with Tree Manager role cannot set planter selfie
-    if (
-      hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_TREE,
-        POLICIES.APPROVE_TREE,
-      ])
-    ) {
-      handleChange('imageUrl', img);
-    }
+    handleChange('imageUrl', img);
   }
 
   function getValue(attr) {

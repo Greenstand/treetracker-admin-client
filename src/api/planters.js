@@ -85,13 +85,13 @@ export default {
       fields: ['planterPhotoUrl'],
     };
 
-    const treeQuery = `${
+    const planterSelfiesQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${planterId}/selfies/?filter=${JSON.stringify(
       filter,
     )}`;
 
-    return fetch(treeQuery, {
+    return fetch(planterSelfiesQuery, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
