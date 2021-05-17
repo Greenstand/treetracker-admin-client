@@ -170,6 +170,9 @@ const useStyles = makeStyles((theme) => ({
   sidePanelSubmitButton: {
     width: '128px',
   },
+  mb: {
+    marginBottom: '1rem',
+  },
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -883,7 +886,7 @@ function SidePanel(props) {
                   label="Flag tree for contact/review"
                 />
               </RadioGroup>
-              <Grid>
+              <Grid className={classes.mb}>
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Additional tags
                 </Typography>
