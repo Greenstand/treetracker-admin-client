@@ -835,53 +835,61 @@ function SidePanel(props) {
             </>
           )}
           {switchApprove === 1 && (
-            <RadioGroup
-              className={classes.sidePanelItem}
-              value={rejectionReason}
-            >
-              <FormControlLabel
-                onClick={() => setRejectionReason('not_tree')}
-                value="not_tree"
-                control={<Radio />}
-                label="Not a tree"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('unapproved_tree')}
-                value="unapproved_tree"
-                control={<Radio />}
-                label="Not an approved tree"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('blurry_image')}
-                value="blurry_image"
-                control={<Radio />}
-                label="Blurry photo"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('dead')}
-                value="dead"
-                control={<Radio />}
-                label="Dead"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('duplicate_image')}
-                value="duplicate_image"
-                control={<Radio />}
-                label="Duplicate photo"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('flag_user')}
-                value="flag_user"
-                control={<Radio />}
-                label="Flag user!"
-              />
-              <FormControlLabel
-                onClick={() => setRejectionReason('needs_contact_or_review')}
-                value="needs_contact_or_review"
-                control={<Radio />}
-                label="Flag tree for contact/review"
-              />
-            </RadioGroup>
+            <>
+              <RadioGroup
+                className={classes.sidePanelItem}
+                value={rejectionReason}
+              >
+                <FormControlLabel
+                  onClick={() => setRejectionReason('not_tree')}
+                  value="not_tree"
+                  control={<Radio />}
+                  label="Not a tree"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('unapproved_tree')}
+                  value="unapproved_tree"
+                  control={<Radio />}
+                  label="Not an approved tree"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('blurry_image')}
+                  value="blurry_image"
+                  control={<Radio />}
+                  label="Blurry photo"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('dead')}
+                  value="dead"
+                  control={<Radio />}
+                  label="Dead"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('duplicate_image')}
+                  value="duplicate_image"
+                  control={<Radio />}
+                  label="Duplicate photo"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('flag_user')}
+                  value="flag_user"
+                  control={<Radio />}
+                  label="Flag user!"
+                />
+                <FormControlLabel
+                  onClick={() => setRejectionReason('needs_contact_or_review')}
+                  value="needs_contact_or_review"
+                  control={<Radio />}
+                  label="Flag tree for contact/review"
+                />
+              </RadioGroup>
+              <Grid>
+                <Typography className={classes.sidePanelItem} variant="h6">
+                  Additional tags
+                </Typography>
+                <TreeTags placeholder="Add other text tags" />
+              </Grid>
+            </>
           )}
         </Grid>
         {/*Hidden until functionality is implemented. Issuer: https://github.com/Greenstand/treetracker-admin/issues/371*/}
