@@ -689,63 +689,6 @@ function SidePanel(props) {
         direction={'column'}
         className={classes.sidePanelContainer}
       >
-        <Grid>
-          <Typography variant="h5">Tags</Typography>
-        </Grid>
-        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
-          <RadioGroup value={morphology} className={classes.radioGroup}>
-            <FormControlLabel
-              value="seedling"
-              onClick={() => setMorphology('seedling')}
-              control={<Radio />}
-              label="Seedling"
-            />
-            <FormControlLabel
-              value="direct_seedling"
-              control={<Radio />}
-              onClick={() => setMorphology('direct_seedling')}
-              label="Direct seeding"
-            />
-            <FormControlLabel
-              onClick={() => setMorphology('fmnr')}
-              value="fmnr"
-              control={<Radio />}
-              label="Pruned/tied (FMNR)"
-            />
-          </RadioGroup>
-        </Grid>
-        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
-          <RadioGroup value={age} className={classes.radioGroup}>
-            <FormControlLabel
-              onClick={() => setAge('new_tree')}
-              value="new_tree"
-              control={<Radio />}
-              label="New tree(s)"
-            />
-            <FormControlLabel
-              onClick={() => setAge('over_two_years')}
-              value="over_two_years"
-              control={<Radio />}
-              label="> 2 years old"
-            />
-          </RadioGroup>
-        </Grid>
-        {/*
-        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
-          <RadioGroup className={classes.radioGroup}>
-            <FormControlLabel disabled value='Create token' control={<Radio/>} label='Create token' />
-            <FormControlLabel disabled value='No token' control={<Radio/>} label='No token' />
-          </RadioGroup>
-        </Grid>
-        */}
-        <Grid>
-          <Typography variant="h6">Species (if known)</Typography>
-          <Species />
-        </Grid>
-        <Grid>
-          <Typography variant="h6">Additional tags</Typography>
-          <TreeTags placeholder="Add other text tags" />
-        </Grid>
         <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
           <Tabs
             indicatorColor="primary"
@@ -767,59 +710,135 @@ function SidePanel(props) {
             />
           </Tabs>
           {switchApprove === 0 && (
-            <RadioGroup value={captureApprovalTag}>
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('simple_leaf')}
-                value="simple_leaf"
-                control={<Radio />}
-                label="Simple leaf"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('complex_leaf')}
-                value="complex_leaf"
-                control={<Radio />}
-                label="Complex leaf"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('acacia_like')}
-                value="acacia_like"
-                control={<Radio />}
-                label="Acacia-like"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('conifer')}
-                value="conifer"
-                control={<Radio />}
-                label="Conifer"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('fruit')}
-                value="fruit"
-                control={<Radio />}
-                label="Fruit"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('mangrove')}
-                value="mangrove"
-                control={<Radio />}
-                label="Mangrove"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('palm')}
-                value="palm"
-                control={<Radio />}
-                label="Palm"
-              />
-              <FormControlLabel
-                onClick={() => setCaptureApprovalTag('timber')}
-                value="timber"
-                control={<Radio />}
-                label="Timber"
-              />
-            </RadioGroup>
+            <>
+              <Grid>
+                <Typography className={classes.sidePanelItem} variant="h6">
+                  Morphology
+                </Typography>
+              </Grid>
+              <Grid
+                className={`${classes.bottomLine} ${classes.sidePanelItem}`}
+              >
+                <RadioGroup value={morphology} className={classes.radioGroup}>
+                  <FormControlLabel
+                    value="seedling"
+                    onClick={() => setMorphology('seedling')}
+                    control={<Radio />}
+                    label="Seedling"
+                  />
+                  <FormControlLabel
+                    value="direct_seedling"
+                    control={<Radio />}
+                    onClick={() => setMorphology('direct_seedling')}
+                    label="Direct seeding"
+                  />
+                  <FormControlLabel
+                    onClick={() => setMorphology('fmnr')}
+                    value="fmnr"
+                    control={<Radio />}
+                    label="Pruned/tied (FMNR)"
+                  />
+                </RadioGroup>
+              </Grid>
+              <Grid
+                className={`${classes.bottomLine} ${classes.sidePanelItem}`}
+              >
+                <Typography variant="h6">Age</Typography>
+                <RadioGroup value={age} className={classes.radioGroup}>
+                  <FormControlLabel
+                    onClick={() => setAge('new_tree')}
+                    value="new_tree"
+                    control={<Radio />}
+                    label="New tree(s)"
+                  />
+                  <FormControlLabel
+                    onClick={() => setAge('over_two_years')}
+                    value="over_two_years"
+                    control={<Radio />}
+                    label="> 2 years old"
+                  />
+                </RadioGroup>
+              </Grid>
+              {/*
+        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
+          <RadioGroup className={classes.radioGroup}>
+            <FormControlLabel disabled value='Create token' control={<Radio/>} label='Create token' />
+            <FormControlLabel disabled value='No token' control={<Radio/>} label='No token' />
+          </RadioGroup>
+        </Grid>
+        */}
+              <Grid>
+                <Typography className={classes.sidePanelItem} variant="h6">
+                  Species (if known)
+                </Typography>
+                <Species />
+              </Grid>
+              <Grid>
+                <Typography className={classes.sidePanelItem} variant="h6">
+                  Additional tags
+                </Typography>
+                <TreeTags placeholder="Add other text tags" />
+              </Grid>
+              <RadioGroup
+                className={classes.sidePanelItem}
+                value={captureApprovalTag}
+              >
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('simple_leaf')}
+                  value="simple_leaf"
+                  control={<Radio />}
+                  label="Simple leaf"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('complex_leaf')}
+                  value="complex_leaf"
+                  control={<Radio />}
+                  label="Complex leaf"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('acacia_like')}
+                  value="acacia_like"
+                  control={<Radio />}
+                  label="Acacia-like"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('conifer')}
+                  value="conifer"
+                  control={<Radio />}
+                  label="Conifer"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('fruit')}
+                  value="fruit"
+                  control={<Radio />}
+                  label="Fruit"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('mangrove')}
+                  value="mangrove"
+                  control={<Radio />}
+                  label="Mangrove"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('palm')}
+                  value="palm"
+                  control={<Radio />}
+                  label="Palm"
+                />
+                <FormControlLabel
+                  onClick={() => setCaptureApprovalTag('timber')}
+                  value="timber"
+                  control={<Radio />}
+                  label="Timber"
+                />
+              </RadioGroup>
+            </>
           )}
           {switchApprove === 1 && (
-            <RadioGroup value={rejectionReason}>
+            <RadioGroup
+              className={classes.sidePanelItem}
+              value={rejectionReason}
+            >
               <FormControlLabel
                 onClick={() => setRejectionReason('not_tree')}
                 value="not_tree"
