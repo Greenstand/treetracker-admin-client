@@ -39,16 +39,14 @@ const species = {
     async loadSpeciesList() {
       const speciesList = await api.getSpecies();
       log.debug('load species from api:', speciesList.length);
-      const speciesListWithCount = await Promise.all(
+      const sepcieListWithCount = await Promise.all(
         speciesList.map(async (species) => {
           let captureCount = await api.getCaptureCountPerSpecies(species.id);
-          console.log('species capture count', captureCount);
           species.captureCount = captureCount.count;
           return species;
         }),
       );
-      // console.error('loading species', speciesListWithCoucapture
-      this.setSpeciesList(speciesListWithCount);
+      this.setSpeciesList(sepcieListWithCount);
     },
     onChange(text) {
       console.log('on change:"', text, '"');

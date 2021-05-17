@@ -25,8 +25,6 @@ import {
 } from '../common/locale';
 import { getOrganization } from '../api/apiUtils';
 
-const log = require('loglevel').getLogger('../components/FilterTop');
-
 export const FILTER_WIDTH = 330;
 
 const styles = (theme) => {
@@ -67,7 +65,7 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  log.debug('render: filter top');
+  // console.log('render: filter top');
   const { classes, filter } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
@@ -88,20 +86,18 @@ function Filter(props) {
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
   const [userHasOrg, setUserHasOrg] = useState(false);
-  const [orgList, setOrgList] = useState(
-    props.organizationState.organizationList || [],
-  );
 
   useEffect(() => {
     props.tagsDispatch.getTags(tagSearchString);
   }, [tagSearchString, props.tagsDispatch]);
 
   useEffect(() => {
-    log.debug('filter top checks user org id & loads orgs');
+    // console.log('filter top checks user org id & loads orgs');
     const hasOrg = getOrganization();
-    setUserHasOrg(hasOrg ? true : false); // check if it's an org account or admin
-    if (!hasOrg) {
-      setOrgList(props.organizationState.organizationList); // only load if it's not an org account
+    setUserHasOrg(hasOrg ? true : false);
+    // if not an org account && the org list isn't loaded --> load the orgs
+    if (!hasOrg && !props.organizationState.organizationList.length) {
+      props.organizationDispatch.loadOrganizations();
     }
   }, []);
 
@@ -135,7 +131,6 @@ function Filter(props) {
   }
 
   function handleReset() {
-    log.debug('--- RESET filter and form ---');
     // reset form values, except 'approved' and 'active' which we'll keep
     setCaptureId('');
     setPlanterId('');
@@ -320,7 +315,7 @@ function Filter(props) {
                   {[
                     { id: ALL_ORGANIZATIONS, name: 'All' },
                     { id: ORGANIZATION_NOT_SET, name: 'Not set' },
-                    ...orgList,
+                    ...props.organizationState.organizationList,
                   ].map((org) => (
                     <MenuItem key={org.id} value={org.id}>
                       {org.name}

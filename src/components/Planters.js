@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Planters = (props) => {
-  log.debug('render Planters...');
+  // log.debug('render: Planters...');
   const classes = useStyles(props);
   const [isFilterShown, setFilterShown] = React.useState(false);
   const [isDetailShown, setDetailShown] = React.useState(false);

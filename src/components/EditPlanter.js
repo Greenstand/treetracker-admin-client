@@ -28,6 +28,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const EditPlanter = (props) => {
+  // console.log('render: edit planter');
   const classes = useStyle();
   const { isOpen, planter, onClose } = props;
 
@@ -36,15 +37,13 @@ const EditPlanter = (props) => {
   const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
   const [userHasOrg, setUserHasOrg] = useState(false);
-  const [orgList, setOrgList] = useState(
-    props.organizationState.organizationList || [],
-  );
 
   useEffect(() => {
     const hasOrg = getOrganization();
-    setUserHasOrg(hasOrg ? true : false); // check if it's an org account or admin
-    if (!hasOrg) {
-      setOrgList(props.organizationState.organizationList); // only load if it's not an org account
+    setUserHasOrg(hasOrg ? true : false);
+    // if not an org account && the org list isn't loaded --> load the orgs
+    if (!hasOrg && !props.organizationState.organizationList.length) {
+      props.organizationDispatch.loadOrganizations();
     }
   }, []);
 
@@ -186,8 +185,8 @@ const EditPlanter = (props) => {
                 <MenuItem key={'null'} value={'null'}>
                   No organization
                 </MenuItem>
-                {orgList.length &&
-                  orgList.map((org) => (
+                {props.organizationState.organizationList.length &&
+                  props.organizationState.organizationList.map((org) => (
                     <MenuItem key={org.id} value={org.id}>
                       {org.name}
                     </MenuItem>

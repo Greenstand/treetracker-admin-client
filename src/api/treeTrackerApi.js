@@ -371,9 +371,9 @@ export default {
    * get organizations for
    */
   getOrganizations() {
-    // get all the organizations that the user belongs to? or get all organizations?
-    const query = `${process.env.REACT_APP_API_ROOT}/api/organizations?filter[where][type]=O`;
-    console.log('---------- load organizations');
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}organizations?filter[where][type]=O`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -381,10 +381,7 @@ export default {
         Authorization: session.token,
       },
     })
-      .then((res) => {
-        console.log('---------- load organizations res', res.ok);
-        return handleResponse(res);
-      })
+      .then(handleResponse)
       .catch(handleError);
   },
 };

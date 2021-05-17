@@ -41,6 +41,7 @@ import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
+import { getOrganization } from '../api/apiUtils';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -209,19 +210,33 @@ const Verify = (props) => {
     document.title = `Verify - ${documentTitle}`;
     props.verifyDispatch.updateFilter(props.verifyState.filter);
     props.verifyDispatch.loadCaptureImages();
-    props.verifyDispatch.getTreeCount();
-    props.organizationDispatch.loadOrganizations();
+    props.verifyDispatch.getCaptureCount();
+    if (
+      !getOrganization() &&
+      !props.organizationState.organizationList.length
+    ) {
+      props.organizationDispatch.loadOrganizations();
+    }
   }, []);
 
   /* to display progress */
   useEffect(() => {
-    log.debug('set complete trees');
+    // log.debug('set complete captures');
     setComplete(props.verifyState.approveAllComplete);
   }, [props.verifyState.approveAllComplete]);
 
+  /* To update capture count */
+  useEffect(() => {
+    if (
+      props.verifyState.captureCount !== props.verifyState.captureImages.length
+    ) {
+      props.verifyDispatch.getCaptureCount();
+    }
+  }, [props.verifyState.captureImages]);
+
   /* load more captures when the page or page size changes */
   useEffect(() => {
-    log.debug('get captures & tree count when page changes');
+    // log.debug('get captures & capture count when page changes');
     props.verifyDispatch.loadCaptureImages();
     props.verifyDispatch.getCaptureCount();
   }, [props.verifyState.pageSize, props.verifyState.currentPage]);
@@ -342,7 +357,9 @@ const Verify = (props) => {
   }
 
   function handleChangePageSize(event) {
-    props.verifyDispatch.set({ pageSize: event.target.value });
+    props.verifyDispatch.set({
+      pageSize: event.target.value,
+    });
   }
 
   function handleChangePage(event, page) {
@@ -849,7 +866,7 @@ function SidePanel(props) {
                   onClick={() => setRejectionReason('unapproved_tree')}
                   value="unapproved_tree"
                   control={<Radio />}
-                  label="Not an approved tree"
+                  label="Not an approved capture"
                 />
                 <FormControlLabel
                   onClick={() => setRejectionReason('blurry_image')}
