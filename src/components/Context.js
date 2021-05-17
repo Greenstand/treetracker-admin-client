@@ -8,6 +8,7 @@ import Account from './Account';
 import Home from './Home';
 import Users from './Users';
 import SpeciesMgt from './SpeciesMgt';
+import Stakeholder from './Stakeholder';
 import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
 
 import IconSettings from '@material-ui/icons/Settings';
@@ -21,6 +22,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
 import { session, hasPermission, POLICIES } from '../models/auth';
 import axios from 'axios';
@@ -103,6 +105,14 @@ function getRoutes(user) {
         !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
         !user ||
         user.policy.organization !== undefined,
+    },
+    {
+      name: 'Stakeholders',
+      linkTo: '/stakeholders',
+      component: Stakeholder,
+      icon: AccountTreeIcon,
+      //TODO this is temporarily, need to add stakeholders policy
+      disabled: false,
     },
     {
       name: 'Settings',
