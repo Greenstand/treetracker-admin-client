@@ -143,6 +143,20 @@ function getRoutes(user) {
         user.policy.organization !== undefined,
     },
     {
+      name: 'Stakeholders',
+      linkTo: '/stakeholders',
+      component: Stakeholder,
+      icon: AccountTreeIcon,
+      //TODO this is temporarily, need to add stakeholders policy
+      // disabled: false,
+      disabled:
+        process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.APPROVE_TREE,
+        ]),
+    },
+    {
       name: 'Settings',
       linkTo: '/settings',
       component: Unauthorized,
