@@ -28,7 +28,7 @@ jobs:
         run: npm ci
         working-directory: ${{ env.project-directory }}
       - name: build client project
-        run: CI= REACT_APP_WEBMAP_DOMAIN=http://treetracker.org REACT_APP_API_ROOT=https://prod-k8s.treetracker.org/api/admin npm run build
+        run: CI= REACT_APP_WEBMAP_DOMAIN=https://map.treetracker.org REACT_APP_API_ROOT=https://prod-k8s.treetracker.org/api/admin npm run build
         working-directory: ${{ env.project-directory }}
       - uses: actions/upload-artifact@v2
         with:
