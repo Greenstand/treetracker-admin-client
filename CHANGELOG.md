@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.2...v1.11.3) (2021-05-21)
+
+
+### Bug Fixes
+
+* Approve UX  ([#89](https://github.com/Greenstand/treetracker-admin-client/issues/89)) ([d94fa19](https://github.com/Greenstand/treetracker-admin-client/commit/d94fa198ea3d53d72cff65c0267b14656a416caa))
+
 ## [1.11.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.1...v1.11.2) (2021-05-16)
 
 
