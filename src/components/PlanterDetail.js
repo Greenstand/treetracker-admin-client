@@ -224,11 +224,13 @@ const PlanterDetail = (props) => {
           </Grid>
         </Grid>
       </Drawer>
-      <EditPlanter
-        isOpen={editDialogOpen}
-        planter={planter}
-        onClose={handleEditClose}
-      ></EditPlanter>
+      {editDialogOpen && (
+        <EditPlanter
+          isOpen={editDialogOpen}
+          planter={planter}
+          onClose={handleEditClose}
+        ></EditPlanter>
+      )}
     </React.Fragment>
   );
 };

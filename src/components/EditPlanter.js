@@ -35,10 +35,18 @@ const EditPlanter = (props) => {
   const [planterUpdate, setPlanterUpdate] = useState(null);
   const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
+  const [userHasOrg, setUserHasOrg] = useState(false);
+  const [orgList, setOrgList] = useState(
+    props.organizationState.organizationList || [],
+  );
 
   useEffect(() => {
-    props.organizationDispatch.loadOrganizations();
-  }, [props.organizationDispatch]);
+    const hasOrg = getOrganization();
+    setUserHasOrg(hasOrg ? true : false); // check if it's an org account or admin
+    if (!hasOrg) {
+      setOrgList(props.organizationState.organizationList); // only load if it's not an org account
+    }
+  }, []);
 
   useEffect(() => {
     async function loadPlanterImages() {
@@ -165,7 +173,7 @@ const EditPlanter = (props) => {
             </Grid>
           ))}
           <Grid item container>
-            {!getOrganization() && (
+            {!userHasOrg && (
               <TextField
                 select
                 className={classes.textInput}
@@ -178,11 +186,12 @@ const EditPlanter = (props) => {
                 <MenuItem key={'null'} value={'null'}>
                   No organization
                 </MenuItem>
-                {[...props.organizationState.organizationList].map((org) => (
-                  <MenuItem key={org.id} value={org.id}>
-                    {org.name}
-                  </MenuItem>
-                ))}
+                {orgList.length &&
+                  orgList.map((org) => (
+                    <MenuItem key={org.id} value={org.id}>
+                      {org.name}
+                    </MenuItem>
+                  ))}
               </TextField>
             )}
           </Grid>

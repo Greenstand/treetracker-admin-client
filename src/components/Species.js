@@ -19,7 +19,7 @@ function Species(props) {
   /* load species list when mount*/
   React.useEffect(() => {
     props.speciesDispatch.loadSpeciesList();
-  }, [props.speciesDispatch]);
+  }, []);
 
   return (
     <Autocomplete

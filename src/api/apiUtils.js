@@ -20,6 +20,12 @@ export function handleError(error) {
 }
 
 export function getOrganization() {
+  console.log(
+    '... get users org id --> ',
+    // session.user,
+    // session(),
+    session.user?.policy?.organization?.id,
+  );
   if (session.user?.policy?.organization?.id) {
     return `organization/${session.user?.policy?.organization?.id}/`;
   } else {

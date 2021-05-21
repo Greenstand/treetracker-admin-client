@@ -368,10 +368,12 @@ export default {
       .catch(handleError);
   },
   /*
-   * get organizations
+   * get organizations for
    */
   getOrganizations() {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/organizations?filter[where][type]=o`;
+    // get all the organizations that the user belongs to? or get all organizations?
+    const query = `${process.env.REACT_APP_API_ROOT}/api/organizations?filter[where][type]=O`;
+    console.log('---------- load organizations');
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -379,7 +381,10 @@ export default {
         Authorization: session.token,
       },
     })
-      .then(handleResponse)
+      .then((res) => {
+        console.log('---------- load organizations res', res.ok);
+        return handleResponse(res);
+      })
       .catch(handleError);
   },
 };
