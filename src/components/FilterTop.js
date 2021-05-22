@@ -83,10 +83,14 @@ function Filter(props) {
     filter.dateStart || dateStartDefault,
   );
   const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
-  const [speciesId, setSpeciesId] = useState(ALL_SPECIES);
+  const [speciesId, setSpeciesId] = useState(filter.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
+  // TODO: how to save the tag state when the filter top opens/closes
+  // e.g. state --> {"id":5,"tagName":"another_tag","active":true,"public":true}
   const [tagSearchString, setTagSearchString] = useState('');
-  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
+  const [organizationId, setOrganizationId] = useState(
+    filter.organizationId || ALL_ORGANIZATIONS,
+  );
   const [userHasOrg, setUserHasOrg] = useState(false);
 
   useEffect(() => {
@@ -94,7 +98,6 @@ function Filter(props) {
   }, [tagSearchString, props.tagsDispatch]);
 
   useEffect(() => {
-    // console.log('filter top checks user org id & loads orgs');
     const hasOrg = getOrganization();
     setUserHasOrg(hasOrg ? true : false);
     // if not an org account && the org list isn't loaded --> load the orgs
@@ -256,7 +259,10 @@ function Filter(props) {
               >
                 {[
                   { id: ALL_SPECIES, name: 'All' },
-                  { id: SPECIES_NOT_SET, name: 'Not set' },
+                  {
+                    id: SPECIES_NOT_SET,
+                    name: 'Not set',
+                  },
                   ...props.speciesState.speciesList,
                 ].map((species) => (
                   <MenuItem key={species.id} value={species.id}>
@@ -298,8 +304,14 @@ function Filter(props) {
                   onChange={(e) => setOrganizationId(e.target.value)}
                 >
                   {[
-                    { id: ALL_ORGANIZATIONS, name: 'All' },
-                    { id: ORGANIZATION_NOT_SET, name: 'Not set' },
+                    {
+                      id: ALL_ORGANIZATIONS,
+                      name: 'All',
+                    },
+                    {
+                      id: ORGANIZATION_NOT_SET,
+                      name: 'Not set',
+                    },
                     ...props.organizationState.organizationList,
                   ].map((org) => (
                     <MenuItem key={org.id} value={org.id}>

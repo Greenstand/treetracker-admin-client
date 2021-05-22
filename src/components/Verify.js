@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,7 +41,6 @@ import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
-import { getOrganization } from '../api/apiUtils';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -183,23 +182,24 @@ const ToVerifyCounter = withData(({ data }) => (
   </>
 ));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const Verify = (props) => {
+  // console.log('render: verify');
   const classes = useStyles(props);
-  const [complete, setComplete] = React.useState(0);
-  const [isFilterShown, setFilterShown] = React.useState(false);
-  const [captureDetail, setCaptureDetail] = React.useState({
+  const [complete, setComplete] = useState(0);
+  const [isFilterShown, setFilterShown] = useState(false);
+  const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
   });
-  const [planterDetail, setPlanterDetail] = React.useState({
+  const [planterDetail, setPlanterDetail] = useState({
     isOpen: false,
     planter: {},
   });
-  const refContainer = React.useRef();
+  const refContainer = useRef();
 
   /*
    * effect to load page when mounted
@@ -211,34 +211,16 @@ const Verify = (props) => {
     props.verifyDispatch.updateFilter(props.verifyState.filter);
     props.verifyDispatch.loadCaptureImages();
     props.verifyDispatch.getCaptureCount();
-    if (
-      !getOrganization() &&
-      !props.organizationState.organizationList.length
-    ) {
-      props.organizationDispatch.loadOrganizations();
-    }
   }, []);
 
   /* to display progress */
   useEffect(() => {
-    // log.debug('set complete captures');
     setComplete(props.verifyState.approveAllComplete);
   }, [props.verifyState.approveAllComplete]);
 
-  /* To update capture count */
-  useEffect(() => {
-    if (
-      props.verifyState.captureCount !== props.verifyState.captureImages.length
-    ) {
-      props.verifyDispatch.getCaptureCount();
-    }
-  }, [props.verifyState.captureImages]);
-
   /* load more captures when the page or page size changes */
   useEffect(() => {
-    // log.debug('get captures & capture count when page changes');
     props.verifyDispatch.loadCaptureImages();
-    props.verifyDispatch.getCaptureCount();
   }, [props.verifyState.pageSize, props.verifyState.currentPage]);
 
   function handleCaptureClick(e, captureId) {
@@ -951,16 +933,12 @@ export default connect(
   (state) => ({
     verifyState: state.verify,
     speciesState: state.species,
-    //plantersState: state.planters,
-    organizationState: state.organizations,
     tagState: state.tags,
   }),
   //dispatch
   (dispatch) => ({
     verifyDispatch: dispatch.verify,
     speciesDispatch: dispatch.species,
-    // plantersDispatch: dispatch.planters,
-    organizationDispatch: dispatch.organizations,
     tagDispatch: dispatch.tags,
   }),
 )(Verify);
