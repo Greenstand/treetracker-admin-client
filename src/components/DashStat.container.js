@@ -27,8 +27,10 @@ export const DashStatTotalTrees = compose(
   connect(
     (state) => ({
       data:
-        state.trees.treeCount !== null
-          ? countToLocaleString(state.trees.treeCount)
+        state.verify.treeCount + state.verify.verifiedTreeCount !== null
+          ? countToLocaleString(
+              state.verify.treeCount + state.verify.verifiedTreeCount,
+            )
           : null,
       needsRefresh: true,
     }),
