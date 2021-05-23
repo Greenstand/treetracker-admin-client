@@ -50,9 +50,10 @@ _On MacOS, you can alleviate the need to run as sudo by using nvm or by [followi
 git clone https://github.com/<username>/treetracker-admin-client
 ```
 
-Add Greenstand as a remote:
+Move into the new source code directory and add Greenstand as a remote:
 
 ```
+cd cd treetracker-admin-client
 git remote add upstream https://github.com/Greenstand/treetracker-admin-client
 ```
 
