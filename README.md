@@ -32,9 +32,10 @@ If you encounter issues with the server, check your version of Node.js first. Th
 
 We recommend using [nvm](https://github.com/nvm-sh/nvm) to install and manage your Node.js instances. More details here: https://www.sitepoint.com/quick-tip-multiple-versions-node-nvm/
 
-1. Install nvm: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
-2. Install the latest version of Node.js 12: `nvm install 12`
-3. Use the installed Node.js: `nvm use 12`
+1. Make sure a profile exists for your terminal, run `touch ~/.profile; touch ~/.zshrc`
+2. Install nvm: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
+3. Install the latest version of Node.js 12: `nvm install 12`
+4. Use the installed Node.js: `nvm use 12`
 
 Alternatively, you can install Node.js directly from https://nodejs.org/dist/latest-v12.x/
 
