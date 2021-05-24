@@ -1,13 +1,13 @@
 import { init } from '@rematch/core';
-import trees from './trees';
+import captures from './captures';
 import * as loglevel from 'loglevel';
 import Axios from 'axios';
 
-const log = loglevel.getLogger('../models/trees.test');
+const log = loglevel.getLogger('../models/captures.test');
 
 jest.mock('axios');
 
-describe('trees', () => {
+describe('captures', () => {
   let store;
 
   beforeEach(() => {});
@@ -16,46 +16,46 @@ describe('trees', () => {
     beforeEach(async () => {
       store = init({
         models: {
-          trees,
+          captures,
         },
       });
     });
 
-    it('should have no trees', () => {
-      expect(store.getState().trees.data).toHaveLength(0);
+    it('should have no captures', () => {
+      expect(store.getState().captures.data).toHaveLength(0);
     });
 
     it('should be on page 0', () => {
-      expect(store.getState().trees.page).toBe(0);
+      expect(store.getState().captures.page).toBe(0);
     });
 
-    describe('getTreesAsync()', () => {
+    describe('getCapturesAsync()', () => {
       beforeEach(async () => {
         const data = [
           {
             id: '1',
           },
         ];
-        // Mock the call to trees/count first
+        // Mock the call to captures/count first
         Axios.get
           .mockReturnValueOnce({ data: { count: data.length } })
           .mockReturnValueOnce({ data });
-        await store.dispatch.trees.getTreesAsync();
+        await store.dispatch.captures.getCapturesAsync();
       });
 
-      it('should get a tree count', () => {
-        expect(store.getState().trees.treeCount).toBe(1);
+      it('should get a capture count', () => {
+        expect(store.getState().captures.captureCount).toBe(1);
       });
 
-      it('should get some trees', () => {
-        expect(store.getState().trees.data).toHaveLength(1);
+      it('should get some captures', () => {
+        expect(store.getState().captures.data).toHaveLength(1);
       });
 
-      it('should get the tree count first', () => {
+      it('should get the capture count first', () => {
         expect(Axios.get.mock.calls[0][0]).toContain(`trees/count`);
       });
 
-      it('should call trees API with a valid filter', () => {
+      it('should call captures API with a valid filter', () => {
         const filter = JSON.stringify({
           where: { active: true },
           order: ['id asc'],

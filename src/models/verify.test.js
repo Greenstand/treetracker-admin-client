@@ -13,21 +13,21 @@ describe('verify', () => {
   beforeEach(() => {
     //mock the api
     api = require('../api/treeTrackerApi').default;
-    api.getTreeImages = jest.fn(() =>
+    api.getCaptureImages = jest.fn(() =>
       Promise.resolve([
         {
           id: '1',
         },
       ]),
     );
-    api.approveTreeImage = jest.fn(() => Promise.resolve(true));
-    api.rejectTreeImage = jest.fn(() => Promise.resolve(true));
-    api.undoTreeImage = () => Promise.resolve(true);
-    api.getUnverifiedTreeCount = () =>
+    api.approveCaptureImage = jest.fn(() => Promise.resolve(true));
+    api.rejectCaptureImage = jest.fn(() => Promise.resolve(true));
+    api.undoCaptureImage = () => Promise.resolve(true);
+    api.getUnverifiedCaptureCount = () =>
       Promise.resolve({
         count: 1,
       });
-    api.getTreeCount = () =>
+    api.getCaptureCount = () =>
       Promise.resolve({
         count: 1,
       });
@@ -47,25 +47,25 @@ describe('verify', () => {
       expect(store.getState().verify.isLoading).toBe(false);
     });
 
-    describe('loadTreeImages() ', () => {
+    describe('loadCaptureImages() ', () => {
       //{{{
       beforeEach(async () => {
-        const result = await store.dispatch.verify.loadTreeImages();
+        const result = await store.dispatch.verify.loadCaptureImages();
         expect(result).toBe(true);
       });
 
-      it('should get some trees', () => {
-        expect(store.getState().verify.treeImages).toHaveLength(1);
+      it('should get some captures', () => {
+        expect(store.getState().verify.captureImages).toHaveLength(1);
       });
 
       it('should call api with param: skip = 0', () => {
-        expect(api.getTreeImages.mock.calls[0][0]).toMatchObject({
+        expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
           skip: 0,
         });
       });
 
-      it('by default, should call tree api with filter: approve=false, active=true', () => {
-        expect(api.getTreeImages.mock.calls[0][0]).toMatchObject({
+      it('by default, should call capture api with filter: approve=false, active=true', () => {
+        expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
           filter: {
             approved: false,
             active: true,
@@ -73,21 +73,21 @@ describe('verify', () => {
         });
       });
 
-      describe('getTreeCount()', () => {
+      describe('getCaptureCount()', () => {
         beforeEach(async () => {
-          const result = await store.dispatch.verify.getTreeCount();
+          const result = await store.dispatch.verify.getCaptureCount();
           expect(result).toBe(true);
         });
 
-        it('getTreeCount should be 1', () => {
-          expect(store.getState().verify.treeCount).toBe(1);
+        it('getCaptureCount should be 1', () => {
+          expect(store.getState().verify.captureCount).toBe(1);
         });
       });
 
-      describe('approveTreeImage(1, {seedling, new_tree, simple_leaf, 6})', () => {
+      describe('approveCaptureImage(1, {seedling, new_capture, simple_leaf, 6})', () => {
         let approveAction = {
           morphology: 'seedling',
-          age: 'new_tree',
+          age: 'new_capture',
           isApproved: true,
           captureApprovalTag: 'simple_leaf',
           speciesId: 6,
@@ -100,28 +100,30 @@ describe('verify', () => {
           expect(result).toBe(true);
         });
 
-        it('state tree list should remove the tree, so return []', () => {
-          expect(store.getState().verify.treeImages).toEqual(expect.any(Array));
-          expect(store.getState().verify.treeImages).toHaveLength(0);
+        it('state capture list should remove the capture, so return []', () => {
+          expect(store.getState().verify.captureImages).toEqual(
+            expect.any(Array),
+          );
+          expect(store.getState().verify.captureImages).toHaveLength(0);
         });
 
         it('api.approve should be called by : id, seedling...', () => {
-          console.log(api.approveTreeImage.mock);
-          expect(api.approveTreeImage.mock.calls[0]).toMatchObject([
+          console.log(api.approveCaptureImage.mock);
+          expect(api.approveCaptureImage.mock.calls[0]).toMatchObject([
             '1',
             'seedling',
-            'new_tree',
+            'new_capture',
             'simple_leaf',
             6,
           ]);
         });
       });
 
-      describe('rejectTreeImage(1, not_tree)', () => {
+      describe('rejectCaptureImage(1, not_capture)', () => {
         //{{{
         let approveAction = {
           isApproved: false,
-          rejectionReason: 'not_tree',
+          rejectionReason: 'not_capture',
         };
         beforeEach(async () => {
           const result = await store.dispatch.verify.approve({
@@ -131,30 +133,30 @@ describe('verify', () => {
           expect(result).toBe(true);
         });
 
-        it('state tree list should removed the tree, so, get []', () => {
-          expect(store.getState().verify.treeImages).toHaveLength(0);
+        it('state capture list should removed the capture, so, get []', () => {
+          expect(store.getState().verify.captureImages).toHaveLength(0);
         });
 
-        it('api.reject should be called by : id, not_tree ...', () => {
-          console.log(api.approveTreeImage.mock);
-          expect(api.rejectTreeImage.mock.calls[0]).toMatchObject([
+        it('api.reject should be called by : id, not_capture ...', () => {
+          console.log(api.approveCaptureImage.mock);
+          expect(api.rejectCaptureImage.mock.calls[0]).toMatchObject([
             '1',
-            'not_tree',
+            'not_capture',
           ]);
         });
 
         //}}}
       });
 
-      describe('loadTreeImages() load second page', () => {
+      describe('loadCaptureImages() load second page', () => {
         //{{{
         beforeEach(async () => {
-          api.getTreeImages.mockClear();
-          await store.dispatch.verify.loadTreeImages();
+          api.getCaptureImages.mockClear();
+          await store.dispatch.verify.loadCaptureImages();
         });
 
         it('should call api with param: skip = 1', () => {
-          expect(api.getTreeImages.mock.calls[0][0]).toMatchObject({
+          expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
             skip: 1,
           });
         });
@@ -165,15 +167,15 @@ describe('verify', () => {
         //{{{
         beforeEach(async () => {
           //clear
-          api.getTreeImages.mockClear();
+          api.getCaptureImages.mockClear();
           const filter = new Filter();
           filter.approved = false;
           filter.active = false;
           await store.dispatch.verify.updateFilter(filter);
         });
 
-        it('after updateFilter, should call load trees with filter(approved:false, active:false)', () => {
-          expect(api.getTreeImages.mock.calls[0][0]).toMatchObject({
+        it('after updateFilter, should call load captures with filter(approved:false, active:false)', () => {
+          expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
             filter: {
               approved: false,
               active: false,
@@ -209,14 +211,14 @@ describe('verify', () => {
     //}}}
   });
 
-  describe('a store with 10 trees', () => {
+  describe('a store with 10 captures', () => {
     //{{{
     beforeEach(() => {
       //9, 8, 7, 6, 5, 4, 3, 2, 1, 0
       const verifyInit = {
         state: {
           ...verify.state,
-          treeImages: Array.from(new Array(10)).map((e, i) => {
+          captureImages: Array.from(new Array(10)).map((e, i) => {
             return {
               id: 9 - i,
               imageUrl: 'http://' + (9 - i),
@@ -233,9 +235,9 @@ describe('verify', () => {
       });
     });
 
-    it('the tree images has length 10', () => {
-      log.debug(store.getState().verify.treeImages);
-      expect(store.getState().verify.treeImages).toHaveLength(10);
+    it('the capture images has length 10', () => {
+      log.debug(store.getState().verify.captureImages);
+      expect(store.getState().verify.captureImages).toHaveLength(10);
     });
 
     describe('selectAll(true)', () => {
@@ -245,7 +247,7 @@ describe('verify', () => {
       });
 
       it('selected should be 10', () => {
-        expect(store.getState().verify.treeImagesSelected).toHaveLength(10);
+        expect(store.getState().verify.captureImagesSelected).toHaveLength(10);
       });
 
       describe('selectAll(false)', () => {
@@ -255,7 +257,7 @@ describe('verify', () => {
         });
 
         it('selected should be 0', () => {
-          expect(store.getState().verify.treeImagesSelected).toHaveLength(0);
+          expect(store.getState().verify.captureImagesSelected).toHaveLength(0);
         });
 
         //}}}
@@ -263,44 +265,48 @@ describe('verify', () => {
       //}}}
     });
 
-    describe('clickTree(7)', () => {
+    describe('clickCapture(7)', () => {
       //{{{
       beforeEach(() => {
         //9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-        store.dispatch.verify.clickTree({ treeId: 7 });
+        store.dispatch.verify.clickCapture({ captureId: 7 });
       });
 
-      it('treeImagesSelected should be [7]', () => {
-        expect(store.getState().verify.treeImagesSelected).toMatchObject([7]);
+      it('captureImagesSelected should be [7]', () => {
+        expect(store.getState().verify.captureImagesSelected).toMatchObject([
+          7,
+        ]);
       });
 
-      it('treeImageAnchor should be 7', () => {
-        expect(store.getState().verify.treeImageAnchor).toBe(7);
+      it('captureImageAnchor should be 7', () => {
+        expect(store.getState().verify.captureImageAnchor).toBe(7);
       });
 
-      describe('clickTree(5)', () => {
+      describe('clickCapture(5)', () => {
         //{{{
         beforeEach(() => {
           //9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-          store.dispatch.verify.clickTree({ treeId: 5 });
+          store.dispatch.verify.clickCapture({ captureId: 5 });
         });
 
-        it('treeImagesSelected should be [5]', () => {
-          expect(store.getState().verify.treeImagesSelected).toMatchObject([5]);
+        it('captureImagesSelected should be [5]', () => {
+          expect(store.getState().verify.captureImagesSelected).toMatchObject([
+            5,
+          ]);
         });
         //}}}
       });
 
-      describe('clickTree(5, isShift)', () => {
+      describe('clickCapture(5, isShift)', () => {
         //{{{
         beforeEach(() => {
           //9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-          store.dispatch.verify.clickTree({ treeId: 5, isShift: true });
+          store.dispatch.verify.clickCapture({ captureId: 5, isShift: true });
         });
 
-        it('treeImagesSelected should be [7, 6, 5]', () => {
+        it('captureImagesSelected should be [7, 6, 5]', () => {
           //9, 8, [7, 6, 5], 4, 3, 2, 1, 0
-          expect(store.getState().verify.treeImagesSelected).toMatchObject([
+          expect(store.getState().verify.captureImagesSelected).toMatchObject([
             7,
             6,
             5,
@@ -311,7 +317,7 @@ describe('verify', () => {
           //{{{
           let approveAction = {
             morphology: 'seedling',
-            age: 'new_tree',
+            age: 'new_capture',
             isApproved: true,
             captureApprovalTag: 'simple_leaf',
             speciesId: 6,
@@ -324,9 +330,9 @@ describe('verify', () => {
             expect(store.getState().verify.isBulkApproving).toBe(true);
           });
 
-          it('tree images should be 7', () => {
-            console.error('tree:', store.getState().verify.treeImages);
-            expect(store.getState().verify.treeImages).toHaveLength(7);
+          it('capture images should be 7', () => {
+            console.error('capture:', store.getState().verify.captureImages);
+            expect(store.getState().verify.captureImages).toHaveLength(7);
           });
 
           it('isApproveAllProcessing === false', () => {
@@ -334,14 +340,14 @@ describe('verify', () => {
           });
 
           it('after approveAll, should get an undo list', () => {
-            expect(store.getState().verify.treeImagesUndo).toHaveLength(3);
+            expect(store.getState().verify.captureImagesUndo).toHaveLength(3);
           });
 
           it('api.approve should be called with ...', () => {
-            expect(api.approveTreeImage.mock.calls[0]).toMatchObject([
+            expect(api.approveCaptureImage.mock.calls[0]).toMatchObject([
               7,
               'seedling',
-              'new_tree',
+              'new_capture',
               'simple_leaf',
               6,
             ]);
@@ -353,16 +359,16 @@ describe('verify', () => {
           //							await store.dispatch.verify.undoAll()
           //						})
           //
-          //						it('tree list should restore to 10', () => {
-          //							expect(store.getState().verify.treeImages).toHaveLength(10)
+          //						it('capture list should restore to 10', () => {
+          //							expect(store.getState().verify.captureImages).toHaveLength(10)
           //						})
           //
           //						it('isBulkApproving === false', () => {
           //							expect(store.getState().verify.isBulkApproving).toBe(false)
           //						})
           //
-          //						it('tree list order should be correct', () => {
-          //							expect(store.getState().verify.treeImages.map(tree => tree.id)).toMatchObject(
+          //						it('capture list order should be correct', () => {
+          //							expect(store.getState().verify.captureImages.map(capture => capture.id)).toMatchObject(
           //								[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
           //							)
           //						})
@@ -375,7 +381,7 @@ describe('verify', () => {
         describe('rejectAll()', () => {
           let approveAction = {
             isApproved: false,
-            rejectionReason: 'not_tree',
+            rejectionReason: 'not_capture',
           };
           beforeEach(async () => {
             await store.dispatch.verify.approveAll({ approveAction });
@@ -385,8 +391,8 @@ describe('verify', () => {
             expect(store.getState().verify.isBulkApproving).toBe(true);
           });
 
-          it('tree images should be 7', () => {
-            expect(store.getState().verify.treeImages).toHaveLength(7);
+          it('capture images should be 7', () => {
+            expect(store.getState().verify.captureImages).toHaveLength(7);
           });
 
           it('isRejectAllProcessing === false', () => {
@@ -394,13 +400,13 @@ describe('verify', () => {
           });
 
           it('after rejectAll, should get an undo list', () => {
-            expect(store.getState().verify.treeImagesUndo).toHaveLength(3);
+            expect(store.getState().verify.captureImagesUndo).toHaveLength(3);
           });
 
           it('api.approve should be called with ...', () => {
-            expect(api.rejectTreeImage.mock.calls[0]).toMatchObject([
+            expect(api.rejectCaptureImage.mock.calls[0]).toMatchObject([
               7,
-              'not_tree',
+              'not_capture',
             ]);
           });
 
@@ -414,12 +420,12 @@ describe('verify', () => {
           //							expect(store.getState().verify.isBulkRejecting).toBe(false)
           //						})
           //
-          //						it('tree list should restore to 10', () => {
-          //							expect(store.getState().verify.treeImages).toHaveLength(10)
+          //						it('capture list should restore to 10', () => {
+          //							expect(store.getState().verify.captureImages).toHaveLength(10)
           //						})
           //
-          //						it('tree list order should be correct', () => {
-          //							expect(store.getState().verify.treeImages.map(tree => tree.id)).toMatchObject(
+          //						it('capture list order should be correct', () => {
+          //							expect(store.getState().verify.captureImages.map(capture => capture.id)).toMatchObject(
           //								[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
           //							)
           //						})
@@ -427,32 +433,30 @@ describe('verify', () => {
           //					})
         });
 
-        describe('clickTree(9, isShift)', () => {
+        describe('clickCapture(9, isShift)', () => {
           //{{{
           beforeEach(() => {
-            store.dispatch.verify.clickTree({ treeId: 9, isShift: true });
+            store.dispatch.verify.clickCapture({ captureId: 9, isShift: true });
           });
 
-          it('treeImagesSelected should be [9,8,7]', () => {
-            expect(store.getState().verify.treeImagesSelected).toMatchObject([
-              9,
-              8,
-              7,
-            ]);
+          it('captureImagesSelected should be [9,8,7]', () => {
+            expect(
+              store.getState().verify.captureImagesSelected,
+            ).toMatchObject([9, 8, 7]);
           });
           //}}}
         });
 
-        describe('clickTree(0)', () => {
+        describe('clickCapture(0)', () => {
           //{{{
           beforeEach(() => {
-            store.dispatch.verify.clickTree({ treeId: 0 });
+            store.dispatch.verify.clickCapture({ captureId: 0 });
           });
 
-          it('treeImagesSelected should be [0]', () => {
-            expect(store.getState().verify.treeImagesSelected).toMatchObject([
-              0,
-            ]);
+          it('captureImagesSelected should be [0]', () => {
+            expect(
+              store.getState().verify.captureImagesSelected,
+            ).toMatchObject([0]);
           });
           //}}}
         });

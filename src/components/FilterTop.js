@@ -68,7 +68,7 @@ function Filter(props) {
   const { classes, filter } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const [treeId, setTreeId] = useState(filter.treeId || '');
+  const [captureId, setCaptureId] = useState(filter.captureId || '');
   const [planterId, setPlanterId] = useState(filter.planterId || '');
   const [deviceId, setDeviceId] = useState(filter.deviceIdentifier || '');
   const [planterIdentifier, setPlanterIdentifier] = useState(
@@ -108,7 +108,7 @@ function Filter(props) {
   function handleSubmit(e) {
     e.preventDefault();
     const filter = new FilterModel();
-    filter.treeId = treeId;
+    filter.captureId = captureId;
     filter.planterId = planterId;
     filter.deviceIdentifier = deviceId;
     filter.planterIdentifier = planterIdentifier;
@@ -125,7 +125,7 @@ function Filter(props) {
   function handleReset() {
     console.log('--- RESET filter and form ---');
     // reset form values, except 'approved' and 'active' which we'll keep
-    setTreeId('');
+    setCaptureId('');
     setPlanterId('');
     setDeviceId('');
     setPlanterIdentifier('');
@@ -239,10 +239,10 @@ function Filter(props) {
                 onChange={(e) => setPlanterId(e.target.value)}
               />
               <TextField
-                label="Tree ID"
+                label="Capture ID"
                 placeholder="e.g. 80"
-                value={treeId}
-                onChange={(e) => setTreeId(e.target.value)}
+                value={captureId}
+                onChange={(e) => setCaptureId(e.target.value)}
               />
               <TextField
                 label="Device Identifier"

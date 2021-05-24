@@ -1,11 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import AppBar from '@material-ui/core/AppBar';
-import Modal from '@material-ui/core/Modal';
-import TreeImageScrubber from '../components/TreeImageScrubber';
-import verify from '../models/verify';
-import { ThemeProvider, useTheme } from '@material-ui/styles';
+import Verify from '../components/Verify';
+import { ThemeProvider } from '@material-ui/styles';
 import theme from '../components/common/theme';
 import { Provider } from 'react-redux';
 import { init } from '@rematch/core';
@@ -31,7 +27,7 @@ function TestVerify() {
             overflow: 'scroll',
           }}
         >
-          <TreeImageScrubber getScrollContainerRef={getContainerRef} />
+          <Verify getScrollContainerRef={getContainerRef} />
         </div>
       </ThemeProvider>
     </Provider>
@@ -41,7 +37,7 @@ function TestVerify() {
 storiesOf('verify', module)
   .add('verify', function () {
     //mock the api
-    api.getTreeImages = (() => {
+    api.getCaptureImages = (() => {
       let counter = 0;
       let id = 100;
       return function () {
@@ -74,11 +70,11 @@ storiesOf('verify', module)
         }
       };
     })();
-    api.approveTreeImage = () =>
+    api.approveCaptureImage = () =>
       new Promise((r) => setTimeout(() => r(true), 500));
-    api.rejectTreeImage = () =>
+    api.rejectCaptureImage = () =>
       new Promise((r) => setTimeout(() => r(true), 500));
-    api.undoTreeImage = () =>
+    api.undoCaptureImage = () =>
       new Promise((r) => setTimeout(() => r(true), 500));
     api.getSpecies = () => {
       return [
@@ -103,7 +99,7 @@ storiesOf('verify', module)
   })
   .add('verifyApproveAllWithError', function () {
     //mock the api
-    api.getTreeImages = (() => {
+    api.getCaptureImages = (() => {
       let counter = 0;
       let id = 0;
       return function () {
@@ -134,7 +130,7 @@ storiesOf('verify', module)
       };
     })();
 
-    api.approveTreeImage = (() => {
+    api.approveCaptureImage = (() => {
       let counter = 0;
       return function () {
         switch (counter++) {
@@ -149,7 +145,7 @@ storiesOf('verify', module)
       };
     })();
 
-    api.rejectTreeImage = () =>
+    api.rejectCaptureImage = () =>
       new Promise((r) => setTimeout(() => r(true), 500));
 
     return <TestVerify />;

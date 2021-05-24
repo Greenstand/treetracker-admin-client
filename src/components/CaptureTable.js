@@ -17,7 +17,7 @@ import {
 
 import { getDateTimeStringLocale } from '../common/locale';
 import Filter, { FILTER_WIDTH } from './Filter';
-import TreeDetails from './TreeDetails.js';
+import CaptureDetails from './CaptureDetails.js';
 import LinkToWebmap from './common/LinkToWebmap';
 
 // change 88 to unit spacing,
@@ -62,7 +62,7 @@ const styles = (theme) => ({
 const columns = [
   {
     attr: 'id',
-    label: 'Tree ID',
+    label: 'Capture ID',
   },
   {
     attr: 'planterId',
@@ -97,7 +97,7 @@ const columns = [
   },
 ];
 
-class TreeTable extends Component {
+class CaptureTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -111,18 +111,18 @@ class TreeTable extends Component {
     this.scrollRef = React.createRef();
   }
 
-  loadTrees(payload) {
-    this.props.getTreesAsync(payload).then(() => {
+  loadCaptures(payload) {
+    this.props.getCapturesAsync(payload).then(() => {
       this.scrollRef.current && this.scrollRef.current.scrollTo(0, 0);
     });
   }
 
   componentDidMount() {
-    this.loadTrees();
+    this.loadCaptures();
   }
 
   toggleDrawer(id) {
-    this.props.getTreeAsync(id);
+    this.props.getCaptureAsync(id);
     const { isDetailsPaneOpen } = this.state;
     this.setState({
       isDetailsPaneOpen: !isDetailsPaneOpen,
@@ -142,20 +142,20 @@ class TreeTable extends Component {
   }
 
   handleFilterSubmit(filter) {
-    this.loadTrees({
+    this.loadCaptures({
       page: 0,
       filter,
     });
   }
 
   handlePageChange(_event, page) {
-    this.loadTrees({
+    this.loadCaptures({
       page,
     });
   }
 
   handleRowsPerPageChange(event) {
-    this.loadTrees({
+    this.loadCaptures({
       page: 0,
       rowsPerPage: parseInt(event.target.value),
     });
@@ -168,7 +168,7 @@ class TreeTable extends Component {
           ? 'desc'
           : 'asc';
       const orderBy = attr;
-      this.loadTrees({ order, orderBy });
+      this.loadCaptures({ order, orderBy });
     };
   }
 
@@ -177,7 +177,7 @@ class TreeTable extends Component {
       <TablePagination
         rowsPerPageOptions={[25, 50, 100, 250, 500]}
         component="div"
-        count={this.props.treeCount}
+        count={this.props.captureCount || 0}
         page={this.props.page}
         rowsPerPage={this.props.rowsPerPage}
         onChangePage={this.handlePageChange}
@@ -186,7 +186,7 @@ class TreeTable extends Component {
     );
   }
   render() {
-    const { treesArray, tree, classes, orderBy, order } = this.props;
+    const { capturesArray, capture, classes, orderBy, order } = this.props;
 
     return (
       <div className={classes.tableContainer} ref={this.scrollRef}>
@@ -197,7 +197,7 @@ class TreeTable extends Component {
           alignItems="center"
         >
           <Typography variant="h5" className={classes.title}>
-            Trees
+            Captures
           </Typography>
           {this.tablePagination()}
         </Grid>
@@ -222,15 +222,15 @@ class TreeTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {treesArray.map((tree) => (
+            {capturesArray.map((capture) => (
               <TableRow
-                key={tree.id}
-                onClick={this.createToggleDrawerHandler(tree.id)}
+                key={capture.id}
+                onClick={this.createToggleDrawerHandler(capture.id)}
                 className={classes.tableRow}
               >
                 {columns.map(({ attr, renderer }) => (
                   <TableCell key={attr}>
-                    {formatCell(tree, attr, renderer)}
+                    {formatCell(capture, attr, renderer)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -243,7 +243,7 @@ class TreeTable extends Component {
           open={this.state.isDetailsPaneOpen}
           onClose={this.closeDrawer}
         >
-          <TreeDetails tree={tree} />
+          <CaptureDetails capture={capture} />
         </Drawer>
         <Filter
           isOpen={true}
@@ -255,34 +255,41 @@ class TreeTable extends Component {
   }
 }
 
-const formatCell = (tree, attr, renderer) => {
+const formatCell = (capture, attr, renderer) => {
   if (attr === 'id' || attr === 'planterId') {
     return (
-      <LinkToWebmap value={tree[attr]} type={attr === 'id' ? 'tree' : 'user'} />
+      <LinkToWebmap
+        value={capture[attr]}
+        type={attr === 'id' ? 'tree' : 'user'}
+      />
     );
   } else {
-    return renderer ? renderer(tree[attr]) : tree[attr];
+    return renderer ? renderer(capture[attr]) : capture[attr];
   }
 };
 
 const mapState = (state) => {
-  const keys = Object.keys(state.trees.data);
+  const keys = Object.keys(state.captures.data);
   return {
-    treesArray: keys.map((id) => ({
-      ...state.trees.data[id],
+    capturesArray: keys.map((id) => ({
+      ...state.captures.data[id],
     })),
-    ...state.trees,
+    ...state.captures,
   };
 };
 
 const mapDispatch = (dispatch) => ({
-  getTreesAsync: (payload) => dispatch.trees.getTreesAsync(payload),
+  getCapturesAsync: (payload) => dispatch.captures.getCapturesAsync(payload),
   getLocationName: (id, lat, lon) =>
-    dispatch.trees.getLocationName({ id: id, latitude: lat, longitude: lon }),
-  getTreeAsync: (id) => dispatch.trees.getTreeAsync(id),
+    dispatch.captures.getLocationName({
+      id: id,
+      latitude: lat,
+      longitude: lon,
+    }),
+  getCaptureAsync: (id) => dispatch.captures.getCaptureAsync(id),
 });
 
 export default compose(
   withStyles(styles),
   connect(mapState, mapDispatch),
-)(TreeTable);
+)(CaptureTable);

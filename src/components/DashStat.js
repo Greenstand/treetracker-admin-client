@@ -38,7 +38,7 @@ const style = (theme) => ({
     float: 'left',
     marginLeft: '22px',
     height: '100%',
-    width: '90px',
+    width: '110px',
     boxSizing: 'border-box',
     position: 'relative',
     fontFamily: theme.typography.fontFamily,
@@ -56,7 +56,7 @@ const style = (theme) => ({
     bottom: '20px',
     marginBlockStart: 0,
     marginBlockEnd: 0,
-    width: '90px',
+    width: '110px',
     position: 'absolute',
   },
 });

@@ -1,5 +1,5 @@
 /*
- * A simple model for tree filter
+ * A simple model for capture filter
  */
 
 export const ALL_SPECIES = 'ALL_SPECIES';
@@ -9,7 +9,7 @@ export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 
 export default class Filter {
-  treeId;
+  captureId;
   //status
   dateStart;
   dateEnd;
@@ -30,8 +30,8 @@ export default class Filter {
     //{{{
     let where = {};
 
-    if (this.treeId) {
-      where.id = this.treeId;
+    if (this.captureId) {
+      where.id = this.captureId;
     }
 
     if (this.dateStart && this.dateEnd) {

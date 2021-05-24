@@ -35,14 +35,14 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Navbar from './Navbar';
 import PlanterDetail from './PlanterDetail';
-import TreeTags from './TreeTags';
-import TreeDetailDialog from './TreeDetailDialog';
+import CaptureTags from './CaptureTags';
+import CaptureDetailDialog from './CaptureDetailDialog';
 import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
 
-const log = require('loglevel').getLogger('../components/TreeImageScrubber');
+const log = require('loglevel').getLogger('../components/Verify');
 
 const SIDE_PANEL_WIDTH = 315;
 
@@ -186,13 +186,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TreeImageScrubber = (props) => {
+const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = React.useState(0);
   const [isFilterShown, setFilterShown] = React.useState(false);
-  const [treeDetail, setTreeDetail] = React.useState({
+  const [captureDetail, setCaptureDetail] = React.useState({
     isOpen: false,
-    tree: {},
+    capture: {},
   });
   const [planterDetail, setPlanterDetail] = React.useState({
     isOpen: false,
@@ -207,7 +207,7 @@ const TreeImageScrubber = (props) => {
     log.debug('mounted:');
     // update filter right away to prevent non-Filter type objects loading
     props.verifyDispatch.updateFilter(props.verifyState.filter);
-    props.verifyDispatch.loadTreeImages();
+    props.verifyDispatch.loadCaptureImages();
   }, [props.verifyDispatch]);
 
   /* to update html document title */
@@ -220,44 +220,44 @@ const TreeImageScrubber = (props) => {
     setComplete(props.verifyState.approveAllComplete);
   }, [props.verifyState.approveAllComplete]);
 
-  /* To update tree count */
+  /* To update capture count */
   useEffect(() => {
-    props.verifyDispatch.getTreeCount();
-  }, [props.verifyDispatch, props.verifyState.treeImages]);
+    props.verifyDispatch.getCaptureCount();
+  }, [props.verifyDispatch, props.verifyState.captureImages]);
 
-  /* load more trees when the page or page size changes */
+  /* load more captures when the page or page size changes */
   useEffect(() => {
-    props.verifyDispatch.loadTreeImages();
+    props.verifyDispatch.loadCaptureImages();
   }, [
     props.verifyDispatch,
     props.verifyState.pageSize,
     props.verifyState.currentPage,
   ]);
 
-  function handleTreeClick(e, treeId) {
+  function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click at tree:%d', treeId);
-    props.verifyDispatch.clickTree({
-      treeId,
+    log.debug('click on capture:%d', captureId);
+    props.verifyDispatch.clickCapture({
+      captureId,
       isShift: e.shiftKey,
       isCmd: e.metaKey,
       isCtrl: e.ctrlKey,
     });
   }
 
-  function handleTreePinClick(e, treeId) {
+  function handleCapturePinClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on tree:%d', treeId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${treeId}`;
+    log.debug('click on capture pin:%d', captureId);
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
     window.open(url, '_blank').opener = null;
   }
 
   function handlePlanterMapClick(e, planterId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click at planter:%d', planterId);
+    log.debug('click on planter:%d', planterId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${planterId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -270,8 +270,8 @@ const TreeImageScrubber = (props) => {
   async function handleSubmit(approveAction) {
     console.log('approveAction:', approveAction);
     //check selection
-    if (props.verifyState.treeImagesSelected.length === 0) {
-      window.alert('Please select one or more trees');
+    if (props.verifyState.captureImagesSelected.length === 0) {
+      window.alert('Please select one or more captures');
       return;
     }
     /*
@@ -310,19 +310,19 @@ const TreeImageScrubber = (props) => {
 
     const result = await props.verifyDispatch.approveAll({ approveAction });
     if (!result) {
-      window.alert('sorry, failed to approve some picture');
+      window.alert('Failed to approve a capture');
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
-    props.verifyDispatch.loadTreeImages();
+    props.verifyDispatch.loadCaptureImages();
   }
 
-  async function handleShowPlanterDetail(e, tree) {
+  async function handleShowPlanterDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
     setPlanterDetail({
       isOpen: true,
-      planterId: tree.planterId,
+      planterId: capture.planterId,
     });
   }
 
@@ -333,19 +333,19 @@ const TreeImageScrubber = (props) => {
     });
   }
 
-  function handleShowTreeDetail(e, tree) {
+  function handleShowCaptureDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
-    setTreeDetail({
+    setCaptureDetail({
       isOpen: true,
-      tree,
+      capture,
     });
   }
 
-  function handleCloseTreeDetail() {
-    setTreeDetail({
+  function handleCloseCaptureDetail() {
+    setCaptureDetail({
       isOpen: false,
-      tree: {},
+      capture: {},
     });
   }
 
@@ -357,19 +357,21 @@ const TreeImageScrubber = (props) => {
     props.verifyDispatch.set({ currentPage: page });
   }
 
-  function isTreeSelected(id) {
-    return props.verifyState.treeImagesSelected.indexOf(id) >= 0;
+  function isCaptureSelected(id) {
+    return props.verifyState.captureImagesSelected.indexOf(id) >= 0;
   }
 
-  const treeImages = props.verifyState.treeImages.filter((tree, index) => {
-    return (
-      index >= props.verifyState.currentPage * props.verifyState.pageSize &&
-      index < (props.verifyState.currentPage + 1) * props.verifyState.pageSize
-    );
-  });
+  const captureImages = props.verifyState.captureImages.filter(
+    (capture, index) => {
+      return (
+        index >= props.verifyState.currentPage * props.verifyState.pageSize &&
+        index < (props.verifyState.currentPage + 1) * props.verifyState.pageSize
+      );
+    },
+  );
 
   const placeholderImages = props.verifyState.isLoading
-    ? Array(props.verifyState.pageSize - treeImages.length)
+    ? Array(props.verifyState.pageSize - captureImages.length)
         .fill()
         .map((_, index) => {
           return {
@@ -379,78 +381,80 @@ const TreeImageScrubber = (props) => {
         })
     : [];
 
-  const treeImageItems = treeImages.concat(placeholderImages).map((tree) => {
-    return (
-      <Grid item xs={12} sm={6} md={4} xl={3} key={tree.id}>
-        <div
-          className={clsx(
-            classes.cardWrapper,
-            isTreeSelected(tree.id) ? classes.cardSelected : undefined,
-            tree.placeholder && classes.placeholderCard,
-          )}
-        >
-          {isTreeSelected(tree.id) && (
-            <Paper className={classes.cardCheckbox} elevation={4}>
-              <CheckIcon />
-            </Paper>
-          )}
-          <Card
-            onClick={(e) => handleTreeClick(e, tree.id)}
-            id={`card_${tree.id}`}
-            className={classes.card}
-            elevation={tree.placeholder ? 0 : 3}
+  const captureImageItems = captureImages
+    .concat(placeholderImages)
+    .map((capture) => {
+      return (
+        <Grid item xs={12} sm={6} md={4} xl={3} key={capture.id}>
+          <div
+            className={clsx(
+              classes.cardWrapper,
+              isCaptureSelected(capture.id) ? classes.cardSelected : undefined,
+              capture.placeholder && classes.placeholderCard,
+            )}
           >
-            <CardContent className={classes.cardContent}>
-              <OptimizedImage
-                src={tree.imageUrl}
-                width={400}
-                className={classes.cardMedia}
-              />
-            </CardContent>
+            {isCaptureSelected(capture.id) && (
+              <Paper className={classes.cardCheckbox} elevation={4}>
+                <CheckIcon />
+              </Paper>
+            )}
+            <Card
+              onClick={(e) => handleCaptureClick(e, capture.id)}
+              id={`card_${capture.id}`}
+              className={classes.card}
+              elevation={capture.placeholder ? 0 : 3}
+            >
+              <CardContent className={classes.cardContent}>
+                <OptimizedImage
+                  src={capture.imageUrl}
+                  width={400}
+                  className={classes.cardMedia}
+                />
+              </CardContent>
 
-            <Grid justify="center" container className={classes.cardActions}>
-              <Grid item>
-                <IconButton
-                  onClick={(e) => handleShowPlanterDetail(e, tree)}
-                  aria-label={`Planter details`}
-                  title={`Planter details`}
-                >
-                  <Person color="primary" />
-                </IconButton>
-                <IconButton
-                  onClick={(e) => handleShowTreeDetail(e, tree)}
-                  aria-label={`Tree details`}
-                  title={`Tree details`}
-                >
-                  <Nature color="primary" />
-                </IconButton>
-                <IconButton
-                  variant="link"
-                  href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${tree.id}`}
-                  target="_blank"
-                  onClick={(e) => handleTreePinClick(e, tree.id)}
-                  aria-label={`Tree location`}
-                  title={`Tree location`}
-                >
-                  <LocationOn color="primary" />
-                </IconButton>
-                <IconButton
-                  variant="link"
-                  href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${tree.planterId}`}
-                  target="_blank"
-                  onClick={(e) => handlePlanterMapClick(e, tree.planterId)}
-                  aria-label={`Planter map`}
-                  title={`Planter map`}
-                >
-                  <Map color="primary" />
-                </IconButton>
+              <Grid justify="center" container className={classes.cardActions}>
+                <Grid item>
+                  <IconButton
+                    onClick={(e) => handleShowPlanterDetail(e, capture)}
+                    aria-label={`Planter details`}
+                    title={`Planter details`}
+                  >
+                    <Person color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={(e) => handleShowCaptureDetail(e, capture)}
+                    aria-label={`Capture details`}
+                    title={`Capture details`}
+                  >
+                    <Nature color="primary" />
+                  </IconButton>
+                  <IconButton
+                    variant="link"
+                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
+                    target="_blank"
+                    onClick={(e) => handleCapturePinClick(e, capture.id)}
+                    aria-label={`Capture location`}
+                    title={`Capture location`}
+                  >
+                    <LocationOn color="primary" />
+                  </IconButton>
+                  <IconButton
+                    variant="link"
+                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
+                    target="_blank"
+                    onClick={(e) => handlePlanterMapClick(e, capture.planterId)}
+                    aria-label={`Planter map`}
+                    title={`Planter map`}
+                  >
+                    <Map color="primary" />
+                  </IconButton>
+                </Grid>
               </Grid>
-            </Grid>
-          </Card>
-        </div>
-      </Grid>
-    );
-  });
+            </Card>
+          </div>
+        </Grid>
+      );
+    });
 
   function handleFilterClick() {
     if (isFilterShown) {
@@ -464,12 +468,12 @@ const TreeImageScrubber = (props) => {
     <TablePagination
       rowsPerPageOptions={[12, 24, 48, 96, 192]}
       component="div"
-      count={props.verifyState.treeCount || 0}
+      count={props.verifyState.captureCount || 0}
       rowsPerPage={props.verifyState.pageSize}
       page={props.verifyState.currentPage}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
-      labelRowsPerPage="Images per page:"
+      labelRowsPerPage="Captures per page:"
     />
   );
 
@@ -527,9 +531,9 @@ const TreeImageScrubber = (props) => {
                   <Grid item>
                     <Typography variant="h5">
                       <ToVerifyCounter
-                        needsRefresh={props.verifyState.invalidateTreeCount}
-                        fetch={props.verifyDispatch.getTreeCount}
-                        data={props.verifyState.treeCount}
+                        needsRefresh={props.verifyState.invalidateCaptureCount}
+                        fetch={props.verifyDispatch.getCaptureCount}
+                        data={props.verifyState.captureCount}
                       />
                     </Typography>
                   </Grid>
@@ -543,7 +547,7 @@ const TreeImageScrubber = (props) => {
                 }}
               >
                 <Grid container className={classes.wrapper} spacing={1}>
-                  {treeImageItems}
+                  {captureImageItems}
                 </Grid>
               </Grid>
               <Grid item container justify="flex-end" className={classes.title}>
@@ -554,7 +558,7 @@ const TreeImageScrubber = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={props.verifyState.treeImagesSelected.length > 0}
+          submitEnabled={props.verifyState.captureImagesSelected.length > 0}
         />
       </Grid>
       {props.verifyState.isApproveAllProcessing && (
@@ -579,7 +583,7 @@ const TreeImageScrubber = (props) => {
       {false /* close undo */ &&
         !props.verifyState.isApproveAllProcessing &&
         !props.verifyState.isRejectAllProcessing &&
-        props.verifyState.treeImagesUndo.length > 0 && (
+        props.verifyState.captureImagesUndo.length > 0 && (
           <Snackbar
             open
             autoHideDuration={15000}
@@ -593,7 +597,7 @@ const TreeImageScrubber = (props) => {
                 {props.verifyState.isBulkApproving
                   ? ' approved '
                   : ' rejected '}
-                {props.verifyState.treeImagesUndo.length} trees
+                {props.verifyState.captureImagesUndo.length} captures
               </span>
             }
             color="primary"
@@ -617,11 +621,11 @@ const TreeImageScrubber = (props) => {
         planterId={planterDetail.planterId}
         onClose={() => handleClosePlanterDetail()}
       />
-      <TreeDetailDialog
-        open={treeDetail.isOpen}
+      <CaptureDetailDialog
+        open={captureDetail.isOpen}
         TransitionComponent={Transition}
-        onClose={handleCloseTreeDetail}
-        tree={treeDetail.tree}
+        onClose={handleCloseCaptureDetail}
+        capture={captureDetail.capture}
       />
     </React.Fragment>
   );
@@ -780,7 +784,7 @@ function SidePanel(props) {
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Additional tags
                 </Typography>
-                <TreeTags placeholder="Add other text tags" />
+                <CaptureTags placeholder="Add other text tags" />
               </Grid>
               <RadioGroup
                 className={classes.sidePanelItem}
@@ -883,14 +887,14 @@ function SidePanel(props) {
                   onClick={() => setRejectionReason('needs_contact_or_review')}
                   value="needs_contact_or_review"
                   control={<Radio />}
-                  label="Flag tree for contact/review"
+                  label="Flag capture for contact/review"
                 />
               </RadioGroup>
               <Grid className={classes.mb}>
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Additional tags
                 </Typography>
-                <TreeTags placeholder="Add other text tags" />
+                <CaptureTags placeholder="Add other text tags" />
               </Grid>
             </>
           )}
@@ -948,4 +952,4 @@ export default connect(
     plantersDispatch: dispatch.planters,
     tagDispatch: dispatch.tags,
   }),
-)(TreeImageScrubber);
+)(Verify);

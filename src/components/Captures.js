@@ -1,8 +1,8 @@
 /*
-Trees
+Captures
 
-Trees is a container component (no visual representation of its own and concerned with
-handling the comms between the tree view components and the store/models)
+Captures is a container component (no visual representation of its own and concerned with
+handling the comms between the captures view components and the store/models)
 
 */
 import React, { useEffect } from 'react';
@@ -12,12 +12,12 @@ import { documentTitle } from '../common/variables';
 import Grid from '@material-ui/core/Grid';
 
 import Navbar from './Navbar';
-import TreeTable from './TreeTable';
+import CaptureTable from './CaptureTable';
 
-function Trees() {
+function Captures() {
   /* to update html document title */
   useEffect(() => {
-    document.title = `Trees - ${documentTitle}`;
+    document.title = `Capture Data - ${documentTitle}`;
   }, []);
 
   return (
@@ -30,7 +30,7 @@ function Trees() {
         <Navbar />
       </Grid>
       <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
-        <TreeTable />
+        <CaptureTable />
       </Grid>
     </Grid>
   );
@@ -44,6 +44,6 @@ const mapDispatch = () => {
   return {};
 };
 
-Trees.propTypes = {};
+Captures.propTypes = {};
 
-export default connect(mapState, mapDispatch)(Trees);
+export default connect(mapState, mapDispatch)(Captures);

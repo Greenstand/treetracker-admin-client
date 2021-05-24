@@ -11,9 +11,9 @@ import { AppContext } from './Context';
 import { hasPermission, POLICIES } from '../models/auth';
 import {
   DashStatPlanterCount,
-  DashStatTotalTrees,
-  DashStatUnprocessedTrees,
-  DashStatVerifiedTrees,
+  DashStatTotalCaptures,
+  DashStatUnprocessedCaptures,
+  DashStatVerifiedCaptures,
 } from './DashStat.container';
 
 const logo = (
@@ -187,9 +187,9 @@ function Home(props) {
             POLICIES.APPROVE_TREE,
           ]) && (
             <>
-              <DashStatTotalTrees />
-              <DashStatUnprocessedTrees />
-              <DashStatVerifiedTrees />
+              <DashStatTotalCaptures />
+              <DashStatUnprocessedCaptures />
+              <DashStatVerifiedCaptures />
             </>
           )}
           {hasPermission(user, [

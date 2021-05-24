@@ -12,88 +12,88 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
-function DashStatTotalTreesComponent(props, El) {
+function DashStatTotalCapturesComponent(props, El) {
   return (
     <El
       color={theme.palette.stats.green}
       Icon={NatureOutlinedIcon}
-      label={'Total Trees'}
+      label={'Total Captures'}
       {...props}
     />
   );
 }
 
-export const DashStatTotalTrees = compose(
+export const DashStatTotalCaptures = compose(
   connect(
     (state) => ({
       data:
-        state.trees.treeCount !== null
-          ? countToLocaleString(state.trees.treeCount)
+        state.captures.captureCount !== null
+          ? countToLocaleString(state.captures.captureCount)
           : null,
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.trees.getTreeCount,
+      fetch: dispatch.captures.getCaptureCount,
     }),
   ),
   withData,
-  (El) => (props) => DashStatTotalTreesComponent(props, El),
+  (El) => (props) => DashStatTotalCapturesComponent(props, El),
 )(DashStat);
 
-function DashStatUnprocessedTreesComponent(props, El) {
+function DashStatUnprocessedCapturesComponent(props, El) {
   return (
     <El
       color={theme.palette.stats.red}
       Icon={LocalOfferOutlinedIcon}
-      label={'Untagged Trees'}
+      label={'Untagged Captures'}
       {...props}
     />
   );
 }
 
-export const DashStatUnprocessedTrees = compose(
+export const DashStatUnprocessedCaptures = compose(
   connect(
     (state) => ({
       data:
-        state.verify.treeCount !== null
-          ? countToLocaleString(state.verify.treeCount)
+        state.verify.captureCount !== null
+          ? countToLocaleString(state.verify.captureCount)
           : null,
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.verify.getTreeCount,
+      fetch: dispatch.verify.getCaptureCount,
     }),
   ),
   withData,
-  (El) => (props) => DashStatUnprocessedTreesComponent(props, El),
+  (El) => (props) => DashStatUnprocessedCapturesComponent(props, El),
 )(DashStat);
 
-function DashStatVerifiedTreesComponent(props, El) {
+function DashStatVerifiedCapturesComponent(props, El) {
   return (
     <El
       color={theme.palette.stats.orange}
       Icon={CheckCircleOutlineOutlinedIcon}
-      label={'Verified Trees'}
+      label={'Verified Captures'}
       {...props}
     />
   );
 }
 
-export const DashStatVerifiedTrees = compose(
+export const DashStatVerifiedCaptures = compose(
   connect(
     (state) => ({
       data:
-        state.verify.verifiedTreeCount !== null
-          ? countToLocaleString(state.verify.verifiedTreeCount)
+        state.verify.verifiedCaptureCount !== null
+          ? countToLocaleString(state.verify.verifiedCaptureCount)
           : null,
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.verify.getVerifiedTreeCount,
+      fetch: dispatch.verify.getVerifiedCaptureCount,
     }),
   ),
   withData,
-  (El) => (props) => DashStatVerifiedTreesComponent(props, El),
+  (El) => (props) => DashStatVerifiedCapturesComponent(props, El),
 )(DashStat);
 
 function DashStatPlanterCountComponent(props, El) {
