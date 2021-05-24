@@ -1,10 +1,10 @@
 import { init } from '@rematch/core';
-import treeDetail from './treeDetail';
+import captureDetail from './captureDetail';
 import * as loglevel from 'loglevel';
 
-const log = loglevel.getLogger('../models/treeDetail.test');
+const log = loglevel.getLogger('../models/captureDetail.test');
 
-describe('treeDetail', () => {
+describe('captureDetail', () => {
   //{{{
   let store;
   let api;
@@ -62,20 +62,20 @@ describe('treeDetail', () => {
     beforeEach(() => {
       store = init({
         models: {
-          treeDetail,
+          captureDetail,
         },
       });
     });
 
-    describe('query treeDetail', () => {
+    describe('query captureDetail', () => {
       beforeEach(async () => {
-        await store.dispatch.treeDetail.getTreeDetail(0);
+        await store.dispatch.captureDetail.getcaptureDetail(0);
       });
 
-      it('loaded treeDetail', () => {
-        expect(store.getState().treeDetail.tree).toStrictEqual(TREE);
-        expect(store.getState().treeDetail.species).toStrictEqual(SPECIES);
-        expect(store.getState().treeDetail.tags).toStrictEqual([TAG]);
+      it('loaded captureDetail', () => {
+        expect(store.getState().captureDetail.tree).toStrictEqual(TREE);
+        expect(store.getState().captureDetail.species).toStrictEqual(SPECIES);
+        expect(store.getState().captureDetail.tags).toStrictEqual([TAG]);
       });
     });
     //}}}
