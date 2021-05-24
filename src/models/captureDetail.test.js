@@ -8,7 +8,7 @@ describe('captureDetail', () => {
   //{{{
   let store;
   let api;
-  const TREE = {
+  const CAPTURE = {
     id: 0,
     planterId: 10,
     planterIdentifier: 'planter@some.place',
@@ -43,9 +43,9 @@ describe('captureDetail', () => {
   beforeEach(() => {
     //mock the api
     api = require('../api/treeTrackerApi').default;
-    api.getTreeById = (id) => {
-      log.debug('mock getTreeById:');
-      return Promise.resolve(TREE);
+    api.getCaptureById = (id) => {
+      log.debug('mock getCaptureById:');
+      return Promise.resolve(CAPTURE);
     };
     api.getSpeciesById = (id) => {
       log.debug('mock getSpeciesById');
@@ -69,11 +69,11 @@ describe('captureDetail', () => {
 
     describe('query captureDetail', () => {
       beforeEach(async () => {
-        await store.dispatch.captureDetail.getcaptureDetail(0);
+        await store.dispatch.captureDetail.getCaptureDetail(0);
       });
 
       it('loaded captureDetail', () => {
-        expect(store.getState().captureDetail.tree).toStrictEqual(TREE);
+        expect(store.getState().captureDetail.capture).toStrictEqual(CAPTURE);
         expect(store.getState().captureDetail.species).toStrictEqual(SPECIES);
         expect(store.getState().captureDetail.tags).toStrictEqual([TAG]);
       });
