@@ -8,7 +8,7 @@ import Account from './Account';
 import Home from './Home';
 import Users from './Users';
 import SpeciesMgt from './SpeciesMgt';
-import Stakeholder from './Stakeholder';
+import Stakeholder from './Stakeholders';
 import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
 
 import IconSettings from '@material-ui/icons/Settings';
