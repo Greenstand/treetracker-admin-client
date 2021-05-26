@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.4...v1.12.0) (2021-05-26)
+
+
+### Features
+
+* replace Trees with Captures and refactor code ([#99](https://github.com/Greenstand/treetracker-admin-client/issues/99)) ([7513e71](https://github.com/Greenstand/treetracker-admin-client/commit/7513e714f2dcf39a074875f63b821ce155ce7ce6))
+
 ## [1.11.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.3...v1.11.4) (2021-05-21)
 
 
