@@ -1,9 +1,9 @@
 import React from 'react';
 import isEqual from 'react-fast-compare';
 
-import TreeImageScrubber from './TreeImageScrubber';
+import Verify from './Verify';
 import Planters from './Planters';
-import Trees from './Trees';
+import Captures from './Captures';
 import Account from './Account';
 import Home from './Home';
 import Users from './Users';
@@ -47,7 +47,7 @@ function getRoutes(user) {
     {
       name: 'Verify',
       linkTo: '/verify',
-      component: TreeImageScrubber,
+      component: Verify,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -56,8 +56,18 @@ function getRoutes(user) {
       ]),
     },
     {
-      name: 'Capture Matching',
+      name: 'Captures',
       linkTo: '/captures',
+      component: Captures,
+      icon: IconNature,
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.LIST_TREE,
+      ]),
+    },
+    {
+      name: 'Capture Matching',
+      linkTo: '/capture-matching',
       component: CaptureMatchingFrame,
       icon: CompareIcon,
       disabled:
@@ -66,16 +76,6 @@ function getRoutes(user) {
           POLICIES.SUPER_PERMISSION,
           POLICIES.APPROVE_TREE,
         ]),
-    },
-    {
-      name: 'Trees',
-      linkTo: '/trees',
-      component: Trees,
-      icon: IconNature,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_TREE,
-      ]),
     },
     {
       name: 'Planters',
@@ -98,7 +98,7 @@ function getRoutes(user) {
       linkTo: '/species',
       component: SpeciesMgt,
       icon: CategoryIcon,
-      //TODO this is temporarily, need to add species policy
+      //TODO this is temporary, need to add species policy
       disabled:
         !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
         !user ||
@@ -113,7 +113,7 @@ function getRoutes(user) {
     },
     {
       name: 'User Manager',
-      linkTo: '/usermanager',
+      linkTo: '/user-manager',
       component: Users,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),

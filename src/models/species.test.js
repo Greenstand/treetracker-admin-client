@@ -32,7 +32,7 @@ describe('species', () => {
         name: 'm',
       });
     });
-    api.getTreeCountPerSpecies = jest.fn(() => {
+    api.getCaptureCountPerSpecies = jest.fn(() => {
       return Promise.resolve({ count: (Math.random() * 10) >> 0 });
     });
   });

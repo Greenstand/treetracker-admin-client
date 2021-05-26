@@ -1,22 +1,22 @@
 /*
- * The model for the TreeDetailDialog component
+ * The model for the CaptureDetailDialog component
  */
 import * as loglevel from 'loglevel';
 import api from '../api/treeTrackerApi';
 
-const log = loglevel.getLogger('../models/treeDetail');
+const log = loglevel.getLogger('../models/captureDetail');
 
 const STATE_EMPTY = {
-  tree: null,
+  capture: null,
   species: null,
   tags: [],
 };
 
-const treeDetail = {
+const captureDetail = {
   state: STATE_EMPTY,
   reducers: {
-    setTree(state, tree) {
-      return { ...state, tree };
+    setCapture(state, capture) {
+      return { ...state, capture };
     },
     setSpecies(state, species) {
       return { ...state, species };
@@ -29,30 +29,27 @@ const treeDetail = {
     },
   },
   effects: {
-    async getTreeDetail(id) {
+    async getCaptureDetail(id) {
       this.reset();
 
-      return Promise.all([
-        this.getTree(id).then((tree) => {
-          this.getSpecies(tree && tree.speciesId);
-          this.getTags(tree && tree.treeTags);
-        }),
-      ]);
+      return this.getCapture(id).then((capture) => {
+        this.getSpecies(capture && capture.speciesId);
+        this.getTags(capture && capture.treeTags);
+      });
     },
-    async getTree(id) {
+    async getCapture(id) {
       if (id == null) {
-        log.debug('getTree called with no id');
-        return Promise.resolve(STATE_EMPTY.tree);
+        log.debug('getCapture called with no id');
+        return Promise.resolve(STATE_EMPTY.capture);
       }
 
-      return api.getTreeById(id).then((tree) => {
-        this.setTree(tree);
-        return tree;
+      return api.getCaptureById(id).then((capture) => {
+        this.setCapture(capture);
+        return capture;
       });
     },
     async getSpecies(speciesId) {
       if (speciesId == null) {
-        log.debug('getSpecies called with no speciesId');
         return Promise.resolve(STATE_EMPTY.speciesId);
       }
 
@@ -61,14 +58,13 @@ const treeDetail = {
         return species;
       });
     },
-    async getTags(treeTags) {
-      if (treeTags == null) {
-        log.debug('getTags called with no speciesId');
+    async getTags(captureTags) {
+      if (captureTags == null) {
         return Promise.resolve(STATE_EMPTY.tags);
       }
 
       Promise.all(
-        treeTags.map((tag) => {
+        captureTags.map((tag) => {
           return api.getTagById(tag.tagId);
         }),
       ).then((tags) => {
@@ -79,4 +75,4 @@ const treeDetail = {
   },
 };
 
-export default treeDetail;
+export default captureDetail;

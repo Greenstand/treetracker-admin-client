@@ -35,48 +35,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TreeDetailDialog(props) {
-  const { open, TransitionComponent, tree } = props;
+function CaptureDetailDialog(props) {
+  const { open, TransitionComponent, capture } = props;
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
-  const [renderTree, setRenderTree] = useState(tree);
+  const [renderCapture, setRenderCapture] = useState(capture);
   const classes = useStyles();
   const textAreaRef = useRef(null);
 
   useEffect(() => {
-    props.treeDetailDispatch.getTreeDetail(props.tree.id);
-  }, [props.treeDetailDispatch, props.tree]);
+    props.captureDetailDispatch.getCaptureDetail(props.capture.id);
+  }, [props.captureDetailDispatch, props.capture]);
 
   /*
-   * Render the most complete tree detail we have
+   * Render the most complete capture detail we have
    */
   useEffect(() => {
-    if (props.treeDetail.tree) {
-      setRenderTree(props.treeDetail.tree);
+    if (props.captureDetail.capture) {
+      setRenderCapture(props.captureDetail.capture);
     } else {
-      setRenderTree(props.tree);
+      setRenderCapture(props.capture);
     }
-  }, [props.treeDetail, props.tree]);
+  }, [props.captureDetail, props.capture]);
 
   function handleClose() {
     setSnackbarOpen(false);
     setSnackbarLabel('');
-    props.treeDetailDispatch.reset();
+    props.captureDetailDispatch.reset();
     props.onClose();
   }
 
   function Tags(props) {
-    const { tree, species, treeTags } = props;
+    const { capture, species, captureTags } = props;
     const allTags = [
-      tree.morphology,
-      tree.age,
-      tree.captureApprovalTag,
-      tree.rejectionReason,
-      ...treeTags.map((t) => t.tagName),
+      capture.morphology,
+      capture.age,
+      capture.captureApprovalTag,
+      capture.rejectionReason,
+      ...captureTags.map((t) => t.tagName),
     ].filter((tag) => !!tag);
 
-    const dateCreated = new Date(Date.parse(tree.timeCreated));
+    const dateCreated = new Date(Date.parse(capture.timeCreated));
     function confirmCopy(label) {
       setSnackbarOpen(false);
       setSnackbarLabel(label);
@@ -111,34 +111,34 @@ function TreeDetailDialog(props) {
       <Grid item container direction="column" spacing={4}>
         <Grid item>
           <Typography color="primary" variant="h6">
-            Tree <LinkToWebmap value={tree.id} type="tree" />
-            <CopyButton label="Tree ID" value={tree.id} />
+            Capture <LinkToWebmap value={capture.id} type="tree" />
+            <CopyButton label="Capture ID" value={capture.id} />
           </Typography>
         </Grid>
         <Divider />
         {[
           {
             label: 'Planter ID',
-            value: tree.planterId,
+            value: capture.planterId,
             copy: true,
             link: true,
           },
           {
             label: 'Planter Identifier',
-            value: tree.planterIdentifier,
+            value: capture.planterIdentifier,
             copy: true,
           },
           {
             label: 'Device Identifier',
-            value: tree.deviceIdentifier,
+            value: capture.deviceIdentifier,
             copy: true,
           },
-          { label: 'Approved', value: tree.approved ? 'true' : 'false' },
-          { label: 'Active', value: tree.active ? 'true' : 'false' },
-          { label: 'Status', value: tree.status },
+          { label: 'Approved', value: capture.approved ? 'true' : 'false' },
+          { label: 'Active', value: capture.active ? 'true' : 'false' },
+          { label: 'Status', value: capture.status },
           { label: 'Species', value: species && species.name },
           { label: 'Created', value: dateCreated.toLocaleString() },
-          { label: 'Note', value: renderTree.note },
+          { label: 'Note', value: renderCapture.note },
         ].map((item) => (
           <Fragment key={item.label}>
             <Grid item>
@@ -207,7 +207,7 @@ function TreeDetailDialog(props) {
         <Grid container spacing={4} wrap="nowrap">
           <Grid item>
             <OptimizedImage
-              src={renderTree.imageUrl}
+              src={renderCapture.imageUrl}
               width={640}
               style={{ maxWidth: '100%' }}
               fixed
@@ -216,9 +216,9 @@ function TreeDetailDialog(props) {
           <Grid container item style={{ width: '300px' }} spacing={2}>
             <Grid container direction="row" spacing={4}>
               <Tags
-                tree={renderTree}
-                species={props.treeDetail.species}
-                treeTags={props.treeDetail.tags}
+                capture={renderCapture}
+                species={props.captureDetail.species}
+                captureTags={props.captureDetail.tags}
               />
             </Grid>
           </Grid>
@@ -235,11 +235,11 @@ function TreeDetailDialog(props) {
 }
 
 const mapState = (state) => ({
-  treeDetail: state.treeDetail,
+  captureDetail: state.captureDetail,
 });
 
 const mapDispatch = (dispatch) => ({
-  treeDetailDispatch: dispatch.treeDetail,
+  captureDetailDispatch: dispatch.captureDetail,
 });
 
-export default compose(connect(mapState, mapDispatch))(TreeDetailDialog);
+export default compose(connect(mapState, mapDispatch))(CaptureDetailDialog);

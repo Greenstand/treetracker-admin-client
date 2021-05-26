@@ -2,7 +2,7 @@ import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
 export default {
-  getTreeImages({
+  getCaptureImages({
     skip,
     rowsPerPage,
     orderBy = 'id',
@@ -44,7 +44,7 @@ export default {
       .catch(handleError);
   },
 
-  approveTreeImage(id, morphology, age, captureApprovalTag, speciesId) {
+  approveCaptureImage(id, morphology, age, captureApprovalTag, speciesId) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/${id}`;
@@ -70,7 +70,7 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  rejectTreeImage(id, rejectionReason) {
+  rejectCaptureImage(id, rejectionReason) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/${id}`;
@@ -95,7 +95,7 @@ export default {
   /*
    * to rollback from a wrong approving
    */
-  undoTreeImage(id) {
+  undoCaptureImage(id) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/${id}`;
@@ -114,7 +114,7 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getUnverifiedTreeCount() {
+  getUnverifiedCaptureCount() {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`;
@@ -126,13 +126,13 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getTreeCount(filter) {
+  getCaptureCount(filter) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?where=${JSON.stringify(
       filter.getWhereObj(),
     )}`;
-    // console.log('getTreeCount --- ', filter)
+    // console.log('getCaptureCount --- ', filter)
     return fetch(query, {
       headers: {
         Authorization: session.token,
@@ -141,7 +141,7 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getTreeById(id) {
+  getCaptureById(id) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/${id}`;
@@ -263,7 +263,7 @@ export default {
   /*
    * get tree count by species
    */
-  getTreeCountPerSpecies(speciesId) {
+  getCaptureCountPerSpecies(speciesId) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
@@ -331,7 +331,7 @@ export default {
   /*
    * create new tree tags
    */
-  async createTreeTags(treeId, tags) {
+  async createCaptureTags(captureId, tags) {
     return tags.map((t) => {
       const query = `${process.env.REACT_APP_API_ROOT}/api/tree_tags`;
       return fetch(query, {
@@ -341,7 +341,7 @@ export default {
           Authorization: session.token,
         },
         body: JSON.stringify({
-          treeId,
+          treeId: captureId,
           tagId: t.id,
         }),
       })
@@ -352,9 +352,9 @@ export default {
   /*
    * get tags for a given tree
    */
-  getTreeTags({ treeId, tagId }) {
+  getCaptureTags({ captureId, tagId }) {
     const filterString =
-      (treeId ? `filter[where][treeId]=${treeId}` : '') +
+      (captureId ? `filter[where][treeId]=${captureId}` : '') +
       (tagId ? `&filter[where][tagId]=${tagId}` : '');
     const query = `${process.env.REACT_APP_API_ROOT}/api/tree_tags?${filterString}`;
     return fetch(query, {

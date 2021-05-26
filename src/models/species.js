@@ -41,8 +41,8 @@ const species = {
       log.debug('load species from api:', speciesList.length);
       const sepcieListWithCount = await Promise.all(
         speciesList.map(async (species) => {
-          let treeCount = await api.getTreeCountPerSpecies(species.id);
-          species.treeCount = treeCount.count;
+          let captureCount = await api.getCaptureCountPerSpecies(species.id);
+          species.captureCount = captureCount.count;
           return species;
         }),
       );
@@ -101,7 +101,7 @@ const species = {
      */
     async editSpecies(payload) {
       const { id, name, desc } = payload;
-      let editedSpecies = await api.editSpecies(id, name, desc);
+      const editedSpecies = await api.editSpecies(id, name, desc);
       console.debug('edit old species:', editedSpecies);
     },
     /*
@@ -109,7 +109,7 @@ const species = {
      */
     async deleteSpecies(payload) {
       const { id } = payload;
-      let deletedSpecies = await api.deleteSpecies(id);
+      const deletedSpecies = await api.deleteSpecies(id);
       console.debug('delete outdated species:', deletedSpecies);
     },
 

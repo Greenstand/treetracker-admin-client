@@ -9,26 +9,26 @@ const log = loglevel.getLogger('../models/verify');
 
 const verify = {
   state: {
-    treeImages: [],
+    captureImages: [],
     /*
-     * The array of all current selected trees, user click to select true
-     * [treeId, treeId, ...]
+     * The array of all current selected captures, user click to select true
+     * [captureId, captureId, ...]
      */
-    treeImagesSelected: [],
+    captureImagesSelected: [],
     /*
-     * this is a tree id, used to assist selecting trees, when click a tree,
-     * and press shift to select a range, then, need use this tree id to cal
+     * this is a capture id, used to assist selecting captures, when click a capture,
+     * and press shift to select a range, then, need use this capture id to cal
      * the whole range
      */
-    treeImageAnchor: undefined,
+    captureImageAnchor: undefined,
     /*
-     * When approved a lot of trees, put them in this array, so could undo the
+     * When approved a lot of captures, put them in this array, so could undo the
      * approving action
-     * Note, the element of this array is tree object, not tree id
+     * Note, the element of this array is capture object, not capture id
      */
-    treeImagesUndo: [],
+    captureImagesUndo: [],
     /*
-     * When approving a lot of trees, set isBulkApproving to true
+     * When approving a lot of captures, set isBulkApproving to true
      * set it back to false when undo
      */
     isBulkApproving: false,
@@ -56,26 +56,26 @@ const verify = {
       active: false,
     }),
 
-    invalidateTreeCount: true,
+    invalidateCaptureCount: true,
     invalidateVerifiedCount: true,
     invalidateRejectedCount: true,
-    treeCount: null,
-    rejectedTreeCount: null,
-    verifiedTreeCount: null,
+    captureCount: null,
+    rejectedCaptureCount: null,
+    verifiedCaptureCount: null,
   },
   reducers: {
-    appendTreeImages(state, treeImages) {
-      let newTreeImages = [...state.treeImages, ...treeImages];
+    appendCaptureImages(state, captureImages) {
+      let newCaptureImages = [...state.captureImages, ...captureImages];
       let newState = {
         ...state,
-        treeImages: newTreeImages,
+        captureImages: newCaptureImages,
       };
       return newState;
     },
-    setTreeImages(state, treeImages) {
+    setCaptureImages(state, captureImages) {
       return {
         ...state,
-        treeImages,
+        captureImages,
       };
     },
     setLoading(state, isLoading) {
@@ -110,23 +110,23 @@ const verify = {
         ? { ...state, filter }
         : { ...state, filter: newFilter };
     },
-    setTreeCount(state, treeCount) {
+    setCaptureCount(state, captureCount) {
       return {
         ...state,
-        treeCount: Number(treeCount),
-        invalidateTreeCount: false,
+        captureCount: Number(captureCount),
+        invalidateCaptureCount: false,
       };
     },
-    invalidateTreeCount(state, payload) {
+    invalidateCaptureCount(state, payload) {
       return {
         ...state,
-        invalidateTreeCount: payload,
+        invalidateCaptureCount: payload,
       };
     },
-    setRejectedTreeCount(state, unprocessedTreeCount) {
+    setRejectedCaptureCount(state, unprocessedCaptureCount) {
       return {
         ...state,
-        unprocessedTreeCount,
+        unprocessedCaptureCount,
         invalidateRejectedCount: false,
       };
     },
@@ -136,11 +136,11 @@ const verify = {
         invalidateRejectedCount: payload,
       };
     },
-    setVerifiedTreeCount(state, verifiedTreeCount) {
+    setVerifiedCaptureCount(state, verifiedCaptureCount) {
       window.api = api;
       return {
         ...state,
-        verifiedTreeCount,
+        verifiedCaptureCount,
         invalidateVerifiedCount: false,
       };
     },
@@ -154,7 +154,7 @@ const verify = {
       return {
         ...state,
         approveAllComplete,
-        invalidateTreeCount: true,
+        invalidateCaptureCount: true,
         invalidateVerifiedCount: true,
       };
     },
@@ -162,84 +162,84 @@ const verify = {
       return {
         ...state,
         rejectAllComplete,
-        invalidateTreeCount: true,
+        invalidateCaptureCount: true,
         invalidateRejectedCount: true,
       };
     },
     /*
      * replace approve and reject
      */
-    approved(state, treeId) {
-      const treeImages = state.treeImages.filter(
-        (treeImage) => treeImage.id !== treeId,
+    approved(state, captureId) {
+      const captureImages = state.captureImages.filter(
+        (captureImage) => captureImage.id !== captureId,
       );
       //remove if selected
-      const treeImagesSelected = state.treeImagesSelected.filter(
-        (id) => id !== treeId,
+      const captureImagesSelected = state.captureImagesSelected.filter(
+        (id) => id !== captureId,
       );
       return {
         ...state,
-        treeImages,
-        treeImagesSelected,
+        captureImages,
+        captureImagesSelected,
       };
     },
-    approvedTreeImage(state, treeId) {
-      const treeImages = state.treeImages.filter(
-        (treeImage) => treeImage.id !== treeId,
+    approvedCaptureImage(state, captureId) {
+      const captureImages = state.captureImages.filter(
+        (captureImage) => captureImage.id !== captureId,
       );
       //remove if selected
-      const treeImagesSelected = state.treeImagesSelected.filter(
-        (id) => id !== treeId,
+      const captureImagesSelected = state.captureImagesSelected.filter(
+        (id) => id !== captureId,
       );
       return {
         ...state,
-        treeImages,
-        treeImagesSelected,
+        captureImages,
+        captureImagesSelected,
       };
     },
-    rejectedTreeImage(state, treeId) {
-      const treeImages = state.treeImages.filter(
-        (treeImage) => treeImage.id !== treeId,
+    rejectedCaptureImage(state, captureId) {
+      const captureImages = state.captureImages.filter(
+        (captureImage) => captureImage.id !== captureId,
       );
       //remove if selected
-      const treeImagesSelected = state.treeImagesSelected.filter(
-        (id) => id !== treeId,
+      const captureImagesSelected = state.captureImagesSelected.filter(
+        (id) => id !== captureId,
       );
       return {
         ...state,
-        treeImages,
-        treeImagesSelected,
+        captureImages,
+        captureImagesSelected,
       };
     },
-    undoedTreeImage(state, treeId) {
+    undoedCaptureImage(state, captureId) {
       /*
-       * put the tree back, from undo list, sort by id
+       * put the capture back, from undo list, sort by id
        */
-      const treeUndo = state.treeImagesUndo.reduce((a, c) =>
-        c.id === treeId ? c : a,
+      const captureUndo = state.captureImagesUndo.reduce((a, c) =>
+        c.id === captureId ? c : a,
       );
-      const treeImagesUndo = state.treeImagesUndo.filter(
-        (tree) => tree.id !== treeId,
+      const captureImagesUndo = state.captureImagesUndo.filter(
+        (capture) => capture.id !== captureId,
       );
-      const treeImages = [...state.treeImages, treeUndo].sort(
+      const captureImages = [...state.captureImages, captureUndo].sort(
         (a, b) => a.id - b.id,
       );
       return {
         ...state,
-        treeImages,
-        treeImagesUndo,
+        captureImages,
+        captureImagesUndo,
       };
     },
     //to reset the page status, load from beginning
     reset(state) {
       return {
         ...state,
-        treeImages: [],
+        captureImages: [],
         currentPage: 0,
-        treeCount: null,
-        verifiedTreeCount: null,
-        unprocessedTreeCount: null,
-        invalidateTreeCount: true,
+        captureCount: null,
+        verifiedCaptureCount: null,
+        unprocessedCaptureCount: null,
+        invalidateCaptureCount: true,
         invalidateVerifiedCount: true,
         invalidateRejectedCount: true,
       };
@@ -250,8 +250,8 @@ const verify = {
     resetSelection(state) {
       return {
         ...state,
-        treeImagesSelected: [],
-        treeImageAnchor: undefined,
+        captureImagesSelected: [],
+        captureImageAnchor: undefined,
       };
     },
     /*
@@ -267,25 +267,25 @@ const verify = {
   effects: {
     /*
      * Dedicated, by approve
-     * approve a tree, given tree id
+     * approve a capture, given capture id
      */
-    async approveTreeImage(id) {
-      await api.approveTreeImage(id);
-      this.approvedTreeImage(id);
+    async approveCaptureImage(id) {
+      await api.approveCaptureImage(id);
+      this.approvedCaptureImage(id);
       return true;
     },
     /*
      * Dedicated, by approve
-     * reject a tree, given tree id
+     * reject a capture, given capture id
      */
-    async rejectTreeImage(id) {
-      await api.rejectTreeImage(id);
-      this.rejectedTreeImage(id);
+    async rejectCaptureImage(id) {
+      await api.rejectCaptureImage(id);
+      this.rejectedCaptureImage(id);
       return true;
     },
     /*
      * Sat Apr 11 17:23:16 CST 2020
-     * use new method to replace old ones: approveTreeImage, rejectTreeImage
+     * use new method to replace old ones: approveCaptureImage, rejectCaptureImage
      * add approveAction to indicate if it's approve or reject, and other
      * arguments
      *
@@ -300,7 +300,7 @@ const verify = {
       }
       if (payload.approveAction.isApproved) {
         log.debug('approve');
-        await api.approveTreeImage(
+        await api.approveCaptureImage(
           payload.id,
           payload.approveAction.morphology,
           payload.approveAction.age,
@@ -309,38 +309,38 @@ const verify = {
         );
       } else {
         log.debug('reject');
-        await api.rejectTreeImage(
+        await api.rejectCaptureImage(
           payload.id,
           payload.approveAction.rejectionReason,
         );
       }
 
       if (payload.approveAction.tags) {
-        await api.createTreeTags(payload.id, payload.approveAction.tags);
+        await api.createCaptureTags(payload.id, payload.approveAction.tags);
       }
 
       this.approved(payload.id);
       return true;
     },
-    async undoTreeImage(id) {
-      await api.undoTreeImage(id);
-      this.undoedTreeImage(id);
+    async undoCaptureImage(id) {
+      await api.undoCaptureImage(id);
+      this.undoedCaptureImage(id);
       return true;
     },
     /*
-     * To load trees into the list
+     * To load captures into the list
      */
-    async loadTreeImages(_payload, state) {
+    async loadCaptureImages(_payload, state) {
       //{{{
       log.debug('to load images');
       const verifyState = state.verify;
 
       if (
         verifyState.isLoading ||
-        (verifyState.treeCount > 0 &&
-          verifyState.treeImages.length >= verifyState.treeCount) ||
+        (verifyState.captureCount > 0 &&
+          verifyState.captureImages.length >= verifyState.captureCount) ||
         verifyState.pageSize * (verifyState.currentPage + 1) <=
-          verifyState.treeImages.length
+          verifyState.captureImages.length
       ) {
         // No need to request more images
         log.debug("cancel load because condition doesn't meet");
@@ -354,16 +354,16 @@ const verify = {
         //REVISE Fri Aug 16 10:56:34 CST 2019
         //change the api to use skip parameter directly, because there is a
         //bug to use page as param
-        skip: verifyState.treeImages.length,
+        skip: verifyState.captureImages.length,
         rowsPerPage:
           verifyState.pageSize * (verifyState.currentPage + 1) -
-          verifyState.treeImages.length,
+          verifyState.captureImages.length,
         filter: verifyState.filter,
       };
       log.debug('load page with params:', pageParams);
-      const result = await api.getTreeImages(pageParams);
-      log.debug('loaded trees:', result.length);
-      this.appendTreeImages(result);
+      const result = await api.getCaptureImages(pageParams);
+      log.debug('loaded captures:', result.length);
+      this.appendCaptureImages(result);
       //restore loading status
       this.setLoading(false);
       return true;
@@ -372,7 +372,7 @@ const verify = {
 
     /*
      * Dedicated, by approveAll
-     * reject all tree
+     * reject all capture
      */
     async rejectAll(payload, state) {
       log.debug('rejectAll with state:', state);
@@ -380,23 +380,23 @@ const verify = {
       this.setApproveAllProcessing(true);
       this.setIsBulkRejecting(true);
       const verifyState = state.verify;
-      const total = verifyState.treeImagesSelected.length;
-      const undo = verifyState.treeImages.filter((tree) =>
-        verifyState.treeImagesSelected.some((id) => id === tree.id),
+      const total = verifyState.captureImagesSelected.length;
+      const undo = verifyState.captureImages.filter((capture) =>
+        verifyState.captureImagesSelected.some((id) => id === capture.id),
       );
-      log.debug('items:%d', verifyState.treeImages.length);
+      log.debug('items:%d', verifyState.captureImages.length);
       try {
-        for (let i = 0; i < verifyState.treeImagesSelected.length; i++) {
-          const treeId = verifyState.treeImagesSelected[i];
-          const treeImage = verifyState.treeImages.reduce((a, c) => {
-            if (c && c.id === treeId) {
+        for (let i = 0; i < verifyState.captureImagesSelected.length; i++) {
+          const captureId = verifyState.captureImagesSelected[i];
+          const captureImage = verifyState.captureImages.reduce((a, c) => {
+            if (c && c.id === captureId) {
               return c;
             } else {
               return a;
             }
           }, undefined);
-          log.trace('reject:%d', treeImage.id);
-          await this.rejectTreeImage(treeImage.id);
+          log.trace('reject:%d', captureImage.id);
+          await this.rejectCaptureImage(captureImage.id);
           this.setApproveAllComplete(100 * ((i + 1) / total));
         }
       } catch (e) {
@@ -407,14 +407,14 @@ const verify = {
       }
       //push to undo list
       this.set({
-        treeImagesUndo: undo,
+        captureImagesUndo: undo,
       });
       //finished, set status flags
       this.setLoading(false);
       this.setApproveAllProcessing(false);
       this.setRejectAllProcessing(false);
       this.invalidateVerifiedCount(true);
-      this.invalidateTreeCount(true);
+      this.invalidateCaptureCount(true);
       this.invalidateRejectedCount(true);
 
       //reset
@@ -424,7 +424,7 @@ const verify = {
     },
 
     /*
-     * approve all tree
+     * approve all capture
      * REVISE Tue Apr 14 16:20:31 CST 2020
      * Merge approve and reject to one, just: approveAll
      * payload : {
@@ -439,24 +439,24 @@ const verify = {
       this.setApproveAllProcessing(true);
       this.setIsBulkApproving(true);
       const verifyState = state.verify;
-      const total = verifyState.treeImagesSelected.length;
-      const undo = verifyState.treeImages.filter((tree) =>
-        verifyState.treeImagesSelected.some((id) => id === tree.id),
+      const total = verifyState.captureImagesSelected.length;
+      const undo = verifyState.captureImages.filter((capture) =>
+        verifyState.captureImagesSelected.some((id) => id === capture.id),
       );
-      log.debug('items:%d', verifyState.treeImages.length);
+      log.debug('items:%d', verifyState.captureImages.length);
       try {
-        for (let i = 0; i < verifyState.treeImagesSelected.length; i++) {
-          const treeId = verifyState.treeImagesSelected[i];
-          const treeImage = verifyState.treeImages.reduce((a, c) => {
-            if (c && c.id === treeId) {
+        for (let i = 0; i < verifyState.captureImagesSelected.length; i++) {
+          const captureId = verifyState.captureImagesSelected[i];
+          const captureImage = verifyState.captureImages.reduce((a, c) => {
+            if (c && c.id === captureId) {
               return c;
             } else {
               return a;
             }
           }, undefined);
-          log.trace('approve:%d', treeImage.id);
+          log.trace('approve:%d', captureImage.id);
           await this.approve({
-            id: treeImage.id,
+            id: captureImage.id,
             approveAction: payload.approveAction,
           });
           this.setApproveAllComplete(100 * ((i + 1) / total));
@@ -469,13 +469,13 @@ const verify = {
       }
       //push to undo list
       this.set({
-        treeImagesUndo: undo,
+        captureImagesUndo: undo,
       });
       //finished, set status flags
       this.setLoading(false);
       this.setApproveAllProcessing(false);
       this.invalidateRejectedCount(true);
-      this.invalidateTreeCount(true);
+      this.invalidateCaptureCount(true);
       this.invalidateVerifiedCount(true);
       //reset
       this.setApproveAllComplete(0);
@@ -485,7 +485,7 @@ const verify = {
     },
     /*
      * Dedicated
-     * To undo all approved trees
+     * To undo all approved captures
      */
     async undoAll(payload, state) {
       //{{{
@@ -494,13 +494,13 @@ const verify = {
       this.setRejectAllProcessing(true);
       this.setApproveAllProcessing(true);
       const verifyState = state.verify;
-      const total = verifyState.treeImagesUndo.length;
-      log.debug('items:%d', verifyState.treeImages.length);
+      const total = verifyState.captureImagesUndo.length;
+      log.debug('items:%d', verifyState.captureImages.length);
       try {
-        for (let i = 0; i < verifyState.treeImagesUndo.length; i++) {
-          const treeImage = verifyState.treeImagesUndo[i];
-          log.trace('undo:%d', treeImage.id);
-          await this.undoTreeImage(treeImage.id);
+        for (let i = 0; i < verifyState.captureImagesUndo.length; i++) {
+          const captureImage = verifyState.captureImagesUndo[i];
+          log.trace('undo:%d', captureImage.id);
+          await this.undoCaptureImage(captureImage.id);
           this.setApproveAllComplete(100 * ((i + 1) / total));
         }
       } catch (e) {
@@ -520,7 +520,7 @@ const verify = {
       this.setRejectAllComplete(0);
       this.setApproveAllComplete(0);
       this.invalidateRejectedCount(true);
-      this.invalidateTreeCount(true);
+      this.invalidateCaptureCount(true);
       this.invalidateVerifiedCount(true);
       this.resetSelection();
       return true;
@@ -535,109 +535,112 @@ const verify = {
       this.reset();
       this.resetSelection();
       //clear all stuff
-      await this.loadTreeImages();
+      await this.loadCaptureImages();
       //}}}
     },
     /*
-     * gets and sets count for unverified trees
+     * gets and sets count for unverified captures
      */
-    async getTreeCount(payload, state) {
-      this.invalidateTreeCount(false);
-      const result = await api.getTreeCount(state.verify.filter);
-      this.setTreeCount(result.count);
+    async getCaptureCount(payload, state) {
+      this.invalidateCaptureCount(false);
+      const result = await api.getCaptureCount(state.verify.filter);
+      this.setCaptureCount(result.count);
       return true;
     },
 
     /*
-     * gets and sets count for trees with no tag data (entirely unprocessed)
+     * gets and sets count for captures with no tag data (entirely unprocessed)
      */
-    async getRejectedTreeCount(payload, state) {
+    async getRejectedCaptureCount(payload, state) {
       this.invalidateRejectedCount(false);
-      const result = await api.getTreeCount(state.verify.rejectedFilter);
-      this.setRejectedTreeCount(result.count);
+      const result = await api.getCaptureCount(state.verify.rejectedFilter);
+      this.setRejectedCaptureCount(result.count);
       return true;
     },
 
     /*
-     * gets and sets count for trees that are active and approved
+     * gets and sets count for captures that are active and approved
      */
-    async getVerifiedTreeCount(payload, state) {
+    async getVerifiedCaptureCount(payload, state) {
       this.invalidateVerifiedCount(false);
-      const result = await api.getTreeCount(state.verify.verifiedFilter);
-      this.setVerifiedTreeCount(result.count);
+      const result = await api.getCaptureCount(state.verify.verifiedFilter);
+      this.setVerifiedCaptureCount(result.count);
       return true;
     },
 
     /*
-     * to select trees
+     * to select captures
      * payload:
      *   {
-     *     treeId    : string,
+     *     captureId    : string,
      *     isShift    : boolean,
      *     isCmd    : boolean,
      *     isCtrl    : boolean
      *     }
      */
-    clickTree(payload, state) {
+    clickCapture(payload, state) {
       //{{{
-      const { treeId, isShift, isCmd, isCtrl } = payload;
+      const { captureId, isShift, isCmd, isCtrl } = payload;
       if (!isShift && !isCmd && !isCtrl) {
         this.set({
-          treeImagesSelected: [treeId],
-          treeImageAnchor: treeId,
+          captureImagesSelected: [captureId],
+          captureImageAnchor: captureId,
         });
       } else if (isShift) {
         log.debug(
           'press shift, and there is an anchor:',
-          state.verify.treeImageAnchor,
+          state.verify.captureImageAnchor,
         );
         //if no anchor, then, select from beginning
         let indexAnchor = 0;
-        if (state.verify.treeImageAnchor !== undefined) {
-          indexAnchor = state.verify.treeImages.reduce((a, c, i) => {
-            if (c !== undefined && c.id === state.verify.treeImageAnchor) {
+        if (state.verify.captureImageAnchor !== undefined) {
+          indexAnchor = state.verify.captureImages.reduce((a, c, i) => {
+            if (c !== undefined && c.id === state.verify.captureImageAnchor) {
               return i;
             } else {
               return a;
             }
           }, -1);
         }
-        const indexCurrent = state.verify.treeImages.reduce((a, c, i) => {
-          if (c !== undefined && c.id === treeId) {
+        const indexCurrent = state.verify.captureImages.reduce((a, c, i) => {
+          if (c !== undefined && c.id === captureId) {
             return i;
           } else {
             return a;
           }
         }, -1);
-        const treeImagesSelected = state.verify.treeImages
+        const captureImagesSelected = state.verify.captureImages
           .slice(
             Math.min(indexAnchor, indexCurrent),
             Math.max(indexAnchor, indexCurrent) + 1,
           )
-          .map((tree) => tree.id);
+          .map((capture) => capture.id);
         log.trace(
           'find range:[%d,%d], selected:%d',
           indexAnchor,
           indexCurrent,
-          treeImagesSelected.length,
+          captureImagesSelected.length,
         );
         this.set({
-          treeImagesSelected,
+          captureImagesSelected,
         });
       } else if (isCmd || isCtrl) {
         // Toggle the selection state
-        let treeImagesSelected;
-        if (state.verify.treeImagesSelected.find((el) => el === treeId)) {
-          treeImagesSelected = state.verify.treeImagesSelected.filter(function (
-            tree,
-          ) {
-            return tree !== treeId;
-          });
+        let captureImagesSelected;
+        if (state.verify.captureImagesSelected.find((el) => el === captureId)) {
+          captureImagesSelected = state.verify.captureImagesSelected.filter(
+            function (capture) {
+              return capture !== captureId;
+            },
+          );
         } else {
-          treeImagesSelected = [...state.verify.treeImagesSelected, treeId];
+          captureImagesSelected = [
+            ...state.verify.captureImagesSelected,
+            captureId,
+          ];
         }
         this.set({
-          treeImagesSelected,
+          captureImagesSelected,
         });
       }
       //}}}
@@ -645,10 +648,10 @@ const verify = {
     selectAll(selected, state) {
       //{{{
       this.set({
-        treeImagesSelected: selected
-          ? state.verify.treeImages.map((tree) => tree.id)
+        captureImagesSelected: selected
+          ? state.verify.captureImages.map((capture) => capture.id)
           : [],
-        treeImageAnchor: undefined,
+        captureImageAnchor: undefined,
       });
       //}}}
     },

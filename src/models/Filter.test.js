@@ -5,7 +5,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   beforeEach(() => {
     filter = new Filter();
-    filter.treeId = 10;
+    filter.captureId = 10;
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
     filter.approved = true;
@@ -72,10 +72,10 @@ describe('Filter, with initial values about this filter object', () => {
     );
   });
 
-  describe('set treeId = ""', () => {
+  describe('set captureId = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.treeId = '';
+      filter.captureId = '';
     });
 
     it('loopback object should not match any [id]', () => {

@@ -54,7 +54,7 @@ function Filter(props) {
   const { classes, filter } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const [treeId, setTreeId] = useState(filter.treeId);
+  const [captureId, setCaptureId] = useState(filter.captureId);
   const [planterId, setPlanterId] = useState(filter.planterId);
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter.deviceIdentifier,
@@ -84,7 +84,7 @@ function Filter(props) {
 
   function handleClear() {
     const filter = new FilterModel();
-    setTreeId('');
+    setCaptureId('');
     setPlanterId('');
     setDeviceIdentifier('');
     setPlanterIdentifier('');
@@ -98,7 +98,7 @@ function Filter(props) {
 
   function handleSubmit() {
     const filter = new FilterModel();
-    filter.treeId = treeId;
+    filter.captureId = captureId;
     filter.planterId = planterId;
     filter.deviceIdentifier = deviceIdentifier;
     filter.planterIdentifier = planterIdentifier;
@@ -156,16 +156,16 @@ function Filter(props) {
       >
         Clear Filters
       </Button>
-      <GSInputLabel text="Tree Id" />
+      <GSInputLabel text="Capture ID" />
       <TextField
         placeholder="e.g. 80"
         InputLabelProps={{
           shrink: true,
         }}
-        value={treeId}
-        onChange={(e) => setTreeId(e.target.value)}
+        value={captureId}
+        onChange={(e) => setCaptureId(e.target.value)}
       />
-      <GSInputLabel text="Planter Id" />
+      <GSInputLabel text="Planter ID" />
       <TextField
         placeholder="planter id"
         InputLabelProps={{
@@ -203,7 +203,7 @@ function Filter(props) {
         }}
         onChange={(e) => setStatus(e.target.value === 'All' ? '' : e.target.value)}
       >
-        {['All', 'Planted', 'Hole dug', 'Not a tree', 'Blurry'].map((name) => (
+        {['All', 'Planted', 'Hole dug', 'Not a capture', 'Blurry'].map((name) => (
           <MenuItem key={name} value={name}>
             {name}
           </MenuItem>

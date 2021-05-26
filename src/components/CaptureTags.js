@@ -72,7 +72,7 @@ const debounceCallback = ({ value, callback }) => {
   return callback && callback(value);
 };
 
-const TreeTags = (props) => {
+const CaptureTags = (props) => {
   const classes = useStyles(props);
   const [textFieldInput, setTextFieldInput] = React.useState('');
   const [error, setError] = React.useState(false);
@@ -192,4 +192,4 @@ export default connect(
   (dispatch) => ({
     tagDispatch: dispatch.tags,
   }),
-)(TreeTags);
+)(CaptureTags);
