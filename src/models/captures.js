@@ -183,7 +183,7 @@ const captures = {
         !rootState.captures.byId[payload.id] ||
         !rootState.captures.byId[payload.id].location
       ) {
-        const query = `https://nominatim.openscapturetmap.org/reverse?format=jsonv2&lat=${payload.latitude}&lon=${payload.longitude}`;
+        const query = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${payload.latitude}&lon=${payload.longitude}`;
         Axios.get(query, {
           headers: {
             'content-type': 'application/json',
