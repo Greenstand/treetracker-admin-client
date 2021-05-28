@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -26,12 +27,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Filter() {
-  const classes = useStyles();
+function Filter({ state, dispatch }) {
+  const { filters } = state;
+  const { updateFilters } = dispatch;
 
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState({});
-  const [filters, setFilters] = useState({});
 
   const close = () => {
     setOptions(filters);
@@ -44,18 +46,16 @@ export default function Filter() {
 
   const resetFilters = () => {
     setOptions({});
-    setFilters({});
+    updateFilters({});
   };
 
   const applyFilters = () => {
-    setFilters(options);
+    updateFilters({ ...filters, ...options });
     setOpen(false);
-    console.log('dispatch');
   };
 
   const applySearch = (e) => {
-    setFilters({ ...filters, search: e.target.value });
-    console.log('dispatch');
+    updateFilters({ ...filters, search: e.target.value });
   };
 
   return (
@@ -67,6 +67,7 @@ export default function Filter() {
         variant="outlined"
         value={filters?.search || ''}
         onChange={applySearch}
+        autoComplete="off"
       />
       <Button
         variant="text"
@@ -140,3 +141,14 @@ export default function Filter() {
     </>
   );
 }
+
+export default connect(
+  //state
+  (state) => ({
+    state: state.stakeholders,
+  }),
+  //dispatch
+  (dispatch) => ({
+    dispatch: dispatch.stakeholders,
+  }),
+)(Filter);
