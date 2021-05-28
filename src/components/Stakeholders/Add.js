@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -9,7 +10,7 @@ import {
   FormControl,
 } from '@material-ui/core';
 
-export default function AddStakeholder() {
+function AddStakeholder({ dispatch }) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
 
@@ -27,7 +28,7 @@ export default function AddStakeholder() {
   };
 
   const submit = () => {
-    console.log(data);
+    dispatch.createStakeholder(data);
   };
 
   return (
@@ -93,3 +94,14 @@ export default function AddStakeholder() {
     </>
   );
 }
+
+export default connect(
+  //state
+  (state) => ({
+    state: state.stakeholders,
+  }),
+  //dispatch
+  (dispatch) => ({
+    dispatch: dispatch.stakeholders,
+  }),
+)(AddStakeholder);
