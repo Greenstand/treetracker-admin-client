@@ -7,3 +7,4 @@ export { default as planters } from './planters';
 export { default as tags } from './tags';
 export { default as captureDetail } from './captureDetail';
 export { default as organizations } from './organizations';
+export { default as stakeholders } from './stakeholders';
