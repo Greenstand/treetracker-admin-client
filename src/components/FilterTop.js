@@ -150,58 +150,42 @@ function Filter(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 select
-                label="Approved"
+                label="Verification Status"
                 value={
-                  approved === undefined
+                  approved === undefined && active === undefined
                     ? 'All'
-                    : approved === true
-                    ? 'true'
-                    : 'false'
+                    : approved === false && active === true
+                    ? 'Awaiting Verification'
+                    : active === true && approved === true
+                    ? 'Approved'
+                    : 'Rejected'
                 }
-                onChange={(e) =>
+                onChange={(e) => {
                   setApproved(
                     e.target.value === 'All'
                       ? undefined
-                      : e.target.value === 'true'
-                      ? true
-                      : false,
-                  )
-                }
-              >
-                {['All', 'true', 'false'].map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                select
-                label="Rejected"
-                value={
-                  active === undefined
-                    ? 'All'
-                    : active === true
-                    ? 'false'
-                    : 'true'
-                }
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) =>
+                      : e.target.value === 'Awaiting Verification' ||
+                        e.target.value === 'Rejected'
+                      ? false
+                      : true,
+                  );
                   setActive(
                     e.target.value === 'All'
                       ? undefined
-                      : e.target.value === 'true'
-                      ? false
-                      : true,
-                  )
-                }
+                      : e.target.value === 'Awaiting Verification' ||
+                        e.target.value === 'Approved'
+                      ? true
+                      : false,
+                  );
+                }}
               >
-                {['All', 'false', 'true'].map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
+                {['All', 'Approved', 'Awaiting Verification', 'Rejected'].map(
+                  (name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ),
+                )}
               </TextField>
               <MuiPickersUtilsProvider
                 utils={DateFnsUtils}

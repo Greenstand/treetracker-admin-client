@@ -210,55 +210,44 @@ function Filter(props) {
         ))}
       </TextField>
       */}
-      <GSInputLabel text="Approved" />
+      <GSInputLabel text="Verification Status" />
       <TextField
         select
         value={
-          approved === undefined ? 'All' : approved === true ? 'true' : 'false'
+          approved === undefined && active === undefined
+            ? 'All'
+            : approved === false && active === true
+            ? 'Awaiting Verification'
+            : active === true && approved === true
+            ? 'Approved'
+            : 'Rejected'
         }
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={(e) =>
+        onChange={(e) => {
           setApproved(
             e.target.value === 'All'
               ? undefined
-              : e.target.value === 'true'
-              ? true
-              : false,
-          )
-        }
-      >
-        {['All', 'true', 'false'].map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
-          </MenuItem>
-        ))}
-      </TextField>
-      <GSInputLabel text="Rejected" />
-      <TextField
-        select
-        value={
-          active === undefined ? 'All' : active === true ? 'false' : 'true'
-        }
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={(e) =>
+              : e.target.value === 'Awaiting Verification' ||
+                e.target.value === 'Rejected'
+              ? false
+              : true,
+          );
           setActive(
             e.target.value === 'All'
               ? undefined
-              : e.target.value === 'true'
-              ? false
-              : true,
-          )
-        }
+              : e.target.value === 'Awaiting Verification' ||
+                e.target.value === 'Approved'
+              ? true
+              : false,
+          );
+        }}
       >
-        {['All', 'false', 'true'].map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
-          </MenuItem>
-        ))}
+        {['All', 'Approved', 'Awaiting Verification', 'Rejected'].map(
+          (name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ),
+        )}
       </TextField>
       <GSInputLabel text="Time created" />
       <MuiPickersUtilsProvider
