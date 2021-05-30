@@ -30,8 +30,31 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0.5),
     fontSize: '0.7rem',
   },
+  rejectedChip: {
+    backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.red,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  awaitingChip: {
+    backgroundColor: theme.palette.stats.orange.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.orange,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  approvedChip: {
+    backgroundColor: theme.palette.stats.green.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.green,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
   copyButton: {
     margin: theme.spacing(-2, 0),
+  },
+  subtitle: {
+    ...theme.typography.button,
+    fontSize: '0.8em',
+    color: 'rgba(0,0,0,0.5)',
   },
 }));
 
@@ -116,49 +139,65 @@ function CaptureDetailDialog(props) {
           </Typography>
         </Grid>
         <Divider />
-        {[
-          {
-            label: 'Planter ID',
-            value: capture.planterId,
-            copy: true,
-            link: true,
-          },
-          {
-            label: 'Planter Identifier',
-            value: capture.planterIdentifier,
-            copy: true,
-          },
-          {
-            label: 'Device Identifier',
-            value: capture.deviceIdentifier,
-            copy: true,
-          },
-          { label: 'Approved', value: capture.approved ? 'true' : 'false' },
-          { label: 'Active', value: capture.active ? 'true' : 'false' },
-          { label: 'Status', value: capture.status },
-          { label: 'Species', value: species && species.name },
-          { label: 'Created', value: dateCreated.toLocaleString() },
-          { label: 'Note', value: renderCapture.note },
-        ].map((item) => (
-          <Fragment key={item.label}>
-            <Grid item>
-              <Typography variant="subtitle1">{item.label}</Typography>
-              <Typography variant="body1">
-                {item.link ? (
-                  <LinkToWebmap value={item.value} type="user" />
-                ) : (
-                  item.value || '---'
-                )}
-                {item.value && item.copy && (
-                  <CopyButton label={item.label} value={item.value} />
-                )}
-              </Typography>
-            </Grid>
-            <Divider />
-          </Fragment>
-        ))}
         <Grid item>
-          <Typography variant="subtitle1">Tags</Typography>
+          <Typography className={classes.subtitle}>Capture Data</Typography>
+          {[
+            {
+              label: 'Planter ID',
+              value: capture.planterId,
+              copy: true,
+              link: true,
+            },
+            {
+              label: 'Planter Identifier',
+              value: capture.planterIdentifier,
+              copy: true,
+            },
+            {
+              label: 'Device Identifier',
+              value: capture.deviceIdentifier,
+              copy: true,
+            },
+            { label: 'Species', value: species && species.name },
+            { label: 'Created', value: dateCreated.toLocaleString() },
+            { label: 'Note', value: renderCapture.note },
+          ].map((item) => (
+            <Fragment key={item.label}>
+              <Grid item>
+                <Typography variant="subtitle1">{item.label}</Typography>
+                <Typography variant="body1">
+                  {item.link ? (
+                    <LinkToWebmap value={item.value} type="user" />
+                  ) : (
+                    item.value || '---'
+                  )}
+                  {item.value && item.copy && (
+                    <CopyButton label={item.label} value={item.value} />
+                  )}
+                </Typography>
+              </Grid>
+            </Fragment>
+          ))}
+        </Grid>
+        <Divider />
+        <Grid item>
+          <Typography className={classes.subtitle}>
+            Verification State
+          </Typography>
+          {!capture.approved && capture.active ? (
+            <Chip
+              label="Awaiting verification"
+              className={classes.awaitingChip}
+            />
+          ) : capture.active && capture.approved ? (
+            <Chip label="Approved" className={classes.approvedChip} />
+          ) : (
+            <Chip label="Rejected" className={classes.rejectedChip} />
+          )}
+        </Grid>
+        <Divider />
+        <Grid item>
+          <Typography className={classes.subtitle}>Tags</Typography>
           {allTags.length === 0 ? (
             <Typography variant="body1">---</Typography>
           ) : (
@@ -168,6 +207,15 @@ function CaptureDetailDialog(props) {
               ))}
             </div>
           )}
+        </Grid>
+        <Divider />
+        <Grid item>
+          <Typography className={classes.subtitle}>Capture Token</Typography>
+          <Typography variant="body1">
+            {capture.token != null
+              ? 'Impact token issued'
+              : 'Impact token not issued'}
+          </Typography>
         </Grid>
         <Snackbar
           anchorOrigin={{

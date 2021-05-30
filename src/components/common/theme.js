@@ -3,7 +3,7 @@
  */
 import { createMuiTheme } from '@material-ui/core/styles';
 
-export const colorPrimary = '#76BB23';
+export const colorPrimary = 'rgba(118, 187, 35, 1)';
 
 const colorPrimarySelected = 'rgba(118, 187, 35, 0.3)';
 const colorPrimaryHover = 'rgba(118, 187, 35, 0.1)';
@@ -43,8 +43,8 @@ export default createMuiTheme({
     },
     stats: {
       green: colorPrimary,
-      red: 'rgb(233, 88, 57)',
-      orange: 'rgb(239, 128, 49)',
+      red: 'rgba(233, 88, 57, 1)',
+      orange: 'rgba(239, 128, 49, 1)',
     },
   },
   overrides: {
