@@ -83,6 +83,10 @@ const stakeholders = {
         parents: [],
         users: [],
         growers: [],
+        children: [],
+        parents: [],
+        users: [],
+        growers: [],
       },
       {
         type: 'org',
@@ -97,6 +101,10 @@ const stakeholders = {
         parents: [],
         users: [],
         growers: [],
+        children: [],
+        parents: [],
+        users: [],
+        growers: [],
       },
       {
         type: 'org',
@@ -107,6 +115,10 @@ const stakeholders = {
         email: 'hi@greenworld.com',
         phone: '123-123-1234',
         website: 'greenworld.com',
+        children: [],
+        parents: [],
+        users: [],
+        growers: [],
         children: [],
         parents: [],
         users: [],
@@ -205,6 +217,14 @@ const stakeholders = {
     async createStakeholder(payload) {
       console.log(payload);
       // send api request
+    },
+    async linkStakeholder(payload) {
+      console.log('link');
+      console.log({ type: payload.type, id: payload.id });
+    },
+    async unlinkStakeholder(payload) {
+      console.log('unlink');
+      console.log({ type: payload.type, id: payload.id });
     },
   },
 };

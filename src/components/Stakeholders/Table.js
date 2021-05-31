@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Row from './StakeholderDetail';
+import Row from './EditDialog';
 import {
   Paper,
   TableContainer,
@@ -14,13 +13,9 @@ import {
   TablePagination,
 } from '@material-ui/core';
 
-const useStyles = makeStyles({});
-
 function StakeholderTable({ state, dispatch }) {
   const { data, display, columns, rowsPerPage, page, sortBy, sortAsc } = state;
   const { getData, changePage, changeRowsPerPage, sort } = dispatch;
-
-  const classes = useStyles();
 
   useEffect(() => {
     getData();
