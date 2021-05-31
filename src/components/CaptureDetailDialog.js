@@ -159,7 +159,6 @@ function CaptureDetailDialog(props) {
               value: capture.deviceIdentifier,
               copy: true,
             },
-            { label: 'Species', value: species && species.name },
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
           ].map((item) => (
@@ -205,6 +204,18 @@ function CaptureDetailDialog(props) {
         <Divider />
         <Grid item>
           <Typography className={classes.subtitle}>Tags</Typography>
+          <Typography variant="subtitle1">Species</Typography>
+          {species && species.name ? (
+            <Chip
+              key={species && species.name}
+              label={species && species.name}
+              className={classes.chip}
+            />
+          ) : (
+            <Typography variant="body1">---</Typography>
+          )}
+
+          <Typography variant="subtitle1">Other</Typography>
           {allTags.length === 0 ? (
             <Typography variant="body1">---</Typography>
           ) : (
@@ -219,9 +230,7 @@ function CaptureDetailDialog(props) {
         <Grid item>
           <Typography className={classes.subtitle}>Capture Token</Typography>
           <Typography variant="body1">
-            {capture.token != null
-              ? 'Impact token issued'
-              : 'Impact token not issued'}
+            {getTokenStatus(capture.tokenId)}
           </Typography>
         </Grid>
         <Snackbar
@@ -296,5 +305,15 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
   captureDetailDispatch: dispatch.captureDetail,
 });
+
+const getTokenStatus = (tokenId) => {
+  if (tokenId === undefined) {
+    return 'Impact token status unknown';
+  } else if (tokenId === null) {
+    return 'Impact token not issued';
+  } else {
+    return 'Impact token issued';
+  }
+};
 
 export default compose(connect(mapState, mapDispatch))(CaptureDetailDialog);
