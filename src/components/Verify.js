@@ -866,7 +866,7 @@ function SidePanel(props) {
                   onClick={() => setRejectionReason('unapproved_tree')}
                   value="unapproved_tree"
                   control={<Radio />}
-                  label="Not an approved capture"
+                  label="Not an approved tree"
                 />
                 <FormControlLabel
                   onClick={() => setRejectionReason('blurry_image')}
