@@ -1,3 +1,15 @@
+# [1.13.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.12.0...v1.13.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* reduce # of requests to server and add conditional rendering ([#87](https://github.com/Greenstand/treetracker-admin-client/issues/87)) ([8a3aaff](https://github.com/Greenstand/treetracker-admin-client/commit/8a3aaffe204ea7f8a313eadcbb562c50d9c4529b))
+
+
+### Features
+
+* better capture details & filters ([#101](https://github.com/Greenstand/treetracker-admin-client/issues/101)) ([f0d2c9b](https://github.com/Greenstand/treetracker-admin-client/commit/f0d2c9b5332bfb28842546b3d9cd05297590f843))
+
 # [1.12.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.11.4...v1.12.0) (2021-05-26)
 
 
