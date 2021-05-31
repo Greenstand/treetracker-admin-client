@@ -24,6 +24,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import { getOrganization } from '../api/apiUtils';
+import { verificationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -67,6 +68,7 @@ const styles = (theme) => {
 function Filter(props) {
   // console.log('render: filter top');
   const { classes, filter } = props;
+  const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
   const [captureId, setCaptureId] = useState(filter.captureId || '');
@@ -157,54 +159,37 @@ function Filter(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 select
-                label="Approved"
+                label="Verification Status"
                 value={
-                  approved === undefined
-                    ? 'All'
-                    : approved === true
-                    ? 'true'
-                    : 'false'
+                  active === undefined && approved === undefined
+                    ? filterOptionAll
+                    : getVerificationStatus(active, approved)
                 }
-                onChange={(e) =>
+                onChange={(e) => {
                   setApproved(
-                    e.target.value === 'All'
+                    e.target.value === filterOptionAll
                       ? undefined
-                      : e.target.value === 'true'
-                      ? true
-                      : false,
-                  )
-                }
-              >
-                {['All', 'true', 'false'].map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                select
-                label="Rejected"
-                value={
-                  active === undefined
-                    ? 'All'
-                    : active === true
-                    ? 'false'
-                    : 'true'
-                }
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) =>
-                  setActive(
-                    e.target.value === 'All'
-                      ? undefined
-                      : e.target.value === 'true'
+                      : e.target.value === verificationStates.AWAITING ||
+                        e.target.value === verificationStates.REJECTED
                       ? false
                       : true,
-                  )
-                }
+                  );
+                  setActive(
+                    e.target.value === filterOptionAll
+                      ? undefined
+                      : e.target.value === verificationStates.AWAITING ||
+                        e.target.value === verificationStates.APPROVED
+                      ? true
+                      : false,
+                  );
+                }}
               >
-                {['All', 'false', 'true'].map((name) => (
+                {[
+                  filterOptionAll,
+                  verificationStates.APPROVED,
+                  verificationStates.AWAITING,
+                  verificationStates.REJECTED,
+                ].map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
@@ -349,6 +334,16 @@ function Filter(props) {
     </React.Fragment>
   );
 }
+
+const getVerificationStatus = (active, approved) => {
+  if (active === true && approved === false) {
+    return verificationStates.AWAITING;
+  } else if (active === true && approved === true) {
+    return verificationStates.APPROVED;
+  } else if (active === false && approved === false) {
+    return verificationStates.REJECTED;
+  }
+};
 
 //export default compose(
 //  withStyles(styles, { withTheme: true, name: 'Filter' })
