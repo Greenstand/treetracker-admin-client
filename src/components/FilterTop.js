@@ -65,6 +65,7 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
+  // console.log('render: filter top');
   const { classes, filter } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
@@ -84,14 +85,21 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
+  const [userHasOrg, setUserHasOrg] = useState(false);
 
   useEffect(() => {
     props.tagsDispatch.getTags(tagSearchString);
   }, [tagSearchString, props.tagsDispatch]);
 
   useEffect(() => {
-    props.organizationDispatch.loadOrganizations();
-  }, [props.organizationDispatch]);
+    // console.log('filter top checks user org id & loads orgs');
+    const hasOrg = getOrganization();
+    setUserHasOrg(hasOrg ? true : false);
+    // if not an org account && the org list isn't loaded --> load the orgs
+    if (!hasOrg && !props.organizationState.organizationList.length) {
+      props.organizationDispatch.loadOrganizations();
+    }
+  }, []);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -123,7 +131,6 @@ function Filter(props) {
   }
 
   function handleReset() {
-    console.log('--- RESET filter and form ---');
     // reset form values, except 'approved' and 'active' which we'll keep
     setCaptureId('');
     setPlanterId('');
@@ -298,7 +305,7 @@ function Filter(props) {
                   return <TextField {...params} label="Tag" />;
                 }}
               />
-              {!getOrganization() && (
+              {!userHasOrg && (
                 <TextField
                   select
                   label="Organization"

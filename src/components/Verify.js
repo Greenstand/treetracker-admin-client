@@ -41,6 +41,7 @@ import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
+import { getOrganization } from '../api/apiUtils';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -206,33 +207,39 @@ const Verify = (props) => {
   useEffect(() => {
     log.debug('mounted:');
     // update filter right away to prevent non-Filter type objects loading
+    document.title = `Verify - ${documentTitle}`;
     props.verifyDispatch.updateFilter(props.verifyState.filter);
     props.verifyDispatch.loadCaptureImages();
-  }, [props.verifyDispatch]);
-
-  /* to update html document title */
-  useEffect(() => {
-    document.title = `Verify - ${documentTitle}`;
+    props.verifyDispatch.getCaptureCount();
+    if (
+      !getOrganization() &&
+      !props.organizationState.organizationList.length
+    ) {
+      props.organizationDispatch.loadOrganizations();
+    }
   }, []);
 
   /* to display progress */
   useEffect(() => {
+    // log.debug('set complete captures');
     setComplete(props.verifyState.approveAllComplete);
   }, [props.verifyState.approveAllComplete]);
 
   /* To update capture count */
   useEffect(() => {
-    props.verifyDispatch.getCaptureCount();
-  }, [props.verifyDispatch, props.verifyState.captureImages]);
+    if (
+      props.verifyState.captureCount !== props.verifyState.captureImages.length
+    ) {
+      props.verifyDispatch.getCaptureCount();
+    }
+  }, [props.verifyState.captureImages]);
 
   /* load more captures when the page or page size changes */
   useEffect(() => {
+    // log.debug('get captures & capture count when page changes');
     props.verifyDispatch.loadCaptureImages();
-  }, [
-    props.verifyDispatch,
-    props.verifyState.pageSize,
-    props.verifyState.currentPage,
-  ]);
+    props.verifyDispatch.getCaptureCount();
+  }, [props.verifyState.pageSize, props.verifyState.currentPage]);
 
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
@@ -268,7 +275,7 @@ const Verify = (props) => {
   }
 
   async function handleSubmit(approveAction) {
-    console.log('approveAction:', approveAction);
+    log.debug('approveAction:', approveAction);
     //check selection
     if (props.verifyState.captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
@@ -350,7 +357,9 @@ const Verify = (props) => {
   }
 
   function handleChangePageSize(event) {
-    props.verifyDispatch.set({ pageSize: event.target.value });
+    props.verifyDispatch.set({
+      pageSize: event.target.value,
+    });
   }
 
   function handleChangePage(event, page) {
@@ -942,14 +951,16 @@ export default connect(
   (state) => ({
     verifyState: state.verify,
     speciesState: state.species,
-    plantersState: state.planters,
+    //plantersState: state.planters,
+    organizationState: state.organizations,
     tagState: state.tags,
   }),
   //dispatch
   (dispatch) => ({
     verifyDispatch: dispatch.verify,
     speciesDispatch: dispatch.species,
-    plantersDispatch: dispatch.planters,
+    // plantersDispatch: dispatch.planters,
+    organizationDispatch: dispatch.organizations,
     tagDispatch: dispatch.tags,
   }),
 )(Verify);

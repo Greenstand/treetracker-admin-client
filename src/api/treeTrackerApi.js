@@ -368,10 +368,12 @@ export default {
       .catch(handleError);
   },
   /*
-   * get organizations
+   * get organizations for
    */
   getOrganizations() {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/organizations?filter[where][type]=o`;
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}organizations?filter[where][type]=O`;
     return fetch(query, {
       method: 'GET',
       headers: {

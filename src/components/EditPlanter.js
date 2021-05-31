@@ -28,6 +28,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const EditPlanter = (props) => {
+  // console.log('render: edit planter');
   const classes = useStyle();
   const { isOpen, planter, onClose } = props;
 
@@ -35,10 +36,16 @@ const EditPlanter = (props) => {
   const [planterUpdate, setPlanterUpdate] = useState(null);
   const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
+  const [userHasOrg, setUserHasOrg] = useState(false);
 
   useEffect(() => {
-    props.organizationDispatch.loadOrganizations();
-  }, [props.organizationDispatch]);
+    const hasOrg = getOrganization();
+    setUserHasOrg(hasOrg ? true : false);
+    // if not an org account && the org list isn't loaded --> load the orgs
+    if (!hasOrg && !props.organizationState.organizationList.length) {
+      props.organizationDispatch.loadOrganizations();
+    }
+  }, []);
 
   useEffect(() => {
     async function loadPlanterImages() {
@@ -165,7 +172,7 @@ const EditPlanter = (props) => {
             </Grid>
           ))}
           <Grid item container>
-            {!getOrganization() && (
+            {!userHasOrg && (
               <TextField
                 select
                 className={classes.textInput}
@@ -178,11 +185,12 @@ const EditPlanter = (props) => {
                 <MenuItem key={'null'} value={'null'}>
                   No organization
                 </MenuItem>
-                {[...props.organizationState.organizationList].map((org) => (
-                  <MenuItem key={org.id} value={org.id}>
-                    {org.name}
-                  </MenuItem>
-                ))}
+                {props.organizationState.organizationList.length &&
+                  props.organizationState.organizationList.map((org) => (
+                    <MenuItem key={org.id} value={org.id}>
+                      {org.name}
+                    </MenuItem>
+                  ))}
               </TextField>
             )}
           </Grid>
