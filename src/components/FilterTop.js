@@ -24,6 +24,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import { getOrganization } from '../api/apiUtils';
+import { verificationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -66,6 +67,7 @@ const styles = (theme) => {
 
 function Filter(props) {
   const { classes, filter } = props;
+  const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
   const [captureId, setCaptureId] = useState(filter.captureId || '');
@@ -152,40 +154,39 @@ function Filter(props) {
                 select
                 label="Verification Status"
                 value={
-                  approved === undefined && active === undefined
-                    ? 'All'
-                    : approved === false && active === true
-                    ? 'Awaiting Verification'
-                    : active === true && approved === true
-                    ? 'Approved'
-                    : 'Rejected'
+                  active === undefined && approved === undefined
+                    ? filterOptionAll
+                    : getVerificationStatus(active, approved)
                 }
                 onChange={(e) => {
                   setApproved(
-                    e.target.value === 'All'
+                    e.target.value === filterOptionAll
                       ? undefined
-                      : e.target.value === 'Awaiting Verification' ||
-                        e.target.value === 'Rejected'
+                      : e.target.value === verificationStates.AWAITING ||
+                        e.target.value === verificationStates.REJECTED
                       ? false
                       : true,
                   );
                   setActive(
-                    e.target.value === 'All'
+                    e.target.value === filterOptionAll
                       ? undefined
-                      : e.target.value === 'Awaiting Verification' ||
-                        e.target.value === 'Approved'
+                      : e.target.value === verificationStates.AWAITING ||
+                        e.target.value === verificationStates.APPROVED
                       ? true
                       : false,
                   );
                 }}
               >
-                {['All', 'Approved', 'Awaiting Verification', 'Rejected'].map(
-                  (name) => (
-                    <MenuItem key={name} value={name}>
-                      {name}
-                    </MenuItem>
-                  ),
-                )}
+                {[
+                  filterOptionAll,
+                  verificationStates.APPROVED,
+                  verificationStates.AWAITING,
+                  verificationStates.REJECTED,
+                ].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
               </TextField>
               <MuiPickersUtilsProvider
                 utils={DateFnsUtils}
@@ -326,6 +327,16 @@ function Filter(props) {
     </React.Fragment>
   );
 }
+
+const getVerificationStatus = (active, approved) => {
+  if (active === true && approved === false) {
+    return verificationStates.AWAITING;
+  } else if (active === true && approved === true) {
+    return verificationStates.APPROVED;
+  } else if (active === false && approved === false) {
+    return verificationStates.REJECTED;
+  }
+};
 
 //export default compose(
 //  withStyles(styles, { withTheme: true, name: 'Filter' })

@@ -19,6 +19,7 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
+import { verificationStates } from '../common/variables';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -182,17 +183,23 @@ function CaptureDetailDialog(props) {
         <Divider />
         <Grid item>
           <Typography className={classes.subtitle}>
-            Verification State
+            Verification Status
           </Typography>
           {!capture.approved && capture.active ? (
             <Chip
-              label="Awaiting verification"
+              label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
           ) : capture.active && capture.approved ? (
-            <Chip label="Approved" className={classes.approvedChip} />
+            <Chip
+              label={verificationStates.APPROVED}
+              className={classes.approvedChip}
+            />
           ) : (
-            <Chip label="Rejected" className={classes.rejectedChip} />
+            <Chip
+              label={verificationStates.REJECTED}
+              className={classes.rejectedChip}
+            />
           )}
         </Grid>
         <Divider />
