@@ -1,5 +1,3 @@
-import api from '../api/treeTrackerApi';
-
 const stakeholders = {
   state: {
     data: [
