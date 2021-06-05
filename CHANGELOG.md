@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.0...v1.13.1) (2021-06-05)
+
+
+### Bug Fixes
+
+* add org id to planter request ([#105](https://github.com/Greenstand/treetracker-admin-client/issues/105)) ([e651010](https://github.com/Greenstand/treetracker-admin-client/commit/e6510107a4ad12d18ef61d59d88f6896e18ef1c9))
+
 # [1.13.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.12.0...v1.13.0) (2021-05-31)
 
 
