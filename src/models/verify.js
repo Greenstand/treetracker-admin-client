@@ -47,21 +47,9 @@ const verify = {
       approved: false,
       active: true,
     }),
-    verifiedFilter: new FilterModel({
-      approved: true,
-      active: true,
-    }),
-    rejectedFilter: new FilterModel({
-      approved: false,
-      active: false,
-    }),
 
     invalidateCaptureCount: true,
-    invalidateVerifiedCount: true,
-    invalidateRejectedCount: true,
     captureCount: null,
-    rejectedCaptureCount: null,
-    verifiedCaptureCount: null,
   },
   reducers: {
     appendCaptureImages(state, captureImages) {
@@ -123,39 +111,11 @@ const verify = {
         invalidateCaptureCount: payload,
       };
     },
-    setRejectedCaptureCount(state, unprocessedCaptureCount) {
-      return {
-        ...state,
-        unprocessedCaptureCount,
-        invalidateRejectedCount: false,
-      };
-    },
-    invalidateRejectedCount(state, payload) {
-      return {
-        ...state,
-        invalidateRejectedCount: payload,
-      };
-    },
-    setVerifiedCaptureCount(state, verifiedCaptureCount) {
-      window.api = api;
-      return {
-        ...state,
-        verifiedCaptureCount,
-        invalidateVerifiedCount: false,
-      };
-    },
-    invalidateVerifiedCount(state, payload) {
-      return {
-        ...state,
-        invalidateVerifiedCount: payload,
-      };
-    },
     setApproveAllComplete(state, approveAllComplete) {
       return {
         ...state,
         approveAllComplete,
         invalidateCaptureCount: true,
-        invalidateVerifiedCount: true,
       };
     },
     setRejectAllComplete(state, rejectAllComplete) {
@@ -163,7 +123,6 @@ const verify = {
         ...state,
         rejectAllComplete,
         invalidateCaptureCount: true,
-        invalidateRejectedCount: true,
       };
     },
     /*
@@ -237,11 +196,7 @@ const verify = {
         captureImages: [],
         currentPage: 0,
         captureCount: null,
-        verifiedCaptureCount: null,
-        unprocessedCaptureCount: null,
         invalidateCaptureCount: true,
-        invalidateVerifiedCount: true,
-        invalidateRejectedCount: true,
       };
     },
     /*
@@ -413,9 +368,7 @@ const verify = {
       this.setLoading(false);
       this.setApproveAllProcessing(false);
       this.setRejectAllProcessing(false);
-      this.invalidateVerifiedCount(true);
       this.invalidateCaptureCount(true);
-      this.invalidateRejectedCount(true);
 
       //reset
       this.setApproveAllComplete(0);
@@ -474,9 +427,7 @@ const verify = {
       //finished, set status flags
       this.setLoading(false);
       this.setApproveAllProcessing(false);
-      this.invalidateRejectedCount(true);
       this.invalidateCaptureCount(true);
-      this.invalidateVerifiedCount(true);
       //reset
       this.setApproveAllComplete(0);
       this.resetSelection();
@@ -519,9 +470,7 @@ const verify = {
       //reset
       this.setRejectAllComplete(0);
       this.setApproveAllComplete(0);
-      this.invalidateRejectedCount(true);
       this.invalidateCaptureCount(true);
-      this.invalidateVerifiedCount(true);
       this.resetSelection();
       return true;
       //}}}
@@ -545,26 +494,6 @@ const verify = {
       this.invalidateCaptureCount(false);
       const result = await api.getCaptureCount(state.verify.filter);
       this.setCaptureCount(result.count);
-      return true;
-    },
-
-    /*
-     * gets and sets count for captures with no tag data (entirely unprocessed)
-     */
-    async getRejectedCaptureCount(payload, state) {
-      this.invalidateRejectedCount(false);
-      const result = await api.getCaptureCount(state.verify.rejectedFilter);
-      this.setRejectedCaptureCount(result.count);
-      return true;
-    },
-
-    /*
-     * gets and sets count for captures that are active and approved
-     */
-    async getVerifiedCaptureCount(payload, state) {
-      this.invalidateVerifiedCount(false);
-      const result = await api.getCaptureCount(state.verify.verifiedFilter);
-      this.setVerifiedCaptureCount(result.count);
       return true;
     },
 
