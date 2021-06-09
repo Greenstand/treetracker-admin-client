@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.1...v1.13.2) (2021-06-09)
+
+
+### Bug Fixes
+
+* resolve various dash stat problems ([#107](https://github.com/Greenstand/treetracker-admin-client/issues/107)) ([5c82b60](https://github.com/Greenstand/treetracker-admin-client/commit/5c82b60a053bf102697d2a6bd99a5f1c3ecb1a0a))
+
 ## [1.13.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.0...v1.13.1) (2021-06-05)
 
 
