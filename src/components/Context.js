@@ -183,8 +183,8 @@ export const AppProvider = (props) => {
       }
 
       if (session.token !== newToken) {
-        setToken(newToken);
         session.token = newToken;
+        setToken(newToken);
 
         if (rememberDetails) {
           localStorage.setItem('token', JSON.stringify(newToken));
