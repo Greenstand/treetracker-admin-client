@@ -12,6 +12,7 @@ const planters = {
     currentPage: 0,
     filter: new FilterPlanter(),
     isLoading: false,
+    totalPlanterCount: null,
   },
   reducers: {
     setPlanters(state, planters) {
@@ -48,6 +49,12 @@ const planters = {
       return {
         ...state,
         isLoading,
+      };
+    },
+    setTotalPlanterCount(state, totalPlanterCount) {
+      return {
+        ...state,
+        totalPlanterCount,
       };
     },
   },
@@ -109,6 +116,11 @@ const planters = {
           }),
         );
       }
+    },
+    async getTotalPlanterCount() {
+      const { count } = await api.getCount({});
+      this.setTotalPlanterCount(count);
+      return true;
     },
   },
 };

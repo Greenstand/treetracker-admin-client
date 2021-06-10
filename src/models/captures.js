@@ -7,7 +7,6 @@ const captures = {
   state: {
     data: [],
     captureCount: null,
-    invalidateCaptureCount: true,
     selected: [],
     capture: {},
     numSelected: 0,
@@ -21,6 +20,9 @@ const captures = {
       isOpen: false,
     },
     filter: new FilterModel(),
+    totalCaptureCount: null,
+    verifiedCaptureCount: null,
+    unprocessedCaptureCount: null,
   },
   reducers: {
     selectAll(state) {
@@ -37,10 +39,7 @@ const captures = {
       };
     },
     receiveCaptureCount(state, payload) {
-      return { ...state, captureCount: payload, invalidateCaptureCount: false };
-    },
-    invalidateCaptureCount(state, payload) {
-      return { ...state, invalidateCaptureCount: payload };
+      return { ...state, captureCount: payload };
     },
     receiveLocation(state, payload, { id, address }) {
       if (address === 'cached') {
@@ -64,6 +63,24 @@ const captures = {
     },
     closeDisplayDrawer() {
       return { displayDrawer: { isOpen: false } };
+    },
+    setTotalCaptureCount(state, totalCaptureCount) {
+      return {
+        ...state,
+        totalCaptureCount,
+      };
+    },
+    setUnprocessedCaptureCount(state, unprocessedCaptureCount) {
+      return {
+        ...state,
+        unprocessedCaptureCount,
+      };
+    },
+    setVerifiedCaptureCount(state, verifiedCaptureCount) {
+      return {
+        ...state,
+        verifiedCaptureCount,
+      };
     },
   },
   effects: {
@@ -113,7 +130,6 @@ const captures = {
        * first load the page count
        */
 
-      this.invalidateCaptureCount(false);
       const paramString = `where=${JSON.stringify(
         filter ? filter.getWhereObj() : {},
       )}`;
@@ -195,6 +211,30 @@ const captures = {
       } else {
         this.receiveLocation(null, { id: payload.id, address: 'cached' });
       }
+    },
+    async getTotalCaptureCount() {
+      const response = await this.queryCapturesApi({
+        count: true,
+        paramString: 'where[active]=true',
+      });
+      const { count } = response.data;
+      this.setTotalCaptureCount(count);
+    },
+    async getUnprocessedCaptureCount() {
+      const response = await this.queryCapturesApi({
+        count: true,
+        paramString: 'where[active]=true&where[approved]=false',
+      });
+      const { count } = response.data;
+      this.setUnprocessedCaptureCount(count);
+    },
+    async getVerifiedCaptureCount() {
+      const response = await this.queryCapturesApi({
+        count: true,
+        paramString: 'where[active]=true&where[approved]=true',
+      });
+      const { count } = response.data;
+      this.setVerifiedCaptureCount(count);
     },
   },
 };

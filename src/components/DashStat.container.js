@@ -26,14 +26,11 @@ function DashStatTotalCapturesComponent(props, El) {
 export const DashStatTotalCaptures = compose(
   connect(
     (state) => ({
-      data:
-        state.captures.captureCount !== null
-          ? countToLocaleString(state.captures.captureCount)
-          : null,
+      data: countToLocaleString(state.captures.totalCaptureCount),
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.captures.getCaptureCount,
+      fetch: dispatch.captures.getTotalCaptureCount,
     }),
   ),
   withData,
@@ -54,14 +51,11 @@ function DashStatUnprocessedCapturesComponent(props, El) {
 export const DashStatUnprocessedCaptures = compose(
   connect(
     (state) => ({
-      data:
-        state.verify.captureCount !== null
-          ? countToLocaleString(state.verify.captureCount)
-          : null,
+      data: countToLocaleString(state.captures.unprocessedCaptureCount),
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.verify.getCaptureCount,
+      fetch: dispatch.captures.getUnprocessedCaptureCount,
     }),
   ),
   withData,
@@ -83,13 +77,13 @@ export const DashStatVerifiedCaptures = compose(
   connect(
     (state) => ({
       data:
-        state.verify.verifiedCaptureCount !== null
-          ? countToLocaleString(state.verify.verifiedCaptureCount)
+        state.captures.verifiedCaptureCount !== null
+          ? countToLocaleString(state.captures.verifiedCaptureCount)
           : null,
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.verify.getVerifiedCaptureCount,
+      fetch: dispatch.captures.getVerifiedCaptureCount,
     }),
   ),
   withData,
@@ -110,14 +104,11 @@ function DashStatPlanterCountComponent(props, El) {
 export const DashStatPlanterCount = compose(
   connect(
     (state) => ({
-      data:
-        state.planters.count !== null
-          ? countToLocaleString(state.planters.count)
-          : null,
+      data: countToLocaleString(state.planters.totalPlanterCount),
       needsRefresh: true,
     }),
     (dispatch) => ({
-      fetch: dispatch.planters.count,
+      fetch: dispatch.planters.getTotalPlanterCount,
     }),
   ),
   withData,
