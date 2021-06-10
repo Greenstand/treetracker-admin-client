@@ -214,7 +214,7 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateStart}
                   onChange={handleDateStartChange}
-                  maxDate={dateEnd}
+                  //maxDate={dateEnd} Conrado Banegas comment 6/2021 issue #94
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}

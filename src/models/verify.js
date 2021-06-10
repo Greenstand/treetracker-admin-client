@@ -360,8 +360,10 @@ const verify = {
           verifyState.treeImages.length,
         filter: verifyState.filter,
       };
+
       log.debug('load page with params:', pageParams);
       const result = await api.getTreeImages(pageParams);
+
       log.debug('loaded trees:', result.length);
       this.appendTreeImages(result);
       //restore loading status
