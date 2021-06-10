@@ -8,7 +8,7 @@ import IconClose from '@material-ui/icons/CloseRounded';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import FilterModel from '../models/Filter';
+import FilterModel, { TOKENIZED, NOT_TOKENIZED } from '../models/Filter';
 import GSInputLabel from './common/InputLabel';
 import classNames from 'classnames';
 import DateFnsUtils from '@date-io/date-fns';
@@ -22,7 +22,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 
-import { verificationStates } from '../common/variables';
+import { verificationStates, tokenizationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -72,6 +72,7 @@ function Filter(props) {
     filter.dateStart || dateStartDefault,
   );
   const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
+  const [tokenId, setTokenId] = useState(filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -96,6 +97,7 @@ function Filter(props) {
     setDateEnd(dateEndDefault);
     setApproved();
     setActive();
+    setTokenId(filterOptionAll);
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -110,6 +112,7 @@ function Filter(props) {
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
     filter.active = active;
+    filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -245,6 +248,36 @@ function Filter(props) {
           verificationStates.APPROVED,
           verificationStates.AWAITING,
           verificationStates.REJECTED,
+        ].map((name) => (
+          <MenuItem key={name} value={name}>
+            {name}
+          </MenuItem>
+        ))}
+      </TextField>
+      <GSInputLabel text="Tokenization Status" />
+      <TextField
+        select
+        value={
+          tokenId === filterOptionAll
+            ? filterOptionAll
+            : tokenId === TOKENIZED
+            ? tokenizationStates.TOKENIZED
+            : tokenizationStates.NOT_TOKENIZED
+        }
+        onChange={(e) => {
+          setTokenId(
+            e.target.value === filterOptionAll
+              ? filterOptionAll
+              : e.target.value === tokenizationStates.TOKENIZED
+              ? TOKENIZED
+              : NOT_TOKENIZED,
+          );
+        }}
+      >
+        {[
+          filterOptionAll,
+          tokenizationStates.NOT_TOKENIZED,
+          tokenizationStates.TOKENIZED,
         ].map((name) => (
           <MenuItem key={name} value={name}>
             {name}
