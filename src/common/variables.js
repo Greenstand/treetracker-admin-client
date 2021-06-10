@@ -9,3 +9,7 @@ export const verificationStates = {
   AWAITING: 'Awaiting Verification',
   REJECTED: 'Rejected',
 };
+export const tokenizationStates = {
+  TOKENIZED: 'Tokenized',
+  NOT_TOKENIZED: 'Not Tokenized',
+};

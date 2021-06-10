@@ -7,6 +7,8 @@ export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
+export const TOKENIZED = 'TOKENIZED';
+export const NOT_TOKENIZED = 'NOT_TOKENIZED';
 
 export default class Filter {
   captureId;
@@ -21,6 +23,7 @@ export default class Filter {
   speciesId;
   tagId;
   organizationId;
+  tokenId;
 
   constructor(options) {
     Object.assign(this, options);
@@ -94,6 +97,12 @@ export default class Filter {
       where.organizationId = null;
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
       where.organizationId = this.organizationId;
+    }
+
+    if (this.tokenId === TOKENIZED) {
+      where.tokenId = { neq: null };
+    } else if (this.tokenId === NOT_TOKENIZED) {
+      where.tokenId = { eq: null };
     }
 
     return where;
