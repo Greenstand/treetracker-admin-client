@@ -11,8 +11,6 @@ import FilterModel, {
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
   TAG_NOT_SET,
-  TOKENIZED,
-  NOT_TOKENIZED,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import { connect } from 'react-redux';
@@ -209,7 +207,7 @@ function Filter(props) {
                 value={
                   tokenId === filterOptionAll
                     ? filterOptionAll
-                    : tokenId === TOKENIZED
+                    : tokenId === tokenizationStates.TOKENIZED
                     ? tokenizationStates.TOKENIZED
                     : tokenizationStates.NOT_TOKENIZED
                 }
@@ -218,8 +216,8 @@ function Filter(props) {
                     e.target.value === filterOptionAll
                       ? filterOptionAll
                       : e.target.value === tokenizationStates.TOKENIZED
-                      ? TOKENIZED
-                      : NOT_TOKENIZED,
+                      ? tokenizationStates.TOKENIZED
+                      : tokenizationStates.NOT_TOKENIZED,
                   );
                 }}
               >

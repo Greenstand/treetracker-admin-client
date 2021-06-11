@@ -8,7 +8,7 @@ import IconClose from '@material-ui/icons/CloseRounded';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import FilterModel, { TOKENIZED, NOT_TOKENIZED } from '../models/Filter';
+import FilterModel from '../models/Filter';
 import GSInputLabel from './common/InputLabel';
 import classNames from 'classnames';
 import DateFnsUtils from '@date-io/date-fns';
@@ -260,7 +260,7 @@ function Filter(props) {
         value={
           tokenId === filterOptionAll
             ? filterOptionAll
-            : tokenId === TOKENIZED
+            : tokenId === tokenizationStates.TOKENIZED
             ? tokenizationStates.TOKENIZED
             : tokenizationStates.NOT_TOKENIZED
         }
@@ -269,8 +269,8 @@ function Filter(props) {
             e.target.value === filterOptionAll
               ? filterOptionAll
               : e.target.value === tokenizationStates.TOKENIZED
-              ? TOKENIZED
-              : NOT_TOKENIZED,
+              ? tokenizationStates.TOKENIZED
+              : tokenizationStates.NOT_TOKENIZED,
           );
         }}
       >
