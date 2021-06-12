@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.2...v1.14.0) (2021-06-12)
+
+
+### Features
+
+* tokenized filter option ([#112](https://github.com/Greenstand/treetracker-admin-client/issues/112)) ([17742b2](https://github.com/Greenstand/treetracker-admin-client/commit/17742b2966712fec208eedb7957975422287b9a7))
+
 ## [1.13.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.1...v1.13.2) (2021-06-09)
 
 
