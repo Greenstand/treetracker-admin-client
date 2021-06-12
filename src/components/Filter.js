@@ -254,24 +254,12 @@ function Filter(props) {
           </MenuItem>
         ))}
       </TextField>
-      <GSInputLabel text="Tokenization Status" />
+      <GSInputLabel text="Token Status" />
       <TextField
         select
-        value={
-          tokenId === filterOptionAll
-            ? filterOptionAll
-            : tokenId === tokenizationStates.TOKENIZED
-            ? tokenizationStates.TOKENIZED
-            : tokenizationStates.NOT_TOKENIZED
-        }
+        value={tokenId}
         onChange={(e) => {
-          setTokenId(
-            e.target.value === filterOptionAll
-              ? filterOptionAll
-              : e.target.value === tokenizationStates.TOKENIZED
-              ? tokenizationStates.TOKENIZED
-              : tokenizationStates.NOT_TOKENIZED,
-          );
+          setTokenId(e.target.value);
         }}
       >
         {[
