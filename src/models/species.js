@@ -36,17 +36,22 @@ const species = {
     },
   },
   effects: {
-    async loadSpeciesList() {
+    async loadSpeciesList(forceReload = false, state) {
+      if (state.species.speciesList.length && !forceReload) {
+        return;
+      }
       const speciesList = await api.getSpecies();
+      // Initially set the species list without counts
+      this.setSpeciesList(speciesList);
       log.debug('load species from api:', speciesList.length);
-      const sepcieListWithCount = await Promise.all(
+      const speciesListWithCount = await Promise.all(
         speciesList.map(async (species) => {
-          let captureCount = await api.getCaptureCountPerSpecies(species.id);
+          const captureCount = await api.getCaptureCountPerSpecies(species.id);
           species.captureCount = captureCount.count;
           return species;
         }),
       );
-      this.setSpeciesList(sepcieListWithCount);
+      this.setSpeciesList(speciesListWithCount);
     },
     onChange(text) {
       console.log('on change:"', text, '"');
