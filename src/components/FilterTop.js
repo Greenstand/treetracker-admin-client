@@ -24,7 +24,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import { getOrganization } from '../api/apiUtils';
-import { verificationStates } from '../common/variables';
+import { verificationStates, tokenizationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -92,6 +92,7 @@ function Filter(props) {
     filter.organizationId || ALL_ORGANIZATIONS,
   );
   const [userHasOrg, setUserHasOrg] = useState(false);
+  const [tokenId, setTokenId] = useState(filterOptionAll);
 
   useEffect(() => {
     props.tagsDispatch.getTags(tagSearchString);
@@ -132,6 +133,7 @@ function Filter(props) {
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
+    filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -147,6 +149,7 @@ function Filter(props) {
     setOrganizationId(ALL_ORGANIZATIONS);
     setTag(null);
     setTagSearchString('');
+    setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
     filter.approved = approved; // keeps last value set
@@ -192,6 +195,24 @@ function Filter(props) {
                   verificationStates.APPROVED,
                   verificationStates.AWAITING,
                   verificationStates.REJECTED,
+                ].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                select
+                label="Token Status"
+                value={tokenId}
+                onChange={(e) => {
+                  setTokenId(e.target.value);
+                }}
+              >
+                {[
+                  filterOptionAll,
+                  tokenizationStates.NOT_TOKENIZED,
+                  tokenizationStates.TOKENIZED,
                 ].map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}

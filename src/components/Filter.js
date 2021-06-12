@@ -22,7 +22,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 
-import { verificationStates } from '../common/variables';
+import { verificationStates, tokenizationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -72,6 +72,7 @@ function Filter(props) {
     filter.dateStart || dateStartDefault,
   );
   const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
+  const [tokenId, setTokenId] = useState(filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -96,6 +97,7 @@ function Filter(props) {
     setDateEnd(dateEndDefault);
     setApproved();
     setActive();
+    setTokenId(filterOptionAll);
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -110,6 +112,7 @@ function Filter(props) {
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
     filter.active = active;
+    filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -245,6 +248,24 @@ function Filter(props) {
           verificationStates.APPROVED,
           verificationStates.AWAITING,
           verificationStates.REJECTED,
+        ].map((name) => (
+          <MenuItem key={name} value={name}>
+            {name}
+          </MenuItem>
+        ))}
+      </TextField>
+      <GSInputLabel text="Token Status" />
+      <TextField
+        select
+        value={tokenId}
+        onChange={(e) => {
+          setTokenId(e.target.value);
+        }}
+      >
+        {[
+          filterOptionAll,
+          tokenizationStates.NOT_TOKENIZED,
+          tokenizationStates.TOKENIZED,
         ].map((name) => (
           <MenuItem key={name} value={name}>
             {name}
