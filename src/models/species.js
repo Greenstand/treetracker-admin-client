@@ -9,8 +9,7 @@ const log = loglevel.getLogger('../models/species');
 const species = {
   state: {
     speciesList: [],
-    speciesInput: '',
-    speciesDesc: '',
+    selectedSpecies: null,
   },
   reducers: {
     setSpeciesList(state, speciesList) {
@@ -22,16 +21,10 @@ const species = {
         speciesList: sortedSpeciesList,
       };
     },
-    setSpeciesInput(state, text) {
+    setSelectedSpecies(state, selectedSpecies) {
       return {
         ...state,
-        speciesInput: text,
-      };
-    },
-    setSpeciesDesc(state, text) {
-      return {
-        ...state,
-        speciesDesc: text,
+        selectedSpecies,
       };
     },
   },
@@ -53,53 +46,35 @@ const species = {
       );
       this.setSpeciesList(speciesListWithCount);
     },
-    onChange(text) {
-      console.log('on change:"', text, '"');
-      this.setSpeciesInput(text);
-    },
-    isNewSpecies(payload, state) {
-      //if there are some input, and it don't exist, then new species
-      if (!state.species.speciesInput) {
-        log.debug('empty species, false');
-        return false;
+    async updateSpeciesCount(speciesId, state) {
+      if (speciesId == null) {
+        return;
       }
-      log.debug(
-        'to find species %s in list:%d',
-        state.species.speciesInput,
-        state.species.speciesList.length,
-      );
-      return state.species.speciesList.every(
-        (c) =>
-          c.name.toLowerCase() !== state.species.speciesInput.toLowerCase(),
-      );
+      const captureCount = await api.getCaptureCountPerSpecies(speciesId);
+      const speciesList = state.species.speciesList.map((species) => {
+        if (species.id === speciesId) {
+          return {
+            ...species,
+            captureCount: captureCount.count,
+          };
+        } else {
+          return species;
+        }
+      });
+      this.setSpeciesList(speciesList);
     },
     async createSpecies(payload, state) {
-      const species = await api.createSpecies(
-        payload || {
-          name: state.species.speciesInput,
-          desc: '',
-        },
-      );
+      const species = await api.createSpecies(payload);
       console.debug('created new species:', species);
       //update the list
       this.setSpeciesList([species, ...state.species.speciesList]);
       return species;
     },
     /*
-     * to get the species id according the input
+     * to get the selected species id
      */
     getSpeciesId(payload, state) {
-      if (state.species.speciesInput) {
-        return state.species.speciesList.reduce((a, c) => {
-          if (a) {
-            return a;
-          } else if (c.name === state.species.speciesInput) {
-            return c.id;
-          } else {
-            return a;
-          }
-        }, undefined);
-      }
+      return state.species.selectedSpecies?.id;
     },
     /*
      * to edit the species
