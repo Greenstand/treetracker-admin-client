@@ -37,14 +37,6 @@ const species = {
       // Initially set the species list without counts
       this.setSpeciesList(speciesList);
       log.debug('load species from api:', speciesList.length);
-      const speciesListWithCount = await Promise.all(
-        speciesList.map(async (species) => {
-          const captureCount = await api.getCaptureCountPerSpecies(species.id);
-          species.captureCount = captureCount.count;
-          return species;
-        }),
-      );
-      this.setSpeciesList(speciesListWithCount);
     },
     async updateSpeciesCount(speciesId, state) {
       if (speciesId == null) {
