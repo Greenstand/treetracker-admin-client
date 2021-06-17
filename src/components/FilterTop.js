@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -23,8 +23,9 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
-import { getOrganization } from '../api/apiUtils';
+// import { getOrganization } from '../api/apiUtils';
 import { verificationStates, tokenizationStates } from '../common/variables';
+import { AppContext } from './Context';
 
 export const FILTER_WIDTH = 330;
 
@@ -71,6 +72,7 @@ function Filter(props) {
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
+  const { orgList, userHasOrg } = useContext(AppContext);
   const [captureId, setCaptureId] = useState(filter.captureId || '');
   const [planterId, setPlanterId] = useState(filter.planterId || '');
   const [deviceId, setDeviceId] = useState(filter.deviceIdentifier || '');
@@ -91,21 +93,21 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS,
   );
-  const [userHasOrg, setUserHasOrg] = useState(false);
+  // const [userHasOrg, setUserHasOrg] = useState(false);
   const [tokenId, setTokenId] = useState(filterOptionAll);
 
   useEffect(() => {
     props.tagsDispatch.getTags(tagSearchString);
   }, [tagSearchString, props.tagsDispatch]);
 
-  useEffect(() => {
-    const hasOrg = getOrganization();
-    setUserHasOrg(hasOrg ? true : false);
-    // if not an org account && the org list isn't loaded --> load the orgs
-    if (!hasOrg && !props.organizationState.organizationList.length) {
-      props.organizationDispatch.loadOrganizations();
-    }
-  }, []);
+  // useEffect(() => {
+  //   const hasOrg = getOrganization();
+  //   setUserHasOrg(hasOrg ? true : false);
+  //   // if not an org account && the org list isn't loaded --> load the orgs
+  //   if (!hasOrg && !orgList.length) {
+  //     props.organizationDispatch.loadOrganizations();
+  //   }
+  // }, []);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -333,7 +335,7 @@ function Filter(props) {
                       id: ORGANIZATION_NOT_SET,
                       name: 'Not set',
                     },
-                    ...props.organizationState.organizationList,
+                    ...orgList,
                   ].map((org) => (
                     <MenuItem key={org.id} value={org.id}>
                       {org.name}
@@ -387,12 +389,12 @@ export default withStyles(styles)(
     (state) => ({
       speciesState: state.species,
       tagsState: state.tags,
-      organizationState: state.organizations,
+      // organizationState: state.organizations,
     }),
     //dispatch
     (dispatch) => ({
       tagsDispatch: dispatch.tags,
-      organizationDispatch: dispatch.organizations,
+      // organizationDispatch: dispatch.organizations,
     }),
   )(Filter),
 );

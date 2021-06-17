@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Checkbox,
   Grid,
@@ -54,31 +54,31 @@ const styles = (theme) => ({
 });
 
 const Login = (props) => {
-  const appContext = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
   const { classes } = props;
-  const [userName, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  const [usernameBlurred, setUsernameBlurred] = React.useState(false);
-  const [passwordBlurred, setPasswordBlurred] = React.useState(false);
-  const [isRemember, setRemember] = React.useState(true);
+  const [userName, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [usernameBlurred, setUsernameBlurred] = useState(false);
+  const [passwordBlurred, setPasswordBlurred] = useState(false);
+  const [isRemember, setRemember] = useState(true);
 
   const history = useHistory();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/' } };
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       setLoading(false);
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setErrorMessage('');
   }, [userName, password]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // console.log("--- EFFECT when user changes", appContext.user, loading);
     if (appContext.user) {
       history.replace(from);

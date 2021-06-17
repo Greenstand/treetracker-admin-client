@@ -1,28 +1,30 @@
 /*
  * Planter page
  */
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import TablePagination from '@material-ui/core/TablePagination';
 import Button from '@material-ui/core/Button';
-
-import { selectedHighlightColor, documentTitle } from '../common/variables.js';
-import Grid from '@material-ui/core/Grid';
+import Person from '@material-ui/icons/Person';
 import IconFilter from '@material-ui/icons/FilterList';
 
-import FilterTopPlanter from './FilterTopPlanter';
-import Person from '@material-ui/icons/Person';
-import Navbar from './Navbar';
-import PlanterDetail from './PlanterDetail';
-import OptimizedImage from './OptimizedImage';
+import FilterPlanter from '../models/FilterPlanter';
+import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import LinkToWebmap from './common/LinkToWebmap';
+import Navbar from './Navbar';
+import FilterTopPlanter from './FilterTopPlanter';
+import OptimizedImage from './OptimizedImage';
+import PlanterDetail from './PlanterDetail';
+import { AppContext } from './Context';
+import api from '../api/planters';
 
 const log = require('loglevel').getLogger('../components/Planters');
 
@@ -126,62 +128,50 @@ const useStyles = makeStyles((theme) => ({
 const Planters = (props) => {
   // log.debug('render: Planters...');
   const classes = useStyles(props);
-  const [isFilterShown, setFilterShown] = React.useState(false);
-  const [isDetailShown, setDetailShown] = React.useState(false);
-  const [planterDetail, setPlanterDetail] = React.useState({});
+  const { planters, setPlanters } = useContext(AppContext);
+  const [isFilterShown, setFilterShown] = useState(false);
+  const [isDetailShown, setDetailShown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState(new FilterPlanter());
+  const [planterCount, setPlanterCount] = useState(0);
+  const [planterDetail, setPlanterDetail] = useState({});
+  const [pageSize, setPageSize] = useState(24);
+  const [pageNumber, setPageNumber] = useState(0);
 
   /*
-   * effect to load page when mounted
+   * effect to load page when mounted and initialize the title and planter count
    */
   useEffect(() => {
     log.debug('mounted');
-    props.plantersDispatch.count();
-  }, [props.plantersDispatch]);
-
-  useEffect(() => {
-    props.plantersDispatch.load({
+    document.title = `Planters - ${documentTitle}`;
+    loadPlanters({
       pageNumber: 0,
     });
-  }, [props.plantersDispatch, props.plantersState.pageSize]);
-
-  useEffect(() => {
-    props.plantersDispatch.count({
-      filter: props.plantersState.filter,
-    });
-  }, [props.plantersDispatch, props.plantersState.filter]);
-
-  /* to update html document title */
-  useEffect(() => {
-    document.title = `Planters - ${documentTitle}`;
   }, []);
 
-  function handlePlanterClick(planter) {
-    setDetailShown(true);
-    setPlanterDetail(planter);
+  useEffect(() => {
+    loadPlanters({ pageSize, pageNumber, filter });
+  }, [pageSize, pageNumber, filter]);
+
+  useEffect(() => {
+    getPlanterCount(filter);
+  }, [filter]);
+
+  async function loadPlanters() {
+    setIsLoading(true);
+    const updatedPlanters = await api.getPlanters({
+      skip: pageNumber * pageSize,
+      rowsPerPage: pageSize,
+      filter,
+    });
+    setPlanters(updatedPlanters);
+    setIsLoading(false);
   }
 
-  const placeholderPlanters = Array(props.plantersState.pageSize)
-    .fill()
-    .map((_, index) => {
-      return {
-        id: index,
-        placeholder: true,
-      };
-    });
-
-  let plantersItems = (props.plantersState.isLoading
-    ? placeholderPlanters
-    : props.plantersState.planters
-  ).map((planter) => {
-    return (
-      <Planter
-        onClick={() => handlePlanterClick(planter)}
-        key={planter.id}
-        planter={planter}
-        placeholder={planter.placeholder}
-      />
-    );
-  });
+  async function getPlanterCount(filter) {
+    const { count } = await api.getCount({ filter: filter });
+    setPlanterCount(count);
+  }
 
   function handleFilterClick() {
     if (isFilterShown) {
@@ -192,30 +182,52 @@ const Planters = (props) => {
   }
 
   function handlePageChange(e, page) {
-    props.plantersDispatch.load({
-      pageNumber: page,
-      filter: props.plantersState.filter,
-    });
+    setPageNumber(page);
   }
 
   function handleChangePageSize(e, option) {
-    props.plantersDispatch.changePageSize({ pageSize: option.props.value });
+    setPageSize({ pageSize: option.props.value });
   }
 
   function updateFilter(filter) {
-    props.plantersDispatch.load({
-      pageNumber: 0,
-      filter,
-    });
+    setPageNumber(0);
+    setFilter(filter);
   }
+
+  function handlePlanterClick(planter) {
+    setDetailShown(true);
+    setPlanterDetail(planter);
+  }
+
+  const placeholderPlanters = Array(pageSize)
+    .fill()
+    .map((_, index) => {
+      return {
+        id: index,
+        placeholder: true,
+      };
+    });
+
+  let plantersItems = (isLoading ? placeholderPlanters : planters).map(
+    (planter) => {
+      return (
+        <Planter
+          onClick={() => handlePlanterClick(planter)}
+          key={planter.id}
+          planter={planter}
+          placeholder={planter.placeholder}
+        />
+      );
+    },
+  );
 
   const pagination = (
     <TablePagination
       rowsPerPageOptions={[24, 48, 96]}
       component="div"
-      count={props.plantersState.count || 0}
-      rowsPerPage={props.plantersState.pageSize}
-      page={props.plantersState.currentPage}
+      count={planterCount || 0}
+      rowsPerPage={pageSize}
+      page={pageNumber}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Planters per page:"
@@ -243,7 +255,7 @@ const Planters = (props) => {
               <FilterTopPlanter
                 isOpen={isFilterShown}
                 onSubmit={(filter) => updateFilter(filter)}
-                filter={props.plantersState.filter}
+                filter={filter}
                 onClose={handleFilterClick}
               />
             )}
@@ -287,7 +299,7 @@ const Planters = (props) => {
   );
 };
 
-function Planter(props) {
+export function Planter(props) {
   const { planter } = props;
   const classes = useStyles(props);
   return (
@@ -343,15 +355,4 @@ function Planter(props) {
     </div>
   );
 }
-export { Planter };
-
-export default connect(
-  //state
-  (state) => ({
-    plantersState: state.planters,
-  }),
-  //dispatch
-  (dispatch) => ({
-    plantersDispatch: dispatch.planters,
-  }),
-)(Planters);
+export default Planters;
