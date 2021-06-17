@@ -1,6 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  forwardRef,
+} from 'react';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -40,6 +45,9 @@ import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
+import { VerifyContext } from '../context/VerifyContext';
+import { SpeciesContext } from '../context/SpeciesContext';
+import { TagsContext } from '../context/TagsContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -183,6 +191,9 @@ const ToVerifyCounter = withData(({ data }) => (
 
 const Verify = (props) => {
   // console.log('render: verify');
+  const verifyContext = useContext(VerifyContext);
+  const speciesContext = useContext(SpeciesContext);
+  const tagsContext = useContext(TagsContext);
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
@@ -203,26 +214,26 @@ const Verify = (props) => {
     log.debug('mounted:');
     // update filter right away to prevent non-Filter type objects loading
     document.title = `Verify - ${documentTitle}`;
-    props.verifyDispatch.updateFilter(props.verifyState.filter);
-    props.verifyDispatch.loadCaptureImages();
-    props.verifyDispatch.getCaptureCount();
+    // context.updateFilter(context.filter);
+    // context.loadCaptureImages();
+    // context.getCaptureCount(context.filter);
   }, []);
 
   /* to display progress */
   useEffect(() => {
-    setComplete(props.verifyState.approveAllComplete);
-  }, [props.verifyState.approveAllComplete]);
+    setComplete(verifyContext.approveAllComplete);
+  }, [verifyContext.approveAllComplete]);
 
   /* load more captures when the page or page size changes */
   useEffect(() => {
-    props.verifyDispatch.loadCaptureImages();
-  }, [props.verifyState.pageSize, props.verifyState.currentPage]);
+    verifyContext.loadCaptureImages();
+  }, [verifyContext.pageSize, verifyContext.currentPage]);
 
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on capture:%d', captureId);
-    props.verifyDispatch.clickCapture({
+    verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
       isCmd: e.metaKey,
@@ -247,19 +258,41 @@ const Verify = (props) => {
   }
 
   function resetApprovalFields() {
-    props.tagDispatch.setTagInput([]);
-    props.speciesDispatch.setSelectedSpecies(null);
+    tagsContext.setTagInput([]);
+    speciesContext.setSpeciesInput('');
   }
 
   async function handleSubmit(approveAction) {
     log.debug('approveAction:', approveAction);
     //check selection
-    if (props.verifyState.captureImagesSelected.length === 0) {
+    if (verifyContext.captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
     }
-
-    const speciesId = await props.speciesDispatch.getSpeciesId();
+    /*
+     * check species
+     */
+    const isNew = await speciesContext.isNewSpecies();
+    if (isNew) {
+      const answer = await new Promise((resolve) => {
+        if (
+          window.confirm(
+            `The species ${speciesContext.speciesInput} is a new one, create it?`,
+          )
+        ) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+      if (!answer) {
+        return;
+      } else {
+        //create new species
+        await speciesContext.createSpecies();
+      }
+    }
+    const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
       console.log('species id:', speciesId);
@@ -270,14 +303,13 @@ const Verify = (props) => {
      */
     approveAction.tags = await props.tagDispatch.createTags();
 
-    const result = await props.verifyDispatch.approveAll({ approveAction });
+    const result = await verifyContext.approveAll({ approveAction });
     if (!result) {
       window.alert('Failed to approve a capture');
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
-    props.verifyDispatch.loadCaptureImages();
-    props.speciesDispatch.updateSpeciesCount(approveAction.speciesId);
+    verifyContext.loadCaptureImages();
   }
 
   async function handleShowPlanterDetail(e, capture) {
@@ -313,30 +345,28 @@ const Verify = (props) => {
   }
 
   function handleChangePageSize(event) {
-    props.verifyDispatch.set({
+    verifyContext.set({
       pageSize: event.target.value,
     });
   }
 
   function handleChangePage(event, page) {
-    props.verifyDispatch.set({ currentPage: page });
+    verifyContext.set({ currentPage: page });
   }
 
   function isCaptureSelected(id) {
-    return props.verifyState.captureImagesSelected.indexOf(id) >= 0;
+    return verifyContext.captureImagesSelected.indexOf(id) >= 0;
   }
 
-  const captureImages = props.verifyState.captureImages.filter(
-    (capture, index) => {
-      return (
-        index >= props.verifyState.currentPage * props.verifyState.pageSize &&
-        index < (props.verifyState.currentPage + 1) * props.verifyState.pageSize
-      );
-    },
-  );
+  const captureImages = verifyContext.captureImages.filter((capture, index) => {
+    return (
+      index >= verifyContext.currentPage * verifyContext.pageSize &&
+      index < (verifyContext.currentPage + 1) * verifyContext.pageSize
+    );
+  });
 
-  const placeholderImages = props.verifyState.isLoading
-    ? Array(props.verifyState.pageSize - captureImages.length)
+  const placeholderImages = verifyContext.isLoading
+    ? Array(verifyContext.pageSize - captureImages.length)
         .fill()
         .map((_, index) => {
           return {
@@ -433,9 +463,9 @@ const Verify = (props) => {
     <TablePagination
       rowsPerPageOptions={[12, 24, 48, 96, 192]}
       component="div"
-      count={props.verifyState.captureCount || 0}
-      rowsPerPage={props.verifyState.pageSize}
-      page={props.verifyState.currentPage}
+      count={verifyContext.captureCount || 0}
+      rowsPerPage={verifyContext.pageSize}
+      page={verifyContext.currentPage}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Captures per page:"
@@ -465,9 +495,9 @@ const Verify = (props) => {
                 <FilterTop
                   isOpen={isFilterShown}
                   onSubmit={(filter) => {
-                    props.verifyDispatch.updateFilter(filter);
+                    verifyContext.updateFilter(filter);
                   }}
-                  filter={props.verifyState.filter}
+                  filter={verifyContext.filter}
                   onClose={handleFilterClick}
                 />
               )}
@@ -496,9 +526,9 @@ const Verify = (props) => {
                   <Grid item>
                     <Typography variant="h5">
                       <ToVerifyCounter
-                        needsRefresh={props.verifyState.invalidateCaptureCount}
-                        fetch={props.verifyDispatch.getCaptureCount}
-                        data={props.verifyState.captureCount}
+                        needsRefresh={verifyContext.invalidateCaptureCount}
+                        fetch={verifyContext.getCaptureCount}
+                        data={verifyContext.captureCount}
                       />
                     </Typography>
                   </Grid>
@@ -523,10 +553,10 @@ const Verify = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={props.verifyState.captureImagesSelected.length > 0}
+          submitEnabled={verifyContext.captureImagesSelected.length > 0}
         />
       </Grid>
-      {props.verifyState.isApproveAllProcessing && (
+      {verifyContext.isApproveAllProcessing && (
         <AppBar
           position="fixed"
           style={{
@@ -540,15 +570,15 @@ const Verify = (props) => {
           />
         </AppBar>
       )}
-      {props.verifyState.isApproveAllProcessing && (
+      {verifyContext.isApproveAllProcessing && (
         <Modal open={true}>
           <div></div>
         </Modal>
       )}
       {false /* close undo */ &&
-        !props.verifyState.isApproveAllProcessing &&
-        !props.verifyState.isRejectAllProcessing &&
-        props.verifyState.captureImagesUndo.length > 0 && (
+        !verifyContext.isApproveAllProcessing &&
+        !context.isRejectAllProcessing &&
+        verifyContext.captureImagesUndo.length > 0 && (
           <Snackbar
             open
             autoHideDuration={15000}
@@ -559,10 +589,8 @@ const Verify = (props) => {
             message={
               <span id="snackbar-fab-message-id">
                 You have{' '}
-                {props.verifyState.isBulkApproving
-                  ? ' approved '
-                  : ' rejected '}
-                {props.verifyState.captureImagesUndo.length} captures
+                {verifyContext.isBulkApproving ? ' approved ' : ' rejected '}
+                {verifyContext.captureImagesUndo.length} captures
               </span>
             }
             color="primary"
@@ -571,7 +599,7 @@ const Verify = (props) => {
                 color="inherit"
                 size="small"
                 onClick={async () => {
-                  await props.verifyDispatch.undoAll();
+                  await verifyContext.undoAll();
                   log.log('finished');
                 }}
               >
@@ -902,17 +930,4 @@ function SidePanel(props) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    verifyState: state.verify,
-    speciesState: state.species,
-    tagState: state.tags,
-  }),
-  //dispatch
-  (dispatch) => ({
-    verifyDispatch: dispatch.verify,
-    speciesDispatch: dispatch.species,
-    tagDispatch: dispatch.tags,
-  }),
-)(Verify);
+export default Verify;

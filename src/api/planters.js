@@ -19,7 +19,7 @@ export default {
   },
 
   getPlanters({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
-    const where = filter ? filter.getWhereObj() : {};
+    const where = filter.getWhereObj ? filter.getWhereObj() : {};
     const planterFilter = {
       where: { ...where, active: true },
       order: [`${orderBy} ${order}`],
@@ -52,7 +52,7 @@ export default {
   },
 
   getCount({ filter }) {
-    const filterObj = filter ? filter.getWhereObj() : {};
+    const filterObj = filter.getWhereObj ? filter.getWhereObj() : {};
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/count?where=${JSON.stringify(filterObj)}`;

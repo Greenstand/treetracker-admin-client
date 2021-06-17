@@ -48,9 +48,7 @@ const Navbar = (props) => {
           <Grid item>{props.children}</Grid>
         </Grid>
       </AppBar>
-      {/* children duplicated behind the AppBar component to preserve height */}
       <Toolbar className={classes.toolbar} />
-      {props.children}
       {isMenuShown && <Menu onClose={() => setMenuShown(false)} />}
     </React.Fragment>
   );

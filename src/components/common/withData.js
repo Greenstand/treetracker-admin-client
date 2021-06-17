@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function withData(Component) {
   function ComponentWithData(props, ref) {
     const { fetch, data, needsRefresh, ...rest } = props;
-    React.useEffect(() => {
+    useEffect(() => {
       (data == null || needsRefresh) && fetch();
       return;
     }, [needsRefresh, data, fetch]);

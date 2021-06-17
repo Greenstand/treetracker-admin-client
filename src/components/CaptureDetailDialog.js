@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useState, useEffect } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from 'react';
 
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -20,6 +26,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
+import { CaptureDetailContext } from '../context/CaptureDetailContext';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -76,8 +83,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, capture } = props;
-
+  const { open, TransitionComponent, capture } = props;
+  const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
@@ -90,29 +97,29 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    props.captureDetailDispatch.getCaptureDetail(props.capture.id);
+    cdContext.getCaptureDetail(capture.id);
 
     window.addEventListener('resize', resizeWindow);
     return () => {
       window.removeEventListener('resize', resizeWindow);
     };
-  }, [props.captureDetailDispatch, props.capture, resizeWindow]);
+  }, [capture, resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
    */
   useEffect(() => {
-    if (props.captureDetail.capture) {
-      setRenderCapture(props.captureDetail.capture);
+    if (cdContext.capture) {
+      setRenderCapture(cdContext.capture);
     } else {
-      setRenderCapture(props.capture);
+      setRenderCapture(capture);
     }
-  }, [props.captureDetail, props.capture]);
+  }, [cdContext.capture, capture]);
 
   function handleClose() {
     setSnackbarOpen(false);
     setSnackbarLabel('');
-    props.captureDetailDispatch.reset();
+    cdContext.reset();
     props.onClose();
   }
 
@@ -282,7 +289,7 @@ function CaptureDetailDialog(props) {
           message={`${snackbarLabel} copied to clipboard`}
           color="primary"
           action={
-            <Fragment>
+            <>
               <IconButton
                 size="small"
                 aria-label="close"
@@ -290,7 +297,7 @@ function CaptureDetailDialog(props) {
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
-            </Fragment>
+            </>
           }
         />
       </Grid>
@@ -298,7 +305,7 @@ function CaptureDetailDialog(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -331,9 +338,18 @@ function CaptureDetailDialog(props) {
               captureTags={props.captureDetail.tags}
             />
           </Grid>
+          <Grid container item style={{ width: '300px' }} spacing={2}>
+            <Grid container direction="row" spacing={4}>
+              <Tags
+                capture={renderCapture}
+                species={cdContext.species}
+                captureTags={cdContext.tags}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 }
 

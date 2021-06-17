@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useContext,
+} from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -31,7 +37,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import axios from 'axios';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
 import pwdGenerator from 'generate-password';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
@@ -124,24 +130,24 @@ function intersection(a, b) {
 
 function Users(props) {
   const { classes } = props;
-  const appContext = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
   const { user, token } = appContext;
 
-  const [userEditing, setUserEditing] = React.useState(undefined);
-  const [userPassword, setUserPassword] = React.useState(undefined);
-  const [userDelete, setUserDelete] = React.useState(undefined);
-  const [newPassword, setNewPassword] = React.useState('');
-  const [permissions, setPermissions] = React.useState([]);
-  const [isPermissionsShow, setPermissionsShown] = React.useState(false);
-  const [users, setUsers] = React.useState([]);
-  const [copyMsg, setCopyMsg] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const passwordRef = React.useRef(null);
-  const [saveInProgress, setSaveInProgress] = React.useState(false);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [snackbarMessage, setSnackbarMesssage] = React.useState('');
-  const [usersLoaded, setUsersLoaded] = React.useState(false);
-  const [userNameValid, setUserNameValid] = React.useState(true);
+  const [userEditing, setUserEditing] = useState(undefined);
+  const [userPassword, setUserPassword] = useState(undefined);
+  const [userDelete, setUserDelete] = useState(undefined);
+  const [newPassword, setNewPassword] = useState('');
+  const [permissions, setPermissions] = useState([]);
+  const [isPermissionsShow, setPermissionsShown] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [copyMsg, setCopyMsg] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const passwordRef = useRef(null);
+  const [saveInProgress, setSaveInProgress] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMesssage] = useState('');
+  const [usersLoaded, setUsersLoaded] = useState(false);
+  const [userNameValid, setUserNameValid] = useState(true);
 
   const ENABLED = 'Enabled';
   const DISABLED = 'Disabled';
@@ -555,7 +561,7 @@ function Users(props) {
       </TableRow>
     ));
   }
-  console.log(userNameValid);
+  // console.log(userNameValid);
   return (
     <>
       <Grid container className={classes.box}>

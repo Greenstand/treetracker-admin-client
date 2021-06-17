@@ -1,6 +1,10 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { render, screen } from '@testing-library/react';
+import { AppContext, AppProvider } from '../context/AppContext';
 import FilterPlanter from './FilterPlanter';
 
-describe('Filter', () => {
+describe('FilterPlanter, with initial filter values', () => {
   let filterPlanter;
 
   beforeEach(() => {

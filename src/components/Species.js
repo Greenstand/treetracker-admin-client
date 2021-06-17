@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
+import { SpeciesContext } from '../context/SpeciesContext';
 
 const styles = () => {
   return {
@@ -16,21 +16,27 @@ const styles = () => {
 };
 
 function Species(props) {
+  // Verify also uses speciesInput so keep it on context
+  const speciesContext = useContext(SpeciesContext);
   /* load species list when mount*/
-  React.useEffect(() => {
-    props.speciesDispatch.loadSpeciesList();
-  }, [props.speciesDispatch]);
+  useEffect(() => {
+    speciesContext.loadSpeciesList();
+  }, [speciesContext.speciesList]);
 
   return (
     <Autocomplete
-      options={props.speciesState.speciesList}
+      options={speciesContext.speciesList}
       getOptionLabel={(option) => option.name}
       style={{ width: 300 }}
       onChange={(_event, value) => {
-        props.speciesDispatch.setSelectedSpecies(value);
+        speciesContext.onChange((value && value.name) || '');
+      }}
+      onInputChange={(_event, value) => {
+        speciesContext.onChange(value || '');
       }}
       className={props.classes.root}
-      value={props.speciesState.selectedSpecies}
+      freeSolo={true}
+      inputValue={speciesContext.speciesInput}
       renderInput={(params) => (
         <TextField {...params} placeholder="e.g. Mango" variant="outlined" />
       )}
@@ -38,15 +44,4 @@ function Species(props) {
   );
 }
 
-export default withStyles(styles)(
-  connect(
-    //state
-    (state) => ({
-      speciesState: state.species,
-    }),
-    //dispatch
-    (dispatch) => ({
-      speciesDispatch: dispatch.species,
-    }),
-  )(Species),
-);
+export default withStyles(styles)(Species);

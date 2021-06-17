@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -14,7 +13,8 @@ import {
 } from '@material-ui/core';
 import api from '../api/planters';
 import ImageScroller from './ImageScroller';
-import { getOrganization } from '../api/apiUtils';
+import { AppContext } from '../context/AppContext';
+import { PlanterContext } from '../context/PlanterContext';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -31,21 +31,12 @@ const EditPlanter = (props) => {
   // console.log('render: edit planter');
   const classes = useStyle();
   const { isOpen, planter, onClose } = props;
-
+  const appContext = useContext(AppContext);
+  const planterContext = useContext(PlanterContext);
   const [planterImages, setPlanterImages] = useState([]);
   const [planterUpdate, setPlanterUpdate] = useState(null);
   const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
-  const [userHasOrg, setUserHasOrg] = useState(false);
-
-  useEffect(() => {
-    const hasOrg = getOrganization();
-    setUserHasOrg(hasOrg ? true : false);
-    // if not an org account && the org list isn't loaded --> load the orgs
-    if (!hasOrg && !props.organizationState.organizationList.length) {
-      props.organizationDispatch.loadOrganizations();
-    }
-  }, []);
 
   useEffect(() => {
     async function loadPlanterImages() {
@@ -65,11 +56,31 @@ const EditPlanter = (props) => {
     loadPlanterImages();
   }, [planter]);
 
+  async function updatePlanter(planter) {
+    await api.updatePlanter(planter);
+    const updatedPlanter = await api.getPlanter(planter.id);
+    // only update context if planters have already been downloaded
+    if (planterContext.planters.length) {
+      const index = planterContext.planters.findIndex(
+        (p) => p.id === updatedPlanter.id,
+      );
+      if (index >= 0) {
+        // planterContext.setPlanters([
+        //   ...planterContext.planters,
+        //   { [index]: updatedPlanter },
+        // ]);
+        planterContext.set({
+          planters: [...planterContext.planters, { [index]: updatedPlanter }],
+        });
+      }
+    }
+  }
+
   async function handleSave() {
     if (planterUpdate) {
       setSaveInProgress(true);
       // TODO handle errors
-      await props.plantersDispatch.updatePlanter({
+      await updatePlanter({
         id: planter.id,
         ...planterUpdate,
       });
@@ -171,7 +182,7 @@ const EditPlanter = (props) => {
             </Grid>
           ))}
           <Grid item container>
-            {!userHasOrg && (
+            {!appContext.userHasOrg && (
               <TextField
                 select
                 className={classes.textInput}
@@ -184,8 +195,8 @@ const EditPlanter = (props) => {
                 <MenuItem key={'null'} value={'null'}>
                   No organization
                 </MenuItem>
-                {props.organizationState.organizationList.length &&
-                  props.organizationState.organizationList.map((org) => (
+                {appContext.orgList.length &&
+                  appContext.orgList.map((org) => (
                     <MenuItem key={org.id} value={org.id}>
                       {org.name}
                     </MenuItem>
@@ -210,15 +221,5 @@ const EditPlanter = (props) => {
     </Dialog>
   );
 };
-export { EditPlanter };
 
-export default connect(
-  (state) => ({
-    plantersState: state.planters,
-    organizationState: state.organizations,
-  }),
-  (dispatch) => ({
-    plantersDispatch: dispatch.planters,
-    organizationDispatch: dispatch.organizations,
-  }),
-)(EditPlanter);
+export default EditPlanter;

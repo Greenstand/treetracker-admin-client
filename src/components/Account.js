@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useContext } from 'react';
 import {
   Grid,
   Paper,
@@ -15,7 +15,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import Menu from './common/Menu';
 import AccountIcon from '@material-ui/icons/Person';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
@@ -67,13 +67,13 @@ const renderLoader = () => (
 
 function Account(props) {
   const { classes } = props;
-  const appContext = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
   const { user, token } = appContext;
-  const [openPwdForm, setOpenPwdForm] = React.useState(false);
-  const [oldPassword, setOldPassword] = React.useState('');
-  const [newPassword, setNewPassword] = React.useState('');
-  const [confirmedPassword, setConfirmedPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [openPwdForm, setOpenPwdForm] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmedPassword, setConfirmedPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   function handleLogout() {
     appContext.logout();

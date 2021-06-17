@@ -11,6 +11,9 @@
     "@material-ui/styles": "^4.3.0",
     "@material-ui/system": "^4.3.2",
     "@rematch/core": "*",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
     "assert": "^2.0.0",
     "axios": "*",
     "classnames": "*",
@@ -46,6 +49,8 @@
   },
   "scripts": {
     "start": "cross-env PORT=3001 react-scripts start",
+    "start:dev": "REACT_APP_API_ROOT=https://dev-k8s.treetracker.org/api/admin cross-env PORT=3001 react-scripts start",
+    "start:local": "REACT_APP_API_ROOT=http://localhost:3000 cross-env PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.development npm run build && mv build build-dev",
     "build:staging": "env-cmd -f .env.staging npm run build",

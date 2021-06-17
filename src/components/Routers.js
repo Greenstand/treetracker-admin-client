@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useContext, useRef, useMemo } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Login from './Login';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
 import PrivateRoute from './PrivateRoute';
 import Unauthorized from './Unauthorized';
 import Page404 from './Page404';
 
 export default function Routers() {
-  const refContainer = React.useRef();
-  const appContext = React.useContext(AppContext);
+  const refContainer = useRef();
+  const appContext = useContext(AppContext);
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     return (
       <Grid container wrap="nowrap">
         <Grid

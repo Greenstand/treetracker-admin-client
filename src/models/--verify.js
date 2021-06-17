@@ -350,7 +350,7 @@ const verify = {
               return a;
             }
           }, undefined);
-          log.trace('reject:%d', captureImage.id);
+          // log.trace('reject:%d', captureImage.id);
           await this.rejectCaptureImage(captureImage.id);
           this.setApproveAllComplete(100 * ((i + 1) / total));
         }
@@ -407,7 +407,7 @@ const verify = {
               return a;
             }
           }, undefined);
-          log.trace('approve:%d', captureImage.id);
+          // log.trace('approve:%d', captureImage.id);
           await this.approve({
             id: captureImage.id,
             approveAction: payload.approveAction,
@@ -450,7 +450,7 @@ const verify = {
       try {
         for (let i = 0; i < verifyState.captureImagesUndo.length; i++) {
           const captureImage = verifyState.captureImagesUndo[i];
-          log.trace('undo:%d', captureImage.id);
+          // log.trace('undo:%d', captureImage.id);
           await this.undoCaptureImage(captureImage.id);
           this.setApproveAllComplete(100 * ((i + 1) / total));
         }
@@ -544,12 +544,12 @@ const verify = {
             Math.max(indexAnchor, indexCurrent) + 1,
           )
           .map((capture) => capture.id);
-        log.trace(
-          'find range:[%d,%d], selected:%d',
-          indexAnchor,
-          indexCurrent,
-          captureImagesSelected.length,
-        );
+        // log.trace(
+        //   'find range:[%d,%d], selected:%d',
+        //   indexAnchor,
+        //   indexCurrent,
+        //   captureImagesSelected.length,
+        // );
         this.set({
           captureImagesSelected,
         });
