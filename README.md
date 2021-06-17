@@ -221,7 +221,7 @@ const log = loglevel.getLogger('../components/TreeImageScrubber')
 The convention is: call `the loglevel.getLogger()` function with argument of 'the path to current file'. In the above example, the js file is: `/src/components/TreeImageScrumbber.js`, so pass the path string: `../components/TreeImageScrubber` in, just like what we do in 'import' statement, but the path just points to itself.
 
 Actually, we can pass in any string, following this convention is just for a UNIQUE key for the log object, now we can set the log level in browser to open/close log. To do so, open DevTools -> application -> localstorage -> add a key: 'loglevel:[the path]' and value: [the log level] (e.g. loglevel:../components/TreeImageScrubber -> DEBUG )
-<img alt="snapshot" src="https://raw.githubusercontent.com/dadiorchen/treetracker-admin/master/client/loglevel.gif" width="600" >
+<img alt="snapshot" src="https://raw.githubusercontent.com/Greenstand/treetracker-admin-client/master/docs/loglevel.gif" width="600" >
 
 ## About Material-UI
 
@@ -251,7 +251,7 @@ All the stories are located at `./src/stories/`
 
 We use [Rematch](https://github.com/rematch/rematch), it is a simple shell on Redux. In contrast to vanilla Redux, Rematch has less boilerplate code.
 
-If you are not familiar with Redux/Rematch, please check our [simple tutorial](rematchTutorial.md), there is a REAL example about how to convert a original React component to a Redux-connected component, and how to test it.
+If you are not familiar with Redux/Rematch, please check our [simple tutorial](docs/rematchTutorial.md), there is a REAL example about how to convert a original React component to a Redux-connected component, and how to test it.
 
 ## Advanced local development using docker _## Currently broken ##_
 
