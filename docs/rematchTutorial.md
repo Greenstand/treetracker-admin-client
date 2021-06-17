@@ -693,6 +693,6 @@ describe('verify', () => {
 
 And we can also test the component using Storybook, please check our Storybook test for this component.
 
-<img alt='storybook example' src='https://raw.githubusercontent.com/Greenstand/treetracker-admin-client/docs/figure_storybook.png' width='600' >
+<img alt='storybook example' src='https://raw.githubusercontent.com/Greenstand/treetracker-admin-client/master/docs/figure_storybook.png' width='600' >
 
 That's it, hope you enjoy coding with Rematch/Redux.
