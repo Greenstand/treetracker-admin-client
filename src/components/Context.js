@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
+import axios from 'axios';
 
 import Verify from './Verify';
 import Planters from './Planters';
@@ -9,6 +10,7 @@ import Home from './Home';
 import Users from './Users';
 import SpeciesMgt from './SpeciesMgt';
 import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
+import Unauthorized from './Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
 import IconShowChart from '@material-ui/icons/ShowChart';
@@ -23,10 +25,11 @@ import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 
 import { session, hasPermission, POLICIES } from '../models/auth';
-import axios from 'axios';
-import Unauthorized from './Unauthorized';
+// import { getOrganization } from '../api/apiUtils';
+import api from '../api/treeTrackerApi';
+// import apiPlanters from '../api/planters';
 
-export const AppContext = React.createContext({});
+export const AppContext = createContext({});
 
 function getRoutes(user) {
   return [
@@ -130,9 +133,22 @@ function getRoutes(user) {
 
 export const AppProvider = (props) => {
   const localUser = JSON.parse(localStorage.getItem('user'));
-  const [user, setUser] = React.useState(undefined);
-  const [token, setToken] = React.useState(undefined);
-  const [routes, setRoutes] = React.useState(getRoutes(localUser));
+  const [user, setUser] = useState(undefined);
+  const [token, setToken] = useState(undefined);
+  const [routes, setRoutes] = useState(getRoutes(localUser));
+  const [userHasOrg, setUserHasOrg] = useState(false);
+  const [orgList, setOrgList] = useState([]);
+  const [planters, setPlanters] = useState([]);
+  // const [planterCount, setPlanterCount] = useState(0);
+  const [totalPlanterCount, setTotalPlanterCount] = useState(0);
+
+  // check if the user has an org load organizations when the user changes
+  useEffect(() => {
+    if (user && token && !user?.policy?.organization?.id) {
+      loadOrganizations();
+    }
+    setUserHasOrg(!!user?.policy?.organization?.id);
+  }, [user, token]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -146,7 +162,9 @@ export const AppProvider = (props) => {
         .get(
           `${process.env.REACT_APP_API_ROOT}/auth/check_session?id=${localUser.id}`,
           {
-            headers: { Authorization: localToken },
+            headers: {
+              Authorization: localToken,
+            },
           },
         )
         .then((response) => {
@@ -168,41 +186,59 @@ export const AppProvider = (props) => {
     return false;
   }
 
+  function login(newUser, newToken, rememberDetails) {
+    // This api gets hit with identical users from multiple login calls
+    if (!isEqual(session.user, newUser)) {
+      setUser(newUser);
+      session.user = newUser;
+      if (rememberDetails) {
+        localStorage.setItem('user', JSON.stringify(newUser));
+      }
+
+      // By not updating routes object, we can memoize the menu and routes better
+      setRoutes(getRoutes(newUser));
+    }
+
+    if (session.token !== newToken) {
+      session.token = newToken;
+      setToken(newToken);
+
+      if (rememberDetails) {
+        localStorage.setItem('token', JSON.stringify(newToken));
+      }
+    }
+  }
+
+  function logout() {
+    setUser(undefined);
+    setToken(undefined);
+    setRoutes(getRoutes(undefined));
+    session.token = undefined;
+    session.user = undefined;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
+
+  async function loadOrganizations() {
+    const orgs = await api.getOrganizations();
+    console.log('load organizations from api:', orgs.length);
+    setOrgList(orgs);
+  }
+
   const context = {
-    login: (newUser, newToken, rememberDetails) => {
-      // This api gets hit with identical users from multiple login calls
-      if (!isEqual(session.user, newUser)) {
-        setUser(newUser);
-        session.user = newUser;
-        if (rememberDetails) {
-          localStorage.setItem('user', JSON.stringify(newUser));
-        }
-
-        // By not updating routes object, we can memoize the menu and routes better
-        setRoutes(getRoutes(newUser));
-      }
-
-      if (session.token !== newToken) {
-        session.token = newToken;
-        setToken(newToken);
-
-        if (rememberDetails) {
-          localStorage.setItem('token', JSON.stringify(newToken));
-        }
-      }
-    },
-    logout: () => {
-      setUser(undefined);
-      setToken(undefined);
-      setRoutes(getRoutes(undefined));
-      session.token = undefined;
-      session.user = undefined;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    },
+    login,
+    logout,
     user,
     token,
     routes,
+    orgList,
+    userHasOrg,
+    planters,
+    setPlanters,
+    // planterCount,
+    // setPlanterCount
+    totalPlanterCount,
+    setTotalPlanterCount,
   };
 
   if (!user || !token) {

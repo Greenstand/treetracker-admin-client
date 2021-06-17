@@ -933,12 +933,12 @@ export default connect(
   (state) => ({
     verifyState: state.verify,
     speciesState: state.species,
-    tagState: state.tags,
+    // tagState: state.tags,
   }),
   //dispatch
   (dispatch) => ({
     verifyDispatch: dispatch.verify,
     speciesDispatch: dispatch.species,
-    tagDispatch: dispatch.tags,
+    // tagDispatch: dispatch.tags,
   }),
 )(Verify);
