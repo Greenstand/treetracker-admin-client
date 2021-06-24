@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.14.0...v1.15.0) (2021-06-24)
+
+
+### Features
+
+* disable species creation from Verify and reduce species count queries ([#115](https://github.com/Greenstand/treetracker-admin-client/issues/115)) ([1fb8977](https://github.com/Greenstand/treetracker-admin-client/commit/1fb8977433e769c6eca09a3f45a2d170aa175e12))
+
 # [1.14.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.13.2...v1.14.0) (2021-06-12)
 
 
