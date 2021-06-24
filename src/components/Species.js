@@ -27,14 +27,10 @@ function Species(props) {
       getOptionLabel={(option) => option.name}
       style={{ width: 300 }}
       onChange={(_event, value) => {
-        props.speciesDispatch.onChange((value && value.name) || '');
-      }}
-      onInputChange={(_event, value) => {
-        props.speciesDispatch.onChange(value || '');
+        props.speciesDispatch.setSelectedSpecies(value);
       }}
       className={props.classes.root}
-      freeSolo={true}
-      inputValue={props.speciesState.speciesInput}
+      value={props.speciesState.selectedSpecies}
       renderInput={(params) => (
         <TextField {...params} placeholder="e.g. Mango" variant="outlined" />
       )}

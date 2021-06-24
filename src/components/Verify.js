@@ -253,7 +253,7 @@ const Verify = (props) => {
 
   function resetApprovalFields() {
     props.tagDispatch.setTagInput([]);
-    props.speciesDispatch.setSpeciesInput('');
+    props.speciesDispatch.setSelectedSpecies(null);
   }
 
   async function handleSubmit(approveAction) {
@@ -263,29 +263,7 @@ const Verify = (props) => {
       window.alert('Please select one or more captures');
       return;
     }
-    /*
-     * check species
-     */
-    const isNew = await props.speciesDispatch.isNewSpecies();
-    if (isNew) {
-      const answer = await new Promise((resolve) => {
-        if (
-          window.confirm(
-            `The species ${props.speciesState.speciesInput} is a new one, create it?`,
-          )
-        ) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-      if (!answer) {
-        return;
-      } else {
-        //create new species
-        await props.speciesDispatch.createSpecies();
-      }
-    }
+
     const speciesId = await props.speciesDispatch.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
@@ -304,6 +282,7 @@ const Verify = (props) => {
       resetApprovalFields();
     }
     props.verifyDispatch.loadCaptureImages();
+    props.speciesDispatch.updateSpeciesCount(approveAction.speciesId);
   }
 
   async function handleShowPlanterDetail(e, capture) {

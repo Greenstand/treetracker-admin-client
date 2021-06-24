@@ -63,9 +63,8 @@ describe('species', () => {
         expect(speciesNames).toStrictEqual(['apple', 'Pine']);
       });
 
-      describe('input: water melon, create species', () => {
+      describe('create species', () => {
         beforeEach(async () => {
-          await store.dispatch.species.onChange('water melon');
           await store.dispatch.species.createSpecies({ name: 'water melon' });
         });
 

@@ -401,7 +401,7 @@ const EditModal = ({
         name: speciesEdit.name,
         desc: speciesEdit.desc,
       });
-      loadSpeciesList();
+      loadSpeciesList(true);
       setSpeciesEdit(undefined);
     }
   };
@@ -482,7 +482,7 @@ const CombineModal = ({
 
     setShow(false);
     await combineSpecies({ combine: selected, name, desc });
-    loadSpeciesList();
+    loadSpeciesList(true);
     setName('');
     setDesc('');
   };
@@ -560,7 +560,7 @@ const DeleteDialog = ({
 }) => {
   const handleDelete = async () => {
     await deleteSpecies({ id: speciesEdit.id });
-    loadSpeciesList();
+    loadSpeciesList(true);
     setOpenDelete(false);
     setSpeciesEdit(undefined);
   };
