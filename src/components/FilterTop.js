@@ -25,7 +25,9 @@ import {
 } from '../common/locale';
 // import { getOrganization } from '../api/apiUtils';
 import { verificationStates, tokenizationStates } from '../common/variables';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
+import VerifyContext from '../context/VerifyContext';
+import SpeciesContext from '../context/SpeciesContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -68,11 +70,13 @@ const styles = (theme) => {
 
 function Filter(props) {
   // console.log('render: filter top');
+  const verifyContext = useContext(VerifyContext);
+  const speciesContext = useContext(SpeciesContext);
+  const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const { orgList, userHasOrg } = useContext(AppContext);
   const [captureId, setCaptureId] = useState(filter.captureId || '');
   const [planterId, setPlanterId] = useState(filter.planterId || '');
   const [deviceId, setDeviceId] = useState(filter.deviceIdentifier || '');
@@ -286,7 +290,7 @@ function Filter(props) {
                     id: SPECIES_NOT_SET,
                     name: 'Not set',
                   },
-                  ...props.speciesState.speciesList,
+                  ...speciesContext.speciesList,
                 ].map((species) => (
                   <MenuItem key={species.id} value={species.id}>
                     {species.name}
@@ -380,21 +384,17 @@ const getVerificationStatus = (active, approved) => {
   }
 };
 
-//export default compose(
-//  withStyles(styles, { withTheme: true, name: 'Filter' })
-//)(Filter)
 export default withStyles(styles)(
   connect(
     //state
     (state) => ({
-      speciesState: state.species,
       tagsState: state.tags,
-      // organizationState: state.organizations,
     }),
     //dispatch
     (dispatch) => ({
       tagsDispatch: dispatch.tags,
-      // organizationDispatch: dispatch.organizations,
     }),
   )(Filter),
 );
+
+// export default Filter;

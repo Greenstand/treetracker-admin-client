@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Menu, { MENU_WIDTH } from './common/Menu';
 import { documentTitle } from '../common/variables';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 import { hasPermission, POLICIES } from '../models/auth';
 import {
   DashStatPlanterCount,

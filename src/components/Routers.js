@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Login from './Login';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 import PrivateRoute from './PrivateRoute';
 import Unauthorized from './Unauthorized';
 import Page404 from './Page404';

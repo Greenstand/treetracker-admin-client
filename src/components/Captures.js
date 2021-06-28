@@ -6,7 +6,7 @@ handling the comms between the captures view components and the store/models)
 
 */
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 
 import { documentTitle } from '../common/variables';
 import Grid from '@material-ui/core/Grid';
@@ -36,14 +36,16 @@ function Captures() {
   );
 }
 
-const mapState = (state) => {
-  return { state: state };
-};
+// const mapState = (state) => {
+//   return { state: state };
+// };
 
-const mapDispatch = () => {
-  return {};
-};
+// const mapDispatch = () => {
+//   return {};
+// };
 
-Captures.propTypes = {};
+// Captures.propTypes = {};
 
-export default connect(mapState, mapDispatch)(Captures);
+// export default connect(mapState, mapDispatch)(Captures);
+
+export default Captures;

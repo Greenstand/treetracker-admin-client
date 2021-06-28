@@ -14,7 +14,7 @@ import Fab from '@material-ui/core/Fab';
 import api from '../api/planters';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 import EditPlanter from './EditPlanter';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';

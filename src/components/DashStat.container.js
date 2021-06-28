@@ -11,7 +11,7 @@ import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlin
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
 import api from '../api/planters';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 
 function DashStatTotalCaptures(props) {
   // data ===> state.captures.totalCaptureCount
