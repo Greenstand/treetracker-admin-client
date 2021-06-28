@@ -2,15 +2,15 @@ import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
-import Verify from './Verify';
-import Planters from './Planters';
-import Captures from './Captures';
-import Account from './Account';
-import Home from './Home';
-import Users from './Users';
-import SpeciesMgt from './SpeciesMgt';
-import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
-import Unauthorized from './Unauthorized';
+import Verify from '../components/Verify';
+import Planters from '../components/Planters';
+import Captures from '../components/Captures';
+import Account from '../components/Account';
+import Home from '../components/Home';
+import Users from '../components/Users';
+import SpeciesMgt from '../components/SpeciesMgt';
+import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
+import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
 import IconShowChart from '@material-ui/icons/ShowChart';
@@ -23,7 +23,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-
+import { VerifyProvider } from '../context/VerifyContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 // import { getOrganization } from '../api/apiUtils';
 import api from '../api/treeTrackerApi';
@@ -246,6 +246,8 @@ export const AppProvider = (props) => {
   }
 
   return (
-    <AppContext.Provider value={context}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={context}>
+      <VerifyProvider>{props.children}</VerifyProvider>
+    </AppContext.Provider>
   );
 };

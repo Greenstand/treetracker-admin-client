@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import IconLogo from './IconLogo';
 import { withStyles } from '@material-ui/core/styles';
-import { AppContext } from './Context';
+import { AppContext } from '../context/Context';
 import classNames from 'classnames';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
