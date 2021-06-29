@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import * as loglevel from 'loglevel';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
-const VerifyContext = React.createContext({
+const VerifyContext = createContext({
   captureImages: [],
   captureImagesSelected: [],
   // captureImageAnchor: undefined,

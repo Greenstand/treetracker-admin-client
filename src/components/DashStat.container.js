@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 // import withData from './common/withData';
 import DashStat from './DashStat';
@@ -10,76 +10,87 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
-import api from '../api/planters';
-import { AppContext } from '../context/Context';
+import apiPlanters from '../api/planters';
+import api from '../api/treeTrackerApi';
+import FilterModel from '../models/Filter';
+import { AppContext } from '../context/AppContext';
 
 function DashStatTotalCaptures(props) {
-  // data ===> state.captures.totalCaptureCount
-  // const { totalPlanterCount, setTotalPlanterCount } = useContext(AppContext);
+  const defaultFilter = new FilterModel({});
 
-  // useEffect(() => {
-  //   getTotalPlanterCount();
-  // }, []);
+  const [total, setTotal] = useState(0);
 
-  // async function getTotalPlanterCount() {
-  //   const { count } = await api.getCount({});
-  //   setTotalPlanterCount(count);
-  // }
+  const getTotal = async () => {
+    const { count } = await api.getCaptureCount(defaultFilter);
+    setTotal(count);
+  };
+
+  useEffect(() => {
+    getTotal();
+  }, []);
 
   return (
     <DashStat
       color={theme.palette.stats.green}
       Icon={NatureOutlinedIcon}
       label={'Total Captures'}
-      data={countToLocaleString(111)}
+      data={countToLocaleString(total)}
       {...props}
     />
   );
 }
 
 function DashStatUnprocessedCaptures(props) {
-  // data ===> state.captures.unprocessedCaptureCount
-  // const { totalPlanterCount, setTotalPlanterCount } = useContext(AppContext);
+  const unprocessedFilter = new FilterModel({
+    approved: false,
+    active: true,
+  });
 
-  // useEffect(() => {
-  //   getTotalPlanterCount();
-  // }, []);
+  const [totalUnprocessed, setTotalUnprocessed] = useState(0);
 
-  // async function getTotalPlanterCount() {
-  //   const { count } = await api.getCount({});
-  //   setTotalPlanterCount(count);
-  // }
+  const getTotalUnprocessed = async () => {
+    const { count } = await api.getCaptureCount(unprocessedFilter);
+    setTotalUnprocessed(count);
+  };
+
+  useEffect(() => {
+    getTotalUnprocessed();
+  }, []);
 
   return (
     <DashStat
       color={theme.palette.stats.red}
       Icon={LocalOfferOutlinedIcon}
       label={'Untagged Captures'}
-      data={countToLocaleString(111)}
+      data={countToLocaleString(totalUnprocessed)}
       {...props}
     />
   );
 }
 
 function DashStatVerifiedCaptures(props) {
-  // data ===> state.captures.verifiedCaptureCount
-  // const { totalPlanterCount, setTotalPlanterCount } = useContext(AppContext);
+  const verifiedFilter = new FilterModel({
+    approved: true,
+    active: true,
+  });
 
-  // useEffect(() => {
-  //   getTotalPlanterCount();
-  // }, []);
+  const [totalVerified, setTotalVerified] = useState(0);
 
-  // async function getTotalPlanterCount() {
-  //   const { count } = await api.getCount({});
-  //   setTotalPlanterCount(count);
-  // }
+  const getTotalVerified = async () => {
+    const { count } = await api.getCaptureCount(verifiedFilter);
+    setTotalVerified(count);
+  };
+
+  useEffect(() => {
+    getTotalVerified();
+  }, []);
 
   return (
     <DashStat
       color={theme.palette.stats.orange}
       Icon={CheckCircleOutlineOutlinedIcon}
       label={'Verified Captures'}
-      data={countToLocaleString(111)}
+      data={countToLocaleString(totalVerified)}
       {...props}
     />
   );
@@ -93,7 +104,7 @@ function DashStatPlanterCount(props) {
   }, []);
 
   async function getTotalPlanterCount() {
-    const { count } = await api.getCount({});
+    const { count } = await apiPlanters.getCount({});
     setTotalPlanterCount(count);
   }
 

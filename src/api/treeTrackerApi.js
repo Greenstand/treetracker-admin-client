@@ -114,18 +114,18 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getUnverifiedCaptureCount() {
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`;
-    return fetch(query, {
-      headers: {
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
-  },
+  // getUnverifiedCaptureCount() {
+  //   const query = `${
+  //     process.env.REACT_APP_API_ROOT
+  //   }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`;
+  //   return fetch(query, {
+  //     headers: {
+  //       Authorization: session.token,
+  //     },
+  //   })
+  //     .then(handleResponse)
+  //     .catch(handleError);
+  // },
   getCaptureCount(filter) {
     const query = `${
       process.env.REACT_APP_API_ROOT

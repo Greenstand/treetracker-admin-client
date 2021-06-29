@@ -13,7 +13,6 @@ import FilterModel, {
   TAG_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
-import { connect } from 'react-redux';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -23,11 +22,11 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
-// import { getOrganization } from '../api/apiUtils';
 import { verificationStates, tokenizationStates } from '../common/variables';
-import { AppContext } from '../context/Context';
-import VerifyContext from '../context/VerifyContext';
+import { AppContext } from '../context/AppContext';
+// import VerifyContext from '../context/VerifyContext';
 import SpeciesContext from '../context/SpeciesContext';
+import TagsContext from '../context/TagsContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -70,8 +69,9 @@ const styles = (theme) => {
 
 function Filter(props) {
   // console.log('render: filter top');
-  const verifyContext = useContext(VerifyContext);
+  // const verifyContext = useContext(VerifyContext);
   const speciesContext = useContext(SpeciesContext);
+  const tagsContext = useContext(TagsContext);
   const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
@@ -97,21 +97,11 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS,
   );
-  // const [userHasOrg, setUserHasOrg] = useState(false);
   const [tokenId, setTokenId] = useState(filterOptionAll);
 
   useEffect(() => {
-    props.tagsDispatch.getTags(tagSearchString);
-  }, [tagSearchString, props.tagsDispatch]);
-
-  // useEffect(() => {
-  //   const hasOrg = getOrganization();
-  //   setUserHasOrg(hasOrg ? true : false);
-  //   // if not an org account && the org list isn't loaded --> load the orgs
-  //   if (!hasOrg && !orgList.length) {
-  //     props.organizationDispatch.loadOrganizations();
-  //   }
-  // }, []);
+    tagsContext.getTags(tagSearchString);
+  }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -308,7 +298,7 @@ function Filter(props) {
                     active: true,
                     public: true,
                   },
-                  ...props.tagsState.tagList,
+                  ...tagsContext.tagList,
                 ]}
                 value={tag}
                 getOptionLabel={(tag) => tag.tagName}
@@ -384,17 +374,4 @@ const getVerificationStatus = (active, approved) => {
   }
 };
 
-export default withStyles(styles)(
-  connect(
-    //state
-    (state) => ({
-      tagsState: state.tags,
-    }),
-    //dispatch
-    (dispatch) => ({
-      tagsDispatch: dispatch.tags,
-    }),
-  )(Filter),
-);
-
-// export default Filter;
+export default withStyles(styles)(Filter);

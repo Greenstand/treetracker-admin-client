@@ -1,6 +1,6 @@
 import { init } from '@rematch/core';
 import * as loglevel from 'loglevel';
-import { AppContext } from '../context/Context';
+import { AppContext } from '../context/AppContext';
 // import FilterTop from '../components/FilterTop';
 
 const log = loglevel.getLogger('../models/organizations.test');

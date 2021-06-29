@@ -1,4 +1,10 @@
-import React, { Fragment, useRef, useState, useEffect } from 'react';
+import React, {
+  Fragment,
+  useRef,
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -20,6 +26,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
+import CaptureDetailContext from '../context/CaptureDetailContext';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -61,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CaptureDetailDialog(props) {
   const { open, TransitionComponent, capture } = props;
-
+  const context = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
@@ -69,24 +76,24 @@ function CaptureDetailDialog(props) {
   const textAreaRef = useRef(null);
 
   useEffect(() => {
-    props.captureDetailDispatch.getCaptureDetail(props.capture.id);
-  }, [props.captureDetailDispatch, props.capture]);
+    context.getCaptureDetail(props.capture.id);
+  }, [context, props.capture]);
 
   /*
    * Render the most complete capture detail we have
    */
   useEffect(() => {
-    if (props.captureDetail.capture) {
-      setRenderCapture(props.captureDetail.capture);
+    if (context.capture) {
+      setRenderCapture(context.capture);
     } else {
       setRenderCapture(props.capture);
     }
-  }, [props.captureDetail, props.capture]);
+  }, [context, props.capture]);
 
   function handleClose() {
     setSnackbarOpen(false);
     setSnackbarLabel('');
-    props.captureDetailDispatch.reset();
+    context.reset();
     props.onClose();
   }
 
@@ -281,8 +288,8 @@ function CaptureDetailDialog(props) {
             <Grid container direction="row" spacing={4}>
               <Tags
                 capture={renderCapture}
-                species={props.captureDetail.species}
-                captureTags={props.captureDetail.tags}
+                species={context.species}
+                captureTags={context.tags}
               />
             </Grid>
           </Grid>
