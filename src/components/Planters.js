@@ -23,7 +23,7 @@ import Navbar from './Navbar';
 import FilterTopPlanter from './FilterTopPlanter';
 import OptimizedImage from './OptimizedImage';
 import PlanterDetail from './PlanterDetail';
-import { AppContext } from '../context/Context';
+import { AppContext } from '../context/AppContext';
 import api from '../api/planters';
 
 const log = require('loglevel').getLogger('../components/Planters');

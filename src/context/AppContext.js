@@ -23,7 +23,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-import { VerifyProvider } from '../context/VerifyContext';
+import { VerifyProvider } from './VerifyContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 // import { getOrganization } from '../api/apiUtils';
 import api from '../api/treeTrackerApi';

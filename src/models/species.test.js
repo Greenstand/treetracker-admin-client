@@ -1,5 +1,5 @@
 import { init } from '@rematch/core';
-import species from './species';
+// import species from './--species';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../models/species.test');

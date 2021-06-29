@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import * as loglevel from 'loglevel';
 import api from '../api/treeTrackerApi';
 
 const log = loglevel.getLogger('../context/SpeciesContext');
 
-const SpeciesContext = React.createContext({
+const SpeciesContext = createContext({
   speciesList: [],
   speciesInput: '',
   speciesDesc: '',
@@ -68,14 +68,14 @@ export class SpeciesProvider extends Component {
   loadSpeciesList = async () => {
     const speciesList = await api.getSpecies();
     log.debug('load species from api:', this.state.speciesList.length);
-    const sepcieListWithCount = await Promise.all(
+    const speciesListWithCount = await Promise.all(
       speciesList.map(async (species) => {
         let captureCount = await api.getCaptureCountPerSpecies(species.id);
         species.captureCount = captureCount.count;
         return species;
       }),
     );
-    this.setSpeciesList(sepcieListWithCount);
+    this.setSpeciesList(speciesListWithCount);
   };
 
   onChange = async (text) => {
@@ -85,41 +85,41 @@ export class SpeciesProvider extends Component {
 
   isNewSpecies = () => {
     //if there are some input, and it don't exist, then new species
-    if (!this.state.species.speciesInput) {
+    if (!this.state.speciesInput) {
       log.debug('empty species, false');
       return false;
     }
     this.log.debug(
       'to find species %s in list:%d',
-      this.state.species.speciesInput,
-      this.state.species.speciesList.length,
+      this.state.speciesInput,
+      this.state.speciesList.length,
     );
-    return this.state.species.speciesList.every(
-      (c) =>
-        c.name.toLowerCase() !== this.state.species.speciesInput.toLowerCase(),
+    return this.state.speciesList.every(
+      (c) => c.name.toLowerCase() !== this.state.speciesInput.toLowerCase(),
     );
   };
 
   createSpecies = async (payload) => {
     const species = await api.createSpecies(
       payload || {
-        name: this.state.species.speciesInput,
+        name: this.state.speciesInput,
         desc: '',
       },
     );
     console.debug('created new species:', species);
     //update the list
-    this.setSpeciesList([species, ...this.state.species.speciesList]);
-    return species;
+    console.log('createSpecies THIS', this);
+    this.setSpeciesList([species, ...this.state.speciesList]);
+    // return species;
   };
 
   //to get the species id according the current speciesInput
   getSpeciesId = () => {
-    if (this.state.species.speciesInput) {
-      return this.state.species.speciesList.reduce((a, c) => {
+    if (this.state.speciesInput) {
+      return this.state.speciesList.reduce((a, c) => {
         if (a) {
           return a;
-        } else if (c.name === this.state.species.speciesInput) {
+        } else if (c.name === this.state.speciesInput) {
           return c.id;
         } else {
           return a;
@@ -137,7 +137,7 @@ export class SpeciesProvider extends Component {
   deleteSpecies = async (payload) => {
     const { id } = payload;
     const deletedSpecies = await api.deleteSpecies(id);
-    console.debug('delete outdated species:', deletedSpecies);
+    console.debug('delete outdated species:', id, deletedSpecies);
   };
 
   combineSpecies = async (payload) => {

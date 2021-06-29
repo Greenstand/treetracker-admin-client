@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Box from '@material-ui/core/Box';
 import IconLogo from '../IconLogo';
-import { AppContext } from '../../context/Context';
+import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 

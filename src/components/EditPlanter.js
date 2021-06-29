@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import api from '../api/planters';
 import ImageScroller from './ImageScroller';
-import { AppContext } from '../context/Context';
+import { AppContext } from '../context/AppContext';
 
 const useStyle = makeStyles((theme) => ({
   container: {
