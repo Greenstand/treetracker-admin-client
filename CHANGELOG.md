@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.0...v1.15.1) (2021-07-03)
+
+
+### Bug Fixes
+
+* support complex image urls ([#124](https://github.com/Greenstand/treetracker-admin-client/issues/124)) ([cb32ac0](https://github.com/Greenstand/treetracker-admin-client/commit/cb32ac02eccb63faf4a8e7c01fd36e7d6474c42f))
+
 # [1.15.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.14.0...v1.15.0) (2021-06-24)
 
 
