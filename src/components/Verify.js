@@ -755,6 +755,7 @@ function SidePanel(props) {
                   Additional tags
                 </Typography>
                 <CaptureTags placeholder="Add other text tags" />
+                <br />
               </Grid>
               <RadioGroup
                 className={classes.sidePanelItem}
