@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.1...v1.15.2) (2021-07-06)
+
+
+### Bug Fixes
+
+* format the warning message ([#125](https://github.com/Greenstand/treetracker-admin-client/issues/125)) ([ff2b3c1](https://github.com/Greenstand/treetracker-admin-client/commit/ff2b3c1373987e6349dbe5dc796dc360b449df60))
+
 ## [1.15.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.0...v1.15.1) (2021-07-03)
 
 
