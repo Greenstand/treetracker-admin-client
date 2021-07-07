@@ -63,6 +63,8 @@ function FilterTopPlanter(props) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [organizationId, setOrganizationId] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
   function handleSubmit() {
     const filter = new FilterModel({
@@ -71,6 +73,8 @@ function FilterTopPlanter(props) {
       firstName,
       lastName,
       organizationId,
+      email,
+      phone,
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -114,6 +118,20 @@ function FilterTopPlanter(props) {
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+            />
+            <TextField
+              className={`${classes.textField} ${classes.filterElement}`}
+              label="Email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              className={`${classes.textField} ${classes.filterElement}`}
+              label="Phone Number"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
             <Button
               className={classes.apply}

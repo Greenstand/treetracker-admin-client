@@ -33,6 +33,16 @@ export default class Filter {
       where.organizationId = this.organizationId;
     }
 
+    if (this.email) {
+      where.email = {
+        ilike: this.email,
+      };
+    }
+
+    if (this.phone) {
+      where.phone = this.phone;
+    }
+
     return where;
   }
 }
