@@ -128,7 +128,6 @@ const Planters = (props) => {
   const classes = useStyles(props);
   const [isFilterShown, setFilterShown] = React.useState(false);
   const [isDetailShown, setDetailShown] = React.useState(false);
-  const [isClickLink, setClickLink] = React.useState(false);
   const [planterDetail, setPlanterDetail] = React.useState({});
 
   /*
@@ -177,7 +176,6 @@ const Planters = (props) => {
     return (
       <Planter
         onClick={() => handlePlanterClick(planter)}
-        clickLink={() => handleClickLink()}
         key={planter.id}
         planter={planter}
         placeholder={planter.placeholder}
@@ -209,18 +207,6 @@ const Planters = (props) => {
       pageNumber: 0,
       filter,
     });
-  }
-
-  function handleClickLink() {
-    setClickLink(true);
-  }
-
-  function onOpenPlantDetail() {
-    if (isClickLink) {
-      setClickLink(false);
-      setDetailShown(false);
-    }
-    return isDetailShown;
   }
 
   const pagination = (
@@ -293,8 +279,7 @@ const Planters = (props) => {
         </Grid>
       </Grid>
       <PlanterDetail
-        open={onOpenPlantDetail()}
-        clickLink={isClickLink}
+        open={isDetailShown}
         planterId={planterDetail.id}
         onClose={() => setDetailShown(false)}
       />
@@ -345,7 +330,7 @@ function Planter(props) {
               <Typography className={classes.name}>
                 {planter.firstName} {planter.lastName}
               </Typography>
-              <Typography onClick={() => props.clickLink()}>
+              <Typography>
                 ID: <LinkToWebmap value={planter.id} type="user" />
               </Typography>
               {planter.organization && (
