@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.2...v1.15.3) (2021-07-10)
+
+
+### Bug Fixes
+
+* checked species when changing pages ([#129](https://github.com/Greenstand/treetracker-admin-client/issues/129)) ([84b5750](https://github.com/Greenstand/treetracker-admin-client/commit/84b5750da5734a51632c4528e1c6d8011662c2e7))
+
 ## [1.15.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.1...v1.15.2) (2021-07-06)
 
 
