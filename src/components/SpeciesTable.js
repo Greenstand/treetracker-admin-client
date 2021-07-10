@@ -204,6 +204,7 @@ const SpeciesTable = (props) => {
         <TableCell>
           <Checkbox
             onChange={(e) => handleSelect(e.target.checked, species.id)}
+            checked={selected.includes(species.id)}
           />
         </TableCell>
         <TableCell component="th" scope="row">
