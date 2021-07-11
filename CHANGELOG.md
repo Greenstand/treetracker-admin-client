@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.3...v1.15.4) (2021-07-11)
+
+
+### Bug Fixes
+
+* edit species ([#128](https://github.com/Greenstand/treetracker-admin-client/issues/128)) ([0127c13](https://github.com/Greenstand/treetracker-admin-client/commit/0127c1378ede54f578a8fe2186e446f23452a11c))
+
 ## [1.15.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.2...v1.15.3) (2021-07-10)
 
 
