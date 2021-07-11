@@ -375,7 +375,6 @@ const EditModal = ({
   data,
 }) => {
   const [error, setError] = React.useState(undefined);
-  const nameSpecies = data.map((species) => species.name.toLowerCase());
 
   const onNameChange = (e) => {
     setError(undefined);
@@ -387,12 +386,20 @@ const EditModal = ({
   };
 
   const handleEditDetailClose = () => {
+    setError(undefined);
     setIsEdit(false);
     setSpeciesEdit(undefined);
   };
 
   const handleSave = async () => {
-    if (nameSpecies.includes(speciesEdit.name.toLowerCase().trim())) {
+    const editName = speciesEdit.name.toLowerCase().trim();
+    const otherSpeciesList = isEdit
+      ? data.filter((species) => Number(species.id) !== speciesEdit.id)
+      : data;
+    const nameSpecies = otherSpeciesList.map((species) =>
+      species.name.toLowerCase(),
+    );
+    if (nameSpecies.includes(editName)) {
       setError('Species already exists');
     } else {
       setError(undefined);
