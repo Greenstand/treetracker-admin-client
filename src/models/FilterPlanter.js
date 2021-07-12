@@ -40,7 +40,9 @@ export default class Filter {
     }
 
     if (this.phone) {
-      where.phone = this.phone;
+      where.phone = {
+        ilike: this.phone,
+      };
     }
 
     return where;
