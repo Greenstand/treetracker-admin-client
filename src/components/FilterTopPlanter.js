@@ -81,6 +81,13 @@ function FilterTopPlanter(props) {
     setFirstName('');
     setLastName('');
     setOrganizationId('');
+
+    const filter = new FilterModel();
+    props.onSubmit && props.onSubmit(filter);
+  };
+
+  const handleEnterPress = (e) => {
+    e.key === 'Enter' && handleSubmit();
   };
 
   return (
@@ -94,6 +101,7 @@ function FilterTopPlanter(props) {
               placeholder="Planter ID"
               value={id}
               onChange={(e) => setId(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
@@ -101,6 +109,7 @@ function FilterTopPlanter(props) {
               placeholder="Person ID"
               value={personId}
               onChange={(e) => setPersonId(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
@@ -108,6 +117,7 @@ function FilterTopPlanter(props) {
               placeholder="Organization ID"
               value={organizationId}
               onChange={(e) => setOrganizationId(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
@@ -115,6 +125,7 @@ function FilterTopPlanter(props) {
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
@@ -122,6 +133,7 @@ function FilterTopPlanter(props) {
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <Button
               className={classes.apply}
