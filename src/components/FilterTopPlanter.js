@@ -75,6 +75,14 @@ function FilterTopPlanter(props) {
     props.onSubmit && props.onSubmit(filter);
   }
 
+  const handleReset = () => {
+    setId('');
+    setPersonId('');
+    setFirstName('');
+    setLastName('');
+    setOrganizationId('');
+  };
+
   return (
     <React.Fragment>
       {
@@ -122,6 +130,15 @@ function FilterTopPlanter(props) {
               onClick={handleSubmit}
             >
               Apply
+            </Button>
+
+            <Button
+              className={classes.apply}
+              variant="outlined"
+              color="primary"
+              onClick={handleReset}
+            >
+              Reset
             </Button>
           </Grid>
         </Grid>
