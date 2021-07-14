@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.16.0...v1.17.0) (2021-07-14)
+
+
+### Features
+
+* [[#133](https://github.com/Greenstand/treetracker-admin-client/issues/133)] add reset button and enter keydown functionality to planter view filter ([#134](https://github.com/Greenstand/treetracker-admin-client/issues/134)) ([b0fc39b](https://github.com/Greenstand/treetracker-admin-client/commit/b0fc39ba08c926b623122984390ed4f523dff9ae))
+
 # [1.16.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.15.4...v1.16.0) (2021-07-13)
 
 
