@@ -15,7 +15,7 @@ export default function OptimizedImage(props) {
   if (!src) return <></>;
 
   const cdnPath = 'https://cdn.statically.io/img';
-  const matches = src.match(/\/\/(.*)\/(.*)/);
+  const matches = src.match(/\/\/(.*?)\/(.*)/);
 
   let cdnUrl, sizes, srcSet;
 
