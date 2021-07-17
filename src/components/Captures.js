@@ -6,16 +6,14 @@ handling the comms between the captures view components and the store/models)
 
 */
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-
 import { documentTitle } from '../common/variables';
-import Grid from '@material-ui/core/Grid';
-
+// import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
 import Navbar from './Navbar';
 import CaptureTable from './CaptureTable';
+import { CapturesProvider } from '../context/CapturesContext';
 
 function Captures() {
-  /* to update html document title */
   useEffect(() => {
     document.title = `Capture Data - ${documentTitle}`;
   }, []);
@@ -30,20 +28,12 @@ function Captures() {
         <Navbar />
       </Grid>
       <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
-        <CaptureTable />
+        <CapturesProvider>
+          <CaptureTable />
+        </CapturesProvider>
       </Grid>
     </Grid>
   );
 }
 
-const mapState = (state) => {
-  return { state: state };
-};
-
-const mapDispatch = () => {
-  return {};
-};
-
-Captures.propTypes = {};
-
-export default connect(mapState, mapDispatch)(Captures);
+export default Captures;

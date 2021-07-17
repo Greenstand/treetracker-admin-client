@@ -1,5 +1,5 @@
 import { init } from '@rematch/core';
-import captureDetail from './captureDetail';
+// import captureDetail from './--captureDetail';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../models/captureDetail.test');

@@ -15,7 +15,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import Menu from './common/Menu';
 import AccountIcon from '@material-ui/icons/Person';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
