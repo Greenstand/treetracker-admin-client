@@ -4,7 +4,7 @@ The Admin Panel is the part of the Treetracker project for verifying, processing
 
 This is the React web frontend of Admin Panel, built with [create-react-app](https://github.com/facebook/create-react-app), [Rematch](http://rematch.gitbooks.io/), and [Material UI](https://material-ui.com/).
 
-The Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api).
+The Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api). The API specification is (partially) documented in OpenAPI format: [treetracker-admin.v1.yaml](https://github.com/Greenstand/treetracker-admin-api/blob/master/docs/api/spec/treetracker-admin.v1.yaml)
 
 Please add any missing content to this readme.
 
