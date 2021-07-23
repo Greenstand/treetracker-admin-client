@@ -54,7 +54,7 @@ git clone https://github.com/<username>/treetracker-admin-client
 Move into the new source code directory and add Greenstand as a remote:
 
 ```
-cd cd treetracker-admin-client
+cd treetracker-admin-client
 git remote add upstream https://github.com/Greenstand/treetracker-admin-client
 ```
 
