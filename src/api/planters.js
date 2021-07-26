@@ -102,7 +102,6 @@ export default {
     })
       .then(handleResponse)
       .then((items) => {
-        console.log(items);
         // Remove duplicates
         return [
           ...new Set(
