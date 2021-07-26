@@ -102,8 +102,15 @@ export default {
     })
       .then(handleResponse)
       .then((items) => {
+        console.log(items);
         // Remove duplicates
-        return [...new Set(items.map((tree) => tree.planterPhotoUrl))];
+        return [
+          ...new Set(
+            items
+              .map((tree) => tree.planterPhotoUrl)
+              .filter((img) => img !== ''),
+          ),
+        ];
       })
       .catch(handleError);
   },
