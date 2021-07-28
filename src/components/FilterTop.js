@@ -230,7 +230,7 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateStart}
                   onChange={handleDateStartChange}
-                  maxDate={dateEnd}
+                  maxDate={dateEnd || Date('2100-01-01')}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
@@ -242,7 +242,7 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateEnd}
                   onChange={handleDateEndChange}
-                  minDate={dateStart}
+                  minDate={dateStart || Date('1900-01-01')}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
