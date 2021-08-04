@@ -14,5 +14,4 @@ export const tokenizationStates = {
 // These are the default min/max dates for the MUI KeyboardDatePicker component
 // See https://material-ui-pickers.dev/api/KeyboardDatePicker
 // If we set minDate or maxDate to null on this component, the fwd/back buttons are disabled
-export const datePickerDefaultMinDate = Date('1900-01-01');
-export const datePickerDefaultMaxDate = Date('2100-01-01');
+export const datePickerDefaultMinDate = '1900-01-01';

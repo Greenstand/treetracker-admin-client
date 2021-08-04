@@ -29,7 +29,6 @@ import {
   verificationStates,
   tokenizationStates,
   datePickerDefaultMinDate,
-  datePickerDefaultMaxDate,
 } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
@@ -236,7 +235,7 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateStart}
                   onChange={handleDateStartChange}
-                  maxDate={dateEnd || datePickerDefaultMaxDate}
+                  maxDate={dateEnd || Date()}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
@@ -249,6 +248,7 @@ function Filter(props) {
                   value={dateEnd}
                   onChange={handleDateEndChange}
                   minDate={dateStart || datePickerDefaultMinDate}
+                  maxDate={Date()}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
