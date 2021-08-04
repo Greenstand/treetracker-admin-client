@@ -1,7 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, Grid, CircularProgress, Card, Button } from '@material-ui/core';
+import {
+  Fab,
+  Grid,
+  CircularProgress,
+  Card,
+  Button,
+  IconButton,
+} from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import Rotate90DegreesCcwIcon from '@material-ui/icons/Rotate90DegreesCcw';
 import OptimizedImage from './OptimizedImage';
 
 /* This component currently uses fixed size cards and scroll window,
@@ -65,20 +73,35 @@ const useStyle = makeStyles((theme) => ({
     textAlign: 'center',
     height: '100%',
   },
+  clickRotate: {
+    margin: 5,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 25,
+    height: 25,
+    color: 'white',
+    backgroundColor: 'black',
+    '&:hover': {
+      background: 'white',
+      color: 'black',
+    },
+  },
 }));
 
 export default function ImageScroller(props) {
   const {
     images,
     selectedImage,
-    onSelectImage,
     loading = false,
     blankMessage = '',
+    imageRotation,
+    onSelectChange,
   } = props;
-
   const classes = useStyle();
   const [maxImages, setMaxImages] = useState(MAX_IMAGES_INCREMENT);
   const imageScrollerRef = useRef(null);
+  let [rotation, setRotation] = useState(imageRotation);
 
   function loadMoreImages() {
     setMaxImages(maxImages + MAX_IMAGES_INCREMENT);
@@ -103,6 +126,19 @@ export default function ImageScroller(props) {
     });
   }
 
+  function handleDataChange(img) {
+    if (img) {
+      onSelectChange('imageUrl', img);
+    }
+    if (rotation === 270) {
+      setRotation(0);
+      onSelectChange('imageRotation', 0);
+    } else {
+      setRotation(rotation + 90);
+      onSelectChange('imageRotation', rotation + 90);
+    }
+  }
+
   return (
     <div className={classes.container}>
       <Grid
@@ -118,7 +154,7 @@ export default function ImageScroller(props) {
           images.slice(0, maxImages).map((img, idx) => (
             <Card
               key={`${idx}_${img}`}
-              onClick={() => onSelectImage(img)}
+              onClick={() => handleDataChange(img)}
               className={`image-card ${classes.imageCard} ${
                 img === selectedImage && classes.selectedImageCard
               }`}
@@ -129,7 +165,15 @@ export default function ImageScroller(props) {
                 height={192}
                 className={classes.image}
                 fixed
+                style={{ transform: `rotate(${rotation}deg)` }}
               />
+              <IconButton
+                className={classes.clickRotate}
+                onClick={() => handleDataChange(null)}
+                style={{ transform: `rotateY(180deg)` }}
+              >
+                <Rotate90DegreesCcwIcon />
+              </IconButton>
             </Card>
           ))
         ) : (
