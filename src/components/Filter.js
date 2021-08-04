@@ -270,7 +270,7 @@ function Filter(props) {
             value={dateStart}
             onChange={handleDateStartChange}
             format={getDateFormatLocale(true)}
-            maxDate={dateEnd || Date()}
+            maxDate={dateEnd || Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
@@ -284,7 +284,7 @@ function Filter(props) {
             onChange={handleDateEndChange}
             format={getDateFormatLocale(true)}
             minDate={dateStart || datePickerDefaultMinDate}
-            maxDate={Date()}
+            maxDate={Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
