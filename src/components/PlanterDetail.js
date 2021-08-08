@@ -61,6 +61,7 @@ const PlanterDetail = (props) => {
   const [planterRegistrations, setPlanterRegistrations] = React.useState(null);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [planter, setPlanter] = React.useState({});
+  const [deviceIdentifiers, setDeviceIdentifiers] = React.useState([]);
   const classes = useStyle();
   const { planterId } = props;
   const { user } = React.useContext(AppContext);
@@ -88,6 +89,11 @@ const PlanterDetail = (props) => {
                 a.created_at > b.created_at ? 1 : -1,
               );
               setPlanterRegistrations(sortedRegistrations);
+              setDeviceIdentifiers(
+                sortedRegistrations
+                  .map((reg) => reg.device_identifier)
+                  .filter((id) => id),
+              );
             }
           });
         }
@@ -220,6 +226,18 @@ const PlanterDetail = (props) => {
                   )) ||
                   '---'}
               </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">
+                Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
+              </Typography>
+              {(deviceIdentifiers.length &&
+                deviceIdentifiers.map((identifier, index) => (
+                  <Typography variant="body1" key={index}>
+                    {identifier}
+                  </Typography>
+                ))) || <Typography variant="body1">---</Typography>}
             </Grid>
           </Grid>
         </Grid>
