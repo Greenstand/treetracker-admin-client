@@ -1,3 +1,15 @@
+# [1.18.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.17.0...v1.18.0) (2021-08-08)
+
+
+### Bug Fixes
+
+* date selection in filters ([#140](https://github.com/Greenstand/treetracker-admin-client/issues/140)) ([06a146f](https://github.com/Greenstand/treetracker-admin-client/commit/06a146f9b2537538304fa2d53c2cbe0c95857565))
+
+
+### Features
+
+* add device identifier to planter detail dialog [#36](https://github.com/Greenstand/treetracker-admin-client/issues/36) ([#141](https://github.com/Greenstand/treetracker-admin-client/issues/141)) ([6338583](https://github.com/Greenstand/treetracker-admin-client/commit/633858337e8c6c575a083e1a409a842e761c2022))
+
 # [1.17.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.16.0...v1.17.0) (2021-07-14)
 
 
