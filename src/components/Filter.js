@@ -21,6 +21,9 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
+import {
+  datePickerDefaultMinDate,
+} from '../common/variables';
 
 import { verificationStates, tokenizationStates } from '../common/variables';
 
@@ -198,24 +201,6 @@ function Filter(props) {
         value={planterIdentifier}
         onChange={(e) => setPlanterIdentifier(e.target.value)}
       />
-      {/*
-      <GSInputLabel text="Status" />
-      <TextField
-        select
-        placeholder="e.g. 80"
-        value={status ? status : 'All'}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={(e) => setStatus(e.target.value === 'All' ? '' : e.target.value)}
-      >
-        {['All', 'Planted', 'Hole dug', 'Not a capture', 'Blurry'].map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
-          </MenuItem>
-        ))}
-      </TextField>
-      */}
       <GSInputLabel text="Verification Status" />
       <TextField
         select
@@ -285,7 +270,7 @@ function Filter(props) {
             value={dateStart}
             onChange={handleDateStartChange}
             format={getDateFormatLocale(true)}
-            maxDate={dateEnd}
+            maxDate={dateEnd || Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
@@ -298,7 +283,8 @@ function Filter(props) {
             value={dateEnd}
             onChange={handleDateEndChange}
             format={getDateFormatLocale(true)}
-            minDate={dateStart}
+            minDate={dateStart || datePickerDefaultMinDate}
+            maxDate={Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}

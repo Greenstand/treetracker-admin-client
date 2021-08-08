@@ -11,6 +11,7 @@ import FilterModel, {
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
   TAG_NOT_SET,
+
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import { connect } from 'react-redux';
@@ -24,7 +25,11 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import { getOrganization } from '../api/apiUtils';
-import { verificationStates, tokenizationStates } from '../common/variables';
+import {
+  verificationStates,
+  tokenizationStates,
+  datePickerDefaultMinDate,
+} from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -230,7 +235,7 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateStart}
                   onChange={handleDateStartChange}
-                  maxDate={dateEnd}
+                  maxDate={dateEnd || Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
@@ -242,7 +247,8 @@ function Filter(props) {
                   format={getDateFormatLocale(true)}
                   value={dateEnd}
                   onChange={handleDateEndChange}
-                  minDate={dateStart}
+                  minDate={dateStart || datePickerDefaultMinDate}
+                  maxDate={Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}

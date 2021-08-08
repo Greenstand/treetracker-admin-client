@@ -1,7 +1,4 @@
 export const drawerWidth = 240;
-//move this variable to react app env
-//export const API_ROOT = 'api/admin'
-//export const API_ROOT = 'http://localhost:3000/'
 export const selectedHighlightColor = '#0af';
 export const documentTitle = 'Treetracker Admin by Greenstand';
 export const verificationStates = {
@@ -13,3 +10,8 @@ export const tokenizationStates = {
   TOKENIZED: 'Tokenized',
   NOT_TOKENIZED: 'Not Tokenized',
 };
+
+// These are the default min/max dates for the MUI KeyboardDatePicker component
+// See https://material-ui-pickers.dev/api/KeyboardDatePicker
+// If we set minDate or maxDate to null on this component, the fwd/back buttons are disabled
+export const datePickerDefaultMinDate = '1900-01-01';
