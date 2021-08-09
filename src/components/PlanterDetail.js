@@ -134,6 +134,7 @@ const PlanterDetail = (props) => {
                   height={378}
                   className={classes.cardMedia}
                   fixed
+                  rotation={planter.imageRotation}
                 />
               )}
               {!planter.imageUrl && (

@@ -90,7 +90,7 @@ const EditPlanter = (props) => {
       return newPlanter[key] !== planter[key];
     });
 
-    if (key === 'imageRotation' || changed) {
+    if (changed) {
       setPlanterUpdate(newPlanter);
     } else {
       setPlanterUpdate(null);

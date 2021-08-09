@@ -314,6 +314,7 @@ function Planter(props) {
               height={192}
               className={classes.cardMedia}
               fixed
+              rotation={planter.imageRotation}
             />
           )}
           {!planter.imageUrl && (

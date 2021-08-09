@@ -6,7 +6,6 @@ import {
   CircularProgress,
   Card,
   Button,
-  IconButton,
 } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import Rotate90DegreesCcwIcon from '@material-ui/icons/Rotate90DegreesCcw';
@@ -78,14 +77,8 @@ const useStyle = makeStyles((theme) => ({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 25,
-    height: 25,
-    color: 'white',
-    backgroundColor: 'black',
-    '&:hover': {
-      background: 'white',
-      color: 'black',
-    },
+    width: 32,
+    height: 32,
   },
 }));
 
@@ -126,17 +119,13 @@ export default function ImageScroller(props) {
     });
   }
 
-  function handleDataChange(img) {
-    if (img) {
-      onSelectChange('imageUrl', img);
+  function handleRotationChange() {
+    let newRotation = rotation + 90;
+    if (newRotation === 360) {
+      newRotation = 0;
     }
-    if (rotation === 270) {
-      setRotation(0);
-      onSelectChange('imageRotation', 0);
-    } else {
-      setRotation(rotation + 90);
-      onSelectChange('imageRotation', rotation + 90);
-    }
+    setRotation(newRotation);
+    onSelectChange('imageRotation', newRotation);
   }
 
   return (
@@ -154,7 +143,7 @@ export default function ImageScroller(props) {
           images.slice(0, maxImages).map((img, idx) => (
             <Card
               key={`${idx}_${img}`}
-              onClick={() => handleDataChange(img)}
+              onClick={() => onSelectChange('imageUrl', img)}
               className={`image-card ${classes.imageCard} ${
                 img === selectedImage && classes.selectedImageCard
               }`}
@@ -165,15 +154,20 @@ export default function ImageScroller(props) {
                 height={192}
                 className={classes.image}
                 fixed
-                style={{ transform: `rotate(${rotation}deg)` }}
+                rotation={rotation}
               />
-              <IconButton
-                className={classes.clickRotate}
-                onClick={() => handleDataChange(null)}
-                style={{ transform: `rotateY(180deg)` }}
-              >
-                <Rotate90DegreesCcwIcon />
-              </IconButton>
+              {
+                img === selectedImage ?
+                <Fab
+                  id="click-rotate"
+                  className={classes.clickRotate}
+                  onClick={handleRotationChange}
+                >
+                  <Rotate90DegreesCcwIcon
+                    style={{ transform: `rotateY(180deg)` }}
+                  />
+                </Fab> : ''
+              }
             </Card>
           ))
         ) : (

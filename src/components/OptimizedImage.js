@@ -9,6 +9,7 @@ export default function OptimizedImage(props) {
     screenWidths = [1600, 1280, 960, 0],
     imageSizes = [400, 300, 250, 200],
     fixed,
+    rotation,
     ...rest
   } = props;
 
@@ -53,6 +54,7 @@ export default function OptimizedImage(props) {
           objectFit: 'cover',
           width: '100%',
           height: '100%',
+          transform: `rotate(${rotation}deg)`,
         }}
         {...rest}
       />
