@@ -1,12 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Fab,
-  Grid,
-  CircularProgress,
-  Card,
-  Button,
-} from '@material-ui/core';
+import { Fab, Grid, CircularProgress, Card, Button } from '@material-ui/core';
 import { ChevronLeft, ChevronRight } from '@material-ui/icons';
 import Rotate90DegreesCcwIcon from '@material-ui/icons/Rotate90DegreesCcw';
 import OptimizedImage from './OptimizedImage';
@@ -143,7 +137,6 @@ export default function ImageScroller(props) {
           images.slice(0, maxImages).map((img, idx) => (
             <Card
               key={`${idx}_${img}`}
-              onClick={() => onSelectChange('imageUrl', img)}
               className={`image-card ${classes.imageCard} ${
                 img === selectedImage && classes.selectedImageCard
               }`}
@@ -155,9 +148,9 @@ export default function ImageScroller(props) {
                 className={classes.image}
                 fixed
                 rotation={rotation}
+                onClick={() => onSelectChange('imageUrl', img)}
               />
-              {
-                img === selectedImage ?
+              {img === selectedImage ? (
                 <Fab
                   id="click-rotate"
                   className={classes.clickRotate}
@@ -166,8 +159,10 @@ export default function ImageScroller(props) {
                   <Rotate90DegreesCcwIcon
                     style={{ transform: `rotateY(180deg)` }}
                   />
-                </Fab> : ''
-              }
+                </Fab>
+              ) : (
+                ''
+              )}
             </Card>
           ))
         ) : (
