@@ -76,25 +76,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, TransitionComponent, capture } = props;
+  const { open, capture } = props;
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const resizeWidth = useCallback(() => {
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const resizeWindow = useCallback(() => {
     setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
   }, []);
   const classes = useStyles();
 
   useEffect(() => {
     props.captureDetailDispatch.getCaptureDetail(props.capture.id);
 
-    window.addEventListener('resize', resizeWidth);
+    window.addEventListener('resize', resizeWindow);
     return () => {
-      window.removeEventListener('resize', resizeWidth);
+      window.removeEventListener('resize', resizeWindow);
     };
-  }, [props.captureDetailDispatch, props.capture, resizeWidth]);
+  }, [props.captureDetailDispatch, props.capture, resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
@@ -168,7 +170,7 @@ function CaptureDetailDialog(props) {
               </Box>
             </Grid>
             <Grid item>
-              <IconButton onClick={() => props.onClose()}>
+              <IconButton onClick={handleClose}>
                 <Close />
               </IconButton>
             </Grid>
@@ -299,7 +301,6 @@ function CaptureDetailDialog(props) {
     <React.Fragment>
       <Dialog
         open={open}
-        TransitionComponent={TransitionComponent}
         onClose={handleClose}
         style={{ width: screenWidth - 340 }}
         BackdropProps={{
@@ -310,7 +311,8 @@ function CaptureDetailDialog(props) {
       >
         <OptimizedImage
           src={renderCapture.imageUrl}
-          width={320}
+          width={screenWidth * 0.5}
+          height={screenHeight * 0.8}
           style={{ maxWidth: '100%' }}
           fixed
         />
