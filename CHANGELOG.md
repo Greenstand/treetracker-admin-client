@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.19.0...v1.19.1) (2021-08-14)
+
+
+### Bug Fixes
+
+* make capture images slightly bigger ([165dc6f](https://github.com/Greenstand/treetracker-admin-client/commit/165dc6f9b0c8d92b6c09dad96a37b3f191e7bd74))
+
 # [1.19.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.18.0...v1.19.0) (2021-08-14)
 
 
