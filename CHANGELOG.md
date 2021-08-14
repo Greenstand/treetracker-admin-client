@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.18.0...v1.19.0) (2021-08-14)
+
+
+### Features
+
+* improve consistency between Tree Detail and Planter Detail dialogs [#10](https://github.com/Greenstand/treetracker-admin-client/issues/10) ([#143](https://github.com/Greenstand/treetracker-admin-client/issues/143)) ([7197969](https://github.com/Greenstand/treetracker-admin-client/commit/71979694fc183975ee2017c7cf2fc685b1c206bc))
+
 # [1.18.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.17.0...v1.18.0) (2021-08-08)
 
 
