@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState, useEffect } from 'react';
+import React, { Fragment, useCallback, useState, useEffect } from 'react';
 
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import Drawer from '@material-ui/core/Drawer';
+import Box from '@material-ui/core/Box';
+import Close from '@material-ui/icons/Close';
 
 import FileCopy from '@material-ui/icons/FileCopy';
 import CloseIcon from '@material-ui/icons/Close';
@@ -57,20 +57,46 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.8em',
     color: 'rgba(0,0,0,0.5)',
   },
+  root: {
+    width: 340,
+  },
+  drawer: {
+    width: 0,
+    // remove backdrop
+    '& .MuiBackdrop-root': {
+      display: 'none',
+    },
+  },
+  dialog: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
+  box: {
+    padding: theme.spacing(4),
+  },
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, TransitionComponent, capture } = props;
+  const { open, capture } = props;
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const resizeWindow = useCallback(() => {
+    setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
+  }, []);
   const classes = useStyles();
-  const textAreaRef = useRef(null);
 
   useEffect(() => {
     props.captureDetailDispatch.getCaptureDetail(props.capture.id);
-  }, [props.captureDetailDispatch, props.capture]);
+
+    window.addEventListener('resize', resizeWindow);
+    return () => {
+      window.removeEventListener('resize', resizeWindow);
+    };
+  }, [props.captureDetailDispatch, props.capture, resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
@@ -132,15 +158,26 @@ function CaptureDetailDialog(props) {
     }
 
     return (
-      <Grid item container direction="column" spacing={4}>
+      <Grid container direction="column">
         <Grid item>
-          <Typography color="primary" variant="h6">
-            Capture <LinkToWebmap value={capture.id} type="tree" />
-            <CopyButton label="Capture ID" value={capture.id} />
-          </Typography>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item>
+              <Box m={4}>
+                <Typography color="primary" variant="h6">
+                  Capture <LinkToWebmap value={capture.id} type="tree" />
+                  <CopyButton label="Capture ID" value={capture.id} />
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={handleClose}>
+                <Close />
+              </IconButton>
+            </Grid>
+          </Grid>
         </Grid>
         <Divider />
-        <Grid item>
+        <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
@@ -180,7 +217,7 @@ function CaptureDetailDialog(props) {
           ))}
         </Grid>
         <Divider />
-        <Grid item>
+        <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
@@ -202,7 +239,7 @@ function CaptureDetailDialog(props) {
           )}
         </Grid>
         <Divider />
-        <Grid item>
+        <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>Tags</Typography>
           <Typography variant="subtitle1">Species</Typography>
           {species && species.name ? (
@@ -227,7 +264,7 @@ function CaptureDetailDialog(props) {
           )}
         </Grid>
         <Divider />
-        <Grid item>
+        <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>Capture Token</Typography>
           <Typography variant="body1">
             {getTokenStatus(capture.tokenId)}
@@ -261,40 +298,42 @@ function CaptureDetailDialog(props) {
   }
 
   return (
-    <Dialog
-      open={open}
-      TransitionComponent={TransitionComponent}
-      onClose={handleClose}
-      maxWidth="xl"
-    >
-      <DialogContent>
-        <Grid container spacing={4} wrap="nowrap">
-          <Grid item>
-            <OptimizedImage
-              src={renderCapture.imageUrl}
-              width={640}
-              style={{ maxWidth: '100%' }}
-              fixed
+    <React.Fragment>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        style={{ width: screenWidth - 340 }}
+        BackdropProps={{
+          classes: {
+            root: classes.dialog,
+          },
+        }}
+      >
+        <OptimizedImage
+          src={renderCapture.imageUrl}
+          width={screenWidth * 0.5}
+          height={screenHeight * 0.8}
+          style={{ maxWidth: '100%' }}
+          fixed
+        />
+      </Dialog>
+      <Drawer
+        anchor="right"
+        open={open}
+        className={classes.drawer}
+        onClose={handleClose}
+      >
+        <Grid className={classes.root}>
+          <Grid container direction="column">
+            <Tags
+              capture={renderCapture}
+              species={props.captureDetail.species}
+              captureTags={props.captureDetail.tags}
             />
           </Grid>
-          <Grid container item style={{ width: '300px' }} spacing={2}>
-            <Grid container direction="row" spacing={4}>
-              <Tags
-                capture={renderCapture}
-                species={props.captureDetail.species}
-                captureTags={props.captureDetail.tags}
-              />
-            </Grid>
-          </Grid>
         </Grid>
-      </DialogContent>
-      <DialogActions justify="center">
-        <Button onClick={handleClose} color="primary">
-          Close
-        </Button>
-      </DialogActions>
-      <textarea ref={textAreaRef} hidden />
-    </Dialog>
+      </Drawer>
+    </React.Fragment>
   );
 }
 
