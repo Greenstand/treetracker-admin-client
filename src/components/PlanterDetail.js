@@ -21,9 +21,6 @@ import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 
 const useStyle = makeStyles((theme) => ({
-  root: {
-    width: 441,
-  },
   box: {
     padding: theme.spacing(4),
   },
@@ -108,7 +105,14 @@ const PlanterDetail = (props) => {
   return (
     <React.Fragment>
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
-        <Grid className={classes.root}>
+        <Grid
+          style={{
+            width:
+              planter.imageRotation === 0 || planter.imageRotation === 180
+                ? 441
+                : 378,
+          }}
+        >
           <Grid container direction="column">
             <Grid item>
               <Grid container justify="space-between" alignItems="center">
