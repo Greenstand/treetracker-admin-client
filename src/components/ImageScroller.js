@@ -30,7 +30,7 @@ const useStyle = makeStyles((theme) => ({
     textAlign: 'center',
   },
   imageCard: {
-    height: '84%',
+    height: '100%',
     margin: theme.spacing(1.5),
     width: `${IMAGE_CARD_SIZE - theme.spacing(3)}px`,
     cursor: 'pointer',
@@ -88,16 +88,7 @@ export default function ImageScroller(props) {
   const classes = useStyle();
   const [maxImages, setMaxImages] = useState(MAX_IMAGES_INCREMENT);
   const imageScrollerRef = useRef(null);
-  let objRotation = {};
-  if (selectedImage) {
-    const selectedIndex = images.indexOf(selectedImage);
-    objRotation[selectedIndex] = imageRotation;
-  } else {
-    images.map((_, idx) => {
-      objRotation[idx] = imageRotation;
-    });
-  }
-  let [rotations, setRotations] = useState(objRotation);
+  let [rotation, setRotation] = useState(imageRotation);
 
   function loadMoreImages() {
     setMaxImages(maxImages + MAX_IMAGES_INCREMENT);
@@ -122,14 +113,20 @@ export default function ImageScroller(props) {
     });
   }
 
-  function handleRotationChange(idx) {
-    let newRotation =
-      rotations[idx] >= 0 ? rotations[idx] + 90 : imageRotation + 90;
-    if (newRotation === 360) {
+  function handleRotationChange() {
+    let newRotation = rotation + 90;
+    if (newRotation > 270) {
       newRotation = 0;
     }
-    setRotations({ ...rotations, [idx]: newRotation });
+    setRotation(newRotation);
     onSelectChange('imageRotation', newRotation);
+  }
+
+  function handleImageChange(img) {
+    onSelectChange('imageUrl', img)
+    if (images.length > 1) {
+      setRotation(0);
+    }
   }
 
   return (
@@ -157,14 +154,14 @@ export default function ImageScroller(props) {
                 height={192}
                 className={classes.image}
                 fixed
-                rotation={rotations[idx] ? rotations[idx] : imageRotation}
-                onClick={() => onSelectChange('imageUrl', img)}
+                rotation={img === selectedImage ? rotation : 0}
+                onClick={() => handleImageChange(img)}
               />
               {img === selectedImage ? (
                 <Fab
                   id="click-rotate"
                   className={classes.clickRotate}
-                  onClick={() => handleRotationChange(idx)}
+                  onClick={handleRotationChange}
                 >
                   <Rotate90DegreesCcwIcon
                     style={{ transform: `rotateY(180deg)` }}
