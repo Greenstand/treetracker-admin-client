@@ -14,12 +14,15 @@ import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 
 function DashStatTotalCaptures(props) {
-  const defaultFilter = new FilterModel({});
+  const activeFilter = new FilterModel({
+    active: true,
+  });
 
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(null);
 
   const getTotal = async () => {
-    const { count } = await api.getCaptureCount(defaultFilter);
+    console.log('-- dash getTotal');
+    const { count } = await api.getCaptureCount(activeFilter);
     setTotal(count);
   };
 
@@ -44,9 +47,10 @@ function DashStatUnprocessedCaptures(props) {
     active: true,
   });
 
-  const [totalUnprocessed, setTotalUnprocessed] = useState(0);
+  const [totalUnprocessed, setTotalUnprocessed] = useState(null);
 
   const getTotalUnprocessed = async () => {
+    console.log('-- dash getTotalUnprocessed');
     const { count } = await api.getCaptureCount(unprocessedFilter);
     setTotalUnprocessed(count);
   };
@@ -72,9 +76,10 @@ function DashStatVerifiedCaptures(props) {
     active: true,
   });
 
-  const [totalVerified, setTotalVerified] = useState(0);
+  const [totalVerified, setTotalVerified] = useState(null);
 
   const getTotalVerified = async () => {
+    console.log('-- dash getTotalVerified');
     const { count } = await api.getCaptureCount(verifiedFilter);
     setTotalVerified(count);
   };
@@ -99,7 +104,7 @@ function DashStatPlanterCount(props) {
     active: true,
   });
 
-  const [totalPlanterCount, setTotalPlanterCount] = useState(0);
+  const [totalPlanterCount, setTotalPlanterCount] = useState(null);
 
   const getTotalPlanterCount = async () => {
     const { count } = await apiPlanters.getCount(planterFilter);

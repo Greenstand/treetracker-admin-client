@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
@@ -22,14 +22,24 @@ export function SpeciesProvider(props) {
   const [speciesList, setSpeciesList] = useState([]);
   const [speciesInput, setSpeciesInput] = useState(''); // only used by Species dropdown and Verify
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    loadSpeciesList({ signal: abortController.signal });
+    return () => abortController.abort();
+  }, []);
+
   // EVENT HANDLERS
 
-  const loadSpeciesList = async () => {
-    const species = await api.getSpecies();
-    log.debug('load species from api:', speciesList.length);
+  const loadSpeciesList = async (abortController) => {
+    const species = await api.getSpecies(abortController);
+    log.debug('load species from api:', species.length);
+
     const speciesListWithCount = await Promise.all(
       species.map(async (species) => {
-        let captureCount = await api.getCaptureCountPerSpecies(species.id);
+        let captureCount = await api.getCaptureCountPerSpecies(
+          species.id,
+          abortController,
+        );
         species.captureCount = captureCount.count;
         return species;
       }),

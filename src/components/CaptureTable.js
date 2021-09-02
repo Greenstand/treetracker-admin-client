@@ -7,7 +7,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  // Drawer,
   TablePagination,
   TableSortLabel,
   Typography,
@@ -135,9 +134,11 @@ const CaptureTable = () => {
     });
   };
 
-  const handlePageChange = (_event, page) => {
+  const handlePageChange = () => {
     loadCaptures({
-      page,
+      page: capturesContext.page + 1,
+      rowsPerPage: capturesContext.rowsPerPage,
+      filter: capturesContext.filter,
     });
   };
 
@@ -145,6 +146,7 @@ const CaptureTable = () => {
     loadCaptures({
       page: 0,
       rowsPerPage: parseInt(event.target.value),
+      filter: capturesContext.filter,
     });
   };
 
@@ -186,7 +188,7 @@ const CaptureTable = () => {
         </Typography>
         {tablePagination()}
       </Grid>
-      <Table>
+      <Table data-testid="captures-table">
         <TableHead>
           <TableRow>
             {columns.map(({ attr, label, noSort }) => (
@@ -214,7 +216,7 @@ const CaptureTable = () => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody data-testid="captures-table-body">
           {capturesArray.map((capture) => (
             <TableRow
               key={capture.id}
@@ -231,9 +233,6 @@ const CaptureTable = () => {
         </TableBody>
       </Table>
       {tablePagination()}
-      {/* <Drawer anchor="right" open={isDetailsPaneOpen} onClose={closeDrawer}>
-        <CaptureDetails capture={capture} />
-      </Drawer> */}
       <CaptureDetails
         capture={capturesContext.capture}
         isDetailsPaneOpen={isDetailsPaneOpen}

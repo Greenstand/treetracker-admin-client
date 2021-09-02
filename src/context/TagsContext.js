@@ -10,45 +10,34 @@ export const TagsContext = createContext({
   tagInput: [],
   getTags: () => {},
   createTags: () => {},
+  setTagInput: () => {},
 });
 
 export function TagsProvider(props) {
-  const [state, setState] = useState({
-    tagList: [],
-    tagInput: [],
-  });
+  const [tagList, setTagList] = useState([]);
+  const [tagInput, setTagInput] = useState([]);
 
   // STATE HELPER FUNCTIONS
 
   const appendToTagList = (tags) => {
-    const sortedTagList = _.unionBy(state.tagList, tags, 'id').sort((a, b) =>
+    const sortedTagList = _.unionBy(tagList, tags, 'id').sort((a, b) =>
       a.tagName.localeCompare(b.tagName),
     );
-    setState({
-      ...state,
-      tagList: sortedTagList,
-    });
+    setTagList(sortedTagList);
   };
-
-  // const setTagInput = (tags) => {
-  //   setState({
-  //     ...state,
-  //     tagInput: tags,
-  //   });
-  // };
 
   // EVENT HANDLERS
 
-  const getTags = async (filter) => {
-    const newTags = await api.getTags(filter);
-    log.debug('load more tags from api:', newTags.length);
+  const getTags = async (filter, abortController) => {
+    const newTags = await api.getTags(filter, abortController);
+    log.debug('load (more) tags from api:', newTags.length);
     appendToTagList(newTags);
   };
   /*
    * check for new tags in tagInput and add them to the database
    */
-  const createTags = (payload, state) => {
-    const savedTags = state.tagInput.map(async (t) => {
+  const createTags = () => {
+    const savedTags = tagInput.map(async (t) => {
       return api.createTag(t);
     });
 
@@ -56,10 +45,11 @@ export function TagsProvider(props) {
   };
 
   const value = {
-    tagList: state.tagList,
-    tagInput: state.tagInput,
+    tagList,
+    tagInput,
     getTags,
     createTags,
+    setTagInput,
   };
 
   return (

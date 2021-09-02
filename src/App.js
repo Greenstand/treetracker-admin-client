@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core/styles';
-import Routers from './components/Routers';
 import theme from './components/common/theme';
+import Routers from './components/Routers';
 import { AppProvider } from './context/AppContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
@@ -29,10 +28,4 @@ class App extends Component {
   }
 }
 
-const mapState = (state) => {
-  return state;
-};
-
-const mapDispatch = () => ({});
-
-export default connect(mapState, mapDispatch)(App);
+export default App;

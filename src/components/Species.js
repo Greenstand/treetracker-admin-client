@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
@@ -18,10 +18,6 @@ const styles = () => {
 function Species(props) {
   // Verify also uses speciesInput so keep it on context
   const speciesContext = useContext(SpeciesContext);
-  /* load species list when mount*/
-  useEffect(() => {
-    speciesContext.loadSpeciesList();
-  }, [speciesContext.speciesList]);
 
   return (
     <Autocomplete

@@ -57,6 +57,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const PlanterDetail = (props) => {
+  // console.log('render: planter detail');
   const classes = useStyle();
   const { planterId } = props;
   const appContext = useContext(AppContext);

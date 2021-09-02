@@ -65,13 +65,9 @@ const EditPlanter = (props) => {
         (p) => p.id === updatedPlanter.id,
       );
       if (index >= 0) {
-        // planterContext.setPlanters([
-        //   ...planterContext.planters,
-        //   { [index]: updatedPlanter },
-        // ]);
-        planterContext.set({
-          planters: [...planterContext.planters, { [index]: updatedPlanter }],
-        });
+        const planters = [...planterContext.planters];
+        planters[index] = updatedPlanter;
+        planterContext.updatePlanters(planters);
       }
     }
   }

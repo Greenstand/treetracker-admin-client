@@ -128,19 +128,6 @@ const useStyles = makeStyles((theme) => ({
 const Planters = (props) => {
   // log.debug('render: Planters...');
   const classes = useStyles(props);
-  // const {
-  //   planters,
-  //   pageSize,
-  //   count,
-  //   currentPage,
-  //   filter,
-  //   isLoading,
-  //   updateFilter,
-  //   changePageSize,
-  //   changeCurrentPage,
-  //   load,
-  //   getCount,
-  // } = useContext(PlanterContext);
   const planterContext = useContext(PlanterContext);
   const [isFilterShown, setFilterShown] = useState(false);
   const [isDetailShown, setDetailShown] = useState(false);
@@ -152,11 +139,9 @@ const Planters = (props) => {
   useEffect(() => {
     // log.debug('planters mounted', filter);
     document.title = `Planters - ${documentTitle}`;
-    planterContext.load();
   }, []);
 
   useEffect(() => {
-    // console.log('load -- filter', filter);
     planterContext.load();
   }, [
     planterContext.pageSize,
@@ -166,7 +151,6 @@ const Planters = (props) => {
 
   useEffect(() => {
     planterContext.getCount();
-    // console.log('getCount -- filter', filter);
   }, [
     planterContext.pageSize,
     planterContext.currentPage,
@@ -186,7 +170,7 @@ const Planters = (props) => {
   }
 
   function handleChangePageSize(e, option) {
-    planterContext.changePageSize({ pageSize: option.props.value });
+    planterContext.changePageSize(option.props.value);
   }
 
   function handlePlanterClick(planter) {

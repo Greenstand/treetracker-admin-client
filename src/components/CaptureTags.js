@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -57,7 +57,7 @@ function renderSuggestionsContainer(options) {
   const { containerProps, children } = options;
 
   return (
-    <Paper {...containerProps} square>
+    <Paper {...containerProps} data-testid="tag-suggestion" square>
       {children}
     </Paper>
   );
@@ -73,10 +73,11 @@ const debounceCallback = ({ value, callback }) => {
 };
 
 const CaptureTags = (props) => {
+  // console.log('render: capture tags');
   const classes = useStyles(props);
   const tagsContext = useContext(TagsContext);
-  const [textFieldInput, setTextFieldInput] = React.useState('');
-  const [error, setError] = React.useState(false);
+  const [textFieldInput, setTextFieldInput] = useState('');
+  const [error, setError] = useState(false);
   const debouncedInputHandler = useCallback(
     _.debounce(debounceCallback, 250),
     [],
@@ -89,6 +90,7 @@ const CaptureTags = (props) => {
     return (
       <ChipInput
         {...other}
+        data-testid="tag-chip-input"
         clearInputValueOnChange
         onUpdateInput={onChange}
         value={chips}
@@ -146,6 +148,7 @@ const CaptureTags = (props) => {
 
   return (
     <Autosuggest
+      data-testid="tag-autosuggest"
       theme={{
         container: classes.container,
         suggestionsContainerOpen: classes.suggestionsContainerOpen,

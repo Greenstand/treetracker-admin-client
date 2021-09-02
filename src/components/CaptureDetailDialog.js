@@ -6,9 +6,6 @@ import React, {
   useContext,
 } from 'react';
 
-import compose from 'recompose/compose';
-import { connect } from 'react-redux';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
@@ -83,7 +80,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, TransitionComponent, capture } = props;
+  // console.log('render: capture detail dialog');
+  const { open, capture } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -334,32 +332,15 @@ function CaptureDetailDialog(props) {
           <Grid container direction="column">
             <Tags
               capture={renderCapture}
-              species={props.captureDetail.species}
-              captureTags={props.captureDetail.tags}
+              species={cdContext.species}
+              captureTags={cdContext.tags}
             />
-          </Grid>
-          <Grid container item style={{ width: '300px' }} spacing={2}>
-            <Grid container direction="row" spacing={4}>
-              <Tags
-                capture={renderCapture}
-                species={cdContext.species}
-                captureTags={cdContext.tags}
-              />
-            </Grid>
           </Grid>
         </Grid>
       </Drawer>
     </>
   );
 }
-
-const mapState = (state) => ({
-  captureDetail: state.captureDetail,
-});
-
-const mapDispatch = (dispatch) => ({
-  captureDetailDispatch: dispatch.captureDetail,
-});
 
 const getTokenStatus = (tokenId) => {
   if (tokenId === undefined) {
@@ -371,4 +352,4 @@ const getTokenStatus = (tokenId) => {
   }
 };
 
-export default compose(connect(mapState, mapDispatch))(CaptureDetailDialog);
+export default CaptureDetailDialog;

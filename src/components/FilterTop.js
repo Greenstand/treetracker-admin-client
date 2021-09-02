@@ -10,7 +10,7 @@ import FilterModel, {
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
-  TAG_NOT_SET,
+  // TAG_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -93,16 +93,18 @@ function Filter(props) {
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
-  // TODO: how to save the tag state when the filter top opens/closes
-  // e.g. state --> {"id":5,"tagName":"another_tag","active":true,"public":true}
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS,
   );
-  const [tokenId, setTokenId] = useState(filterOptionAll);
+  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   useEffect(() => {
-    tagsContext.getTags(tagSearchString);
+    if (tagSearchString === '') {
+      const abortController = new AbortController();
+      tagsContext.getTags(tagSearchString, { signal: abortController.signal });
+      return () => abortController.abort();
+    }
   }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
@@ -119,6 +121,7 @@ function Filter(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.captureId = captureId;
     filter.planterId = planterId;
@@ -144,9 +147,9 @@ function Filter(props) {
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setSpeciesId(ALL_SPECIES);
-    setOrganizationId(ALL_ORGANIZATIONS);
     setTag(null);
     setTagSearchString('');
+    setOrganizationId(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -163,6 +166,8 @@ function Filter(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 select
+                htmlFor="verification-status"
+                id="verification-status"
                 label="Verification Status"
                 value={
                   active === undefined && approved === undefined
@@ -201,6 +206,8 @@ function Filter(props) {
               </TextField>
               <TextField
                 select
+                htmlFor="token-status"
+                id="token-status"
                 label="Token Status"
                 value={tokenId}
                 onChange={(e) => {
@@ -224,6 +231,7 @@ function Filter(props) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="start-date-picker"
+                  htmlFor="start-date-picker"
                   label="Start Date"
                   format={getDateFormatLocale(true)}
                   value={dateStart}
@@ -236,6 +244,7 @@ function Filter(props) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="end-date-picker"
+                  htmlFor="end-date-picker"
                   label="End Date"
                   format={getDateFormatLocale(true)}
                   value={dateEnd}
@@ -248,31 +257,42 @@ function Filter(props) {
                 />
               </MuiPickersUtilsProvider>
               <TextField
+                htmlFor="planter-id"
+                id="planter-id"
                 label="Planter ID"
                 placeholder="e.g. 7"
                 value={planterId}
                 onChange={(e) => setPlanterId(e.target.value)}
               />
               <TextField
+                htmlFor="capture-id"
+                id="capture-id"
                 label="Capture ID"
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
               />
               <TextField
+                htmlFor="device-identifier"
+                id="device-identifier"
                 label="Device Identifier"
                 placeholder="e.g. 1234abcd"
                 value={deviceId}
                 onChange={(e) => setDeviceId(e.target.value)}
               />
               <TextField
+                htmlFor="planter-identifier"
+                id="planter-identifier"
                 label="Planter Identifier"
                 placeholder="e.g. planter@example.com"
                 value={planterIdentifier}
                 onChange={(e) => setPlanterIdentifier(e.target.value)}
               />
               <TextField
+                data-testid="species-dropdown"
                 select
+                htmlFor="species"
+                id="species"
                 label="Species"
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
@@ -285,29 +305,48 @@ function Filter(props) {
                   },
                   ...speciesContext.speciesList,
                 ].map((species) => (
-                  <MenuItem key={species.id} value={species.id}>
+                  <MenuItem
+                    data-testid="species-item"
+                    key={species.id}
+                    value={species.id}
+                  >
                     {species.name}
                   </MenuItem>
                 ))}
               </TextField>
               <Autocomplete
+                data-testid="tag-dropdown"
+                label="Tag"
+                htmlFor="tag"
+                id="tag"
                 classes={{
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
-                  {
-                    id: TAG_NOT_SET,
-                    tagName: 'Not set',
-                    active: true,
-                    public: true,
-                  },
+                  // {
+                  //   id: TAG_NOT_SET,
+                  //   tagName: 'Not set',
+                  //   active: true,
+                  //   public: true,
+                  // },
                   ...tagsContext.tagList,
                 ]}
                 value={tag}
-                getOptionLabel={(tag) => tag.tagName}
+                defaultValue={'Not set'}
+                getOptionLabel={(tag) => {
+                  // if (tag === 'Not set') {
+                  //   return 'Not set';
+                  // }
+                  return tag.tagName;
+                }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  setTag(newVal);
+                  console.log('newVal -- ', newVal);
+                  if (newVal && newVal.tagName === 'Not set') {
+                    setTag('Not set');
+                  } else {
+                    setTag(newVal);
+                  }
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -315,11 +354,17 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
+                // selectOnFocus
+                // clearOnBlur
+                // handleHomeEndKeys
               />
               {!userHasOrg && (
                 <TextField
+                  data-testid="org-dropdown"
                   select
                   label="Organization"
+                  htmlFor="organization"
+                  id="organization"
                   value={organizationId}
                   onChange={(e) => setOrganizationId(e.target.value)}
                 >
@@ -334,7 +379,11 @@ function Filter(props) {
                     },
                     ...orgList,
                   ].map((org) => (
-                    <MenuItem key={org.id} value={org.id}>
+                    <MenuItem
+                      data-testid="org-item"
+                      key={org.id}
+                      value={org.id}
+                    >
                       {org.name}
                     </MenuItem>
                   ))}
@@ -344,6 +393,9 @@ function Filter(props) {
             <Grid className={classes.inputContainer}>
               <Button
                 type="submit"
+                label="submit"
+                htmlFor="submit"
+                id="submit"
                 className={classes.apply}
                 variant="outlined"
                 color="primary"
@@ -352,6 +404,9 @@ function Filter(props) {
                 Apply
               </Button>
               <Button
+                label="reset"
+                htmlFor="reset"
+                id="reset"
                 className={classes.apply}
                 variant="outlined"
                 color="primary"

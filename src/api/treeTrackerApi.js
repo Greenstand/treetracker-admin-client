@@ -2,14 +2,17 @@ import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
 export default {
-  getCaptureImages({
-    skip,
-    rowsPerPage,
-    orderBy = 'id',
-    order = 'desc',
-    //the filter model
-    filter,
-  }) {
+  getCaptureImages(
+    {
+      skip,
+      rowsPerPage,
+      orderBy = 'id',
+      order = 'desc',
+      //the filter model
+      filter,
+    },
+    abortController,
+  ) {
     const where = filter.getWhereObj();
 
     const lbFilter = {
@@ -35,10 +38,12 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`;
+
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
+      signal: abortController?.signal,
     })
       .then(handleResponse)
       .catch(handleError);
@@ -58,8 +63,7 @@ export default {
       body: JSON.stringify({
         id: id,
         approved: true,
-        //revise, if click approved on a rejected pic, then, should set the pic
-        //approved, AND restore to ACTIVE = true
+        //revise, if click approved on a rejected pic, then, should set the pic approved, AND restore to ACTIVE = true
         active: true,
         morphology,
         age,
@@ -71,6 +75,7 @@ export default {
       .catch(handleError);
   },
   rejectCaptureImage(id, rejectionReason) {
+    console.log('reject capture', id, rejectionReason);
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/${id}`;
@@ -95,25 +100,25 @@ export default {
   /*
    * to rollback from a wrong approving
    */
-  undoCaptureImage(id) {
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/${id}`;
-    return fetch(query, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify({
-        id: id,
-        active: true,
-        approved: false,
-      }),
-    })
-      .then(handleResponse)
-      .catch(handleError);
-  },
+  // undoCaptureImage(id) {
+  //   const query = `${
+  //     process.env.REACT_APP_API_ROOT
+  //   }/api/${getOrganization()}trees/${id}`;
+  //   return fetch(query, {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'content-type': 'application/json',
+  //       Authorization: session.token,
+  //     },
+  //     body: JSON.stringify({
+  //       id: id,
+  //       active: true,
+  //       approved: false,
+  //     }),
+  //   })
+  //     .then(handleResponse)
+  //     .catch(handleError);
+  // },
   // getUnverifiedCaptureCount() {
   //   const query = `${
   //     process.env.REACT_APP_API_ROOT
@@ -132,7 +137,6 @@ export default {
     }/api/${getOrganization()}trees/count?where=${JSON.stringify(
       filter.getWhereObj(),
     )}`;
-    // console.log('getCaptureCount --- ', filter)
     return fetch(query, {
       headers: {
         Authorization: session.token,
@@ -156,7 +160,7 @@ export default {
   /*
    * get species list
    */
-  getSpecies() {
+  getSpecies(abortController) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
     return fetch(query, {
       method: 'GET',
@@ -164,6 +168,7 @@ export default {
         'content-type': 'application/json',
         Authorization: session.token,
       },
+      signal: abortController?.signal,
     })
       .then(handleResponse)
       .catch(handleError);
@@ -263,7 +268,7 @@ export default {
   /*
    * get tree count by species
    */
-  getCaptureCountPerSpecies(speciesId) {
+  getCaptureCountPerSpecies(speciesId, abortController) {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
@@ -271,6 +276,7 @@ export default {
       headers: {
         Authorization: session.token,
       },
+      signal: abortController?.signal,
     })
       .then(handleResponse)
       .catch(handleError);
@@ -278,7 +284,7 @@ export default {
   /*
    * get tag list
    */
-  getTags(filter) {
+  getTags(filter, abortController) {
     const filterString =
       `filter[limit]=25&` +
       (filter ? `filter[where][tagName][ilike]=${filter}%` : '');
@@ -289,6 +295,7 @@ export default {
         'content-type': 'application/json',
         Authorization: session.token,
       },
+      signal: abortController?.signal,
     })
       .then(handleResponse)
       .catch(handleError);

@@ -3,8 +3,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+// import MenuItem from '@material-ui/core/MenuItem';
 import FilterModel from '../models/FilterPlanter';
-import { connect } from 'react-redux';
+// import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
+// import { AppContext } from '../context/AppContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -57,14 +59,20 @@ const styles = (theme) => {
 };
 
 function FilterTopPlanter(props) {
-  const { classes } = props;
-  const [id, setId] = useState('');
-  const [personId, setPersonId] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [organizationId, setOrganizationId] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  // const { orgList, userHasOrg } = useContext(AppContext);
+  const { classes, filter } = props;
+  const [id, setId] = useState(filter?.id || '');
+  const [personId, setPersonId] = useState(filter?.personId || '');
+  const [firstName, setFirstName] = useState(filter?.firstName || '');
+  const [lastName, setLastName] = useState(filter?.lastName || '');
+  // const [organizationId, setOrganizationId] = useState(
+  //   filter?.organizationId || ALL_ORGANIZATIONS,
+  // );
+  const [organizationId, setOrganizationId] = useState(
+    filter?.organizationId || '',
+  );
+  const [email, setEmail] = useState(filter?.email || '');
+  const [phone, setPhone] = useState(filter?.phone || '');
 
   function handleSubmit() {
     const filter = new FilterModel({
@@ -104,6 +112,8 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Planter ID"
+              htmlFor="Planter ID"
+              id="Planter ID"
               placeholder="Planter ID"
               value={id}
               onChange={(e) => setId(e.target.value)}
@@ -112,6 +122,8 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Person ID"
+              htmlFor="Person ID"
+              id="Person ID"
               placeholder="Person ID"
               value={personId}
               onChange={(e) => setPersonId(e.target.value)}
@@ -120,14 +132,48 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Organization ID"
+              htmlFor="Organization ID"
+              id="Organization ID"
               placeholder="Organization ID"
               value={organizationId}
               onChange={(e) => setOrganizationId(e.target.value)}
               onKeyDown={handleEnterPress}
             />
+            {/* {!userHasOrg && (
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                data-testid="org-dropdown"
+                select
+                label="Organization ID"
+                htmlFor="Organization ID"
+                id="Organization ID"
+                placeholder="Organization ID"
+                value={organizationId}
+                onChange={(e) => setOrganizationId(e.target.value)}
+                onKeyDown={handleEnterPress}
+              >
+                {[
+                  {
+                    id: ALL_ORGANIZATIONS,
+                    name: 'All',
+                  },
+                  {
+                    id: ORGANIZATION_NOT_SET,
+                    name: 'Not set',
+                  },
+                  ...orgList,
+                ].map((org) => (
+                  <MenuItem data-testid="org-item" key={org.id} value={org.id}>
+                    {org.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )} */}
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="First Name"
+              htmlFor="First Name"
+              id="First Name"
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -136,6 +182,8 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Last Name"
+              htmlFor="Last Name"
+              id="Last Name"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -144,6 +192,8 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Email"
+              htmlFor="Email"
+              id="Email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -152,6 +202,9 @@ function FilterTopPlanter(props) {
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
               label="Phone Number"
+              htmlFor="Phone Number"
+              id="Phone Number"
+              personId="Phone Number"
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -159,6 +212,7 @@ function FilterTopPlanter(props) {
             />
             <Button
               className={classes.apply}
+              label="submit"
               variant="outlined"
               color="primary"
               onClick={handleSubmit}
@@ -168,6 +222,7 @@ function FilterTopPlanter(props) {
 
             <Button
               className={classes.apply}
+              label="reset"
               variant="outlined"
               color="primary"
               onClick={handleReset}
@@ -181,14 +236,4 @@ function FilterTopPlanter(props) {
   );
 }
 
-//export default compose(
-//  withStyles(styles, { withTheme: true, name: 'Filter' })
-//)(Filter)
-export default withStyles(styles)(
-  connect(
-    //state
-    (state) => ({
-      speciesState: state.species,
-    }),
-  )(FilterTopPlanter),
-);
+export default withStyles(styles)(FilterTopPlanter);

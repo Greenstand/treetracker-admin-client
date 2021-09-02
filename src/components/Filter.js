@@ -21,9 +21,7 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
-import {
-  datePickerDefaultMinDate,
-} from '../common/variables';
+import { datePickerDefaultMinDate } from '../common/variables';
 
 import { verificationStates, tokenizationStates } from '../common/variables';
 
@@ -57,25 +55,26 @@ const styles = (theme) => {
 
 function Filter(props) {
   const { classes, filter } = props;
+  console.log('filter', filter);
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const [captureId, setCaptureId] = useState(filter.captureId);
-  const [planterId, setPlanterId] = useState(filter.planterId);
+  const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [planterId, setPlanterId] = useState(filter?.planterId || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter.deviceIdentifier,
+    filter?.deviceIdentifier || '',
   );
   const [planterIdentifier, setPlanterIdentifier] = useState(
-    filter.planterIdentifier,
+    filter?.planterIdentifier || '',
   );
-  const [status, setStatus] = useState(filter.status);
-  const [approved, setApproved] = useState(filter.approved);
-  const [active, setActive] = useState(filter.active);
+  const [status, setStatus] = useState(filter?.status);
+  const [approved, setApproved] = useState(filter?.approved);
+  const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
-    filter.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault,
   );
-  const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
-  const [tokenId, setTokenId] = useState(filterOptionAll);
+  const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
+  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -89,38 +88,40 @@ function Filter(props) {
     return convertDateToDefaultSqlDate(date);
   };
 
-  function handleClear() {
-    const filter = new FilterModel();
-    setCaptureId('');
-    setPlanterId('');
-    setDeviceIdentifier('');
-    setPlanterIdentifier('');
-    setStatus('All');
-    setDateStart(dateStartDefault);
-    setDateEnd(dateEndDefault);
-    setApproved();
-    setActive();
-    setTokenId(filterOptionAll);
-    props.onSubmit && props.onSubmit(filter);
+  function handleCloseClick() {
+    props.onClose && props.onClose();
   }
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
     const filter = new FilterModel();
     filter.captureId = captureId;
     filter.planterId = planterId;
     filter.deviceIdentifier = deviceIdentifier;
     filter.planterIdentifier = planterIdentifier;
-    filter.status = status;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
     filter.active = active;
     filter.tokenId = tokenId;
+    filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
 
-  function handleCloseClick() {
-    props.onClose && props.onClose();
+  function handleClear() {
+    setCaptureId('');
+    setPlanterId('');
+    setDeviceIdentifier('');
+    setPlanterIdentifier('');
+    setDateStart(dateStartDefault);
+    setDateEnd(dateEndDefault);
+    setApproved();
+    setActive();
+    setTokenId(filterOptionAll);
+    setStatus('All');
+
+    const filter = new FilterModel();
+    props.onSubmit && props.onSubmit(filter);
   }
 
   return (
@@ -305,7 +306,5 @@ const getVerificationStatus = (active, approved) => {
     return verificationStates.REJECTED;
   }
 };
-//export default compose(
-//  withStyles(styles, { withTheme: true, name: 'Filter' })
-//)(Filter)
+
 export default withStyles(styles)(Filter);

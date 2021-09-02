@@ -1,24 +1,22 @@
-
-describe("Admin", () => {
+describe('Admin', () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.visit('/');
     cy.contains(/Log in/i);
-    cy.findInputByLabel("Username")
-      .type("admin");
-    cy.findInputByLabel("Password")
-      .type("admin");
-    cy.contains(/log in/i)
-      .click();
-    cy.contains(/Greenstand admin panel/i);
+    cy.findInputByLabel(/Username/i).type('username');
+    cy.findInputByLabel(/Password/i).type('password');
+    cy.contains(/log in/i).click();
   });
 
-  it("verify", () => {
-    cy.contains(/verify/i)
-      .click();
+  it('verify menu item', () => {
+    // cy.visit('/verify');
+    cy.contains(/verify/i);
   });
 
-  it("planter", () => {
-    cy.contains(/planter/i)
-      .click();
+  it('verify', () => {
+    cy.contains(/verify/i).click();
+  });
+
+  it('planter', () => {
+    cy.contains(/planter/i).click();
   });
 });

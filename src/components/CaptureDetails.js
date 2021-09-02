@@ -18,16 +18,6 @@ const useStyle = makeStyles((theme) => ({
   box: {
     padding: theme.spacing(4),
   },
-  cardMedia: {
-    height: '378px',
-  },
-  personBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'lightgray',
-    height: '100%',
-  },
   person: {
     height: 180,
     width: 180,
@@ -51,14 +41,6 @@ const useStyle = makeStyles((theme) => ({
 const CaptureDetails = (props) => {
   let { capture, isDetailsPaneOpen, closeDrawer } = props;
   const classes = useStyle();
-  // const captureImage =
-  //   capture.imageUrl !== null ? (
-  //     <img
-  //       className="capture-image"
-  //       src={capture.imageUrl}
-  //       alt={`capture ${capture.id}`}
-  //     />
-  //   ) : null;
   const isAlive = capture.causeOfDeathId !== null ? 'Dead' : 'Alive';
   const captureMissing = capture.missing ? 'True' : 'False';
 
@@ -113,19 +95,6 @@ const CaptureDetails = (props) => {
       </Grid>
     </Drawer>
   );
-
-  // return (
-  //   <Drawer anchor="right" open={isDetailsPaneOpen} onClose={closeDrawer}>
-  //     <div className="capture-panel">
-  //       {captureImage}
-  //       <p className="capture-location">
-  //         Location: {capture.lat} {capture.lon}
-  //       </p>
-  //       <p className="capture-dead">Status: {isAlive}</p>
-  //       <p className="capture-missing">Missing: {captureMissing}</p>
-  //     </div>
-  //   </Drawer>
-  // );
 };
 
 export default CaptureDetails;

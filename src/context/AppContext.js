@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
-import Verify from '../components/Verify';
+import VerifyView from '../views/VerifyView';
 import Planters from '../components/Planters';
 import Captures from '../components/Captures';
 import Account from '../components/Account';
@@ -23,7 +23,6 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-import { VerifyProvider } from './VerifyContext';
 import { PlanterProvider } from './PlanterContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
@@ -49,7 +48,7 @@ function getRoutes(user) {
     {
       name: 'Verify',
       linkTo: '/verify',
-      component: Verify,
+      component: VerifyView,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -138,7 +137,6 @@ export const AppProvider = (props) => {
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
 
-  // console.log('context rendered', localUser, routes);
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
     if (user && token && !user?.policy?.organization?.id) {
@@ -153,7 +151,7 @@ export const AppProvider = (props) => {
     if (localToken && localUser) {
       // Temporarily log in with the localStorage credentials while
       // we check that the session is still valid
-      context.login(localUser, localToken);
+      login(localUser, localToken);
 
       axios
         .get(
@@ -169,13 +167,13 @@ export const AppProvider = (props) => {
           if (response.status === 200) {
             if (response.data.token === undefined) {
               //the role has not changed
-              context.login(localUser, localToken, true);
+              login(localUser, localToken, true);
             } else {
               //role has changed, update the token
-              context.login(localUser, response.data.token, true);
+              login(localUser, response.data.token, true);
             }
           } else {
-            context.logout();
+            logout();
           }
         });
       return true;
@@ -222,7 +220,7 @@ export const AppProvider = (props) => {
     setOrgList(orgs);
   }
 
-  const context = {
+  const value = {
     login,
     logout,
     user,
@@ -238,10 +236,8 @@ export const AppProvider = (props) => {
 
   // VerifyProvider and PlanterProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={context}>
-      <VerifyProvider>
-        <PlanterProvider>{props.children}</PlanterProvider>
-      </VerifyProvider>
+    <AppContext.Provider value={value}>
+      <PlanterProvider>{props.children}</PlanterProvider>
     </AppContext.Provider>
   );
 };

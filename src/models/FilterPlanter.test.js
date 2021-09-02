@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { AppContext, AppProvider } from '../context/AppContext';
 import FilterPlanter from './FilterPlanter';
 
-describe('FilterPlanter, with initial filter values', () => {
+describe.skip('FilterPlanter, with initial filter values', () => {
   let filterPlanter;
 
   beforeEach(() => {

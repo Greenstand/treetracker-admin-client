@@ -134,14 +134,6 @@ const SpeciesTable = (props) => {
       speciesContext.speciesList.length - page * rowsPerPage,
     );
 
-  /* load species list when mount*/
-  useEffect(() => {
-    // don't call unless the list is empty
-    if (speciesContext.speciesList.length <= 0) {
-      speciesContext.loadSpeciesList();
-    }
-  }, [speciesContext.speciesList]);
-
   useEffect(() => {
     const sortBy = (option) => {
       let sortedSpecies;
