@@ -85,6 +85,8 @@ function FilterTopPlanter(props) {
     setFirstName('');
     setLastName('');
     setOrganizationId('');
+    setEmail('');
+    setPhone('');
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -145,6 +147,7 @@ function FilterTopPlanter(props) {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <TextField
               className={`${classes.textField} ${classes.filterElement}`}
@@ -152,6 +155,7 @@ function FilterTopPlanter(props) {
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              onKeyDown={handleEnterPress}
             />
             <Button
               className={classes.apply}
