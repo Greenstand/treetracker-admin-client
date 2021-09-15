@@ -40,7 +40,7 @@ export function SpeciesProvider(props) {
           species.id,
           abortController,
         );
-        species.captureCount = captureCount.count;
+        species.captureCount = captureCount?.count;
         return species;
       }),
     );

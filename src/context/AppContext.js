@@ -4,11 +4,11 @@ import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
 import Planters from '../components/Planters';
-import Captures from '../components/Captures';
+import CapturesView from '../views/CapturesView';
 import Account from '../components/Account';
 import Home from '../components/Home';
 import Users from '../components/Users';
-import SpeciesMgt from '../components/SpeciesMgt';
+import SpeciesView from '../views/SpeciesView';
 import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
 import Unauthorized from '../components/Unauthorized';
 
@@ -59,7 +59,7 @@ function getRoutes(user) {
     {
       name: 'Captures',
       linkTo: '/captures',
-      component: Captures,
+      component: CapturesView,
       icon: IconNature,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -97,7 +97,7 @@ function getRoutes(user) {
     {
       name: 'Species',
       linkTo: '/species',
-      component: SpeciesMgt,
+      component: SpeciesView,
       icon: CategoryIcon,
       //TODO this is temporary, need to add species policy
       disabled:

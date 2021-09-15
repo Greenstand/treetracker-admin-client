@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import SpeciesTable from './SpeciesTable';
+import SpeciesTable from '../components/SpeciesTable';
 import { Grid } from '@material-ui/core';
 import { documentTitle } from '../common/variables';
 import { SpeciesProvider } from '../context/SpeciesContext';
 
-const SpeciesMgt = () => {
+const SpeciesView = () => {
   /* to update html document title */
   useEffect(() => {
     document.title = `Species - ${documentTitle}`;
@@ -25,4 +25,4 @@ const SpeciesMgt = () => {
   );
 };
 
-export default SpeciesMgt;
+export default SpeciesView;

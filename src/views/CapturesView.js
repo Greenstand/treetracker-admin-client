@@ -8,11 +8,11 @@ handling the comms between the captures view components and the store/models)
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
-import Navbar from './Navbar';
-import CaptureTable from './CaptureTable';
+import Navbar from '../components/Navbar';
+import CaptureTable from '../components/CaptureTable';
 import { CapturesProvider } from '../context/CapturesContext';
 
-function Captures() {
+function CapturesView() {
   useEffect(() => {
     document.title = `Capture Data - ${documentTitle}`;
   }, []);
@@ -35,4 +35,4 @@ function Captures() {
   );
 }
 
-export default Captures;
+export default CapturesView;

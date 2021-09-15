@@ -16,7 +16,7 @@ import { AppProvider } from '../../context/AppContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 
 import Species from '../Species';
-import SpeciesMgt from '../SpeciesMgt';
+import SpeciesView from '../../views/SpeciesView';
 import SpeciesTable from '../SpeciesTable';
 
 const SPECIES = [
@@ -74,13 +74,13 @@ describe.skip('species management', () => {
 
   afterEach(cleanup);
 
-  describe('<SpeciesMgt /> renders page', () => {
+  describe('<SpeciesView /> renders page', () => {
     beforeEach(async () => {
       render(
         <BrowserRouter>
           <AppProvider>
             <SpeciesProvider value={speciesValues}>
-              <SpeciesMgt />
+              <SpeciesView />
             </SpeciesProvider>
           </AppProvider>
         </BrowserRouter>,

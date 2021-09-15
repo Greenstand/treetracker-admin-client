@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  forwardRef,
-} from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -212,7 +206,7 @@ const Verify = (props) => {
    * effect to load page when mounted
    */
   useEffect(() => {
-    log.debug('mounted:');
+    log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
     document.title = `Verify - ${documentTitle}`;
   }, []);
