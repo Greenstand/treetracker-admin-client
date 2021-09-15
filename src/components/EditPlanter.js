@@ -97,10 +97,6 @@ const EditPlanter = (props) => {
     }
   }
 
-  function handleSelectPlanterImage(img) {
-    handleChange('imageUrl', img);
-  }
-
   function getValue(attr) {
     // Ensure empty strings are not overlooked
     if (planterUpdate?.[attr] != null) {
@@ -146,9 +142,12 @@ const EditPlanter = (props) => {
           <ImageScroller
             images={planterImages}
             selectedImage={planterUpdate?.imageUrl || planter.imageUrl}
-            onSelectImage={handleSelectPlanterImage}
             loading={loadingPlanterImages}
             blankMessage="No planter images available"
+            imageRotation={
+              planterUpdate?.imageRotation || planter.imageRotation || 0
+            }
+            onSelectChange={handleChange}
           />
           {inputs.map((row, rowIdx) => (
             <Grid item container direction="row" key={rowIdx}>

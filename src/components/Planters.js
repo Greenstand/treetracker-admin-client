@@ -26,6 +26,8 @@ import LinkToWebmap from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('../components/Planters');
 
+const PLANTER_IMAGE_SIZE = 182;
+
 const useStyles = makeStyles((theme) => ({
   outer: {
     height: '100vh',
@@ -48,14 +50,14 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     padding: 0,
-    height: '12rem',
+    height: `${PLANTER_IMAGE_SIZE}px`,
     position: 'relative',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
   },
   cardMedia: {
-    height: '12rem',
+    height: `${PLANTER_IMAGE_SIZE}px`,
   },
   cardWrapper: {
     width: 200,
@@ -310,10 +312,11 @@ function Planter(props) {
           {planter.imageUrl && (
             <OptimizedImage
               src={planter.imageUrl}
-              width={182}
-              height={192}
+              width={PLANTER_IMAGE_SIZE}
+              height={PLANTER_IMAGE_SIZE}
               className={classes.cardMedia}
               fixed
+              rotation={planter.imageRotation}
             />
           )}
           {!planter.imageUrl && (

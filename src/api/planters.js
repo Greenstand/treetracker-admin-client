@@ -34,6 +34,7 @@ export default {
         personId: true,
         organization: true,
         organizationId: true,
+        imageRotation: true,
         id: true,
       },
     };
