@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.19.1...v1.20.0) (2021-09-15)
+
+
+### Features
+
+* planter selfie rotation ([#142](https://github.com/Greenstand/treetracker-admin-client/issues/142)) ([f307700](https://github.com/Greenstand/treetracker-admin-client/commit/f307700362ea94ce86dfe9e188f284cffdd84627))
+
 ## [1.19.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.19.0...v1.19.1) (2021-08-14)
 
 
