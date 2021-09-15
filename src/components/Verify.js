@@ -37,8 +37,6 @@ import { TagsContext } from '../context/TagsContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
-const SIDE_PANEL_WIDTH = 315;
-
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8, 4, 8),
@@ -120,18 +118,6 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: '8px',
   },
-
-  navbar: {
-    width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
-    left: 0,
-    right: 'auto',
-  },
-  sidePanel: {
-    width: SIDE_PANEL_WIDTH,
-  },
-  drawerPaper: {
-    width: SIDE_PANEL_WIDTH,
-  },
   body: {
     display: 'flex',
     height: '100%',
@@ -139,19 +125,6 @@ const useStyles = makeStyles((theme) => ({
   bodyInner: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  sidePanelContainer: {
-    padding: theme.spacing(2),
-    flexWrap: 'nowrap',
-  },
-  sidePanelItem: {
-    marginTop: theme.spacing(1),
-  },
-  radioGroup: {
-    flexDirection: 'row',
-  },
-  bottomLine: {
-    borderBottom: '1px solid lightgray',
   },
   tooltip: {
     maxWidth: 'none',
@@ -471,7 +444,6 @@ const Verify = (props) => {
         <Grid item className={classes.bodyInner}>
           <Grid item>
             <Navbar
-              className={classes.navbar}
               buttons={[
                 <Button
                   variant="text"

@@ -30,30 +30,17 @@ const styles = (theme) => {
       width: 158,
       fontSize: 14,
     },
-    button: {
-      marginTop: 5,
-    },
-    inputContaner: {
-      padding: 5,
-    },
-    input: {
-      margin: theme.spacing(2),
-    },
-    filterElement: {
-      marginLeft: 4,
-    },
-    textField: {
-      marginTop: 15,
-      width: 142,
-      paddingBottom: 2,
-    },
-    textFieldSelect: {
-      marginTop: 17,
-      width: 142,
+    inputContainer: {
+      margin: theme.spacing(1),
+      '&>*': {
+        display: 'inline-flex',
+        width: 160,
+        margin: theme.spacing(1.5, 1),
+      },
     },
     apply: {
-      marginTop: 15,
-      marginLeft: 4,
+      width: 90,
+      height: 36,
     },
   };
 };
@@ -74,7 +61,8 @@ function FilterTopPlanter(props) {
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
     const filter = new FilterModel({
       personId,
       id,
@@ -105,41 +93,42 @@ function FilterTopPlanter(props) {
   };
 
   return (
-    <React.Fragment>
+    <>
       {
-        <Grid container>
-          <Grid item className={classes.inputContainer}>
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Planter ID"
-              htmlFor="Planter ID"
-              id="Planter ID"
-              placeholder="Planter ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Person ID"
-              htmlFor="Person ID"
-              id="Person ID"
-              placeholder="Person ID"
-              value={personId}
-              onChange={(e) => setPersonId(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Organization ID"
-              htmlFor="Organization ID"
-              id="Organization ID"
-              placeholder="Organization ID"
-              value={organizationId}
-              onChange={(e) => setOrganizationId(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            {/* {!userHasOrg && (
+        <form onSubmit={handleSubmit}>
+          <Grid container wrap="nowrap" direction="row">
+            <Grid item className={classes.inputContainer}>
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Planter ID"
+                htmlFor="Planter ID"
+                id="Planter ID"
+                placeholder="Planter ID"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Person ID"
+                htmlFor="Person ID"
+                id="Person ID"
+                placeholder="Person ID"
+                value={personId}
+                onChange={(e) => setPersonId(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Organization ID"
+                htmlFor="Organization ID"
+                id="Organization ID"
+                placeholder="Organization ID"
+                value={organizationId}
+                onChange={(e) => setOrganizationId(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              {/* {!userHasOrg && (
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
                 data-testid="org-dropdown"
@@ -169,70 +158,126 @@ function FilterTopPlanter(props) {
                 ))}
               </TextField>
             )} */}
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="First Name"
-              htmlFor="First Name"
-              id="First Name"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Last Name"
-              htmlFor="Last Name"
-              id="Last Name"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Email"
-              htmlFor="Email"
-              id="Email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <TextField
-              className={`${classes.textField} ${classes.filterElement}`}
-              label="Phone Number"
-              htmlFor="Phone Number"
-              id="Phone Number"
-              personId="Phone Number"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
-            <Button
-              className={classes.apply}
-              label="submit"
-              variant="outlined"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Apply
-            </Button>
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="First Name"
+                htmlFor="First Name"
+                id="First Name"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Last Name"
+                htmlFor="Last Name"
+                id="Last Name"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Email"
+                htmlFor="Email"
+                id="Email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Phone Number"
+                htmlFor="Phone Number"
+                id="Phone Number"
+                personId="Phone Number"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <Button
+                className={classes.apply}
+                label="submit"
+                variant="outlined"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Apply
+              </Button>
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="First Name"
+                htmlFor="First Name"
+                id="First Name"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Last Name"
+                htmlFor="Last Name"
+                id="Last Name"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Email"
+                htmlFor="Email"
+                id="Email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Phone Number"
+                htmlFor="Phone Number"
+                id="Phone Number"
+                personId="Phone Number"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </Grid>
+            <Grid className={classes.inputContainer}>
+              <Button
+                className={classes.apply}
+                type="submit"
+                label="submit"
+                htmlFor="submit"
+                id="submit"
+                variant="outlined"
+                color="primary"
+                onClick={(e) => handleSubmit(e)}
+              >
+                Apply
+              </Button>
 
-            <Button
-              className={classes.apply}
-              label="reset"
-              variant="outlined"
-              color="primary"
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
+              <Button
+                className={classes.apply}
+                label="reset"
+                htmlFor="reset"
+                id="reset"
+                variant="outlined"
+                color="primary"
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </form>
       }
-    </React.Fragment>
+    </>
   );
 }
 

@@ -15,7 +15,7 @@ const log = loglevel.getLogger('../tests/captureDetail.test.js');
 describe.skip('captureDetail', () => {
   let api;
   let captureValues;
-  let transition;
+  // let transition;
 
   const CAPTURE = {
     id: 0,
@@ -65,9 +65,9 @@ describe.skip('captureDetail', () => {
       log.debug('mock getTagById');
       return Promise.resolve(TAG);
     };
-    transition = forwardRef(function Transition(props, ref) {
-      return <Slide direction="up" ref={ref} {...props} />;
-    });
+    // transition = forwardRef(function Transition(props, ref) {
+    //   return <Slide direction="up" ref={ref} {...props} />;
+    // });
   });
 
   describe('with a default context', () => {
@@ -91,7 +91,7 @@ describe.skip('captureDetail', () => {
               <CaptureDetailProvider value={captureValues}>
                 <CaptureDetailDialog
                   open={true}
-                  TransitionComponent={transition}
+                  // TransitionComponent={transition}
                   capture={{ id: 0 }}
                 />
               </CaptureDetailProvider>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
@@ -18,10 +18,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     margin: theme.spacing(1),
   },
+  navbar: {
+    // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
+    width: '100%',
+    position: 'relative',
+    left: 0,
+    right: 'auto',
+  },
 }));
 
 const Navbar = (props) => {
-  const [isMenuShown, setMenuShown] = React.useState(false);
+  const [isMenuShown, setMenuShown] = useState(false);
   const classes = useStyles(props);
 
   function handleMenuClick() {
@@ -29,8 +36,8 @@ const Navbar = (props) => {
   }
 
   return (
-    <React.Fragment>
-      <AppBar color="default" className={props.className}>
+    <>
+      <AppBar color="default" className={classes.navbar}>
         <Grid container direction="column">
           <Toolbar className={classes.toolbar} disableGutters={true}>
             <Grid container justify="space-between">
@@ -50,9 +57,9 @@ const Navbar = (props) => {
       </AppBar>
       {/* children duplicated behind the AppBar component to preserve height */}
       <Toolbar className={classes.toolbar} />
-      {props.children}
+      {/* {props.children} */}
       {isMenuShown && <Menu onClose={() => setMenuShown(false)} />}
-    </React.Fragment>
+    </>
   );
 };
 

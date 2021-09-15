@@ -159,7 +159,7 @@ function Filter(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
@@ -392,11 +392,11 @@ function Filter(props) {
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button
+                className={classes.apply}
                 type="submit"
                 label="submit"
                 htmlFor="submit"
                 id="submit"
-                className={classes.apply}
                 variant="outlined"
                 color="primary"
                 onClick={(e) => handleSubmit(e)}
@@ -404,10 +404,10 @@ function Filter(props) {
                 Apply
               </Button>
               <Button
+                className={classes.apply}
                 label="reset"
                 htmlFor="reset"
                 id="reset"
-                className={classes.apply}
                 variant="outlined"
                 color="primary"
                 onClick={handleReset}
@@ -418,7 +418,7 @@ function Filter(props) {
           </Grid>
         </form>
       }
-    </React.Fragment>
+    </>
   );
 }
 
