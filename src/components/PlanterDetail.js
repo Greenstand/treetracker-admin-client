@@ -20,12 +20,14 @@ import EditPlanter from './EditPlanter';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 
+const PLANTER_IMAGE_SIZE = 441;
+
 const useStyle = makeStyles((theme) => ({
   box: {
     padding: theme.spacing(4),
   },
   cardMedia: {
-    height: '378px',
+    height: `${PLANTER_IMAGE_SIZE}px`,
   },
   personBox: {
     display: 'flex',
@@ -50,7 +52,7 @@ const useStyle = makeStyles((theme) => ({
   },
   imageContainer: {
     position: 'relative',
-    height: '378px',
+    height: `${PLANTER_IMAGE_SIZE}px`,
   },
 }));
 
@@ -107,10 +109,7 @@ const PlanterDetail = (props) => {
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
         <Grid
           style={{
-            width:
-              planter.imageRotation === 0 || planter.imageRotation === 180
-                ? 441
-                : 378,
+            width: PLANTER_IMAGE_SIZE,
           }}
         >
           <Grid container direction="column">
@@ -134,8 +133,8 @@ const PlanterDetail = (props) => {
               {planter.imageUrl && (
                 <OptimizedImage
                   src={planter.imageUrl}
-                  width={441}
-                  height={378}
+                  width={PLANTER_IMAGE_SIZE}
+                  height={PLANTER_IMAGE_SIZE}
                   className={classes.cardMedia}
                   fixed
                   rotation={planter.imageRotation}
