@@ -47,7 +47,7 @@ const EditPlanter = (props) => {
 
         setPlanterImages([
           ...(planter.imageUrl ? [planter.imageUrl] : []),
-          ...selfies.filter((img) => img !== planter.imageUrl),
+          ...selfies?.filter((img) => img !== planter.imageUrl),
         ]);
       }
     }

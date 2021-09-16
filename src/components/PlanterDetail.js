@@ -85,6 +85,7 @@ const PlanterDetail = (props) => {
         ) {
           setPlanterRegistrations(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
+            console.log('planter registrations: ', registrations);
             if (registrations && registrations.length) {
               const sortedRegistrations = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1,
@@ -169,6 +170,7 @@ const PlanterDetail = (props) => {
                 POLICIES.MANAGE_PLANTER,
               ]) && (
                 <Fab
+                  data-testid="edit-planter"
                   className={classes.editButton}
                   onClick={() => handleEditClick()}
                 >

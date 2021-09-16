@@ -18,6 +18,7 @@ import Verify from '../Verify';
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
+jest.setTimeout(7000);
 jest.mock('../../api/planters');
 jest.mock('../../api/treeTrackerApi');
 
@@ -45,7 +46,7 @@ const CAPTURE = {
 
 const CAPTURES = [
   {
-    id: 1,
+    id: 10,
     planterId: 10,
     planterIdentifier: 'planter1@some.place',
     deviceIdentifier: '1-abcdef123456',
@@ -66,7 +67,7 @@ const CAPTURES = [
     ],
   },
   {
-    id: 2,
+    id: 20,
     planterId: 11,
     planterIdentifier: 'planter2@some.place',
     deviceIdentifier: '2-abcdef123456',
@@ -87,7 +88,7 @@ const CAPTURES = [
     ],
   },
   {
-    id: 3,
+    id: 30,
     planterId: 10,
     planterIdentifier: 'planter3@some.place',
     deviceIdentifier: '3-abcdef123456',
@@ -209,17 +210,24 @@ describe('Verify', () => {
     planterApi = require('../../api/planters').default;
 
     planterApi.getCount = () => {
-      log.debug('mock getCount');
+      log.debug('mock getCount:');
       return Promise.resolve({ count: 2 });
     };
     planterApi.getPlanter = () => {
-      log.debug('mock getPlanter');
+      log.debug('mock getPlanter:');
       return Promise.resolve(PLANTER);
     };
-    // planterApi.getPlanters = () => {
-    //   log.debug('mock load');
-    //   return Promise.resolve(PLANTERS);
-    // };
+    planterApi.getPlanterRegistrations = () => {
+      log.debug('mock getPlanterRegistrations:');
+      return Promise.resolve([]);
+    };
+    planterApi.getPlanterSelfies = (id) => {
+      log.debug('mock getPlanterSelfies:');
+      return Promise.resolve([
+        { planterPhotoUrl: '' },
+        { planterPhotoUrl: '' },
+      ]);
+    };
 
     // mock the treeTrackerApi
     captureApi = require('../../api/treeTrackerApi').default;
@@ -347,21 +355,16 @@ describe('Verify', () => {
 
     afterEach(cleanup);
 
-    it('renders capture count', () => {
-      screen.logTestingPlaygroundURL();
-      expect(screen.getByText(/3 captures/i));
-    });
-
     it('renders filter top', () => {
       const filter = screen.getByRole('button', { name: /filter/i });
       userEvent.click(filter);
       // screen.logTestingPlaygroundURL();
 
-      const verifyStatus = screen.getAllByLabelText(/verification status/i);
-      expect(verifyStatus).toHaveLength(2);
+      const verifyStatus = screen.getByLabelText(/awaiting verification/i);
+      expect(verifyStatus).toBeInTheDocument();
 
-      const tokenStatus = screen.getAllByLabelText(/token status/i);
-      expect(tokenStatus).toHaveLength(2);
+      const tokenStatus = screen.getByLabelText(/token status/i);
+      expect(tokenStatus).toBeInTheDocument();
     });
 
     it('renders side panel', () => {
@@ -373,6 +376,8 @@ describe('Verify', () => {
       // screen.logTestingPlaygroundURL();
       const pageSize = screen.getAllByText(/captures per page:/i);
       expect(pageSize).toHaveLength(2);
+
+      expect(screen.getByText(/3 captures/i));
     });
 
     it('renders capture details', () => {
@@ -406,9 +411,17 @@ describe('Verify', () => {
       expect(screen.getByText(/registered/i)).toBeInTheDocument();
     });
 
-    // it('renders filter top', () => {
-    //   // screen.logTestingPlaygroundURL();
-    //   // expect(screen.getByText(/planters per page: 24/i));
+    // it('renders edit planter', () => {
+    //   const planterDetails = screen.getAllByRole('button', {
+    //     name: /planter details/i,
+    //   });
+    //   userEvent.click(planterDetails[0]);
+
+    //   screen.logTestingPlaygroundURL();
+    //   //
+    //   const editPlanter = screen.getByTestId(/edit-planter/i);
+    //   expect(editPlanter).toBeInTheDocument();
+    //   userEvent.click(editPlanter);
     // });
   });
 });
