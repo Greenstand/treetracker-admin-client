@@ -22,10 +22,10 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci')
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '16.x'
       - name: npm clean install
         run: npm ci
         working-directory: ${{ env.project-directory }}
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '16.x'
       # install dependencies and run semantic-release
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
       - run: semantic-release
