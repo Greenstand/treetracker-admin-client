@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.0...v1.20.1) (2021-09-17)
+
+
+### Bug Fixes
+
+* filter email + phone in planters ([#155](https://github.com/Greenstand/treetracker-admin-client/issues/155)) ([2d0dc11](https://github.com/Greenstand/treetracker-admin-client/commit/2d0dc11dab9ab67bf7d11c967c47d24433a005a4))
+
 # [1.20.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.19.1...v1.20.0) (2021-09-15)
 
 
