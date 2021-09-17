@@ -84,6 +84,6 @@
     "react-inspector": "^3.0.2"
   },
   "engines": {
-    "node": ">= 12 < 13"
+    "node": ">= 16 < 17"
   }
 }
