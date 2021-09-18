@@ -972,7 +972,7 @@ function Users(props) {
         onClose={handleSnackbarClose}
         message={snackbarMessage}
         action={
-          <React.Fragment>
+          <>
             <IconButton
               size="small"
               aria-label="close"
@@ -981,7 +981,7 @@ function Users(props) {
             >
               <CloseIcon fontSize="small" />
             </IconButton>
-          </React.Fragment>
+          </>
         }
       />
     </>

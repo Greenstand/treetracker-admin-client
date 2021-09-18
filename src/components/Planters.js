@@ -215,7 +215,7 @@ const Planters = (props) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <Grid container direction="column" className={classes.outer}>
         <Grid item>
           <Navbar
@@ -275,7 +275,7 @@ const Planters = (props) => {
         planterId={planterDetail.id}
         onClose={() => setDetailShown(false)}
       />
-    </React.Fragment>
+    </>
   );
 };
 
