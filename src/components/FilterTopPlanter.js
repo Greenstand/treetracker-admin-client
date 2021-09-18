@@ -89,7 +89,7 @@ function FilterTopPlanter(props) {
   };
 
   const handleEnterPress = (e) => {
-    e.key === 'Enter' && handleSubmit();
+    e.key === 'Enter' && handleSubmit(e);
   };
 
   return (
@@ -193,59 +193,10 @@ function FilterTopPlanter(props) {
                 label="Phone Number"
                 htmlFor="Phone Number"
                 id="Phone Number"
-                personId="Phone Number"
                 placeholder="Phone Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 onKeyDown={handleEnterPress}
-              />
-              <Button
-                className={classes.apply}
-                label="submit"
-                variant="outlined"
-                color="primary"
-                onClick={handleSubmit}
-              >
-                Apply
-              </Button>
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="First Name"
-                htmlFor="First Name"
-                id="First Name"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                onKeyDown={handleEnterPress}
-              />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Last Name"
-                htmlFor="Last Name"
-                id="Last Name"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                onKeyDown={handleEnterPress}
-              />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Email"
-                htmlFor="Email"
-                id="Email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Phone Number"
-                htmlFor="Phone Number"
-                id="Phone Number"
-                personId="Phone Number"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
               />
             </Grid>
             <Grid className={classes.inputContainer}>
@@ -257,7 +208,7 @@ function FilterTopPlanter(props) {
                 id="submit"
                 variant="outlined"
                 color="primary"
-                onClick={(e) => handleSubmit(e)}
+                onClick={handleSubmit}
               >
                 Apply
               </Button>

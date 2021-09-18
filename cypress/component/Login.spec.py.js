@@ -1,7 +1,7 @@
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import Login from './Login';
-import theme from './common/theme';
+import Login from '../../src/components/Login';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 describe('Login', () => {

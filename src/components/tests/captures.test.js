@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import { act, render, screen, within, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
-import { AppProvider } from '../context/AppContext';
-import { CapturesContext, CapturesProvider } from '../context/CapturesContext';
+import { AppProvider } from '../../context/AppContext';
+import {
+  CapturesContext,
+  CapturesProvider,
+} from '../../context/CapturesContext';
 import CaptureTable from 'components/CaptureTable';
-import FilterModel from '../models/Filter';
+import FilterModel from '../../models/Filter';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../models/captures.test');

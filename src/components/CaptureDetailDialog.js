@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-} from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -204,21 +198,19 @@ function CaptureDetailDialog(props) {
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
           ].map((item) => (
-            <Fragment key={item.label}>
-              <Grid item>
-                <Typography variant="subtitle1">{item.label}</Typography>
-                <Typography variant="body1">
-                  {item.link ? (
-                    <LinkToWebmap value={item.value} type="user" />
-                  ) : (
-                    item.value || '---'
-                  )}
-                  {item.value && item.copy && (
-                    <CopyButton label={item.label} value={item.value} />
-                  )}
-                </Typography>
-              </Grid>
-            </Fragment>
+            <Grid item key={item.label}>
+              <Typography variant="subtitle1">{item.label}</Typography>
+              <Typography variant="body1">
+                {item.link ? (
+                  <LinkToWebmap value={item.value} type="user" />
+                ) : (
+                  item.value || '---'
+                )}
+                {item.value && item.copy && (
+                  <CopyButton label={item.label} value={item.value} />
+                )}
+              </Typography>
+            </Grid>
           ))}
         </Grid>
         <Divider />

@@ -30,7 +30,7 @@ const SPECIES = [
   },
 ];
 
-describe.skip('species management', () => {
+describe('species management', () => {
   let api;
   let speciesValues;
   // can be used to test routes and permissions

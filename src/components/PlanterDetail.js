@@ -123,7 +123,7 @@ const PlanterDetail = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
         <Grid
           style={{
@@ -264,7 +264,7 @@ const PlanterDetail = (props) => {
         planter={planter}
         onClose={handleEditClose}
       ></EditPlanter>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -439,7 +439,7 @@ const Verify = (props) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <Grid item className={classes.body}>
         <Grid item className={classes.bodyInner}>
           <Grid item>
@@ -584,7 +584,7 @@ const Verify = (props) => {
         onClose={() => handleCloseCaptureDetail()}
         capture={captureDetail.capture}
       />
-    </React.Fragment>
+    </>
   );
 };
 
