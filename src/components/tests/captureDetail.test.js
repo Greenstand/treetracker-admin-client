@@ -12,7 +12,7 @@ import CaptureDetailDialog from '../CaptureDetailDialog';
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/captureDetail.test.js');
 
-describe.skip('captureDetail', () => {
+describe('captureDetail', () => {
   let api;
   let captureValues;
   // let transition;

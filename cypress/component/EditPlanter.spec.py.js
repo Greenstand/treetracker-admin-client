@@ -2,12 +2,12 @@
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
 import { Provider } from 'react-redux';
-import theme from './common/theme';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { init } from '@rematch/core';
-import api from '../api/planters';
+import api from '../../src/api/planters';
 
-import EditPlanter from './EditPlanter';
+import EditPlanter from '../../src/components/EditPlanter';
 
 describe('EditPlanter', () => {
   let store;

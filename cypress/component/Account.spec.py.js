@@ -1,7 +1,7 @@
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import Account from './Account';
-import theme from './common/theme';
+import Account from '../../src/components/Account';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 describe('Account', () => {

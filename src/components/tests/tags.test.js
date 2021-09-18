@@ -39,7 +39,7 @@ const ORGS = [
   },
 ];
 
-describe.skip('tags', () => {
+describe('tags', () => {
   //{{{
   let tagsValues;
   let api;

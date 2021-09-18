@@ -77,7 +77,7 @@ const ORGS = [
   },
 ];
 
-describe.skip('planters', () => {
+describe('planters', () => {
   let api;
   let planterValues;
 
