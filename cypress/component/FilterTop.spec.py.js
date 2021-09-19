@@ -42,12 +42,10 @@ describe('FilterTop', () => {
     mount(
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <FilterTop
-            filter={filterModel}
-            isOpen={true}
-          />
-        </ThemeProvider>,
-      </Provider>
+          <FilterTop filter={filterModel} isOpen={true} />
+        </ThemeProvider>
+        ,
+      </Provider>,
     );
   });
 
@@ -55,11 +53,17 @@ describe('FilterTop', () => {
     cy.get('#start-date-picker+* button').then(($buttons) => {
       $buttons[0].click();
       // Check forward button is disabled
-      cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should('have.length', 1);
+      cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
+        'have.length',
+        1,
+      );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
-        cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should('have.length', 0);
+        cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
+          'have.length',
+          0,
+        );
       });
     });
   });
@@ -68,11 +72,17 @@ describe('FilterTop', () => {
     cy.get('#end-date-picker+* button').then(($buttons) => {
       $buttons[0].click();
       // Check forward button is disabled
-      cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should('have.length', 1);
+      cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
+        'have.length',
+        1,
+      );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
-        cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should('have.length', 0);
+        cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
+          'have.length',
+          0,
+        );
       });
     });
   });

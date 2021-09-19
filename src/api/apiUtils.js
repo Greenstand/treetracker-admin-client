@@ -14,9 +14,13 @@ export async function handleResponse(response) {
 
 // we should call an error logging service, but
 export function handleError(error) {
-  // eslint-disable-next-line no-console
-  console.error('API call failed. ' + error);
-  throw error;
+  if (error.name === 'AbortError') {
+    // Ignore `AbortError`
+    console.log('Aborted', error);
+  } else {
+    console.error('API call failed. ' + error);
+    throw error;
+  }
 }
 
 export function getOrganization() {

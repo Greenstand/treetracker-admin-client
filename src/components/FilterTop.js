@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,11 +10,9 @@ import FilterModel, {
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
-  TAG_NOT_SET,
-
+  // TAG_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
-import { connect } from 'react-redux';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -24,12 +22,14 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
-import { getOrganization } from '../api/apiUtils';
 import {
   verificationStates,
   tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
+import { AppContext } from '../context/AppContext';
+import { SpeciesContext } from '../context/SpeciesContext';
+import { TagsContext } from '../context/TagsContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -72,45 +72,40 @@ const styles = (theme) => {
 
 function Filter(props) {
   // console.log('render: filter top');
-  const { classes, filter } = props;
+  const speciesContext = useContext(SpeciesContext);
+  const tagsContext = useContext(TagsContext);
+  const { orgList, userHasOrg } = useContext(AppContext);
+  const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
-  const [captureId, setCaptureId] = useState(filter.captureId || '');
-  const [planterId, setPlanterId] = useState(filter.planterId || '');
-  const [deviceId, setDeviceId] = useState(filter.deviceIdentifier || '');
+  const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [planterId, setPlanterId] = useState(filter?.planterId || '');
+  const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [planterIdentifier, setPlanterIdentifier] = useState(
-    filter.planterIdentifier || '',
+    filter?.planterIdentifier || '',
   );
-  const [approved, setApproved] = useState(filter.approved);
-  const [active, setActive] = useState(filter.active);
+  const [approved, setApproved] = useState(filter?.approved);
+  const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
-    filter.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault,
   );
-  const [dateEnd, setDateEnd] = useState(filter.dateEnd || dateEndDefault);
-  const [speciesId, setSpeciesId] = useState(filter.speciesId || ALL_SPECIES);
+  const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
+  const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
-  // TODO: how to save the tag state when the filter top opens/closes
-  // e.g. state --> {"id":5,"tagName":"another_tag","active":true,"public":true}
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS,
   );
-  const [userHasOrg, setUserHasOrg] = useState(false);
-  const [tokenId, setTokenId] = useState(filterOptionAll);
+  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   useEffect(() => {
-    props.tagsDispatch.getTags(tagSearchString);
-  }, [tagSearchString, props.tagsDispatch]);
-
-  useEffect(() => {
-    const hasOrg = getOrganization();
-    setUserHasOrg(hasOrg ? true : false);
-    // if not an org account && the org list isn't loaded --> load the orgs
-    if (!hasOrg && !props.organizationState.organizationList.length) {
-      props.organizationDispatch.loadOrganizations();
+    if (tagSearchString === '') {
+      const abortController = new AbortController();
+      tagsContext.getTags(tagSearchString, { signal: abortController.signal });
+      return () => abortController.abort();
     }
-  }, []);
+  }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -126,6 +121,7 @@ function Filter(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.captureId = captureId;
     filter.planterId = planterId;
@@ -151,9 +147,9 @@ function Filter(props) {
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setSpeciesId(ALL_SPECIES);
-    setOrganizationId(ALL_ORGANIZATIONS);
     setTag(null);
     setTagSearchString('');
+    setOrganizationId(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -163,13 +159,15 @@ function Filter(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
               <TextField
                 select
+                htmlFor="verification-status"
+                id="verification-status"
                 label="Verification Status"
                 value={
                   active === undefined && approved === undefined
@@ -208,6 +206,8 @@ function Filter(props) {
               </TextField>
               <TextField
                 select
+                htmlFor="token-status"
+                id="token-status"
                 label="Token Status"
                 value={tokenId}
                 onChange={(e) => {
@@ -231,6 +231,7 @@ function Filter(props) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="start-date-picker"
+                  htmlFor="start-date-picker"
                   label="Start Date"
                   format={getDateFormatLocale(true)}
                   value={dateStart}
@@ -243,6 +244,7 @@ function Filter(props) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="end-date-picker"
+                  htmlFor="end-date-picker"
                   label="End Date"
                   format={getDateFormatLocale(true)}
                   value={dateEnd}
@@ -255,31 +257,42 @@ function Filter(props) {
                 />
               </MuiPickersUtilsProvider>
               <TextField
+                htmlFor="planter-id"
+                id="planter-id"
                 label="Planter ID"
                 placeholder="e.g. 7"
                 value={planterId}
                 onChange={(e) => setPlanterId(e.target.value)}
               />
               <TextField
+                htmlFor="capture-id"
+                id="capture-id"
                 label="Capture ID"
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
               />
               <TextField
+                htmlFor="device-identifier"
+                id="device-identifier"
                 label="Device Identifier"
                 placeholder="e.g. 1234abcd"
                 value={deviceId}
                 onChange={(e) => setDeviceId(e.target.value)}
               />
               <TextField
+                htmlFor="planter-identifier"
+                id="planter-identifier"
                 label="Planter Identifier"
                 placeholder="e.g. planter@example.com"
                 value={planterIdentifier}
                 onChange={(e) => setPlanterIdentifier(e.target.value)}
               />
               <TextField
+                data-testid="species-dropdown"
                 select
+                htmlFor="species"
+                id="species"
                 label="Species"
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
@@ -290,31 +303,50 @@ function Filter(props) {
                     id: SPECIES_NOT_SET,
                     name: 'Not set',
                   },
-                  ...props.speciesState.speciesList,
+                  ...speciesContext.speciesList,
                 ].map((species) => (
-                  <MenuItem key={species.id} value={species.id}>
+                  <MenuItem
+                    data-testid="species-item"
+                    key={species.id}
+                    value={species.id}
+                  >
                     {species.name}
                   </MenuItem>
                 ))}
               </TextField>
               <Autocomplete
+                data-testid="tag-dropdown"
+                label="Tag"
+                htmlFor="tag"
+                id="tag"
                 classes={{
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
-                  {
-                    id: TAG_NOT_SET,
-                    tagName: 'Not set',
-                    active: true,
-                    public: true,
-                  },
-                  ...props.tagsState.tagList,
+                  // {
+                  //   id: TAG_NOT_SET,
+                  //   tagName: 'Not set',
+                  //   active: true,
+                  //   public: true,
+                  // },
+                  ...tagsContext.tagList,
                 ]}
                 value={tag}
-                getOptionLabel={(tag) => tag.tagName}
+                defaultValue={'Not set'}
+                getOptionLabel={(tag) => {
+                  // if (tag === 'Not set') {
+                  //   return 'Not set';
+                  // }
+                  return tag.tagName;
+                }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  setTag(newVal);
+                  console.log('newVal -- ', newVal);
+                  if (newVal && newVal.tagName === 'Not set') {
+                    setTag('Not set');
+                  } else {
+                    setTag(newVal);
+                  }
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -322,11 +354,17 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
+                // selectOnFocus
+                // clearOnBlur
+                // handleHomeEndKeys
               />
               {!userHasOrg && (
                 <TextField
+                  data-testid="org-dropdown"
                   select
                   label="Organization"
+                  htmlFor="organization"
+                  id="organization"
                   value={organizationId}
                   onChange={(e) => setOrganizationId(e.target.value)}
                 >
@@ -339,9 +377,13 @@ function Filter(props) {
                       id: ORGANIZATION_NOT_SET,
                       name: 'Not set',
                     },
-                    ...props.organizationState.organizationList,
+                    ...orgList,
                   ].map((org) => (
-                    <MenuItem key={org.id} value={org.id}>
+                    <MenuItem
+                      data-testid="org-item"
+                      key={org.id}
+                      value={org.id}
+                    >
                       {org.name}
                     </MenuItem>
                   ))}
@@ -350,8 +392,11 @@ function Filter(props) {
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button
-                type="submit"
                 className={classes.apply}
+                type="submit"
+                label="submit"
+                htmlFor="submit"
+                id="submit"
                 variant="outlined"
                 color="primary"
                 onClick={(e) => handleSubmit(e)}
@@ -360,6 +405,9 @@ function Filter(props) {
               </Button>
               <Button
                 className={classes.apply}
+                label="reset"
+                htmlFor="reset"
+                id="reset"
                 variant="outlined"
                 color="primary"
                 onClick={handleReset}
@@ -370,7 +418,7 @@ function Filter(props) {
           </Grid>
         </form>
       }
-    </React.Fragment>
+    </>
   );
 }
 
@@ -384,21 +432,4 @@ const getVerificationStatus = (active, approved) => {
   }
 };
 
-//export default compose(
-//  withStyles(styles, { withTheme: true, name: 'Filter' })
-//)(Filter)
-export default withStyles(styles)(
-  connect(
-    //state
-    (state) => ({
-      speciesState: state.species,
-      tagsState: state.tags,
-      organizationState: state.organizations,
-    }),
-    //dispatch
-    (dispatch) => ({
-      tagsDispatch: dispatch.tags,
-      organizationDispatch: dispatch.organizations,
-    }),
-  )(Filter),
-);
+export default withStyles(styles)(Filter);

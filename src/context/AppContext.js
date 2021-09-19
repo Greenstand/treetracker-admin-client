@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
+import axios from 'axios';
 
-import Verify from './Verify';
-import Planters from './Planters';
-import Captures from './Captures';
-import Account from './Account';
-import Home from './Home';
-import Users from './Users';
-import SpeciesMgt from './SpeciesMgt';
-import CaptureMatchingFrame from './CaptureMatching/CaptureMatchingFrame';
+import VerifyView from '../views/VerifyView';
+import Planters from '../components/Planters';
+import CapturesView from '../views/CapturesView';
+import Account from '../components/Account';
+import Home from '../components/Home';
+import Users from '../components/Users';
+import SpeciesView from '../views/SpeciesView';
+import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
+import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
 import IconShowChart from '@material-ui/icons/ShowChart';
@@ -21,12 +23,11 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-
+import { PlanterProvider } from './PlanterContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
-import axios from 'axios';
-import Unauthorized from './Unauthorized';
+import api from '../api/treeTrackerApi';
 
-export const AppContext = React.createContext({});
+export const AppContext = createContext({}); // no initial context here because we want login values to be 'undefined' until they are confirmed
 
 function getRoutes(user) {
   return [
@@ -47,7 +48,7 @@ function getRoutes(user) {
     {
       name: 'Verify',
       linkTo: '/verify',
-      component: Verify,
+      component: VerifyView,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -58,7 +59,7 @@ function getRoutes(user) {
     {
       name: 'Captures',
       linkTo: '/captures',
-      component: Captures,
+      component: CapturesView,
       icon: IconNature,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -96,7 +97,7 @@ function getRoutes(user) {
     {
       name: 'Species',
       linkTo: '/species',
-      component: SpeciesMgt,
+      component: SpeciesView,
       icon: CategoryIcon,
       //TODO this is temporary, need to add species policy
       disabled:
@@ -130,9 +131,19 @@ function getRoutes(user) {
 
 export const AppProvider = (props) => {
   const localUser = JSON.parse(localStorage.getItem('user'));
-  const [user, setUser] = React.useState(undefined);
-  const [token, setToken] = React.useState(undefined);
-  const [routes, setRoutes] = React.useState(getRoutes(localUser));
+  const [user, setUser] = useState(undefined);
+  const [token, setToken] = useState(undefined);
+  const [routes, setRoutes] = useState(getRoutes(localUser));
+  const [userHasOrg, setUserHasOrg] = useState(false);
+  const [orgList, setOrgList] = useState([]);
+
+  // check if the user has an org load organizations when the user changes
+  useEffect(() => {
+    if (user && token && !user?.policy?.organization?.id) {
+      loadOrganizations();
+    }
+    setUserHasOrg(!!user?.policy?.organization?.id);
+  }, [user, token]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -140,13 +151,15 @@ export const AppProvider = (props) => {
     if (localToken && localUser) {
       // Temporarily log in with the localStorage credentials while
       // we check that the session is still valid
-      context.login(localUser, localToken);
+      login(localUser, localToken);
 
       axios
         .get(
           `${process.env.REACT_APP_API_ROOT}/auth/check_session?id=${localUser.id}`,
           {
-            headers: { Authorization: localToken },
+            headers: {
+              Authorization: localToken,
+            },
           },
         )
         .then((response) => {
@@ -154,13 +167,13 @@ export const AppProvider = (props) => {
           if (response.status === 200) {
             if (response.data.token === undefined) {
               //the role has not changed
-              context.login(localUser, localToken, true);
+              login(localUser, localToken, true);
             } else {
               //role has changed, update the token
-              context.login(localUser, response.data.token, true);
+              login(localUser, response.data.token, true);
             }
           } else {
-            context.logout();
+            logout();
           }
         });
       return true;
@@ -168,48 +181,63 @@ export const AppProvider = (props) => {
     return false;
   }
 
-  const context = {
-    login: (newUser, newToken, rememberDetails) => {
-      // This api gets hit with identical users from multiple login calls
-      if (!isEqual(session.user, newUser)) {
-        setUser(newUser);
-        session.user = newUser;
-        if (rememberDetails) {
-          localStorage.setItem('user', JSON.stringify(newUser));
-        }
-
-        // By not updating routes object, we can memoize the menu and routes better
-        setRoutes(getRoutes(newUser));
+  function login(newUser, newToken, rememberDetails) {
+    // This api gets hit with identical users from multiple login calls
+    if (!isEqual(session.user, newUser)) {
+      setUser(newUser);
+      session.user = newUser;
+      if (rememberDetails) {
+        localStorage.setItem('user', JSON.stringify(newUser));
       }
 
-      if (session.token !== newToken) {
-        session.token = newToken;
-        setToken(newToken);
+      // By not updating routes object, we can memoize the menu and routes better
+      setRoutes(getRoutes(newUser));
+    }
 
-        if (rememberDetails) {
-          localStorage.setItem('token', JSON.stringify(newToken));
-        }
+    if (session.token !== newToken) {
+      session.token = newToken;
+      setToken(newToken);
+
+      if (rememberDetails) {
+        localStorage.setItem('token', JSON.stringify(newToken));
       }
-    },
-    logout: () => {
-      setUser(undefined);
-      setToken(undefined);
-      setRoutes(getRoutes(undefined));
-      session.token = undefined;
-      session.user = undefined;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    },
+    }
+  }
+
+  function logout() {
+    setUser(undefined);
+    setToken(undefined);
+    setRoutes(getRoutes(undefined));
+    session.token = undefined;
+    session.user = undefined;
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
+
+  async function loadOrganizations() {
+    const orgs = await api.getOrganizations();
+    console.log('load organizations from api:', orgs.length);
+    setOrgList(orgs);
+  }
+
+  const value = {
+    login,
+    logout,
     user,
     token,
     routes,
+    orgList,
+    userHasOrg,
   };
 
   if (!user || !token) {
     checkSession();
   }
 
+  // VerifyProvider and PlanterProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={context}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={value}>
+      <PlanterProvider>{props.children}</PlanterProvider>
+    </AppContext.Provider>
   );
 };

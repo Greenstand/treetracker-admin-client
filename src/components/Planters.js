@@ -1,30 +1,30 @@
 /*
  * Planter page
  */
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import TablePagination from '@material-ui/core/TablePagination';
 import Button from '@material-ui/core/Button';
-
-import { selectedHighlightColor, documentTitle } from '../common/variables.js';
-import Grid from '@material-ui/core/Grid';
+import Person from '@material-ui/icons/Person';
 import IconFilter from '@material-ui/icons/FilterList';
 
-import FilterTopPlanter from './FilterTopPlanter';
-import Person from '@material-ui/icons/Person';
-import Navbar from './Navbar';
-import PlanterDetail from './PlanterDetail';
-import OptimizedImage from './OptimizedImage';
+import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import LinkToWebmap from './common/LinkToWebmap';
+import Navbar from './Navbar';
+import FilterTopPlanter from './FilterTopPlanter';
+import OptimizedImage from './OptimizedImage';
+import PlanterDetail from './PlanterDetail';
+import { PlanterContext } from '../context/PlanterContext';
 
-const log = require('loglevel').getLogger('../components/Planters');
+// const log = require('loglevel').getLogger('../components/Planters');
 
 const PLANTER_IMAGE_SIZE = 182;
 
@@ -128,41 +128,57 @@ const useStyles = makeStyles((theme) => ({
 const Planters = (props) => {
   // log.debug('render: Planters...');
   const classes = useStyles(props);
-  const [isFilterShown, setFilterShown] = React.useState(false);
-  const [isDetailShown, setDetailShown] = React.useState(false);
-  const [planterDetail, setPlanterDetail] = React.useState({});
+  const planterContext = useContext(PlanterContext);
+  const [isFilterShown, setFilterShown] = useState(false);
+  const [isDetailShown, setDetailShown] = useState(false);
+  const [planterDetail, setPlanterDetail] = useState({});
 
   /*
-   * effect to load page when mounted
+   * effect to load page when mounted and initialize the title and planter count
    */
   useEffect(() => {
-    log.debug('mounted');
-    props.plantersDispatch.count();
-  }, [props.plantersDispatch]);
-
-  useEffect(() => {
-    props.plantersDispatch.load({
-      pageNumber: 0,
-    });
-  }, [props.plantersDispatch, props.plantersState.pageSize]);
-
-  useEffect(() => {
-    props.plantersDispatch.count({
-      filter: props.plantersState.filter,
-    });
-  }, [props.plantersDispatch, props.plantersState.filter]);
-
-  /* to update html document title */
-  useEffect(() => {
+    // log.debug('planters mounted', filter);
     document.title = `Planters - ${documentTitle}`;
   }, []);
+
+  useEffect(() => {
+    planterContext.load();
+  }, [
+    planterContext.pageSize,
+    planterContext.currentPage,
+    planterContext.filter,
+  ]);
+
+  useEffect(() => {
+    planterContext.getCount();
+  }, [
+    planterContext.pageSize,
+    planterContext.currentPage,
+    planterContext.filter,
+  ]);
+
+  function handleFilterClick() {
+    if (isFilterShown) {
+      setFilterShown(false);
+    } else {
+      setFilterShown(true);
+    }
+  }
+
+  function handlePageChange(e, page) {
+    planterContext.changeCurrentPage(page);
+  }
+
+  function handleChangePageSize(e, option) {
+    planterContext.changePageSize(option.props.value);
+  }
 
   function handlePlanterClick(planter) {
     setDetailShown(true);
     setPlanterDetail(planter);
   }
 
-  const placeholderPlanters = Array(props.plantersState.pageSize)
+  const placeholderPlanters = Array(planterContext.pageSize)
     .fill()
     .map((_, index) => {
       return {
@@ -171,9 +187,9 @@ const Planters = (props) => {
       };
     });
 
-  let plantersItems = (props.plantersState.isLoading
+  let plantersItems = (planterContext.isLoading
     ? placeholderPlanters
-    : props.plantersState.planters
+    : planterContext.planters
   ).map((planter) => {
     return (
       <Planter
@@ -185,39 +201,13 @@ const Planters = (props) => {
     );
   });
 
-  function handleFilterClick() {
-    if (isFilterShown) {
-      setFilterShown(false);
-    } else {
-      setFilterShown(true);
-    }
-  }
-
-  function handlePageChange(e, page) {
-    props.plantersDispatch.load({
-      pageNumber: page,
-      filter: props.plantersState.filter,
-    });
-  }
-
-  function handleChangePageSize(e, option) {
-    props.plantersDispatch.changePageSize({ pageSize: option.props.value });
-  }
-
-  function updateFilter(filter) {
-    props.plantersDispatch.load({
-      pageNumber: 0,
-      filter,
-    });
-  }
-
   const pagination = (
     <TablePagination
       rowsPerPageOptions={[24, 48, 96]}
       component="div"
-      count={props.plantersState.count || 0}
-      rowsPerPage={props.plantersState.pageSize}
-      page={props.plantersState.currentPage}
+      count={planterContext.count || 0}
+      rowsPerPage={planterContext.pageSize}
+      page={planterContext.currentPage}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Planters per page:"
@@ -225,7 +215,7 @@ const Planters = (props) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <Grid container direction="column" className={classes.outer}>
         <Grid item>
           <Navbar
@@ -244,8 +234,8 @@ const Planters = (props) => {
             {isFilterShown && (
               <FilterTopPlanter
                 isOpen={isFilterShown}
-                onSubmit={(filter) => updateFilter(filter)}
-                filter={props.plantersState.filter}
+                onSubmit={(filter) => planterContext.updateFilter(filter)}
+                filter={planterContext.filter}
                 onClose={handleFilterClick}
               />
             )}
@@ -285,11 +275,11 @@ const Planters = (props) => {
         planterId={planterDetail.id}
         onClose={() => setDetailShown(false)}
       />
-    </React.Fragment>
+    </>
   );
 };
 
-function Planter(props) {
+export function Planter(props) {
   const { planter } = props;
   const classes = useStyles(props);
   return (
@@ -346,15 +336,4 @@ function Planter(props) {
     </div>
   );
 }
-export { Planter };
-
-export default connect(
-  //state
-  (state) => ({
-    plantersState: state.planters,
-  }),
-  //dispatch
-  (dispatch) => ({
-    plantersDispatch: dispatch.planters,
-  }),
-)(Planters);
+export default Planters;

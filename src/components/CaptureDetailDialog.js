@@ -1,7 +1,4 @@
-import React, { Fragment, useCallback, useState, useEffect } from 'react';
-
-import compose from 'recompose/compose';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -20,6 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
+import { CaptureDetailContext } from '../context/CaptureDetailContext';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -76,8 +74,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
+  // console.log('render: capture detail dialog');
   const { open, capture } = props;
-
+  const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
@@ -90,29 +89,29 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    props.captureDetailDispatch.getCaptureDetail(props.capture.id);
+    cdContext.getCaptureDetail(capture.id);
 
     window.addEventListener('resize', resizeWindow);
     return () => {
       window.removeEventListener('resize', resizeWindow);
     };
-  }, [props.captureDetailDispatch, props.capture, resizeWindow]);
+  }, [capture, resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
    */
   useEffect(() => {
-    if (props.captureDetail.capture) {
-      setRenderCapture(props.captureDetail.capture);
+    if (cdContext.capture) {
+      setRenderCapture(cdContext.capture);
     } else {
-      setRenderCapture(props.capture);
+      setRenderCapture(capture);
     }
-  }, [props.captureDetail, props.capture]);
+  }, [cdContext.capture, capture]);
 
   function handleClose() {
     setSnackbarOpen(false);
     setSnackbarLabel('');
-    props.captureDetailDispatch.reset();
+    cdContext.reset();
     props.onClose();
   }
 
@@ -199,21 +198,19 @@ function CaptureDetailDialog(props) {
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
           ].map((item) => (
-            <Fragment key={item.label}>
-              <Grid item>
-                <Typography variant="subtitle1">{item.label}</Typography>
-                <Typography variant="body1">
-                  {item.link ? (
-                    <LinkToWebmap value={item.value} type="user" />
-                  ) : (
-                    item.value || '---'
-                  )}
-                  {item.value && item.copy && (
-                    <CopyButton label={item.label} value={item.value} />
-                  )}
-                </Typography>
-              </Grid>
-            </Fragment>
+            <Grid item key={item.label}>
+              <Typography variant="subtitle1">{item.label}</Typography>
+              <Typography variant="body1">
+                {item.link ? (
+                  <LinkToWebmap value={item.value} type="user" />
+                ) : (
+                  item.value || '---'
+                )}
+                {item.value && item.copy && (
+                  <CopyButton label={item.label} value={item.value} />
+                )}
+              </Typography>
+            </Grid>
           ))}
         </Grid>
         <Divider />
@@ -282,7 +279,7 @@ function CaptureDetailDialog(props) {
           message={`${snackbarLabel} copied to clipboard`}
           color="primary"
           action={
-            <Fragment>
+            <>
               <IconButton
                 size="small"
                 aria-label="close"
@@ -290,7 +287,7 @@ function CaptureDetailDialog(props) {
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
-            </Fragment>
+            </>
           }
         />
       </Grid>
@@ -298,7 +295,7 @@ function CaptureDetailDialog(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -327,23 +324,15 @@ function CaptureDetailDialog(props) {
           <Grid container direction="column">
             <Tags
               capture={renderCapture}
-              species={props.captureDetail.species}
-              captureTags={props.captureDetail.tags}
+              species={cdContext.species}
+              captureTags={cdContext.tags}
             />
           </Grid>
         </Grid>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 }
-
-const mapState = (state) => ({
-  captureDetail: state.captureDetail,
-});
-
-const mapDispatch = (dispatch) => ({
-  captureDetailDispatch: dispatch.captureDetail,
-});
 
 const getTokenStatus = (tokenId) => {
   if (tokenId === undefined) {
@@ -355,4 +344,4 @@ const getTokenStatus = (tokenId) => {
   }
 };
 
-export default compose(connect(mapState, mapDispatch))(CaptureDetailDialog);
+export default CaptureDetailDialog;

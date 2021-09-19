@@ -11,7 +11,6 @@ import { tokenizationStates } from '../common/variables';
 
 export default class Filter {
   captureId;
-  //status
   dateStart;
   dateEnd;
   approved;
@@ -29,7 +28,6 @@ export default class Filter {
   }
 
   getWhereObj() {
-    //{{{
     let where = {};
 
     if (this.captureId) {
@@ -53,10 +51,6 @@ export default class Filter {
     if (this.approved !== undefined) {
       where.approved = this.approved;
     }
-
-    // if (this.rejected !== undefined) {
-    //   where.rejected = this.rejected;
-    // }
 
     if (this.active !== undefined) {
       where.active = this.active;
@@ -105,7 +99,6 @@ export default class Filter {
     }
 
     return where;
-    //}}}
   }
 
   /*

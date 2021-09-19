@@ -1,5 +1,4 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   Checkbox,
   Grid,
@@ -30,6 +29,7 @@ import Delete from '@material-ui/icons/Delete';
 import SortIcon from '@material-ui/icons/Sort';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
+import { SpeciesContext } from '../context/SpeciesContext';
 
 const styles = (theme) => ({
   box: {
@@ -113,41 +113,37 @@ const styles = (theme) => ({
 const SpeciesTable = (props) => {
   const { classes } = props;
   const sortOptions = { byId: 'id', byName: 'name' };
+  const speciesContext = useContext(SpeciesContext);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [speciesEdit, setSpeciesEdit] = useState(undefined);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [sortedSpeciesList, setSortedSpeciesList] = useState([]);
+  const [option, setOption] = useState(sortOptions.byName);
+  const [selected, setSelected] = useState([]);
+  const [showCombine, setShowCombine] = useState(false);
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [isEdit, setIsEdit] = React.useState(false);
-  const [isAdding, setIsAdding] = React.useState(false);
-  const [speciesEdit, setSpeciesEdit] = React.useState(undefined);
-  const [openDelete, setOpenDelete] = React.useState(false);
-  const [sortedSpeciesList, setSortedSpeciesList] = React.useState([]);
-  const [option, setOption] = React.useState(sortOptions.byName);
-  const [selected, setSelected] = React.useState([]);
-  const [showCombine, setShowCombine] = React.useState(false);
-
-  const tableRef = React.useRef(null);
+  const tableRef = useRef(null);
 
   const emptyRows =
     rowsPerPage -
     Math.min(
       rowsPerPage,
-      props.speciesState.speciesList.length - page * rowsPerPage,
+      speciesContext.speciesList.length - page * rowsPerPage,
     );
 
-  React.useEffect(() => {
-    props.speciesDispatch.loadSpeciesList();
-  }, [props.speciesDispatch]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const sortBy = (option) => {
       let sortedSpecies;
       if (option === sortOptions.byId) {
-        sortedSpecies = [...props.speciesState.speciesList].sort(
+        sortedSpecies = [...speciesContext.speciesList].sort(
           (a, b) => a[option] - b[option],
         );
       }
       if (option === sortOptions.byName) {
-        sortedSpecies = [...props.speciesState.speciesList].sort((a, b) =>
+        sortedSpecies = [...speciesContext.speciesList].sort((a, b) =>
           a[option].localeCompare(b[option]),
         );
       }
@@ -158,7 +154,7 @@ const SpeciesTable = (props) => {
     option,
     sortOptions.byId,
     sortOptions.byName,
-    props.speciesState.speciesList,
+    speciesContext.speciesList,
   ]);
 
   const handleChangePage = (event, newPage) => {
@@ -210,7 +206,7 @@ const SpeciesTable = (props) => {
         <TableCell component="th" scope="row">
           {species.id}
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" data-testid="species">
           {species.name}
         </TableCell>
         <TableCell>{species.desc}</TableCell>
@@ -229,7 +225,7 @@ const SpeciesTable = (props) => {
 
   const tablePagination = () => (
     <TablePagination
-      count={props.speciesState.speciesList.length}
+      count={speciesContext.speciesList.length}
       rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
       colSpan={3}
       page={page}
@@ -242,6 +238,8 @@ const SpeciesTable = (props) => {
       }}
     />
   );
+
+  // console.log('context', context);
 
   return (
     <>
@@ -336,11 +334,9 @@ const SpeciesTable = (props) => {
         setSpeciesEdit={setSpeciesEdit}
         styles={{ ...classes }}
         editSpecies={
-          isAdding
-            ? props.speciesDispatch.createSpecies
-            : props.speciesDispatch.editSpecies
+          isAdding ? speciesContext.createSpecies : speciesContext.editSpecies
         }
-        loadSpeciesList={props.speciesDispatch.loadSpeciesList}
+        loadSpeciesList={speciesContext.loadSpeciesList}
         data={sortedSpeciesList}
       />
       <DeleteDialog
@@ -348,15 +344,15 @@ const SpeciesTable = (props) => {
         setSpeciesEdit={setSpeciesEdit}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
-        deleteSpecies={props.speciesDispatch.deleteSpecies}
-        loadSpeciesList={props.speciesDispatch.loadSpeciesList}
+        deleteSpecies={speciesContext.deleteSpecies}
+        loadSpeciesList={speciesContext.loadSpeciesList}
       />
       <CombineModal
         show={showCombine}
         setShow={setShowCombine}
         data={sortedSpeciesList}
-        combineSpecies={props.speciesDispatch.combineSpecies}
-        loadSpeciesList={props.speciesDispatch.loadSpeciesList}
+        combineSpecies={speciesContext.combineSpecies}
+        loadSpeciesList={speciesContext.loadSpeciesList}
         selected={selected}
         styles={{ ...classes }}
       />
@@ -374,7 +370,8 @@ const EditModal = ({
   editSpecies,
   data,
 }) => {
-  const [error, setError] = React.useState(undefined);
+  const [error, setError] = useState(undefined);
+  // const nameSpecies = data.map((species) => species.name.toLowerCase());
 
   const onNameChange = (e) => {
     setError(undefined);
@@ -392,6 +389,7 @@ const EditModal = ({
   };
 
   const handleSave = async () => {
+    // console.log('speciesEdit -- ', speciesEdit);
     const editName = speciesEdit.name.toLowerCase().trim();
     const otherSpeciesList = isEdit
       ? data.filter((species) => Number(species.id) !== speciesEdit.id)
@@ -406,8 +404,8 @@ const EditModal = ({
       setIsEdit(false);
       await editSpecies({
         id: speciesEdit.id,
-        name: speciesEdit.name,
-        desc: speciesEdit.desc,
+        name: speciesEdit.name || '',
+        desc: speciesEdit.desc || '', // need default value for desc to prevent error
       });
       loadSpeciesList(true);
       setSpeciesEdit(undefined);
@@ -472,8 +470,8 @@ const CombineModal = ({
   loadSpeciesList,
   styles,
 }) => {
-  const [name, setName] = React.useState('');
-  const [desc, setDesc] = React.useState('');
+  const [name, setName] = useState('');
+  const [desc, setDesc] = useState('');
 
   const list = data
     .filter((species) => selected.includes(species.id))
@@ -597,15 +595,4 @@ const DeleteDialog = ({
   );
 };
 
-export default withStyles(styles)(
-  connect(
-    //state
-    (state) => ({
-      speciesState: state.species,
-    }),
-    //dispatch
-    (dispatch) => ({
-      speciesDispatch: dispatch.species,
-    }),
-  )(SpeciesTable),
-);
+export default withStyles(styles)(SpeciesTable);

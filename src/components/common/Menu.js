@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Box from '@material-ui/core/Box';
 import IconLogo from '../IconLogo';
-import { AppContext } from '../Context';
+import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GSMenu(props) {
   const classes = useStyles();
-  const appContext = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
 
   const menu = (
     <>
@@ -68,8 +68,9 @@ export default function GSMenu(props) {
         <IconLogo />
       </Box>
       <Box height={20} />
-      {React.useMemo(
+      {useMemo(
         () =>
+          appContext.routes &&
           appContext.routes
             .filter(({ disabled }) => !disabled)
             .map((item, i) => (

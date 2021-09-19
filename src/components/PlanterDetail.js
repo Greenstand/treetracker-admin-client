@@ -1,5 +1,4 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -15,7 +14,8 @@ import Fab from '@material-ui/core/Fab';
 import api from '../api/planters';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
+import { PlanterContext } from '../context/PlanterContext';
 import EditPlanter from './EditPlanter';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
@@ -57,21 +57,23 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const PlanterDetail = (props) => {
-  const [planterRegistrations, setPlanterRegistrations] = React.useState(null);
-  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
-  const [planter, setPlanter] = React.useState({});
-  const [deviceIdentifiers, setDeviceIdentifiers] = React.useState([]);
+  // console.log('render: planter detail');
   const classes = useStyle();
   const { planterId } = props;
-  const { user } = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
+  const planterContext = useContext(PlanterContext);
+  const [planterRegistrations, setPlanterRegistrations] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [planter, setPlanter] = useState({});
+  const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadPlanterDetail() {
       if (planter && planter.id !== planterId) {
         setPlanter({});
       }
       if (planterId) {
-        const match = await props.plantersDispatch.getPlanter({
+        const match = await getPlanter({
           id: planterId,
         });
         setPlanter(match);
@@ -83,6 +85,7 @@ const PlanterDetail = (props) => {
         ) {
           setPlanterRegistrations(null);
           api.getPlanterRegistrations(planterId).then((registrations) => {
+            console.log('planter registrations: ', registrations);
             if (registrations && registrations.length) {
               const sortedRegistrations = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1,
@@ -100,7 +103,16 @@ const PlanterDetail = (props) => {
     }
     loadPlanterDetail();
     // eslint-disable-next-line
-  }, [planterId, props.plantersState.planters, props.plantersDispatch]);
+  }, [planterId, planterContext.planters]);
+
+  async function getPlanter(payload) {
+    const { id } = payload;
+    let planter = planterContext.planters?.find((p) => p.id === id); // Look for a match in the context first
+    if (!planter) {
+      planter = await api.getPlanter(id); // Otherwise query the API
+    }
+    return planter;
+  }
 
   function handleEditClick() {
     setEditDialogOpen(true);
@@ -111,7 +123,7 @@ const PlanterDetail = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
         <Grid
           style={{
@@ -153,11 +165,12 @@ const PlanterDetail = (props) => {
                   </Grid>
                 </CardMedia>
               )}
-              {hasPermission(user, [
+              {hasPermission(appContext.user, [
                 POLICIES.SUPER_PERMISSION,
                 POLICIES.MANAGE_PLANTER,
               ]) && (
                 <Fab
+                  data-testid="edit-planter"
                   className={classes.editButton}
                   onClick={() => handleEditClick()}
                 >
@@ -251,16 +264,8 @@ const PlanterDetail = (props) => {
         planter={planter}
         onClose={handleEditClose}
       ></EditPlanter>
-    </React.Fragment>
+    </>
   );
 };
-export { PlanterDetail };
 
-export default connect(
-  (state) => ({
-    plantersState: state.planters,
-  }),
-  (dispatch) => ({
-    plantersDispatch: dispatch.planters,
-  }),
-)(PlanterDetail);
+export default PlanterDetail;

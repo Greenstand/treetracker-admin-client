@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Menu, { MENU_WIDTH } from './common/Menu';
 import { documentTitle } from '../common/variables';
-import { AppContext } from './Context';
+import { AppContext } from '../context/AppContext';
 import { hasPermission, POLICIES } from '../models/auth';
 import {
   DashStatPlanterCount,
@@ -117,7 +117,7 @@ const style = () => ({
 
 function Home(props) {
   const { classes } = props;
-  const { user } = React.useContext(AppContext);
+  const appContext = useContext(AppContext);
 
   // async function load() {
   //   const logoElement = d3.select('.logo')
@@ -181,7 +181,7 @@ function Home(props) {
           className={classes.welcomeBox}
           justify="center"
         >
-          {hasPermission(user, [
+          {hasPermission(appContext.user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.LIST_TREE,
             POLICIES.APPROVE_TREE,
@@ -192,7 +192,7 @@ function Home(props) {
               <DashStatVerifiedCaptures />
             </>
           )}
-          {hasPermission(user, [
+          {hasPermission(appContext.user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.LIST_PLANTER,
           ]) && <DashStatPlanterCount />}

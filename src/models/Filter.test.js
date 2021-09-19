@@ -22,7 +22,9 @@ describe('Filter, with initial values about this filter object', () => {
   it('getWhereObj() should match: timeCreated between', () => {
     expect(filter.getWhereObj()).toEqual(
       expect.objectContaining({
-        timeCreated: { between: ['2019-07-25', '2019-07-30'] },
+        timeCreated: {
+          between: ['2019-07-25', '2019-07-30'],
+        },
       }),
     );
   });
@@ -91,7 +93,7 @@ describe('Filter, with initial values about this filter object', () => {
     });
 
     it('loopback object should not match any [planterId]', () => {
-      console.error('the where:', filter.getWhereObj());
+      // console.error('the where:', filter.getWhereObj());
       expect(filter.getWhereObj()).not.toHaveProperty('planterId');
     });
     //}}}

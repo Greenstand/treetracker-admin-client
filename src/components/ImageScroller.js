@@ -186,7 +186,7 @@ export default function ImageScroller(props) {
         )}
       </Grid>
       {images.length > NUM_IMAGE_CARDS && (
-        <React.Fragment>
+        <>
           <Fab
             id="scroll-left"
             className={`${classes.scrollButton} ${classes.scrollLeft}`}
@@ -201,7 +201,7 @@ export default function ImageScroller(props) {
           >
             <ChevronRight />
           </Fab>
-        </React.Fragment>
+        </>
       )}
     </div>
   );

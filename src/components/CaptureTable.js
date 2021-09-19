@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import compose from 'recompose/compose';
-import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState, useContext, createRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Table,
@@ -9,7 +7,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Drawer,
   TablePagination,
   TableSortLabel,
   Typography,
@@ -19,9 +16,10 @@ import { getDateTimeStringLocale } from '../common/locale';
 import Filter, { FILTER_WIDTH } from './Filter';
 import CaptureDetails from './CaptureDetails.js';
 import LinkToWebmap from './common/LinkToWebmap';
+import { CapturesContext } from '../context/CapturesContext';
 
 // change 88 to unit spacing,
-const styles = (theme) => ({
+const useStyle = makeStyles((theme) => ({
   root: {
     position: 'relative',
     paddingLeft: theme.spacing(16),
@@ -57,7 +55,7 @@ const styles = (theme) => ({
   title: {
     paddingLeft: theme.spacing(4),
   },
-});
+}));
 
 const columns = [
   {
@@ -97,163 +95,157 @@ const columns = [
   },
 ];
 
-class CaptureTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDetailsPaneOpen: false,
-    };
-    this.closeDrawer = this.closeDrawer.bind(this);
-    this.handleFilterSubmit = this.handleFilterSubmit.bind(this);
-    this.handlePageChange = this.handlePageChange.bind(this);
-    this.handleRowsPerPageChange = this.handleRowsPerPageChange.bind(this);
-    this.createSortHandler = this.createSortHandler.bind(this);
-    this.scrollRef = React.createRef();
-  }
+const CaptureTable = () => {
+  const capturesContext = useContext(CapturesContext);
+  const capturesArray = capturesContext.captures;
+  const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
+  const scrollRef = createRef();
+  const classes = useStyle();
 
-  loadCaptures(payload) {
-    this.props.getCapturesAsync(payload).then(() => {
-      this.scrollRef.current && this.scrollRef.current.scrollTo(0, 0);
+  useEffect(() => {
+    loadCaptures();
+  }, []);
+
+  const loadCaptures = (payload) => {
+    capturesContext.getCapturesAsync(payload).then(() => {
+      scrollRef.current && scrollRef.current.scrollTo(0, 0);
     });
-  }
+  };
 
-  componentDidMount() {
-    this.loadCaptures();
-  }
+  const toggleDrawer = (id) => {
+    capturesContext.getCaptureAsync(id);
+    setIsDetailsPaneOpen(!isDetailsPaneOpen);
+  };
 
-  toggleDrawer(id) {
-    this.props.getCaptureAsync(id);
-    const { isDetailsPaneOpen } = this.state;
-    this.setState({
-      isDetailsPaneOpen: !isDetailsPaneOpen,
-    });
-  }
-
-  createToggleDrawerHandler(id) {
+  const createToggleDrawerHandler = (id) => {
     return () => {
-      this.toggleDrawer(id);
+      toggleDrawer(id);
     };
-  }
+  };
 
-  closeDrawer() {
-    this.setState({
-      isDetailsPaneOpen: false,
-    });
-  }
+  const closeDrawer = () => {
+    setIsDetailsPaneOpen(false);
+  };
 
-  handleFilterSubmit(filter) {
-    this.loadCaptures({
+  const handleFilterSubmit = (filter) => {
+    loadCaptures({
       page: 0,
       filter,
     });
-  }
+  };
 
-  handlePageChange(_event, page) {
-    this.loadCaptures({
-      page,
+  const handlePageChange = () => {
+    loadCaptures({
+      page: capturesContext.page + 1,
+      rowsPerPage: capturesContext.rowsPerPage,
+      filter: capturesContext.filter,
     });
-  }
+  };
 
-  handleRowsPerPageChange(event) {
-    this.loadCaptures({
+  const handleRowsPerPageChange = (event) => {
+    loadCaptures({
       page: 0,
       rowsPerPage: parseInt(event.target.value),
+      filter: capturesContext.filter,
     });
-  }
+  };
 
-  createSortHandler(attr) {
+  const createSortHandler = (attr) => {
     return () => {
       const order =
-        this.props.orderBy === attr && this.props.order === 'asc'
+        capturesContext.orderBy === attr && capturesContext.order === 'asc'
           ? 'desc'
           : 'asc';
       const orderBy = attr;
-      this.loadCaptures({ order, orderBy });
+      loadCaptures({ order, orderBy });
     };
-  }
+  };
 
-  tablePagination() {
+  const tablePagination = () => {
     return (
       <TablePagination
         rowsPerPageOptions={[25, 50, 100, 250, 500]}
         component="div"
-        count={this.props.captureCount || 0}
-        page={this.props.page}
-        rowsPerPage={this.props.rowsPerPage}
-        onChangePage={this.handlePageChange}
-        onChangeRowsPerPage={this.handleRowsPerPageChange}
+        count={capturesContext.captureCount}
+        page={capturesContext.page}
+        rowsPerPage={capturesContext.rowsPerPage}
+        onChangePage={handlePageChange}
+        onChangeRowsPerPage={handleRowsPerPageChange}
       />
     );
-  }
-  render() {
-    const { capturesArray, capture, classes, orderBy, order } = this.props;
+  };
 
-    return (
-      <div className={classes.tableContainer} ref={this.scrollRef}>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
-          <Typography variant="h5" className={classes.title}>
-            Captures
-          </Typography>
-          {this.tablePagination()}
-        </Grid>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map(({ attr, label, noSort }) => (
-                <TableCell
-                  key={attr}
-                  sortDirection={orderBy === attr ? order : false}
+  return (
+    <div className={classes.tableContainer} ref={scrollRef}>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h5" className={classes.title}>
+          Captures
+        </Typography>
+        {tablePagination()}
+      </Grid>
+      <Table data-testid="captures-table">
+        <TableHead>
+          <TableRow>
+            {columns.map(({ attr, label, noSort }) => (
+              <TableCell
+                key={attr}
+                sortDirection={
+                  capturesContext.orderBy === attr
+                    ? capturesContext.order
+                    : false
+                }
+              >
+                <TableSortLabel
+                  active={capturesContext.orderBy === attr}
+                  direction={
+                    capturesContext.orderBy === attr
+                      ? capturesContext.order
+                      : 'asc'
+                  }
+                  onClick={createSortHandler(attr)}
+                  disabled={noSort}
                 >
-                  <TableSortLabel
-                    active={orderBy === attr}
-                    direction={orderBy === attr ? order : 'asc'}
-                    onClick={this.createSortHandler(attr)}
-                    disabled={noSort}
-                  >
-                    {label}
-                  </TableSortLabel>
+                  {label}
+                </TableSortLabel>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody data-testid="captures-table-body">
+          {capturesArray.map((capture) => (
+            <TableRow
+              key={capture.id}
+              onClick={createToggleDrawerHandler(capture.id)}
+              className={classes.tableRow}
+            >
+              {columns.map(({ attr, renderer }) => (
+                <TableCell key={attr}>
+                  {formatCell(capture, attr, renderer)}
                 </TableCell>
               ))}
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {capturesArray.map((capture) => (
-              <TableRow
-                key={capture.id}
-                onClick={this.createToggleDrawerHandler(capture.id)}
-                className={classes.tableRow}
-              >
-                {columns.map(({ attr, renderer }) => (
-                  <TableCell key={attr}>
-                    {formatCell(capture, attr, renderer)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        {this.tablePagination()}
-        <Drawer
-          anchor="right"
-          open={this.state.isDetailsPaneOpen}
-          onClose={this.closeDrawer}
-        >
-          <CaptureDetails capture={capture} />
-        </Drawer>
-        <Filter
-          isOpen={true}
-          onSubmit={this.handleFilterSubmit}
-          filter={this.props.filter}
-        />
-      </div>
-    );
-  }
-}
+          ))}
+        </TableBody>
+      </Table>
+      {tablePagination()}
+      <CaptureDetails
+        capture={capturesContext.capture}
+        isDetailsPaneOpen={isDetailsPaneOpen}
+        closeDrawer={closeDrawer}
+      />
+      <Filter
+        isOpen={true}
+        onSubmit={handleFilterSubmit}
+        filter={capturesContext.filter}
+      />
+    </div>
+  );
+};
 
 const formatCell = (capture, attr, renderer) => {
   if (attr === 'id' || attr === 'planterId') {
@@ -268,28 +260,4 @@ const formatCell = (capture, attr, renderer) => {
   }
 };
 
-const mapState = (state) => {
-  const keys = Object.keys(state.captures.data);
-  return {
-    capturesArray: keys.map((id) => ({
-      ...state.captures.data[id],
-    })),
-    ...state.captures,
-  };
-};
-
-const mapDispatch = (dispatch) => ({
-  getCapturesAsync: (payload) => dispatch.captures.getCapturesAsync(payload),
-  getLocationName: (id, lat, lon) =>
-    dispatch.captures.getLocationName({
-      id: id,
-      latitude: lat,
-      longitude: lon,
-    }),
-  getCaptureAsync: (id) => dispatch.captures.getCaptureAsync(id),
-});
-
-export default compose(
-  withStyles(styles),
-  connect(mapState, mapDispatch),
-)(CaptureTable);
+export default CaptureTable;

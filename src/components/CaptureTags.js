@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useCallback, useContext } from 'react';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import * as _ from 'lodash';
+import { TagsContext } from '../context/TagsContext';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,7 +57,7 @@ function renderSuggestionsContainer(options) {
   const { containerProps, children } = options;
 
   return (
-    <Paper {...containerProps} square>
+    <Paper {...containerProps} data-testid="tag-suggestion" square>
       {children}
     </Paper>
   );
@@ -73,9 +73,11 @@ const debounceCallback = ({ value, callback }) => {
 };
 
 const CaptureTags = (props) => {
+  // console.log('render: capture tags');
   const classes = useStyles(props);
-  const [textFieldInput, setTextFieldInput] = React.useState('');
-  const [error, setError] = React.useState(false);
+  const tagsContext = useContext(TagsContext);
+  const [textFieldInput, setTextFieldInput] = useState('');
+  const [error, setError] = useState(false);
   const debouncedInputHandler = useCallback(
     _.debounce(debounceCallback, 250),
     [],
@@ -88,6 +90,7 @@ const CaptureTags = (props) => {
     return (
       <ChipInput
         {...other}
+        data-testid="tag-chip-input"
         clearInputValueOnChange
         onUpdateInput={onChange}
         value={chips}
@@ -115,7 +118,7 @@ const CaptureTags = (props) => {
       value,
       callback: (val) => {
         if (isValidTagString(val)) {
-          return props.tagDispatch.getTags(val);
+          return tagsContext.getTags(val);
         }
         return null;
       },
@@ -134,17 +137,18 @@ const CaptureTags = (props) => {
   };
 
   let handleAddChip = (chip) => {
-    props.tagDispatch.setTagInput(props.tagState.tagInput.concat([chip]));
+    tagsContext.setTagInput(tagsContext.tagInput.concat([chip]));
   };
 
   let handleDeleteChip = (_chip, index) => {
-    const temp = props.tagState.tagInput;
+    const temp = tagsContext.tagInput;
     temp.splice(index, 1);
-    props.tagDispatch.setTagInput(temp);
+    tagsContext.setTagInput(temp);
   };
 
   return (
     <Autosuggest
+      data-testid="tag-autosuggest"
       theme={{
         container: classes.container,
         suggestionsContainerOpen: classes.suggestionsContainerOpen,
@@ -152,12 +156,12 @@ const CaptureTags = (props) => {
         suggestion: classes.suggestion,
       }}
       renderInputComponent={renderInput}
-      suggestions={props.tagState.tagList.filter((t) => {
+      suggestions={tagsContext.tagList.filter((t) => {
         const tagName = t.tagName.toLowerCase();
         return (
           (textFieldInput.length === 0 ||
             tagName.startsWith(textFieldInput.toLowerCase())) &&
-          !props.tagState.tagInput.find((i) => i.toLowerCase() === tagName)
+          !tagsContext.tagInput.find((i) => i.toLowerCase() === tagName)
         );
       })}
       onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
@@ -172,7 +176,7 @@ const CaptureTags = (props) => {
       focusInputOnSuggestionClick
       inputProps={{
         classes,
-        chips: props.tagState.tagInput,
+        chips: tagsContext.tagInput,
         onChange: handletextFieldInputChange,
         value: textFieldInput,
         onBeforeAdd: (chip) => handleBeforeAddChip(chip),
@@ -185,11 +189,4 @@ const CaptureTags = (props) => {
   );
 };
 
-export default connect(
-  (state) => ({
-    tagState: state.tags,
-  }),
-  (dispatch) => ({
-    tagDispatch: dispatch.tags,
-  }),
-)(CaptureTags);
+export default CaptureTags;
