@@ -2,12 +2,12 @@ import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
 export default {
-  getPlanter(id) {
-    const planterQuery = `${
+  getGrower(id) {
+    const growerQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${id}`;
 
-    return fetch(planterQuery, {
+    return fetch(growerQuery, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -18,9 +18,9 @@ export default {
       .catch(handleError);
   },
 
-  getPlanters({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
+  getGrowers({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     const where = filter.getWhereObj ? filter.getWhereObj() : {};
-    const planterFilter = {
+    const growerFilter = {
       where: { ...where, active: true },
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
@@ -40,7 +40,7 @@ export default {
     };
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}planter?filter=${JSON.stringify(planterFilter)}`;
+    }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
@@ -66,10 +66,10 @@ export default {
       .catch(handleError);
   },
 
-  getPlanterRegistrations(planterId) {
+  getGrowerRegistrations(growerId) {
     const registrationQuery = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}planter-registration?filter[where][planterId]=${planterId}`;
+    }/api/${getOrganization()}planter-registration?filter[where][planterId]=${growerId}`;
     return fetch(registrationQuery, {
       method: 'GET',
       headers: {
@@ -81,20 +81,20 @@ export default {
       .catch(handleError);
   },
 
-  getPlanterSelfies(planterId) {
+  getGrowerSelfies(growerId) {
     const filter = {
       order: 'timeUpdated DESC',
       limit: 100,
       fields: ['planterPhotoUrl'],
     };
 
-    const planterSelfiesQuery = `${
+    const growerSelfiesQuery = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}planter/${planterId}/selfies/?filter=${JSON.stringify(
+    }/api/${getOrganization()}planter/${growerId}/selfies/?filter=${JSON.stringify(
       filter,
     )}`;
 
-    return fetch(planterSelfiesQuery, {
+    return fetch(growerSelfiesQuery, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -115,11 +115,11 @@ export default {
       .catch(handleError);
   },
 
-  updatePlanter(planterUpdate) {
-    if (planterUpdate.organizationId === 'null') {
-      planterUpdate = { ...planterUpdate, organizationId: null };
+  updateGrower(growerUpdate) {
+    if (growerUpdate.organizationId === 'null') {
+      growerUpdate = { ...growerUpdate, organizationId: null };
     }
-    const { id } = planterUpdate;
+    const { id } = growerUpdate;
     const planterQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${id}`;
@@ -130,7 +130,7 @@ export default {
         'content-type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(planterUpdate),
+      body: JSON.stringify(growerUpdate),
     })
       .then(handleResponse)
       .catch(handleError);

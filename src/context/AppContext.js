@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
-import Planters from '../components/Planters';
+import Growers from '../components/Growers';
 import CapturesView from '../views/CapturesView';
 import Account from '../components/Account';
 import Home from '../components/Home';
@@ -79,9 +79,9 @@ function getRoutes(user) {
         ]),
     },
     {
-      name: 'Planters',
-      linkTo: '/planters',
-      component: Planters,
+      name: 'Growers',
+      linkTo: '/growers',
+      component: Growers,
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,

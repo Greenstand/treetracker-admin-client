@@ -1,35 +1,35 @@
 import React, { useState, createContext } from 'react';
-import FilterPlanter from '../models/FilterPlanter';
-import api from '../api/planters';
+import FilterGrower from '../models/FilterGrower';
+import api from '../api/growers';
 import * as loglevel from 'loglevel';
 
-const log = loglevel.getLogger('../context/PlanterContext');
+const log = loglevel.getLogger('../context/GrowerContext');
 
-export const PlanterContext = createContext({
-  planters: [],
+export const GrowerContext = createContext({
+  growers: [],
   pageSize: 24,
   count: null,
   currentPage: 0,
-  filter: new FilterPlanter(),
+  filter: new FilterGrower(),
   isLoading: false,
   totalPlanterCount: null,
   load: () => {},
   getCount: () => {},
   changePageSize: () => {},
   changeCurrentPage: () => {},
-  getPlanter: () => {},
-  updatePlanter: () => {},
-  updatePlanters: () => {},
+  getGrower: () => {},
+  updateGrower: () => {},
+  updateGrowers: () => {},
   updateFilter: () => {},
-  getTotalPlanterCount: () => {},
+  getTotalGrowerCount: () => {},
 });
 
-export function PlanterProvider(props) {
-  const [planters, setPlanters] = useState([]);
+export function GrowerProvider(props) {
+  const [growers, setGrowers] = useState([]);
   const [pageSize, setPageSize] = useState(24);
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [filter, setFilter] = useState(new FilterPlanter());
+  const [filter, setFilter] = useState(new FilterGrower());
   const [isLoading, setIsLoading] = useState(false);
   const [totalPlanterCount, setTotalPlanterCount] = useState(null);
 
@@ -43,20 +43,20 @@ export function PlanterProvider(props) {
     setCurrentPage(currentPage);
   };
 
-  const updatePlanters = (planters) => {
-    setPlanters(planters);
+  const updatePlanters = (growers) => {
+    setGrowers(growers);
   };
 
   const load = async () => {
-    log.debug('load planters');
+    log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const planters = await api.getPlanters({
+    const growers = await api.getPlanters({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
       filter,
     });
-    setPlanters(planters);
+    setGrowers(growers);
     setIsLoading(false);
   };
 
@@ -68,7 +68,7 @@ export function PlanterProvider(props) {
   const getPlanter = async (payload) => {
     const { id } = payload;
     // Look for a match in the local state first
-    let planter = planters.find((p) => p.id === id);
+    let planter = growers.find((p) => p.id === id);
     if (!planter) {
       // Otherwise query the API
       planter = await api.getPlanter(id);
@@ -79,12 +79,12 @@ export function PlanterProvider(props) {
   const updatePlanter = async (payload) => {
     await api.updatePlanter(payload);
     const updatedPlanter = await api.getPlanter(payload.id);
-    const index = planters.findIndex((p) => p.id === updatedPlanter.id);
+    const index = growers.findIndex((p) => p.id === updatedPlanter.id);
     if (index >= 0) {
-      const planters = Object.assign([], planters, {
+      const growers = Object.assign([], growers, {
         [index]: updatedPlanter,
       });
-      setPlanters(planters);
+      setGrowers(growers);
     }
   };
 
@@ -99,7 +99,7 @@ export function PlanterProvider(props) {
   };
 
   const value = {
-    planters,
+    growers,
     pageSize,
     count,
     currentPage,
@@ -118,8 +118,8 @@ export function PlanterProvider(props) {
   };
 
   return (
-    <PlanterContext.Provider value={value}>
+    <GrowerContext.Provider value={value}>
       {props.children}
-    </PlanterContext.Provider>
+    </GrowerContext.Provider>
   );
 }

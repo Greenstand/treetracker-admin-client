@@ -17,8 +17,8 @@ const policy = {
       description: 'Can approve/reject trees',
     },
     {
-      name: 'list_planter',
-      description: 'Can view planters',
+      name: 'list_grower',
+      description: 'Can view growers',
     },
     {
       name: 'manage_planter',

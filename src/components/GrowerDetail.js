@@ -11,23 +11,23 @@ import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
-import api from '../api/planters';
+import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
-import { PlanterContext } from '../context/PlanterContext';
-import EditPlanter from './EditPlanter';
+import { GrowerContext } from '../context/GrowerContext';
+import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 
-const PLANTER_IMAGE_SIZE = 441;
+const GROWER_IMAGE_SIZE = 441;
 
 const useStyle = makeStyles((theme) => ({
   box: {
     padding: theme.spacing(4),
   },
   cardMedia: {
-    height: `${PLANTER_IMAGE_SIZE}px`,
+    height: `${GROWER_IMAGE_SIZE}px`,
   },
   personBox: {
     display: 'flex',
@@ -52,45 +52,45 @@ const useStyle = makeStyles((theme) => ({
   },
   imageContainer: {
     position: 'relative',
-    height: `${PLANTER_IMAGE_SIZE}px`,
+    height: `${GROWER_IMAGE_SIZE}px`,
   },
 }));
 
-const PlanterDetail = (props) => {
-  // console.log('render: planter detail');
+const GrowerDetail = (props) => {
+  // console.log('render: grower detail');
   const classes = useStyle();
-  const { planterId } = props;
+  const { growerId } = props;
   const appContext = useContext(AppContext);
-  const planterContext = useContext(PlanterContext);
-  const [planterRegistrations, setPlanterRegistrations] = useState(null);
+  const growerContext = useContext(GrowerContext);
+  const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [planter, setPlanter] = useState({});
+  const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
 
   useEffect(() => {
-    async function loadPlanterDetail() {
-      if (planter && planter.id !== planterId) {
-        setPlanter({});
+    async function loadGrowerDetail() {
+      if (grower && grower.id !== growerId) {
+        setGrower({});
       }
-      if (planterId) {
-        const match = await getPlanter({
-          id: planterId,
+      if (growerId) {
+        const match = await getGrower({
+          id: growerId,
         });
-        setPlanter(match);
+        setGrower(match);
 
         if (
-          !planterRegistrations ||
-          (planterRegistrations.length > 0 &&
-            planterRegistrations[0].planter_id !== planterId)
+          !growerRegistrations ||
+          (growerRegistrations.length > 0 &&
+            growerRegistrations[0].planter_id !== growerId)
         ) {
-          setPlanterRegistrations(null);
-          api.getPlanterRegistrations(planterId).then((registrations) => {
-            console.log('planter registrations: ', registrations);
+          setGrowerRegistrations(null);
+          api.getGrowerRegistrations(growerId).then((registrations) => {
+            console.log('grower registrations: ', registrations);
             if (registrations && registrations.length) {
               const sortedRegistrations = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1,
               );
-              setPlanterRegistrations(sortedRegistrations);
+              setGrowerRegistrations(sortedRegistrations);
               setDeviceIdentifiers(
                 sortedRegistrations
                   .map((reg) => reg.device_identifier)
@@ -101,17 +101,17 @@ const PlanterDetail = (props) => {
         }
       }
     }
-    loadPlanterDetail();
+    loadGrowerDetail();
     // eslint-disable-next-line
-  }, [planterId, planterContext.planters]);
+  }, [growerId, growerContext.growers]);
 
-  async function getPlanter(payload) {
+  async function getGrower(payload) {
     const { id } = payload;
-    let planter = planterContext.planters?.find((p) => p.id === id); // Look for a match in the context first
-    if (!planter) {
-      planter = await api.getPlanter(id); // Otherwise query the API
+    let grower = growerContext.growers?.find((p) => p.id === id); // Look for a match in the context first
+    if (!grower) {
+      grower = await api.getGrower(id); // Otherwise query the API
     }
-    return planter;
+    return grower;
   }
 
   function handleEditClick() {
@@ -127,7 +127,7 @@ const PlanterDetail = (props) => {
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
         <Grid
           style={{
-            width: PLANTER_IMAGE_SIZE,
+            width: GROWER_IMAGE_SIZE,
           }}
         >
           <Grid container direction="column">
@@ -136,7 +136,7 @@ const PlanterDetail = (props) => {
                 <Grid item>
                   <Box m={4}>
                     <Typography color="primary" variant="h6">
-                      Planter Detail
+                      Grower Detail
                     </Typography>
                   </Box>
                 </Grid>
@@ -148,17 +148,17 @@ const PlanterDetail = (props) => {
               </Grid>
             </Grid>
             <Grid item className={classes.imageContainer}>
-              {planter.imageUrl && (
+              {grower.imageUrl && (
                 <OptimizedImage
-                  src={planter.imageUrl}
-                  width={PLANTER_IMAGE_SIZE}
-                  height={PLANTER_IMAGE_SIZE}
+                  src={grower.imageUrl}
+                  width={GROWER_IMAGE_SIZE}
+                  height={GROWER_IMAGE_SIZE}
                   className={classes.cardMedia}
                   fixed
-                  rotation={planter.imageRotation}
+                  rotation={grower.imageRotation}
                 />
               )}
-              {!planter.imageUrl && (
+              {!grower.imageUrl && (
                 <CardMedia className={classes.cardMedia}>
                   <Grid container className={classes.personBox}>
                     <Person className={classes.person} />
@@ -170,7 +170,7 @@ const PlanterDetail = (props) => {
                 POLICIES.MANAGE_PLANTER,
               ]) && (
                 <Fab
-                  data-testid="edit-planter"
+                  data-testid="edit-grower"
                   className={classes.editButton}
                   onClick={() => handleEditClick()}
                 >
@@ -180,49 +180,49 @@ const PlanterDetail = (props) => {
             </Grid>
             <Grid item className={classes.box}>
               <Typography variant="h5" color="primary" className={classes.name}>
-                {planter.firstName} {planter.lastName}
+                {grower.firstName} {grower.lastName}
               </Typography>
               <Typography variant="body2">
-                ID: <LinkToWebmap value={planter.id} type="user" />
+                ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Email address</Typography>
-              <Typography variant="body1">{planter.email || '---'}</Typography>
+              <Typography variant="body1">{grower.email || '---'}</Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Phone number</Typography>
-              <Typography variant="body1">{planter.phone || '---'}</Typography>
+              <Typography variant="body1">{grower.phone || '---'}</Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Person ID</Typography>
               <Typography variant="body1">
-                {planter.personId || '---'}
+                {grower.personId || '---'}
               </Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Organization</Typography>
               <Typography variant="body1">
-                {planter.organization || '---'}
+                {grower.organization || '---'}
               </Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Organization ID</Typography>
               <Typography variant="body1">
-                {planter.organizationId || '---'}
+                {grower.organizationId || '---'}
               </Typography>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Country</Typography>
               <Typography variant="body1">
-                {(planterRegistrations &&
-                  planterRegistrations
+                {(growerRegistrations &&
+                  growerRegistrations
                     .map((item) => item.country)
                     .filter(
                       (country, i, arr) =>
@@ -236,10 +236,10 @@ const PlanterDetail = (props) => {
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Registered</Typography>
               <Typography variant="body1">
-                {(planterRegistrations &&
-                  planterRegistrations.length > 0 &&
+                {(growerRegistrations &&
+                  growerRegistrations.length > 0 &&
                   getDateTimeStringLocale(
-                    planterRegistrations[0].created_at,
+                    growerRegistrations[0].created_at,
                   )) ||
                   '---'}
               </Typography>
@@ -259,13 +259,13 @@ const PlanterDetail = (props) => {
           </Grid>
         </Grid>
       </Drawer>
-      <EditPlanter
+      <EditGrower
         isOpen={editDialogOpen}
-        planter={planter}
+        grower={grower}
         onClose={handleEditClose}
-      ></EditPlanter>
+      ></EditGrower>
     </>
   );
 };
 
-export default PlanterDetail;
+export default GrowerDetail;
