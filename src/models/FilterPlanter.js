@@ -2,6 +2,9 @@
  * A simple model for planter filter
  */
 
+export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
+export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+
 export default class Filter {
   constructor(options) {
     Object.assign(this, options);
@@ -29,7 +32,9 @@ export default class Filter {
       };
     }
 
-    if (this.organizationId) {
+    if (this.organizationId === ORGANIZATION_NOT_SET) {
+      where.organizationId = null;
+    } else if (this.organizationId !== ALL_ORGANIZATIONS) {
       where.organizationId = this.organizationId;
     }
 

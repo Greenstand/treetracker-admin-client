@@ -62,7 +62,7 @@ export function PlanterProvider(props) {
 
   const getCount = async () => {
     const { count } = await api.getCount({ filter });
-    setCount(count);
+    setCount(Number(count));
   };
 
   const getPlanter = async (payload) => {
