@@ -80,9 +80,9 @@ function Filter(props) {
   const dateStartDefault = null;
   const dateEndDefault = null;
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [planterId, setPlanterId] = useState(filter?.planterId || '');
+  const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
-  const [planterIdentifier, setPlanterIdentifier] = useState(
+  const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || '',
   );
   const [approved, setApproved] = useState(filter?.approved);
@@ -124,9 +124,9 @@ function Filter(props) {
     // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.captureId = captureId;
-    filter.planterId = planterId;
+    filter.planterId = growerId;
     filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = planterIdentifier;
+    filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
@@ -141,9 +141,9 @@ function Filter(props) {
   function handleReset() {
     // reset form values, except 'approved' and 'active' which we'll keep
     setCaptureId('');
-    setPlanterId('');
+    setGrowerId('');
     setDeviceId('');
-    setPlanterIdentifier('');
+    setGrowerIdentifier('');
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setSpeciesId(ALL_SPECIES);
@@ -257,12 +257,12 @@ function Filter(props) {
                 />
               </MuiPickersUtilsProvider>
               <TextField
-                htmlFor="planter-id"
-                id="planter-id"
-                label="Planter ID"
+                htmlFor="grower-id"
+                id="grower-id"
+                label="Grower ID"
                 placeholder="e.g. 7"
-                value={planterId}
-                onChange={(e) => setPlanterId(e.target.value)}
+                value={growerId}
+                onChange={(e) => setGrowerId(e.target.value)}
               />
               <TextField
                 htmlFor="capture-id"
@@ -281,12 +281,12 @@ function Filter(props) {
                 onChange={(e) => setDeviceId(e.target.value)}
               />
               <TextField
-                htmlFor="planter-identifier"
-                id="planter-identifier"
-                label="Planter Identifier"
-                placeholder="e.g. planter@example.com"
-                value={planterIdentifier}
-                onChange={(e) => setPlanterIdentifier(e.target.value)}
+                htmlFor="grower-identifier"
+                id="grower-identifier"
+                label="Grower Identifier"
+                placeholder="e.g. grower@example.com"
+                value={growerIdentifier}
+                onChange={(e) => setGrowerIdentifier(e.target.value)}
               />
               <TextField
                 data-testid="species-dropdown"

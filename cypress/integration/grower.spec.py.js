@@ -1,4 +1,4 @@
-describe('Planter', () => {
+describe('Grower', () => {
   const pageSize = 24;
 
   before(() => {
@@ -28,7 +28,7 @@ describe('Planter', () => {
     cy.get('button[title="Previous page"]').should('be.disabled');
   });
 
-  it('Should show a full page of planters', () => {
+  it('Should show a full page of growers', () => {
     cy.get('.MuiCard-root').should('have.length', pageSize);
   });
 

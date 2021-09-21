@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import { AppContext, AppProvider } from '../context/AppContext';
-import FilterPlanter from './FilterPlanter';
+import FilterGrower from './FilterGrower';
 
-describe.skip('FilterPlanter, with initial filter values', () => {
-  let filterPlanter;
+describe.skip('FilterGrower, with initial filter values', () => {
+  let filterGrower;
 
   beforeEach(() => {
-    filterPlanter = new FilterPlanter({
+    filterGrower = new FilterGrower({
       personId: 1,
       firstName: 'fn',
       lastName: 'ln',
@@ -17,7 +17,7 @@ describe.skip('FilterPlanter, with initial filter values', () => {
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filterPlanter.getWhereObj()).toEqual(
+    expect(filterGrower.getWhereObj()).toEqual(
       expect.objectContaining({
         firstName: { ilike: 'fn' },
         id: 1,

@@ -23,7 +23,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-import { PlanterProvider } from './PlanterContext';
+import { GrowerProvider } from './GrowerContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
@@ -85,7 +85,7 @@ function getRoutes(user) {
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_PLANTER,
+        POLICIES.LIST_GROWER,
       ]),
     },
     {
@@ -234,10 +234,10 @@ export const AppProvider = (props) => {
     checkSession();
   }
 
-  // VerifyProvider and PlanterProvider need to wrap children here so that they are available when needed
+  // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
     <AppContext.Provider value={value}>
-      <PlanterProvider>{props.children}</PlanterProvider>
+      <GrowerProvider>{props.children}</GrowerProvider>
     </AppContext.Provider>
   );
 };

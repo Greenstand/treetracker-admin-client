@@ -1,7 +1,7 @@
 const PERMISSIONS = {
   ADMIN: 1,
   TREE_AUDIT: 2,
-  PLANTER: 3,
+  GROWER: 3,
 };
 
 const POLICIES = {
@@ -10,7 +10,7 @@ const POLICIES = {
   MANAGER_USER: 'manager_user',
   LIST_TREE: 'list_tree',
   APPROVE_TREE: 'approve_tree',
-  LIST_PLANTER: 'list_planter',
+  LIST_GROWER: 'list_GROWER',
   MANAGE_PLANTER: 'manage_planter',
 };
 

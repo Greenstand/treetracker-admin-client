@@ -12,7 +12,7 @@ export const GrowerContext = createContext({
   currentPage: 0,
   filter: new FilterGrower(),
   isLoading: false,
-  totalPlanterCount: null,
+  totalGrowerCount: null,
   load: () => {},
   getCount: () => {},
   changePageSize: () => {},
@@ -31,7 +31,7 @@ export function GrowerProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(new FilterGrower());
   const [isLoading, setIsLoading] = useState(false);
-  const [totalPlanterCount, setTotalPlanterCount] = useState(null);
+  const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   // EVENT HANDLERS
 
@@ -43,7 +43,7 @@ export function GrowerProvider(props) {
     setCurrentPage(currentPage);
   };
 
-  const updatePlanters = (growers) => {
+  const updateGrowers = (growers) => {
     setGrowers(growers);
   };
 
@@ -51,7 +51,7 @@ export function GrowerProvider(props) {
     log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const growers = await api.getPlanters({
+    const growers = await api.getGrowers({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
       filter,
@@ -65,24 +65,24 @@ export function GrowerProvider(props) {
     setCount(count);
   };
 
-  const getPlanter = async (payload) => {
+  const getGrower = async (payload) => {
     const { id } = payload;
     // Look for a match in the local state first
-    let planter = growers.find((p) => p.id === id);
-    if (!planter) {
+    let grower = growers.find((p) => p.id === id);
+    if (!grower) {
       // Otherwise query the API
-      planter = await api.getPlanter(id);
+      grower = await api.getGrower(id);
     }
-    return planter;
+    return grower;
   };
 
-  const updatePlanter = async (payload) => {
-    await api.updatePlanter(payload);
-    const updatedPlanter = await api.getPlanter(payload.id);
-    const index = growers.findIndex((p) => p.id === updatedPlanter.id);
+  const updateGrower = async (payload) => {
+    await api.updateGrower(payload);
+    const updatedGrower = await api.getGrower(payload.id);
+    const index = growers.findIndex((p) => p.id === updatedGrower.id);
     if (index >= 0) {
       const growers = Object.assign([], growers, {
-        [index]: updatedPlanter,
+        [index]: updatedGrower,
       });
       setGrowers(growers);
     }
@@ -93,9 +93,9 @@ export function GrowerProvider(props) {
     setFilter(filter);
   };
 
-  const getTotalPlanterCount = async () => {
+  const getTotalGrowerCount = async () => {
     const { count } = await api.getCount({});
-    setTotalPlanterCount(count);
+    setTotalGrowerCount(count);
   };
 
   const value = {
@@ -105,16 +105,16 @@ export function GrowerProvider(props) {
     currentPage,
     filter,
     isLoading,
-    totalPlanterCount,
+    totalGrowerCount,
     load,
     getCount,
     changePageSize,
     changeCurrentPage,
-    getPlanter,
-    updatePlanter,
-    updatePlanters,
+    getGrower,
+    updateGrower,
+    updateGrowers,
     updateFilter,
-    getTotalPlanterCount,
+    getTotalGrowerCount,
   };
 
   return (

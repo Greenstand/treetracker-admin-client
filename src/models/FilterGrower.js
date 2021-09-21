@@ -1,5 +1,5 @@
 /*
- * A simple model for planter filter
+ * A simple model for grower filter
  */
 
 export default class Filter {

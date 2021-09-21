@@ -22,7 +22,7 @@ const policy = {
     },
     {
       name: 'manage_planter',
-      description: 'Can modify planter information',
+      description: 'Can modify grower information',
     },
     {
       name: 'list_user',

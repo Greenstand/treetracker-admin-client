@@ -16,7 +16,7 @@ describe('Admin', () => {
     cy.contains(/verify/i).click();
   });
 
-  it('planter', () => {
-    cy.contains(/planter/i).click();
+  it('grower', () => {
+    cy.contains(/grower/i).click();
   });
 });
