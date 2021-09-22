@@ -146,7 +146,7 @@ describe('planters', () => {
 
       expect(screen.getByLabelText('Person ID')).toBeInTheDocument();
 
-      expect(screen.getByLabelText('Organization ID')).toBeInTheDocument();
+      expect(screen.getByLabelText('Organization')).toBeInTheDocument();
 
       expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
 

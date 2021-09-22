@@ -158,6 +158,24 @@ function Filter(props) {
     props.onSubmit && props.onSubmit(filter);
   }
 
+  const defaultOrgList = userHasOrg
+    ? [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+      ]
+    : [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+        {
+          id: ORGANIZATION_NOT_SET,
+          name: 'Not set',
+        },
+      ];
+
   return (
     <>
       {
@@ -358,7 +376,8 @@ function Filter(props) {
                 // clearOnBlur
                 // handleHomeEndKeys
               />
-              {!userHasOrg && (
+              {
+                /* {!userHasOrg && ( }*/
                 <TextField
                   data-testid="org-dropdown"
                   select
@@ -368,17 +387,7 @@ function Filter(props) {
                   value={organizationId}
                   onChange={(e) => setOrganizationId(e.target.value)}
                 >
-                  {[
-                    {
-                      id: ALL_ORGANIZATIONS,
-                      name: 'All',
-                    },
-                    {
-                      id: ORGANIZATION_NOT_SET,
-                      name: 'Not set',
-                    },
-                    ...orgList,
-                  ].map((org) => (
+                  {[...defaultOrgList, ...orgList].map((org) => (
                     <MenuItem
                       data-testid="org-item"
                       key={org.id}
@@ -388,7 +397,8 @@ function Filter(props) {
                     </MenuItem>
                   ))}
                 </TextField>
-              )}
+                //)
+              }
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button

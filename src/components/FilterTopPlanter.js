@@ -89,6 +89,24 @@ function FilterTopPlanter(props) {
     e.key === 'Enter' && handleSubmit(e);
   };
 
+  const defaultOrgList = userHasOrg
+    ? [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+      ]
+    : [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+        {
+          id: ORGANIZATION_NOT_SET,
+          name: 'Not set',
+        },
+      ];
+
   return (
     <>
       {
@@ -115,19 +133,8 @@ function FilterTopPlanter(props) {
                 onChange={(e) => setPersonId(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Organization ID"
-                htmlFor="Organization ID"
-                id="Organization ID"
-                placeholder="Organization ID"
-                value={
-                  organizationId === 'ALL_ORGANIZATIONS' ? '' : organizationId
-                }
-                onChange={(e) => setOrganizationId(Number(e.target.value))}
-                onKeyDown={handleEnterPress}
-              />
-              {!userHasOrg && (
+              {
+                /* {!userHasOrg && ( }*/
                 <TextField
                   className={`${classes.textField} ${classes.filterElement}`}
                   data-testid="org-dropdown"
@@ -140,17 +147,7 @@ function FilterTopPlanter(props) {
                   onChange={(e) => setOrganizationId(e.target.value)}
                   onKeyDown={handleEnterPress}
                 >
-                  {[
-                    {
-                      id: ALL_ORGANIZATIONS,
-                      name: 'All',
-                    },
-                    {
-                      id: ORGANIZATION_NOT_SET,
-                      name: 'Not set',
-                    },
-                    ...orgList,
-                  ].map((org) => (
+                  {[...defaultOrgList, ...orgList].map((org) => (
                     <MenuItem
                       data-testid="org-item"
                       key={org.id}
@@ -160,7 +157,8 @@ function FilterTopPlanter(props) {
                     </MenuItem>
                   ))}
                 </TextField>
-              )}
+                //)
+              }
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
                 label="First Name"
