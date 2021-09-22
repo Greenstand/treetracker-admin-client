@@ -1,3 +1,10 @@
+## [1.20.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.1...v1.20.2) (2021-09-22)
+
+
+### Bug Fixes
+
+* replace logo png with svg ([#157](https://github.com/Greenstand/treetracker-admin-client/issues/157)) ([52e38bf](https://github.com/Greenstand/treetracker-admin-client/commit/52e38bf71232947602048b7412df0e6f4a786ed0))
+
 ## [1.20.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.0...v1.20.1) (2021-09-17)
 
 
