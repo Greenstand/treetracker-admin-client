@@ -1,3 +1,13 @@
+/**
+ * @function
+ * @name stringToSearchRegExp
+ * @description Converts a string to a case-insesnsitive regular expression
+ *              that can be used to search for string patterns.
+ * @param {String} value
+ * @returns {string} A regular expression string
+ */
+const stringToSearchRegExp = (value) => `/.*${value}.*/i`;
+
 /*
  * A simple model for planter filter
  */
@@ -19,13 +29,13 @@ export default class Filter {
 
     if (this.firstName) {
       where.firstName = {
-        ilike: this.firstName,
+        regexp: stringToSearchRegExp(this.firstName),
       };
     }
 
     if (this.lastName) {
       where.lastName = {
-        ilike: this.lastName,
+        regexp: stringToSearchRegExp(this.lastName),
       };
     }
 
@@ -35,13 +45,13 @@ export default class Filter {
 
     if (this.email) {
       where.email = {
-        ilike: this.email,
+        regexp: stringToSearchRegExp(this.email),
       };
     }
 
     if (this.phone) {
       where.phone = {
-        ilike: this.phone,
+        regexp: stringToSearchRegExp(this.phone),
       };
     }
 
