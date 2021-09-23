@@ -5,6 +5,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   beforeEach(() => {
     filter = new Filter();
+    filter.uuid = '11942400-6617-4c6c-bf5e';
     filter.captureId = 10;
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
@@ -13,6 +14,10 @@ describe('Filter, with initial values about this filter object', () => {
     filter.planterId = '1';
     filter.deviceIdentifier = '1';
     filter.planterIdentifier = '1';
+  });
+
+  it('getWhereObj() should be: ', () => {
+    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }));
   });
 
   it('getWhereObj() should be: ', () => {

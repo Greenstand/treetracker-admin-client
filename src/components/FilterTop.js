@@ -79,6 +79,7 @@ function Filter(props) {
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
+  const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [planterId, setPlanterId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
@@ -123,6 +124,7 @@ function Filter(props) {
     e.preventDefault();
     // save the filer to context for editing & submit
     const filter = new FilterModel();
+    filter.uuid = uuid;
     filter.captureId = captureId;
     filter.planterId = planterId;
     filter.deviceIdentifier = deviceId;
@@ -140,6 +142,7 @@ function Filter(props) {
 
   function handleReset() {
     // reset form values, except 'approved' and 'active' which we'll keep
+    setUUID('');
     setCaptureId('');
     setPlanterId('');
     setDeviceId('');
@@ -164,6 +167,14 @@ function Filter(props) {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
+              <TextField
+                htmlFor="uuid"
+                id="uuid"
+                label="UUID"
+                placeholder=""
+                value={uuid}
+                onChange={(e) => setUUID(e.target.value)}
+              />
               <TextField
                 select
                 htmlFor="verification-status"

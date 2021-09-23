@@ -186,6 +186,11 @@ function CaptureDetailDialog(props) {
               link: true,
             },
             {
+              label: 'Planter UUID',
+              value: capture.uuid,
+              copy: true,
+            },
+            {
               label: 'Planter Identifier',
               value: capture.planterIdentifier,
               copy: true,
