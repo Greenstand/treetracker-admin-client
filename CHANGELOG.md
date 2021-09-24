@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.3...v1.21.0) (2021-09-24)
+
+
+### Features
+
+* **planter filter:** include partial matches in results ([#165](https://github.com/Greenstand/treetracker-admin-client/issues/165)) ([90d493e](https://github.com/Greenstand/treetracker-admin-client/commit/90d493e404e882b568a78d0d957d7c23a7cdae54))
+
 ## [1.20.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.2...v1.20.3) (2021-09-24)
 
 
