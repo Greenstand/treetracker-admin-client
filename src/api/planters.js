@@ -24,7 +24,7 @@ export default {
       where: { ...where, active: true },
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
-      skip: skip,
+      skip,
       fields: {
         firstName: true,
         lastName: true,
@@ -41,6 +41,7 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter?filter=${JSON.stringify(planterFilter)}`;
+
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
