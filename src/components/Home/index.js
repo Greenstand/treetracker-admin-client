@@ -3,20 +3,20 @@ import React, { useEffect, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
-import GreenStandSvgLogo from './common/GreenStandSvgLogo';
+import GreenStandSvgLogo from '../common/GreenStandSvgLogo';
 
-import Menu, { MENU_WIDTH } from './common/Menu';
-import { documentTitle } from '../common/variables';
-import { AppContext } from '../context/AppContext';
-import { hasPermission, POLICIES } from '../models/auth';
+import Menu, { MENU_WIDTH } from '../common/Menu';
+import { documentTitle } from '../../common/variables';
+import { AppContext } from '../../context/AppContext';
+import { hasPermission, POLICIES } from '../../models/auth';
 import {
   DashStatPlanterCount,
   DashStatTotalCaptures,
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
-} from './DashStat.container';
+} from '../DashStat.container';
 
-import './Home.css';
+import './styles.css';
 
 function Home() {
   const appContext = useContext(AppContext);
