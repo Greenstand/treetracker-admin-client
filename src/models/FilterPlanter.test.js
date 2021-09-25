@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import { AppContext, AppProvider } from '../context/AppContext';
-import FilterGrower from './FilterGrower';
+import Filter from './FilterPlanter';
 
 describe.skip('FilterGrower, with initial filter values', () => {
   let filterGrower;
 
   beforeEach(() => {
-    filterGrower = new FilterGrower({
+    filterGrower = new Filter({
       personId: 1,
       firstName: 'fn',
       lastName: 'ln',

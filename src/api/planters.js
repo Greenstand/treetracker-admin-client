@@ -121,11 +121,11 @@ export default {
       growerUpdate = { ...growerUpdate, organizationId: null };
     }
     const { id } = growerUpdate;
-    const planterQuery = `${
+    const growerQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${id}`;
 
-    return fetch(planterQuery, {
+    return fetch(growerQuery, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',

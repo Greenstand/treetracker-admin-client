@@ -14,7 +14,7 @@ import Growers from '../Planters';
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/grower.test');
 
-jest.mock('../../api/growers');
+jest.mock('../../api/planters');
 
 const GROWER = {
   id: 1,

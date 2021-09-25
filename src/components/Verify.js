@@ -23,7 +23,7 @@ import Map from '@material-ui/icons/Map';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Navbar from './Navbar';
-import PlanterDetail from './PlanterDetail';
+import GrowerDetail from './PlanterDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
 import CaptureDetailDialog from './CaptureDetailDialog';
@@ -159,9 +159,9 @@ const Verify = (props) => {
     isOpen: false,
     capture: {},
   });
-  const [planterDetail, setPlanterDetail] = useState({
+  const [growerDetail, setGrowerDetail] = useState({
     isOpen: false,
-    planter: {},
+    grower: {},
   });
   const refContainer = useRef();
 
@@ -218,10 +218,10 @@ const Verify = (props) => {
     window.open(url, '_blank').opener = null;
   }
 
-  function handlePlanterMapClick(e, planterId) {
+  function handleGrowerMapClick(e, planterId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on planter:%d', planterId);
+    log.debug('click on grower:%d', planterId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${planterId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -280,17 +280,17 @@ const Verify = (props) => {
     verifyContext.loadCaptureImages();
   }
 
-  async function handleShowPlanterDetail(e, capture) {
+  async function handleShowGrowerDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
-    setPlanterDetail({
+    setGrowerDetail({
       isOpen: true,
       planterId: capture.planterId,
     });
   }
 
-  function handleClosePlanterDetail() {
-    setPlanterDetail({
+  function handleCloseGrowerDetail() {
+    setGrowerDetail({
       isOpen: false,
       planterId: null,
     });
@@ -376,9 +376,9 @@ const Verify = (props) => {
               <Grid justify="center" container className={classes.cardActions}>
                 <Grid item>
                   <IconButton
-                    onClick={(e) => handleShowPlanterDetail(e, capture)}
-                    aria-label={`Planter details`}
-                    title={`Planter details`}
+                    onClick={(e) => handleShowGrowerDetail(e, capture)}
+                    aria-label={`Grower details`}
+                    title={`Grower details`}
                   >
                     <Person color="primary" />
                   </IconButton>
@@ -403,9 +403,9 @@ const Verify = (props) => {
                     variant="link"
                     href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
                     target="_blank"
-                    onClick={(e) => handlePlanterMapClick(e, capture.planterId)}
-                    aria-label={`Planter map`}
-                    title={`Planter map`}
+                    onClick={(e) => handleGrowerMapClick(e, capture.planterId)}
+                    aria-label={`Grower map`}
+                    title={`Grower map`}
                   >
                     <Map color="primary" />
                   </IconButton>
@@ -574,10 +574,10 @@ const Verify = (props) => {
             className={classes.snackbar}
           />
         )}
-      <PlanterDetail
-        open={planterDetail.isOpen}
-        planterId={planterDetail.planterId}
-        onClose={() => handleClosePlanterDetail()}
+      <GrowerDetail
+        open={growerDetail.isOpen}
+        planterId={growerDetail.planterId}
+        onClose={() => handleCloseGrowerDetail()}
       />
       <CaptureDetailDialog
         open={captureDetail.isOpen}

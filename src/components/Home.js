@@ -10,7 +10,7 @@ import { documentTitle } from '../common/variables';
 import { AppContext } from '../context/AppContext';
 import { hasPermission, POLICIES } from '../models/auth';
 import {
-  DashStatPlanterCount,
+  DashStatGrowerCount,
   DashStatTotalCaptures,
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
@@ -195,7 +195,7 @@ function Home(props) {
           {hasPermission(appContext.user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.LIST_PLANTER,
-          ]) && <DashStatPlanterCount />}
+          ]) && <DashStatGrowerCount />}
         </Grid>
       </div>
     </div>

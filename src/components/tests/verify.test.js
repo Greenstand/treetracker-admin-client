@@ -3,15 +3,15 @@ import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import captureApi from '../../api/treeTrackerApi';
-import growerApi from '../../api/growers';
+import growerApi from '../../api/planters';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
 import { VerifyProvider } from '../../context/VerifyContext';
-import { GrowerProvider } from '../../context/GrowerContext';
+import { GrowerProvider } from '../../context/PlanterContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsProvider } from '../../context/TagsContext';
-import FilterGrower from '../../models/FilterGrower';
+import FilterGrower from '../../models/FilterPlanter';
 import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 
@@ -19,7 +19,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
 jest.setTimeout(7000);
-jest.mock('../../api/growers');
+jest.mock('../../api/planters');
 jest.mock('../../api/treeTrackerApi');
 
 const CAPTURE = {
@@ -210,7 +210,7 @@ describe('Verify', () => {
 
   beforeEach(() => {
     //mock the growers api
-    growerApi = require('../../api/growers').default;
+    growerApi = require('../../api/planters').default;
 
     growerApi.getCount = () => {
       log.debug('mock getCount:');
@@ -407,7 +407,9 @@ describe('Verify', () => {
       userEvent.click(growerDetails[0]);
       // screen.logTestingPlaygroundURL();
 
-      expect(screen.getByText(/grower detail/i)).toBeInTheDocument();
+      expect(screen.getByText(/country/i)).toBeInTheDocument();
+      expect(screen.getByText(/organization ID/i)).toBeInTheDocument();
+      expect(screen.getByText(/person ID/i)).toBeInTheDocument();
       expect(screen.getByText(/ID:/i)).toBeInTheDocument();
       expect(screen.getByText(/email address/i)).toBeInTheDocument();
       expect(screen.getByText(/phone number/i)).toBeInTheDocument();

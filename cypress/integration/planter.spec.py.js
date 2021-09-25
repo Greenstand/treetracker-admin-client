@@ -9,7 +9,7 @@ describe('Grower', () => {
     cy.contains(/log in/i).click();
     // cy.visit('/');
     // cy.get('button[title=menu]').click();
-    cy.contains(/Planters/i).click({ force: true });
+    cy.contains(/Growers/i).click({ force: true });
   });
 
   it('Should get id:xxx', () => {
