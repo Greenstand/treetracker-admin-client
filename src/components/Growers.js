@@ -19,9 +19,9 @@ import IconFilter from '@material-ui/icons/FilterList';
 import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import LinkToWebmap from './common/LinkToWebmap';
 import Navbar from './Navbar';
-import FilterTopGrower from './FilterTopPlanter';
+import FilterTopGrower from './FilterTopGrower';
 import OptimizedImage from './OptimizedImage';
-import GrowerDetail from './PlanterDetail';
+import GrowerDetail from './GrowerDetail';
 import { GrowerContext } from '../context/PlanterContext';
 
 // const log = require('loglevel').getLogger('../components/Growers');
@@ -143,19 +143,11 @@ const Growers = (props) => {
 
   useEffect(() => {
     growerContext.load();
-  }, [
-    growerContext.pageSize,
-    growerContext.currentPage,
-    growerContext.filter,
-  ]);
+  }, [growerContext.pageSize, growerContext.currentPage, growerContext.filter]);
 
   useEffect(() => {
     growerContext.getCount();
-  }, [
-    growerContext.pageSize,
-    growerContext.currentPage,
-    growerContext.filter,
-  ]);
+  }, [growerContext.pageSize, growerContext.currentPage, growerContext.filter]);
 
   function handleFilterClick() {
     if (isFilterShown) {

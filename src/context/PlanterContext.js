@@ -1,6 +1,6 @@
 import React, { useState, createContext } from 'react';
-import FilterGrower from '../models/FilterPlanter';
-import api from '../api/planters';
+import FilterGrower from '../models/FilterGrower';
+import api from '../api/growers';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/GrowerContext');

@@ -23,7 +23,7 @@ import Map from '@material-ui/icons/Map';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Navbar from './Navbar';
-import GrowerDetail from './PlanterDetail';
+import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
 import CaptureDetailDialog from './CaptureDetailDialog';

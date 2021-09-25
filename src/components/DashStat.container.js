@@ -9,7 +9,7 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
-import apiPlanters from '../api/planters';
+import apiPlanters from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 

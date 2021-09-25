@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { render, screen } from '@testing-library/react';
 import { AppContext, AppProvider } from '../context/AppContext';
-import Filter from './FilterPlanter';
+import Filter from './FilterGrower';
 
 describe.skip('FilterGrower, with initial filter values', () => {
   let filterGrower;

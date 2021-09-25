@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import captureApi from '../../api/treeTrackerApi';
-import growerApi from '../../api/planters';
+import growerApi from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
@@ -11,7 +11,7 @@ import { VerifyProvider } from '../../context/VerifyContext';
 import { GrowerProvider } from '../../context/PlanterContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsProvider } from '../../context/TagsContext';
-import FilterGrower from '../../models/FilterPlanter';
+import FilterGrower from '../../models/FilterGrower';
 import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 
@@ -19,7 +19,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
 jest.setTimeout(7000);
-jest.mock('../../api/planters');
+jest.mock('../../api/growers');
 jest.mock('../../api/treeTrackerApi');
 
 const CAPTURE = {
@@ -210,7 +210,7 @@ describe('Verify', () => {
 
   beforeEach(() => {
     //mock the growers api
-    growerApi = require('../../api/planters').default;
+    growerApi = require('../../api/growers').default;
 
     growerApi.getCount = () => {
       log.debug('mock getCount:');

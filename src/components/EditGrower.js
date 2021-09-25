@@ -11,7 +11,7 @@ import {
   CircularProgress,
   MenuItem,
 } from '@material-ui/core';
-import api from '../api/planters';
+import api from '../api/growers';
 import ImageScroller from './ImageScroller';
 import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/PlanterContext';

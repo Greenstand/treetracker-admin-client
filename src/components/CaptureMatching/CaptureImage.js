@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CaptureHeader from './CaptureHeader';
-import Grower from './Planter';
+import Grower from './Grower';
 import theme from '../common/theme';
 
 import { Typography, Box, Button, Grid } from '@material-ui/core';

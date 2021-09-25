@@ -11,12 +11,12 @@ import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
-import api from '../api/planters';
+import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/PlanterContext';
-import EditGrower from './EditPlanter';
+import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 
@@ -238,9 +238,7 @@ const GrowerDetail = (props) => {
               <Typography variant="body1">
                 {(growerRegistrations &&
                   growerRegistrations.length > 0 &&
-                  getDateTimeStringLocale(
-                    growerRegistrations[0].created_at,
-                  )) ||
+                  getDateTimeStringLocale(growerRegistrations[0].created_at)) ||
                   '---'}
               </Typography>
             </Grid>

@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
-import Growers from '../components/Planters';
+import Growers from '../components/Growers';
 import CapturesView from '../views/CapturesView';
 import Account from '../components/Account';
 import Home from '../components/Home';

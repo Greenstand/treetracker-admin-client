@@ -5,9 +5,9 @@ import { Provider } from 'react-redux';
 import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { init } from '@rematch/core';
-import api from '../../src/api/planters';
+import api from '../../src/api/growers';
 
-import EditGrower from '../../src/components/EditPlanter';
+import EditGrower from '../../src/components/EditGrower';
 
 describe('EditGrower', () => {
   let store;
