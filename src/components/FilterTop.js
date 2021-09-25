@@ -168,14 +168,6 @@ function Filter(props) {
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
               <TextField
-                htmlFor="uuid"
-                id="uuid"
-                label="UUID"
-                placeholder=""
-                value={uuid}
-                onChange={(e) => setUUID(e.target.value)}
-              />
-              <TextField
                 select
                 htmlFor="verification-status"
                 id="verification-status"
@@ -282,6 +274,14 @@ function Filter(props) {
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
+              />
+              <TextField
+                htmlFor="uuid"
+                id="uuid"
+                label="Capture UUID"
+                placeholder=""
+                value={uuid}
+                onChange={(e) => setUUID(e.target.value)}
               />
               <TextField
                 htmlFor="device-identifier"
