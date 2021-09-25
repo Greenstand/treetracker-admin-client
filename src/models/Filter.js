@@ -10,6 +10,7 @@ export const TAG_NOT_SET = 'TAG_NOT_SET';
 import { tokenizationStates } from '../common/variables';
 
 export default class Filter {
+  uuid;
   captureId;
   dateStart;
   dateEnd;
@@ -29,6 +30,10 @@ export default class Filter {
 
   getWhereObj() {
     let where = {};
+
+    if (this.uuid) {
+      where.uuid = this.uuid;
+    }
 
     if (this.captureId) {
       where.id = this.captureId;

@@ -79,6 +79,7 @@ function Filter(props) {
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
+  const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
@@ -123,6 +124,7 @@ function Filter(props) {
     e.preventDefault();
     // save the filer to context for editing & submit
     const filter = new FilterModel();
+    filter.uuid = uuid;
     filter.captureId = captureId;
     filter.planterId = growerId;
     filter.deviceIdentifier = deviceId;
@@ -140,6 +142,7 @@ function Filter(props) {
 
   function handleReset() {
     // reset form values, except 'approved' and 'active' which we'll keep
+    setUUID('');
     setCaptureId('');
     setGrowerId('');
     setDeviceId('');
@@ -157,6 +160,24 @@ function Filter(props) {
     filter.active = active; // keeps last value set
     props.onSubmit && props.onSubmit(filter);
   }
+
+  const defaultOrgList = userHasOrg
+    ? [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+      ]
+    : [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+        {
+          id: ORGANIZATION_NOT_SET,
+          name: 'Not set',
+        },
+      ];
 
   return (
     <>
@@ -273,6 +294,14 @@ function Filter(props) {
                 onChange={(e) => setCaptureId(e.target.value)}
               />
               <TextField
+                htmlFor="uuid"
+                id="uuid"
+                label="Capture UUID"
+                placeholder=""
+                value={uuid}
+                onChange={(e) => setUUID(e.target.value)}
+              />
+              <TextField
                 htmlFor="device-identifier"
                 id="device-identifier"
                 label="Device Identifier"
@@ -358,7 +387,8 @@ function Filter(props) {
                 // clearOnBlur
                 // handleHomeEndKeys
               />
-              {!userHasOrg && (
+              {
+                /* {!userHasOrg && ( }*/
                 <TextField
                   data-testid="org-dropdown"
                   select
@@ -368,17 +398,7 @@ function Filter(props) {
                   value={organizationId}
                   onChange={(e) => setOrganizationId(e.target.value)}
                 >
-                  {[
-                    {
-                      id: ALL_ORGANIZATIONS,
-                      name: 'All',
-                    },
-                    {
-                      id: ORGANIZATION_NOT_SET,
-                      name: 'Not set',
-                    },
-                    ...orgList,
-                  ].map((org) => (
+                  {[...defaultOrgList, ...orgList].map((org) => (
                     <MenuItem
                       data-testid="org-item"
                       key={org.id}
@@ -388,7 +408,8 @@ function Filter(props) {
                     </MenuItem>
                   ))}
                 </TextField>
-              )}
+                //)
+              }
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button

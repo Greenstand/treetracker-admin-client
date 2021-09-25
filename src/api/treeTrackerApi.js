@@ -21,6 +21,7 @@ export default {
       limit: rowsPerPage,
       skip,
       fields: {
+        uuid: true,
         imageUrl: true,
         lat: true,
         lon: true,
@@ -381,6 +382,9 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}organizations?filter[where][type]=O`;
+
+    console.log('GET ORGANIZATIONS -----', query);
+
     return fetch(query, {
       method: 'GET',
       headers: {

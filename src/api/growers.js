@@ -24,7 +24,7 @@ export default {
       where: { ...where, active: true },
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
-      skip: skip,
+      skip,
       fields: {
         firstName: true,
         lastName: true,
@@ -41,6 +41,7 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
+
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
@@ -120,11 +121,11 @@ export default {
       growerUpdate = { ...growerUpdate, organizationId: null };
     }
     const { id } = growerUpdate;
-    const growerQuery = `${
+    const planterQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${id}`;
 
-    return fetch(growerQuery, {
+    return fetch(planterQuery, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',

@@ -1,6 +1,11 @@
+import { stringToSearchRegExp } from '../utilities';
+
 /*
  * A simple model for grower filter
  */
+
+export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
+export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 
 export default class Filter {
   constructor(options) {
@@ -19,29 +24,31 @@ export default class Filter {
 
     if (this.firstName) {
       where.firstName = {
-        ilike: this.firstName,
+        regexp: stringToSearchRegExp(this.firstName),
       };
     }
 
     if (this.lastName) {
       where.lastName = {
-        ilike: this.lastName,
+        regexp: stringToSearchRegExp(this.lastName),
       };
     }
 
-    if (this.organizationId) {
+    if (this.organizationId === ORGANIZATION_NOT_SET) {
+      where.organizationId = null;
+    } else if (this.organizationId !== ALL_ORGANIZATIONS) {
       where.organizationId = this.organizationId;
     }
 
     if (this.email) {
       where.email = {
-        ilike: this.email,
+        regexp: stringToSearchRegExp(this.email),
       };
     }
 
     if (this.phone) {
       where.phone = {
-        ilike: this.phone,
+        regexp: stringToSearchRegExp(this.phone),
       };
     }
 

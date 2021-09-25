@@ -23,6 +23,7 @@ export function handleError(error) {
   }
 }
 
+// used for limiting organization access, NOT filtering by org/sub-orgs
 export function getOrganization() {
   if (session.user?.policy?.organization?.id) {
     return `organization/${session.user?.policy?.organization?.id}/`;

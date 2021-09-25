@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-// import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@material-ui/core/MenuItem';
 import FilterModel from '../models/FilterGrower';
-// import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
-// import { AppContext } from '../context/AppContext';
+import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
+import { AppContext } from '../context/AppContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -46,17 +46,14 @@ const styles = (theme) => {
 };
 
 function FilterTopGrower(props) {
-  // const { orgList, userHasOrg } = useContext(AppContext);
+  const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter } = props;
   const [id, setId] = useState(filter?.id || '');
   const [personId, setPersonId] = useState(filter?.personId || '');
   const [firstName, setFirstName] = useState(filter?.firstName || '');
   const [lastName, setLastName] = useState(filter?.lastName || '');
-  // const [organizationId, setOrganizationId] = useState(
-  //   filter?.organizationId || ALL_ORGANIZATIONS,
-  // );
   const [organizationId, setOrganizationId] = useState(
-    filter?.organizationId || '',
+    filter?.organizationId || ALL_ORGANIZATIONS,
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
@@ -80,7 +77,7 @@ function FilterTopGrower(props) {
     setPersonId('');
     setFirstName('');
     setLastName('');
-    setOrganizationId('');
+    setOrganizationId(ALL_ORGANIZATIONS);
     setEmail('');
     setPhone('');
 
@@ -91,6 +88,24 @@ function FilterTopGrower(props) {
   const handleEnterPress = (e) => {
     e.key === 'Enter' && handleSubmit(e);
   };
+
+  const defaultOrgList = userHasOrg
+    ? [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+      ]
+    : [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+        },
+        {
+          id: ORGANIZATION_NOT_SET,
+          name: 'Not set',
+        },
+      ];
 
   return (
     <>
@@ -118,46 +133,32 @@ function FilterTopGrower(props) {
                 onChange={(e) => setPersonId(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Organization ID"
-                htmlFor="Organization ID"
-                id="Organization ID"
-                placeholder="Organization ID"
-                value={organizationId}
-                onChange={(e) => setOrganizationId(e.target.value)}
-                onKeyDown={handleEnterPress}
-              />
-              {/* {!userHasOrg && (
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                data-testid="org-dropdown"
-                select
-                label="Organization ID"
-                htmlFor="Organization ID"
-                id="Organization ID"
-                placeholder="Organization ID"
-                value={organizationId}
-                onChange={(e) => setOrganizationId(e.target.value)}
-                onKeyDown={handleEnterPress}
-              >
-                {[
-                  {
-                    id: ALL_ORGANIZATIONS,
-                    name: 'All',
-                  },
-                  {
-                    id: ORGANIZATION_NOT_SET,
-                    name: 'Not set',
-                  },
-                  ...orgList,
-                ].map((org) => (
-                  <MenuItem data-testid="org-item" key={org.id} value={org.id}>
-                    {org.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )} */}
+              {
+                /* {!userHasOrg && ( }*/
+                <TextField
+                  className={`${classes.textField} ${classes.filterElement}`}
+                  data-testid="org-dropdown"
+                  select
+                  label="Organization"
+                  htmlFor="Organization"
+                  id="Organization"
+                  placeholder="Organization"
+                  value={organizationId}
+                  onChange={(e) => setOrganizationId(e.target.value)}
+                  onKeyDown={handleEnterPress}
+                >
+                  {[...defaultOrgList, ...orgList].map((org) => (
+                    <MenuItem
+                      data-testid="org-item"
+                      key={org.id}
+                      value={org.id}
+                    >
+                      {org.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                //)
+              }
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
                 label="First Name"

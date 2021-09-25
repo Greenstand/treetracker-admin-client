@@ -139,7 +139,8 @@ export const AppProvider = (props) => {
 
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
-    if (user && token && !user?.policy?.organization?.id) {
+    // if (user && token && !user?.policy?.organization?.id) {
+    if (user && token) {
       loadOrganizations();
     }
     setUserHasOrg(!!user?.policy?.organization?.id);
