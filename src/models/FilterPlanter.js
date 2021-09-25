@@ -1,14 +1,6 @@
-/**
- * @function
- * @name stringToSearchRegExp
- * @description Converts a string to a case-insesnsitive regular expression
- *              that can be used to search for string patterns.
- * @param {String} value
- * @returns {string} A regular expression string
- */
-const stringToSearchRegExp = (value) => `/.*${value}.*/i`;
+import { stringToSearchRegExp } from '../utilities';
 
-/*
+/**
  * A simple model for planter filter
  */
 
