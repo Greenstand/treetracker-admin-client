@@ -21,6 +21,7 @@ export default {
       limit: rowsPerPage,
       skip,
       fields: {
+        uuid: true,
         imageUrl: true,
         lat: true,
         lon: true,

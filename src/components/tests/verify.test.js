@@ -47,6 +47,7 @@ const CAPTURE = {
 const CAPTURES = [
   {
     id: 10,
+    uuid: '11942400-6617-4c6c-bf5e',
     planterId: 10,
     planterIdentifier: 'planter1@some.place',
     deviceIdentifier: '1-abcdef123456',
@@ -68,6 +69,7 @@ const CAPTURES = [
   },
   {
     id: 20,
+    uuid: '11942400-6617-4c6c-bf5e',
     planterId: 11,
     planterIdentifier: 'planter2@some.place',
     deviceIdentifier: '2-abcdef123456',
@@ -89,6 +91,7 @@ const CAPTURES = [
   },
   {
     id: 30,
+    uuid: '11942400-6617-4c6c-bf5e',
     planterId: 10,
     planterIdentifier: 'planter3@some.place',
     deviceIdentifier: '3-abcdef123456',
