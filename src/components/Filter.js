@@ -22,7 +22,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import { datePickerDefaultMinDate } from '../common/variables';
-
+import { getVerificationStatus } from '../common/utils';
 import { verificationStates, tokenizationStates } from '../common/variables';
 
 export const FILTER_WIDTH = 330;
@@ -296,15 +296,5 @@ function Filter(props) {
     </Drawer>
   );
 }
-
-const getVerificationStatus = (active, approved) => {
-  if (active === true && approved === false) {
-    return verificationStates.AWAITING;
-  } else if (active === true && approved === true) {
-    return verificationStates.APPROVED;
-  } else if (active === false && approved === false) {
-    return verificationStates.REJECTED;
-  }
-};
 
 export default withStyles(styles)(Filter);
