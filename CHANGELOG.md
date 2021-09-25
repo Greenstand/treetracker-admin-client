@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.0...v1.21.1) (2021-09-25)
+
+
+### Bug Fixes
+
+* add uuid to capture detail dialog and top filter ([#166](https://github.com/Greenstand/treetracker-admin-client/issues/166)) ([5771c73](https://github.com/Greenstand/treetracker-admin-client/commit/5771c735103c3dff78d957b1b6f40a8c59ef265d))
+
 # [1.21.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.20.3...v1.21.0) (2021-09-24)
 
 
