@@ -2,14 +2,14 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import api from '../../api/growers';
+import api from '../../api/planters';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
-import { GrowerProvider } from '../../context/GrowerContext';
-import FilterGrower from '../../models/FilterGrower';
-import FilterTopGrower from '../FilterTopGrower';
-import Growers from '../Growers';
+import { GrowerProvider } from '../../context/PlanterContext';
+import FilterGrower from '../../models/FilterPlanter';
+import FilterTopGrower from '../FilterTopPlanter';
+import Growers from '../Planters';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/grower.test');
@@ -83,7 +83,7 @@ describe('growers', () => {
 
   beforeEach(() => {
     //mock the api
-    api = require('../../api/growers').default;
+    api = require('../../api/planters').default;
 
     api.getCount = () => {
       log.debug('mock getCount');

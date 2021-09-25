@@ -19,10 +19,10 @@ import IconFilter from '@material-ui/icons/FilterList';
 import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import LinkToWebmap from './common/LinkToWebmap';
 import Navbar from './Navbar';
-import FilterTopGrower from './FilterTopGrower';
+import FilterTopGrower from './FilterTopPlanter';
 import OptimizedImage from './OptimizedImage';
-import GrowerDetail from './GrowerDetail';
-import { GrowerContext } from '../context/GrowerContext';
+import GrowerDetail from './PlanterDetail';
+import { GrowerContext } from '../context/PlanterContext';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 

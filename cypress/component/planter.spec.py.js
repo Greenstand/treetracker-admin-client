@@ -1,6 +1,6 @@
 import { mount } from 'cypress-react-unit-test'
 import React from 'react'
-import {Grower} from "../../src/components/Growers.js";
+import {Grower} from "../../src/components/Planters.js";
 
 describe('HelloWorld component', () => {
   it('works', () => {

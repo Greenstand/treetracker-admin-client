@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import FilterModel from '../models/FilterGrower';
+import FilterModel from '../models/FilterPlanter';
 import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
 import { AppContext } from '../context/AppContext';
 
