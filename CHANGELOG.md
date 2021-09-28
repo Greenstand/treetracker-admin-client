@@ -1,3 +1,10 @@
+## [1.21.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.1...v1.21.2) (2021-09-28)
+
+
+### Bug Fixes
+
+* make the verify and captures pages consistent ([#152](https://github.com/Greenstand/treetracker-admin-client/issues/152)) ([c8f5cd3](https://github.com/Greenstand/treetracker-admin-client/commit/c8f5cd3eecea762186485c5ef7cb965a09c1e402))
+
 ## [1.21.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.0...v1.21.1) (2021-09-25)
 
 
