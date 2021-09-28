@@ -27,6 +27,7 @@ import {
   tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
+import { getVerificationStatus } from '../common/utils';
 import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
@@ -177,7 +178,7 @@ function Filter(props) {
           id: ORGANIZATION_NOT_SET,
           name: 'Not set',
         },
-      ];
+    ];
 
   return (
     <>
@@ -442,15 +443,5 @@ function Filter(props) {
     </>
   );
 }
-
-const getVerificationStatus = (active, approved) => {
-  if (active === true && approved === false) {
-    return verificationStates.AWAITING;
-  } else if (active === true && approved === true) {
-    return verificationStates.APPROVED;
-  } else if (active === false && approved === false) {
-    return verificationStates.REJECTED;
-  }
-};
 
 export default withStyles(styles)(Filter);

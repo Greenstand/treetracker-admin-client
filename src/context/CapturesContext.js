@@ -164,9 +164,14 @@ export function CapturesProvider(props) {
         id: true,
         timeCreated: true,
         status: true,
+        active: true,
         approved: true,
         planterId: true,
         treeTags: true,
+        planterIdentifier: true,
+        deviceIdentifier: true,
+        speciesId: true,
+        tokenId: true,
       },
     };
 
