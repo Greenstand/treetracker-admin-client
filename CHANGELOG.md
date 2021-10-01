@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.2...v1.22.0) (2021-10-01)
+
+
+### Features
+
+* refactoring renaming planters to growers ([#163](https://github.com/Greenstand/treetracker-admin-client/issues/163)) ([190ea83](https://github.com/Greenstand/treetracker-admin-client/commit/190ea8310f86bfb4db96c0a0bb370e393ad36ea8))
+
 ## [1.21.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.1...v1.21.2) (2021-09-28)
 
 
