@@ -22,7 +22,7 @@ import Navbar from './Navbar';
 import FilterTopGrower from './FilterTopGrower';
 import OptimizedImage from './OptimizedImage';
 import GrowerDetail from './GrowerDetail';
-import { GrowerContext } from '../context/PlanterContext';
+import { GrowerContext } from '../context/GrowerContext';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 

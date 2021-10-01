@@ -8,7 +8,7 @@ import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
 import { VerifyProvider } from '../../context/VerifyContext';
-import { GrowerProvider } from '../../context/PlanterContext';
+import { GrowerProvider } from '../../context/GrowerContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsProvider } from '../../context/TagsContext';
 import FilterGrower from '../../models/FilterGrower';

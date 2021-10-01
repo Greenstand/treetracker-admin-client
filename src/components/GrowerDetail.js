@@ -15,7 +15,7 @@ import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
-import { GrowerContext } from '../context/PlanterContext';
+import { GrowerContext } from '../context/GrowerContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
@@ -167,7 +167,7 @@ const GrowerDetail = (props) => {
               )}
               {hasPermission(appContext.user, [
                 POLICIES.SUPER_PERMISSION,
-                POLICIES.MANAGE_PLANTER,
+                POLICIES.MANAGE_GROWER,
               ]) && (
                 <Fab
                   data-testid="edit-grower"

@@ -6,7 +6,7 @@ import api from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
-import { GrowerProvider } from '../../context/PlanterContext';
+import { GrowerProvider } from '../../context/GrowerContext';
 import FilterGrower from '../../models/FilterGrower';
 import FilterTopGrower from '../FilterTopGrower';
 import Growers from '../Growers';

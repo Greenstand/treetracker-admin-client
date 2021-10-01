@@ -14,7 +14,7 @@ import {
 import api from '../api/growers';
 import ImageScroller from './ImageScroller';
 import { AppContext } from '../context/AppContext';
-import { GrowerContext } from '../context/PlanterContext';
+import { GrowerContext } from '../context/GrowerContext';
 
 const useStyle = makeStyles((theme) => ({
   container: {

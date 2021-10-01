@@ -218,11 +218,11 @@ const Verify = (props) => {
     window.open(url, '_blank').opener = null;
   }
 
-  function handleGrowerMapClick(e, planterId) {
+  function handleGrowerMapClick(e, growerId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on grower:%d', planterId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${planterId}`;
+    log.debug('click on grower:%d', growerId);
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
   }
 
@@ -285,14 +285,14 @@ const Verify = (props) => {
     e.stopPropagation();
     setGrowerDetail({
       isOpen: true,
-      planterId: capture.planterId,
+      growerId: capture.planterId,
     });
   }
 
   function handleCloseGrowerDetail() {
     setGrowerDetail({
       isOpen: false,
-      planterId: null,
+      growerId: null,
     });
   }
 
@@ -576,7 +576,7 @@ const Verify = (props) => {
         )}
       <GrowerDetail
         open={growerDetail.isOpen}
-        planterId={growerDetail.planterId}
+        growerId={growerDetail.growerId}
         onClose={() => handleCloseGrowerDetail()}
       />
       <CaptureDetailDialog
