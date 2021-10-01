@@ -1,7 +1,7 @@
 import { stringToSearchRegExp } from '../utilities';
 
-/**
- * A simple model for planter filter
+/*
+ * A simple model for grower filter
  */
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';

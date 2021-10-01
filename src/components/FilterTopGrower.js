@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import FilterModel from '../models/FilterPlanter';
+import FilterModel from '../models/FilterGrower';
 import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
 import { AppContext } from '../context/AppContext';
 
@@ -45,7 +45,7 @@ const styles = (theme) => {
   };
 };
 
-function FilterTopPlanter(props) {
+function FilterTopGrower(props) {
   const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter } = props;
   const [id, setId] = useState(filter?.id || '');
@@ -115,10 +115,10 @@ function FilterTopPlanter(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
-                label="Planter ID"
-                htmlFor="Planter ID"
-                id="Planter ID"
-                placeholder="Planter ID"
+                label="Grower ID"
+                htmlFor="Grower ID"
+                id="Grower ID"
+                placeholder="Grower ID"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 onKeyDown={handleEnterPress}
@@ -233,4 +233,4 @@ function FilterTopPlanter(props) {
   );
 }
 
-export default withStyles(styles)(FilterTopPlanter);
+export default withStyles(styles)(FilterTopGrower);

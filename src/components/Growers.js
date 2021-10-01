@@ -1,5 +1,5 @@
 /*
- * Planter page
+ * Grower page
  */
 import React, { useState, useEffect, useContext } from 'react';
 import clsx from 'clsx';
@@ -19,14 +19,14 @@ import IconFilter from '@material-ui/icons/FilterList';
 import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import LinkToWebmap from './common/LinkToWebmap';
 import Navbar from './Navbar';
-import FilterTopPlanter from './FilterTopPlanter';
+import FilterTopGrower from './FilterTopGrower';
 import OptimizedImage from './OptimizedImage';
-import PlanterDetail from './PlanterDetail';
-import { PlanterContext } from '../context/PlanterContext';
+import GrowerDetail from './GrowerDetail';
+import { GrowerContext } from '../context/GrowerContext';
 
-// const log = require('loglevel').getLogger('../components/Planters');
+// const log = require('loglevel').getLogger('../components/Growers');
 
-const PLANTER_IMAGE_SIZE = 182;
+const GROWER_IMAGE_SIZE = 182;
 
 const useStyles = makeStyles((theme) => ({
   outer: {
@@ -50,19 +50,19 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     padding: 0,
-    height: `${PLANTER_IMAGE_SIZE}px`,
+    height: `${GROWER_IMAGE_SIZE}px`,
     position: 'relative',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
   },
   cardMedia: {
-    height: `${PLANTER_IMAGE_SIZE}px`,
+    height: `${GROWER_IMAGE_SIZE}px`,
   },
   cardWrapper: {
     width: 200,
   },
-  planterCard: {
+  growerCard: {
     borderRadius: 16,
     border: '1px solid rgba(0, 0, 0, 0.12)',
     boxShadow: 'none',
@@ -125,37 +125,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Planters = (props) => {
-  // log.debug('render: Planters...');
+const Growers = (props) => {
+  // log.debug('render: Growers...');
   const classes = useStyles(props);
-  const planterContext = useContext(PlanterContext);
+  const growerContext = useContext(GrowerContext);
   const [isFilterShown, setFilterShown] = useState(false);
   const [isDetailShown, setDetailShown] = useState(false);
-  const [planterDetail, setPlanterDetail] = useState({});
+  const [growerDetail, setGrowerDetail] = useState({});
 
   /*
-   * effect to load page when mounted and initialize the title and planter count
+   * effect to load page when mounted and initialize the title and grower count
    */
   useEffect(() => {
-    // log.debug('planters mounted', filter);
-    document.title = `Planters - ${documentTitle}`;
+    // log.debug('growers mounted', filter);
+    document.title = `Growers - ${documentTitle}`;
   }, []);
 
   useEffect(() => {
-    planterContext.load();
-  }, [
-    planterContext.pageSize,
-    planterContext.currentPage,
-    planterContext.filter,
-  ]);
+    growerContext.load();
+  }, [growerContext.pageSize, growerContext.currentPage, growerContext.filter]);
 
   useEffect(() => {
-    planterContext.getCount();
-  }, [
-    planterContext.pageSize,
-    planterContext.currentPage,
-    planterContext.filter,
-  ]);
+    growerContext.getCount();
+  }, [growerContext.pageSize, growerContext.currentPage, growerContext.filter]);
 
   function handleFilterClick() {
     if (isFilterShown) {
@@ -166,19 +158,19 @@ const Planters = (props) => {
   }
 
   function handlePageChange(e, page) {
-    planterContext.changeCurrentPage(page);
+    growerContext.changeCurrentPage(page);
   }
 
   function handleChangePageSize(e, option) {
-    planterContext.changePageSize(option.props.value);
+    growerContext.changePageSize(option.props.value);
   }
 
-  function handlePlanterClick(planter) {
+  function handleGrowerClick(grower) {
     setDetailShown(true);
-    setPlanterDetail(planter);
+    setGrowerDetail(grower);
   }
 
-  const placeholderPlanters = Array(planterContext.pageSize)
+  const placeholderGrowers = Array(growerContext.pageSize)
     .fill()
     .map((_, index) => {
       return {
@@ -187,16 +179,16 @@ const Planters = (props) => {
       };
     });
 
-  let plantersItems = (planterContext.isLoading
-    ? placeholderPlanters
-    : planterContext.planters
-  ).map((planter) => {
+  let growersItems = (growerContext.isLoading
+    ? placeholderGrowers
+    : growerContext.growers
+  ).map((grower) => {
     return (
-      <Planter
-        onClick={() => handlePlanterClick(planter)}
-        key={planter.id}
-        planter={planter}
-        placeholder={planter.placeholder}
+      <Grower
+        onClick={() => handleGrowerClick(grower)}
+        key={grower.id}
+        grower={grower}
+        placeholder={grower.placeholder}
       />
     );
   });
@@ -205,12 +197,12 @@ const Planters = (props) => {
     <TablePagination
       rowsPerPageOptions={[24, 48, 96]}
       component="div"
-      count={planterContext.count || 0}
-      rowsPerPage={planterContext.pageSize}
-      page={planterContext.currentPage}
+      count={growerContext.count || 0}
+      rowsPerPage={growerContext.pageSize}
+      page={growerContext.currentPage}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={handleChangePageSize}
-      labelRowsPerPage="Planters per page:"
+      labelRowsPerPage="Growers per page:"
     />
   );
 
@@ -232,10 +224,10 @@ const Planters = (props) => {
             ]}
           >
             {isFilterShown && (
-              <FilterTopPlanter
+              <FilterTopGrower
                 isOpen={isFilterShown}
-                onSubmit={(filter) => planterContext.updateFilter(filter)}
-                filter={planterContext.filter}
+                onSubmit={(filter) => growerContext.updateFilter(filter)}
+                filter={growerContext.filter}
                 onClose={handleFilterClick}
               />
             )}
@@ -256,13 +248,13 @@ const Planters = (props) => {
                 className={classes.title}
               >
                 <Grid item>
-                  <Typography variant="h5">Planters</Typography>
+                  <Typography variant="h5">Growers</Typography>
                 </Grid>
                 <Grid item>{pagination}</Grid>
               </Grid>
             </Grid>
             <Grid item container direction="row" justify="center">
-              {plantersItems}
+              {growersItems}
             </Grid>
           </Grid>
           <Grid container className={classes.page} justify="flex-end">
@@ -270,46 +262,46 @@ const Planters = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <PlanterDetail
+      <GrowerDetail
         open={isDetailShown}
-        planterId={planterDetail.id}
+        growerId={growerDetail.id}
         onClose={() => setDetailShown(false)}
       />
     </>
   );
 };
 
-export function Planter(props) {
-  const { planter } = props;
+export function Grower(props) {
+  const { grower } = props;
   const classes = useStyles(props);
   return (
     <div
       onClick={() => props.onClick()}
       className={clsx(classes.cardWrapper)}
-      key={planter.id}
+      key={grower.id}
     >
       <Card
-        id={`card_${planter.id}`}
+        id={`card_${grower.id}`}
         className={clsx(
           classes.card,
           props.placeholder && classes.placeholderCard,
         )}
         classes={{
-          root: classes.planterCard,
+          root: classes.growerCard,
         }}
       >
         <CardContent className={classes.cardContent}>
-          {planter.imageUrl && (
+          {grower.imageUrl && (
             <OptimizedImage
-              src={planter.imageUrl}
-              width={PLANTER_IMAGE_SIZE}
-              height={PLANTER_IMAGE_SIZE}
+              src={grower.imageUrl}
+              width={GROWER_IMAGE_SIZE}
+              height={GROWER_IMAGE_SIZE}
               className={classes.cardMedia}
               fixed
-              rotation={planter.imageRotation}
+              rotation={grower.imageRotation}
             />
           )}
-          {!planter.imageUrl && (
+          {!grower.imageUrl && (
             <CardMedia className={classes.cardMedia}>
               <Grid container className={classes.personBox}>
                 <Person className={classes.person} />
@@ -321,13 +313,13 @@ export function Planter(props) {
           <Grid justify="flex-start" container>
             <Grid container direction="column">
               <Typography className={classes.name}>
-                {planter.firstName} {planter.lastName}
+                {grower.firstName} {grower.lastName}
               </Typography>
               <Typography>
-                ID: <LinkToWebmap value={planter.id} type="user" />
+                ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
-              {planter.organization && (
-                <Typography>Organization: {planter.organization}</Typography>
+              {grower.organization && (
+                <Typography>Organization: {grower.organization}</Typography>
               )}
             </Grid>
           </Grid>
@@ -336,4 +328,4 @@ export function Planter(props) {
     </div>
   );
 }
-export default Planters;
+export default Growers;

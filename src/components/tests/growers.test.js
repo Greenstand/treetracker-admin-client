@@ -2,21 +2,21 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import api from '../../api/planters';
+import api from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
-import { PlanterProvider } from '../../context/PlanterContext';
-import FilterPlanter from '../../models/FilterPlanter';
-import FilterTopPlanter from '../FilterTopPlanter';
-import Planters from '../Planters';
+import { GrowerProvider } from '../../context/GrowerContext';
+import FilterGrower from '../../models/FilterGrower';
+import FilterTopGrower from '../FilterTopGrower';
+import Growers from '../Growers';
 
 import * as loglevel from 'loglevel';
-const log = loglevel.getLogger('../tests/planter.test');
+const log = loglevel.getLogger('../tests/grower.test');
 
-jest.mock('../../api/planters');
+jest.mock('../../api/growers');
 
-const PLANTER = {
+const GROWER = {
   id: 1,
   firstName: 'testFirstName',
   lastName: 'testLastName',
@@ -29,7 +29,7 @@ const PLANTER = {
   organizationId: 11,
 };
 
-const PLANTERS = [
+const GROWERS = [
   {
     id: 1,
     firstName: 'testFirstName',
@@ -77,72 +77,72 @@ const ORGS = [
   },
 ];
 
-describe('planters', () => {
+describe('growers', () => {
   let api;
-  let planterValues;
+  let growerValues;
 
   beforeEach(() => {
     //mock the api
-    api = require('../../api/planters').default;
+    api = require('../../api/growers').default;
 
     api.getCount = () => {
       log.debug('mock getCount');
       return Promise.resolve({ count: 2 });
     };
-    api.getPlanter = () => {
-      log.debug('mock getPlanter');
-      return Promise.resolve(PLANTER);
+    api.getGrower = () => {
+      log.debug('mock getGrower');
+      return Promise.resolve(GROWER);
     };
-    api.getPlanters = () => {
+    api.getGrowers = () => {
       log.debug('mock load');
-      return Promise.resolve(PLANTERS);
+      return Promise.resolve(GROWERS);
     };
   });
 
   describe('with a default context', () => {
     //{{{
     beforeEach(async () => {
-      planterValues = {
-        planters: [],
+      growerValues = {
+        growers: [],
         pageSize: 24,
         count: null,
         currentPage: 0,
-        filter: new FilterPlanter(),
+        filter: new FilterGrower(),
         isLoading: false,
-        totalPlanterCount: null,
+        totalGrowerCount: null,
         load: () => {},
         getCount: () => {},
         changePageSize: () => {},
         changeCurrentPage: () => {},
-        getPlanter: () => {},
-        updatePlanter: () => {},
-        updatePlanters: () => {},
+        getGrower: () => {},
+        updateGrower: () => {},
+        updateGrowers: () => {},
         updateFilter: () => {},
-        getTotalPlanterCount: () => {},
+        getTotalGrowerCount: () => {},
       };
 
       render(
         <BrowserRouter>
           <AppProvider value={{ orgList: ORGS }}>
-            <PlanterProvider value={planterValues}>
-              <Planters />
-            </PlanterProvider>
+            <GrowerProvider value={growerValues}>
+              <Growers />
+            </GrowerProvider>
           </AppProvider>
         </BrowserRouter>,
       );
 
-      await act(() => api.getPlanters());
+      await act(() => api.getGrowers());
       await act(() => api.getCount());
     });
 
     afterEach(cleanup);
 
-    it('renders subcomponents of filter top planter', () => {
+    it('renders subcomponents of filter top grower', () => {
       const filter = screen.getByRole('button', { name: /filter/i });
       userEvent.click(filter);
       // screen.logTestingPlaygroundURL();
 
-      expect(screen.getByLabelText('Planter ID')).toBeInTheDocument();
+      expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
 
       expect(screen.getByLabelText('Person ID')).toBeInTheDocument();
 
@@ -157,7 +157,7 @@ describe('planters', () => {
       expect(screen.getByLabelText(/phone number/i)).toBeInTheDocument();
     });
 
-    it('renders planter page', () => {
+    it('renders grower page', () => {
       expect(
         screen.getByText(/testFirstName testLastName/i),
       ).toBeInTheDocument();
@@ -175,7 +175,7 @@ describe('planters', () => {
       expect(screen.getByText('2')).toBeInTheDocument();
       expect(screen.getByText('3')).toBeInTheDocument();
 
-      const pageSize = screen.getAllByText(/planters per page:/i);
+      const pageSize = screen.getAllByText(/growers per page:/i);
       expect(pageSize).toHaveLength(2);
     });
   });

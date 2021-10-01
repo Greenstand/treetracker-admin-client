@@ -20,7 +20,7 @@ describe('captureDetail', () => {
   const CAPTURE = {
     id: 0,
     planterId: 10,
-    planterIdentifier: 'planter@some.place',
+    planterIdentifier: 'grower@some.place',
     deviceIdentifier: 'abcdef123456',
     approved: true,
     active: true,
@@ -112,7 +112,7 @@ describe('captureDetail', () => {
 
       it('loaded captureDetail', () => {
         // screen.logTestingPlaygroundURL();
-        expect(screen.getByText(/planter@some.place/i));
+        expect(screen.getByText(/grower@some.place/i));
         expect(screen.getByText(/new_tree/i));
         expect(screen.getByText(/simple_leaf/i));
       });

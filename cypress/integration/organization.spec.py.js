@@ -12,8 +12,8 @@ describe('Organization', () => {
     cy.contains('.MuiMenuItem-root', /verify/i).click();
   });
 
-  it('planter', () => {
-    cy.contains('.MuiMenuItem-root', /planter/i).click({ force: true });
+  it('grower', () => {
+    cy.contains('.MuiMenuItem-root', /grower/i).click({ force: true });
   });
 
   it.only('tree', () => {

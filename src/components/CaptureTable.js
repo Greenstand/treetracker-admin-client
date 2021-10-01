@@ -68,7 +68,7 @@ const columns = [
   },
   {
     attr: 'planterId',
-    label: 'Planter ID',
+    label: 'Grower ID',
   },
   {
     attr: 'deviceIdentifier',

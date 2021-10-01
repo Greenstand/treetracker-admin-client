@@ -1,4 +1,4 @@
-describe('Planter', () => {
+describe('Grower', () => {
   const pageSize = 24;
 
   before(() => {
@@ -9,7 +9,7 @@ describe('Planter', () => {
     cy.contains(/log in/i).click();
     // cy.visit('/');
     // cy.get('button[title=menu]').click();
-    cy.contains(/Planters/i).click({ force: true });
+    cy.contains(/Growers/i).click({ force: true });
   });
 
   it('Should get id:xxx', () => {
@@ -28,7 +28,7 @@ describe('Planter', () => {
     cy.get('button[title="Previous page"]').should('be.disabled');
   });
 
-  it('Should show a full page of planters', () => {
+  it('Should show a full page of growers', () => {
     cy.get('.MuiCard-root').should('have.length', pageSize);
   });
 

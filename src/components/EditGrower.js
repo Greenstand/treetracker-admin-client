@@ -11,10 +11,10 @@ import {
   CircularProgress,
   MenuItem,
 } from '@material-ui/core';
-import api from '../api/planters';
+import api from '../api/growers';
 import ImageScroller from './ImageScroller';
 import { AppContext } from '../context/AppContext';
-import { PlanterContext } from '../context/PlanterContext';
+import { GrowerContext } from '../context/GrowerContext';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -27,58 +27,58 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const EditPlanter = (props) => {
-  // console.log('render: edit planter');
+const EditGrower = (props) => {
+  // console.log('render: edit grower');
   const classes = useStyle();
-  const { isOpen, planter, onClose } = props;
+  const { isOpen, grower, onClose } = props;
   const appContext = useContext(AppContext);
-  const planterContext = useContext(PlanterContext);
-  const [planterImages, setPlanterImages] = useState([]);
-  const [planterUpdate, setPlanterUpdate] = useState(null);
-  const [loadingPlanterImages, setLoadingPlanterImages] = useState(false);
+  const growerContext = useContext(GrowerContext);
+  const [growerImages, setGrowerImages] = useState([]);
+  const [growerUpdate, setGrowerUpdate] = useState(null);
+  const [loadingGrowerImages, setLoadingGrowerImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
 
   useEffect(() => {
-    async function loadPlanterImages() {
-      if (planter?.id) {
-        setLoadingPlanterImages(true);
-        const selfies = await api.getPlanterSelfies(planter.id);
-        setLoadingPlanterImages(false);
+    async function loadGrowerImages() {
+      if (grower?.id) {
+        setLoadingGrowerImages(true);
+        const selfies = await api.getGrowerSelfies(grower.id);
+        setLoadingGrowerImages(false);
 
-        setPlanterImages([
-          ...(planter.imageUrl ? [planter.imageUrl] : []),
-          ...selfies?.filter((img) => img !== planter.imageUrl),
+        setGrowerImages([
+          ...(grower.imageUrl ? [grower.imageUrl] : []),
+          ...selfies?.filter((img) => img !== grower.imageUrl),
         ]);
       }
     }
 
-    setPlanterUpdate(null);
-    loadPlanterImages();
-  }, [planter]);
+    setGrowerUpdate(null);
+    loadGrowerImages();
+  }, [grower]);
 
-  async function updatePlanter(planter) {
-    await api.updatePlanter(planter);
-    const updatedPlanter = await api.getPlanter(planter.id);
-    // only update context if planters have already been downloaded
-    if (planterContext.planters.length) {
-      const index = planterContext.planters.findIndex(
-        (p) => p.id === updatedPlanter.id,
+  async function updateGrower(grower) {
+    await api.updateGrower(grower);
+    const updatedGrower = await api.getGrower(grower.id);
+    // only update context if growers have already been downloaded
+    if (growerContext.growers.length) {
+      const index = growerContext.growers.findIndex(
+        (p) => p.id === updatedGrower.id,
       );
       if (index >= 0) {
-        const planters = [...planterContext.planters];
-        planters[index] = updatedPlanter;
-        planterContext.updatePlanters(planters);
+        const growers = [...growerContext.growers];
+        growers[index] = updatedGrower;
+        growerContext.updateGrowers(growers);
       }
     }
   }
 
   async function handleSave() {
-    if (planterUpdate) {
+    if (growerUpdate) {
       setSaveInProgress(true);
       // TODO handle errors
-      await updatePlanter({
-        id: planter.id,
-        ...planterUpdate,
+      await updateGrower({
+        id: grower.id,
+        ...growerUpdate,
       });
       setSaveInProgress(false);
     }
@@ -90,26 +90,26 @@ const EditPlanter = (props) => {
   }
 
   function handleChange(key, val) {
-    let newPlanter = { ...planterUpdate };
-    newPlanter[key] = val;
+    let newGrower = { ...growerUpdate };
+    newGrower[key] = val;
 
-    const changed = Object.keys(newPlanter).some((key) => {
-      return newPlanter[key] !== planter[key];
+    const changed = Object.keys(newGrower).some((key) => {
+      return newGrower[key] !== grower[key];
     });
 
     if (changed) {
-      setPlanterUpdate(newPlanter);
+      setGrowerUpdate(newGrower);
     } else {
-      setPlanterUpdate(null);
+      setGrowerUpdate(null);
     }
   }
 
   function getValue(attr) {
     // Ensure empty strings are not overlooked
-    if (planterUpdate?.[attr] != null) {
-      return planterUpdate[attr];
-    } else if (planter[attr] != null) {
-      return planter[attr];
+    if (growerUpdate?.[attr] != null) {
+      return growerUpdate[attr];
+    } else if (grower[attr] != null) {
+      return grower[attr];
     }
     return '';
   }
@@ -143,16 +143,16 @@ const EditPlanter = (props) => {
 
   return (
     <Dialog open={isOpen} aria-labelledby="form-dialog-title" maxWidth={false}>
-      <DialogTitle id="form-dialog-title">Edit Planter</DialogTitle>
+      <DialogTitle id="form-dialog-title">Edit Grower</DialogTitle>
       <DialogContent>
         <Grid container direction="column" className={classes.container}>
           <ImageScroller
-            images={planterImages}
-            selectedImage={planterUpdate?.imageUrl || planter.imageUrl}
-            loading={loadingPlanterImages}
-            blankMessage="No planter images available"
+            images={growerImages}
+            selectedImage={growerUpdate?.imageUrl || grower.imageUrl}
+            loading={loadingGrowerImages}
+            blankMessage="No grower images available"
             imageRotation={
-              planterUpdate?.imageRotation || planter.imageRotation || 0
+              growerUpdate?.imageRotation || grower.imageRotation || 0
             }
             onSelectChange={handleChange}
           />
@@ -209,7 +209,7 @@ const EditPlanter = (props) => {
           onClick={handleSave}
           variant="contained"
           color="primary"
-          disabled={!planterUpdate || saveInProgress}
+          disabled={!growerUpdate || saveInProgress}
         >
           {saveInProgress ? <CircularProgress size={21} /> : 'Save'}
         </Button>
@@ -218,4 +218,4 @@ const EditPlanter = (props) => {
   );
 };
 
-export default EditPlanter;
+export default EditGrower;

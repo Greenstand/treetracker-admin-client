@@ -32,6 +32,15 @@ export default function Routers() {
               <Route path="/login">
                 <Login />
               </Route>
+              <Route path="/planters">
+                {' '}
+                {/* cater for legacy naming */}
+                <Redirect
+                  to={{
+                    pathname: '/growers',
+                  }}
+                />
+              </Route>
               {appContext.routes.map(
                 ({ linkTo, exact = false, component, disabled }, idx) => (
                   <PrivateRoute

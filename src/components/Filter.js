@@ -60,11 +60,11 @@ function Filter(props) {
   const dateStartDefault = null;
   const dateEndDefault = null;
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [planterId, setPlanterId] = useState(filter?.planterId || '');
+  const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.deviceIdentifier || '',
   );
-  const [planterIdentifier, setPlanterIdentifier] = useState(
+  const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || '',
   );
   const [status, setStatus] = useState(filter?.status);
@@ -96,9 +96,9 @@ function Filter(props) {
     e.preventDefault();
     const filter = new FilterModel();
     filter.captureId = captureId;
-    filter.planterId = planterId;
+    filter.planterId = growerId;
     filter.deviceIdentifier = deviceIdentifier;
-    filter.planterIdentifier = planterIdentifier;
+    filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
@@ -110,9 +110,9 @@ function Filter(props) {
 
   function handleClear() {
     setCaptureId('');
-    setPlanterId('');
+    setGrowerId('');
     setDeviceIdentifier('');
-    setPlanterIdentifier('');
+    setGrowerIdentifier('');
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setApproved();
@@ -175,14 +175,14 @@ function Filter(props) {
         value={captureId}
         onChange={(e) => setCaptureId(e.target.value)}
       />
-      <GSInputLabel text="Planter ID" />
+      <GSInputLabel text="Grower ID" />
       <TextField
-        placeholder="planter id"
+        placeholder="grower id"
         InputLabelProps={{
           shrink: true,
         }}
-        value={planterId}
-        onChange={(e) => setPlanterId(e.target.value)}
+        value={growerId}
+        onChange={(e) => setGrowerId(e.target.value)}
       />
       <GSInputLabel text="Device Identifier" />
       <TextField
@@ -193,14 +193,14 @@ function Filter(props) {
         value={deviceIdentifier}
         onChange={(e) => setDeviceIdentifier(e.target.value)}
       />
-      <GSInputLabel text="Planter Identifier" />
+      <GSInputLabel text="Grower Identifier" />
       <TextField
-        placeholder="planter identifier"
+        placeholder="grower identifier"
         InputLabelProps={{
           shrink: true,
         }}
-        value={planterIdentifier}
-        onChange={(e) => setPlanterIdentifier(e.target.value)}
+        value={growerIdentifier}
+        onChange={(e) => setGrowerIdentifier(e.target.value)}
       />
       <GSInputLabel text="Verification Status" />
       <TextField

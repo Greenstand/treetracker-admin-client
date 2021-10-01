@@ -180,18 +180,13 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Planter ID',
+              label: 'Grower ID',
               value: capture.planterId,
               copy: true,
               link: true,
             },
             {
-              label: 'Capture UUID',
-              value: capture.uuid,
-              copy: true,
-            },
-            {
-              label: 'Planter Identifier',
+              label: 'Grower Identifier',
               value: capture.planterIdentifier,
               copy: true,
             },
