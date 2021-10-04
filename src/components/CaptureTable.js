@@ -124,7 +124,7 @@ const CaptureTable = () => {
       species[s.id] = s.name;
     });
     setSpeciesState(species);
-  }
+  };
 
   const loadCaptures = (payload) => {
     capturesContext.getCapturesAsync(payload).then(() => {
@@ -148,6 +148,7 @@ const CaptureTable = () => {
   };
 
   const handleFilterSubmit = (filter) => {
+    console.log('submitted filter', filter);
     loadCaptures({
       page: 0,
       filter,
@@ -172,7 +173,7 @@ const CaptureTable = () => {
 
   const handleFilterClick = () => {
     setFilterShown(!isFilterShown);
-  }
+  };
 
   const createSortHandler = (attr) => {
     return () => {

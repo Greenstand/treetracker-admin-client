@@ -10,6 +10,8 @@ import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
 import CaptureTable from '../components/CaptureTable';
 import { CapturesProvider } from '../context/CapturesContext';
+import { SpeciesProvider } from '../context/SpeciesContext';
+import { TagsProvider } from '../context/TagsContext';
 
 function CapturesView() {
   useEffect(() => {
@@ -24,7 +26,11 @@ function CapturesView() {
     >
       <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
         <CapturesProvider>
-          <CaptureTable />
+          <SpeciesProvider>
+            <TagsProvider>
+              <CaptureTable />
+            </TagsProvider>
+          </SpeciesProvider>
         </CapturesProvider>
       </Grid>
     </Grid>
