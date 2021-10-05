@@ -260,15 +260,13 @@ describe('tags', () => {
 
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
 
-        expect(screen.getByLabelText('Planter ID')).toBeInTheDocument();
+        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
 
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
 
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
 
-        expect(
-          screen.getByLabelText(/planter identifier/i),
-        ).toBeInTheDocument();
+        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
 
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
 

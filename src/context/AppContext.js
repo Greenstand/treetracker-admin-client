@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
-import Planters from '../components/Planters';
+import Growers from '../components/Growers';
 import CapturesView from '../views/CapturesView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
@@ -23,7 +23,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-import { PlanterProvider } from './PlanterContext';
+import { GrowerProvider } from './GrowerContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
@@ -79,13 +79,13 @@ function getRoutes(user) {
         ]),
     },
     {
-      name: 'Planters',
-      linkTo: '/planters',
-      component: Planters,
+      name: 'Growers',
+      linkTo: '/growers',
+      component: Growers,
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_PLANTER,
+        POLICIES.LIST_GROWER,
       ]),
     },
     {
@@ -235,10 +235,10 @@ export const AppProvider = (props) => {
     checkSession();
   }
 
-  // VerifyProvider and PlanterProvider need to wrap children here so that they are available when needed
+  // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
     <AppContext.Provider value={value}>
-      <PlanterProvider>{props.children}</PlanterProvider>
+      <GrowerProvider>{props.children}</GrowerProvider>
     </AppContext.Provider>
   );
 };

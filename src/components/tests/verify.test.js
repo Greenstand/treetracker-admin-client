@@ -3,15 +3,15 @@ import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import captureApi from '../../api/treeTrackerApi';
-import planterApi from '../../api/planters';
+import growerApi from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
 import { VerifyProvider } from '../../context/VerifyContext';
-import { PlanterProvider } from '../../context/PlanterContext';
+import { GrowerProvider } from '../../context/GrowerContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsProvider } from '../../context/TagsContext';
-import FilterPlanter from '../../models/FilterPlanter';
+import FilterGrower from '../../models/FilterGrower';
 import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 
@@ -19,13 +19,13 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
 jest.setTimeout(7000);
-jest.mock('../../api/planters');
+jest.mock('../../api/growers');
 jest.mock('../../api/treeTrackerApi');
 
 const CAPTURE = {
   id: 0,
   planterId: 10,
-  planterIdentifier: 'planter@some.place',
+  planterIdentifier: 'grower@some.place',
   deviceIdentifier: 'abcdef123456',
   approved: true,
   active: true,
@@ -49,7 +49,7 @@ const CAPTURES = [
     id: 10,
     uuid: '11942400-6617-4c6c-bf5e',
     planterId: 10,
-    planterIdentifier: 'planter1@some.place',
+    planterIdentifier: 'grower1@some.place',
     deviceIdentifier: '1-abcdef123456',
     approved: true,
     active: true,
@@ -71,7 +71,7 @@ const CAPTURES = [
     id: 20,
     uuid: '11942400-6617-4c6c-bf5e',
     planterId: 11,
-    planterIdentifier: 'planter2@some.place',
+    planterIdentifier: 'grower2@some.place',
     deviceIdentifier: '2-abcdef123456',
     approved: true,
     active: true,
@@ -93,7 +93,7 @@ const CAPTURES = [
     id: 30,
     uuid: '11942400-6617-4c6c-bf5e',
     planterId: 10,
-    planterIdentifier: 'planter3@some.place',
+    planterIdentifier: 'grower3@some.place',
     deviceIdentifier: '3-abcdef123456',
     approved: true,
     active: true,
@@ -113,7 +113,7 @@ const CAPTURES = [
   },
 ];
 
-const PLANTER = {
+const GROWER = {
   id: 1,
   firstName: 'testFirstName',
   lastName: 'testLastName',
@@ -126,7 +126,7 @@ const PLANTER = {
   organizationId: 11,
 };
 
-const PLANTERS = [
+const GROWERS = [
   {
     id: 1,
     firstName: 'testFirstName',
@@ -201,31 +201,31 @@ const SPECIES = [
 ];
 
 describe('Verify', () => {
-  let planterApi;
+  let growerApi;
   let captureApi;
-  let planterValues;
+  let growerValues;
   let verifyValues;
   let speciesValues;
   let tagsValues;
 
   beforeEach(() => {
-    //mock the planters api
-    planterApi = require('../../api/planters').default;
+    //mock the growers api
+    growerApi = require('../../api/growers').default;
 
-    planterApi.getCount = () => {
+    growerApi.getCount = () => {
       log.debug('mock getCount:');
       return Promise.resolve({ count: 2 });
     };
-    planterApi.getPlanter = () => {
-      log.debug('mock getPlanter:');
-      return Promise.resolve(PLANTER);
+    growerApi.getGrower = () => {
+      log.debug('mock getGrower:');
+      return Promise.resolve(GROWER);
     };
-    planterApi.getPlanterRegistrations = () => {
-      log.debug('mock getPlanterRegistrations:');
+    growerApi.getGrowerRegistrations = () => {
+      log.debug('mock getGrowerRegistrations:');
       return Promise.resolve([]);
     };
-    planterApi.getPlanterSelfies = (id) => {
-      log.debug('mock getPlanterSelfies:');
+    growerApi.getGrowerSelfies = (id) => {
+      log.debug('mock getGrowerSelfies:');
       return Promise.resolve([
         { planterPhotoUrl: '' },
         { planterPhotoUrl: '' },
@@ -268,23 +268,23 @@ describe('Verify', () => {
   describe('with default values', () => {
     //{{{
     beforeEach(async () => {
-      planterValues = {
-        planters: PLANTERS,
+      growerValues = {
+        growers: GROWERS,
         pageSize: 24,
         count: null,
         currentPage: 0,
-        filter: new FilterPlanter(),
+        filter: new FilterGrower(),
         isLoading: false,
-        totalPlanterCount: null,
+        totalGrowerCount: null,
         load: () => {},
         getCount: () => {},
         changePageSize: () => {},
         changeCurrentPage: () => {},
-        getPlanter: () => {},
-        updatePlanter: () => {},
-        updatePlanters: () => {},
+        getGrower: () => {},
+        updateGrower: () => {},
+        updateGrowers: () => {},
         updateFilter: () => {},
-        getTotalPlanterCount: () => {},
+        getTotalGrowerCount: () => {},
       };
       verifyValues = {
         captureImages: CAPTURES,
@@ -338,7 +338,7 @@ describe('Verify', () => {
         <ThemeProvider theme={theme}>
           <BrowserRouter>
             <AppProvider value={{ orgList: ORGS }}>
-              {/* <PlanterProvider value={planterValues}> */}
+              {/* <GrowerProvider value={growerValues}> */}
               <VerifyProvider value={verifyValues}>
                 <SpeciesProvider value={speciesValues}>
                   <TagsProvider value={tagsValues}>
@@ -346,7 +346,7 @@ describe('Verify', () => {
                   </TagsProvider>
                 </SpeciesProvider>
               </VerifyProvider>
-              {/* </PlanterProvider> */}
+              {/* </GrowerProvider> */}
             </AppProvider>
           </BrowserRouter>
         </ThemeProvider>,
@@ -391,23 +391,25 @@ describe('Verify', () => {
       userEvent.click(captureDetails[0]);
       // screen.logTestingPlaygroundURL();
       expect(screen.getByText(/capture data/i)).toBeInTheDocument();
-      expect(screen.getByText(/planter identifier/i)).toBeInTheDocument();
-      expect(screen.getByText(/planter1@some.place/i)).toBeInTheDocument();
+      expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
+      expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
       expect(screen.getByText(/device identifier/i)).toBeInTheDocument();
       // expect(screen.getByText(/1 - abcdef123456/i)).toBeInTheDocument();
       expect(screen.getByText(/verification status/i)).toBeInTheDocument();
       expect(screen.getByText(/token status/i)).toBeInTheDocument();
     });
 
-    it('renders planter details', () => {
-      const planterDetails = screen.getAllByRole('button', {
-        name: /planter details/i,
+    it('renders grower details', () => {
+      const growerDetails = screen.getAllByRole('button', {
+        name: /grower details/i,
       });
-      expect(planterDetails).toHaveLength(3);
-      userEvent.click(planterDetails[0]);
+      expect(growerDetails).toHaveLength(3);
+      userEvent.click(growerDetails[0]);
       // screen.logTestingPlaygroundURL();
 
-      expect(screen.getByText(/planter detail/i)).toBeInTheDocument();
+      expect(screen.getByText(/country/i)).toBeInTheDocument();
+      expect(screen.getByText(/organization ID/i)).toBeInTheDocument();
+      expect(screen.getByText(/person ID/i)).toBeInTheDocument();
       expect(screen.getByText(/ID:/i)).toBeInTheDocument();
       expect(screen.getByText(/email address/i)).toBeInTheDocument();
       expect(screen.getByText(/phone number/i)).toBeInTheDocument();

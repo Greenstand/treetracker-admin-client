@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, createRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  Button,
   Grid,
   Table,
   TableHead,
@@ -11,12 +12,16 @@ import {
   TableSortLabel,
   Typography,
 } from '@material-ui/core';
-
+import IconFilter from '@material-ui/icons/FilterList';
 import { getDateTimeStringLocale } from '../common/locale';
-import Filter, { FILTER_WIDTH } from './Filter';
-import CaptureDetails from './CaptureDetails.js';
+import { getVerificationStatus } from '../common/utils';
 import LinkToWebmap from './common/LinkToWebmap';
 import { CapturesContext } from '../context/CapturesContext';
+import CaptureDetailDialog from './CaptureDetailDialog';
+import Navbar from './Navbar';
+import FilterTop from './FilterTop';
+import { tokenizationStates } from '../common/variables';
+import api from '../api/treeTrackerApi';
 
 // change 88 to unit spacing,
 const useStyle = makeStyles((theme) => ({
@@ -25,10 +30,9 @@ const useStyle = makeStyles((theme) => ({
     paddingLeft: theme.spacing(16),
     overflowX: 'auto',
   },
-  tableContainer: {
-    width: `calc(100vw  - ${FILTER_WIDTH + theme.spacing(4)}px)`,
-    overflowY: 'auto',
-    height: '100%',
+  tableGrid: {
+    width: '100%',
+    overflow: 'hidden',
   },
   tableRow: {
     cursor: 'pointer',
@@ -64,29 +68,33 @@ const columns = [
   },
   {
     attr: 'planterId',
-    label: 'Planter ID',
+    label: 'Grower ID',
   },
   {
-    attr: 'payment',
-    label: 'Payment',
-    noSort: true,
-    renderer: () => 'pending',
+    attr: 'deviceIdentifier',
+    label: 'Device Identifier',
+    noSort: false,
   },
   {
-    attr: 'country',
-    label: 'Country',
+    attr: 'planterIdentifier',
+    label: 'Planter Identifier',
+    noSort: false,
+  },
+  {
+    attr: 'verificationStatus',
+    label: 'Verification Status',
     noSort: true,
-    renderer: () => 'pending',
   },
   {
     attr: 'speciesId',
     label: 'Species',
     noSort: true,
-    renderer: () => 'pending',
   },
   {
-    attr: 'status',
-    label: 'Status',
+    attr: 'tokenId',
+    label: 'Token Status',
+    renderer: (val) =>
+      val ? tokenizationStates.TOKENIZED : tokenizationStates.NOT_TOKENIZED,
   },
   {
     attr: 'timeCreated',
@@ -99,12 +107,24 @@ const CaptureTable = () => {
   const capturesContext = useContext(CapturesContext);
   const capturesArray = capturesContext.captures;
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
+  const [isFilterShown, setFilterShown] = useState(true);
+  const [speciesState, setSpeciesState] = useState({});
   const scrollRef = createRef();
   const classes = useStyle();
 
   useEffect(() => {
+    loadSpecies();
     loadCaptures();
   }, []);
+
+  const loadSpecies = async () => {
+    const speciesList = await api.getSpecies(true);
+    let species = {};
+    speciesList.map((s) => {
+      species[s.id] = s.name;
+    });
+    setSpeciesState(species);
+  };
 
   const loadCaptures = (payload) => {
     capturesContext.getCapturesAsync(payload).then(() => {
@@ -150,6 +170,10 @@ const CaptureTable = () => {
     });
   };
 
+  const handleFilterClick = () => {
+    setFilterShown(!isFilterShown);
+  };
+
   const createSortHandler = (attr) => {
     return () => {
       const order =
@@ -176,78 +200,103 @@ const CaptureTable = () => {
   };
 
   return (
-    <div className={classes.tableContainer} ref={scrollRef}>
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Typography variant="h5" className={classes.title}>
-          Captures
-        </Typography>
-        {tablePagination()}
-      </Grid>
-      <Table data-testid="captures-table">
-        <TableHead>
-          <TableRow>
-            {columns.map(({ attr, label, noSort }) => (
-              <TableCell
-                key={attr}
-                sortDirection={
-                  capturesContext.orderBy === attr
-                    ? capturesContext.order
-                    : false
-                }
+    <>
+      <Grid container direction="column" className={classes.tableGrid}>
+        <Grid item>
+          <Navbar
+            buttons={[
+              <Button
+                variant="text"
+                color="primary"
+                onClick={handleFilterClick}
+                startIcon={<IconFilter />}
+                key={1}
               >
-                <TableSortLabel
-                  active={capturesContext.orderBy === attr}
-                  direction={
-                    capturesContext.orderBy === attr
-                      ? capturesContext.order
-                      : 'asc'
-                  }
-                  onClick={createSortHandler(attr)}
-                  disabled={noSort}
-                >
-                  {label}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody data-testid="captures-table-body">
-          {capturesArray.map((capture) => (
-            <TableRow
-              key={capture.id}
-              onClick={createToggleDrawerHandler(capture.id)}
-              className={classes.tableRow}
+                Filter
+              </Button>,
+            ]}
+          >
+            {isFilterShown && (
+              <FilterTop
+                isOpen={isFilterShown}
+                onSubmit={handleFilterSubmit}
+                filter={capturesContext.filter}
+                onClick={handleFilterClick}
+              />
+            )}
+          </Navbar>
+        </Grid>
+        <Grid item>
+          <div className={classes.tableContainer} ref={scrollRef}>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
             >
-              {columns.map(({ attr, renderer }) => (
-                <TableCell key={attr}>
-                  {formatCell(capture, attr, renderer)}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {tablePagination()}
-      <CaptureDetails
-        capture={capturesContext.capture}
-        isDetailsPaneOpen={isDetailsPaneOpen}
-        closeDrawer={closeDrawer}
-      />
-      <Filter
-        isOpen={true}
-        onSubmit={handleFilterSubmit}
-        filter={capturesContext.filter}
-      />
-    </div>
+              <Typography variant="h5" className={classes.title}>
+                Captures
+              </Typography>
+              {tablePagination()}
+            </Grid>
+            <Table data-testid="captures-table">
+              <TableHead>
+                <TableRow>
+                  {columns.map(({ attr, label, noSort }) => (
+                    <TableCell
+                      key={attr}
+                      sortDirection={
+                        capturesContext.orderBy === attr
+                          ? capturesContext.order
+                          : false
+                      }
+                    >
+                      <TableSortLabel
+                        active={capturesContext.orderBy === attr}
+                        direction={
+                          capturesContext.orderBy === attr
+                            ? capturesContext.order
+                            : 'asc'
+                        }
+                        onClick={createSortHandler(attr)}
+                        disabled={noSort}
+                      >
+                        {label}
+                      </TableSortLabel>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody data-testid="captures-table-body">
+                {capturesArray.map((capture) => (
+                  <TableRow
+                    key={capture.id}
+                    onClick={createToggleDrawerHandler(capture.id)}
+                    className={classes.tableRow}
+                  >
+                    {columns.map(({ attr, renderer }) => (
+                      <TableCell key={attr}>
+                        {formatCell(capture, speciesState, attr, renderer)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {tablePagination()}
+            <CaptureDetailDialog
+              open={isDetailsPaneOpen}
+              capture={capturesContext.capture}
+              onClose={closeDrawer}
+            />
+          </div>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
-const formatCell = (capture, attr, renderer) => {
+const formatCell = (capture, speciesState, attr, renderer) => {
   if (attr === 'id' || attr === 'planterId') {
     return (
       <LinkToWebmap
@@ -255,6 +304,12 @@ const formatCell = (capture, attr, renderer) => {
         type={attr === 'id' ? 'tree' : 'user'}
       />
     );
+  } else if (attr === 'speciesId') {
+    return capture[attr] === null ? '--' : speciesState[capture[attr]];
+  } else if (attr === 'verificationStatus') {
+    return capture['active'] === null || capture['approved'] === null
+      ? '--'
+      : getVerificationStatus(capture['active'], capture['approved']);
   } else {
     return renderer ? renderer(capture[attr]) : capture[attr];
   }

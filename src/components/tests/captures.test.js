@@ -159,7 +159,7 @@ describe.skip('Captures', () => {
         expect(item).toBeInTheDocument();
         item = within(table).getByText(/Capture ID/i);
         expect(item).toBeInTheDocument();
-        item = within(table).getByText(/Planter ID/i);
+        item = within(table).getByText(/Grower ID/i);
         expect(item).toBeInTheDocument();
         item = within(table).getByText(/Payment/i);
         expect(item).toBeInTheDocument();
@@ -431,9 +431,14 @@ describe.skip('Captures', () => {
             id: true,
             timeCreated: true,
             status: true,
+            active: true,
             approved: true,
             planterId: true,
             treeTags: true,
+            planterIdentifier: true,
+            deviceIdentifier: true,
+            speciesId: true,
+            tokenId: true,
           },
         });
 
