@@ -34,18 +34,18 @@ export function SpeciesProvider(props) {
     const species = await api.getSpecies(abortController);
     log.debug('load species from api:', species.length);
 
-    const speciesListWithCount = await Promise.all(
-      species.map(async (species) => {
-        let captureCount = await api.getCaptureCountPerSpecies(
-          species.id,
-          abortController,
-        );
-        species.captureCount = captureCount?.count;
-        return species;
-      }),
-    );
+    // const speciesListWithCount = await Promise.all(
+    //   species.map(async (species) => {
+    //     let captureCount = await api.getCaptureCountPerSpecies(
+    //       species.id,
+    //       abortController,
+    //     );
+    //     species.captureCount = captureCount?.count;
+    //     return species;
+    //   }),
+    // );
     // console.log('species with count', speciesListWithCount);
-    setSpeciesList(speciesListWithCount);
+    setSpeciesList(species);
   };
 
   // only used by Species dropdown
