@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.0...v1.22.1) (2021-10-11)
+
+
+### Bug Fixes
+
+* **species context:** remove species count queries ([#169](https://github.com/Greenstand/treetracker-admin-client/issues/169)) ([993d566](https://github.com/Greenstand/treetracker-admin-client/commit/993d56633b296b47f04ab667746ec2e428fae06e))
+
 # [1.22.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.2...v1.22.0) (2021-10-01)
 
 
