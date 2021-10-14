@@ -14,6 +14,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import Avatar from '@material-ui/core/Avatar';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -34,6 +35,7 @@ import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { countAppliedFilters } from 'common/utils.js';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -139,6 +141,12 @@ const useStyles = makeStyles((theme) => ({
   mb: {
     marginBottom: '1rem',
   },
+  activeFilters: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    marginLeft: '5px',
+    backgroundColor: theme.palette.stats.green,
+  }
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -446,13 +454,22 @@ const Verify = (props) => {
             <Navbar
               buttons={[
                 <Button
-                  variant="text"
+                  variant="outlined"
                   color="primary"
                   onClick={handleFilterClick}
                   startIcon={<IconFilter />}
                   key={1}
                 >
                   Filter
+                  {
+                    countAppliedFilters(verifyContext.filter) > 0 ?
+                      <Avatar className={classes.activeFilters}>
+                      {
+                        countAppliedFilters(verifyContext.filter)
+                      }
+                      </Avatar>
+                    : ""
+                  }
                 </Button>,
               ]}
             >
