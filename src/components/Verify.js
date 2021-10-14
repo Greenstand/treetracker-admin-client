@@ -238,29 +238,6 @@ const Verify = (props) => {
       window.alert('Please select one or more captures');
       return;
     }
-    /*
-     * check species
-     */
-    const isNew = await speciesContext.isNewSpecies();
-    if (isNew) {
-      const answer = await new Promise((resolve) => {
-        if (
-          window.confirm(
-            `The species ${speciesContext.speciesInput} is a new one, create it?`,
-          )
-        ) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-      if (!answer) {
-        return;
-      } else {
-        //create new species
-        await speciesContext.createSpecies();
-      }
-    }
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
