@@ -299,6 +299,7 @@ describe('Verify', () => {
         filter: new FilterModel({
           approved: false,
           active: true,
+          deviceIdentifier: '06C71C70-0636-4339-AE53-949107B58814',
         }),
         invalidateCaptureCount: true,
         captureCount: null,
@@ -369,6 +370,12 @@ describe('Verify', () => {
       const tokenStatus = screen.getByLabelText(/token status/i);
       expect(tokenStatus).toBeInTheDocument();
     });
+
+    it('renders number of applied filters', () => {
+      const filter = screen.getByRole('button', { name: /filter/i });
+      userEvent.click(filter);
+      expect(verifyValues.filter.countAppliedFilters()).toBe(2) ;
+    })
 
     it('renders side panel', () => {
       // screen.logTestingPlaygroundURL();

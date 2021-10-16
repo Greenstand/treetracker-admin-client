@@ -35,7 +35,6 @@ import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
-import { countAppliedFilters } from 'common/utils.js';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -144,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
   activeFilters: {
     width: theme.spacing(5),
     height: theme.spacing(5),
-    marginLeft: '5px',
+    marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
   }
 }));
@@ -172,6 +171,7 @@ const Verify = (props) => {
     grower: {},
   });
   const refContainer = useRef();
+  const numFilters = verifyContext.filter.countAppliedFilters();
 
   // log.debug(
   //   'render: verify',
@@ -462,13 +462,12 @@ const Verify = (props) => {
                 >
                   Filter
                   {
-                    countAppliedFilters(verifyContext.filter) > 0 ?
+                    numFilters > 0 &&
+                    (
                       <Avatar className={classes.activeFilters}>
-                      {
-                        countAppliedFilters(verifyContext.filter)
-                      }
+                        {numFilters}
                       </Avatar>
-                    : ""
+                    )
                   }
                 </Button>,
               ]}
