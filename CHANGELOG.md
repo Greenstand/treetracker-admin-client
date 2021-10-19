@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.1...v1.23.0) (2021-10-19)
+
+
+### Features
+
+* include badge showing applied filters in Verify page ([#173](https://github.com/Greenstand/treetracker-admin-client/issues/173)) ([db18bc6](https://github.com/Greenstand/treetracker-admin-client/commit/db18bc6a162bf414e77db2a622d0b6792fc98250))
+
 ## [1.22.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.0...v1.22.1) (2021-10-11)
 
 
