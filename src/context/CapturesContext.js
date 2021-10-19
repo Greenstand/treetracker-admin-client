@@ -45,7 +45,12 @@ export function CapturesProvider(props) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('id');
   // const [byId, setById] = useState({});
-  const [filter, setFilter] = useState(new FilterModel());
+  const [filter, setFilter] = useState(
+    new FilterModel({
+      approved: true,
+      active: true,
+    }),
+  );
 
   // STATE HELPER FUNCTIONS
 
@@ -119,7 +124,7 @@ export function CapturesProvider(props) {
     const { count } = response.data;
     // receiveCaptureCount(count);
     // setState((prev) => ({ ...prev, captureCount: count }));
-    setCaptureCount(count);
+    setCaptureCount(Number(count));
   };
 
   const getCapturesAsync = async (filterInfo = {}) => {
@@ -134,6 +139,9 @@ export function CapturesProvider(props) {
     // WHY ISN'T THIS READING THE STATE as HOOKS?
     console.log(
       'captures state -- ',
+      captures,
+      captureCount,
+      capture,
       page,
       rowsPerPage,
       orderBy,
@@ -156,7 +164,7 @@ export function CapturesProvider(props) {
     const where = filter ? filter.getWhereObj() : {};
 
     const lbFilter = {
-      where: { ...where, active: true },
+      where: { ...where },
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip: page * rowsPerPage,
@@ -167,7 +175,6 @@ export function CapturesProvider(props) {
         active: true,
         approved: true,
         planterId: true,
-        treeTags: true,
         planterIdentifier: true,
         deviceIdentifier: true,
         speciesId: true,
