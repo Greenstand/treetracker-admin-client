@@ -12,7 +12,7 @@ import Menu from './common/Menu.js';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
-    minHeight: '48px',
+    minHeight: 'calc(15px - 2vw)',
   },
   buttons: {
     display: 'flex',
