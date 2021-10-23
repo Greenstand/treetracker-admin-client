@@ -33,6 +33,7 @@ const useStyle = makeStyles((theme) => ({
   tableGrid: {
     width: '100%',
     overflow: 'hidden',
+    flexWrap: 'nowrap',
   },
   tableRow: {
     cursor: 'pointer',
