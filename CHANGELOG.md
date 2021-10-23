@@ -1,3 +1,15 @@
+# [1.24.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.23.0...v1.24.0) (2021-10-23)
+
+
+### Bug Fixes
+
+* **verify, growers and captures components:** removed toolbar gap ([#175](https://github.com/Greenstand/treetracker-admin-client/issues/175)) ([56de78c](https://github.com/Greenstand/treetracker-admin-client/commit/56de78c4bf1d41d135a1d72db7a0d62afdc58d8c))
+
+
+### Features
+
+* **verify component:** disable species creation ([#174](https://github.com/Greenstand/treetracker-admin-client/issues/174)) ([88c135b](https://github.com/Greenstand/treetracker-admin-client/commit/88c135bae20f20fbefdd2b5583972721acdfcb8b))
+
 # [1.23.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.1...v1.23.0) (2021-10-19)
 
 
