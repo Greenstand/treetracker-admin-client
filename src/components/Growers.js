@@ -2,6 +2,7 @@
  * Grower page
  */
 import React, { useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,6 +24,8 @@ import FilterTopGrower from './FilterTopGrower';
 import OptimizedImage from './OptimizedImage';
 import GrowerDetail from './GrowerDetail';
 import { GrowerContext } from '../context/GrowerContext';
+import { AppContext } from '../context/AppContext.js';
+import { getOrganizationById } from 'utilities/index.js';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -124,6 +127,49 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
 }));
+
+/**
+ * @function
+ * @name GrowerOrganization
+ * @description display organision associated with the grower
+ *
+ * @param {object} props
+ * @param {string} props.organizationName name of organization grower belongs to
+ * @param {number} props.assignedOrganizationId id of organization assigned to grower
+ *
+ * @returns {React.Component}
+ */
+const GrowerOrganization = (props) => {
+  const appContext = useContext(AppContext);
+  const { organizationName, assignedOrganizationId } = props;
+
+  const renderGrowerOrganization = () => (
+    <Typography style={{ color: '#C0C0C0', fontStyle: 'italic' }}>
+      {organizationName}
+    </Typography>
+  );
+  const renderGrowerAssignedOrganization = (id) => {
+    const assignedOrganization = getOrganizationById(appContext.orgList, id);
+    return (
+      <Typography>
+        {assignedOrganization?.name} ({id})
+      </Typography>
+    );
+  };
+
+  return assignedOrganizationId
+    ? renderGrowerAssignedOrganization(assignedOrganizationId)
+    : organizationName
+    ? renderGrowerOrganization()
+    : '';
+};
+
+GrowerOrganization.propTypes = {
+  organizationName: PropTypes.string,
+};
+GrowerOrganization.defaultProps = {
+  organizationName: null,
+};
 
 const Growers = (props) => {
   // log.debug('render: Growers...');
@@ -318,9 +364,10 @@ export function Grower(props) {
               <Typography>
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
-              {grower.organization && (
-                <Typography>Organization: {grower.organization}</Typography>
-              )}
+              <GrowerOrganization
+                organizationName={grower?.organization}
+                assignedOrganizationId={grower?.organizationId}
+              />
             </Grid>
           </Grid>
         </CardActions>
