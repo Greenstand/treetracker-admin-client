@@ -25,6 +25,7 @@ import OptimizedImage from './OptimizedImage';
 import GrowerDetail from './GrowerDetail';
 import { GrowerContext } from '../context/GrowerContext';
 import { AppContext } from '../context/AppContext.js';
+import { getOrganizationById } from 'utilities/index.js';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -126,20 +127,6 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
 }));
-
-/**
- * @function
- * @name getOrganizationById
- * @description gets an instance of organization from organization list
- * based on supplied organisation id
- *
- * @param {Array} organisations
- * @param {number} id
- *
- * @returns {object} found organization
- */
-const getOrganizationById = (organizations, organizationId) =>
-  organizations.find(({ id }) => id === organizationId);
 
 /**
  * @function
