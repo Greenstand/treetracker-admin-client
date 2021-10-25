@@ -157,14 +157,13 @@ const GrowerOrganization = (props) => {
   const { organizationName, assignedOrganizationId } = props;
 
   const renderGrowerOrganization = () => (
-    <Typography>Organization: {organizationName}</Typography>
+    <Typography style={{ color: 'grey' }}>{organizationName}</Typography>
   );
   const renderGrowerAssignedOrganization = (id) => {
     const assignedOrganization = getOrganizationById(appContext.orgList, id);
     return (
       <Typography>
-        {' '}
-        Assigned Organization: {assignedOrganization?.name}({id})
+        {assignedOrganization?.name}({id})
       </Typography>
     );
   };
