@@ -28,7 +28,6 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const EditGrower = (props) => {
-  // console.log('render: edit grower');
   const classes = useStyle();
   const { isOpen, grower, onClose } = props;
   const appContext = useContext(AppContext);

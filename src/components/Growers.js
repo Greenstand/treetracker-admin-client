@@ -24,6 +24,8 @@ import FilterTopGrower from './FilterTopGrower';
 import OptimizedImage from './OptimizedImage';
 import GrowerDetail from './GrowerDetail';
 import { GrowerContext } from '../context/GrowerContext';
+import { AppContext } from '../context/AppContext.js';
+import { getOrganizationById } from 'utilities/index.js';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -133,24 +135,40 @@ const useStyles = makeStyles((theme) => ({
  *
  * @param {object} props
  * @param {string} props.organizationName name of organization grower belongs to
- * @param {number} props.assignedOrgansationId id of organization assigned to grower
+ * @param {number} props.assignedOrganizationId id of organization assigned to grower
  *
  * @returns {React.Component}
  */
 const GrowerOrganization = (props) => {
-  const { organizationName } = props;
-  return organizationName ? (
-    <Typography>Organization: {props.organizationName}</Typography>
-  ) : (
-    ''
+  const appContext = useContext(AppContext);
+  const { organizationName, assignedOrganizationId } = props;
+
+  const renderGrowerOrganization = () => (
+    <Typography style={{ color: '#C0C0C0', fontStyle: 'italic' }}>
+      {organizationName}
+    </Typography>
   );
+  const renderGrowerAssignedOrganization = (id) => {
+    const assignedOrganization = getOrganizationById(appContext.orgList, id);
+    return (
+      <Typography>
+        {assignedOrganization?.name} ({id})
+      </Typography>
+    );
+  };
+
+  return assignedOrganizationId
+    ? renderGrowerAssignedOrganization(assignedOrganizationId)
+    : organizationName
+    ? renderGrowerOrganization()
+    : '';
 };
 
 GrowerOrganization.propTypes = {
-  organisationName: PropTypes.string,
+  organizationName: PropTypes.string,
 };
 GrowerOrganization.defaultProps = {
-  organisationName: null,
+  organizationName: null,
 };
 
 const Growers = (props) => {
@@ -346,7 +364,10 @@ export function Grower(props) {
               <Typography>
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
-              <GrowerOrganization organizationName={grower?.organization} />
+              <GrowerOrganization
+                organizationName={grower?.organization}
+                assignedOrganizationId={grower?.organizationId}
+              />
             </Grid>
           </Grid>
         </CardActions>

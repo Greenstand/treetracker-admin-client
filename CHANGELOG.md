@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.24.0...v1.25.0) (2021-10-25)
+
+
+### Features
+
+* **grower:** show assigned organization in overview ([#178](https://github.com/Greenstand/treetracker-admin-client/issues/178)) ([76c061a](https://github.com/Greenstand/treetracker-admin-client/commit/76c061a440ac0198af1698a62e96b4356ccf270f))
+
 # [1.24.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.23.0...v1.24.0) (2021-10-23)
 
 
