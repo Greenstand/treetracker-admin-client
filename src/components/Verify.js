@@ -14,6 +14,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import Avatar from '@material-ui/core/Avatar';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -139,6 +140,12 @@ const useStyles = makeStyles((theme) => ({
   mb: {
     marginBottom: '1rem',
   },
+  activeFilters: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    marginLeft: '0.75rem',
+    backgroundColor: theme.palette.stats.green,
+  }
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -164,6 +171,7 @@ const Verify = (props) => {
     grower: {},
   });
   const refContainer = useRef();
+  const numFilters = verifyContext.filter.countAppliedFilters();
 
   // log.debug(
   //   'render: verify',
@@ -237,29 +245,6 @@ const Verify = (props) => {
     if (verifyContext.captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
-    }
-    /*
-     * check species
-     */
-    const isNew = await speciesContext.isNewSpecies();
-    if (isNew) {
-      const answer = await new Promise((resolve) => {
-        if (
-          window.confirm(
-            `The species ${speciesContext.speciesInput} is a new one, create it?`,
-          )
-        ) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-      if (!answer) {
-        return;
-      } else {
-        //create new species
-        await speciesContext.createSpecies();
-      }
     }
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
@@ -446,13 +431,21 @@ const Verify = (props) => {
             <Navbar
               buttons={[
                 <Button
-                  variant="text"
+                  variant="outlined"
                   color="primary"
                   onClick={handleFilterClick}
                   startIcon={<IconFilter />}
                   key={1}
                 >
                   Filter
+                  {
+                    numFilters > 0 &&
+                    (
+                      <Avatar className={classes.activeFilters}>
+                        {numFilters}
+                      </Avatar>
+                    )
+                  }
                 </Button>,
               ]}
             >

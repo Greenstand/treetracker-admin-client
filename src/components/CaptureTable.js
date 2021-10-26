@@ -33,6 +33,7 @@ const useStyle = makeStyles((theme) => ({
   tableGrid: {
     width: '100%',
     overflow: 'hidden',
+    flexWrap: 'nowrap',
   },
   tableRow: {
     cursor: 'pointer',
@@ -148,6 +149,7 @@ const CaptureTable = () => {
   };
 
   const handleFilterSubmit = (filter) => {
+    console.log('submitted filter', filter);
     loadCaptures({
       page: 0,
       filter,

@@ -2,6 +2,7 @@
  * Grower page
  */
 import React, { useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -124,6 +125,33 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
 }));
+
+/**
+ * @function
+ * @name GrowerOrganization
+ * @description display organision associated with the grower
+ *
+ * @param {object} props
+ * @param {string} props.organizationName name of organization grower belongs to
+ * @param {number} props.assignedOrgansationId id of organization assigned to grower
+ *
+ * @returns {React.Component}
+ */
+const GrowerOrganization = (props) => {
+  const { organizationName } = props;
+  return organizationName ? (
+    <Typography>Organization: {props.organizationName}</Typography>
+  ) : (
+    ''
+  );
+};
+
+GrowerOrganization.propTypes = {
+  organisationName: PropTypes.string,
+};
+GrowerOrganization.defaultProps = {
+  organisationName: null,
+};
 
 const Growers = (props) => {
   // log.debug('render: Growers...');
@@ -318,9 +346,7 @@ export function Grower(props) {
               <Typography>
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
-              {grower.organization && (
-                <Typography>Organization: {grower.organization}</Typography>
-              )}
+              <GrowerOrganization organizationName={grower?.organization} />
             </Grid>
           </Grid>
         </CardActions>

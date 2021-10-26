@@ -1,3 +1,29 @@
+# [1.24.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.23.0...v1.24.0) (2021-10-23)
+
+
+### Bug Fixes
+
+* **verify, growers and captures components:** removed toolbar gap ([#175](https://github.com/Greenstand/treetracker-admin-client/issues/175)) ([56de78c](https://github.com/Greenstand/treetracker-admin-client/commit/56de78c4bf1d41d135a1d72db7a0d62afdc58d8c))
+
+
+### Features
+
+* **verify component:** disable species creation ([#174](https://github.com/Greenstand/treetracker-admin-client/issues/174)) ([88c135b](https://github.com/Greenstand/treetracker-admin-client/commit/88c135bae20f20fbefdd2b5583972721acdfcb8b))
+
+# [1.23.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.1...v1.23.0) (2021-10-19)
+
+
+### Features
+
+* include badge showing applied filters in Verify page ([#173](https://github.com/Greenstand/treetracker-admin-client/issues/173)) ([db18bc6](https://github.com/Greenstand/treetracker-admin-client/commit/db18bc6a162bf414e77db2a622d0b6792fc98250))
+
+## [1.22.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.22.0...v1.22.1) (2021-10-11)
+
+
+### Bug Fixes
+
+* **species context:** remove species count queries ([#169](https://github.com/Greenstand/treetracker-admin-client/issues/169)) ([993d566](https://github.com/Greenstand/treetracker-admin-client/commit/993d56633b296b47f04ab667746ec2e428fae06e))
+
 # [1.22.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.21.2...v1.22.0) (2021-10-01)
 
 ### Features
