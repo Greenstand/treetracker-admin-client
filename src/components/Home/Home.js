@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './Home.styled';
+import styles from './Home.styles';
 import { documentTitle } from '../../common/variables';
 import Menu from '../common/Menu';
 import { AppContext } from '../../context/AppContext';
