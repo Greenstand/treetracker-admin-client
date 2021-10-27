@@ -24,6 +24,7 @@ import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 import { GrowerProvider } from './GrowerContext';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
@@ -83,7 +84,7 @@ function getRoutes(user) {
       name: 'Earnings',
       linkTo: '/earnings',
       component: EarningsView,
-      icon: CompareIcon,
+      icon: CreditCardIcon,
       disabled: false,
     },
     {
