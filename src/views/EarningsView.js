@@ -1,3 +1,6 @@
+import React from 'react';
+import EarningsTable from '../components/EarningsTable/EarningsTable';
+
 /**
  * @function
  * @name EarningsView
@@ -6,7 +9,7 @@
  * @returns {React.Component}
  */
 function EarningsView(props) {
-  return 'EarningsView works';
+  return <EarningsTable />;
 }
 
 export default EarningsView;
