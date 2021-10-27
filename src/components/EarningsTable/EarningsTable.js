@@ -1,3 +1,7 @@
+import Grid from '@material-ui/core/Grid';
+import Navbar from '../Navbar';
+import React from 'react';
+
 /**
  * @function
  * @name EarningsTable
@@ -7,9 +11,17 @@
  *
  * @returns {React.Component} earnings table
  */
-
 function EarningsTable() {
-  return 'EarningsTable Works';
+  return (
+    <Grid container direction="column">
+      <Grid item>
+        <Navbar />
+      </Grid>
+      <Grid item>
+        <h2>EarningsTable Works</h2>
+      </Grid>
+    </Grid>
+  );
 }
 
 export default EarningsTable;
