@@ -79,6 +79,13 @@ function getRoutes(user) {
         ]),
     },
     {
+      name: 'Earnings',
+      linkTo: '/earnings',
+      component: Growers,
+      icon: CompareIcon,
+      disabled: false,
+    },
+    {
       name: 'Growers',
       linkTo: '/growers',
       component: Growers,
