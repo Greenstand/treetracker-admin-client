@@ -24,19 +24,13 @@ function CapturesView() {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%' }}
     >
-      <Grid
-        item
-        container
-        style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
-      >
-        <CapturesProvider>
-          <SpeciesProvider>
-            <TagsProvider>
-              <CaptureTable />
-            </TagsProvider>
-          </SpeciesProvider>
-        </CapturesProvider>
-      </Grid>
+      <CapturesProvider>
+        <SpeciesProvider>
+          <TagsProvider>
+            <CaptureTable />
+          </TagsProvider>
+        </SpeciesProvider>
+      </CapturesProvider>
     </Grid>
   );
 }

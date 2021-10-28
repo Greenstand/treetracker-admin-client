@@ -228,7 +228,10 @@ const CaptureTable = () => {
             )}
           </Navbar>
         </Grid>
-        <Grid item>
+        <Grid
+          item
+          style={{ height: '100%', overflowX: 'hidden', overflowY: 'scroll' }}
+        >
           <div className={classes.tableContainer} ref={scrollRef}>
             <Grid
               container
