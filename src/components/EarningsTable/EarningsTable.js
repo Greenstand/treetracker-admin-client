@@ -6,6 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './EarningsTable.styles';
 import Menu from '../common/Menu';
@@ -35,10 +37,9 @@ function EarningsLeftMenu(props) {
  * @name EarningsTableTopar
  * @description renders earnings table top bar
  *
- * @param {Object} props - component props
  * @returns
  */
-function EarningsTableTopar(props) {
+function EarningsTableTopar() {
   const classes = useStyles();
   return (
     <Grid item className={classes.earningsTableTopBarTitle}>
@@ -54,48 +55,64 @@ function EarningsTableTopar(props) {
  * @returns {React.Component} earnings table
  */
 function EarningsTable() {
+  const classes = useStyles();
   return (
     <Grid container direction="row">
       <EarningsLeftMenu />
-      <Grid item>
+      <Grid item className={classes.earningsTableRightContents}>
         <EarningsTableTopar />
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>Grower</TableCell>
-              <TableCell>Funder</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Payment System</TableCell>
-              <TableCell>Effective Payment Date</TableCell>
+              <TableCell align="right">Grower</TableCell>
+              <TableCell align="right">Funder</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="right">Payment System</TableCell>
+              <TableCell align="right">Effective Payment Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
               <TableCell>1</TableCell>
-              <TableCell>Grower 1</TableCell>
-              <TableCell>Funder 1</TableCell>
-              <TableCell>$100</TableCell>
-              <TableCell>Payment System 1</TableCell>
-              <TableCell>01/01/2019</TableCell>
+              <TableCell align="right">Grower 1</TableCell>
+              <TableCell align="right">Funder 1</TableCell>
+              <TableCell align="right">$100</TableCell>
+              <TableCell align="right">Payment System 1</TableCell>
+              <TableCell align="right">01/01/2019</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>2</TableCell>
-              <TableCell>Grower 2</TableCell>
-              <TableCell>Funder 2</TableCell>
-              <TableCell>$100</TableCell>
-              <TableCell>Payment System 2</TableCell>
-              <TableCell>01/02/2019</TableCell>
+              <TableCell align="right">Grower 2</TableCell>
+              <TableCell align="right">Funder 2</TableCell>
+              <TableCell align="right">$100</TableCell>
+              <TableCell align="right">Payment System 2</TableCell>
+              <TableCell align="right">01/02/2019</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>3</TableCell>
-              <TableCell>Grower 3</TableCell>
-              <TableCell>Funder 3</TableCell>
-              <TableCell>$100</TableCell>
-              <TableCell>Payment System 3</TableCell>
-              <TableCell>03/01/2019</TableCell>
+              <TableCell align="right">Grower 3</TableCell>
+              <TableCell align="right">Funder 3</TableCell>
+              <TableCell align="right">$100</TableCell>
+              <TableCell align="right">Payment System 3</TableCell>
+              <TableCell align="right">03/01/2019</TableCell>
             </TableRow>
           </TableBody>
+          <TableFooter>
+            <TablePagination
+              count={10}
+              className={classes.root}
+              rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+              page={1}
+              rowsPerPage={5}
+              onChangePage={() => {}}
+              onChangeRowsPerPage={() => {}}
+              SelectProps={{
+                inputProps: { 'aria-label': 'rows per page' },
+                native: true,
+              }}
+            />
+          </TableFooter>
         </Table>
       </Grid>
     </Grid>

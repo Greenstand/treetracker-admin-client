@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
  */
 const earningsTableTopBarStyles = {
   earningsTableTopBarTitle: {
-    paddingTop: '25px',
+    padding: '25px 0 25px 0',
   },
 };
 
@@ -26,6 +26,21 @@ const earningsLeftMenuStyles = {
 };
 
 /**
+ * @object
+ * @name EarningsTableStyles
+ * @description styles for EarningsTableStyles component
+ */
+const earningsTableStyles = {
+  earningsTableRightContents: {
+    width: '80%',
+  },
+
+  root: {
+    borderBottom: 'none',
+  },
+};
+
+/**
  * @function
  * @name useStyles
  * @description hook that combines all the styles
@@ -34,6 +49,7 @@ const earningsLeftMenuStyles = {
 const useStyles = makeStyles(() => ({
   ...earningsLeftMenuStyles,
   ...earningsTableTopBarStyles,
+  ...earningsTableStyles,
 }));
 
 export default useStyles;
