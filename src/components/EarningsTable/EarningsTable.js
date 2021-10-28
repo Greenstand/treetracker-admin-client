@@ -2,8 +2,6 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import PublishIcon from '@material-ui/icons/Publish';
 import useStyles from './EarningsTable.styles';
 import Menu from '../common/Menu';
 
@@ -19,7 +17,7 @@ import Menu from '../common/Menu';
 function EarningsLeftMenu(props) {
   const classes = useStyles();
   return (
-    <Grid item xs={3}>
+    <Grid item xs={2}>
       <Paper elevation={3} className={classes.menu}>
         <Menu variant="plain" />
       </Paper>
@@ -38,45 +36,8 @@ function EarningsLeftMenu(props) {
 function EarningsTableTopar(props) {
   const classes = useStyles();
   return (
-    <Grid item xs={9} container className={classes.rightBox}>
-      <Grid item xs={12}>
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Grid container>
-              <Grid item>
-                <Typography variant="h2">Earnings</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item className={classes.earningsTableTopBarRight}>
-            <Grid container justify="space-around">
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  className={classes.dowloadButton}
-                >
-                  <GetAppIcon />
-                  <Typography variant="h5">EXPORT</Typography>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  className={classes.dowloadButton}
-                >
-                  <PublishIcon />
-                  <Typography variant="h5">IMPORT</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+    <Grid item className={classes.earningsTableTopBarTitle}>
+      <Typography variant="h2">Earnings</Typography>
     </Grid>
   );
 }
@@ -94,7 +55,7 @@ function EarningsTableTopar(props) {
 function EarningsTable(props) {
   const classes = useStyles();
   return (
-    <Grid container className={classes.box}>
+    <Grid container direction="row">
       <EarningsLeftMenu />
       <EarningsTableTopar />
     </Grid>
