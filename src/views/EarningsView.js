@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import EarningsTable from '../components/EarningsTable/EarningsTable';
+import { documentTitle } from '../common/variables';
 
 /**
  * @function
@@ -9,6 +10,9 @@ import EarningsTable from '../components/EarningsTable/EarningsTable';
  * @returns {React.Component}
  */
 function EarningsView(props) {
+  useEffect(() => {
+    document.title = `Earnings - ${documentTitle}`; // change the document title
+  }, []);
   return <EarningsTable />;
 }
 

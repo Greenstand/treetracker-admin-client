@@ -14,10 +14,10 @@ const earningsTableTopBarStyles = {
 
 /**
  * @object
- * @name EarningsTableStyles
- * @description styles for EarningsTable component
+ * @name EarningsLeftMenu
+ * @description styles for EarningsLeftMenu component
  */
-const earningsTableStyles = {
+const earningsLeftMenuStyles = {
   menu: {
     height: '100%',
     width: MENU_WIDTH,
@@ -32,7 +32,7 @@ const earningsTableStyles = {
  * @returns {object} styles
  */
 const useStyles = makeStyles(() => ({
-  ...earningsTableStyles,
+  ...earningsLeftMenuStyles,
   ...earningsTableTopBarStyles,
 }));
 
