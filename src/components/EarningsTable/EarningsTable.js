@@ -6,6 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
@@ -43,10 +44,16 @@ function EarningsTableTopar() {
   const classes = useStyles();
   return (
     <Grid item className={classes.earningsTableTopBarTitle}>
-      <Typography variant="h2">Earnings</Typography>
+      <Typography variant="h3">Earnings</Typography>
     </Grid>
   );
 }
+
+/**
+ * @Array
+ * @name earnings table header columns
+ */
+const headerColumns = ['Id', 'Grower', 'Funder', 'Amount', 'Payment System'];
 
 /**
  * @function
@@ -56,22 +63,38 @@ function EarningsTableTopar() {
  */
 function EarningsTable() {
   const classes = useStyles();
+
+  /**
+   * @function
+   * @name renderTableHeaderColumns
+   * @description renders table header columns
+   *
+   * @param {Array} columns - table header columns
+   * @returns {JSX} table header columns
+   */
+  const renderTableHeaderColumns = (columns) => (
+    <TableRow className={classes.earningsTableHeader}>
+      {columns.map((column, i) => (
+        <TableCell key={`${i}-${column}`} align={i === 0 ? '' : 'right'}>
+          <Typography variant="h6">{column}</Typography>
+        </TableCell>
+      ))}
+      <TableCell>
+        <Typography variant="h6" align="right">
+          Effective Payment Date{' '}
+          <InfoOutlinedIcon className={classes.infoIcon} />
+        </Typography>
+      </TableCell>
+    </TableRow>
+  );
+
   return (
     <Grid container direction="row">
       <EarningsLeftMenu />
       <Grid item className={classes.earningsTableRightContents}>
         <EarningsTableTopar />
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell align="right">Grower</TableCell>
-              <TableCell align="right">Funder</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Payment System</TableCell>
-              <TableCell align="right">Effective Payment Date</TableCell>
-            </TableRow>
-          </TableHead>
+          <TableHead>{renderTableHeaderColumns(headerColumns)}</TableHead>
           <TableBody>
             <TableRow>
               <TableCell>1</TableCell>

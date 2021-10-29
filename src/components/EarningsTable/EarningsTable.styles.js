@@ -35,6 +35,14 @@ const earningsTableStyles = {
     width: '80%',
   },
 
+  earningsTableHeader: {
+    borderBottom: '2px solid #e0e0e0',
+  },
+
+  infoIcon: {
+    color: '#86C232',
+  },
+
   root: {
     borderBottom: 'none',
   },
