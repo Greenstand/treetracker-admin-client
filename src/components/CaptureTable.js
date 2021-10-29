@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext, createRef } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button,
   Grid,
   Table,
   TableHead,
@@ -12,55 +10,14 @@ import {
   TableSortLabel,
   Typography,
 } from '@material-ui/core';
-import IconFilter from '@material-ui/icons/FilterList';
-import { getDateTimeStringLocale } from '../common/locale';
-import { getVerificationStatus } from '../common/utils';
-import LinkToWebmap from './common/LinkToWebmap';
-import { CapturesContext } from '../context/CapturesContext';
-import CaptureDetailDialog from './CaptureDetailDialog';
-import Navbar from './Navbar';
-import FilterTop from './FilterTop';
-import { tokenizationStates } from '../common/variables';
-import api from '../api/treeTrackerApi';
-
-// change 88 to unit spacing,
-const useStyle = makeStyles((theme) => ({
-  root: {
-    position: 'relative',
-    paddingLeft: theme.spacing(16),
-    overflowX: 'auto',
-  },
-  tableGrid: {
-    width: '100%',
-    overflow: 'hidden',
-    flexWrap: 'nowrap',
-  },
-  tableRow: {
-    cursor: 'pointer',
-  },
-  locationCol: {
-    width: '270px',
-  },
-  table: {
-    minHeight: '100vh',
-    '&:nth-child(2)': {
-      width: 20,
-    },
-  },
-  tableBody: {
-    minHeight: '100vh',
-  },
-  pagination: {
-    position: 'sticky',
-    bottom: '0px',
-    width: '100%',
-    backgroundColor: '#fff',
-    boxShadow: '0 -2px 5px rgba(0,0,0,0.15)',
-  },
-  title: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
+import { getDateTimeStringLocale } from '../../common/locale';
+import { getVerificationStatus } from '../../common/utils';
+import LinkToWebmap from '../common/LinkToWebmap';
+import { CapturesContext } from '../../context/CapturesContext';
+import { SpeciesContext } from '../../context/SpeciesContext';
+import CaptureDetailDialog from '../CaptureDetailDialog';
+import { tokenizationStates } from '../../common/variables';
+import useStyle from './CaptureTable.styles.js';
 
 const columns = [
   {
@@ -105,36 +62,41 @@ const columns = [
 ];
 
 const CaptureTable = () => {
-  const capturesContext = useContext(CapturesContext);
-  const capturesArray = capturesContext.captures;
+  const {
+    filter,
+    rowsPerPage,
+    page,
+    order,
+    orderBy,
+    captures,
+    capture,
+    captureCount,
+    setPage,
+    setRowsPerPage,
+    setOrder,
+    setOrderBy,
+    getCaptureAsync,
+  } = useContext(CapturesContext);
+  const speciesContext = useContext(SpeciesContext);
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
-  const [isFilterShown, setFilterShown] = useState(true);
   const [speciesState, setSpeciesState] = useState({});
   const scrollRef = createRef();
   const classes = useStyle();
 
   useEffect(() => {
-    loadSpecies();
-    loadCaptures();
-  }, []);
+    formatSpeciesData();
+  }, [filter]);
 
-  const loadSpecies = async () => {
-    const speciesList = await api.getSpecies(true);
+  const formatSpeciesData = async () => {
     let species = {};
-    speciesList.map((s) => {
+    speciesContext.speciesList.map((s) => {
       species[s.id] = s.name;
     });
     setSpeciesState(species);
   };
 
-  const loadCaptures = (payload) => {
-    capturesContext.getCapturesAsync(payload).then(() => {
-      scrollRef.current && scrollRef.current.scrollTo(0, 0);
-    });
-  };
-
   const toggleDrawer = (id) => {
-    capturesContext.getCaptureAsync(id);
+    getCaptureAsync(id);
     setIsDetailsPaneOpen(!isDetailsPaneOpen);
   };
 
@@ -148,42 +110,20 @@ const CaptureTable = () => {
     setIsDetailsPaneOpen(false);
   };
 
-  const handleFilterSubmit = (filter) => {
-    console.log('submitted filter', filter);
-    loadCaptures({
-      page: 0,
-      filter,
-    });
+  const handlePageChange = (e, page) => {
+    setPage(page);
   };
 
-  const handlePageChange = (e, newPage) => {
-    loadCaptures({
-      page: newPage,
-      rowsPerPage: capturesContext.rowsPerPage,
-      filter: capturesContext.filter,
-    });
-  };
-
-  const handleRowsPerPageChange = (event) => {
-    loadCaptures({
-      page: 0,
-      rowsPerPage: parseInt(event.target.value),
-      filter: capturesContext.filter,
-    });
-  };
-
-  const handleFilterClick = () => {
-    setFilterShown(!isFilterShown);
+  const handleRowsPerPageChange = (e) => {
+    setRowsPerPage(parseInt(e.target.value));
   };
 
   const createSortHandler = (attr) => {
     return () => {
-      const order =
-        capturesContext.orderBy === attr && capturesContext.order === 'asc'
-          ? 'desc'
-          : 'asc';
+      const order = orderBy === attr && order === 'asc' ? 'desc' : 'asc';
       const orderBy = attr;
-      loadCaptures({ order, orderBy });
+      setOrder(order);
+      setOrderBy(orderBy);
     };
   };
 
@@ -192,9 +132,9 @@ const CaptureTable = () => {
       <TablePagination
         rowsPerPageOptions={[25, 50, 100, 250, 500]}
         component="div"
-        count={capturesContext.captureCount}
-        page={capturesContext.page}
-        rowsPerPage={capturesContext.rowsPerPage}
+        count={captureCount || 0}
+        page={page}
+        rowsPerPage={rowsPerPage}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleRowsPerPageChange}
       />
@@ -202,99 +142,64 @@ const CaptureTable = () => {
   };
 
   return (
-    <>
-      <Grid container direction="column" className={classes.tableGrid}>
-        <Grid item>
-          <Navbar
-            buttons={[
-              <Button
-                variant="text"
-                color="primary"
-                onClick={handleFilterClick}
-                startIcon={<IconFilter />}
-                key={1}
-              >
-                Filter
-              </Button>,
-            ]}
-          >
-            {isFilterShown && (
-              <FilterTop
-                isOpen={isFilterShown}
-                onSubmit={handleFilterSubmit}
-                filter={capturesContext.filter}
-                onClick={handleFilterClick}
-              />
-            )}
-          </Navbar>
+    <Grid item container style={{ height: '100%', overflow: 'auto' }}>
+      <div className={classes.tableContainer} ref={scrollRef}>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
+          <Typography variant="h5" className={classes.title}>
+            Captures
+          </Typography>
+          {tablePagination()}
         </Grid>
-        <Grid item style={{ height: '100%', overflowY: 'scroll' }}>
-          <div className={classes.tableContainer} ref={scrollRef}>
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
-            >
-              <Typography variant="h5" className={classes.title}>
-                Captures
-              </Typography>
-              {tablePagination()}
-            </Grid>
-            <Table data-testid="captures-table">
-              <TableHead>
-                <TableRow>
-                  {columns.map(({ attr, label, noSort }) => (
-                    <TableCell
-                      key={attr}
-                      sortDirection={
-                        capturesContext.orderBy === attr
-                          ? capturesContext.order
-                          : false
-                      }
-                    >
-                      <TableSortLabel
-                        active={capturesContext.orderBy === attr}
-                        direction={
-                          capturesContext.orderBy === attr
-                            ? capturesContext.order
-                            : 'asc'
-                        }
-                        onClick={createSortHandler(attr)}
-                        disabled={noSort}
-                      >
-                        {label}
-                      </TableSortLabel>
+        <Table data-testid="captures-table">
+          <TableHead>
+            <TableRow>
+              {columns.map(({ attr, label, noSort }) => (
+                <TableCell
+                  key={attr}
+                  sortDirection={orderBy === attr ? order : false}
+                >
+                  <TableSortLabel
+                    active={orderBy === attr}
+                    direction={orderBy === attr ? order : 'asc'}
+                    onClick={createSortHandler(attr)}
+                    disabled={noSort}
+                  >
+                    {label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody data-testid="captures-table-body">
+            {captures &&
+              captures.map((capture) => (
+                <TableRow
+                  key={capture.id}
+                  onClick={createToggleDrawerHandler(capture.id)}
+                  className={classes.tableRow}
+                >
+                  {columns.map(({ attr, renderer }) => (
+                    <TableCell key={attr}>
+                      {formatCell(capture, speciesState, attr, renderer)}
                     </TableCell>
                   ))}
                 </TableRow>
-              </TableHead>
-              <TableBody data-testid="captures-table-body">
-                {capturesArray.map((capture) => (
-                  <TableRow
-                    key={capture.id}
-                    onClick={createToggleDrawerHandler(capture.id)}
-                    className={classes.tableRow}
-                  >
-                    {columns.map(({ attr, renderer }) => (
-                      <TableCell key={attr}>
-                        {formatCell(capture, speciesState, attr, renderer)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {tablePagination()}
-            <CaptureDetailDialog
-              open={isDetailsPaneOpen}
-              capture={capturesContext.capture}
-              onClose={closeDrawer}
-            />
-          </div>
-        </Grid>
-      </Grid>
-    </>
+              ))}
+          </TableBody>
+        </Table>
+        {tablePagination()}
+        <CaptureDetailDialog
+          open={isDetailsPaneOpen}
+          capture={capture}
+          onClose={closeDrawer}
+        />
+      </div>
+    </Grid>
   );
 };
 
