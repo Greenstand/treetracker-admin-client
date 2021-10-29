@@ -174,6 +174,26 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+
+  /**
+   * @function
+   * @name getEarnings
+   * @description get earnings
+   *
+   * @returns {Array} - list of earnings
+   */
+  getEarnings() {
+    const query = `${process.env.REACT_APP_API_ROOT}/api/earnings`;
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   /*
    * get species by id
    */
