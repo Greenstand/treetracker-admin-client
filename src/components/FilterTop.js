@@ -167,18 +167,21 @@ function Filter(props) {
         {
           id: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
       ]
     : [
         {
           id: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
         {
           id: ORGANIZATION_NOT_SET,
           name: 'Not set',
+          value: null,
         },
-    ];
+      ];
 
   return (
     <>
