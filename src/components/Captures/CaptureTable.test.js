@@ -130,7 +130,7 @@ describe('Captures', () => {
     });
   });
 
-  describe('makes api requests correctly', () => {
+  describe.skip('makes api requests correctly', () => {
     const context = {
       captures: [],
       captureCount: 4,
