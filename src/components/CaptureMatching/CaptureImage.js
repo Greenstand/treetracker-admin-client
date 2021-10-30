@@ -55,73 +55,96 @@ function CaptureImage(props) {
         captureImages={captureImages}
       />
 
-      {captureImages
-        .slice((currentPage - 1) * imgPerPage, currentPage * imgPerPage)
-        .map((capture) => {
-          return (
-            <Box
-              key={`capture_${capture.captureId}`}
-              className={classes.containerBox}
-            >
-              <Box className={classes.headerBox}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  // alignItems="baseline"
-                >
-                  <Box style={{ marginTop: '15px' }}>
-                    <Typography
-                      variant="h5"
-                      style={{ width: '150px', wordWrap: 'break-word' }}
-                    >
-                      Capture {capture.captureId}
-                    </Typography>
-                    <Box display="flex">
-                      <AccessTimeIcon />
-                      <Typography variant="body1">
-                        {capture.createdAt}
-                      </Typography>
-                    </Box>
-
-                    <Box display="flex">
-                      <LocationOnOutlinedIcon />
-                      <Typography variant="body1">USA</Typography>
-                    </Box>
-                    {/* <UseLoocation/> */}
-                  </Box>
-
-                  <Grower userPhotoUrl={capture.userPhotoUrl} />
-
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    style={{
-                      height: '50px',
-                      width: '100px',
-                      marginTop: '10px',
-                    }}
-                    onClick={handleSkip}
+      {captureImages &&
+        captureImages
+          .slice((currentPage - 1) * imgPerPage, currentPage * imgPerPage)
+          .map((capture) => {
+            // console.log('captureImage', capture);
+            // age: null;
+            // attributes: null;
+            // created_at: '2021-05-04T11:24:43.000Z';
+            // device_identifier: null;
+            // gps_accuracy: null;
+            // id: 'c02a5ae6-3727-11ec-8d3d-0242ac130003';
+            // image_url: 'http://xxx';
+            // lat: '0';
+            // lon: '0';
+            // morphology: null;
+            // note: null;
+            // planter_id: '1';
+            // planter_photo_url: null;
+            // planter_username: 'x';
+            // reference_id: '1';
+            // status: 'approved';
+            // updated_at: '2021-05-04T11:24:43.000Z';
+            return (
+              <Box
+                key={`capture_${capture.id}`}
+                className={classes.containerBox}
+              >
+                <Box className={classes.headerBox}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-around"
+                    // alignItems="baseline"
                   >
-                    Skip
-                    <SkipNextIcon />
-                  </Button>
-                </Grid>
-              </Box>
+                    <Box style={{ marginTop: '15px' }}>
+                      <Typography
+                        variant="h5"
+                        style={{ width: '150px', wordWrap: 'break-word' }}
+                      >
+                        Capture {capture.id}
+                      </Typography>
+                      <Box display="flex">
+                        <AccessTimeIcon />
+                        <Typography variant="body1">
+                          {capture.created_at}
+                        </Typography>
+                      </Box>
 
-              <Box className={classes.imgBox}>
-                {/* {treeList.slice(0, 1).map( img => { */}
+                      <Box display="flex">
+                        <LocationOnOutlinedIcon />
+                        <Typography variant="body1">USA</Typography>
+                      </Box>
+                      {/* <UseLocation/> */}
+                    </Box>
 
-                <img
-                  key={capture.captureId}
-                  className={classes.imgContainer}
-                  src={capture.imageUrl}
-                  alt={`Capture ${capture.captureId}`}
-                />
+                    <Grower
+                      userPhotoUrl={capture.planter_photo_url}
+                      planter_username={capture.planter_username}
+                      status={capture.status}
+                    />
+
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      style={{
+                        height: '50px',
+                        width: '100px',
+                        marginTop: '10px',
+                      }}
+                      onClick={handleSkip}
+                    >
+                      Skip
+                      <SkipNextIcon />
+                    </Button>
+                  </Grid>
+                </Box>
+
+                <Box className={classes.imgBox}>
+                  {/* {treeList.slice(0, 1).map( img => { */}
+
+                  <img
+                    key={capture.id}
+                    className={classes.imgContainer}
+                    src={capture.image_url}
+                    alt={`Capture ${capture.id}`}
+                  />
+                </Box>
               </Box>
-            </Box>
-          );
-        })}
+            );
+          })}
     </Box>
   );
 }

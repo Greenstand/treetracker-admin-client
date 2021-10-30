@@ -32,13 +32,13 @@ const useStyle = makeStyles({
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/captures`;
 
-function CaptureMachineFrame() {
+function CaptureMatchingView() {
   const classes = useStyle();
 
   const [captureImages, setCaptureImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [cadidateImgData, setCandidateImgData] = useState([]);
+  const [candidateImgData, setCandidateImgData] = useState([]);
 
   // for set how many pages we need in total for pagination
   const [noOfPages, setNoOfPages] = useState(null);
@@ -47,10 +47,11 @@ function CaptureMachineFrame() {
   const [imgCount, setImgCount] = useState(null);
 
   // To get total tree count on candidate capture image icon
-  const treesCount = cadidateImgData.length;
+  const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
   useEffect(() => {
+    console.log('loading candidate images');
     async function fetchCandidateTrees(captureId) {
       // TODO: handle errors and give user feedback
       setLoading(true);
@@ -59,13 +60,18 @@ function CaptureMachineFrame() {
           // Authorization: session.token,
         },
       }).then((res) => res.json());
+      console.log('candidates', data);
       setCandidateImgData(data.trees);
       setLoading(false);
     }
 
     setCandidateImgData([]);
 
-    if (currentPage > 0 && currentPage <= captureImages.length) {
+    if (
+      captureImages &&
+      currentPage > 0 &&
+      currentPage <= captureImages.length
+    ) {
       const captureId = captureImages[currentPage - 1].captureId;
       if (captureId) {
         fetchCandidateTrees(captureId);
@@ -74,6 +80,7 @@ function CaptureMachineFrame() {
   }, [currentPage, captureImages]);
 
   useEffect(() => {
+    console.log('loading captures');
     async function fetchCaptures() {
       // TODO: handle errors and give user feedback
       setLoading(true);
@@ -82,7 +89,8 @@ function CaptureMachineFrame() {
           // Authorization: session.token,
         },
       }).then((res) => res.json());
-      setCaptureImages(data.captures);
+      // console.log('setCaptureImages', data);
+      setCaptureImages(data);
       setLoading(false);
     }
     fetchCaptures();
@@ -162,9 +170,8 @@ function CaptureMachineFrame() {
               />
             </Box>
             <CandidateImages
-              cadidateImgData={cadidateImgData}
+              candidateImgData={candidateImgData}
               sameTreeHandler={sameTreeHandler}
-              captureImages={captureImages}
             />
           </Box>
         </Grid>
@@ -173,4 +180,4 @@ function CaptureMachineFrame() {
   );
 }
 
-export default CaptureMachineFrame;
+export default CaptureMatchingView;

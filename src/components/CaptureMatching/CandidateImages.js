@@ -44,17 +44,15 @@ const useStyles = makeStyles({
   },
 });
 
-function CandidateImages(props) {
+function CandidateImages({ candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
-
-  const cadidateImgData = props.cadidateImgData;
 
   const [showBox, setShowBox] = useState([]);
 
   useEffect(() => {
-    const initialCandidateData = cadidateImgData.map((tree) => tree.tree_id);
+    const initialCandidateData = candidateImgData.map((tree) => tree.tree_id);
     setShowBox(initialCandidateData);
-  }, [cadidateImgData]);
+  }, [candidateImgData]);
 
   const hideImgBox = (i) => {
     const newInitialState = showBox.filter((id) => id !== i);
@@ -67,7 +65,7 @@ function CandidateImages(props) {
 
   return (
     <Box className={classes.imageScroll}>
-      {cadidateImgData.map((tree, i) => {
+      {candidateImgData.map((tree, i) => {
         return (
           <Box className={classes.containerBox} key={tree.tree_id}>
             <Box className={classes.headerBox}>
@@ -98,14 +96,11 @@ function CandidateImages(props) {
                     {tree.captures.map((capture) => {
                       // console.log(tree.captures)
                       return (
-                        <Box
-                          style={{ height: '300px' }}
-                          key={capture.captureId}
-                        >
+                        <Box style={{ height: '300px' }} key={capture.id}>
                           <img
                             className={classes.imgContainer}
-                            src={capture.imageUrl}
-                            alt={`Candidate capture ${capture.captureId}`}
+                            src={capture.image_url}
+                            alt={`Candidate capture ${capture.id}`}
                           />
                         </Box>
                       );
@@ -119,7 +114,7 @@ function CandidateImages(props) {
                     variant="contained"
                     color="primary"
                     startIcon={<CheckIcon />}
-                    onClick={() => props.sameTreeHandler(tree.tree_id)}
+                    onClick={() => sameTreeHandler(tree.tree_id)}
                   >
                     Same Tree
                   </Button>
