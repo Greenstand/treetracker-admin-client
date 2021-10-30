@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.25.0...v1.25.1) (2021-10-30)
+
+
+### Bug Fixes
+
+* **capture:** enables scrolling in Capture page ([#182](https://github.com/Greenstand/treetracker-admin-client/issues/182)) ([9d2a145](https://github.com/Greenstand/treetracker-admin-client/commit/9d2a14527f1a2571b6dcb2db5f9a160473378827))
+
 # [1.25.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.24.0...v1.25.0) (2021-10-25)
 
 
