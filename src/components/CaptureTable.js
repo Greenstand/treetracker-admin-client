@@ -156,9 +156,9 @@ const CaptureTable = () => {
     });
   };
 
-  const handlePageChange = () => {
+  const handlePageChange = (e, newPage) => {
     loadCaptures({
-      page: capturesContext.page + 1,
+      page: newPage,
       rowsPerPage: capturesContext.rowsPerPage,
       filter: capturesContext.filter,
     });
@@ -228,7 +228,7 @@ const CaptureTable = () => {
             )}
           </Navbar>
         </Grid>
-        <Grid item>
+        <Grid item style={{ height: '100%', overflowY: 'scroll' }}>
           <div className={classes.tableContainer} ref={scrollRef}>
             <Grid
               container
