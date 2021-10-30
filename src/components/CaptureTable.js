@@ -113,8 +113,6 @@ const CaptureTable = () => {
   const scrollRef = createRef();
   const classes = useStyle();
 
-  const [page, setPage] = useState(capturesContext.page);
-
   useEffect(() => {
     loadSpecies();
     loadCaptures();
@@ -159,9 +157,8 @@ const CaptureTable = () => {
   };
 
   const handlePageChange = (e, newPage) => {
-    setPage(newPage);
     loadCaptures({
-      page: page,
+      page: newPage,
       rowsPerPage: capturesContext.rowsPerPage,
       filter: capturesContext.filter,
     });
@@ -196,7 +193,7 @@ const CaptureTable = () => {
         rowsPerPageOptions={[25, 50, 100, 250, 500]}
         component="div"
         count={capturesContext.captureCount}
-        page={page}
+        page={capturesContext.page}
         rowsPerPage={capturesContext.rowsPerPage}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleRowsPerPageChange}
