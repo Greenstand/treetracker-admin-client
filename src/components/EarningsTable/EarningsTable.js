@@ -80,7 +80,14 @@ function EarningsTableTopar() {
  * @Array
  * @name earnings table header columns
  */
-const headerColumns = ['Id', 'Grower', 'Funder', 'Amount', 'Payment System'];
+const headerColumns = [
+  'Id',
+  'Grower',
+  'Funder',
+  'Amount',
+  'Payment System',
+  'Effective Payment Date',
+];
 const growers = [
   {
     id: 1,
@@ -129,15 +136,14 @@ function EarningsTable() {
     <TableRow className={classes.earningsTableHeader}>
       {columns.map((column, i) => (
         <TableCell key={`${i}-${column}`} align={i === 0 ? '' : 'right'}>
-          <Typography variant="h6">{column}</Typography>
+          <Typography variant="h6">
+            {column}
+            {i === columns.length - 1 && (
+              <InfoOutlinedIcon className={classes.infoIcon} />
+            )}
+          </Typography>
         </TableCell>
       ))}
-      <TableCell>
-        <Typography variant="h6" align="right">
-          Effective Payment Date{' '}
-          <InfoOutlinedIcon className={classes.infoIcon} />
-        </Typography>
-      </TableCell>
     </TableRow>
   );
 
