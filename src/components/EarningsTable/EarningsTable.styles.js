@@ -47,7 +47,15 @@ const earningsTableStyles = {
   },
 
   root: {
-    borderBottom: 'none',
+    border: 'none',
+  },
+  selectRoot: {
+    marginRight: '76%',
+    position: 'relative',
+    right: '10%',
+    border: '1px solid #e0e0e0',
+    borderRadius: '2px',
+    padding: '4px',
   },
 };
 

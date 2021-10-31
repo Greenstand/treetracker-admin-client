@@ -26,7 +26,7 @@ const GrowersTablePagination = () => {
   return (
     <TablePagination
       count={10}
-      className={classes.root}
+      classes={{ selectRoot: classes.selectRoot, root: classes.root }}
       rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
       page={1}
       rowsPerPage={5}
@@ -149,31 +149,51 @@ function EarningsTable() {
 
   /**
    * @function
-   * @name renderTableBodyRowCells
-   * @description renders table body row cells
-   * @param {Object} grower - grower instance to render
-   * @returns {JSX} table body row cells
-   */
-  const renderTableBodyRowCells = (grower) => (
-    <TableRow key={grower.id}>
-      <TableCell>{grower.id}</TableCell>
-      <TableCell align="right">{grower.name}</TableCell>
-      <TableCell align="right">{grower.funder}</TableCell>
-      <TableCell align="right">{grower.amount}</TableCell>
-      <TableCell align="right">{grower.paymentSystem}</TableCell>
-      <TableCell align="right">{grower.effectivePaymentDate}</TableCell>
-    </TableRow>
-  );
-
-  /**
-   * @function
    * @name renderTableBodyRows
    * @description renders table body rows
    * @param {Array} growers - growers to render
    * @returns {JSX} table body rows
    */
   const renderTableBodyRows = (growers) =>
-    growers.map((grower) => renderTableBodyRowCells(grower));
+    growers.map((grower, i) => (
+      <TableRow key={grower.id}>
+        <TableCell
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.id}
+        </TableCell>
+        <TableCell
+          align="right"
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.name}
+        </TableCell>
+        <TableCell
+          align="right"
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.funder}
+        </TableCell>
+        <TableCell
+          align="right"
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.amount}
+        </TableCell>
+        <TableCell
+          align="right"
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.paymentSystem}
+        </TableCell>
+        <TableCell
+          align="right"
+          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+        >
+          {grower.effectivePaymentDate}
+        </TableCell>
+      </TableRow>
+    ));
 
   return (
     <Grid container direction="row">
