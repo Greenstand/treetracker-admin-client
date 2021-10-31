@@ -41,6 +41,9 @@ const earningsTableStyles = {
 
   infoIcon: {
     color: '#86C232',
+    position: 'absolute',
+    top: '11.6%',
+    right: '3%',
   },
 
   root: {
