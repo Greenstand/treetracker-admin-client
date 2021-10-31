@@ -15,6 +15,33 @@ import Menu from '../common/Menu';
 
 /**
  * @function
+ * @name GrowersTablePagination
+ * @description renders table pagination
+ *
+ * @returns {React.Component} growers table pagination
+ */
+const GrowersTablePagination = () => {
+  const classes = useStyles();
+
+  return (
+    <TablePagination
+      count={10}
+      className={classes.root}
+      rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+      page={1}
+      rowsPerPage={5}
+      onChangePage={() => {}}
+      onChangeRowsPerPage={() => {}}
+      SelectProps={{
+        inputProps: { 'aria-label': 'rows per page' },
+        native: true,
+      }}
+    />
+  );
+};
+
+/**
+ * @function
  * @name EarningsLeftMenu
  * @description renders left menu
  *
@@ -54,6 +81,32 @@ function EarningsTableTopar() {
  * @name earnings table header columns
  */
 const headerColumns = ['Id', 'Grower', 'Funder', 'Amount', 'Payment System'];
+const growers = [
+  {
+    id: 1,
+    name: 'Grower 1',
+    funder: 'Funder 1',
+    amount: '$100',
+    paymentSystem: 'Payment System 1',
+    effectivePaymentDate: '01/01/2019',
+  },
+  {
+    id: 2,
+    name: 'Grower 2',
+    funder: 'Funder 2',
+    amount: '$100',
+    paymentSystem: 'Payment System 2',
+    effectivePaymentDate: '01/02/2019',
+  },
+  {
+    id: 3,
+    name: 'Grower 3',
+    funder: 'Funder 3',
+    amount: '$100',
+    paymentSystem: 'Payment System 3',
+    effectivePaymentDate: '03/01/2019',
+  },
+];
 
 /**
  * @function
@@ -88,6 +141,34 @@ function EarningsTable() {
     </TableRow>
   );
 
+  /**
+   * @function
+   * @name renderTableBodyRowCells
+   * @description renders table body row cells
+   * @param {Object} grower - grower instance to render
+   * @returns {JSX} table body row cells
+   */
+  const renderTableBodyRowCells = (grower) => (
+    <TableRow key={grower.id}>
+      <TableCell>{grower.id}</TableCell>
+      <TableCell align="right">{grower.name}</TableCell>
+      <TableCell align="right">{grower.funder}</TableCell>
+      <TableCell align="right">{grower.amount}</TableCell>
+      <TableCell align="right">{grower.paymentSystem}</TableCell>
+      <TableCell align="right">{grower.effectivePaymentDate}</TableCell>
+    </TableRow>
+  );
+
+  /**
+   * @function
+   * @name renderTableBodyRows
+   * @description renders table body rows
+   * @param {Array} growers - growers to render
+   * @returns {JSX} table body rows
+   */
+  const renderTableBodyRows = (growers) =>
+    growers.map((grower) => renderTableBodyRowCells(grower));
+
   return (
     <Grid container direction="row">
       <EarningsLeftMenu />
@@ -95,46 +176,9 @@ function EarningsTable() {
         <EarningsTableTopar />
         <Table>
           <TableHead>{renderTableHeaderColumns(headerColumns)}</TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>1</TableCell>
-              <TableCell align="right">Grower 1</TableCell>
-              <TableCell align="right">Funder 1</TableCell>
-              <TableCell align="right">$100</TableCell>
-              <TableCell align="right">Payment System 1</TableCell>
-              <TableCell align="right">01/01/2019</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>2</TableCell>
-              <TableCell align="right">Grower 2</TableCell>
-              <TableCell align="right">Funder 2</TableCell>
-              <TableCell align="right">$100</TableCell>
-              <TableCell align="right">Payment System 2</TableCell>
-              <TableCell align="right">01/02/2019</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>3</TableCell>
-              <TableCell align="right">Grower 3</TableCell>
-              <TableCell align="right">Funder 3</TableCell>
-              <TableCell align="right">$100</TableCell>
-              <TableCell align="right">Payment System 3</TableCell>
-              <TableCell align="right">03/01/2019</TableCell>
-            </TableRow>
-          </TableBody>
+          <TableBody>{renderTableBodyRows(growers)}</TableBody>
           <TableFooter>
-            <TablePagination
-              count={10}
-              className={classes.root}
-              rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
-              page={1}
-              rowsPerPage={5}
-              onChangePage={() => {}}
-              onChangeRowsPerPage={() => {}}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-            />
+            <GrowersTablePagination />
           </TableFooter>
         </Table>
       </Grid>
