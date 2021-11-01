@@ -28,6 +28,7 @@ const GrowersTablePagination = () => {
       count={10}
       classes={{ selectRoot: classes.selectRoot, root: classes.root }}
       rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+      labelRowsPerPage="Rows per page"
       page={1}
       rowsPerPage={5}
       onChangePage={() => {}}
