@@ -31,7 +31,7 @@ function Home(props) {
   const appContext = useContext(AppContext);
 
   useEffect(() => {
-    document.title = `${documentTitle}`; // update page title
+    document.title = `${documentTitle}`;
   }, []);
 
   return (
