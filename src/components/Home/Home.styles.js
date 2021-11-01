@@ -30,8 +30,6 @@ const styles = () => ({
   },
   welcomeBox: {
     height: '100%',
-    //padding: theme.spacing(4),
-    //padding: '40px',
   },
   title: {
     fill: '#9f9f9f',
