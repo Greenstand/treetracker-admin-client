@@ -15,7 +15,7 @@ import {
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
 } from '../DashStat.container';
-import GreenStandSvgLogo from '../common/GreenStandSvgLogo';
+import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
 
 /**
  * @function
