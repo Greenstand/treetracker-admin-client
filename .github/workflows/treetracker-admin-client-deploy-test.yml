@@ -6,6 +6,9 @@ on:
       tag:
         description: 'git-tag'
         required: true
+      previous_tag:
+        description: 'previous-git-tag'
+        required: true
 
 env:
   project-directory: ./
