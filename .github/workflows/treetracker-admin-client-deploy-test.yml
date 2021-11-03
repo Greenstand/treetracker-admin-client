@@ -84,4 +84,4 @@ jobs:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       uses: pullreminders/slack-action@master
       with:
-        args: '{\"channel\":\"D013589M8P8\",\"text\":${{steps.generate_changelog.outputs.changelog}}}'
+        args: '{\"channel\":\"D013589M8P8\",\"text\":\"${{steps.generate_changelog.outputs.changelog}}\"}'
