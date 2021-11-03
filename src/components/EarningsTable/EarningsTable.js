@@ -18,9 +18,9 @@ import Menu from '../common/Menu';
  * @name GrowersTablePagination
  * @description renders table pagination
  *
- * @returns {React.Component} growers table pagination
+ * @returns {React.Component} earnings table pagination
  */
-const GrowersTablePagination = () => {
+const EarningsTablePagination = () => {
   const classes = useStyles();
 
   return (
@@ -89,7 +89,7 @@ const headerColumns = [
   'Payment System',
   'Effective Payment Date',
 ];
-const growers = [
+const earnings = [
   {
     id: 1,
     name: 'Grower 1',
@@ -152,46 +152,46 @@ function EarningsTable() {
    * @function
    * @name renderTableBodyRows
    * @description renders table body rows
-   * @param {Array} growers - growers to render
+   * @param {Array} earnings - earnings to render
    * @returns {JSX} table body rows
    */
-  const renderTableBodyRows = (growers) =>
-    growers.map((grower, i) => (
-      <TableRow key={grower.id}>
+  const renderTableBodyRows = (earnings) =>
+    earnings.map((earning, i) => (
+      <TableRow key={earning.id}>
         <TableCell
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.id}
+          {earning.id}
         </TableCell>
         <TableCell
           align="right"
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.name}
+          {earning.name}
         </TableCell>
         <TableCell
           align="right"
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.funder}
+          {earning.funder}
         </TableCell>
         <TableCell
           align="right"
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.amount}
+          {earning.amount}
         </TableCell>
         <TableCell
           align="right"
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.paymentSystem}
+          {earning.paymentSystem}
         </TableCell>
         <TableCell
           align="right"
-          classes={i === growers.length - 1 ? { root: classes.root } : {}}
+          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {grower.effectivePaymentDate}
+          {earning.effectivePaymentDate}
         </TableCell>
       </TableRow>
     ));
@@ -203,9 +203,9 @@ function EarningsTable() {
         <EarningsTableTopar />
         <Table>
           <TableHead>{renderTableHeaderColumns(headerColumns)}</TableHead>
-          <TableBody>{renderTableBodyRows(growers)}</TableBody>
+          <TableBody>{renderTableBodyRows(earnings)}</TableBody>
           <TableFooter>
-            <GrowersTablePagination />
+            <EarningsTablePagination />
           </TableFooter>
         </Table>
       </Grid>
