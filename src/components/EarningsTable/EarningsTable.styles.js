@@ -2,18 +2,42 @@ import { MENU_WIDTH } from '../common/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 
 /**
- * @object
+ * @constant
+ * @type {object}
+ * @description possible colors for earning table component
+ * @see {@link https://colors.artyclick.com/color-name-finder/}  - to learn how
+ *  color names are generated
+ */
+const COLORS = {
+  appleGreen: '#86C232',
+  lavenderPinocchio: '#E0E0E0',
+};
+
+/**
+ * @constant
+ * @type {object}
  * @name EarningsTableTopBarStyles
  * @description styles for EarningsTableTopBar component
  */
 const earningsTableTopBarStyles = {
   earningsTableTopBarTitle: {
-    padding: '25px 0 25px 0',
+    // padding: '25px 0 25px 0',
+  },
+  actionButton: {
+    color: COLORS.appleGreen,
+  },
+  actionButtonIcon: {
+    position: 'relative',
+    top: '4px',
+  },
+  topBarActions: {
+    width: '60%',
   },
 };
 
 /**
- * @object
+ * @constant
+ * @type {object}
  * @name EarningsLeftMenu
  * @description styles for EarningsLeftMenu component
  */
@@ -26,7 +50,8 @@ const earningsLeftMenuStyles = {
 };
 
 /**
- * @object
+ * @constant
+ * @type {object}
  * @name EarningsTableStyles
  * @description styles for EarningsTableStyles component
  */
@@ -36,11 +61,11 @@ const earningsTableStyles = {
   },
 
   earningsTableHeader: {
-    borderBottom: '2px solid #e0e0e0',
+    borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
   },
 
   infoIcon: {
-    color: '#86C232',
+    color: `${COLORS.appleGreen}`,
     position: 'absolute',
     top: '11.6%',
     right: '3%',
@@ -53,7 +78,7 @@ const earningsTableStyles = {
     marginRight: '76%',
     position: 'relative',
     right: '10%',
-    border: '1px solid #e0e0e0',
+    border: `1px solid ${COLORS.lavenderPinocchio}`,
     borderRadius: '3px',
     padding: '4px',
   },
