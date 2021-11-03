@@ -183,7 +183,7 @@ export default {
    * @returns {Array} - list of earnings
    */
   getEarnings() {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/earnings`;
+    const query = `https://dev-k8s.treetracker.org/earnings`;
     return fetch(query, {
       method: 'GET',
       headers: {
