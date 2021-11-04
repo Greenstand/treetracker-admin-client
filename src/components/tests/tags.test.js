@@ -266,9 +266,7 @@ describe('tags', () => {
 
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
 
-        expect(
-          screen.getByLabelText(/grower identifier/i),
-        ).toBeInTheDocument();
+        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
 
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
 
