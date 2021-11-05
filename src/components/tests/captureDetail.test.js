@@ -8,6 +8,7 @@ import Slide from '@material-ui/core/Slide';
 import { AppProvider } from '../../context/AppContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
+import { CAPTURE, TAG, SPECIES } from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/captureDetail.test.js');
@@ -15,39 +16,6 @@ const log = loglevel.getLogger('../tests/captureDetail.test.js');
 describe('captureDetail', () => {
   let api;
   let captureValues;
-  // let transition;
-
-  const CAPTURE = {
-    id: 0,
-    planterId: 10,
-    planterIdentifier: 'grower@some.place',
-    deviceIdentifier: 'abcdef123456',
-    approved: true,
-    active: true,
-    status: 'planted',
-    speciesId: 30,
-    timeCreated: '2020-07-29T21:46:03.522Z',
-    morphology: 'seedling',
-    age: 'new_tree',
-    captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
-  };
-
-  const SPECIES = {
-    id: 30,
-    name: 'fig',
-  };
-
-  const TAG = {
-    id: 3,
-    tagName: 'test',
-  };
 
   beforeEach(() => {
     //mock the api
@@ -65,13 +33,9 @@ describe('captureDetail', () => {
       log.debug('mock getTagById');
       return Promise.resolve(TAG);
     };
-    // transition = forwardRef(function Transition(props, ref) {
-    //   return <Slide direction="up" ref={ref} {...props} />;
-    // });
   });
 
   describe('with a default context', () => {
-    //{{{
     beforeEach(async () => {
       captureValues = {
         capture: null,

@@ -9,26 +9,16 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import * as loglevel from 'loglevel';
-const log = loglevel.getLogger('../tests/species.test');
 // import { session, hasPermission, POLICIES } from '../models/auth';
 import { AppProvider } from '../../context/AppContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
-
-import Species from '../Species';
 import SpeciesView from '../../views/SpeciesView';
 import SpeciesTable from '../SpeciesTable';
+import Species from '../Species';
+import { SPECIES } from './fixtures';
 
-const SPECIES = [
-  {
-    id: 0,
-    name: 'Pine',
-  },
-  {
-    id: 1,
-    name: 'apple',
-  },
-];
+import * as loglevel from 'loglevel';
+const log = loglevel.getLogger('../tests/species.test');
 
 describe('species management', () => {
   let api;
@@ -100,7 +90,7 @@ describe('species management', () => {
       });
 
       it('species list should be 2', () => {
-        expect(speciesValues.speciesList).toHaveLength(2);
+        expect(speciesValues.speciesList).toHaveLength(3);
       });
 
       // shows a table with headers

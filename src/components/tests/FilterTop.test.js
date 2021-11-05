@@ -1,15 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, within, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
 import FilterTop from '../FilterTop';
 import Verify from '../Verify';
-import * as loglevel from 'loglevel';
-import { ORGS } from '../tests/fixtures';
+import { ORGS } from './fixtures';
 
-const log = loglevel.getLogger('../tests/organizations.test');
+import * as loglevel from 'loglevel';
+const log = loglevel.getLogger('../tests/filtertop.test');
 
 describe('FilterTop organizations', () => {
   let api;
