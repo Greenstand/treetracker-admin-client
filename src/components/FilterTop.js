@@ -178,7 +178,7 @@ function Filter(props) {
           id: ORGANIZATION_NOT_SET,
           name: 'Not set',
         },
-    ];
+      ];
 
   return (
     <>

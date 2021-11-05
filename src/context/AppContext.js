@@ -7,7 +7,7 @@ import Growers from '../components/Growers';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView';
 import Account from '../components/Account';
-import Home from '../components/Home';
+import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
 import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
