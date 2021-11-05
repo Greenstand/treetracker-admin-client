@@ -183,7 +183,7 @@ export default {
    * @returns {Array} - list of earnings
    */
   getEarnings() {
-    const query = `https://dev-k8s.treetracker.org/earnings`;
+    const query = `https://dev-k8s.treetracker.org/earnings/earnings`;
     return fetch(query, {
       method: 'GET',
       headers: {

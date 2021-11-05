@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -9,9 +9,9 @@ import TableBody from '@material-ui/core/TableBody';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
-import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
+import API from '../../api/treeTrackerApi';
 import useStyles from './EarningsTable.styles';
 import Menu from '../common/Menu';
 
@@ -150,6 +150,15 @@ const earnings = [
 function EarningsTable() {
   const classes = useStyles();
 
+  async function fetchEarnings() {
+    const response = await API.getEarnings();
+    console.log('earnings loaded---------------', response);
+  }
+
+  useEffect(() => {
+    fetchEarnings();
+  }, []);
+
   /**
    * @function
    * @name renderTableHeaderColumns
@@ -161,7 +170,7 @@ function EarningsTable() {
   const renderTableHeaderColumns = (columns) => (
     <TableRow className={classes.earningsTableHeader}>
       {columns.map((column, i) => (
-        <TableCell key={`${i}-${column}`} align={i === 0 ? '' : 'right'}>
+        <TableCell key={`${i}-${column}`} align={i === 0 ? 'inherit' : 'right'}>
           <Typography variant="h6">
             {column}
             {i === columns.length - 1 && (
@@ -228,10 +237,12 @@ function EarningsTable() {
         <EarningsTableTopar />
         <Table>
           <TableHead>{renderTableHeaderColumns(headerColumns)}</TableHead>
-          <TableBody>{renderTableBodyRows(earnings)}</TableBody>
-          <TableFooter>
-            <EarningsTablePagination />
-          </TableFooter>
+          <TableBody>
+            {renderTableBodyRows(earnings)}
+            <TableRow>
+              <EarningsTablePagination />
+            </TableRow>
+          </TableBody>
         </Table>
       </Grid>
     </Grid>

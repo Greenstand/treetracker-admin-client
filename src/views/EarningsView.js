@@ -6,12 +6,12 @@ import { documentTitle } from '../common/variables';
  * @function
  * @name EarningsView
  * @description View for the earnings page
- * @param {Object} props - The properties passed to the component
+ *
  * @returns {React.Component}
  */
-function EarningsView(props) {
+function EarningsView() {
   useEffect(() => {
-    document.title = `Earnings - ${documentTitle}`; // change the document title
+    document.title = `Earnings - ${documentTitle}`;
   }, []);
   return <EarningsTable />;
 }
