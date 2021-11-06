@@ -86,6 +86,8 @@ describe('growers', () => {
 
       expect(screen.getByLabelText('Person ID')).toBeInTheDocument();
 
+      expect(screen.getByLabelText('Device ID')).toBeInTheDocument();
+
       expect(screen.getByLabelText('Organization')).toBeInTheDocument();
 
       expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
