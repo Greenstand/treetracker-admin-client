@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.25.1...v1.26.0) (2021-11-06)
+
+
+### Features
+
+* **growers:** filter growers by deviceIdentifier ([799958e](https://github.com/Greenstand/treetracker-admin-client/commit/799958e5984f8880ad130fea73d0ae60c8268882))
+
 ## [1.25.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.25.0...v1.25.1) (2021-10-30)
 
 
