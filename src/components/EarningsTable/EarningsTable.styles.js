@@ -1,4 +1,3 @@
-import { MENU_WIDTH } from '../common/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 
 /**
