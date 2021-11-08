@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -7,7 +7,8 @@ import TableBody from '@material-ui/core/TableBody';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import PublishIcon from '@material-ui/icons/Publish';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import API from '../../api/treeTrackerApi';
@@ -20,18 +21,19 @@ import useStyles from './EarningsTable.styles';
  *
  * @returns {React.Component} earnings table pagination
  */
-const EarningsTablePagination = () => {
+const EarningsTablePagination = (props) => {
   const classes = useStyles();
+  const { totalCount } = props;
 
   return (
     <TablePagination
-      count={10}
+      count={totalCount}
       classes={{
         selectRoot: classes.selectRoot,
         root: classes.earningsTablePagination,
       }}
       rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
-      labelRowsPerPage="Rows per page"
+      labelRowsPerPage="Rows per page:"
       page={1}
       rowsPerPage={5}
       onChangePage={() => {}}
@@ -56,23 +58,7 @@ function EarningsTableTopar() {
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
       <Grid item className={classes.earningsTableTopBarTitle}>
-        <Typography variant="h3">Earnings</Typography>
-      </Grid>
-      <Grid item className={classes.topBarActions}>
-        <Grid container direction="row" justify="space-around">
-          <Grid item>
-            <Typography variant="h6" className={classes.actionButton}>
-              <GetAppIcon className={classes.actionButtonIcon} />
-              EXPORT
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" className={classes.actionButton}>
-              <PublishIcon className={classes.actionButtonIcon} />
-              IMPORT
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="h4">Earnings</Typography>
       </Grid>
     </Grid>
   );
@@ -83,38 +69,11 @@ function EarningsTableTopar() {
  * @name earnings table header columns
  */
 const headerColumns = [
-  'Id',
   'Grower',
   'Funder',
   'Amount',
   'Payment System',
-  'Effective Payment Date',
-];
-const earnings = [
-  {
-    id: 1,
-    name: 'Grower 1',
-    funder: 'Funder 1',
-    amount: '$100',
-    paymentSystem: 'Payment System 1',
-    effectivePaymentDate: '01/01/2019',
-  },
-  {
-    id: 2,
-    name: 'Grower 2',
-    funder: 'Funder 2',
-    amount: '$100',
-    paymentSystem: 'Payment System 2',
-    effectivePaymentDate: '01/02/2019',
-  },
-  {
-    id: 3,
-    name: 'Grower 3',
-    funder: 'Funder 3',
-    amount: '$100',
-    paymentSystem: 'Payment System 3',
-    effectivePaymentDate: '03/01/2019',
-  },
+  'Effective Date',
 ];
 
 /**
@@ -125,9 +84,13 @@ const earnings = [
  */
 function EarningsTable() {
   const classes = useStyles();
+  const [earnings, setEarnings] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
 
   async function fetchEarnings() {
     const response = await API.getEarnings();
+    setEarnings(response.earnings);
+    setTotalCount(response.totalCount);
     console.log('earnings loaded---------------', response);
   }
 
@@ -146,7 +109,7 @@ function EarningsTable() {
   const renderTableHeaderColumns = (columns) => (
     <TableRow className={classes.earningsTableHeader}>
       {columns.map((column, i) => (
-        <TableCell key={`${i}-${column}`} align={i === 0 ? 'inherit' : 'right'}>
+        <TableCell key={`${i}-${column}`}>
           <Typography variant="h6">
             {column}
             {i === columns.length - 1 && (
@@ -171,34 +134,24 @@ function EarningsTable() {
         <TableCell
           classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
-          {earning.id}
-        </TableCell>
-        <TableCell
-          align="right"
-          classes={i === earnings.length - 1 ? { root: classes.root } : {}}
-        >
           {earning.name}
         </TableCell>
         <TableCell
-          align="right"
           classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
           {earning.funder}
         </TableCell>
         <TableCell
-          align="right"
           classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
           {earning.amount}
         </TableCell>
         <TableCell
-          align="right"
           classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
           {earning.paymentSystem}
         </TableCell>
         <TableCell
-          align="right"
           classes={i === earnings.length - 1 ? { root: classes.root } : {}}
         >
           {earning.effectivePaymentDate}
@@ -217,7 +170,7 @@ function EarningsTable() {
           <TableBody>
             {renderTableBodyRows(earnings)}
             <TableRow>
-              <EarningsTablePagination />
+              <EarningsTablePagination totalCount={totalCount} />
             </TableRow>
           </TableBody>
         </Table>

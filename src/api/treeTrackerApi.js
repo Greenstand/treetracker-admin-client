@@ -98,40 +98,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * to rollback from a wrong approving
-   */
-  // undoCaptureImage(id) {
-  //   const query = `${
-  //     process.env.REACT_APP_API_ROOT
-  //   }/api/${getOrganization()}trees/${id}`;
-  //   return fetch(query, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'content-type': 'application/json',
-  //       Authorization: session.token,
-  //     },
-  //     body: JSON.stringify({
-  //       id: id,
-  //       active: true,
-  //       approved: false,
-  //     }),
-  //   })
-  //     .then(handleResponse)
-  //     .catch(handleError);
-  // },
-  // getUnverifiedCaptureCount() {
-  //   const query = `${
-  //     process.env.REACT_APP_API_ROOT
-  //   }/api/${getOrganization()}trees/count?where[approved]=false&where[active]=true`;
-  //   return fetch(query, {
-  //     headers: {
-  //       Authorization: session.token,
-  //     },
-  //   })
-  //     .then(handleResponse)
-  //     .catch(handleError);
-  // },
   getCaptureCount(filter) {
     const query = `${
       process.env.REACT_APP_API_ROOT
@@ -183,7 +149,7 @@ export default {
    * @returns {Array} - list of earnings
    */
   getEarnings() {
-    const query = `https://dev-k8s.treetracker.org/earnings/earnings`;
+    const query = `earnings.json`;
     return fetch(query, {
       method: 'GET',
       headers: {

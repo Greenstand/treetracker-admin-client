@@ -1,0 +1,65 @@
+{
+  "earnings": [
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    },
+    {
+      "name": "Mohamed Sankoh",
+      "funder": "Environment for Africa",
+      "amount": "$2.34",
+      "paymentSystem": "Visa",
+      "effectivePaymentDate": "Aug 10,2021"
+    }
+  ],
+  "totalCount": 28,
+  "links": {
+    "prev": null,
+    "next": "http://dev-k8s.treetracker.org/earnings?&offset=1"
+  }
+}

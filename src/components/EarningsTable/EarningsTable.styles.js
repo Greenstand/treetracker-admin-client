@@ -43,7 +43,7 @@ const earningsTableTopBarStyles = {
  */
 const earningsTableStyles = {
   earningsTable: {
-    padding: '20px 0 0 20px',
+    padding: '20px 0 0 40px',
   },
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
