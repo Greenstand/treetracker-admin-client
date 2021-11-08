@@ -145,7 +145,9 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(5),
     marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
-  }
+    fontSize: 'smaller',
+    fontWeight: 'bold',
+  },
 }));
 
 const ToVerifyCounter = withData(({ data }) => (
@@ -438,14 +440,11 @@ const Verify = (props) => {
                   key={1}
                 >
                   Filter
-                  {
-                    numFilters > 0 &&
-                    (
-                      <Avatar className={classes.activeFilters}>
-                        {numFilters}
-                      </Avatar>
-                    )
-                  }
+                  {numFilters > 0 && (
+                    <Avatar className={classes.activeFilters}>
+                      {numFilters}
+                    </Avatar>
+                  )}
                 </Button>,
               ]}
             >
