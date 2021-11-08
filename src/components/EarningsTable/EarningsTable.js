@@ -117,7 +117,7 @@ const EarningsTableBody = ({ data, columns, total }) => {
         </TableRow>
       ))}
       <TableRow>
-        <EarningsTablePagination totalCount={total} />
+        <EarningsTablePagination total={total} />
       </TableRow>
     </TableBody>
   );
