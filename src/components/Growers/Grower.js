@@ -9,11 +9,11 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Person from '@material-ui/icons/Person';
-import LinkToWebmap from './common/LinkToWebmap';
-import OptimizedImage from './OptimizedImage';
-import { AppContext } from '../context/AppContext.js';
+import LinkToWebmap from '../common/LinkToWebmap';
+import OptimizedImage from '../OptimizedImage';
+import { AppContext } from '../../context/AppContext.js';
 import { getOrganizationById } from 'utilities/index.js';
-import { useStyle, GROWER_IMAGE_SIZE } from './Growers/Growers.styles.js';
+import { useStyle, GROWER_IMAGE_SIZE } from './Growers.styles.js';
 
 export const Grower = (props) => {
   const { grower } = props;

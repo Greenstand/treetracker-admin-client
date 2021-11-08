@@ -7,9 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Grower from './Grower';
-import GrowerDetail from './GrowerDetail';
-import { GrowerContext } from '../context/GrowerContext';
-import { useStyle } from './Growers/Growers.styles.js';
+import GrowerDetail from '../GrowerDetail';
+import { GrowerContext } from '../../context/GrowerContext';
+import { useStyle } from './Growers.styles.js';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 

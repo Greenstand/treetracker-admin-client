@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
-import Growers from '../components/Growers.js';
+import Growers from '../components/Growers/Growers.js';
 import { GrowerProvider } from '../context/GrowerContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
