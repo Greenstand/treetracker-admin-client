@@ -33,8 +33,6 @@ function EarningsLeftMenu() {
  * @returns {React.Component}
  */
 function EarningsView() {
-  const classes = useStyles();
-
   useEffect(() => {
     document.title = `Earnings - ${documentTitle}`;
   }, []);
