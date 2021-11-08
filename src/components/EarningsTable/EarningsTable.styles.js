@@ -38,28 +38,13 @@ const earningsTableTopBarStyles = {
 /**
  * @constant
  * @type {object}
- * @name EarningsLeftMenu
- * @description styles for EarningsLeftMenu component
- */
-const earningsLeftMenuStyles = {
-  menu: {
-    height: '100%',
-    width: MENU_WIDTH,
-    overflow: 'hidden',
-  },
-};
-
-/**
- * @constant
- * @type {object}
- * @name EarningsTableStyles
+ * @name earningsTableStyles
  * @description styles for EarningsTableStyles component
  */
 const earningsTableStyles = {
-  earningsTableRightContents: {
-    width: '80%',
+  earningsTable: {
+    padding: '20px 0 0 20px',
   },
-
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
   },
@@ -71,13 +56,12 @@ const earningsTableStyles = {
     left: '5px',
   },
 
-  root: {
+  earningsTablePagination: {
     border: 'none',
+    paddingRight: '0px',
   },
   selectRoot: {
-    marginRight: '76%',
-    position: 'relative',
-    right: '10%',
+    marginRight: '72%',
     border: `1px solid ${COLORS.lavenderPinocchio}`,
     borderRadius: '3px',
     padding: '4px',
@@ -91,7 +75,6 @@ const earningsTableStyles = {
  * @returns {object} styles
  */
 const useStyles = makeStyles(() => ({
-  ...earningsLeftMenuStyles,
   ...earningsTableTopBarStyles,
   ...earningsTableStyles,
 }));

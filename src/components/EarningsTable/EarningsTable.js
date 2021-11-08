@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
@@ -13,7 +12,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import API from '../../api/treeTrackerApi';
 import useStyles from './EarningsTable.styles';
-import Menu from '../common/Menu';
 
 /**
  * @function
@@ -28,7 +26,10 @@ const EarningsTablePagination = () => {
   return (
     <TablePagination
       count={10}
-      classes={{ selectRoot: classes.selectRoot, root: classes.root }}
+      classes={{
+        selectRoot: classes.selectRoot,
+        root: classes.earningsTablePagination,
+      }}
       rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
       labelRowsPerPage="Rows per page"
       page={1}
@@ -45,24 +46,6 @@ const EarningsTablePagination = () => {
 
 /**
  * @function
- * @name EarningsLeftMenu
- * @description renders left menu
- *
- * @returns {React.Component} left menu
- */
-function EarningsLeftMenu() {
-  const classes = useStyles();
-  return (
-    <Grid item xs={2}>
-      <Paper elevation={3} className={classes.menu}>
-        <Menu variant="plain" />
-      </Paper>
-    </Grid>
-  );
-}
-
-/**
- * @function
  * @name EarningsTableTopar
  * @description renders earnings table top bar
  *
@@ -71,30 +54,23 @@ function EarningsLeftMenu() {
 function EarningsTableTopar() {
   const classes = useStyles();
   return (
-    <Grid item>
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justify="space-between"
-      >
-        <Grid item className={classes.earningsTableTopBarTitle}>
-          <Typography variant="h3">Earnings</Typography>
-        </Grid>
-        <Grid item className={classes.topBarActions}>
-          <Grid container direction="row" justify="space-around">
-            <Grid item>
-              <Typography variant="h6" className={classes.actionButton}>
-                <GetAppIcon className={classes.actionButtonIcon} />
-                EXPORT
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h6" className={classes.actionButton}>
-                <PublishIcon className={classes.actionButtonIcon} />
-                IMPORT
-              </Typography>
-            </Grid>
+    <Grid container direction="row" alignItems="center" justify="space-between">
+      <Grid item className={classes.earningsTableTopBarTitle}>
+        <Typography variant="h3">Earnings</Typography>
+      </Grid>
+      <Grid item className={classes.topBarActions}>
+        <Grid container direction="row" justify="space-around">
+          <Grid item>
+            <Typography variant="h6" className={classes.actionButton}>
+              <GetAppIcon className={classes.actionButtonIcon} />
+              EXPORT
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6" className={classes.actionButton}>
+              <PublishIcon className={classes.actionButtonIcon} />
+              IMPORT
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -231,10 +207,11 @@ function EarningsTable() {
     ));
 
   return (
-    <Grid container direction="row">
-      <EarningsLeftMenu />
-      <Grid item className={classes.earningsTableRightContents}>
+    <Grid container direction="column" className={classes.earningsTable}>
+      <Grid item>
         <EarningsTableTopar />
+      </Grid>
+      <Grid item>
         <Table>
           <TableHead>{renderTableHeaderColumns(headerColumns)}</TableHead>
           <TableBody>

@@ -5,7 +5,7 @@ import axios from 'axios';
 import VerifyView from '../views/VerifyView';
 import Growers from '../components/Growers';
 import CapturesView from '../views/CapturesView';
-import EarningsView from '../views/EarningsView';
+import EarningsView from '../views/EarningsView/EarningsView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
