@@ -4,8 +4,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import API from '../../api/treeTrackerApi';
@@ -22,8 +25,52 @@ function EarningsTableTopar() {
   const classes = useStyles();
   return (
     <Grid container direction="row" alignItems="center" justify="space-between">
-      <Grid item className={classes.earningsTableTopBarTitle}>
-        <Typography variant="h4">Earnings</Typography>
+      <Grid item xs={4}>
+        <Typography className={classes.earningsTableTopTitle} variant="h4">
+          Earnings
+        </Typography>
+      </Grid>
+      <Grid item xs={8}>
+        <Grid container direction="row" justify="space-around">
+          {/* start EXPORT button */}
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              className={classes.actionButton}
+            >
+              <GetAppIcon className={classes.actionButtonIcon} />
+              <Typography variant="h6">EXPORT</Typography>
+            </Grid>
+          </Grid>
+          {/*  end EXPORT button */}
+
+          {/* start FILTER button */}
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              className={classes.actionButton}
+            >
+              <Card>
+                <CardContent>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item>
+                      <Typography>Date Range</Typography>
+                      <Typography>Oct 1 - Oct 5</Typography>
+                    </Grid>
+                    <Grid item>
+                      <InfoOutlinedIcon className={classes.infoIcon} />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          {/* end FILTER button */}
+        </Grid>
       </Grid>
     </Grid>
   );

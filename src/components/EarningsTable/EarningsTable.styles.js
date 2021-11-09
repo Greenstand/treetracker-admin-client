@@ -19,18 +19,20 @@ const COLORS = {
  * @description styles for EarningsTableTopBar component
  */
 const earningsTableTopBarStyles = {
-  earningsTableTopBarTitle: {
-    // padding: '25px 0 25px 0',
-  },
   actionButton: {
     color: COLORS.appleGreen,
+    cursor: 'pointer',
   },
   actionButtonIcon: {
     position: 'relative',
-    top: '4px',
+    top: '2px',
   },
   topBarActions: {
     width: '60%',
+  },
+
+  earningsTableTopTitle: {
+    padding: '0px 0px 0px 10px',
   },
 };
 
