@@ -71,35 +71,33 @@ const Growers = (props) => {
   );
 
   return (
-    <>
-      <Grid container direction="column" className={classes.outer}>
-        <Grid item className={classes.body}>
-          <Grid container>
+    <Grid item container style={{ height: '100%', overflow: 'auto' }}>
+      <Grid item className={classes.body}>
+        <Grid container>
+          <Grid
+            item
+            style={{
+              width: '100%',
+            }}
+          >
             <Grid
-              item
-              style={{
-                width: '100%',
-              }}
+              container
+              justify="space-between"
+              alignItems="center"
+              className={classes.title}
             >
-              <Grid
-                container
-                justify="space-between"
-                alignItems="center"
-                className={classes.title}
-              >
-                <Grid item>
-                  <Typography variant="h5">Growers</Typography>
-                </Grid>
-                <Grid item>{pagination}</Grid>
+              <Grid item>
+                <Typography variant="h5">Growers</Typography>
               </Grid>
-            </Grid>
-            <Grid item container direction="row" justify="center">
-              {growersItems}
+              <Grid item>{pagination}</Grid>
             </Grid>
           </Grid>
-          <Grid container className={classes.page} justify="flex-end">
-            {pagination}
+          <Grid item container direction="row" justify="center">
+            {growersItems}
           </Grid>
+        </Grid>
+        <Grid container className={classes.page} justify="flex-end">
+          {pagination}
         </Grid>
       </Grid>
       <GrowerDetail
@@ -107,7 +105,7 @@ const Growers = (props) => {
         growerId={growerDetail.id}
         onClose={() => setDetailShown(false)}
       />
-    </>
+    </Grid>
   );
 };
 
