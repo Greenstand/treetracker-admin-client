@@ -45,11 +45,12 @@ const Growers = (props) => {
   let growersItems = (growerContext.isLoading
     ? placeholderGrowers
     : growerContext.growers
-  ).map((grower) => {
+  ).map((grower, i) => {
+    //combine i + grower.id to create unique keys even when there are duplicate grower.ids
     return (
       <Grower
         onClick={() => handleGrowerClick(grower)}
-        key={grower.id}
+        key={`${i} + ${grower.id}`}
         grower={grower}
         placeholder={grower.placeholder}
       />
