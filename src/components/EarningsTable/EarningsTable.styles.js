@@ -40,7 +40,7 @@ const earningsTableTopBarStyles = {
  * @constant
  * @type {object}
  * @name earningsTableStyles
- * @description styles for EarningsTableStyles component
+ * @description styles for EarningsTable component
  */
 const earningsTableStyles = {
   earningsTable: {
@@ -48,6 +48,11 @@ const earningsTableStyles = {
   },
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
+  },
+
+  earningsTableFilterButton: {
+    cursor: 'pointer',
+    border: `1px solid ${COLORS.lavenderPinocchio}`,
   },
 
   infoIcon: {
@@ -62,7 +67,6 @@ const earningsTableStyles = {
     paddingRight: '0px',
   },
   selectRoot: {
-    marginRight: '72%',
     border: `1px solid ${COLORS.lavenderPinocchio}`,
     borderRadius: '3px',
     padding: '4px',

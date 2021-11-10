@@ -7,8 +7,8 @@ import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import API from '../../api/treeTrackerApi';
@@ -30,10 +30,12 @@ function EarningsTableTopar() {
           Earnings
         </Typography>
       </Grid>
+
+      {/*  start earning table actions */}
       <Grid item xs={8}>
-        <Grid container direction="row" justify="space-around">
+        <Grid container direction="row" justify="flex-end" alignItems="center">
           {/* start EXPORT button */}
-          <Grid item>
+          <Grid item xs={2}>
             <Grid
               container
               direction="row"
@@ -47,31 +49,22 @@ function EarningsTableTopar() {
           {/*  end EXPORT button */}
 
           {/* start FILTER button */}
-          <Grid item>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              className={classes.actionButton}
-            >
-              <Card>
-                <CardContent>
-                  <Grid container direction="row" alignItems="center">
-                    <Grid item>
-                      <Typography>Date Range</Typography>
-                      <Typography>Oct 1 - Oct 5</Typography>
-                    </Grid>
-                    <Grid item>
-                      <InfoOutlinedIcon className={classes.infoIcon} />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+          <Grid item xs={2} className={classes.earningsTableFilterButton}>
+            <Grid container direction="row" justify="center">
+              <div>
+                <Typography>Date Range</Typography>
+                <Typography>Oct 1 - Oct 5</Typography>
+              </div>
+              <ArrowDropDownIcon
+                className={classes.infoIcon}
+                fontSize="large"
+              />
             </Grid>
           </Grid>
           {/* end FILTER button */}
         </Grid>
       </Grid>
+      {/* end earnings table actions */}
     </Grid>
   );
 }
@@ -208,19 +201,21 @@ export default function EarningsTable() {
   }, []);
 
   return (
-    <Grid container direction="column" className={classes.earningsTable}>
-      <Grid item>
-        <EarningsTableTopar />
-      </Grid>
-      <Grid item>
-        <Table>
-          <EarningsTableHead columns={headerColumns} />
-          <EarningsTableBody
-            data={earnings}
-            columns={bodyColumns}
-            total={totalCount}
-          />
-        </Table>
+    <Grid style={{ display: 'flex' }}>
+      <Grid container direction="column" className={classes.earningsTable}>
+        <Grid item>
+          <EarningsTableTopar />
+        </Grid>
+        <Grid item>
+          <Table>
+            <EarningsTableHead columns={headerColumns} />
+            <EarningsTableBody
+              data={earnings}
+              columns={bodyColumns}
+              total={totalCount}
+            />
+          </Table>
+        </Grid>
       </Grid>
     </Grid>
   );
