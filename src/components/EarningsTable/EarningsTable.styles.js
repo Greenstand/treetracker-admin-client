@@ -91,10 +91,28 @@ const earningsTableStyles = {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
   },
 
-  infoIcon: {
+  earningsTableHeadSortIcon: {
+    color: `${COLORS.appleGreen} !important`,
+    padding: '1px',
+    backgroundColor: COLORS.feta,
+    fontSize: '1.5em',
+  },
+
+  arrowDropDownIcon: {
     color: `${COLORS.appleGreen}`,
     position: 'relative',
     top: '5px',
+    left: '5px',
+  },
+
+  infoIcon: {
+    color: `${COLORS.appleGreen}`,
+    backgroundColor: COLORS.feta,
+    padding: '3px',
+    margin: ' 0 4px 0 0',
+    fontSize: '0.9em',
+    position: 'relative',
+    top: '3px',
     left: '5px',
   },
 

@@ -5,6 +5,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
@@ -63,7 +64,7 @@ function EarningsTableTopar() {
                   </Typography>
                 </div>
                 <ArrowDropDownIcon
-                  className={classes.infoIcon}
+                  className={classes.arrowDropDownIcon}
                   fontSize="large"
                 />
               </Grid>
@@ -107,13 +108,20 @@ const EarningsTableHead = ({ columns }) => {
     <TableHead>
       <TableRow className={classes.earningsTableHeader}>
         {columns.map((column, i) => (
-          <TableCell key={`${i}-${column}`}>
-            <Typography variant="h6">
-              {column}
-              {i === columns.length - 1 && (
-                <InfoOutlinedIcon className={classes.infoIcon} />
-              )}
-            </Typography>
+          <TableCell key={`${i}-${column}`} sortDirection={true}>
+            <TableSortLabel
+              active={true}
+              direction="desc"
+              classes={{ icon: classes.earningsTableHeadSortIcon }}
+              IconComponent={ArrowDropDownIcon}
+            >
+              <Typography variant="h6">
+                {column}
+                {i === columns.length - 1 && (
+                  <InfoOutlinedIcon className={classes.infoIcon} />
+                )}
+              </Typography>
+            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>
