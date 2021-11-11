@@ -26,7 +26,8 @@ const earningsTableTopBarStyles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: '20px',
+    alignItems: 'center',
+    padding: '40px 40px 20px 0px',
   },
   filterAvatar: {
     backgroundColor: COLORS.feta,
@@ -83,6 +84,9 @@ const earningsTableTopBarStyles = {
  * @description styles for EarningsTable component
  */
 const earningsTableStyles = {
+  earningsTable: {
+    padding: '0px 40px 0px 40px',
+  },
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
   },

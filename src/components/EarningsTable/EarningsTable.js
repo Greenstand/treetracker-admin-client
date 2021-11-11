@@ -35,12 +35,7 @@ function EarningsTableTopar() {
 
       {/*  start earning table actions */}
       <Grid item xs={8}>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
+        <Grid container direction="row" justify="flex-end" alignItems="center">
           {/* start EXPORT button */}
           <Grid item xs={2}>
             <Grid
@@ -228,7 +223,7 @@ export default function EarningsTable() {
   }, []);
 
   return (
-    <Grid container direction="column" style={{ width: '90%', margin: 'auto' }}>
+    <Grid container direction="column" className={classes.earningsTable}>
       <EarningsTableTopar />
       <Table>
         <EarningsTableHead columns={headerColumns} />
