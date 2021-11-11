@@ -11,6 +11,8 @@ const COLORS = {
   appleGreen: '#86C232',
   lavenderPinocchio: '#E0E0E0',
   carbonGrey: '#585B5D',
+  black: '#000',
+  feta: '#F3F9EB',
 };
 
 /**
@@ -26,12 +28,28 @@ const earningsTableTopBarStyles = {
     justifyContent: 'space-between',
     paddingBottom: '20px',
   },
-  fiterButonSmallText: {
+  filterAvatar: {
+    backgroundColor: COLORS.feta,
+    color: COLORS.appleGreen,
+    marginLeft: '0.75rem',
+    width: '25px',
+    height: '25px',
+  },
+
+  iconFilter: {
+    color: COLORS.appleGreen,
+  },
+
+  filterButtonText: {
+    color: COLORS.black,
+    fontSize: '1.2em',
+  },
+  dateFiterButonSmallText: {
     color: COLORS.carbonGrey,
     fontSize: '0.8em',
     textAlign: 'left',
   },
-  fiterButonMediumText: {
+  dateFiterButonMediumText: {
     fontSize: '1.1em',
     textAlign: 'left',
   },
@@ -50,11 +68,11 @@ const earningsTableTopBarStyles = {
   earningsTableTopTitle: {
     padding: '0px 0px 0px 10px',
   },
-  earningsTableFilterButton: {
-    cursor: 'pointer',
-    padding: '10px 15px 10px 15px',
-    border: `1px solid ${COLORS.lavenderPinocchio}`,
-    borderRadius: '5px',
+  earningsTableDateFilterButton: {
+    padding: '12px 30px 12px 15px',
+  },
+  filterButton: {
+    padding: '15px 30px 20px 15px',
   },
 };
 
@@ -65,9 +83,6 @@ const earningsTableTopBarStyles = {
  * @description styles for EarningsTable component
  */
 const earningsTableStyles = {
-  earningsTable: {
-    padding: '40px 60px 0px 60px',
-  },
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
   },

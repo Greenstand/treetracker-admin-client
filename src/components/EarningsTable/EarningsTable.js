@@ -7,8 +7,10 @@ import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import IconFilter from '@material-ui/icons/FilterList';
+import Button from '@material-ui/core/Button';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import API from '../../api/treeTrackerApi';
@@ -33,7 +35,12 @@ function EarningsTableTopar() {
 
       {/*  start earning table actions */}
       <Grid item xs={8}>
-        <Grid container direction="row" justify="flex-end" alignItems="center">
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
           {/* start EXPORT button */}
           <Grid item xs={2}>
             <Grid
@@ -48,24 +55,40 @@ function EarningsTableTopar() {
           </Grid>
           {/*  end EXPORT button */}
 
-          {/* start FILTER button */}
-          <Grid item xs={3} className={classes.earningsTableFilterButton}>
-            <Grid container direction="row" justify="center">
-              <div>
-                <Typography className={classes.fiterButonSmallText}>
-                  Date Range
-                </Typography>
-                <Typography className={classes.fiterButonMediumText}>
-                  Oct 1 - Oct 5
-                </Typography>
-              </div>
-              <ArrowDropDownIcon
-                className={classes.infoIcon}
-                fontSize="large"
-              />
-            </Grid>
+          {/* start Date Range button */}
+          <Grid item xs={3}>
+            <Button className={classes.earningsTableDateFilterButton}>
+              <Grid container direction="row" justify="center">
+                <div>
+                  <Typography className={classes.dateFiterButonSmallText}>
+                    Date Range
+                  </Typography>
+                  <Typography className={classes.dateFiterButonMediumText}>
+                    Oct 1 - Oct 5
+                  </Typography>
+                </div>
+                <ArrowDropDownIcon
+                  className={classes.infoIcon}
+                  fontSize="large"
+                />
+              </Grid>
+            </Button>
           </Grid>
-          {/* end FILTER button */}
+          {/* end Date Range button */}
+
+          {/* start Filter button */}
+          <Grid item xs={2}>
+            <Button
+              onClick={() => {}}
+              className={classes.filterButton}
+              startIcon={<IconFilter className={classes.iconFilter} />}
+            >
+              <Typography className={classes.filterButtonText}>
+                Filter
+              </Typography>
+              <Avatar className={classes.filterAvatar}>3</Avatar>
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
       {/* end earnings table actions */}
@@ -205,7 +228,7 @@ export default function EarningsTable() {
   }, []);
 
   return (
-    <Grid container direction="column" className={classes.earningsTable}>
+    <Grid container direction="column" style={{ width: '90%', margin: 'auto' }}>
       <EarningsTableTopar />
       <Table>
         <EarningsTableHead columns={headerColumns} />
