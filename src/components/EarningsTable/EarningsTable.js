@@ -24,7 +24,7 @@ import useStyles from './EarningsTable.styles';
 function EarningsTableTopar() {
   const classes = useStyles();
   return (
-    <Grid container direction="row" alignItems="center" justify="space-between">
+    <Grid container className={classes.earningsTableTopar}>
       <Grid item xs={4}>
         <Typography className={classes.earningsTableTopTitle} variant="h4">
           Earnings
@@ -49,11 +49,15 @@ function EarningsTableTopar() {
           {/*  end EXPORT button */}
 
           {/* start FILTER button */}
-          <Grid item xs={2} className={classes.earningsTableFilterButton}>
+          <Grid item xs={3} className={classes.earningsTableFilterButton}>
             <Grid container direction="row" justify="center">
               <div>
-                <Typography>Date Range</Typography>
-                <Typography>Oct 1 - Oct 5</Typography>
+                <Typography className={classes.fiterButonSmallText}>
+                  Date Range
+                </Typography>
+                <Typography className={classes.fiterButonMediumText}>
+                  Oct 1 - Oct 5
+                </Typography>
               </div>
               <ArrowDropDownIcon
                 className={classes.infoIcon}
@@ -201,22 +205,16 @@ export default function EarningsTable() {
   }, []);
 
   return (
-    <Grid style={{ display: 'flex' }}>
-      <Grid container direction="column" className={classes.earningsTable}>
-        <Grid item>
-          <EarningsTableTopar />
-        </Grid>
-        <Grid item>
-          <Table>
-            <EarningsTableHead columns={headerColumns} />
-            <EarningsTableBody
-              data={earnings}
-              columns={bodyColumns}
-              total={totalCount}
-            />
-          </Table>
-        </Grid>
-      </Grid>
+    <Grid container direction="column" className={classes.earningsTable}>
+      <EarningsTableTopar />
+      <Table>
+        <EarningsTableHead columns={headerColumns} />
+        <EarningsTableBody
+          data={earnings}
+          columns={bodyColumns}
+          total={totalCount}
+        />
+      </Table>
     </Grid>
   );
 }

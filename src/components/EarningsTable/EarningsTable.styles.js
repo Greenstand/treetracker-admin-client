@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const COLORS = {
   appleGreen: '#86C232',
   lavenderPinocchio: '#E0E0E0',
+  carbonGrey: '#585B5D',
 };
 
 /**
@@ -19,6 +20,21 @@ const COLORS = {
  * @description styles for EarningsTableTopBar component
  */
 const earningsTableTopBarStyles = {
+  earningsTableTopar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: '20px',
+  },
+  fiterButonSmallText: {
+    color: COLORS.carbonGrey,
+    fontSize: '0.8em',
+    textAlign: 'left',
+  },
+  fiterButonMediumText: {
+    fontSize: '1.1em',
+    textAlign: 'left',
+  },
   actionButton: {
     color: COLORS.appleGreen,
     cursor: 'pointer',
@@ -34,6 +50,12 @@ const earningsTableTopBarStyles = {
   earningsTableTopTitle: {
     padding: '0px 0px 0px 10px',
   },
+  earningsTableFilterButton: {
+    cursor: 'pointer',
+    padding: '10px 15px 10px 15px',
+    border: `1px solid ${COLORS.lavenderPinocchio}`,
+    borderRadius: '5px',
+  },
 };
 
 /**
@@ -44,15 +66,10 @@ const earningsTableTopBarStyles = {
  */
 const earningsTableStyles = {
   earningsTable: {
-    padding: '20px 0 0 40px',
+    padding: '40px 60px 0px 60px',
   },
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
-  },
-
-  earningsTableFilterButton: {
-    cursor: 'pointer',
-    border: `1px solid ${COLORS.lavenderPinocchio}`,
   },
 
   infoIcon: {
