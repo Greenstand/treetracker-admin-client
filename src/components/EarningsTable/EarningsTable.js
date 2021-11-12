@@ -5,11 +5,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import TextField from '@material-ui/core/TextField';
 import Drawer from '@material-ui/core/Drawer';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
+import InputLabel from '@material-ui/core/InputLabel';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -280,29 +279,42 @@ export default function EarningsTable() {
 
           {/* start filter form */}
           <Grid item>
-            <FormControl>
-              <Select>
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
+            >
+              <InputLabel id="demo-simple-select-outlined-label">
+                Funder
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                label="Funder"
+              >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
+                <MenuItem value={10}>Environment For Africa</MenuItem>
               </Select>
+            </FormControl>
 
-              <Select>
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
+            >
+              <InputLabel id="demo-simple-select-outlined-label">
+                Payment System
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                label="Payment System"
+              >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
+                <MenuItem value={10}>Visa</MenuItem>
               </Select>
-
-              <TextField />
-
-              <Select>
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-              </Select>
-              <Divider />
-              <Button>APPLY</Button>
-              <Button>Cancel</Button>
             </FormControl>
           </Grid>
           {/* end filter form */}

@@ -107,6 +107,9 @@ const earningsTableStyles = {
     width: '30px',
     height: '30px',
   },
+  earningsFIlterSelectFormControl: {
+    width: '100%',
+  },
 
   earningsTableHeadSortIcon: {
     color: `${COLORS.appleGreen} !important`,
