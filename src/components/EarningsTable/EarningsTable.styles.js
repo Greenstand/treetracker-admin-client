@@ -87,8 +87,25 @@ const earningsTableStyles = {
   earningsTable: {
     padding: '0px 40px 0px 40px',
   },
+  earningsTableDrawer: {
+    width: '300px',
+    padding: '20px 15px',
+  },
+  earningsTableFilterHeader: {},
   earningsTableHeader: {
     borderBottom: `2px solid ${COLORS.lavenderPinocchio}`,
+  },
+  earningsTableFilterCloseIcon: {
+    color: COLORS.appleGreen,
+    cursor: 'pointer',
+    backgroundColor: COLORS.feta,
+  },
+  earningsTableFilterAvatar: {
+    backgroundColor: COLORS.feta,
+    color: COLORS.appleGreen,
+    marginLeft: '0.5rem',
+    width: '30px',
+    height: '30px',
   },
 
   earningsTableHeadSortIcon: {

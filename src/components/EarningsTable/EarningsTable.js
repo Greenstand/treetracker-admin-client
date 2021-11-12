@@ -5,11 +5,18 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import TextField from '@material-ui/core/TextField';
+import Drawer from '@material-ui/core/Drawer';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -241,6 +248,66 @@ export default function EarningsTable() {
           total={totalCount}
         />
       </Table>
+      <Drawer anchor="right" BackdropProps={{ invisible: true }} open={true}>
+        <Grid
+          container
+          direction="column"
+          className={classes.earningsTableDrawer}
+        >
+          {/* start filter header */}
+          <Grid item className={classes.earningsTableFilterHeader}>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  alignContent="flex-end"
+                  justify="flex-start"
+                >
+                  <Typography variant="h4">Filters</Typography>
+                  <Avatar className={classes.earningsTableFilterAvatar}>
+                    <Typography variant="h5">1</Typography>
+                  </Avatar>
+                </Grid>
+              </Grid>
+              <CloseIcon
+                fontSize="medium"
+                className={classes.earningsTableFilterCloseIcon}
+              />
+            </Grid>
+          </Grid>
+          {/* end filter header */}
+
+          {/* start filter form */}
+          <Grid item>
+            <FormControl>
+              <Select>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+              </Select>
+
+              <Select>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+              </Select>
+
+              <TextField />
+
+              <Select>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+              </Select>
+              <Divider />
+              <Button>APPLY</Button>
+              <Button>Cancel</Button>
+            </FormControl>
+          </Grid>
+          {/* end filter form */}
+        </Grid>
+      </Drawer>
     </Grid>
   );
 }
