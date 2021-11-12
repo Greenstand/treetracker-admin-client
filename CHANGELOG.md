@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.26.0...v1.27.0) (2021-11-12)
+
+
+### Features
+
+* enable capture matching for dev deployment ([6701a05](https://github.com/Greenstand/treetracker-admin-client/commit/6701a055264195c99fba1c352f56916cd9ec862c))
+
 # [1.26.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.25.1...v1.26.0) (2021-11-06)
 
 
