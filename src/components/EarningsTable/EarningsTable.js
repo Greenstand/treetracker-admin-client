@@ -25,6 +25,93 @@ import useStyles from './EarningsTable.styles';
 
 /**
  * @function
+ * @name EarningsTableFilter
+ * @description render filter for earnings table
+ *
+ * @returns {React.Component}
+ */
+function EarningsTableFilter() {
+  const classes = useStyles();
+
+  return (
+    <Grid container direction="column" className={classes.earningsTableDrawer}>
+      {/* start filter header */}
+      <Grid item className={classes.earningsTableFilterHeader}>
+        <Grid container direction="row" justify="space-between">
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              alignContent="flex-end"
+              justify="flex-start"
+            >
+              <Typography variant="h4">Filters</Typography>
+              <Avatar className={classes.earningsTableFilterAvatar}>
+                <Typography variant="h5">1</Typography>
+              </Avatar>
+            </Grid>
+          </Grid>
+          <CloseIcon
+            fontSize="medium"
+            className={classes.earningsTableFilterCloseIcon}
+          />
+        </Grid>
+      </Grid>
+      {/* end filter header */}
+
+      {/* start filter form */}
+      <Grid item>
+        <FormControl
+          variant="outlined"
+          className={classes.earningsFIlterSelectFormControl}
+        >
+          <InputLabel id="demo-simple-select-outlined-label">Funder</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            label="Funder"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Environment For Africa</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl
+          variant="outlined"
+          className={classes.earningsFIlterSelectFormControl}
+        >
+          <InputLabel id="demo-simple-select-outlined-label">
+            Payment System
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            label="Payment System"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Visa</MenuItem>
+          </Select>
+        </FormControl>
+        <Grid
+          container
+          direction="column"
+          className={classes.earningTableFilterActions}
+        >
+          <Button>APPLY</Button>
+          <Button>CANCEL</Button>
+        </Grid>
+      </Grid>
+      {/* end filter form */}
+    </Grid>
+  );
+}
+
+/**
+ * @function
  * @name EarningsTableTopar
  * @description renders earnings table top bar which contains table actions(i.e. filter, export, etc)
  *
@@ -248,77 +335,7 @@ export default function EarningsTable() {
         />
       </Table>
       <Drawer anchor="right" BackdropProps={{ invisible: true }} open={true}>
-        <Grid
-          container
-          direction="column"
-          className={classes.earningsTableDrawer}
-        >
-          {/* start filter header */}
-          <Grid item className={classes.earningsTableFilterHeader}>
-            <Grid container direction="row" justify="space-between">
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignContent="flex-end"
-                  justify="flex-start"
-                >
-                  <Typography variant="h4">Filters</Typography>
-                  <Avatar className={classes.earningsTableFilterAvatar}>
-                    <Typography variant="h5">1</Typography>
-                  </Avatar>
-                </Grid>
-              </Grid>
-              <CloseIcon
-                fontSize="medium"
-                className={classes.earningsTableFilterCloseIcon}
-              />
-            </Grid>
-          </Grid>
-          {/* end filter header */}
-
-          {/* start filter form */}
-          <Grid item>
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Funder
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                label="Funder"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Environment For Africa</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Payment System
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                label="Payment System"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Visa</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          {/* end filter form */}
-        </Grid>
+        <EarningsTableFilter />
       </Drawer>
     </Grid>
   );

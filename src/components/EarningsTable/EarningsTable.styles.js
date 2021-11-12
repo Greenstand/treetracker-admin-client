@@ -79,13 +79,12 @@ const earningsTableTopBarStyles = {
 
 /**
  * @constant
- * @type {object}
- * @name earningsTableStyles
- * @description styles for EarningsTable component
+ * @name earningTableFilterStyles
+ * @description styles for EarningsTableFilter component
  */
-const earningsTableStyles = {
-  earningsTable: {
-    padding: '0px 40px 0px 40px',
+const earningTableFilterStyles = {
+  earningTableFilterActions: {
+    marginTop: '100px',
   },
   earningsTableDrawer: {
     width: '300px',
@@ -109,6 +108,19 @@ const earningsTableStyles = {
   },
   earningsFIlterSelectFormControl: {
     width: '100%',
+    marginTop: '20px',
+  },
+};
+
+/**
+ * @constant
+ * @type {object}
+ * @name earningsTableStyles
+ * @description styles for EarningsTable component
+ */
+const earningsTableStyles = {
+  earningsTable: {
+    padding: '0px 40px 0px 40px',
   },
 
   earningsTableHeadSortIcon: {
@@ -156,6 +168,7 @@ const earningsTableStyles = {
 const useStyles = makeStyles(() => ({
   ...earningsTableTopBarStyles,
   ...earningsTableStyles,
+  ...earningTableFilterStyles,
 }));
 
 export default useStyles;
