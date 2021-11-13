@@ -57,6 +57,9 @@ function FilterTopGrower(props) {
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
+  const [deviceIdentifier, setDeviceIdentifier] = useState(
+    filter?.deviceIdentifier || '',
+  );
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -68,6 +71,7 @@ function FilterTopGrower(props) {
       organizationId,
       email,
       phone,
+      deviceIdentifier,
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -80,6 +84,7 @@ function FilterTopGrower(props) {
     setOrganizationId(ALL_ORGANIZATIONS);
     setEmail('');
     setPhone('');
+    setDeviceIdentifier('');
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -131,6 +136,16 @@ function FilterTopGrower(props) {
                 placeholder="Person ID"
                 value={personId}
                 onChange={(e) => setPersonId(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Device ID"
+                htmlFor="Device ID"
+                id="Device ID"
+                placeholder="Device ID"
+                value={deviceIdentifier}
+                onChange={(e) => setDeviceIdentifier(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
               {

@@ -40,6 +40,12 @@ export default class Filter {
       where.organizationId = this.organizationId;
     }
 
+    if (this.deviceIdentifier) {
+      where.deviceIdentifier = this.deviceIdentifier;
+    } else {
+      where.deviceIdentifier = null;
+    }
+
     if (this.email) {
       where.email = {
         regexp: stringToSearchRegExp(this.email),
