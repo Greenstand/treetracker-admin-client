@@ -23,7 +23,7 @@ const COLORS = {
  * @description styles for EarningsTableTopBar component
  */
 const earningsTableTopBarStyles = {
-  earningsTableTopar: {
+  earningsTableTopBar: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -91,7 +91,7 @@ const earningTableFilterStyles = {
   earningTableFilterCancelButton: {
     border: 'none',
   },
-  earningsTableDrawer: {
+  earningsTableFilterForm: {
     width: '300px',
     padding: '20px 15px',
   },
