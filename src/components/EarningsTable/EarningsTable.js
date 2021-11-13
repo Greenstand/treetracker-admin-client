@@ -176,52 +176,53 @@ function EarningsTableTopBar(props) {
       <Grid item xs={8}>
         <Grid container direction="row" justify="flex-end" alignItems="center">
           {/* start EXPORT button */}
-          <Grid item xs={2}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              className={classes.actionButton}
-            >
-              <GetAppIcon className={classes.actionButtonIcon} />
-              <Typography variant="h6">EXPORT</Typography>
+          <Grid item lg={2}>
+            <Grid container direction="row" justify="flex-end">
+              <Button color="primary" variant="text">
+                <GetAppIcon />
+                <Typography variant="h6">EXPORT</Typography>
+              </Button>
             </Grid>
           </Grid>
           {/*  end EXPORT button */}
 
           {/* start Date Range button */}
-          <Grid item xs={3}>
-            <Button className={classes.earningsTableDateFilterButton}>
-              <Grid container direction="row" justify="center">
-                <div>
-                  <Typography className={classes.dateFiterButonSmallText}>
-                    Date Range
-                  </Typography>
-                  <Typography className={classes.dateFiterButonMediumText}>
-                    Oct 1 - Oct 5
-                  </Typography>
-                </div>
-                <ArrowDropDownIcon
-                  className={classes.arrowDropDownIcon}
-                  fontSize="large"
-                />
-              </Grid>
-            </Button>
+          <Grid item lg={3}>
+            <Grid container direction="row" justify="flex-end">
+              <Button className={classes.earningsTableDateFilterButton}>
+                <Grid container direction="row" justify="center">
+                  <div>
+                    <Typography className={classes.dateFiterButonSmallText}>
+                      Date Range
+                    </Typography>
+                    <Typography className={classes.dateFiterButonMediumText}>
+                      Oct 1 - Oct 5
+                    </Typography>
+                  </div>
+                  <ArrowDropDownIcon
+                    className={classes.arrowDropDownIcon}
+                    fontSize="large"
+                  />
+                </Grid>
+              </Button>
+            </Grid>
           </Grid>
           {/* end Date Range button */}
 
           {/* start Filter button */}
-          <Grid item xs={2}>
-            <Button
-              onClick={openFilter}
-              className={classes.filterButton}
-              startIcon={<IconFilter className={classes.iconFilter} />}
-            >
-              <Typography className={classes.filterButtonText}>
-                Filter
-              </Typography>
-              <Avatar className={classes.filterAvatar}>3</Avatar>
-            </Button>
+          <Grid item lg={3} xs={4}>
+            <Grid container direction="row" justify="flex-end">
+              <Button
+                onClick={openFilter}
+                className={classes.filterButton}
+                startIcon={<IconFilter className={classes.iconFilter} />}
+              >
+                <Typography className={classes.filterButtonText}>
+                  Filter
+                </Typography>
+                <Avatar className={classes.filterAvatar}>3</Avatar>
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

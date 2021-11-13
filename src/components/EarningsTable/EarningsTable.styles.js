@@ -28,7 +28,7 @@ const earningsTableTopBarStyles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '40px 40px 20px 0px',
+    padding: '40px 0px 20px 0px',
   },
   filterAvatar: {
     backgroundColor: COLORS.feta,
