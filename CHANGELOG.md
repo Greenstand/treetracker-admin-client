@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.0...v1.27.1) (2021-11-13)
+
+
+### Bug Fixes
+
+* remove toVerifyCounter which was causing repeated getCount requests ([#188](https://github.com/Greenstand/treetracker-admin-client/issues/188)) ([5cf9697](https://github.com/Greenstand/treetracker-admin-client/commit/5cf969767ba45b9627534c5a1eb7555303982718))
+
 # [1.27.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.26.0...v1.27.0) (2021-11-12)
 
 
