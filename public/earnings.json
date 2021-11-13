@@ -65,7 +65,7 @@
       "paymentDate": "Aug 11,2021"
     }
   ],
-  "totalCount": 28,
+  "totalCount": 8,
   "links": {
     "prev": null,
     "next": "http://dev-k8s.treetracker.org/earnings?&offset=1"

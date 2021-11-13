@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Drawer from '@material-ui/core/Drawer';
 import Select from '@material-ui/core/Select';
+import TableContainer from '@material-ui/core/TableContainer';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
@@ -31,7 +32,7 @@ import useStyles from './EarningsTable.styles';
  * @name EarningsTableFilter
  * @description render filter for earnings table
  * @param {object} props - properties  passed to the component
- * @param {string} props.isFilterOpen - flag that decides where filter should open/close
+ * @param {boolean} props.isFilterOpen - flag that decides where filter should open/close
  * @param {Function} setIsFilterOpen - closes filter when executed
  *
  * @returns {React.Component}
@@ -148,7 +149,7 @@ function EarningsTableFilter(props) {
 }
 
 EarningsTableFilter.propTypes = {
-  isFilterOpen: PropTypes.string.isRequired,
+  isFilterOpen: PropTypes.bool.isRequired,
   setIsFilterOpen: PropTypes.func.isRequired,
 };
 
@@ -245,105 +246,18 @@ EarningsTableTopBar.propTypes = {
 };
 
 /**
- * @function
- * @name EarningsTableHead
- * @description renders earnings table head columns dynamically
- * @param {object} props
- * @param {string} props.columns
- *
- * @returns {React.Component} earnings table head columns
+ * @constant
+ * @name earningTableMetaData
+ * @description infomation about column that will display an instance of earning
  */
-const EarningsTableHead = ({ columns }) => {
-  const classes = useStyles();
-
-  return (
-    <TableHead>
-      <TableRow className={classes.earningsTableHeader}>
-        {columns.map((column, i) => (
-          <TableCell key={`${i}-${column}`} sortDirection={true}>
-            <TableSortLabel
-              active={true}
-              direction="desc"
-              classes={{ icon: classes.earningsTableHeadSortIcon }}
-              IconComponent={ArrowDropDownIcon}
-            >
-              <Typography variant="h6">
-                {column}
-                {i === columns.length - 2 && (
-                  <InfoOutlinedIcon className={classes.infoIcon} />
-                )}
-              </Typography>
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-};
-
-/**
- * @function
- * @name EarningsTablePagination
- * @description renders table pagination
- *
- * @param {object} props
- * @param {string} props.total - total earnings
- *
- * @returns {React.Component} earnings table pagination
- */
-const EarningsTablePagination = ({ total }) => {
-  const classes = useStyles();
-
-  return (
-    <TablePagination
-      count={total}
-      classes={{
-        selectRoot: classes.selectRoot,
-        root: classes.earningsTablePagination,
-      }}
-      rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
-      labelRowsPerPage="Rows per page:"
-      page={1}
-      rowsPerPage={5}
-      onChangePage={() => {}}
-      onChangeRowsPerPage={() => {}}
-      SelectProps={{
-        inputProps: { 'aria-label': 'rows per page' },
-        native: true,
-      }}
-    />
-  );
-};
-
-/**
- * @function
- * @name EarningsTableBody
- * @description renders earnings table body rows dynamically
- * @param {object} props
- * @param {object} props.data
- * @param {string} props.columns
- * @param {string} props.total
- *
- * @returns {React.Component} earnings table body rows
- */
-const EarningsTableBody = ({ data, columns, total }) => {
-  return (
-    <TableBody>
-      {data.map((row, i) => (
-        <TableRow key={`${i}-${row.id}`}>
-          {columns.map((column, j) => (
-            <TableCell key={`${i}-${j}-${column}`}>
-              <Typography variant="body1">{row[column]}</Typography>
-            </TableCell>
-          ))}
-        </TableRow>
-      ))}
-      <TableRow>
-        <EarningsTablePagination total={total} />
-      </TableRow>
-    </TableBody>
-  );
-};
+const earningTableMetaData = [
+  { description: 'Grower', name: 'grower' },
+  { description: 'Funder', name: 'funder' },
+  { description: 'Amount', name: 'amount' },
+  { description: 'Payment System', name: 'paymentSystem' },
+  { description: 'Effective Date', name: 'effectiveDate' },
+  { description: 'Payment Date', name: 'paymentDate' },
+];
 
 /**
  * @function
@@ -356,24 +270,18 @@ export default function EarningsTable() {
   const [earnings, setEarnings] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const headerColumns = [
-    'Grower',
-    'Funder',
-    'Amount',
-    'Payment System',
-    'Effective Date',
-    'Payment Date',
-  ];
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  const bodyColumns = [
-    'grower',
-    'funder',
-    'amount',
-    'paymentSystem',
-    'effectiveDate',
-    'paymentDate',
-  ];
+  const handleChangeRowsPerPage = (event) => {
+    console.log('handleChangeRowsPerPage---', event);
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   async function fetchEarnings() {
     const response = await API.getEarnings();
@@ -388,14 +296,65 @@ export default function EarningsTable() {
   return (
     <Grid container direction="column" className={classes.earningsTable}>
       <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} data={earnings} />
-      <Table>
-        <EarningsTableHead columns={headerColumns} />
-        <EarningsTableBody
-          data={earnings}
-          columns={bodyColumns}
-          total={totalCount}
-        />
-      </Table>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow className={classes.earningsTableHeader}>
+              {earningTableMetaData.map((column, i) => (
+                <TableCell
+                  key={`${i}-${column.description}`}
+                  sortDirection="desc"
+                >
+                  <TableSortLabel
+                    active={true}
+                    direction="desc"
+                    classes={{ icon: classes.earningsTableHeadSortIcon }}
+                    IconComponent={ArrowDropDownIcon}
+                  >
+                    <Typography variant="h6">
+                      {column.description}
+                      {i === earningTableMetaData.length - 2 && (
+                        <InfoOutlinedIcon className={classes.infoIcon} />
+                      )}
+                    </Typography>
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {earnings.map((row, i) => (
+              <TableRow key={`${i}-${row.id}`}>
+                {earningTableMetaData.map((column, j) => (
+                  <TableCell key={`${i}-${j}-${column.name}`}>
+                    <Typography variant="body1">{row[column.name]}</Typography>
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        count={totalCount}
+        classes={{
+          selectRoot: classes.selectRoot,
+          root: classes.earningsTablePagination,
+        }}
+        component="div"
+        rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+        colSpan={3}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        SelectProps={{
+          inputProps: { 'aria-label': 'rows per page' },
+          native: true,
+        }}
+      />
+
       <EarningsTableFilter
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
