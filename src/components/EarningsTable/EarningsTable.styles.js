@@ -23,6 +23,12 @@ const COLORS = {
  * @description styles for EarningsTableTopBar component
  */
 const earningsTableTopBarStyles = {
+  csvLink: {
+    color: COLORS.appleGreen,
+    display: 'flex',
+    alignItems: 'flex-end',
+    textDecoration: 'none',
+  },
   earningsTableTopBar: {
     display: 'flex',
     flexDirection: 'row',

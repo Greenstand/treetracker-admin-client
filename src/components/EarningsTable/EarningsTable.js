@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
+import { CSVLink } from 'react-csv';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
@@ -156,12 +157,13 @@ EarningsTableFilter.propTypes = {
  * @name EarningsTableTopBar
  * @description renders earnings table top bar which contains table actions(i.e. filter, export, etc)
  * @param {object} props - properties passed to component
+ * @param {array} props.data - earnings  to be exported
  * @param {string} props.setIsFilterOpen - sets filter open/closed
  *
  * @returns {React.Component}
  */
 function EarningsTableTopBar(props) {
-  const { setIsFilterOpen } = props;
+  const { setIsFilterOpen, data } = props;
   const classes = useStyles();
   const openFilter = () => setIsFilterOpen(true);
   return (
@@ -179,8 +181,15 @@ function EarningsTableTopBar(props) {
           <Grid item lg={2}>
             <Grid container direction="row" justify="flex-end">
               <Button color="primary" variant="text">
-                <GetAppIcon />
-                <Typography variant="h6">EXPORT</Typography>
+                <CSVLink
+                  data={data}
+                  filename={'earnings.csv'}
+                  className={classes.csvLink}
+                  target="_blank"
+                >
+                  <GetAppIcon />
+                  <Typography variant="h6">EXPORT</Typography>
+                </CSVLink>
               </Button>
             </Grid>
           </Grid>
@@ -232,6 +241,7 @@ function EarningsTableTopBar(props) {
 }
 EarningsTableTopBar.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 /**
@@ -377,7 +387,7 @@ export default function EarningsTable() {
 
   return (
     <Grid container direction="column" className={classes.earningsTable}>
-      <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} />
+      <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} data={earnings} />
       <Table>
         <EarningsTableHead columns={headerColumns} />
         <EarningsTableBody
