@@ -85,7 +85,7 @@ function getRoutes(user) {
       linkTo: '/earnings',
       component: EarningsView,
       icon: CreditCardIcon,
-      disabled: false,
+      disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
     },
     {
       name: 'Growers',

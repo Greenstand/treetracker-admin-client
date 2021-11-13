@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { MENU_WIDTH } from '../../components/common/Menu';
 
 /**
  * @constant
@@ -9,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const earningsViewLeftMenu = {
   earningsViewLeftMenu: {
     height: '100%',
+    width: MENU_WIDTH,
   },
 };
 
