@@ -258,7 +258,7 @@ const EarningsTableHead = ({ columns }) => {
             >
               <Typography variant="h6">
                 {column}
-                {i === columns.length - 1 && (
+                {i === columns.length - 2 && (
                   <InfoOutlinedIcon className={classes.infoIcon} />
                 )}
               </Typography>
@@ -352,6 +352,7 @@ export default function EarningsTable() {
     'Amount',
     'Payment System',
     'Effective Date',
+    'Payment Date',
   ];
 
   const bodyColumns = [
@@ -360,6 +361,7 @@ export default function EarningsTable() {
     'amount',
     'paymentSystem',
     'effectiveDate',
+    'paymentDate',
   ];
 
   async function fetchEarnings() {
