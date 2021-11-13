@@ -93,7 +93,10 @@ const GrowerDetail = (props) => {
               setGrowerRegistrations(sortedRegistrations);
               setDeviceIdentifiers(
                 sortedRegistrations
-                  .map((reg) => reg.device_identifier)
+                  .map((reg) => ({
+                    id: reg.device_identifier,
+                    os: reg.manufacturer === 'apple' ? 'iOS' : 'Android',
+                  }))
                   .filter((id) => id),
               );
             }
@@ -247,12 +250,20 @@ const GrowerDetail = (props) => {
               <Typography variant="subtitle1">
                 Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
               </Typography>
-              {(deviceIdentifiers.length &&
-                deviceIdentifiers.map((identifier, index) => (
-                  <Typography variant="body1" key={index}>
-                    {identifier}
-                  </Typography>
-                ))) || <Typography variant="body1">---</Typography>}
+              {(deviceIdentifiers.length && (
+                <table>
+                  {deviceIdentifiers.map((device, i) => (
+                    <tr key={i}>
+                      <td>
+                        <Typography variant="body1">{device.id}</Typography>
+                      </td>
+                      <td>
+                        <Typography variant="body1">({device.os})</Typography>
+                      </td>
+                    </tr>
+                  ))}
+                </table>
+              )) || <Typography variant="body1">---</Typography>}
             </Grid>
           </Grid>
         </Grid>
