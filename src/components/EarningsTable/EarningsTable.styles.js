@@ -12,6 +12,7 @@ const COLORS = {
   lavenderPinocchio: '#E0E0E0',
   carbonGrey: '#585B5D',
   black: '#000',
+  white: '#fff',
   feta: '#F3F9EB',
 };
 
@@ -83,8 +84,12 @@ const earningsTableTopBarStyles = {
  * @description styles for EarningsTableFilter component
  */
 const earningTableFilterStyles = {
-  earningTableFilterActions: {
-    marginTop: '100px',
+  earningTableFilterSubmitButton: {
+    marginBottom: '10px',
+    color: COLORS.white,
+  },
+  earningTableFilterCancelButton: {
+    border: 'none',
   },
   earningsTableDrawer: {
     width: '300px',

@@ -15,6 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
@@ -96,13 +97,28 @@ function EarningsTableFilter() {
             <MenuItem value={10}>Visa</MenuItem>
           </Select>
         </FormControl>
+
+        <Divider style={{ margin: '100px 0 20px 0' }} />
+
         <Grid
           container
           direction="column"
           className={classes.earningTableFilterActions}
         >
-          <Button>APPLY</Button>
-          <Button>CANCEL</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            className={classes.earningTableFilterSubmitButton}
+          >
+            APPLY
+          </Button>
+          <Button
+            color="primary"
+            className={classes.earningTableFilterCancelButton}
+          >
+            CANCEL
+          </Button>
         </Grid>
       </Grid>
       {/* end filter form */}
