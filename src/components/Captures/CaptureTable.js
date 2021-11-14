@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, createRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Grid,
   Table,
@@ -80,7 +80,6 @@ const CaptureTable = () => {
   const speciesContext = useContext(SpeciesContext);
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   const [speciesState, setSpeciesState] = useState({});
-  const scrollRef = createRef();
   const classes = useStyle();
 
   useEffect(() => {
@@ -120,10 +119,10 @@ const CaptureTable = () => {
 
   const createSortHandler = (attr) => {
     return () => {
-      const order = orderBy === attr && order === 'asc' ? 'desc' : 'asc';
-      const orderBy = attr;
-      setOrder(order);
-      setOrderBy(orderBy);
+      const newOrder = orderBy === attr && order === 'asc' ? 'desc' : 'asc';
+      const newOrderBy = attr;
+      setOrder(newOrder);
+      setOrderBy(newOrderBy);
     };
   };
 
@@ -142,63 +141,61 @@ const CaptureTable = () => {
   };
 
   return (
-    <Grid item container style={{ height: '100%', overflow: 'auto' }}>
-      <div className={classes.tableContainer} ref={scrollRef}>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
-          <Typography variant="h5" className={classes.title}>
-            Captures
-          </Typography>
-          {tablePagination()}
-        </Grid>
-        <Table data-testid="captures-table">
-          <TableHead>
-            <TableRow>
-              {columns.map(({ attr, label, noSort }) => (
-                <TableCell
-                  key={attr}
-                  sortDirection={orderBy === attr ? order : false}
-                >
-                  <TableSortLabel
-                    active={orderBy === attr}
-                    direction={orderBy === attr ? order : 'asc'}
-                    onClick={createSortHandler(attr)}
-                    disabled={noSort}
-                  >
-                    {label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody data-testid="captures-table-body">
-            {captures &&
-              captures.map((capture) => (
-                <TableRow
-                  key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.id)}
-                  className={classes.tableRow}
-                >
-                  {columns.map(({ attr, renderer }) => (
-                    <TableCell key={attr}>
-                      {formatCell(capture, speciesState, attr, renderer)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+    <Grid style={{ height: '100%', overflow: 'auto' }}>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h5" className={classes.title}>
+          Captures
+        </Typography>
         {tablePagination()}
-        <CaptureDetailDialog
-          open={isDetailsPaneOpen}
-          capture={capture}
-          onClose={closeDrawer}
-        />
-      </div>
+      </Grid>
+      <Table data-testid="captures-table">
+        <TableHead>
+          <TableRow>
+            {columns.map(({ attr, label, noSort }) => (
+              <TableCell
+                key={attr}
+                sortDirection={orderBy === attr ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === attr}
+                  direction={orderBy === attr ? order : 'asc'}
+                  onClick={createSortHandler(attr)}
+                  disabled={noSort}
+                >
+                  {label}
+                </TableSortLabel>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody data-testid="captures-table-body">
+          {captures &&
+            captures.map((capture) => (
+              <TableRow
+                key={capture.id}
+                onClick={createToggleDrawerHandler(capture.id)}
+                className={classes.tableRow}
+              >
+                {columns.map(({ attr, renderer }) => (
+                  <TableCell key={attr}>
+                    {formatCell(capture, speciesState, attr, renderer)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+      {tablePagination()}
+      <CaptureDetailDialog
+        open={isDetailsPaneOpen}
+        capture={capture}
+        onClose={closeDrawer}
+      />
     </Grid>
   );
 };

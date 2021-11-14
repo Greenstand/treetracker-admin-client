@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
-import CaptureTable from '../components/Captures/CaptureTable.js';
+import CaptureTable from '../components/Captures/CaptureTable';
 import { CapturesProvider } from '../context/CapturesContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';

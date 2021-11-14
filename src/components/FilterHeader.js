@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { documentTitle } from '../common/variables';
+import React, { useState, useContext } from 'react';
 import { Grid, Button } from '@material-ui/core';
 import IconFilter from '@material-ui/icons/FilterList';
 import { CapturesContext } from '../context/CapturesContext';
@@ -9,10 +8,6 @@ import FilterTop from '../components/FilterTop';
 function FilterHeader() {
   const capturesContext = useContext(CapturesContext);
   const [isFilterShown, setFilterShown] = useState(true);
-
-  useEffect(() => {
-    document.title = `Capture Data - ${documentTitle}`;
-  }, []);
 
   const handleFilterSubmit = (filter) => {
     // console.log('1 - submitted filter', filter);
