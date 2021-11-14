@@ -144,6 +144,8 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(5),
     marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
+    fontSize: 'smaller',
+    fontWeight: 'bold',
   },
 }));
 
