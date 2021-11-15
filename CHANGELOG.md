@@ -1,3 +1,10 @@
+## [1.27.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.2...v1.27.3) (2021-11-15)
+
+
+### Bug Fixes
+
+* clean up code and fix CapturesTable width ([4183afb](https://github.com/Greenstand/treetracker-admin-client/commit/4183afbeef55779e86fe2cd98470da4ce2e9501b))
+
 ## [1.27.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.1...v1.27.2) (2021-11-14)
 
 
