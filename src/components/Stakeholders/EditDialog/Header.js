@@ -70,7 +70,7 @@ export default function DialogHeader({ data }) {
         {!data.logo && <PersonIcon className={classes.logoLg} />}
       </Grid>
 
-      <Grid container xs={11} className={classes.pl}>
+      <Grid item container xs={11} className={classes.pl}>
         <Grid container justify="space-between" alignItems="flex-start">
           {isEditing ? (
             <TextField
@@ -226,6 +226,7 @@ export default function DialogHeader({ data }) {
             </Grid>
           </Grid>
           <Grid
+            item
             container
             xs={3}
             // justify="flex-end"

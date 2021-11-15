@@ -91,13 +91,13 @@ export default function StakeholderDetail({ row, columns, child }) {
 
           <Divider className={classes.my} />
 
-          <Grid container xs={12} spacing={6}>
+          <Grid item container xs={12} spacing={6}>
             <StakeholderGroups data={row} render={['parents', 'children']} />
           </Grid>
 
           <Divider className={classes.my} />
 
-          <Grid container xs={12} spacing={6}>
+          <Grid item container xs={12} spacing={6}>
             <StakeholderGroups data={row} render={['users', 'growers']} tall />
           </Grid>
         </DialogContent>

@@ -15,28 +15,16 @@ import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 function StakeholderTable() {
   const {
-    stakeholder,
     stakeholders,
     columns,
     page,
     rowsPerPage,
-    filter,
     orderBy,
     order,
     setPage,
     setRowsPerPage,
-    setOrder,
-    setOrderBy,
-    setFilter,
-    setIsLoading,
-    setDisplay,
     sort,
-    updateFilters,
-    getStakeholder,
     getStakeholders,
-    createStakeholder,
-    linkStakeholder,
-    unlinkStakeholder,
   } = useContext(StakeholdersContext);
 
   useEffect(() => {
