@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useContext } from 'react';
 import Row from './EditDialog';
 import {
   Paper,
@@ -12,21 +11,44 @@ import {
   TableSortLabel,
   TablePagination,
 } from '@material-ui/core';
+import { StakeholdersContext } from '../../context/StakeholdersContext';
 
-function StakeholderTable({ state, dispatch }) {
-  const { data, display, columns, rowsPerPage, page, sortBy, sortAsc } = state;
-  const { getData, changePage, changeRowsPerPage, sort } = dispatch;
+function StakeholderTable() {
+  const {
+    stakeholder,
+    stakeholders,
+    columns,
+    page,
+    rowsPerPage,
+    filter,
+    orderBy,
+    order,
+    setPage,
+    setRowsPerPage,
+    setOrder,
+    setOrderBy,
+    setFilter,
+    setIsLoading,
+    setDisplay,
+    sort,
+    updateFilters,
+    getStakeholder,
+    getStakeholders,
+    createStakeholder,
+    linkStakeholder,
+    unlinkStakeholder,
+  } = useContext(StakeholdersContext);
 
   useEffect(() => {
-    getData();
+    getStakeholders();
   }, []);
 
   const handleRowsPerPageChange = (e) => {
-    changeRowsPerPage(e.target.value);
+    setRowsPerPage(e.target.value);
   };
 
   const handlePageChange = (e, page) => {
-    changePage(page);
+    setPage(page);
   };
 
   const handleSort = (col) => {
@@ -45,8 +67,8 @@ function StakeholderTable({ state, dispatch }) {
                   onClick={() => handleSort(col.value)}
                 >
                   <TableSortLabel
-                    active={col.value === sortBy}
-                    direction={sortAsc ? 'asc' : 'desc'}
+                    active={col.value === order}
+                    direction={orderBy ? 'asc' : 'desc'}
                   >
                     {col.label}
                   </TableSortLabel>
@@ -55,7 +77,7 @@ function StakeholderTable({ state, dispatch }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {display.map((row) => (
+            {stakeholders.map((row) => (
               <React.Fragment key={row.id}>
                 {/* Main stakeholder */}
                 <Row row={row} columns={columns} />
@@ -71,7 +93,7 @@ function StakeholderTable({ state, dispatch }) {
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[1, 2, 5]}
           onChangeRowsPerPage={handleRowsPerPageChange}
-          count={data.length}
+          count={stakeholders.length}
           page={page}
           onChangePage={handlePageChange}
         />
@@ -80,13 +102,4 @@ function StakeholderTable({ state, dispatch }) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    state: state.stakeholders,
-  }),
-  //dispatch
-  (dispatch) => ({
-    dispatch: dispatch.stakeholders,
-  }),
-)(StakeholderTable);
+export default StakeholderTable;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, List, Typography } from '@material-ui/core';
+import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import AdminIcon from '@material-ui/icons/SupervisorAccount';
 import GrowerIcon from '@material-ui/icons/NaturePeople';
 import StakeholderList from './List';
@@ -31,8 +31,9 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderGroups({ data, render, tall, dispatch }) {
+function StakeholderGroups({ data, render, tall }) {
   const classes = useStyles();
+  const linkStakeholder = useContext(StakeholdersContext);
 
   const stakeholders = {
     children: { label: 'Children', icon: '' },
@@ -42,7 +43,7 @@ function StakeholderGroups({ data, render, tall, dispatch }) {
   };
 
   const handleLink = (type, id) => {
-    dispatch.linkStakeholder({ type, id });
+    linkStakeholder({ type, id });
   };
 
   return (
@@ -84,13 +85,4 @@ function StakeholderGroups({ data, render, tall, dispatch }) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    state: state.stakeholders,
-  }),
-  //dispatch
-  (dispatch) => ({
-    dispatch: dispatch.stakeholders,
-  }),
-)(StakeholderGroups);
+export default StakeholderGroups;

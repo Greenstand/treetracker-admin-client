@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -95,13 +94,4 @@ function AddStakeholder({ dispatch }) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    state: state.stakeholders,
-  }),
-  //dispatch
-  (dispatch) => ({
-    dispatch: dispatch.stakeholders,
-  }),
-)(AddStakeholder);
+export default AddStakeholder;
