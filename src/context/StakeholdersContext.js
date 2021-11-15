@@ -3,7 +3,7 @@ import Filter from '../models/Filter';
 import api from '../api/stakeholders';
 import * as loglevel from 'loglevel';
 
-const log = loglevel.getLogger('../context/GrowerContext');
+const log = loglevel.getLogger('../context/StakeholderContext');
 
 export const StakeholdersContext = createContext({
   stakeholder: {},
@@ -20,7 +20,7 @@ export const StakeholdersContext = createContext({
   setOrder: () => {},
   setOrderBy: () => {},
   setFilter: () => {},
-  setIsLoading: () => {},
+  // setIsLoading: () => {},
   setDisplay: () => {},
   sort: () => {},
   updateFilter: () => {},
@@ -32,204 +32,26 @@ export const StakeholdersContext = createContext({
 });
 
 export function StakeholdersProvider(props) {
-  const [stakeholders, setStakeholders] = useState([
-    {
-      type: 'Organization',
-      logo: './logo_192x192.png',
-      name: 'Greenstand',
-      id: '10193',
-      map: '/greenstandMap',
-      email: 'hello@greenstand.com',
-      phone: '123-123-2122',
-      website: 'greenstand.org',
-      children: [
-        {
-          type: 'person',
-          name: 'Child One',
-          id: '22214',
-          map: '/childOne',
-          email: 'child@gmail.com',
-          phone: '123-123-1234',
-          website: 'childone.com',
-        },
-        {
-          type: 'person',
-          name: 'Child Two',
-          id: '31234',
-          map: '/childtwo',
-          email: 'childtwo@gmail.com',
-          phone: '123-234-1234',
-          website: 'childtwo.com',
-        },
-      ],
-      parents: [
-        {
-          type: 'person',
-          name: 'Parent One',
-          id: '10123',
-          map: '/parentone',
-          email: 'parent@gmail.com',
-          phone: '123-123-1234',
-          website: 'parentone.com',
-        },
-      ],
-      users: [
-        {
-          id: '1234',
-          username: 'admin1',
-          fullName: 'Admin One',
-          roles: 'admin',
-        },
-        {
-          id: '1235',
-          username: 'admin2',
-          fullName: 'Admin Two',
-          roles: 'admin',
-        },
-      ],
-      growers: [
-        { fullName: 'Grower One', id: '12345', createdAt: '01/02/2021' },
-        { fullName: 'Grower Two', id: '12331', createdAt: '20/02/2021' },
-        { fullName: 'Grower Three', id: '12316', createdAt: '01/02/2021' },
-        { fullName: 'Grower Four', id: '12317', createdAt: '20/02/2021' },
-        { fullName: 'Grower Five', id: '12329', createdAt: '01/02/2021' },
-        { fullName: 'Grower Six', id: '12335', createdAt: '20/02/2021' },
-        { fullName: 'Grower Seven', id: '12137', createdAt: '01/02/2021' },
-        { fullName: 'Grower Eight', id: '12334', createdAt: '20/02/2021' },
-        { fullName: 'Grower Nine', id: '12318', createdAt: '01/02/2021' },
-        { fullName: 'Grower Ten', id: '12330', createdAt: '20/02/2021' },
-      ],
-    },
-    {
-      type: 'org',
-      logo: './logo_192x192.png',
-      name: 'Greenstance',
-      id: '41341',
-      map: '/greenstance',
-      email: 'hello@greenstance.com',
-      phone: '123-123-1234',
-      website: 'greenstance.com',
-      children: [],
-      parents: [],
-      users: [],
-      growers: [],
-    },
-    {
-      type: 'org',
-      logo: './logo_192x192.png',
-      name: 'Green Space',
-      id: '51324',
-      map: '/greenspace',
-      email: 'greenspace@green.com',
-      phone: '123-123-1324',
-      website: 'greenspace.com',
-      children: [],
-      parents: [],
-      users: [],
-      growers: [],
-    },
-    {
-      type: 'org',
-      logo: './logo_192x192.png',
-      name: 'Green World',
-      id: '61234',
-      map: '/greenworld',
-      email: 'hi@greenworld.com',
-      phone: '123-123-1234',
-      website: 'greenworld.com',
-      children: [],
-      parents: [],
-      users: [],
-      growers: [],
-    },
-  ]);
-  const [stakeholder, setStakeholder] = useState([
-    {
-      type: 'Organization',
-      logo: './logo_192x192.png',
-      name: 'Greenstand',
-      id: '10193',
-      map: '/greenstandMap',
-      email: 'hello@greenstand.com',
-      phone: '123-123-2122',
-      website: 'greenstand.org',
-      children: [
-        {
-          type: 'person',
-          name: 'Child One',
-          id: '22214',
-          map: '/childOne',
-          email: 'child@gmail.com',
-          phone: '123-123-1234',
-          website: 'childone.com',
-        },
-        {
-          type: 'person',
-          name: 'Child Two',
-          id: '31234',
-          map: '/childtwo',
-          email: 'childtwo@gmail.com',
-          phone: '123-234-1234',
-          website: 'childtwo.com',
-        },
-      ],
-      parents: [
-        {
-          type: 'person',
-          name: 'Parent One',
-          id: '10123',
-          map: '/parentone',
-          email: 'parent@gmail.com',
-          phone: '123-123-1234',
-          website: 'parentone.com',
-        },
-      ],
-      users: [
-        {
-          id: '1234',
-          username: 'admin1',
-          fullName: 'Admin One',
-          roles: 'admin',
-        },
-        {
-          id: '1235',
-          username: 'admin2',
-          fullName: 'Admin Two',
-          roles: 'admin',
-        },
-      ],
-      growers: [
-        { fullName: 'Grower One', id: '12345', createdAt: '01/02/2021' },
-        { fullName: 'Grower Two', id: '12331', createdAt: '20/02/2021' },
-        { fullName: 'Grower Three', id: '12316', createdAt: '01/02/2021' },
-        { fullName: 'Grower Four', id: '12317', createdAt: '20/02/2021' },
-        { fullName: 'Grower Five', id: '12329', createdAt: '01/02/2021' },
-        { fullName: 'Grower Six', id: '12335', createdAt: '20/02/2021' },
-        { fullName: 'Grower Seven', id: '12137', createdAt: '01/02/2021' },
-        { fullName: 'Grower Eight', id: '12334', createdAt: '20/02/2021' },
-        { fullName: 'Grower Nine', id: '12318', createdAt: '01/02/2021' },
-        { fullName: 'Grower Ten', id: '12330', createdAt: '20/02/2021' },
-      ],
-    },
-  ]);
-  const [columns, setColumns] = useState([
+  const [stakeholders, setStakeholders] = useState([]);
+  const [stakeholder, setStakeholder] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(1);
+  const [order, setOrder] = useState(true);
+  const [orderBy, setOrderBy] = useState('asc');
+  const [filter, setFilter] = useState(new Filter());
+  // const [isLoading, setIsLoading] = useState(false);
+  const columns = [
     { label: 'Name', value: 'name' },
     { label: 'ID', value: 'id' },
     { label: 'Map', value: 'map' },
     { label: 'Email', value: 'email' },
     { label: 'Phone', value: 'phone' },
     { label: 'Website', value: 'website' },
-  ]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(1);
-  const [order, setOrder] = useState(true);
-  const [orderBy, setOrderBy] = useState('asc');
-  const [filter, setFilter] = useState(new Filter());
-  const [isLoading, setIsLoading] = useState(false);
+  ];
   // const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
-    getStakeholder();
+    getStakeholders();
   }, [filter, page, rowsPerPage]);
 
   useEffect(() => {
@@ -238,27 +60,23 @@ export function StakeholdersProvider(props) {
 
   // EVENT HANDLERS
 
-  // const load = async () => {
-  //   log.debug('load growers');
-  //   setIsLoading(true);
-  //   const pageNumber = page;
-  //   const stakeholder = await api.getStakeholder({
-  //     skip: pageNumber * rowsPerPage,
-  //     rowsPerPage,
-  //     filter,
-  //   });
-  //   setStakeholder(stakeholder);
-  //   setIsLoading(false);
-  // };
-
   // const getCount = async () => {
   //   const { count } = await api.getCount({ filter });
   //   setCount(Number(count));
   // };
 
   const getStakeholders = async () => {
-    const stakeholdersData = await api.getStakeholders();
-    setStakeholders(stakeholdersData);
+    log.debug('load stakeholders');
+    // setIsLoading(true);
+    const data = await api.getStakeholders({
+      skip: page * rowsPerPage,
+      rowsPerPage,
+      orderBy,
+      order,
+      filter,
+    });
+    setStakeholders(data);
+    // setIsLoading(false);
   };
 
   const getStakeholder = async (id) => {
@@ -326,12 +144,22 @@ export function StakeholdersProvider(props) {
 
   const linkStakeholder = async (payload) => {
     console.log('link');
-    console.log({ type: payload.type, id: payload.id });
+    console.log({
+      type: payload.type,
+      id: payload.id,
+    });
+    updateStakeholder(payload);
+    //determine which request to make (growers, users, etc)
+    //get stakeholders
+    //when one's selected
+    //add id to the array of that type on the current stakeholder & update the stakeholder
   };
 
   const unlinkStakeholder = async (payload) => {
     console.log('unlink');
     console.log({ type: payload.type, id: payload.id });
+    updateStakeholder(payload);
+    //remove the id from the type array in the current stakeholder
   };
 
   const value = {
@@ -348,7 +176,7 @@ export function StakeholdersProvider(props) {
     setOrder,
     setOrderBy,
     setFilter,
-    setIsLoading,
+    // setIsLoading,
     setDisplay,
     sort,
     updateFilter,

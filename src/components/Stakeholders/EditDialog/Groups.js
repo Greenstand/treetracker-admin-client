@@ -50,7 +50,7 @@ function StakeholderGroups({ data, render, tall }) {
     <>
       {render.map((type) => (
         <Grid item xs={6} key={type}>
-          <Grid container justify="space-between" xs={12} direction="row">
+          <Grid item container justify="space-between" xs={12} direction="row">
             <div className={classes.flex}>
               {stakeholders[type]?.icon}
               <Typography variant="h6">

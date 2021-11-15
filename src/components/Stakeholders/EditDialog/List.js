@@ -32,7 +32,7 @@ function StakeholderList({ data, type }) {
           alignItems="center"
           direction="row"
         >
-          <Grid container direction="row" alignItems="center" xs={11}>
+          <Grid item container direction="row" alignItems="center" xs={11}>
             {type === 'users' ? (
               <UserListItem data={data} />
             ) : type === 'growers' ? (
