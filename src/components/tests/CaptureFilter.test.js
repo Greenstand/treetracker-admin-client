@@ -1,22 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, within, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
 import CaptureFilter from '../CaptureFilter';
 import Verify from '../Verify';
-import * as loglevel from 'loglevel';
-import { ORGS } from '../tests/fixtures';
+import { ORGS } from './fixtures';
 
-const log = loglevel.getLogger('../tests/organizations.test');
+import * as loglevel from 'loglevel';
+const log = loglevel.getLogger('../tests/capturefilter.test');
 
 describe('CaptureFilter organizations', () => {
-  let api;
-
+  const api = require('../../api/treeTrackerApi').default;
   beforeEach(() => {
     //mock the api
-    api = require('../../api/treeTrackerApi').default;
 
     api.getOrganizations = () => {
       // log.debug('mock getOrganizations:');
@@ -26,65 +23,50 @@ describe('CaptureFilter organizations', () => {
 
   describe('CaptureFilter', () => {
     describe('w/o data in context', () => {
-      let component;
-
       beforeEach(async () => {
-        component = (
+        render(
           <AppProvider>
             <CaptureFilter />
-          </AppProvider>
+          </AppProvider>,
         );
       });
 
       afterEach(cleanup);
 
-      it('renders without crashing', () => {
-        const div = document.createElement('div');
-        ReactDOM.render(component, div);
-        ReactDOM.unmountComponentAtNode(div);
-      });
-
       it('renders text "Verification Status" ', () => {
-        render(component);
         expect(screen.getByText('Verification Status')).toBeInTheDocument();
       });
 
       it('renders "Start Date" input ', () => {
-        render(component);
-        let input = screen.getByRole('textbox', { name: 'Start Date' });
+        const input = screen.getByRole('textbox', { name: 'Start Date' });
         expect(input).toBeInTheDocument();
       });
 
       it('renders "End Date" input ', () => {
-        render(component);
-        let input = screen.getByRole('textbox', { name: 'End Date' });
+        const input = screen.getByRole('textbox', { name: 'End Date' });
         expect(input).toBeInTheDocument();
       });
 
       it('renders Species dropdown ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('species-dropdown');
+        const dropdown = screen.getByTestId('species-dropdown');
         expect(dropdown).toBeInTheDocument();
       });
 
       it('renders Tags dropdown ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('tag-dropdown');
+        const dropdown = screen.getByTestId('tag-dropdown');
         expect(dropdown).toBeInTheDocument();
       });
 
       it('renders Organization dropdown ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        const dropdown = screen.getByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
       });
 
       it('renders default orgList when dropdown clicked ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        const dropdown = screen.getByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
-        let button = within(dropdown).getByRole('button', {
+        const button = within(dropdown).getByRole('button', {
           name: /all/i,
         });
 
@@ -103,16 +85,15 @@ describe('CaptureFilter organizations', () => {
 
     describe('w/ data in context', () => {
       let orgs;
-      let component;
 
       beforeEach(async () => {
         orgs = await api.getOrganizations();
-        component = (
+
+        render(
           <AppProvider value={{ orgList: orgs }}>
             <CaptureFilter />
-          </AppProvider>
+          </AppProvider>,
         );
-        // render(component);
         await act(() => api.getOrganizations());
       });
 
@@ -123,17 +104,15 @@ describe('CaptureFilter organizations', () => {
       });
 
       it('renders Organization dropdown ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        const dropdown = screen.getByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
       });
 
       it('renders default orgList when dropdown clicked ', () => {
-        render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        const dropdown = screen.getByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
-        let button = within(dropdown).getByRole('button', { name: /all/i });
+        const button = within(dropdown).getByRole('button', { name: /all/i });
 
         userEvent.click(button);
 
@@ -149,35 +128,30 @@ describe('CaptureFilter organizations', () => {
       });
     });
 
-    // describe('context data renders in child', () => {
-    //   let orgs;
-    //   let component;
+    describe.skip('context data renders in child', () => {
+      beforeEach(async () => {
+        render(
+          <AppProvider>
+            <AppContext.Consumer>
+              {(value) => <p>Received: {value.orgList}</p>}
+            </AppContext.Consumer>
+          </AppProvider>,
+        );
 
-    //   beforeEach(async () => {
-    //     component = (
-    //       <AppProvider>
-    //         <AppContext.Consumer>
-    //           {(value) => <p>Received: {value.orgList}</p>}
-    //         </AppContext.Consumer>
-    //       </AppProvider>
-    //     );
+        await act(() => api.getOrganizations());
+      });
 
-    //     render(component);
+      // just tests the mock api, not what's showing on the page
+      it('api loaded 2 organizations', () => {
+        expect(orgs).toHaveLength(2);
+      });
 
-    //     await act(() => api.getOrganizations());
-    //   });
-
-    //   // just tests the mock api, not what's showing on the page
-    //   it('api loaded 2 organizations', () => {
-    //     expect(orgs).toHaveLength(2);
-    //   });
-
-    //   it('renders text "Dummy Org" ', () => {
-    //     // screen.debug(); // shows structure in console
-    //     screen.logTestingPlaygroundURL();
-    //     // expect(screen.getByText(/^Received:/).textContent).toBe('Received: ');
-    //     expect(screen.getByText('Dummy Org')).toBeInTheDocument();
-    //   });
-    // });
+      it('renders text "Dummy Org" ', () => {
+        // screen.debug(); // shows structure in console
+        screen.logTestingPlaygroundURL();
+        // expect(screen.getByText(/^Received:/).textContent).toBe('Received: ');
+        expect(screen.getByText('Dummy Org')).toBeInTheDocument();
+      });
+    });
   });
 });
