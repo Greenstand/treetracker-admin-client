@@ -120,8 +120,6 @@ function getRoutes(user) {
       linkTo: '/stakeholders',
       component: Stakeholder,
       icon: AccountTreeIcon,
-      //TODO this is temporarily, need to add stakeholders policy
-      // disabled: false,
       disabled:
         process.env.REACT_APP_ENABLE_STAKEHOLDERS !== 'true' ||
         !hasPermission(user, [
