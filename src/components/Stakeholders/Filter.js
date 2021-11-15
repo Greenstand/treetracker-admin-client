@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -11,6 +10,7 @@ import {
   FormControl,
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
+import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
   root: {
@@ -27,16 +27,15 @@ const useStyles = makeStyles({
   },
 });
 
-function Filter({ state, dispatch }) {
-  const { filters } = state;
-  const { updateFilters } = dispatch;
+function Filter() {
+  const { filter, updateFilter } = useContext(StakeholdersContext);
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState({});
 
   const close = () => {
-    setOptions(filters);
+    setOptions(filter);
     setOpen(false);
   };
 
@@ -46,16 +45,16 @@ function Filter({ state, dispatch }) {
 
   const resetFilters = () => {
     setOptions({});
-    updateFilters({});
+    updateFilter({});
   };
 
   const applyFilters = () => {
-    updateFilters({ ...filters, ...options });
+    updateFilter({ ...filter, ...options });
     setOpen(false);
   };
 
   const applySearch = (e) => {
-    updateFilters({ ...filters, search: e.target.value });
+    updateFilter({ ...filter, search: e.target.value });
   };
 
   return (
@@ -65,7 +64,7 @@ function Filter({ state, dispatch }) {
         name="search"
         label="Search"
         variant="outlined"
-        value={filters?.search || ''}
+        value={filter?.search || ''}
         onChange={applySearch}
         autoComplete="off"
       />
@@ -78,7 +77,7 @@ function Filter({ state, dispatch }) {
       >
         Filter
       </Button>
-      {Object.keys(filters).length > 0 && (
+      {Object.keys(filter).length > 0 && (
         <Button onClick={resetFilters}>Reset Filters</Button>
       )}
       <Dialog open={open} onClose={close} fullWidth={true} maxWidth={'md'}>
@@ -142,13 +141,4 @@ function Filter({ state, dispatch }) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    state: state.stakeholders,
-  }),
-  //dispatch
-  (dispatch) => ({
-    dispatch: dispatch.stakeholders,
-  }),
-)(Filter);
+export default Filter;

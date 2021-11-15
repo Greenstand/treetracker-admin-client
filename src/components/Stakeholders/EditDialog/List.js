@@ -1,8 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Grid, ListItem } from '@material-ui/core';
 import UnlinkIcon from '@material-ui/icons/LinkOff';
+import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import UserListItem from './UserListItem';
 import GrowerListItem from './GrowerListItem';
 import ParentChildListItem from './ParentChildListItem';
@@ -15,11 +15,12 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderList({ data, type, dispatch }) {
+function StakeholderList({ data, type }) {
   const classes = useStyles();
+  const unlinkStakeholder = useContext(StakeholdersContext);
 
   const handleUnlink = (type, id) => {
-    dispatch.unlinkStakeholder({ type, id });
+    unlinkStakeholder({ type, id });
   };
 
   return (
@@ -51,13 +52,4 @@ function StakeholderList({ data, type, dispatch }) {
   );
 }
 
-export default connect(
-  //state
-  (state) => ({
-    state: state.stakeholders,
-  }),
-  //dispatch
-  (dispatch) => ({
-    dispatch: dispatch.stakeholders,
-  }),
-)(StakeholderList);
+export default StakeholderList;

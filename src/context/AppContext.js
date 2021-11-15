@@ -9,6 +9,7 @@ import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
 import MessagingView from 'views/MessagingView';
 import MatchingToolView from '../views/MatchingToolView';
+import Stakeholder from '../views/StakeholdersView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
@@ -31,6 +32,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
@@ -147,10 +149,10 @@ function getRoutes(user) {
       linkTo: '/stakeholders',
       component: Stakeholder,
       icon: AccountTreeIcon,
-      //TODO this is temporarily, need to add stakeholders policy
+      //TODO this is temporary, need to add stakeholders policy
       // disabled: false,
       disabled:
-        process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
+        process.env.REACT_APP_ENABLE_STAKEHOLDERS !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
           POLICIES.APPROVE_TREE,
