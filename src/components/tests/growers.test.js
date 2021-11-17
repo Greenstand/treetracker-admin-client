@@ -1,16 +1,12 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import api from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
 import { GrowerProvider } from '../../context/GrowerContext';
-import FilterGrower from '../../models/FilterGrower';
-import FilterTopGrower from '../FilterTopGrower';
-import Growers from '../Growers';
-import { GROWER, GROWERS, ORGS } from './fixtures';
+import Growers from '../Growers/Growers';
+import { GROWER, GROWERS, ORGS, growerValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/grower.test');
@@ -19,7 +15,6 @@ jest.mock('../../api/growers');
 
 describe('growers', () => {
   let api;
-  let growerValues;
 
   beforeEach(() => {
     //mock the api
@@ -39,36 +34,18 @@ describe('growers', () => {
     };
   });
 
-  describe.skip('with a default context', () => {
-    //{{{
+  describe('with a default context', () => {
     beforeEach(async () => {
-      growerValues = {
-        growers: [],
-        pageSize: 24,
-        count: null,
-        currentPage: 0,
-        filter: new FilterGrower(),
-        isLoading: false,
-        totalGrowerCount: null,
-        load: () => {},
-        getCount: () => {},
-        changePageSize: () => {},
-        changeCurrentPage: () => {},
-        getGrower: () => {},
-        updateGrower: () => {},
-        updateGrowers: () => {},
-        updateFilter: () => {},
-        getTotalGrowerCount: () => {},
-      };
-
       render(
-        <BrowserRouter>
-          <AppProvider value={{ orgList: ORGS }}>
-            <GrowerProvider value={growerValues}>
-              <Growers />
-            </GrowerProvider>
-          </AppProvider>
-        </BrowserRouter>,
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <AppProvider value={{ orgList: ORGS }}>
+              <GrowerProvider value={growerValues}>
+                <Growers />
+              </GrowerProvider>
+            </AppProvider>
+          </BrowserRouter>
+        </ThemeProvider>,
       );
 
       await act(() => api.getGrowers());
@@ -76,28 +53,6 @@ describe('growers', () => {
     });
 
     afterEach(cleanup);
-
-    it('renders subcomponents of filter top grower', () => {
-      const filter = screen.getByRole('button', { name: /filter/i });
-      userEvent.click(filter);
-      // screen.logTestingPlaygroundURL();
-
-      expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
-
-      expect(screen.getByLabelText('Person ID')).toBeInTheDocument();
-
-      expect(screen.getByLabelText('Device ID')).toBeInTheDocument();
-
-      expect(screen.getByLabelText('Organization')).toBeInTheDocument();
-
-      expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
-
-      expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
-
-      expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-
-      expect(screen.getByLabelText(/phone number/i)).toBeInTheDocument();
-    });
 
     it('renders grower page', () => {
       expect(

@@ -1,3 +1,25 @@
+## [1.27.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.2...v1.27.3) (2021-11-15)
+
+
+### Bug Fixes
+
+* clean up code and fix CapturesTable width ([4183afb](https://github.com/Greenstand/treetracker-admin-client/commit/4183afbeef55779e86fe2cd98470da4ce2e9501b))
+
+## [1.27.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.1...v1.27.2) (2021-11-14)
+
+
+### Bug Fixes
+
+* duplicate keys for Growers because of dup ids ([6c3dae0](https://github.com/Greenstand/treetracker-admin-client/commit/6c3dae018df42423612b4a358a2ca126af9216ad))
+* scrolling to allow viewing the bottom of the page ([697d667](https://github.com/Greenstand/treetracker-admin-client/commit/697d667aba494604309a50b22742d5b475d5e20b))
+
+## [1.27.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.0...v1.27.1) (2021-11-13)
+
+
+### Bug Fixes
+
+* remove toVerifyCounter which was causing repeated getCount requests ([#188](https://github.com/Greenstand/treetracker-admin-client/issues/188)) ([5cf9697](https://github.com/Greenstand/treetracker-admin-client/commit/5cf969767ba45b9627534c5a1eb7555303982718))
+
 # [1.27.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.26.0...v1.27.0) (2021-11-12)
 
 
