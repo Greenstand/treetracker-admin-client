@@ -3,6 +3,20 @@
  */
 import { createMuiTheme } from '@material-ui/core/styles';
 
+/**
+ * @constant
+ * @type {object}
+ * @description other colors used in the UI
+ * @see {@link https://colors.artyclick.com/color-name-finder/}  - to learn how
+ *  color names are generated
+ */
+const COLORS = {
+  lavenderPinocchio: '#E0E0E0', // used for the borders
+  carbonGrey: '#585B5D', // used for adding contrast in texts
+  black: '#000', // used as text color
+  white: '#fff', // used as text color
+};
+
 export const colorPrimary = 'rgba(118, 187, 35, 1)';
 
 const colorPrimarySelected = 'rgba(118, 187, 35, 0.3)';
@@ -45,6 +59,10 @@ export default createMuiTheme({
       green: colorPrimary,
       red: 'rgba(233, 88, 57, 1)',
       orange: 'rgba(239, 128, 49, 1)',
+      lavenderPinocchio: COLORS.lavenderPinocchio,
+      carbonGrey: COLORS.carbonGrey,
+      black: COLORS.black,
+      white: COLORS.white,
     },
   },
   overrides: {
