@@ -66,10 +66,6 @@ function CandidateImages({ candidateImgData, sameTreeHandler }) {
     setShowBox([...showBox, i]);
   };
 
-  console.log('candidates', candidateImgData);
-  console.log('showBox', showBox);
-  console.log('candidateImgData[0].captures', candidateImgData[0].captures);
-
   return (
     <Box className={classes.imageScroll}>
       {candidateImgData.map((tree, i) => {
