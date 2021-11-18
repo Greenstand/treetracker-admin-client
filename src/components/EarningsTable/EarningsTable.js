@@ -179,7 +179,7 @@ function EarningDetails(props) {
     setSelectedEarning(null);
   };
 
-  return (
+  return selectedEarning ? (
     <Drawer
       anchor="right"
       BackdropProps={{ invisible: true }}
@@ -213,43 +213,21 @@ function EarningDetails(props) {
 
         {/* start filter form */}
         <Grid item>
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Funder
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              label="Funder"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Environment For Africa</MenuItem>
-            </Select>
-          </FormControl>
+          <Grid container direction="column" justify="space-around">
+            <Grid item>
+              <Typography>Id</Typography>
+              <Typography variant="h6">{selectedEarning.id}</Typography>
+            </Grid>
 
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              label="Payment System"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
-            </Select>
-          </FormControl>
+            <Grid item>
+              <Typography>Grower</Typography>
+              <Typography variant="h6">{selectedEarning.grower}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>Funder</Typography>
+              <Typography variant="h6">{selectedEarning.funder}</Typography>
+            </Grid>
+          </Grid>
 
           <Divider style={{ margin: '100px 0 20px 0' }} />
 
@@ -278,6 +256,8 @@ function EarningDetails(props) {
         {/* end filter form */}
       </Grid>
     </Drawer>
+  ) : (
+    ''
   );
 }
 
