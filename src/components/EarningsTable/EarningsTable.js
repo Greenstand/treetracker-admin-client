@@ -471,7 +471,7 @@ export default function EarningsTable() {
           root: classes.earningsTablePagination,
         }}
         component="div"
-        rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+        rowsPerPageOptions={[20, 50, 100, { label: 'All', value: -1 }]}
         page={page}
         rowsPerPage={rowsPerPage}
         onChangePage={handleChangePage}
