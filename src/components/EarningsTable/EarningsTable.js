@@ -365,14 +365,14 @@ EarningsTableTopBar.propTypes = {
 /**
  * @constant
  * @name earningTableMetaData
- * @description infomation about column that will display an instance of earning
+ * @description infomation about column that will display an instance of Earning
  */
 const earningTableMetaData = [
   { description: 'Grower', name: 'grower' },
   { description: 'Funder', name: 'funder' },
   { description: 'Amount', name: 'amount' },
   { description: 'Payment System', name: 'paymentSystem' },
-  { description: 'Effective Date', name: 'effectiveDate' },
+  { description: 'Effective Date', name: 'effectiveDate', info: true },
   { description: 'Payment Date', name: 'paymentDate' },
 ];
 
@@ -436,7 +436,7 @@ export default function EarningsTable() {
                   >
                     <Typography variant="h6">
                       {column.description}
-                      {i === earningTableMetaData.length - 2 && (
+                      {column?.info && (
                         <InfoOutlinedIcon className={classes.infoIcon} />
                       )}
                     </Typography>
