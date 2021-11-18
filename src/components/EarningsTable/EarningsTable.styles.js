@@ -19,14 +19,14 @@ const earningsTableTopBarStyles = (theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '40px 0px 20px 0px',
+    padding: theme.spacing(10, 0, 5, 0),
   },
   filterAvatar: {
     backgroundColor: theme.palette.primary.lightVery,
     color: theme.palette.primary.main,
-    marginLeft: '0.75rem',
-    width: '25px',
-    height: '25px',
+    marginLeft: theme.spacing(3),
+    width: theme.spacing(6.25),
+    height: theme.spacing(6.25),
   },
 
   iconFilter: {
@@ -35,37 +35,29 @@ const earningsTableTopBarStyles = (theme) => ({
 
   filterButtonText: {
     color: theme.palette.stats.black,
-    fontSize: '1.2em',
+    fontSize: theme.spacing(4.5),
   },
   dateFiterButonSmallText: {
     color: theme.palette.stats.carbonGrey,
-    fontSize: '0.8em',
+    fontSize: theme.spacing(3),
     textAlign: 'left',
   },
   dateFiterButonMediumText: {
-    fontSize: '1.1em',
+    fontSize: theme.spacing(3.5),
     textAlign: 'left',
   },
   actionButton: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
   },
-  actionButtonIcon: {
-    position: 'relative',
-    top: '2px',
-  },
-  topBarActions: {
-    width: '60%',
-  },
-
   earningsTableTopTitle: {
-    padding: '0px 0px 0px 10px',
+    padding: theme.spacing(0, 0, 0, 2),
   },
   earningsTableDateFilterButton: {
-    padding: '12px 30px 12px 15px',
+    padding: theme.spacing(3, 7.5, 3, 4),
   },
   filterButton: {
-    padding: '15px 30px 20px 15px',
+    padding: theme.spacing(4, 7.5, 5, 4),
   },
 });
 
@@ -76,35 +68,35 @@ const earningsTableTopBarStyles = (theme) => ({
  */
 const earningTableFilterStyles = (theme) => ({
   earningTableFilterSubmitButton: {
-    marginBottom: '10px',
+    marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
   earningTableFilterCancelButton: {
     border: 'none',
   },
   earningsTableFilterForm: {
-    width: '300px',
-    padding: '20px 15px',
+    width: theme.spacing(75),
+    padding: theme.spacing(5, 3.75),
   },
-  earningsTableFilterHeader: {},
   earningsTableHeader: {
-    borderBottom: `2px solid ${theme.palette.stats.lavenderPinocchio}`,
+    borderBottom: `${theme.spacing(0.5)} solid ${
+      theme.palette.stats.lavenderPinocchio
+    }`,
   },
   earningsTableFilterCloseIcon: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
-    backgroundColor: theme.palette.stats.feta,
+    backgroundColor: theme.palette.primary.lightVery,
   },
   earningsTableFilterAvatar: {
-    backgroundColor: theme.palette.stats.feta,
+    backgroundColor: theme.palette.primary.lightVery,
     color: theme.palette.primary.main,
-    marginLeft: '0.5rem',
-    width: '30px',
-    height: '30px',
+    marginLeft: theme.spacing(2),
+    width: theme.spacing(7.5),
+    height: theme.spacing(7.5),
   },
   earningsFIlterSelectFormControl: {
-    width: '100%',
-    marginTop: '20px',
+    marginTop: theme.spacing(6),
   },
 });
 
@@ -117,42 +109,44 @@ const earningTableFilterStyles = (theme) => ({
  */
 const earningsTableStyles = (theme) => ({
   earningsTable: {
-    padding: '0px 40px 0px 40px',
+    padding: theme.spacing(0, 10, 0, 10),
   },
 
   earningsTableHeadSortIcon: {
     color: `${theme.palette.primary.main} !important`,
-    padding: '1px',
+    padding: theme.spacing(0.25),
     backgroundColor: theme.palette.primary.lightVery,
-    fontSize: '1.5em',
+    fontSize: theme.spacing(6),
   },
 
   arrowDropDownIcon: {
     color: `${theme.palette.primary.main}`,
     position: 'relative',
-    top: '5px',
-    left: '5px',
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
 
   infoIcon: {
     color: `${theme.palette.primary.main}`,
     backgroundColor: theme.palette.primary.lightVery,
-    padding: '3px',
-    margin: ' 0 4px 0 0',
-    fontSize: '0.9em',
+    padding: theme.spacing(1),
+    margin: theme.spacing(0, 1, 0, 0),
+    fontSize: theme.spacing(4),
     position: 'relative',
-    top: '3px',
-    left: '5px',
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
 
   earningsTablePagination: {
     border: 'none',
-    paddingRight: '0px',
+    paddingRight: theme.spacing(0),
   },
   selectRoot: {
-    border: `1px solid ${theme.palette.stats.lavenderPinocchio}`,
-    borderRadius: '3px',
-    padding: '4px',
+    border: `${theme.spacing(0.25)} solid ${
+      theme.palette.stats.lavenderPinocchio
+    }`,
+    borderRadius: theme.spacing(1),
+    padding: theme.spacing(1),
   },
 });
 
@@ -170,7 +164,7 @@ const useStyles = makeStyles((theme) => {
   return {
     ...earningsTableTopBar,
     ...earningsTable,
-    ...earningTableFilterStyles,
+    ...earningTableFilter,
   };
 });
 

@@ -55,7 +55,7 @@ function EarningsTableFilter(props) {
         className={classes.earningsTableFilterForm}
       >
         {/* start filter header */}
-        <Grid item className={classes.earningsTableFilterHeader}>
+        <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
               <Grid
@@ -80,43 +80,45 @@ function EarningsTableFilter(props) {
 
         {/* start filter form */}
         <Grid item>
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Funder
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              label="Funder"
+          <Grid container direction="column" justify="space-between">
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Environment For Africa</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel id="demo-simple-select-outlined-label">
+                Funder
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                label="Funder"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Environment For Africa</MenuItem>
+              </Select>
+            </FormControl>
 
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              label="Payment System"
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel id="demo-simple-select-outlined-label">
+                Payment System
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                label="Payment System"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Visa</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
           <Divider style={{ margin: '100px 0 20px 0' }} />
 

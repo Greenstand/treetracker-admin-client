@@ -6,12 +6,13 @@ import { createMuiTheme } from '@material-ui/core/styles';
 /**
  * @constant
  * @type {object}
+ * @name COLORS
  * @description other colors used in the UI
  * @see {@link https://colors.artyclick.com/color-name-finder/}  - to learn how
  *  color names are generated
  */
 const COLORS = {
-  lavenderPinocchio: '#E0E0E0', // used for the borders
+  lavenderPinocchio: '#E0E0E0', // used for some of the borders
   carbonGrey: '#585B5D', // used for adding contrast in texts
   black: '#000', // used as text color
   white: '#fff', // used as text color
