@@ -9,7 +9,10 @@ import theme from '../common/theme';
 
 const useStyles = makeStyles({
   containerBox: {
-    margin: theme.spacing(5),
+    marginTop: 0,
+    marginRight: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    marginLeft: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     background: '#fff',
     borderRadius: '4px',
@@ -20,8 +23,7 @@ const useStyles = makeStyles({
   },
 
   imgContainer: {
-    width: '350px',
-    height: 'auto',
+    height: '100%',
     padding: '5px',
     objectFit: 'cover',
     paddingBottom: '10px',
@@ -32,10 +34,11 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'auto',
+    overflowY: 'hidden',
   },
 
   imageScroll: {
-    height: '100vh',
+    height: '76vh',
     overflow: 'scroll',
   },
 
@@ -63,11 +66,15 @@ function CandidateImages({ candidateImgData, sameTreeHandler }) {
     setShowBox([...showBox, i]);
   };
 
+  console.log('candidates', candidateImgData);
+  console.log('showBox', showBox);
+  console.log('candidateImgData[0].captures', candidateImgData[0].captures);
+
   return (
     <Box className={classes.imageScroll}>
       {candidateImgData.map((tree, i) => {
         return (
-          <Box className={classes.containerBox} key={tree.tree_id}>
+          <Box className={classes.containerBox} key={`${i}-${tree.tree_id}`}>
             <Box className={classes.headerBox}>
               <Grid
                 container
@@ -94,7 +101,6 @@ function CandidateImages({ candidateImgData, sameTreeHandler }) {
                 {typeof tree.captures === 'object' ? (
                   <Box className={classes.gridList} cols={3}>
                     {tree.captures.map((capture) => {
-                      // console.log(tree.captures)
                       return (
                         <Box style={{ height: '300px' }} key={capture.id}>
                           <img

@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 
   imgContainer: {
     width: '100%',
-    height: 'auto',
+    height: '51vh',
     objectFit: 'cover',
     marginTop: '20px',
   },
