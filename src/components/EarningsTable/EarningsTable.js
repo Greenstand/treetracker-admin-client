@@ -19,6 +19,7 @@ import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
+import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
@@ -192,8 +193,8 @@ function EarningDetails(props) {
         direction="column"
         className={classes.earningsTableFilterForm}
       >
-        {/* start filter header */}
-        <Grid item className={classes.earningsTableFilterHeader}>
+        {/* start earning details header */}
+        <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
               <Grid
@@ -211,27 +212,142 @@ function EarningDetails(props) {
             />
           </Grid>
         </Grid>
-        {/* end filter header */}
+        {/* end earnings detail header */}
 
-        {/* start filter form */}
-        <Grid item>
+        {/* start earning details contents */}
+        <Grid item className={classes.earningDetailsContents}>
           <Grid container direction="column" justify="space-around">
-            <Grid item>
+            <Grid item className={classes.earningGrowerDetail}>
               <Typography>Id</Typography>
-              <Typography variant="h6">{selectedEarning.id}</Typography>
+              <Typography variant="b">{selectedEarning.id}</Typography>
             </Grid>
 
-            <Grid item>
+            <Grid item className={classes.earningGrowerDetail}>
               <Typography>Grower</Typography>
-              <Typography variant="h6">{selectedEarning.grower}</Typography>
+              <Typography variant="b">{selectedEarning.grower}</Typography>
             </Grid>
-            <Grid item>
+            <Grid item className={classes.earningGrowerDetail}>
               <Typography>Funder</Typography>
-              <Typography variant="h6">{selectedEarning.funder}</Typography>
+              <Typography variant="b">{selectedEarning.funder}</Typography>
             </Grid>
           </Grid>
 
-          <Divider style={{ margin: '100px 0 20px 0' }} />
+          <Divider className={classes.earningDetailsContentsDivider} />
+
+          <Grid container direction="row">
+            <Grid item sm={5}>
+              <Typography>Amount</Typography>
+              <Typography variant="b">{selectedEarning.amount}</Typography>
+            </Grid>
+
+            <Grid item>
+              <Typography>Currency</Typography>
+              <Typography variant="b">Us Dollar</Typography>
+            </Grid>
+          </Grid>
+
+          <Divider className={classes.earningDetailsContentsDivider} />
+
+          <Grid container direction="column" justify="space-around">
+            <Grid item className={classes.earningGrowerDetail}>
+              <Typography>Status</Typography>
+              <Typography variant="b">Waiting payment</Typography>
+            </Grid>
+
+            <Grid item className={classes.earningGrowerDetail}>
+              <Typography>
+                Effective Payment Date
+                <InfoOutlinedIcon
+                  fontSize="large"
+                  className={classes.infoIconOutlined}
+                />
+              </Typography>
+              <Typography variant="b">
+                {selectedEarning.effectiveDate}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider className={classes.earningDetailsContentsDivider} />
+
+          <Grid container direction="column" justify="space-around">
+            <Grid item className={classes.earningGrowerDetail}>
+              <Typography variant="h6">Consolidation</Typography>
+            </Grid>
+
+            <Grid item className={classes.earningGrowerDetail}>
+              <Typography>Consolidation Type</Typography>
+              <Typography variant="b">087654321</Typography>
+            </Grid>
+
+            <Grid item className={classes.earningGrowerDetail}>
+              <Grid container direction="row">
+                <Grid item sm={5}>
+                  <Typography>Start Date</Typography>
+                  <Typography variant="b">Aug 10, 2021</Typography>
+                </Grid>
+
+                <Grid item>
+                  <Typography>End Date</Typography>
+                  <Typography variant="b">Aug 10, 2021</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Divider className={classes.earningDetailsContentsDivider} />
+
+          <Grid container direction="column" justify="space-around">
+            <Grid item className={classes.earningGrowerDetail}>
+              <Typography variant="h6">Payment</Typography>
+            </Grid>
+
+            <Grid container direction="column" justify="space-between">
+              <FormControl
+                variant="outlined"
+                className={classes.earningsFIlterSelectFormControl}
+              >
+                <TextField
+                  id="outlined-basic"
+                  label="Payment Confirmation Id"
+                  variant="outlined"
+                />
+              </FormControl>
+
+              <FormControl
+                variant="outlined"
+                className={classes.earningsFIlterSelectFormControl}
+              >
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Payment System
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  label="Payment System"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Visa</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item className={classes.earningGrowerDetail}>
+              <Grid item>
+                <Typography>Payment Confirmed by</Typography>
+                <Typography variant="b">User24352</Typography>
+              </Grid>
+
+              <Grid item className={classes.earningGrowerDetail}>
+                <Typography>Payment confirmation method</Typography>
+                <Typography variant="b">User24352</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Divider className={classes.earningDetailsContentsDivider} />
 
           <Grid
             container
@@ -244,7 +360,7 @@ function EarningDetails(props) {
               disableElevation
               className={classes.earningTableFilterSubmitButton}
             >
-              APPLY
+              LOG PAYMENT
             </Button>
             <Button
               color="primary"
@@ -255,7 +371,7 @@ function EarningDetails(props) {
             </Button>
           </Grid>
         </Grid>
-        {/* end filter form */}
+        {/* end earning details contents */}
       </Grid>
     </Drawer>
   ) : (

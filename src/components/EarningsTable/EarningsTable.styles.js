@@ -62,9 +62,11 @@ const earningsTableTopBarStyles = (theme) => ({
 });
 
 /**
- * @constant
+ * @function
  * @name earningTableFilterStyles
  * @description styles for EarningsTableFilter component
+ * @param {object} theme - material-ui theme object
+ * @returns {object} styles for EarningsTableFilter component
  */
 const earningTableFilterStyles = (theme) => ({
   earningTableFilterSubmitButton: {
@@ -150,6 +152,27 @@ const earningsTableStyles = (theme) => ({
   },
 });
 
+const earningDetailsStyles = (theme) => ({
+  earningDetailsContents: {
+    padding: theme.spacing(5, 0, 0, 0),
+  },
+  earningGrowerDetail: {
+    padding: theme.spacing(2, 0, 0, 0),
+  },
+  earningDetailsContentsDivider: {
+    margin: theme.spacing(4, 0, 4, 0),
+  },
+  infoIconOutlined: {
+    color: `${theme.palette.primary.main}`,
+    padding: theme.spacing(1),
+    margin: theme.spacing(0, 1, 0, 0),
+    fontSize: theme.spacing(4),
+    position: 'relative',
+    bottom: theme.spacing(-2),
+    right: theme.spacing(0.5),
+  },
+});
+
 /**
  * @function
  * @name useStyles
@@ -160,11 +183,13 @@ const useStyles = makeStyles((theme) => {
   const earningsTableTopBar = earningsTableTopBarStyles(theme);
   const earningsTable = earningsTableStyles(theme);
   const earningTableFilter = earningTableFilterStyles(theme);
+  const earningDetails = earningDetailsStyles(theme);
 
   return {
     ...earningsTableTopBar,
     ...earningsTable,
     ...earningTableFilter,
+    ...earningDetails,
   };
 });
 
