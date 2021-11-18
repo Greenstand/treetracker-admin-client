@@ -32,7 +32,7 @@ import useStyles from './EarningsTable.styles';
  * @name EarningsTableFilter
  * @description render filter for earnings table
  * @param {object} props - properties  passed to the component
- * @param {boolean} props.isFilterOpen - flag that decides where filter should open/close
+ * @param {boolean} props.isFilterOpen - flag that decides wheather filter should open/close
  * @param {Function} setIsFilterOpen - closes filter when executed
  *
  * @returns {React.Component}
@@ -41,7 +41,7 @@ function EarningsTableFilter(props) {
   const { isFilterOpen, setIsFilterOpen } = props;
   const classes = useStyles();
 
-  const closeFilter = () => setIsFilterOpen(false);
+  const handleCloseFilter = () => setIsFilterOpen(false);
 
   return (
     <Drawer
@@ -71,7 +71,7 @@ function EarningsTableFilter(props) {
               </Grid>
             </Grid>
             <CloseIcon
-              onClick={() => closeFilter()}
+              onClick={() => handleCloseFilter()}
               className={classes.earningsTableFilterCloseIcon}
             />
           </Grid>
@@ -151,6 +151,141 @@ function EarningsTableFilter(props) {
 EarningsTableFilter.propTypes = {
   isFilterOpen: PropTypes.bool.isRequired,
   setIsFilterOpen: PropTypes.func.isRequired,
+};
+
+/**
+ * @function
+ * @name EarningDetails
+ * @description render details of an earning
+ * @param {object} props - properties  passed to the component
+ * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
+ * @param {Function} setIsDetailsDrawerOpen - closes earning details drawer when executed
+ * @param {object} props.selectedEarning - earning object
+ * @param {Function} props.setSelectedEarning - sets/resets selected earning object
+ *
+ * @returns {React.Component}
+ */
+function EarningDetails(props) {
+  const {
+    isDetailsDrawerOpen,
+    setIsDetailsDrawerOpen,
+    selectedEarning,
+    setSelectedEarning,
+  } = props;
+  const classes = useStyles();
+
+  const handleCloseDetails = () => {
+    setIsDetailsDrawerOpen(false);
+    setSelectedEarning(null);
+  };
+
+  return (
+    <Drawer
+      anchor="right"
+      BackdropProps={{ invisible: true }}
+      open={isDetailsDrawerOpen}
+    >
+      <Grid
+        container
+        direction="column"
+        className={classes.earningsTableFilterForm}
+      >
+        {/* start filter header */}
+        <Grid item className={classes.earningsTableFilterHeader}>
+          <Grid container direction="row" justify="space-between">
+            <Grid item>
+              <Grid
+                container
+                direction="row"
+                alignContent="flex-end"
+                justify="flex-start"
+              >
+                <Typography variant="h4">Details</Typography>
+              </Grid>
+            </Grid>
+            <CloseIcon
+              onClick={() => handleCloseDetails()}
+              className={classes.earningsTableFilterCloseIcon}
+            />
+          </Grid>
+        </Grid>
+        {/* end filter header */}
+
+        {/* start filter form */}
+        <Grid item>
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFIlterSelectFormControl}
+          >
+            <InputLabel id="demo-simple-select-outlined-label">
+              Funder
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              label="Funder"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Environment For Africa</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFIlterSelectFormControl}
+          >
+            <InputLabel id="demo-simple-select-outlined-label">
+              Payment System
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              label="Payment System"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Visa</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Divider style={{ margin: '100px 0 20px 0' }} />
+
+          <Grid
+            container
+            direction="column"
+            className={classes.earningTableFilterActions}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              className={classes.earningTableFilterSubmitButton}
+            >
+              APPLY
+            </Button>
+            <Button
+              color="primary"
+              variant="text"
+              className={classes.earningTableFilterCancelButton}
+            >
+              CANCEL
+            </Button>
+          </Grid>
+        </Grid>
+        {/* end filter form */}
+      </Grid>
+    </Drawer>
+  );
+}
+
+EarningDetails.propTypes = {
+  isDetailsDrawerOpen: PropTypes.bool.isRequired,
+  setIsDetailsDrawerOpen: PropTypes.func.isRequired,
+  setSelectedEarning: PropTypes.func.isRequired,
+  selectedEarning: PropTypes.object.isRequired,
 };
 
 /**
@@ -270,15 +405,16 @@ export default function EarningsTable() {
   const [earnings, setEarnings] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedEarning, setSelectedEarning] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    console.log('handleChangeRowsPerPage---', event);
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -288,6 +424,11 @@ export default function EarningsTable() {
     setEarnings(response.earnings);
     setTotalCount(response.totalCount);
   }
+
+  const handleOpenEarningDetails = (earning) => {
+    setSelectedEarning(earning);
+    setIsDetailsDrawerOpen(true);
+  };
 
   useEffect(() => {
     fetchEarnings();
@@ -324,11 +465,16 @@ export default function EarningsTable() {
           </TableHead>
 
           <TableBody>
-            {earnings.map((row, i) => (
-              <TableRow key={`${i}-${row.id}`}>
+            {earnings.map((earning, i) => (
+              <TableRow
+                key={`${i}-${earning.id}`}
+                onClick={() => handleOpenEarningDetails(earning)}
+              >
                 {earningTableMetaData.map((column, j) => (
                   <TableCell key={`${i}-${j}-${column.name}`}>
-                    <Typography variant="body1">{row[column.name]}</Typography>
+                    <Typography variant="body1">
+                      {earning[column.name]}
+                    </Typography>
                   </TableCell>
                 ))}
               </TableRow>
@@ -344,7 +490,6 @@ export default function EarningsTable() {
         }}
         component="div"
         rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
-        colSpan={3}
         page={page}
         rowsPerPage={rowsPerPage}
         onChangePage={handleChangePage}
@@ -358,6 +503,13 @@ export default function EarningsTable() {
       <EarningsTableFilter
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
+      />
+
+      <EarningDetails
+        isDetailsDrawerOpen={isDetailsDrawerOpen}
+        setIsDetailsDrawerOpen={setIsDetailsDrawerOpen}
+        selectedEarning={selectedEarning}
+        setSelectedEarning={setSelectedEarning}
       />
     </Grid>
   );
