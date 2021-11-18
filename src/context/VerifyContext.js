@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
@@ -59,6 +59,10 @@ export function VerifyProvider(props) {
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
   const [captureCount, setCaptureCount] = useState(null);
+
+  useEffect(() => {
+    if (invalidateCaptureCount) getCaptureCount();
+  }, [invalidateCaptureCount]);
 
   // STATE HELPER FUNCTIONS
 

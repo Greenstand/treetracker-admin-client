@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
-// import { Grid } from '@material-ui/core';
-// import Navbar from './Navbar';
 import Verify from '../components/Verify';
 import { VerifyProvider } from '../context/VerifyContext';
 import { SpeciesProvider } from '../context/SpeciesContext';

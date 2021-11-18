@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
-import Growers from '../components/Growers';
+import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
 import Account from '../components/Account';
@@ -90,7 +90,7 @@ function getRoutes(user) {
     {
       name: 'Growers',
       linkTo: '/growers',
-      component: Growers,
+      component: GrowersView,
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
@@ -246,8 +246,6 @@ export const AppProvider = (props) => {
 
   // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={value}>
-      <GrowerProvider>{props.children}</GrowerProvider>
-    </AppContext.Provider>
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };

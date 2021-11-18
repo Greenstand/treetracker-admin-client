@@ -8,7 +8,7 @@ import { AppProvider } from '../../context/AppContext';
 import { TagsContext, TagsProvider } from '../../context/TagsContext';
 import Verify from '../Verify';
 import CaptureTags from '../CaptureTags';
-import FilterTop from '../FilterTop';
+import CaptureFilter from '../CaptureFilter';
 import { ORGS, TAGS, tagsValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
@@ -163,12 +163,12 @@ describe('tags', () => {
     });
   });
 
-  describe('FilterTop renders tags search and dropdown', () => {
+  describe('CaptureFilter renders tags search and dropdown', () => {
     beforeEach(async () => {
       render(
         <AppProvider value={{ orgList: ORGS }}>
           <TagsProvider value={tagsValues}>
-            <FilterTop />
+            <CaptureFilter />
           </TagsProvider>
         </AppProvider>,
       );

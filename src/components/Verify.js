@@ -28,7 +28,6 @@ import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
 import CaptureDetailDialog from './CaptureDetailDialog';
-import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
@@ -145,15 +144,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(5),
     marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
-  }
+    fontSize: 'smaller',
+    fontWeight: 'bold',
+  },
 }));
-
-const ToVerifyCounter = withData(({ data }) => (
-  <>
-    {data !== null &&
-      `${countToLocaleString(data)} capture${data === 1 ? '' : 's'}`}
-  </>
-));
 
 const Verify = (props) => {
   const verifyContext = useContext(VerifyContext);
@@ -438,14 +432,11 @@ const Verify = (props) => {
                   key={1}
                 >
                   Filter
-                  {
-                    numFilters > 0 &&
-                    (
-                      <Avatar className={classes.activeFilters}>
-                        {numFilters}
-                      </Avatar>
-                    )
-                  }
+                  {numFilters > 0 && (
+                    <Avatar className={classes.activeFilters}>
+                      {numFilters}
+                    </Avatar>
+                  )}
                 </Button>,
               ]}
             >
@@ -483,11 +474,12 @@ const Verify = (props) => {
                 >
                   <Grid item>
                     <Typography variant="h5">
-                      <ToVerifyCounter
-                        needsRefresh={verifyContext.invalidateCaptureCount}
-                        fetch={verifyContext.getCaptureCount}
-                        data={verifyContext.captureCount}
-                      />
+                      {verifyContext.captureCount !== null &&
+                        `${countToLocaleString(
+                          verifyContext.captureCount,
+                        )} capture${
+                          verifyContext.captureCount === 1 ? '' : 's'
+                        }`}
                     </Typography>
                   </Grid>
                   <Grid item>{imagePagination}</Grid>

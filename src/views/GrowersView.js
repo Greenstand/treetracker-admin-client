@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
-import CaptureTable from '../components/Captures/CaptureTable';
-import { CapturesProvider } from '../context/CapturesContext';
+import Growers from '../components/Growers/Growers.js';
+import { GrowerProvider } from '../context/GrowerContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
-import CaptureFilterHeader from '../components/CaptureFilterHeader';
+import GrowerFilterHeader from '../components/GrowerFilterHeader';
 
-function CapturesView() {
+function GrowersView() {
   useEffect(() => {
-    document.title = `Capture Data - ${documentTitle}`;
+    document.title = `Growers - ${documentTitle}`;
   }, []);
 
   return (
@@ -18,16 +18,16 @@ function CapturesView() {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
-      <CapturesProvider>
+      <GrowerProvider>
         <SpeciesProvider>
           <TagsProvider>
-            <CaptureFilterHeader />
-            <CaptureTable />
+            <GrowerFilterHeader />
+            <Growers />
           </TagsProvider>
         </SpeciesProvider>
-      </CapturesProvider>
+      </GrowerProvider>
     </Grid>
   );
 }
 
-export default CapturesView;
+export default GrowersView;

@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import FilterGrower from '../models/FilterGrower';
 import api from '../api/growers';
 import * as loglevel from 'loglevel';
@@ -32,6 +32,11 @@ export function GrowerProvider(props) {
   const [filter, setFilter] = useState(new FilterGrower());
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
+
+  useEffect(() => {
+    load();
+    getCount();
+  }, [filter, pageSize, currentPage]);
 
   // EVENT HANDLERS
 

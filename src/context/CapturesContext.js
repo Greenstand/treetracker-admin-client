@@ -1,10 +1,10 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
 import { getOrganization } from '../api/apiUtils';
 import { session } from '../models/auth';
 import FilterModel from '../models/Filter';
-import * as loglevel from 'loglevel';
 
+import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
 
 export const CapturesContext = createContext({
@@ -15,28 +15,21 @@ export const CapturesContext = createContext({
   rowsPerPage: 25,
   order: 'asc',
   orderBy: 'id',
-  // byId: {},
   filter: new FilterModel(),
+  setRowsPerPage: () => {},
+  setPage: () => {},
+  setOrder: () => {},
+  setOrderBy: () => {},
   queryCapturesApi: () => {},
   getCaptureCount: () => {},
   getCapturesAsync: () => {},
   getCaptureAsync: () => {},
+  updateFilter: () => {},
   // getLocationName: () => {},
 });
 
 export function CapturesProvider(props) {
-  log.debug('render: captures');
-  // const [state, setState] = useState({
-  //   captures: [],
-  //   captureCount: 0,
-  //   capture: {},
-  //   page: 0,
-  //   rowsPerPage: 25,
-  //   order: 'asc',
-  //   orderBy: 'id',
-  //   byId: {},
-  //   filter: new FilterModel(),
-  // });
+  // log.debug('render: captures');
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
   const [capture, setCapture] = useState({});
@@ -51,6 +44,11 @@ export function CapturesProvider(props) {
       active: true,
     }),
   );
+
+  useEffect(() => {
+    getCapturesAsync();
+    getCaptureCount();
+  }, [filter, rowsPerPage, page, order, orderBy]);
 
   // STATE HELPER FUNCTIONS
 
@@ -69,50 +67,30 @@ export function CapturesProvider(props) {
   //   setState((prev) => ({ ...prev, status: payload }));
   // };
 
-  // toggleDisplayDrawer = () => {
-  //   setState({
-  //     ...state,
-  //     displayDrawer: { isOpen: !state.isOpen },
-  //   });
-  // };
-
-  // openDisplayDrawer = () => {
-  //   setState({ ...state, displayDrawer: { isOpen: true } });
-  // };
-
-  // closeDisplayDrawer = () => {
-  //   setState({ ...state, displayDrawer: { isOpen: false } });
-  // };
-
   // EVENT HANDLERS
 
-  const queryCapturesApi = ({
-    id = null,
-    count = false,
-    paramString = null,
-  }) => {
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees${count ? '/count' : ''}${
-      id != null ? '/' + id : ''
-    }${paramString ? '?' + paramString : ''}`;
+  const queryCapturesApi = ({ id = null, count = false, paramString = null }) =>
+    // abortController,
+    {
+      const query = `${
+        process.env.REACT_APP_API_ROOT
+      }/api/${getOrganization()}trees${count ? '/count' : ''}${
+        id != null ? '/' + id : ''
+      }${paramString ? '?' + paramString : ''}`;
 
-    // console.log('queryCapturesApi', query, session);
+      // log.debug('queryCapturesApi', query, session);
 
-    return axios.get(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    });
-  };
+      return axios.get(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        // signal: abortController?.signal,
+      });
+    };
 
-  const getCaptureCount = async (payload) => {
+  const getCaptureCount = async () => {
     log.debug('load capture count');
-    // Destruct payload and fill in any gaps from state
-    // const { filter } = { ...state, ...payload };
-    const filter = payload.filter ? payload.filter : filter;
-    // first load the page count
     const paramString = `where=${JSON.stringify(
       filter ? filter.getWhereObj() : {},
     )}`;
@@ -120,47 +98,13 @@ export function CapturesProvider(props) {
       count: true,
       paramString,
     });
-    // console.log('get capture count', response);
     const { count } = response.data;
-    // receiveCaptureCount(count);
-    // setState((prev) => ({ ...prev, captureCount: count }));
+
     setCaptureCount(Number(count));
   };
 
-  const getCapturesAsync = async (filterInfo = {}) => {
-    log.debug('load captures');
-    console.log('captures filterInfo -- ', filterInfo);
-    // Destruct payload and fill in any gaps from captures
-    // const { page, rowsPerPage, filter, orderBy, order } = {
-    //   ...state,
-    //   ...filterInfo,
-    // };
-
-    // WHY ISN'T THIS READING THE STATE as HOOKS?
-    console.log(
-      'captures state -- ',
-      captures,
-      captureCount,
-      capture,
-      page,
-      rowsPerPage,
-      orderBy,
-      order,
-      filter,
-    );
-
-    // if filterInfo contains new values override the defaults in state hooks
-    const {
-      page = 0,
-      rowsPerPage = 25,
-      filter = new FilterModel(),
-      orderBy = 'id',
-      order = 'asc',
-    } = filterInfo;
-
-    // first load the page count
-    getCaptureCount(filterInfo);
-
+  const getCapturesAsync = async () => {
+    // log.debug('4 - load captures');
     const where = filter ? filter.getWhereObj() : {};
 
     const lbFilter = {
@@ -184,28 +128,12 @@ export function CapturesProvider(props) {
 
     const paramString = `filter=${JSON.stringify(lbFilter)}`;
     const response = await queryCapturesApi({ paramString });
-    // console.log('get captures async filter', filter);
-    // setState((prev) => ({
-    //   ...prev,
-    //   captures: response.data,
-    //   page,
-    //   rowsPerPage,
-    //   orderBy,
-    //   order,
-    //   filter,
-    // }));
     setCaptures(response.data);
-    setPage(page);
-    setRowsPerPage(rowsPerPage);
-    setOrderBy(orderBy);
-    setOrder(order);
-    setFilter(filter);
   };
 
-  const getCaptureAsync = async (id) => {
+  const getCaptureAsync = (id) => {
     queryCapturesApi({ id })
       .then((res) => {
-        // setState((prev) => ({ ...prev, capture: res.data }));
         setCapture(res.data);
       })
       .catch((err) =>
@@ -238,12 +166,17 @@ export function CapturesProvider(props) {
   //   }
   // };
 
-  // const updateFilter = async (filter = state.filter) => {
-  //   getCapturesAsync({
-  //     page: 0,
-  //     filter,
-  //   });
-  // };
+  const updateFilter = async (filter) => {
+    log.debug('2 - updateFilter', filter);
+    setFilter(filter);
+    reset();
+  };
+
+  const reset = () => {
+    setCaptures([]);
+    setPage(0);
+    setCaptureCount(null);
+  };
 
   const value = {
     captures,
@@ -253,12 +186,16 @@ export function CapturesProvider(props) {
     rowsPerPage,
     order,
     orderBy,
-    // byId,
     filter,
+    setRowsPerPage,
+    setPage,
+    setOrder,
+    setOrderBy,
     queryCapturesApi,
     getCaptureCount,
     getCapturesAsync,
     getCaptureAsync,
+    updateFilter,
     // getLocationName,
   };
 
