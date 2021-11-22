@@ -27,6 +27,7 @@ const styles = () => ({
     right: 0,
     backgroundColor: 'rgb(239, 239, 239)',
     boxSizing: 'border-box',
+    overflowY: 'scroll',
   },
   welcomeBox: {
     height: '100%',
@@ -37,6 +38,9 @@ const styles = () => ({
     fontFamily: 'Lato,Roboto,Helvetica,Arial,sans-serif',
     fontWeight: '400',
     lineHeight: '1.235',
+  },
+  statCardGrid: {
+    padding: 0,
   },
 });
 

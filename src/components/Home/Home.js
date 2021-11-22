@@ -16,6 +16,7 @@ import {
   DashStatVerifiedCaptures,
 } from '../DashStat.container';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
+import GrowerReportingCard from '../ReportingCards';
 
 /**
  * @function
@@ -42,36 +43,52 @@ function Home(props) {
         </Paper>
       </div>
       <div className={classes.rightBox}>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
-            <GreenStandSvgLogo />
-            <Box display="inline" ml={2}>
-              Version: {`${process.env.REACT_APP_VERSION}`}
-            </Box>
+        <Box className={classes.box2}>
+          <Grid container spacing={5}>
+            <Grid item xs={3}>
+              <GreenStandSvgLogo />
+              <Box display="inline" ml={2}>
+                Version: {`${process.env.REACT_APP_VERSION}`}
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid
-          container
-          spacing={5}
-          className={classes.welcomeBox}
-          justify="center"
-        >
-          {hasPermission(appContext.user, [
-            POLICIES.SUPER_PERMISSION,
-            POLICIES.LIST_TREE,
-            POLICIES.APPROVE_TREE,
-          ]) && (
-            <>
-              <DashStatTotalCaptures />
-              <DashStatUnprocessedCaptures />
-              <DashStatVerifiedCaptures />
-            </>
-          )}
-          {hasPermission(appContext.user, [
-            POLICIES.SUPER_PERMISSION,
-            POLICIES.LIST_PLANTER,
-          ]) && <DashStatGrowerCount />}
-        </Grid>
+          <Grid
+            container
+            spacing={5}
+            className={classes.welcomeBox}
+            justify="center"
+          >
+            {hasPermission(appContext.user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.LIST_TREE,
+              POLICIES.APPROVE_TREE,
+            ]) && (
+              <>
+                <DashStatTotalCaptures />
+                <DashStatUnprocessedCaptures />
+                <DashStatVerifiedCaptures />
+              </>
+            )}
+            {hasPermission(appContext.user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.LIST_PLANTER,
+            ]) && <DashStatGrowerCount />}
+            <Grid className={classes.statCardGrid} container xs={12}>
+              <Grid item xs={4}>
+                <GrowerReportingCard />
+              </Grid>
+              <Grid item xs={4}>
+                <GrowerReportingCard />
+              </Grid>
+              <Grid item xs={4}>
+                <GrowerReportingCard />
+              </Grid>
+              <Grid item xs={4}>
+                <GrowerReportingCard />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
       </div>
     </div>
   );
