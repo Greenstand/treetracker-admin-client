@@ -24,6 +24,7 @@ export const CapturesContext = createContext({
   getCaptureCount: () => {},
   getCapturesAsync: () => {},
   getCaptureAsync: () => {},
+  getAllCaptures: () => {},
   updateFilter: () => {},
   // getLocationName: () => {},
 });
@@ -131,6 +132,42 @@ export function CapturesProvider(props) {
     setCaptures(response.data);
   };
 
+  const getAllCaptures = async (filterInfo = {}) => {
+    log.debug('load all captures');
+    console.log('captures filterInfo -- ', filterInfo);
+
+    // if filterInfo contains new values override the defaults in state hooks
+    const {
+      filter = new FilterModel(),
+      orderBy = 'id',
+      order = 'asc',
+    } = filterInfo;
+
+    const where = filter ? filter.getWhereObj() : {};
+
+    const lbFilter = {
+      where: { ...where },
+      order: [`${orderBy} ${order}`],
+      limit: 20000,
+      fields: {
+        id: true,
+        timeCreated: true,
+        status: true,
+        active: true,
+        approved: true,
+        planterId: true,
+        planterIdentifier: true,
+        deviceIdentifier: true,
+        speciesId: true,
+        tokenId: true,
+      },
+    };
+
+    const paramString = `filter=${JSON.stringify(lbFilter)}`;
+    const response = await queryCapturesApi({ paramString });
+    return response;
+  }
+
   const getCaptureAsync = (id) => {
     queryCapturesApi({ id })
       .then((res) => {
@@ -195,6 +232,7 @@ export function CapturesProvider(props) {
     getCaptureCount,
     getCapturesAsync,
     getCaptureAsync,
+    getAllCaptures,
     updateFilter,
     // getLocationName,
   };

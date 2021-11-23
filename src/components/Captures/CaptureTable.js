@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import {
   Grid,
   Table,
+  Button,
   TableHead,
   TableBody,
   TableRow,
@@ -10,6 +11,7 @@ import {
   TableSortLabel,
   Typography,
 } from '@material-ui/core';
+import { GetApp } from '@material-ui/icons';
 import { getDateTimeStringLocale } from '../../common/locale';
 import { getVerificationStatus } from '../../common/utils';
 import LinkToWebmap from '../common/LinkToWebmap';
@@ -18,6 +20,7 @@ import { SpeciesContext } from '../../context/SpeciesContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
 import { tokenizationStates } from '../../common/variables';
 import useStyle from './CaptureTable.styles.js';
+import ExportCaptures from 'components/ExportCaptures';
 
 const columns = [
   {
@@ -32,21 +35,25 @@ const columns = [
     attr: 'deviceIdentifier',
     label: 'Device Identifier',
     noSort: false,
+    renderer: (val) => val,
   },
   {
     attr: 'planterIdentifier',
     label: 'Planter Identifier',
     noSort: false,
+    renderer: (val) => val,
   },
   {
     attr: 'verificationStatus',
     label: 'Verification Status',
     noSort: true,
+    renderer: (val) => val,
   },
   {
     attr: 'speciesId',
     label: 'Species',
     noSort: true,
+    renderer: (val) => val,
   },
   {
     attr: 'tokenId',
@@ -80,6 +87,7 @@ const CaptureTable = () => {
   const speciesContext = useContext(SpeciesContext);
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   const [speciesState, setSpeciesState] = useState({});
+  const [isOpenExport, setOpenExport] = useState(false);
   const classes = useStyle();
 
   useEffect(() => {
@@ -107,6 +115,10 @@ const CaptureTable = () => {
 
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
+  };
+
+  const handleOpenExport = () => {
+    setOpenExport(true);
   };
 
   const handlePageChange = (e, page) => {
@@ -151,7 +163,25 @@ const CaptureTable = () => {
         <Typography variant="h5" className={classes.title}>
           Captures
         </Typography>
-        {tablePagination()}
+        <Grid className={classes.cornerTable}>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<GetApp />}
+            className={classes.buttonCsv}
+            onClick={handleOpenExport}
+          >
+            Export Captures
+          </Button>
+          <ExportCaptures
+            isOpen={isOpenExport}
+            handleClose={() => setOpenExport(false)}
+            columns={columns}
+            filter={filter}
+            speciesState={speciesState}
+          />
+          {tablePagination()}
+        </Grid>
       </Grid>
       <Table data-testid="captures-table">
         <TableHead>
@@ -200,7 +230,7 @@ const CaptureTable = () => {
   );
 };
 
-const formatCell = (capture, speciesState, attr, renderer) => {
+export const formatCell = (capture, speciesState, attr, renderer) => {
   if (attr === 'id' || attr === 'planterId') {
     return (
       <LinkToWebmap
