@@ -77,8 +77,8 @@ const earningTableFilterStyles = (theme) => ({
     border: 'none',
   },
   earningsTableFilterForm: {
-    width: theme.spacing(75),
-    padding: theme.spacing(5, 3.75),
+    width: theme.spacing(80),
+    padding: theme.spacing(5, 4),
   },
   earningsTableHeader: {
     borderBottom: `${theme.spacing(0.5)} solid ${
@@ -98,7 +98,7 @@ const earningTableFilterStyles = (theme) => ({
     height: theme.spacing(7.5),
   },
   earningsFIlterSelectFormControl: {
-    marginTop: theme.spacing(6),
+    margin: theme.spacing(2, 0, 2, 0),
   },
 });
 
@@ -113,7 +113,9 @@ const earningsTableStyles = (theme) => ({
   earningsTable: {
     padding: theme.spacing(0, 10, 0, 10),
   },
-
+  selectedEarningsTableRow: {
+    backgroundColor: theme.palette.primary.lightVery,
+  },
   earningsTableHeadSortIcon: {
     color: `${theme.palette.primary.main} !important`,
     padding: theme.spacing(0.25),
@@ -157,7 +159,8 @@ const earningDetailsStyles = (theme) => ({
     padding: theme.spacing(5, 0, 0, 0),
   },
   earningGrowerDetail: {
-    padding: theme.spacing(2, 0, 0, 0),
+    padding: theme.spacing(1, 0, 0, 0),
+    color: theme.palette.stats.carbonGrey,
   },
   earningDetailsContentsDivider: {
     margin: theme.spacing(4, 0, 4, 0),

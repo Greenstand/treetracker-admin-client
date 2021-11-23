@@ -528,11 +528,13 @@ export default function EarningsTable() {
     setIsDetailsDrawerOpen(true);
   };
 
+  const isRowSelected = (id) => id === selectedEarning?.id;
+
   useEffect(() => {
     fetchEarnings();
   }, []);
 
-  return (
+  return earnings.length > 0 ? (
     <Grid container direction="column" className={classes.earningsTable}>
       <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} data={earnings} />
       <TableContainer>
@@ -567,6 +569,11 @@ export default function EarningsTable() {
               <TableRow
                 key={`${i}-${earning.id}`}
                 onClick={() => handleOpenEarningDetails(earning)}
+                className={
+                  isRowSelected(earning.id)
+                    ? classes.selectedEarningsTableRow
+                    : ''
+                }
               >
                 {earningTableMetaData.map((column, j) => (
                   <TableCell key={`${i}-${j}-${column.name}`}>
@@ -610,5 +617,7 @@ export default function EarningsTable() {
         setSelectedEarning={setSelectedEarning}
       />
     </Grid>
+  ) : (
+    ''
   );
 }
