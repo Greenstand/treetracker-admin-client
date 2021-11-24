@@ -10,13 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import Close from '@material-ui/icons/Close';
-
-import FileCopy from '@material-ui/icons/FileCopy';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
-import CopyNotification from './CopyNotification';
+import CopyNotification from './common/CopyNotification';
+import { CopyButton } from './common/CopyButton';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -46,9 +45,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: '0.8em',
   },
-  copyButton: {
-    margin: theme.spacing(-2, 0),
-  },
   subtitle: {
     ...theme.typography.button,
     fontSize: '0.8em',
@@ -71,23 +67,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
   },
 }));
-
-export function CopyButton(props) {
-  const { value, label, className, confirmCopy } = props;
-
-  return (
-    <IconButton
-      className={className}
-      title="Copy to clipboard"
-      onClick={() => {
-        navigator.clipboard.writeText(value);
-        confirmCopy(label);
-      }}
-    >
-      <FileCopy fontSize="small" />
-    </IconButton>
-  );
-}
 
 function CaptureDetailDialog(props) {
   // console.log('render: capture detail dialog');
@@ -203,7 +182,6 @@ function CaptureDetailDialog(props) {
                     label={item.label}
                     value={item.value}
                     confirmCopy={confirmCopy}
-                    className={classes.copyButton}
                   />
                 )}
               </Typography>

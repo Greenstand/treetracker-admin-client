@@ -19,8 +19,8 @@ import { GrowerContext } from '../context/GrowerContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
-import { CopyButton } from './CaptureDetailDialog';
-import CopyNotification from './CopyNotification';
+import { CopyButton } from './common/CopyButton';
+import CopyNotification from './common/CopyNotification';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -55,9 +55,6 @@ const useStyle = makeStyles((theme) => ({
   imageContainer: {
     position: 'relative',
     height: `${GROWER_IMAGE_SIZE}px`,
-  },
-  copyButton: {
-    margin: theme.spacing(-2, 0),
   },
 }));
 
@@ -270,7 +267,6 @@ const GrowerDetail = (props) => {
                       label={'Device Identifier'}
                       value={identifier}
                       confirmCopy={confirmCopy}
-                      className={classes.copyButton}
                     />
                   </Typography>
                 ))) || <Typography variant="body1">---</Typography>}
