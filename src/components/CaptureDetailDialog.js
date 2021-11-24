@@ -72,6 +72,14 @@ const useStyles = makeStyles((theme) => ({
   box: {
     padding: theme.spacing(4),
   },
+  imageLink: {
+    position: 'absolute',
+    bottom: 0,
+    margin: '0 auto',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#fff',
+  },
 }));
 
 function CaptureDetailDialog(props) {
@@ -332,6 +340,14 @@ function CaptureDetailDialog(props) {
           style={{ maxWidth: '100%' }}
           fixed
         />
+        <Link
+          href={renderCapture.imageUrl}
+          underline="always"
+          target="_blank"
+          className={classes.imageLink}
+        >
+          <Typography variant="body1">Open original image</Typography>
+        </Link>
       </Dialog>
       <Drawer
         anchor="right"
