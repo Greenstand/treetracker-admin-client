@@ -19,6 +19,8 @@ import { GrowerContext } from '../context/GrowerContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
+import { CopyButton } from './CaptureDetailDialog';
+import CopyNotification from './CopyNotification';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -54,6 +56,9 @@ const useStyle = makeStyles((theme) => ({
     position: 'relative',
     height: `${GROWER_IMAGE_SIZE}px`,
   },
+  copyButton: {
+    margin: theme.spacing(-2, 0),
+  },
 }));
 
 const GrowerDetail = (props) => {
@@ -66,6 +71,8 @@ const GrowerDetail = (props) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState('');
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -120,6 +127,14 @@ const GrowerDetail = (props) => {
 
   function handleEditClose() {
     setEditDialogOpen(false);
+    setSnackbarOpen(false);
+    setSnackbarLabel('');
+  }
+
+  function confirmCopy(label) {
+    setSnackbarOpen(false);
+    setSnackbarLabel(label);
+    setSnackbarOpen(true);
   }
 
   return (
@@ -251,12 +266,23 @@ const GrowerDetail = (props) => {
                 deviceIdentifiers.map((identifier, index) => (
                   <Typography variant="body1" key={index}>
                     {identifier}
+                    <CopyButton
+                      label={'Device Identifier'}
+                      value={identifier}
+                      confirmCopy={confirmCopy}
+                      className={classes.copyButton}
+                    />
                   </Typography>
                 ))) || <Typography variant="body1">---</Typography>}
             </Grid>
           </Grid>
         </Grid>
       </Drawer>
+      <CopyNotification
+        snackbarLabel={snackbarLabel}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
       <EditGrower
         isOpen={editDialogOpen}
         grower={grower}
