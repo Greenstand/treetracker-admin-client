@@ -4,6 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FilterModel, {
   ALL_SPECIES,
@@ -27,7 +30,6 @@ import {
   tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
-import { getVerificationStatus } from '../common/utils';
 import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
@@ -100,6 +102,18 @@ function Filter(props) {
     filter.organizationId || ALL_ORGANIZATIONS,
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  const verificationStatesArr = [
+    verificationStates.APPROVED,
+    verificationStates.AWAITING,
+    verificationStates.REJECTED,
+  ];
+  const [verificationStatus, setVerificationStatus] = useState([
+    verificationStates.APPROVED,
+    verificationStates.AWAITING,
+  ]);
+  const isAllVerification =
+    verificationStatus.length &&
+    verificationStatus.length === verificationStatesArr.length;
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -111,6 +125,19 @@ function Filter(props) {
 
   const formatDate = (date) => {
     return convertDateToDefaultSqlDate(date);
+  };
+
+  const handleVerificationStatusChange = (event) => {
+    const value = event.target.value;
+    if (value[value.length - 1] === 'all') {
+      setVerificationStatus(
+        verificationStatus.length === verificationStatesArr.length
+          ? []
+          : verificationStatesArr,
+      );
+      return;
+    }
+    setVerificationStatus(value);
   };
 
   function handleSubmit(e) {
@@ -186,38 +213,60 @@ function Filter(props) {
                 htmlFor="verification-status"
                 id="verification-status"
                 label="Verification Status"
-                value={
-                  active === undefined && approved === undefined
-                    ? filterOptionAll
-                    : getVerificationStatus(active, approved)
-                }
-                onChange={(e) => {
-                  setApproved(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.REJECTED
-                      ? false
-                      : true,
-                  );
-                  setActive(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.APPROVED
-                      ? true
-                      : false,
-                  );
+                SelectProps={{
+                  multiple: true,
+                  value: verificationStatus,
+                  onChange: handleVerificationStatusChange,
+                  renderValue: (verificationStatus) =>
+                    verificationStatus.join(', '),
                 }}
+                // renderValue={(verificationStatus) => verificationStatus.join(", ")}
+                // value={
+                //   active === undefined && approved === undefined
+                //     ? filterOptionAll
+                //     : getVerificationStatus(active, approved)
+                // }
+                // onChange={(e) => {
+                //   setApproved(
+                //     e.target.value === filterOptionAll
+                //       ? undefined
+                //       : e.target.value === verificationStates.AWAITING ||
+                //         e.target.value === verificationStates.REJECTED
+                //       ? false
+                //       : true,
+                //   );
+                //   setActive(
+                //     e.target.value === filterOptionAll
+                //       ? undefined
+                //       : e.target.value === verificationStates.AWAITING ||
+                //         e.target.value === verificationStates.APPROVED
+                //       ? true
+                //       : false,
+                //   );
+                // }}
               >
-                {[
-                  filterOptionAll,
-                  verificationStates.APPROVED,
-                  verificationStates.AWAITING,
-                  verificationStates.REJECTED,
-                ].map((name) => (
+                <MenuItem value="all">
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={
+                        isAllVerification === 0 ? false : isAllVerification
+                      }
+                      indeterminate={
+                        verificationStatus.length > 0 &&
+                        verificationStatus.length < verificationStatesArr.length
+                      }
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Select All" />
+                </MenuItem>
+                {verificationStatesArr.map((name) => (
                   <MenuItem key={name} value={name}>
-                    {name}
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={verificationStatus.indexOf(name) > -1}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
                   </MenuItem>
                 ))}
               </TextField>
