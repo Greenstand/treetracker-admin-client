@@ -137,11 +137,7 @@ export function CapturesProvider(props) {
     console.log('captures filterInfo -- ', filterInfo);
 
     // if filterInfo contains new values override the defaults in state hooks
-    const {
-      filter = new FilterModel(),
-      orderBy = 'id',
-      order = 'asc',
-    } = filterInfo;
+    const { filter = new FilterModel() } = filterInfo;
 
     const where = filter ? filter.getWhereObj() : {};
 
@@ -166,7 +162,7 @@ export function CapturesProvider(props) {
     const paramString = `filter=${JSON.stringify(lbFilter)}`;
     const response = await queryCapturesApi({ paramString });
     return response;
-  }
+  };
 
   const getCaptureAsync = (id) => {
     queryCapturesApi({ id })

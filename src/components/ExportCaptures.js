@@ -10,9 +10,10 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel,
+  DialogContentText,
 } from '@material-ui/core';
 import { CapturesContext } from '../context/CapturesContext';
-import { CSVLink } from "react-csv";
+import { CSVLink } from 'react-csv';
 import { formatCell } from './Captures/CaptureTable';
 import { LinearProgress } from '@material-ui/core';
 
@@ -26,7 +27,7 @@ const useStyle = makeStyles((theme) => ({
     flexGrow: 1,
   },
   formControl: {
-    margin: theme.spacing(3),
+    margin: theme.spacing(2),
   },
 }));
 
@@ -35,7 +36,7 @@ const ExportCaptures = (props) => {
   const classes = useStyle();
   let nameColumns = {};
   columns.forEach(({ attr, renderer }) => {
-    nameColumns[attr] = {status: true, renderer: renderer};
+    nameColumns[attr] = { status: true, renderer: renderer };
   });
   // checkboxes to choose download columns
   const [checkedColumns, setCheckColumns] = useState(nameColumns);
@@ -46,33 +47,44 @@ const ExportCaptures = (props) => {
 
   function handleChange(attr) {
     const newStatus = !checkedColumns[attr].status;
-    setCheckColumns({ ...checkedColumns, [attr]: { ...checkedColumns[attr], status: newStatus }});
+    setCheckColumns({
+      ...checkedColumns,
+      [attr]: { ...checkedColumns[attr], status: newStatus },
+    });
   }
 
   function processDownloadData(captures, selectedColumns) {
-    return captures.map(capture => {
+    return captures.map((capture) => {
       let formatCapture = {};
-      Object.keys(selectedColumns).forEach(attr => {
+      Object.keys(selectedColumns).forEach((attr) => {
         if (attr === 'id' || attr === 'planterId') {
           formatCapture[attr] = capture[attr];
         } else {
           const renderer = selectedColumns[attr].renderer;
-          formatCapture[attr] = formatCell(capture, speciesState, attr, renderer);
+          formatCapture[attr] = formatCell(
+            capture,
+            speciesState,
+            attr,
+            renderer,
+          );
         }
-      })
+      });
       return formatCapture;
-    })
+    });
   }
 
   async function downloadCaptures() {
     setLoading(true);
-    const filterColumns = Object.entries(checkedColumns).filter((val) => val[1].status === true);
+    const filterColumns = Object.entries(checkedColumns).filter(
+      (val) => val[1].status === true,
+    );
     const selectedColumns = Object.fromEntries(filterColumns);
     await capturesContext.getAllCaptures({ filter }).then((response) => {
       setDownloadData(processDownloadData(response.data, selectedColumns));
       setLoading(false);
     });
     csvLink.current.link.click();
+    handleClose();
   }
 
   return (
@@ -83,6 +95,7 @@ const ExportCaptures = (props) => {
     >
       <DialogTitle id="form-dialog-title">Export Captures</DialogTitle>
       <DialogContent>
+        <DialogContentText>Select the columns to download:</DialogContentText>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormGroup>
             {columns.map(({ attr, label }) => (
@@ -100,19 +113,23 @@ const ExportCaptures = (props) => {
             ))}
           </FormGroup>
         </FormControl>
+        <DialogContentText>
+          Only the first 20,000 records will be downloaded.
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button color="primary" onClick={downloadCaptures}>Download</Button>
-        <CSVLink
-          data={downloadData}
-          filename={"captures.csv"}
-          ref={csvLink}
-        />
+        <Button
+          color="primary"
+          variant="contained"
+          disabled={loading}
+          onClick={downloadCaptures}
+        >
+          Download
+        </Button>
+        <CSVLink data={downloadData} filename={'captures.csv'} ref={csvLink} />
       </DialogActions>
-      {
-        loading && <LinearProgress color="primary" />
-      }
+      {loading && <LinearProgress color="primary" />}
     </Dialog>
   );
 };
