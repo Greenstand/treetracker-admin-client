@@ -81,7 +81,7 @@ describe('Captures', () => {
 
     it('renders headers for captures table', () => {
       const table = screen.getByRole(/table/i);
-      let item = screen.getByText(/Captures/i);
+      let item = screen.getAllByText(/Captures/i)[0];
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Capture ID/i);
       expect(item).toBeInTheDocument();
