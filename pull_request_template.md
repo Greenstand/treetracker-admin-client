@@ -1,15 +1,19 @@
 ## Description
-_[Add a description of the changes]_ 
+
+_[Add a description of the changes]_
 
 **Issue(s) addressed**
+
 - Resolves #_[insert ID of the issue addressed]_
 
-**What kind of change(s) does this PR introduce?** 
+**What kind of change(s) does this PR introduce?**
+
 - [ ] Enhancement
 - [ ] Bug fix
 - [ ] Refactor
 
 **Please check if the PR fulfills these requirements**
+
 - [ ] The commit message follows our guidelines
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been added / updated (for bug fixes / features)
@@ -21,6 +25,7 @@ _[Add a description of the changes]_
 **What is the new behavior?**
 
 ## Breaking change
-**Does this PR introduce a breaking change?** 
+
+**Does this PR introduce a breaking change?**
 
 ## Other useful information
