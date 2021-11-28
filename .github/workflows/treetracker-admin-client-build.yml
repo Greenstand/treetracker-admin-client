@@ -56,9 +56,12 @@ jobs:
       github.event_name == 'push' &&
       github.repository == 'Greenstand/treetracker-admin-client'
     steps:
-      # check out repository code and setup node
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: '16.x'
       # install dependencies and run semantic-release
