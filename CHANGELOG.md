@@ -1,3 +1,17 @@
+# [1.28.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.3...v1.28.0) (2021-11-28)
+
+
+### Bug Fixes
+
+* increased default page size in the Species tool ([#210](https://github.com/Greenstand/treetracker-admin-client/issues/210)) ([9f36227](https://github.com/Greenstand/treetracker-admin-client/commit/9f362279ef1bc48be0ac19624fd2e39e4b78ff94))
+
+
+### Features
+
+* add copy button for Device Identifier in Grower Details ([#207](https://github.com/Greenstand/treetracker-admin-client/issues/207)) ([7a0037d](https://github.com/Greenstand/treetracker-admin-client/commit/7a0037d94abca97c42dd3cfef3370602bffeec46))
+* adding Export Captures button  ([#168](https://github.com/Greenstand/treetracker-admin-client/issues/168)) ([f59a11c](https://github.com/Greenstand/treetracker-admin-client/commit/f59a11ce23bb3b604b533ca839a48a7f9769555e))
+* **grower-detail:** display device manufacturer with device id ([#196](https://github.com/Greenstand/treetracker-admin-client/issues/196)) ([ba9158f](https://github.com/Greenstand/treetracker-admin-client/commit/ba9158f7e4be30644b6568dbd7b2c65ebc95a46c))
+
 ## [1.27.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.2...v1.27.3) (2021-11-15)
 
 
