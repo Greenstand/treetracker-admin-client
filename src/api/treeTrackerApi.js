@@ -162,7 +162,7 @@ export default {
    * get species list
    */
   getSpecies(abortController) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species?filter[order]=name`;
     return fetch(query, {
       method: 'GET',
       headers: {
