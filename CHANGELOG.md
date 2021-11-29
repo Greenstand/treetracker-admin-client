@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.28.0...v1.28.1) (2021-11-29)
+
+
+### Bug Fixes
+
+* sort Verify tool Species filter alphabetically ([#211](https://github.com/Greenstand/treetracker-admin-client/issues/211)) ([59d4ef3](https://github.com/Greenstand/treetracker-admin-client/commit/59d4ef320aaedfca3d879dbe24e2f2fe49202d74))
+
 # [1.28.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.27.3...v1.28.0) (2021-11-28)
 
 
