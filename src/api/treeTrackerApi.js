@@ -162,28 +162,17 @@ export default {
    * get species list
    */
   getSpecies(abortController) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
-    return (
-      fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        signal: abortController?.signal,
-      })
-        .then(handleResponse)
-        // Sort species list alphabetically by species name
-        .then((res) => {
-          res = res.sort((a, b) => {
-            let textA = a.name.toUpperCase();
-            let textB = b.name.toUpperCase();
-            return textA < textB ? -1 : textA > textB ? 1 : 0;
-          });
-          return res;
-        })
-        .catch(handleError)
-    );
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species?filter[order]=name`;
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      signal: abortController?.signal,
+    })
+      .then(handleResponse)
+      .catch(handleError);
   },
   /*
    * get species by id
