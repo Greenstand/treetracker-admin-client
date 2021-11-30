@@ -10,12 +10,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
 import Drawer from '@material-ui/core/Drawer';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
+import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
@@ -65,6 +65,24 @@ const useStyle = makeStyles((theme) => ({
   listCaptures: {
     display: 'flex',
     alignItems: 'center',
+  },
+  rejectedChip: {
+    backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.red,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  awaitingChip: {
+    backgroundColor: theme.palette.stats.orange.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.orange,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  approvedChip: {
+    backgroundColor: theme.palette.stats.green.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.green,
+    fontWeight: 700,
+    fontSize: '0.8em',
   },
 }));
 
@@ -218,34 +236,58 @@ const GrowerDetail = (props) => {
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Captures</Typography>
               <List className={classes.listCaptures}>
-                <Box borderRadius={'30%'} border={1} m={1}>
+                <Box
+                  borderColor="grey.500"
+                  borderRadius={10}
+                  border={0.5}
+                  m={0.5}
+                >
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar>
-                        <ImageIcon />
+                      <Avatar className={classes.approvedChip}>
+                        <Done />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={96} secondary="Approved" />
+                    <ListItemText
+                      primary={<Typography variant="h5">96</Typography>}
+                      secondary="Approved"
+                    />
                   </ListItem>
                 </Box>
-                <Box borderRadius={'30%'} border={1} m={1}>
+                <Box
+                  borderColor="grey.500"
+                  borderRadius={10}
+                  border={0.5}
+                  m={0.5}
+                >
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar>
-                        <ImageIcon />
+                      <Avatar className={classes.awaitingChip}>
+                        <HourglassEmptyOutlined />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={12} secondary="Unverified" />
+                    <ListItemText
+                      primary={<Typography variant="h5">12</Typography>}
+                      secondary="Unverified"
+                    />
                   </ListItem>
                 </Box>
-                <Box borderRadius={'30%'} border={1} m={1}>
+                <Box
+                  borderColor="grey.500"
+                  borderRadius={10}
+                  border={0.5}
+                  m={0.5}
+                >
                   <ListItem>
                     <ListItemAvatar>
-                      <Avatar>
-                        <ImageIcon />
+                      <Avatar className={classes.rejectedChip}>
+                        <Clear />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={4} secondary="Rejected" />
+                    <ListItemText
+                      primary={<Typography variant="h5">4</Typography>}
+                      secondary="Rejected"
+                    />
                   </ListItem>
                 </Box>
               </List>
