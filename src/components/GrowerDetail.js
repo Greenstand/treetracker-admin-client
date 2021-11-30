@@ -5,6 +5,12 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import ImageIcon from '@material-ui/icons/Image';
 import Drawer from '@material-ui/core/Drawer';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
@@ -55,6 +61,10 @@ const useStyle = makeStyles((theme) => ({
   imageContainer: {
     position: 'relative',
     height: `${GROWER_IMAGE_SIZE}px`,
+  },
+  listCaptures: {
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
@@ -203,6 +213,42 @@ const GrowerDetail = (props) => {
               <Typography variant="body2">
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Captures</Typography>
+              <List className={classes.listCaptures}>
+                <Box borderRadius={'30%'} border={1} m={1}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <ImageIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={96} secondary="Approved" />
+                  </ListItem>
+                </Box>
+                <Box borderRadius={'30%'} border={1} m={1}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <ImageIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={12} secondary="Unverified" />
+                  </ListItem>
+                </Box>
+                <Box borderRadius={'30%'} border={1} m={1}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <ImageIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={4} secondary="Rejected" />
+                  </ListItem>
+                </Box>
+              </List>
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
