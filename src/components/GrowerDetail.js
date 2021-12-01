@@ -27,6 +27,8 @@ import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
+import { getVerificationStatus } from '../common/utils';
+import { verificationStates } from '../common/variables';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -89,6 +91,7 @@ const useStyle = makeStyles((theme) => ({
 const GrowerDetail = (props) => {
   // console.log('render: grower detail');
   const classes = useStyle();
+  const emptyStatusCount = { approved: 0, awaiting: 0, rejected: 0 };
   const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
@@ -98,6 +101,9 @@ const GrowerDetail = (props) => {
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
+  const [verificationStatus, setVerificationStatus] = useState(
+    emptyStatusCount,
+  );
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -134,6 +140,23 @@ const GrowerDetail = (props) => {
                   }))
                   .filter((id) => id),
               );
+              let statusCount = emptyStatusCount;
+              registrations.map((reg) => {
+                const verificationState = getVerificationStatus(
+                  reg.active,
+                  reg.approved,
+                );
+                if (verificationState === verificationStates.APPROVED) {
+                  statusCount.approved += 1;
+                } else if (verificationState === verificationStates.AWAITING) {
+                  statusCount.awaiting += 1;
+                } else {
+                  statusCount.rejected += 1;
+                }
+              });
+              setVerificationStatus(statusCount);
+            } else {
+              setVerificationStatus(emptyStatusCount);
             }
           });
         }
@@ -237,7 +260,7 @@ const GrowerDetail = (props) => {
               <Typography variant="subtitle1">Captures</Typography>
               <List className={classes.listCaptures}>
                 <Box
-                  borderColor="grey.500"
+                  borderColor="grey.300"
                   borderRadius={10}
                   border={0.5}
                   m={0.5}
@@ -249,13 +272,17 @@ const GrowerDetail = (props) => {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={<Typography variant="h5">96</Typography>}
+                      primary={
+                        <Typography variant="h5">
+                          {verificationStatus.approved}
+                        </Typography>
+                      }
                       secondary="Approved"
                     />
                   </ListItem>
                 </Box>
                 <Box
-                  borderColor="grey.500"
+                  borderColor="grey.300"
                   borderRadius={10}
                   border={0.5}
                   m={0.5}
@@ -267,13 +294,17 @@ const GrowerDetail = (props) => {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={<Typography variant="h5">12</Typography>}
-                      secondary="Unverified"
+                      primary={
+                        <Typography variant="h5">
+                          {verificationStatus.awaiting}
+                        </Typography>
+                      }
+                      secondary="Awaiting"
                     />
                   </ListItem>
                 </Box>
                 <Box
-                  borderColor="grey.500"
+                  borderColor="grey.300"
                   borderRadius={10}
                   border={0.5}
                   m={0.5}
@@ -285,7 +316,11 @@ const GrowerDetail = (props) => {
                       </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={<Typography variant="h5">4</Typography>}
+                      primary={
+                        <Typography variant="h5">
+                          {verificationStatus.rejected}
+                        </Typography>
+                      }
                       secondary="Rejected"
                     />
                   </ListItem>
