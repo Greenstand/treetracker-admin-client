@@ -135,7 +135,11 @@ function CaptureDetailDialog(props) {
               <Box m={4}>
                 <Typography color="primary" variant="h6">
                   Capture <LinkToWebmap value={capture.id} type="tree" />
-                  <CopyButton label="Capture ID" value={capture.id} />
+                  <CopyButton
+                    label="Capture ID"
+                    value={capture.id}
+                    confirmCopy={confirmCopy}
+                  />
                 </Typography>
               </Box>
             </Grid>
