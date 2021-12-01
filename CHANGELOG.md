@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.0...v1.29.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* pass the confirmCopy function to CopyButton for CaptureID ([#224](https://github.com/Greenstand/treetracker-admin-client/issues/224)) ([196ce3c](https://github.com/Greenstand/treetracker-admin-client/commit/196ce3cbc58d9d5fad5070a80f54a81a50f19a37))
+
 # [1.29.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.28.1...v1.29.0) (2021-12-01)
 
 
