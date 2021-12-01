@@ -128,7 +128,7 @@ export default {
    * get species list
    */
   getSpecies(abortController) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species?filter[order]=name`;
     return fetch(query, {
       method: 'GET',
       headers: {
@@ -367,7 +367,7 @@ export default {
   getOrganizations() {
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}organizations?filter[where][type]=O`;
+    }/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
     console.log('GET ORGANIZATIONS -----', query);
 

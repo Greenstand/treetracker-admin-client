@@ -37,6 +37,16 @@ const useStyle = makeStyles((theme) => ({
   title: {
     paddingLeft: theme.spacing(4),
   },
+  cornerTable: {
+    margin: theme.spacing(1),
+    '&>*': {
+      display: 'inline-flex',
+      margin: theme.spacing(1, 1),
+    },
+  },
+  buttonCsv: {
+    height: 36,
+  },
 }));
 
 export default useStyle;

@@ -7,17 +7,15 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import Close from '@material-ui/icons/Close';
-
-import FileCopy from '@material-ui/icons/FileCopy';
-import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
+import CopyNotification from './common/CopyNotification';
+import { CopyButton } from './common/CopyButton';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -46,9 +44,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.stats.green,
     fontWeight: 700,
     fontSize: '0.8em',
-  },
-  copyButton: {
-    margin: theme.spacing(-2, 0),
   },
   subtitle: {
     ...theme.typography.button,
@@ -132,30 +127,6 @@ function CaptureDetailDialog(props) {
       setSnackbarOpen(true);
     }
 
-    function handleSnackbarClose(event, reason) {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setSnackbarOpen(false);
-    }
-
-    function CopyButton(props) {
-      const { value, label } = props;
-
-      return (
-        <IconButton
-          className={classes.copyButton}
-          title="Copy to clipboard"
-          onClick={() => {
-            navigator.clipboard.writeText(value);
-            confirmCopy(label);
-          }}
-        >
-          <FileCopy fontSize="small" />
-        </IconButton>
-      );
-    }
-
     return (
       <Grid container direction="column">
         <Grid item>
@@ -207,7 +178,11 @@ function CaptureDetailDialog(props) {
                   item.value || '---'
                 )}
                 {item.value && item.copy && (
-                  <CopyButton label={item.label} value={item.value} />
+                  <CopyButton
+                    label={item.label}
+                    value={item.value}
+                    confirmCopy={confirmCopy}
+                  />
                 )}
               </Typography>
             </Grid>
@@ -267,28 +242,10 @@ function CaptureDetailDialog(props) {
             {getTokenStatus(capture.tokenId)}
           </Typography>
         </Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          key={snackbarLabel.length ? snackbarLabel : undefined}
-          open={snackbarOpen}
-          autoHideDuration={2000}
-          onClose={handleSnackbarClose}
-          message={`${snackbarLabel} copied to clipboard`}
-          color="primary"
-          action={
-            <>
-              <IconButton
-                size="small"
-                aria-label="close"
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </>
-          }
+        <CopyNotification
+          snackbarLabel={snackbarLabel}
+          snackbarOpen={snackbarOpen}
+          setSnackbarOpen={setSnackbarOpen}
         />
       </Grid>
     );

@@ -19,6 +19,8 @@ import { GrowerContext } from '../context/GrowerContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
+import { CopyButton } from './common/CopyButton';
+import CopyNotification from './common/CopyNotification';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -66,6 +68,8 @@ const GrowerDetail = (props) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState('');
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -93,7 +97,13 @@ const GrowerDetail = (props) => {
               setGrowerRegistrations(sortedRegistrations);
               setDeviceIdentifiers(
                 sortedRegistrations
-                  .map((reg) => reg.device_identifier)
+                  .map((reg) => ({
+                    id: reg.device_identifier,
+                    os:
+                      reg.manufacturer.toLowerCase() === 'apple'
+                        ? 'iOS'
+                        : 'Android',
+                  }))
                   .filter((id) => id),
               );
             }
@@ -120,6 +130,14 @@ const GrowerDetail = (props) => {
 
   function handleEditClose() {
     setEditDialogOpen(false);
+    setSnackbarOpen(false);
+    setSnackbarLabel('');
+  }
+
+  function confirmCopy(label) {
+    setSnackbarOpen(false);
+    setSnackbarLabel(label);
+    setSnackbarOpen(true);
   }
 
   return (
@@ -247,16 +265,38 @@ const GrowerDetail = (props) => {
               <Typography variant="subtitle1">
                 Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
               </Typography>
-              {(deviceIdentifiers.length &&
-                deviceIdentifiers.map((identifier, index) => (
-                  <Typography variant="body1" key={index}>
-                    {identifier}
-                  </Typography>
-                ))) || <Typography variant="body1">---</Typography>}
+              {(deviceIdentifiers.length && (
+                <table>
+                  <tbody>
+                    {deviceIdentifiers.map((device, i) => (
+                      <tr key={i}>
+                        <td>
+                          <Typography variant="body1">
+                            {device.id}
+                            <CopyButton
+                              label={'Device Identifier'}
+                              value={device.id}
+                              confirmCopy={confirmCopy}
+                            />
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography variant="body1">({device.os})</Typography>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )) || <Typography variant="body1">---</Typography>}
             </Grid>
           </Grid>
         </Grid>
       </Drawer>
+      <CopyNotification
+        snackbarLabel={snackbarLabel}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
       <EditGrower
         isOpen={editDialogOpen}
         grower={grower}
