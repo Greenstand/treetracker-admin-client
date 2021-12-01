@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.28.1...v1.29.0) (2021-12-01)
+
+
+### Features
+
+* **earnings:** Implement earnings tabular list UI ([#181](https://github.com/Greenstand/treetracker-admin-client/issues/181)) ([b7adb1c](https://github.com/Greenstand/treetracker-admin-client/commit/b7adb1c3c190edf9fac468e7ba94fd000a78debb))
+
 ## [1.28.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.28.0...v1.28.1) (2021-11-29)
 
 ### Bug Fixes
