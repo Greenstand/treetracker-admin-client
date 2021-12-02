@@ -51,7 +51,7 @@
   "scripts": {
     "start": "cross-env PORT=3001 react-scripts start",
     "start:dev": "env-cmd -f .env.development cross-env PORT=3001 react-scripts start",
-    "start:local": "REACT_APP_API_ROOT=http://localhost:3000 cross-env PORT=3001 react-scripts start",
+    "start:local": "env-cmd -f .env cross-env PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.development npm run build && mv build build-dev",
     "build:staging": "env-cmd -f .env.staging npm run build",
