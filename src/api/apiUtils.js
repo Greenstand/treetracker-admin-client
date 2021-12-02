@@ -31,3 +31,11 @@ export function getOrganization() {
     return '';
   }
 }
+
+export function getOrganizationId() {
+  if (session.user?.policy?.organization?.id) {
+    return session.user?.policy?.organization?.id;
+  } else {
+    return null;
+  }
+}

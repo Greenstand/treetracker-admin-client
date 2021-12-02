@@ -32,6 +32,7 @@ const useStyles = makeStyles({
 });
 
 function StakeholderGroups({ data, render, tall }) {
+  console.log('StakeholderGroups data, render tall', data, render, tall);
   const classes = useStyles();
   const linkStakeholder = useContext(StakeholdersContext);
 
@@ -54,7 +55,7 @@ function StakeholderGroups({ data, render, tall }) {
             <div className={classes.flex}>
               {stakeholders[type]?.icon}
               <Typography variant="h6">
-                {stakeholders[type]?.label} ({data[type].length || 0})
+                {stakeholders[type]?.label} ({data[type]?.length || 0})
               </Typography>
             </div>
             <Button
@@ -71,13 +72,14 @@ function StakeholderGroups({ data, render, tall }) {
             className={`${classes.listBox} ${tall ? classes.tall : ''}`}
             dense
           >
-            {data[type].map((stakeholder) => (
-              <StakeholderList
-                key={stakeholder.id}
-                data={stakeholder}
-                type={type}
-              />
-            ))}
+            {data[type] &&
+              data[type].map((stakeholder) => (
+                <StakeholderList
+                  key={stakeholder.id}
+                  data={stakeholder}
+                  type={type}
+                />
+              ))}
           </List>
         </Grid>
       ))}
