@@ -527,15 +527,6 @@ const prepareEarnings = (earnings) =>
   });
 
 /**
- * gets sort direction based on selected column
- * @param {*} columns
- * @param {*} columnsName
- * @returns {string} sort direction
- */
-const getSortDirection = (columns, columnsName) =>
-  columns.find(({ name }) => name === columnsName)?.sortDirection;
-
-/**
  * @function
  * @name EarningsTable
  * @description displays table containing  earnings data
