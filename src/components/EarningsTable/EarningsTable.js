@@ -25,7 +25,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
-import API from '../../api/treeTrackerApi';
+import earningsAPI from '../../api/earnings';
 import useStyles from './EarningsTable.styles';
 
 /**
@@ -218,11 +218,6 @@ function EarningDetails(props) {
         <Grid item className={classes.earningDetailsContents}>
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.earningGrowerDetail}>
-              <Typography>Id</Typography>
-              <Typography variant="b">{selectedEarning.id}</Typography>
-            </Grid>
-
-            <Grid item className={classes.earningGrowerDetail}>
               <Typography>Grower</Typography>
               <Typography variant="b">{selectedEarning.grower}</Typography>
             </Grid>
@@ -237,12 +232,12 @@ function EarningDetails(props) {
           <Grid container direction="row">
             <Grid item sm={5}>
               <Typography>Amount</Typography>
-              <Typography variant="b">{selectedEarning.amount}</Typography>
+              <Typography variant="b">{selectedEarning.amount} </Typography>
             </Grid>
 
             <Grid item>
               <Typography>Currency</Typography>
-              <Typography variant="b">Us Dollar</Typography>
+              <Typography variant="b">{selectedEarning.currency}</Typography>
             </Grid>
           </Grid>
 
@@ -251,7 +246,7 @@ function EarningDetails(props) {
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.earningGrowerDetail}>
               <Typography>Status</Typography>
-              <Typography variant="b">Waiting payment</Typography>
+              <Typography variant="b">{selectedEarning.status}</Typography>
             </Grid>
 
             <Grid item className={classes.earningGrowerDetail}>
@@ -262,9 +257,7 @@ function EarningDetails(props) {
                   className={classes.infoIconOutlined}
                 />
               </Typography>
-              <Typography variant="b">
-                {selectedEarning.effectiveDate}
-              </Typography>
+              <Typography variant="b">{selectedEarning.paid_at}</Typography>
             </Grid>
           </Grid>
 
@@ -277,19 +270,23 @@ function EarningDetails(props) {
 
             <Grid item className={classes.earningGrowerDetail}>
               <Typography>Consolidation Type</Typography>
-              <Typography variant="b">087654321</Typography>
+              <Typography variant="b">Default</Typography>
             </Grid>
 
             <Grid item className={classes.earningGrowerDetail}>
               <Grid container direction="row">
                 <Grid item sm={5}>
                   <Typography>Start Date</Typography>
-                  <Typography variant="b">Aug 10, 2021</Typography>
+                  <Typography variant="b">
+                    {selectedEarning.consolidation_period_start}
+                  </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography>End Date</Typography>
-                  <Typography variant="b">Aug 10, 2021</Typography>
+                  <Typography variant="b">
+                    {selectedEarning.consolidation_period_end}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -337,12 +334,16 @@ function EarningDetails(props) {
             <Grid item className={classes.earningGrowerDetail}>
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
-                <Typography variant="b">User24352</Typography>
+                <Typography variant="b">
+                  {selectedEarning.payment_confirmed_by}
+                </Typography>
               </Grid>
 
               <Grid item className={classes.earningGrowerDetail}>
                 <Typography>Payment confirmation method</Typography>
-                <Typography variant="b">User24352</Typography>
+                <Typography variant="b">
+                  {selectedEarning.payment_confirmation_method}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -487,9 +488,9 @@ const earningTableMetaData = [
   { description: 'Grower', name: 'grower' },
   { description: 'Funder', name: 'funder' },
   { description: 'Amount', name: 'amount' },
-  { description: 'Payment System', name: 'paymentSystem' },
-  { description: 'Effective Date', name: 'effectiveDate', info: true },
-  { description: 'Payment Date', name: 'paymentDate' },
+  { description: 'Payment System', name: 'payment_system' },
+  { description: 'Effective Date', name: 'paid_at', info: true },
+  { description: 'Payment Date', name: 'calculated_at' },
 ];
 
 /**
@@ -518,7 +519,7 @@ export default function EarningsTable() {
   };
 
   async function fetchEarnings() {
-    const response = await API.getEarnings();
+    const response = await earningsAPI.getEarnings();
     setEarnings(response.earnings);
     setTotalCount(response.totalCount);
   }
