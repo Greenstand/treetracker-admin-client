@@ -115,7 +115,7 @@ const SpeciesTable = (props) => {
   const sortOptions = { byId: 'id', byName: 'name' };
   const speciesContext = useContext(SpeciesContext);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [speciesEdit, setSpeciesEdit] = useState(undefined);
@@ -226,7 +226,7 @@ const SpeciesTable = (props) => {
   const tablePagination = () => (
     <TablePagination
       count={speciesContext.speciesList.length}
-      rowsPerPageOptions={[5, 10, 20, { label: 'All', value: -1 }]}
+      rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
       colSpan={3}
       page={page}
       rowsPerPage={rowsPerPage}
