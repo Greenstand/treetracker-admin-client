@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from 'react';
-import Row from './EditDialog';
+import React, { useContext } from 'react';
+import StakeholderDetail from './StakeholderDetail';
 import {
   Paper,
   TableContainer,
@@ -16,6 +16,7 @@ import { StakeholdersContext } from '../../context/StakeholdersContext';
 function StakeholderTable() {
   const {
     stakeholders,
+    stakeholder,
     columns,
     page,
     rowsPerPage,
@@ -24,12 +25,14 @@ function StakeholderTable() {
     setPage,
     setRowsPerPage,
     sort,
-    getStakeholders,
+    // getStakeholder,
+    // getStakeholders,
   } = useContext(StakeholdersContext);
 
-  useEffect(() => {
-    getStakeholders();
-  }, []);
+  // useEffect(() => {
+  //   // getStakeholders();
+  //   getStakeholder('792a4eee-8e18-4750-a56f-91bdec383aa6');
+  // }, []);
 
   const handleRowsPerPageChange = (e) => {
     setRowsPerPage(e.target.value);
@@ -65,13 +68,19 @@ function StakeholderTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stakeholders.map((row) => (
-              <React.Fragment key={row.id}>
+            {stakeholder.map((stakeholder) => (
+              <React.Fragment key={stakeholder.id}>
                 {/* Main stakeholder */}
-                <Row row={row} columns={columns} />
-                {row.children.map((child) => (
-                  <Row key={child.id} row={child} columns={columns} child />
-                ))}
+                <StakeholderDetail row={stakeholder} columns={columns} />
+                {stakeholder.children &&
+                  stakeholder.children.map((child) => (
+                    <StakeholderDetail
+                      key={child.id}
+                      row={child}
+                      columns={columns}
+                      child
+                    />
+                  ))}
               </React.Fragment>
             ))}
           </TableBody>

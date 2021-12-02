@@ -1,11 +1,25 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganization,
+  getOrganizationId,
+} from './apiUtils';
 import { session } from '../models/auth';
 
+// const STAKEHOLDER_API = process.env.REACT_APP_API_ROOT;
+const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API;
+
 export default {
-  getStakeholder(id) {
-    const stakeholderQuery = `${
-      process.env.REACT_APP_API_ROOT
-    }/${getOrganization()}stakeholders/${id}`;
+  getStakeholderById(id) {
+    const orgId = id || getOrganizationId();
+    let stakeholderQuery = '';
+    if (Number(orgId)) {
+      stakeholderQuery = `${STAKEHOLDER_API}?id=${orgId}`;
+    } else {
+      stakeholderQuery = `${STAKEHOLDER_API}?stakeholder_uuid=${id}`;
+    }
+
+    console.log('getStakeholderById ---->', stakeholderQuery);
 
     return fetch(stakeholderQuery, {
       method: 'GET',
@@ -19,7 +33,7 @@ export default {
   },
 
   getStakeholders({
-    skip,
+    offset,
     rowsPerPage,
     orderBy = 'id',
     order = 'desc',
@@ -30,25 +44,33 @@ export default {
       where: { ...where, active: true },
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
-      skip,
+      offset,
       fields: {
+        id: true,
+        type: true,
+        orgName: true,
         firstName: true,
         lastName: true,
         imageUrl: true,
         email: true,
         phone: true,
-        personId: true,
-        organization: true,
+        website: true,
+        logoUrl: true,
+        mapName: true,
+        stakeholder_uuid: true,
         organizationId: true,
-        imageRotation: true,
-        id: true,
       },
     };
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/${getOrganization()}stakeholders?filter=${JSON.stringify(
+    const query = `${STAKEHOLDER_API}/stakeholder?filter=${JSON.stringify(
       stakeholderFilter,
     )}`;
+
+    console.log(
+      'getStakeholders ---> ',
+      query,
+      'org ---> ',
+      getOrganizationId(),
+    );
 
     return fetch(query, {
       headers: {
@@ -60,31 +82,12 @@ export default {
       .catch(handleError);
   },
 
-  // getCount({ filter }) {
-  //   const filterObj = filter.getWhereObj ? filter.getWhereObj() : {};
-  //   const query = `${
-  //     process.env.REACT_APP_API_ROOT
-  //   }/${getOrganization()}stakeholders/count?where=${JSON.stringify(
-  //     filterObj,
-  //   )}`;
-  //   return fetch(query, {
-  //     headers: {
-  //       'content-type': 'application/json',
-  //       Authorization: session.token,
-  //     },
-  //   })
-  //     .then(handleResponse)
-  //     .catch(handleError);
-  // },
-
   updateStakeholder(stakeholderUpdate) {
     if (stakeholderUpdate.organizationId === 'null') {
       stakeholderUpdate = { ...stakeholderUpdate, organizationId: null };
     }
     const { id } = stakeholderUpdate;
-    const stakeholderQuery = `${
-      process.env.REACT_APP_API_ROOT
-    }/${getOrganization()}stakeholders/${id}`;
+    const stakeholderQuery = `${STAKEHOLDER_API}/${getOrganization()}stakeholder/${id}`;
 
     return fetch(stakeholderQuery, {
       method: 'PATCH',
