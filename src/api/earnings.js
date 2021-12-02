@@ -9,8 +9,10 @@ export default {
    * @description Get earnings from the API
    * @returns {Promise}
    */
-  async getEarnings() {
-    const endpoint = `${apiUrl}earnings`;
+  async getEarnings(limit = 20, offset = 0, sortByInfo) {
+    const sortField = sortByInfo?.field || 'grower';
+    const sortOrder = sortByInfo?.order || 'asc';
+    const endpoint = `${apiUrl}earnings?limit=${limit}&offset=${offset}&sort_by=${sortField}&order=${sortOrder}`;
     return fetch(endpoint, {
       method: 'GET',
       headers: {

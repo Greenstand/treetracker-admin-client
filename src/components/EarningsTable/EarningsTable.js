@@ -486,12 +486,16 @@ EarningsTableTopBar.propTypes = {
  * @description infomation about column that will display an instance of Earning
  */
 const earningTableMetaData = [
-  { description: 'Grower', name: 'grower' },
-  { description: 'Funder', name: 'funder' },
-  { description: 'Amount', name: 'amount' },
-  { description: 'Payment System', name: 'payment_system' },
-  { description: 'Effective Date', name: 'paid_at', info: true },
-  { description: 'Payment Date', name: 'calculated_at' },
+  { description: 'Grower', name: 'grower', sortDirection: 'desc' },
+  { description: 'Funder', name: 'funder', sortDirection: 'desc' },
+  { description: 'Amount', name: 'amount', sortDirection: 'desc' },
+  {
+    description: 'Effective Date',
+    name: 'calculated_at',
+    info: true,
+    sortDirection: 'desc',
+  },
+  { description: 'Payment Date', name: 'paid_at', sortDirection: 'desc' },
 ];
 
 /**
@@ -504,6 +508,7 @@ const prepareEarnings = (earnings) =>
     const {
       id,
       grower,
+      currency,
       funder,
       amount,
       payment_system,
@@ -514,12 +519,21 @@ const prepareEarnings = (earnings) =>
       id,
       grower,
       funder,
-      amount,
+      amount: `${currency} ${amount}`,
       payment_system,
       paid_at,
       calculated_at: covertDateStringToHumanReadableFormat(calculated_at),
     };
   });
+
+/**
+ * gets sort direction based on selected column
+ * @param {*} columns
+ * @param {*} columnsName
+ * @returns {string} sort direction
+ */
+const getSortDirection = (columns, columnsName) =>
+  columns.find(({ name }) => name === columnsName)?.sortDirection;
 
 /**
  * @function
@@ -534,20 +548,25 @@ export default function EarningsTable() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [selectedEarning, setSelectedEarning] = useState(null);
+  const [sortableColumnsObject, setSortableColumnsObject] = useState({});
+  const [sortBy, setSortBy] = useState(null);
 
   const handleChangePage = (event, newPage) => {
+    setEarnings([]);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
+    setEarnings([]);
     setPage(0);
   };
 
-  async function fetchEarnings() {
-    const response = await earningsAPI.getEarnings();
+  async function fetchEarnings(limit, currentPage, sorByInfo) {
+    const offset = limit * currentPage;
+    const response = await earningsAPI.getEarnings(limit, offset, sorByInfo);
     const preparedEarnings = prepareEarnings(response.earnings);
     setEarnings(preparedEarnings);
     setTotalCount(response.totalCount);
@@ -558,13 +577,26 @@ export default function EarningsTable() {
     setIsDetailsDrawerOpen(true);
   };
 
+  const handleSortableColumns = (column) => {
+    const sortableColumns = {
+      ...sortableColumnsObject,
+      [column.name]: sortableColumnsObject[column.name]
+        ? sortableColumnsObject[column.name] === 'asc'
+          ? 'desc'
+          : 'asc'
+        : 'asc',
+    };
+    setSortableColumnsObject(sortableColumns);
+    setSortBy({ field: column.name, order: sortableColumns[column.name] });
+  };
+
   const isRowSelected = (id) => id === selectedEarning?.id;
 
   useEffect(() => {
-    fetchEarnings();
-  }, []);
+    fetchEarnings(rowsPerPage, page, sortBy);
+  }, [rowsPerPage, page, sortBy]);
 
-  return earnings.length > 0 ? (
+  return (
     <Grid container direction="column" className={classes.earningsTable}>
       <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} data={earnings} />
       <TableContainer>
@@ -574,11 +606,16 @@ export default function EarningsTable() {
               {earningTableMetaData.map((column, i) => (
                 <TableCell
                   key={`${i}-${column.description}`}
-                  sortDirection="desc"
+                  sortDirection={
+                    sortableColumnsObject[column.name] || column.sortDirection
+                  }
                 >
                   <TableSortLabel
                     active={true}
-                    direction="desc"
+                    onClick={() => handleSortableColumns(column)}
+                    direction={
+                      sortableColumnsObject[column.name] || column.sortDirection
+                    }
                     classes={{ icon: classes.earningsTableHeadSortIcon }}
                     IconComponent={ArrowDropDownIcon}
                   >
@@ -594,27 +631,31 @@ export default function EarningsTable() {
             </TableRow>
           </TableHead>
 
-          <TableBody>
-            {earnings.map((earning, i) => (
-              <TableRow
-                key={`${i}-${earning.id}`}
-                onClick={() => handleOpenEarningDetails(earning)}
-                className={
-                  isRowSelected(earning.id)
-                    ? classes.selectedEarningsTableRow
-                    : ''
-                }
-              >
-                {earningTableMetaData.map((column, j) => (
-                  <TableCell key={`${i}-${j}-${column.name}`}>
-                    <Typography variant="body1">
-                      {earning[column.name]}
-                    </Typography>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+          {earnings.length > 0 ? (
+            <TableBody>
+              {earnings.map((earning, i) => (
+                <TableRow
+                  key={`${i}-${earning.id}`}
+                  onClick={() => handleOpenEarningDetails(earning)}
+                  className={
+                    isRowSelected(earning.id)
+                      ? classes.selectedEarningsTableRow
+                      : ''
+                  }
+                >
+                  {earningTableMetaData.map((column, j) => (
+                    <TableCell key={`${i}-${j}-${column.name}`}>
+                      <Typography variant="body1">
+                        {earning[column.name]}
+                      </Typography>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          ) : (
+            ''
+          )}
         </Table>
       </TableContainer>
       <TablePagination
@@ -647,7 +688,5 @@ export default function EarningsTable() {
         setSelectedEarning={setSelectedEarning}
       />
     </Grid>
-  ) : (
-    ''
   );
 }
