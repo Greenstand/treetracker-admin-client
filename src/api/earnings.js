@@ -10,8 +10,7 @@ export default {
    * @returns {Promise}
    */
   async getEarnings() {
-    const localUrl = `earnings.json`;
-    const endpoint = `${apiUrl}earnings`;
+    const endpoint = `${apiUrl}/earnings`;
     return fetch(endpoint, {
       method: 'GET',
       headers: {
