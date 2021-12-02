@@ -22,3 +22,18 @@ export const stringToSearchRegExp = (value) => `/.*${value}.*/i`;
  */
 export const getOrganizationById = (organizations, organizationId) =>
   organizations.find(({ id }) => id === organizationId);
+
+/**
+ * @function
+ * @name covertDateStringToHumanReadableFormat
+ * @description receives a date iso string and converts it to a human readable format
+ *
+ * @param {string} dateString
+ *
+ * @returns {string} human readable date
+ */
+export const covertDateStringToHumanReadableFormat = (dateString) => {
+  const date = new Date(dateString);
+
+  return date.toDateString();
+};
