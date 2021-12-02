@@ -27,6 +27,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import earningsAPI from '../../api/earnings';
 import useStyles from './EarningsTable.styles';
+import { covertDateStringToHumanReadableFormat } from 'utilities';
 
 /**
  * @function
@@ -494,6 +495,33 @@ const earningTableMetaData = [
 ];
 
 /**
+ * transform earnings such that are well formated compatible with earnigs table meta data
+ * @param {object} earnings
+ * @returns {Array}
+ */
+const prepareEarnings = (earnings) =>
+  earnings.map((earning) => {
+    const {
+      id,
+      grower,
+      funder,
+      amount,
+      payment_system,
+      paid_at,
+      calculated_at,
+    } = earning;
+    return {
+      id,
+      grower,
+      funder,
+      amount,
+      payment_system,
+      paid_at,
+      calculated_at: covertDateStringToHumanReadableFormat(calculated_at),
+    };
+  });
+
+/**
  * @function
  * @name EarningsTable
  * @description displays table containing  earnings data
@@ -520,7 +548,8 @@ export default function EarningsTable() {
 
   async function fetchEarnings() {
     const response = await earningsAPI.getEarnings();
-    setEarnings(response.earnings);
+    const preparedEarnings = prepareEarnings(response.earnings);
+    setEarnings(preparedEarnings);
     setTotalCount(response.totalCount);
   }
 
