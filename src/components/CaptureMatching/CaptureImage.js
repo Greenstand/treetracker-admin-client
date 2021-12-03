@@ -22,11 +22,14 @@ const useStyles = makeStyles({
     flexDirection: 'spaceBetween',
   },
 
+  imgBox: {
+    height: '52vh',
+    marginTop: '20px',
+    overflow: 'scroll',
+  },
+
   imgContainer: {
     width: '100%',
-    height: '51vh',
-    objectFit: 'cover',
-    marginTop: '20px',
   },
 });
 
