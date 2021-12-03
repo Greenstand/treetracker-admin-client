@@ -13,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   containerBox: {
     margin: theme.spacing(5),
-    paddingTop: '30px',
     background: '#fff',
     borderRadius: '4px',
   },
@@ -59,24 +58,6 @@ function CaptureImage(props) {
         captureImages
           .slice((currentPage - 1) * imgPerPage, currentPage * imgPerPage)
           .map((capture) => {
-            // console.log('captureImage', capture);
-            // age: null;
-            // attributes: null;
-            // created_at: '2021-05-04T11:24:43.000Z';
-            // device_identifier: null;
-            // gps_accuracy: null;
-            // id: 'c02a5ae6-3727-11ec-8d3d-0242ac130003';
-            // image_url: 'http://xxx';
-            // lat: '0';
-            // lon: '0';
-            // morphology: null;
-            // note: null;
-            // planter_id: '1';
-            // planter_photo_url: null;
-            // planter_username: 'x';
-            // reference_id: '1';
-            // status: 'approved';
-            // updated_at: '2021-05-04T11:24:43.000Z';
             return (
               <Box
                 key={`capture_${capture.id}`}
@@ -111,7 +92,7 @@ function CaptureImage(props) {
                     </Box>
 
                     <Grower
-                      userPhotoUrl={capture.planter_photo_url}
+                      planter_photo_url={capture.planter_photo_url}
                       planter_username={capture.planter_username}
                       status={capture.status}
                     />

@@ -8,7 +8,12 @@ function Grower({ planter_photo_url, planter_username, status }) {
       <img
         src={planter_photo_url}
         alt=""
-        style={{ borderRadius: '50%', width: '130px', height: '130px' }}
+        style={{
+          borderRadius: '50%',
+          width: '130px',
+          height: '130px',
+          paddingTop: '20px',
+        }}
       />
       <Box style={{ margin: 'auto', paddingLeft: '10px' }}>
         <Typography variant="body1" style={{ display: 'block' }}>

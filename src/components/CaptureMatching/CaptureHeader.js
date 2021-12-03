@@ -35,14 +35,11 @@ function CaptureHeader(props) {
           justify="space-between"
           alignItems="baseline"
         >
-          <Box>
-            <CurrentCaptureNumber
-              text={`Unmatched Capture${imgCount !== 1 && 's'}`}
-              cameraImg={iconImgLogo}
-              imgCount={imgCount}
-            />
-          </Box>
-
+          <CurrentCaptureNumber
+            text={`Unmatched Capture${imgCount !== 1 && 's'}`}
+            cameraImg={iconImgLogo}
+            imgCount={imgCount}
+          />
           <Box style={{ display: 'flex', flexDirection: 'wrap' }}>
             <Pagination
               count={noOfPages}

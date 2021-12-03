@@ -30,7 +30,7 @@ const useStyle = makeStyles({
 });
 
 // Set API as a variable
-const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/captures`;
+const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
   const classes = useStyle();
@@ -49,20 +49,23 @@ function CaptureMatchingView() {
   useEffect(() => {
     console.log('loading candidate images');
     async function fetchCandidateTrees(captureId) {
-      console.log('fetchCandidateTrees()');
       // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}/${captureId}/potential_trees`, {
-        headers: {
-          // Authorization: session.token,
+      const data = await fetch(
+        `${CAPTURE_API}/${captureId}/potential_matches`,
+        {
+          headers: {
+            // Authorization: session.token,
+          },
         },
-      }).then((res) => res.json());
-      setCandidateImgData(data);
-      setTreesCount(data.length);
+      ).then((res) => res.json());
+      console.log('candidate images ---> ', data);
+      setCandidateImgData(data.matches);
+      setTreesCount(data.matches.length);
       setLoading(false);
     }
 
-    setCandidateImgData([]);
+    // setCandidateImgData([]);
 
     if (
       captureImages &&
@@ -113,6 +116,7 @@ function CaptureMatchingView() {
   const sameTreeHandler = (treeId) => {
     // TODO: handle errors and give user feedback
     const captureId = captureImages[currentPage - 1].id;
+    console.log('captureId treeId', captureId, treeId);
     fetch(`${CAPTURE_API}/${captureId}`, {
       method: 'PATCH',
       headers: {
