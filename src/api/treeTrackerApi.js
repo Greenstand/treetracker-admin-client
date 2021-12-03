@@ -1,6 +1,28 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+const FIELDS = {
+  uuid: true,
+  imageUrl: true,
+  lat: true,
+  lon: true,
+  id: true,
+  timeCreated: true,
+  timeUpdated: true,
+  active: true,
+  approved: true,
+  planterId: true,
+  deviceIdentifier: true,
+  planterIdentifier: true,
+  speciesId: true,
+  tokenId: true,
+  morphology: true,
+  age: true,
+  captureApprovalTag: true,
+  rejectionReason: true,
+  note: true,
+}
+
 export default {
   getCaptureImages(
     {
@@ -20,20 +42,7 @@ export default {
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip,
-      fields: {
-        uuid: true,
-        imageUrl: true,
-        lat: true,
-        lon: true,
-        id: true,
-        timeCreated: true,
-        timeUpdated: true,
-        active: true,
-        approved: true,
-        planterId: true,
-        deviceIdentifier: true,
-        planterIdentifier: true,
-      },
+      fields: FIELDS,
     };
 
     const query = `${
@@ -113,9 +122,15 @@ export default {
       .catch(handleError);
   },
   getCaptureById(id) {
+    const lbFilter = {
+      order: [`${'asc'} ${'id'}`],
+      fields: FIELDS,
+    };
+
+    const paramString = `filter=${JSON.stringify(lbFilter)}`;
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/${id}`;
+    }/api/${getOrganization()}trees/${id}${paramString ? '?' + paramString : ''}`;
     return fetch(query, {
       headers: {
         Authorization: session.token,

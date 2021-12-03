@@ -16,6 +16,7 @@ import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
+import { SpeciesContext } from 'context/SpeciesContext';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -72,11 +73,13 @@ function CaptureDetailDialog(props) {
   // console.log('render: capture detail dialog');
   const { open, capture } = props;
   const cdContext = useContext(CaptureDetailContext);
+  const speciesContext = useContext(SpeciesContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [species, setSpecies] = useState({});
   const resizeWindow = useCallback(() => {
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
@@ -85,7 +88,10 @@ function CaptureDetailDialog(props) {
 
   useEffect(() => {
     cdContext.getCaptureDetail(capture.id);
-
+    const filterSpecies = capture.speciesId ? speciesContext.speciesList.filter(spec => spec.id === capture.speciesId) : [];
+    if (filterSpecies && filterSpecies.length) {
+      setSpecies(filterSpecies[0]);
+    }
     window.addEventListener('resize', resizeWindow);
     return () => {
       window.removeEventListener('resize', resizeWindow);
@@ -285,7 +291,7 @@ function CaptureDetailDialog(props) {
           <Grid container direction="column">
             <Tags
               capture={renderCapture}
-              species={cdContext.species}
+              species={species}
               captureTags={cdContext.tags}
             />
           </Grid>
