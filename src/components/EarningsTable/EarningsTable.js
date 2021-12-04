@@ -490,29 +490,32 @@ const earningTableMetaData = [
   {
     description: 'Grower',
     name: 'grower',
-    sortDirection: 'desc',
     sortable: true,
+    showInfoIcon: false,
   },
   {
     description: 'Funder',
     name: 'funder',
-    sortDirection: 'desc',
     sortable: true,
+    showInfoIcon: false,
   },
   {
     description: 'Amount',
     name: 'amount',
-    sortDirection: 'desc',
     sortable: true,
+    showInfoIcon: false,
   },
   {
     description: 'Effective Date',
     name: 'calculated_at',
-    info: true,
+    sortable: false,
+    showInfoIcon: true,
   },
   {
     description: 'Payment Date',
     name: 'paid_at',
+    sortable: false,
+    showInfoIcon: false,
   },
 ];
 
@@ -622,18 +625,15 @@ export default function EarningsTable() {
                 >
                   {column?.sortable ? (
                     <TableSortLabel
-                      active={true}
+                      active={sortBy?.field === column.name}
                       onClick={() => handleSortableColumns(column)}
-                      direction={
-                        sortableColumnsObject[column.name] ||
-                        column.sortDirection
-                      }
+                      direction={sortableColumnsObject[column.name]}
                       classes={{ icon: classes.earningsTableHeadSortIcon }}
                       IconComponent={ArrowDropDownIcon}
                     >
                       <Typography variant="h6">
                         {column.description}
-                        {column?.info && (
+                        {column?.showInfoIcon && (
                           <InfoOutlinedIcon className={classes.infoIcon} />
                         )}
                       </Typography>
@@ -641,7 +641,7 @@ export default function EarningsTable() {
                   ) : (
                     <Typography variant="h6">
                       {column.description}
-                      {column?.info && (
+                      {column?.showInfoIcon && (
                         <InfoOutlinedIcon className={classes.infoIcon} />
                       )}
                     </Typography>
