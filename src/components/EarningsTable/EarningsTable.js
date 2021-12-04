@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Drawer from '@material-ui/core/Drawer';
 import Select from '@material-ui/core/Select';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TableContainer from '@material-ui/core/TableContainer';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -577,6 +578,7 @@ export default function EarningsTable() {
           : 'asc'
         : 'asc',
     };
+    setEarnings([]);
     setSortableColumnsObject(sortableColumns);
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
@@ -645,7 +647,9 @@ export default function EarningsTable() {
               ))}
             </TableBody>
           ) : (
-            ''
+            <Grid item container className={classes.progressContainer}>
+              <CircularProgress />
+            </Grid>
           )}
         </Table>
       </TableContainer>

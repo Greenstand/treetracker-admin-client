@@ -110,6 +110,12 @@ const earningTableFilterStyles = (theme) => ({
  * @returns {object} styles for EarningsTable component
  */
 const earningsTableStyles = (theme) => ({
+  progressContainer: {
+    padding: theme.spacing(5, 0, 5, 0),
+    position: 'relative',
+    left: theme.spacing(120),
+    bottom: theme.spacing(0),
+  },
   earningsTable: {
     padding: theme.spacing(0, 10, 0, 10),
   },
