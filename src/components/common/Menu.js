@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
     position: 'inherit',
     height: '100vh',
   },
+  menuTitle: {
+    textTransform: 'uppercase',
+  },
+  menuItemWithChildren: {
+    padding: theme.spacing(0, 0, 0, 4),
+  },
   menuItem: {
     '&:hover': {
       backgroundColor: theme.palette.primary.lightVery,
@@ -76,8 +82,10 @@ export default function GSMenu(props) {
             .filter(({ disabled }) => !disabled)
             .map((item, i) =>
               item?.children ? (
-                <div>
-                  <Typography>{item.name}</Typography>
+                <div className={classes.menuItemWithChildren}>
+                  <Typography className={classes.menuTitle}>
+                    {item.name}
+                  </Typography>
                   {item.children.map((child, i) => (
                     <Link
                       key={`menu_${i}`}
