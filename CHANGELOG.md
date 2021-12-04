@@ -1,3 +1,10 @@
+## [1.29.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.1...v1.29.2) (2021-12-04)
+
+
+### Bug Fixes
+
+* tag search in verify and captures filters ([#229](https://github.com/Greenstand/treetracker-admin-client/issues/229)) ([64c3139](https://github.com/Greenstand/treetracker-admin-client/commit/64c3139ecc4ff23d5a9f3cab11cf4f31f4b665c5))
+
 ## [1.29.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.0...v1.29.1) (2021-12-01)
 
 
