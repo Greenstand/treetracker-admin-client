@@ -9,6 +9,7 @@ import IconLogo from '../IconLogo';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
 
 export const MENU_WIDTH = 232;
 
@@ -73,35 +74,70 @@ export default function GSMenu(props) {
           appContext.routes &&
           appContext.routes
             .filter(({ disabled }) => !disabled)
-            .map((item, i) => (
-              <Link
-                key={`menu_${i}`}
-                className={
-                  classes.linkItemText +
-                  (item.disabled ? ' ' + classes.disabledLinkItem : '')
-                }
-                to={`${item.disabled ? '/' : item.linkTo}`}
-              >
-                <MenuItem
-                  className={classes.menuItem}
-                  selected={props.active === item.name}
-                  disabled={item.disabled}
+            .map((item, i) =>
+              item?.children ? (
+                <div>
+                  <Typography>{item.name}</Typography>
+                  {item.children.map((child, i) => (
+                    <Link
+                      key={`menu_${i}`}
+                      className={
+                        classes.linkItemText +
+                        (child.disabled ? ' ' + classes.disabledLinkItem : '')
+                      }
+                      to={`${child.disabled ? '/' : child.linkTo}`}
+                    >
+                      <MenuItem
+                        className={classes.menuItem}
+                        selected={props.active === item.name}
+                        disabled={child.disabled}
+                      >
+                        <Grid container>
+                          <Grid item>
+                            <ListItemIcon className={classes.listItemIcon}>
+                              {child.icon && <child.icon />}
+                            </ListItemIcon>
+                          </Grid>
+                          <Grid item>
+                            <ListItemText className={classes.listItemText}>
+                              {child.name}
+                            </ListItemText>
+                          </Grid>
+                        </Grid>
+                      </MenuItem>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <Link
+                  key={`menu_${i}`}
+                  className={
+                    classes.linkItemText +
+                    (item.disabled ? ' ' + classes.disabledLinkItem : '')
+                  }
+                  to={`${item.disabled ? '/' : item.linkTo}`}
                 >
-                  <Grid container>
-                    <Grid item>
-                      <ListItemIcon className={classes.listItemIcon}>
-                        {item.icon && <item.icon />}
-                      </ListItemIcon>
+                  <MenuItem
+                    className={classes.menuItem}
+                    selected={props.active === item.name}
+                    disabled={item.disabled}
+                  >
+                    <Grid container>
+                      <Grid item>
+                        <ListItemIcon className={classes.listItemIcon}>
+                          {item.icon && <item.icon />}
+                        </ListItemIcon>
+                      </Grid>
+                      <Grid item>
+                        <ListItemText className={classes.listItemText}>
+                          {item.name}
+                        </ListItemText>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <ListItemText className={classes.listItemText}>
-                        {item.name}
-                      </ListItemText>
-                    </Grid>
-                  </Grid>
-                </MenuItem>
-              </Link>
-            )),
+                  </MenuItem>
+                </Link>
+              ),
+            ),
         [appContext.routes, props.active, classes],
       )}
     </>

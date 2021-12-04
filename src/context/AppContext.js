@@ -81,10 +81,20 @@ function getRoutes(user) {
     },
     {
       name: 'Earnings',
-      linkTo: '/earnings',
-      component: EarningsView,
-      icon: CreditCardIcon,
-      disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+      children: [
+        {
+          name: 'Earnings',
+          linkTo: '/earnings',
+          component: EarningsView,
+          icon: CreditCardIcon,
+          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+        },
+        {
+          name: 'Payments',
+          linkTo: '/payments',
+          icon: IconCompareArrows,
+        },
+      ],
     },
     {
       name: 'Growers',
@@ -95,12 +105,6 @@ function getRoutes(user) {
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_GROWER,
       ]),
-    },
-    {
-      name: 'Payments',
-      linkTo: '/payments',
-      icon: IconCompareArrows,
-      disabled: true,
     },
     {
       name: 'Species',
