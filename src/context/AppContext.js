@@ -93,6 +93,7 @@ function getRoutes(user) {
           name: 'Payments',
           linkTo: '/payments',
           icon: IconCompareArrows,
+          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
         },
       ],
     },
