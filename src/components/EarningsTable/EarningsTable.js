@@ -487,16 +487,33 @@ EarningsTableTopBar.propTypes = {
  * @description infomation about column that will display an instance of Earning
  */
 const earningTableMetaData = [
-  { description: 'Grower', name: 'grower', sortDirection: 'desc' },
-  { description: 'Funder', name: 'funder', sortDirection: 'desc' },
-  { description: 'Amount', name: 'amount', sortDirection: 'desc' },
+  {
+    description: 'Grower',
+    name: 'grower',
+    sortDirection: 'desc',
+    sortable: true,
+  },
+  {
+    description: 'Funder',
+    name: 'funder',
+    sortDirection: 'desc',
+    sortable: true,
+  },
+  {
+    description: 'Amount',
+    name: 'amount',
+    sortDirection: 'desc',
+    sortable: true,
+  },
   {
     description: 'Effective Date',
     name: 'calculated_at',
     info: true,
-    sortDirection: 'desc',
   },
-  { description: 'Payment Date', name: 'paid_at', sortDirection: 'desc' },
+  {
+    description: 'Payment Date',
+    name: 'paid_at',
+  },
 ];
 
 /**
@@ -603,22 +620,32 @@ export default function EarningsTable() {
                     sortableColumnsObject[column.name] || column.sortDirection
                   }
                 >
-                  <TableSortLabel
-                    active={true}
-                    onClick={() => handleSortableColumns(column)}
-                    direction={
-                      sortableColumnsObject[column.name] || column.sortDirection
-                    }
-                    classes={{ icon: classes.earningsTableHeadSortIcon }}
-                    IconComponent={ArrowDropDownIcon}
-                  >
+                  {column?.sortable ? (
+                    <TableSortLabel
+                      active={true}
+                      onClick={() => handleSortableColumns(column)}
+                      direction={
+                        sortableColumnsObject[column.name] ||
+                        column.sortDirection
+                      }
+                      classes={{ icon: classes.earningsTableHeadSortIcon }}
+                      IconComponent={ArrowDropDownIcon}
+                    >
+                      <Typography variant="h6">
+                        {column.description}
+                        {column?.info && (
+                          <InfoOutlinedIcon className={classes.infoIcon} />
+                        )}
+                      </Typography>
+                    </TableSortLabel>
+                  ) : (
                     <Typography variant="h6">
                       {column.description}
                       {column?.info && (
                         <InfoOutlinedIcon className={classes.infoIcon} />
                       )}
                     </Typography>
-                  </TableSortLabel>
+                  )}
                 </TableCell>
               ))}
             </TableRow>
