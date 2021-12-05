@@ -130,12 +130,20 @@ const earningTableMetaData = [
 ];
 
 export default function EarningsTable() {
-  const getEarnings = (...args) => {
-    return earningsAPI.getEarnings(...args);
-  };
+  const [earnings, setEarnings] = useState([]);
+  const [totalEarnings, setTotalEarnings] = useState(0);
+  const [selectedEarning, setSelectedEarning] = useState(null);
+  async function getEarnings(...args) {
+    const response = await earningsAPI.getEarnings(...args);
+    setEarnings(response.earnings);
+    setTotalEarnings(response.totalCount);
+  }
   return (
     <CustomTable
+      data={earnings}
+      totalCount={totalEarnings}
       handleGetData={getEarnings}
+      setSelectedRow={setSelectedEarning}
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
       filter={<EarningsTableFilter />}

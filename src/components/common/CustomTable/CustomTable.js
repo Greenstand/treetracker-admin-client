@@ -393,6 +393,7 @@ const prepareEarnings = (earnings) =>
  * @description displays table containing  earnings data
  * @param {object} props - properties passed to component
  * @param {function} props.handleGetData - handler function that gets data to be displayed in table
+ * @param {Array} props.data - data to be displayed in table
  * @param {React.Component} props.filter - renders table filter form
  * @param {string} props.headerTitle - title of the table header
  * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
@@ -405,12 +406,13 @@ function CustomTable(props) {
     filter,
     headerTitle,
     actionButtonType,
+    data,
+    totalCount,
   } = props;
 
   // managing custom table  state
   const classes = useStyles();
   const [earnings, setEarnings] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
@@ -420,22 +422,18 @@ function CustomTable(props) {
   const [sortBy, setSortBy] = useState(null);
 
   const handleChangePage = (event, newPage) => {
-    setEarnings([]);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setEarnings([]);
     setPage(0);
   };
 
-  async function fetchData(limit, currentPage, sorByInfo) {
+  function fetchData(limit, currentPage, sorByInfo) {
     const offset = limit * currentPage;
-    const response = await handleGetData(limit, offset, sorByInfo);
-    const preparedEarnings = prepareEarnings(response.earnings);
-    setEarnings(preparedEarnings);
-    setTotalCount(response.totalCount);
+    setEarnings([]);
+    handleGetData(limit, offset, sorByInfo);
   }
 
   const handleOpenEarningDetails = (earning) => {
@@ -452,12 +450,16 @@ function CustomTable(props) {
           : 'asc'
         : 'asc',
     };
-    setEarnings([]);
     setSortableColumnsObject(sortableColumns);
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
   const isRowSelected = (id) => id === selectedEarning?.id;
+
+  useEffect(() => {
+    const preparedEarnings = prepareEarnings(data);
+    setEarnings(preparedEarnings);
+  }, [data]);
 
   useEffect(() => {
     fetchData(rowsPerPage, page, sortBy);
@@ -621,4 +623,5 @@ CustomTable.propTypes = {
   filter: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   actionButtonType: PropTypes.element.isRequired,
+  data: PropTypes.objectOf(PropTypes.any).isRequired,
 };
