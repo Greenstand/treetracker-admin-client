@@ -26,137 +26,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
-import earningsAPI from '../../../api/earnings';
 import useStyles from './CustomTable.styles';
 import { covertDateStringToHumanReadableFormat } from 'utilities';
-
-/**
- * @function
- * @name EarningsTableFilter
- * @description render filter for earnings table
- * @param {object} props - properties  passed to the component
- * @param {boolean} props.isFilterOpen - flag that decides wheather filter should open/close
- * @param {Function} setIsFilterOpen - closes filter when executed
- *
- * @returns {React.Component}
- */
-function EarningsTableFilter(props) {
-  const { isFilterOpen, setIsFilterOpen } = props;
-  const classes = useStyles();
-
-  const handleCloseFilter = () => setIsFilterOpen(false);
-
-  return (
-    <Drawer
-      anchor="right"
-      BackdropProps={{ invisible: true }}
-      open={isFilterOpen}
-    >
-      <Grid
-        container
-        direction="column"
-        className={classes.earningsTableFilterForm}
-      >
-        {/* start filter header */}
-        <Grid item>
-          <Grid container direction="row" justify="space-between">
-            <Grid item>
-              <Grid
-                container
-                direction="row"
-                alignContent="flex-end"
-                justify="flex-start"
-              >
-                <Typography variant="h4">Filters</Typography>
-                <Avatar className={classes.earningsTableFilterAvatar}>
-                  <Typography variant="h5">1</Typography>
-                </Avatar>
-              </Grid>
-            </Grid>
-            <CloseIcon
-              onClick={() => handleCloseFilter()}
-              className={classes.earningsTableFilterCloseIcon}
-            />
-          </Grid>
-        </Grid>
-        {/* end filter header */}
-
-        {/* start filter form */}
-        <Grid item>
-          <Grid container direction="column" justify="space-between">
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Funder
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                label="Funder"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Environment For Africa</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Payment System
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                label="Payment System"
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Visa</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Divider style={{ margin: '100px 0 20px 0' }} />
-
-          <Grid
-            container
-            direction="column"
-            className={classes.earningTableFilterActions}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              className={classes.earningTableFilterSubmitButton}
-            >
-              APPLY
-            </Button>
-            <Button
-              color="primary"
-              variant="text"
-              className={classes.earningTableFilterCancelButton}
-            >
-              CANCEL
-            </Button>
-          </Grid>
-        </Grid>
-        {/* end filter form */}
-      </Grid>
-    </Drawer>
-  );
-}
-
-EarningsTableFilter.propTypes = {
-  isFilterOpen: PropTypes.bool.isRequired,
-  setIsFilterOpen: PropTypes.func.isRequired,
-};
 
 /**
  * @function
@@ -517,10 +388,11 @@ const prepareEarnings = (earnings) =>
  * @description displays table containing  earnings data
  * @param {object} props - properties passed to component
  * @param {function} props.handleGetData - handler function that gets data to be displayed in table
+ * @param {React.Component} props.filter - renders table filter form
  * @returns {React.Component} earnings table
  */
 function CustomTable(props) {
-  const { handleGetData, tableMetaData } = props;
+  const { handleGetData, tableMetaData, filter } = props;
   const classes = useStyles();
   const [earnings, setEarnings] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -665,10 +537,44 @@ function CustomTable(props) {
         }}
       />
 
-      <EarningsTableFilter
-        isFilterOpen={isFilterOpen}
-        setIsFilterOpen={setIsFilterOpen}
-      />
+      {/* start table filter */}
+      <Drawer
+        anchor="right"
+        BackdropProps={{ invisible: true }}
+        open={isFilterOpen}
+      >
+        <Grid
+          container
+          direction="column"
+          className={classes.earningsTableFilterForm}
+        >
+          {/* start filter header */}
+          <Grid item>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  alignContent="flex-end"
+                  justify="flex-start"
+                >
+                  <Typography variant="h4">Filters</Typography>
+                  <Avatar className={classes.earningsTableFilterAvatar}>
+                    <Typography variant="h5">1</Typography>
+                  </Avatar>
+                </Grid>
+              </Grid>
+              <CloseIcon
+                onClick={() => setIsFilterOpen(false)}
+                className={classes.earningsTableFilterCloseIcon}
+              />
+            </Grid>
+          </Grid>
+          {/* end filter header */}
+          {filter}
+        </Grid>
+      </Drawer>
+      {/* end table filter */}
 
       <EarningDetails
         isDetailsDrawerOpen={isDetailsDrawerOpen}
@@ -692,4 +598,5 @@ CustomTable.propTypes = {
       showInfoIcon: PropTypes.bool.isRequired,
     }),
   ),
+  filter: PropTypes.element.isRequired,
 };

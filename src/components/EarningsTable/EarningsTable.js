@@ -1,6 +1,90 @@
-import CustomTable from '../common/CustomTable/CustomTable';
 import React from 'react';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
 import earningsAPI from '../../api/earnings';
+import CustomTable from '../common/CustomTable/CustomTable';
+import useStyles from './EarningsTable.styles';
+
+/**
+ * @function
+ * @name EarningsTableFilter
+ * @description render filter UI for earnings table
+ * @returns {React.Component}
+ */
+function EarningsTableFilter() {
+  const classes = useStyles();
+
+  return (
+    <Grid item>
+      <Grid container direction="column" justify="space-between">
+        <FormControl
+          variant="outlined"
+          className={classes.earningsFIlterSelectFormControl}
+        >
+          <InputLabel id="demo-simple-select-outlined-label">Funder</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            label="Funder"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Environment For Africa</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl
+          variant="outlined"
+          className={classes.earningsFIlterSelectFormControl}
+        >
+          <InputLabel id="demo-simple-select-outlined-label">
+            Payment System
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            label="Payment System"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Visa</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+
+      <Divider style={{ margin: '100px 0 20px 0' }} />
+
+      <Grid
+        container
+        direction="column"
+        className={classes.earningTableFilterActions}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          disableElevation
+          className={classes.earningTableFilterSubmitButton}
+        >
+          APPLY
+        </Button>
+        <Button
+          color="primary"
+          variant="text"
+          className={classes.earningTableFilterCancelButton}
+        >
+          CANCEL
+        </Button>
+      </Grid>
+    </Grid>
+  );
+}
 
 /**
  * @constant
@@ -53,6 +137,7 @@ export default function EarningsTable() {
     <CustomTable
       handleGetData={getEarnings}
       tableMetaData={earningTableMetaData}
+      filter={<EarningsTableFilter />}
     />
   );
 }
