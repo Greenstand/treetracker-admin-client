@@ -4,9 +4,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import Drawer from '@material-ui/core/Drawer';
 import Select from '@material-ui/core/Select';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { CSVLink } from 'react-csv';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TableContainer from '@material-ui/core/TableContainer';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,7 +15,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import { CSVLink } from 'react-csv';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
@@ -262,46 +262,49 @@ EarningDetails.propTypes = {
 
 /**
  * @function
- * @name EarningsTableTopBar
+ * @name CustomTableHeader
  * @description renders earnings table top bar which contains table actions(i.e. filter, export, etc)
  * @param {object} props - properties passed to component
- * @param {array} props.data - earnings  to be exported
+ * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {string} props.setIsFilterOpen - sets filter open/closed
+ * @param {string} props.headerTitle - title of the table
+ * @param {Array} props.data - data to be exported
  *
  * @returns {React.Component}
  */
-function EarningsTableTopBar(props) {
-  const { setIsFilterOpen, data } = props;
+function CustomTableHeader(props) {
+  const { setIsFilterOpen, actionButtonType, headerTitle, data } = props;
   const classes = useStyles();
   const openFilter = () => setIsFilterOpen(true);
   return (
     <Grid container className={classes.earningsTableTopBar}>
       <Grid item xs={4}>
         <Typography className={classes.earningsTableTopTitle} variant="h4">
-          Earnings
+          {headerTitle}
         </Typography>
       </Grid>
 
       {/*  start earning table actions */}
       <Grid item xs={8}>
         <Grid container direction="row" justify="flex-end" alignItems="center">
-          {/* start EXPORT button */}
-          <Grid item lg={2}>
-            <Grid container direction="row" justify="flex-end">
-              <Button color="primary" variant="text">
-                <CSVLink
-                  data={data}
-                  filename={'earnings.csv'}
-                  className={classes.csvLink}
-                  target="_blank"
-                >
-                  <GetAppIcon />
-                  <Typography variant="h6">EXPORT</Typography>
-                </CSVLink>
-              </Button>
+          {/*  show export button if actionButtonType is 'export' */}
+          {actionButtonType === 'export' && (
+            <Grid item lg={2}>
+              <Grid container direction="row" justify="flex-end">
+                <Button color="primary" variant="text">
+                  <CSVLink
+                    data={data}
+                    filename={'earnings.csv'}
+                    className={classes.csvLink}
+                    target="_blank"
+                  >
+                    <GetAppIcon />
+                    <Typography variant="h6">EXPORT</Typography>
+                  </CSVLink>
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          {/*  end EXPORT button */}
+          )}
 
           {/* start Date Range button */}
           <Grid item lg={3}>
@@ -347,9 +350,11 @@ function EarningsTableTopBar(props) {
     </Grid>
   );
 }
-EarningsTableTopBar.propTypes = {
+CustomTableHeader.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
+  headerTitle: PropTypes.string.isRequired,
+  actionButtonType: PropTypes.string.isRequired,
 };
 
 /**
@@ -389,10 +394,20 @@ const prepareEarnings = (earnings) =>
  * @param {object} props - properties passed to component
  * @param {function} props.handleGetData - handler function that gets data to be displayed in table
  * @param {React.Component} props.filter - renders table filter form
+ * @param {string} props.headerTitle - title of the table header
+ * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
  * @returns {React.Component} earnings table
  */
 function CustomTable(props) {
-  const { handleGetData, tableMetaData, filter } = props;
+  const {
+    handleGetData,
+    tableMetaData,
+    filter,
+    headerTitle,
+    actionButtonType,
+  } = props;
+
+  // managing custom table  state
   const classes = useStyles();
   const [earnings, setEarnings] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -415,7 +430,7 @@ function CustomTable(props) {
     setPage(0);
   };
 
-  async function fetchEarnings(limit, currentPage, sorByInfo) {
+  async function fetchData(limit, currentPage, sorByInfo) {
     const offset = limit * currentPage;
     const response = await handleGetData(limit, offset, sorByInfo);
     const preparedEarnings = prepareEarnings(response.earnings);
@@ -445,12 +460,17 @@ function CustomTable(props) {
   const isRowSelected = (id) => id === selectedEarning?.id;
 
   useEffect(() => {
-    fetchEarnings(rowsPerPage, page, sortBy);
+    fetchData(rowsPerPage, page, sortBy);
   }, [rowsPerPage, page, sortBy]);
 
   return (
     <Grid container direction="column" className={classes.earningsTable}>
-      <EarningsTableTopBar setIsFilterOpen={setIsFilterOpen} data={earnings} />
+      <CustomTableHeader
+        setIsFilterOpen={setIsFilterOpen}
+        data={earnings}
+        headerTitle={headerTitle}
+        actionButtonType={actionButtonType}
+      />
       <TableContainer>
         <Table>
           <TableHead>
@@ -599,4 +619,6 @@ CustomTable.propTypes = {
     }),
   ),
   filter: PropTypes.element.isRequired,
+  headerTitle: PropTypes.string.isRequired,
+  actionButtonType: PropTypes.element.isRequired,
 };

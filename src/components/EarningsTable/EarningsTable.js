@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
@@ -137,7 +137,9 @@ export default function EarningsTable() {
     <CustomTable
       handleGetData={getEarnings}
       tableMetaData={earningTableMetaData}
+      headerTitle="Earnings"
       filter={<EarningsTableFilter />}
+      actionButtonType="export"
     />
   );
 }

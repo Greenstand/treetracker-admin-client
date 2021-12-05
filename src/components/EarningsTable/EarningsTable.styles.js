@@ -39,6 +39,14 @@ const earningTableFilterStyles = (theme) => ({
   earningsFIlterSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
   },
+
+  // styles for export button
+  csvLink: {
+    color: theme.palette.primary.main,
+    display: 'flex',
+    alignItems: 'flex-end',
+    textDecoration: 'none',
+  },
 });
 
 /**
