@@ -19,8 +19,7 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-import paymentsIcon from '../components/images/payments.svg';
-import Icon from '@material-ui/core/Icon';
+import PaymentsIcon from '../components/images/PaymentsIcon';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
@@ -93,11 +92,7 @@ function getRoutes(user) {
         {
           name: 'Payments',
           linkTo: '/payments',
-          icon: () => (
-            <Icon>
-              <img alt="Payments" src={paymentsIcon} />
-            </Icon>
-          ),
+          icon: PaymentsIcon,
           disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
         },
       ],
