@@ -3,6 +3,7 @@ import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import PublishIcon from '@material-ui/icons/Publish';
 import TableBody from '@material-ui/core/TableBody';
 import Drawer from '@material-ui/core/Drawer';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -64,6 +65,17 @@ function CustomTableHeader(props) {
                     <GetAppIcon />
                     <Typography variant="h6">EXPORT</Typography>
                   </CSVLink>
+                </Button>
+              </Grid>
+            </Grid>
+          )}
+
+          {actionButtonType === 'upload' && (
+            <Grid item lg={2}>
+              <Grid container direction="row" justify="flex-end">
+                <Button color="primary" variant="text">
+                  <PublishIcon />
+                  <Typography variant="h6">UPLOAD</Typography>
                 </Button>
               </Grid>
             </Grid>
