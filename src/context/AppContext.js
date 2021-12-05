@@ -6,6 +6,7 @@ import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
+import PaymentsView from '../views/PaymentsView/PaymentsView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
@@ -92,6 +93,7 @@ function getRoutes(user) {
         {
           name: 'Payments',
           linkTo: '/payments',
+          component: PaymentsView,
           icon: PaymentsIcon,
           disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
         },
