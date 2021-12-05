@@ -6,17 +6,18 @@ import {
 } from './apiUtils';
 import { session } from '../models/auth';
 
-// const STAKEHOLDER_API = process.env.REACT_APP_API_ROOT;
-const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API;
+const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 
 export default {
   getStakeholderById(id) {
-    const orgId = id || getOrganizationId();
+    const orgId = getOrganizationId();
     let stakeholderQuery = '';
     if (Number(orgId)) {
-      stakeholderQuery = `${STAKEHOLDER_API}?id=${orgId}`;
+      stakeholderQuery = `${STAKEHOLDER_API}/${orgId}`;
+    } else if (id) {
+      stakeholderQuery = `${STAKEHOLDER_API}?id=${id}`;
     } else {
-      stakeholderQuery = `${STAKEHOLDER_API}?stakeholder_uuid=${id}`;
+      stakeholderQuery = `${STAKEHOLDER_API}`;
     }
 
     console.log('getStakeholderById ---->', stakeholderQuery);
