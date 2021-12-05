@@ -190,38 +190,6 @@ function EarningDetails(props) {
           <Typography variant="h6">Payment</Typography>
         </Grid>
 
-        <Grid container direction="column" justify="space-between">
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <TextField
-              id="outlined-basic"
-              label="Payment Confirmation Id"
-              variant="outlined"
-            />
-          </FormControl>
-
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
-          >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              label="Payment System"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-
         <Grid item className={classes.earningGrowerDetail}>
           <Grid item>
             <Typography>Payment Confirmed by</Typography>
@@ -237,30 +205,6 @@ function EarningDetails(props) {
             </Typography>
           </Grid>
         </Grid>
-      </Grid>
-
-      <Divider className={classes.earningDetailsContentsDivider} />
-
-      <Grid
-        container
-        direction="column"
-        className={classes.earningTableFilterActions}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          className={classes.earningTableFilterSubmitButton}
-        >
-          LOG PAYMENT
-        </Button>
-        <Button
-          color="primary"
-          variant="text"
-          className={classes.earningTableFilterCancelButton}
-        >
-          CANCEL
-        </Button>
       </Grid>
     </Grid>
   ) : (
