@@ -482,45 +482,9 @@ EarningsTableTopBar.propTypes = {
 };
 
 /**
- * @constant
- * @name earningTableMetaData
- * @description infomation about column that will display an instance of Earning
- */
-const earningTableMetaData = [
-  {
-    description: 'Grower',
-    name: 'grower',
-    sortable: true,
-    showInfoIcon: false,
-  },
-  {
-    description: 'Funder',
-    name: 'funder',
-    sortable: true,
-    showInfoIcon: false,
-  },
-  {
-    description: 'Amount',
-    name: 'amount',
-    sortable: true,
-    showInfoIcon: false,
-  },
-  {
-    description: 'Effective Date',
-    name: 'calculated_at',
-    sortable: false,
-    showInfoIcon: true,
-  },
-  {
-    description: 'Payment Date',
-    name: 'paid_at',
-    sortable: false,
-    showInfoIcon: false,
-  },
-];
-
-/**
- * transform earnings such that are well formated compatible with earnigs table meta data
+ * @function
+ * @name prepareEarnings
+ * @description transform earnings such that are well formated compatible with earnigs table meta data
  * @param {object} earnings
  * @returns {Array}
  */
@@ -551,9 +515,12 @@ const prepareEarnings = (earnings) =>
  * @function
  * @name CustomTable
  * @description displays table containing  earnings data
+ * @param {object} props - properties passed to component
+ * @param {function} props.handleGetData - handler function that gets data to be displayed in table
  * @returns {React.Component} earnings table
  */
-export default function CustomTable() {
+function CustomTable(props) {
+  const { handleGetData, tableMetaData } = props;
   const classes = useStyles();
   const [earnings, setEarnings] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -578,7 +545,7 @@ export default function CustomTable() {
 
   async function fetchEarnings(limit, currentPage, sorByInfo) {
     const offset = limit * currentPage;
-    const response = await earningsAPI.getEarnings(limit, offset, sorByInfo);
+    const response = await handleGetData(limit, offset, sorByInfo);
     const preparedEarnings = prepareEarnings(response.earnings);
     setEarnings(preparedEarnings);
     setTotalCount(response.totalCount);
@@ -616,7 +583,7 @@ export default function CustomTable() {
         <Table>
           <TableHead>
             <TableRow className={classes.earningsTableHeader}>
-              {earningTableMetaData.map((column, i) => (
+              {tableMetaData.map((column, i) => (
                 <TableCell
                   key={`${i}-${column.description}`}
                   sortDirection={
@@ -663,7 +630,7 @@ export default function CustomTable() {
                       : ''
                   }
                 >
-                  {earningTableMetaData.map((column, j) => (
+                  {tableMetaData.map((column, j) => (
                     <TableCell key={`${i}-${j}-${column.name}`}>
                       <Typography variant="body1">
                         {earning[column.name]}
@@ -712,3 +679,17 @@ export default function CustomTable() {
     </Grid>
   );
 }
+
+export default CustomTable;
+
+CustomTable.propTypes = {
+  handleGetData: PropTypes.func.isRequired,
+  tableMetaData: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      sortable: PropTypes.bool.isRequired,
+      showInfoIcon: PropTypes.bool.isRequired,
+    }),
+  ),
+};
