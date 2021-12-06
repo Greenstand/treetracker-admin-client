@@ -8,8 +8,15 @@ import {
   DialogActions,
   TextField,
   FormControl,
+  MenuItem,
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
+// import FilterModel from '../../models/FilterStakeholder';
+import FilterModel, {
+  ALL_ORGANIZATIONS,
+  ORGANIZATION_NOT_SET,
+} from '../../models/FilterStakeholder';
+import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -21,6 +28,7 @@ const useStyles = makeStyles({
   },
   flex: {
     display: 'flex',
+    flex: 'wrap',
   },
   ml: {
     marginLeft: '24px',
@@ -28,34 +36,85 @@ const useStyles = makeStyles({
 });
 
 function Filter() {
-  const { filter, updateFilter } = useContext(StakeholdersContext);
-
   const classes = useStyles();
+  const { orgList, userHasOrg } = useContext(AppContext);
+
+  const { filter, updateFilter, initialFilterState } = useContext(
+    StakeholdersContext,
+  );
+  const [organizationId, setOrganizationId] = useState(
+    filter.id || ALL_ORGANIZATIONS,
+  );
+  const [search, setSearch] = useState('');
+  const [formData, setFormData] = useState(initialFilterState);
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState({});
 
   const close = () => {
-    setOptions(filter);
+    setFormData(filter);
     setOpen(false);
   };
 
-  const updateOptions = (e) => {
-    setOptions({ ...options, [e.target.name]: e.target.value });
+  const handleChanges = (e) => {
+    // console.log('handleChanges', e.target);
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const resetFilters = () => {
-    setOptions({});
-    updateFilter({});
+    setFormData({});
+    const resetFilter = new FilterModel(initialFilterState);
+    updateFilter(resetFilter);
   };
 
   const applyFilters = () => {
-    updateFilter({ ...filter, ...options });
+    const resetFilter = new FilterModel({
+      ...filter,
+      ...formData,
+    });
+    updateFilter(resetFilter);
     setOpen(false);
   };
 
   const applySearch = (e) => {
-    updateFilter({ ...filter, search: e.target.value });
+    setSearch(e.target.value);
+    const resetFilter = new FilterModel({ ...filter, search: e.target.value });
+    updateFilter(resetFilter);
   };
+
+  const defaultOrgList = userHasOrg
+    ? [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+          value: 'All',
+        },
+      ]
+    : [
+        {
+          id: ALL_ORGANIZATIONS,
+          name: 'All',
+          value: 'All',
+        },
+        {
+          id: ORGANIZATION_NOT_SET,
+          name: 'Not set',
+          value: null,
+        },
+      ];
+
+  const defaultTypeList = [
+    {
+      name: 'Not set',
+      value: undefined,
+    },
+    {
+      name: 'Organization',
+      value: 'Organization',
+    },
+    {
+      name: 'Person',
+      value: 'Person',
+    },
+  ];
 
   return (
     <>
@@ -64,7 +123,7 @@ function Filter() {
         name="search"
         label="Search"
         variant="outlined"
-        value={filter?.search || ''}
+        value={search || ''}
         onChange={applySearch}
         autoComplete="off"
       />
@@ -89,43 +148,92 @@ function Filter() {
                 label="ID"
                 variant="outlined"
                 name="id"
-                onChange={updateOptions}
-                value={options?.id || ''}
+                onChange={handleChanges}
+                value={formData?.id || ''}
               />
               <TextField
-                label="Organization Name"
+                data-testid="type-dropdown"
+                select
+                label="type"
+                htmlFor="type"
+                id="type"
+                name="type"
+                value={formData?.type || ''}
+                onChange={(e) => handleChanges(e)}
+              >
+                {defaultTypeList.map((type) => (
+                  <MenuItem
+                    data-testid="type-item"
+                    key={type.name}
+                    value={type.value}
+                  >
+                    {type.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                data-testid="org-dropdown"
+                select
+                label="Organization"
+                htmlFor="organization"
+                id="organizationId"
+                value={organizationId}
+                onChange={(e) => setOrganizationId(e.target.value)}
+              >
+                {[...defaultOrgList, ...orgList].map((org) => (
+                  <MenuItem data-testid="org-item" key={org.id} value={org.id}>
+                    {org.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              {/* <TextField
+                label="Org Name"
                 variant="outlined"
-                name="name"
-                onChange={updateOptions}
-                value={options?.name || ''}
+                name="org_name"
+                onChange={handleChanges}
+                value={formData?.org_name || ''}
               />
+              <TextField
+                label="First Name"
+                variant="outlined"
+                name="first_name"
+                onChange={handleChanges}
+                value={formData?.first_name || ''}
+              />
+              <TextField
+                label="Last Name"
+                variant="outlined"
+                name="last_name"
+                onChange={handleChanges}
+                value={formData?.last_name || ''}
+              /> */}
               <TextField
                 label="Map"
                 variant="outlined"
                 name="map"
-                onChange={updateOptions}
-                value={options?.map || ''}
+                onChange={handleChanges}
+                value={formData?.map || ''}
               />
               <TextField
                 label="Email"
                 variant="outlined"
                 name="email"
-                onChange={updateOptions}
-                value={options?.email || ''}
+                onChange={handleChanges}
+                value={formData?.email || ''}
               />
               <TextField
                 label="Phone"
                 variant="outlined"
                 name="phone"
-                onChange={updateOptions}
-                value={options?.phone || ''}
+                onChange={handleChanges}
+                value={formData?.phone || ''}
               />
               <TextField
                 label="Website"
                 variant="outlined"
                 name="website"
-                onChange={updateOptions}
-                value={options?.website || ''}
+                onChange={handleChanges}
+                value={formData?.website || ''}
               />
             </div>
           </FormControl>

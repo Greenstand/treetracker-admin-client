@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Grid, ListItem } from '@material-ui/core';
 import UnlinkIcon from '@material-ui/icons/LinkOff';
+import LinkIcon from '@material-ui/icons/Link';
 import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import UserListItem from './UserListItem';
 import GrowerListItem from './GrowerListItem';
@@ -15,12 +16,23 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderList({ data, type }) {
+function StakeholderList({ id, data, type, linked }) {
   const classes = useStyles();
-  const unlinkStakeholder = useContext(StakeholdersContext);
+  const [isLinked, setIsLinked] = useState(linked);
+  const { updateLinks } = useContext(StakeholdersContext);
 
-  const handleUnlink = (type, id) => {
-    unlinkStakeholder({ type, id });
+  // const handleUnlink = (type, id) => {
+  //   unlinkStakeholder({ type, id });
+  // };
+
+  const handleChange = (e, stakeholder) => {
+    setIsLinked(!isLinked);
+    updateLinks(id, {
+      id: stakeholder.id,
+      type,
+      linked: !linked,
+      data: stakeholder,
+    });
   };
 
   return (
@@ -33,18 +45,24 @@ function StakeholderList({ data, type }) {
           direction="row"
         >
           <Grid item container direction="row" alignItems="center" xs={11}>
-            {type === 'users' ? (
+            {type === 'User' ? (
               <UserListItem data={data} />
-            ) : type === 'growers' ? (
+            ) : type === 'Person' ? (
               <GrowerListItem data={data} />
             ) : (
               <ParentChildListItem data={data} />
             )}
           </Grid>
           <Grid item xs={1}>
-            <IconButton onClick={() => handleUnlink(type, data.id)}>
-              <UnlinkIcon />
-            </IconButton>
+            {isLinked ? (
+              <IconButton onClick={(e) => handleChange(e, data)}>
+                <UnlinkIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={(e) => handleChange(e, data)}>
+                <LinkIcon />
+              </IconButton>
+            )}
           </Grid>
         </Grid>
       </ListItem>

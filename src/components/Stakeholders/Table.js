@@ -16,7 +16,7 @@ import { StakeholdersContext } from '../../context/StakeholdersContext';
 function StakeholderTable() {
   const {
     stakeholders,
-    stakeholder,
+    // stakeholder,
     columns,
     page,
     rowsPerPage,
@@ -29,11 +29,6 @@ function StakeholderTable() {
     // getStakeholders,
   } = useContext(StakeholdersContext);
 
-  // useEffect(() => {
-  //   // getStakeholders();
-  //   getStakeholder('792a4eee-8e18-4750-a56f-91bdec383aa6');
-  // }, []);
-
   const handleRowsPerPageChange = (e) => {
     setRowsPerPage(e.target.value);
   };
@@ -42,8 +37,9 @@ function StakeholderTable() {
     setPage(page);
   };
 
-  const handleSort = (col) => {
-    sort(col);
+  const handleSort = (col, order) => {
+    console.log('sort col', { col, order });
+    sort({ col, order });
   };
 
   return (
@@ -55,11 +51,11 @@ function StakeholderTable() {
               {columns.map((col) => (
                 <TableCell
                   key={col.value}
-                  onClick={() => handleSort(col.value)}
+                  onClick={() => handleSort(col.value, !order)}
                 >
                   <TableSortLabel
-                    active={col.value === order}
-                    direction={orderBy ? 'asc' : 'desc'}
+                    active={col.value === !!orderBy}
+                    direction={order ? 'asc' : 'desc'}
                   >
                     {col.label}
                   </TableSortLabel>
@@ -68,7 +64,7 @@ function StakeholderTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stakeholder.map((stakeholder) => (
+            {stakeholders.map((stakeholder) => (
               <React.Fragment key={stakeholder.id}>
                 {/* Main stakeholder */}
                 <StakeholderDetail row={stakeholder} columns={columns} />
