@@ -42,7 +42,7 @@ export function CapturesProvider(props) {
   // const [byId, setById] = useState({});
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: true,
+      approved: undefined,
       active: true,
     }),
   );

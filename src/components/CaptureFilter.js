@@ -74,7 +74,6 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  // console.log('render: filter top');
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { orgList, userHasOrg } = useContext(AppContext);
@@ -89,8 +88,8 @@ function Filter(props) {
   const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || '',
   );
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
+  const [approved, setApproved] = useState(undefined);
+  const [active, setActive] = useState(true);
   const [dateStart, setDateStart] = useState(
     filter?.dateStart || dateStartDefault,
   );
@@ -129,16 +128,56 @@ function Filter(props) {
 
   const handleVerificationStatusChange = (event) => {
     const value = event.target.value;
-    if (value[value.length - 1] === 'all') {
+    if (
+      value[value.length - 1] === 'all' ||
+      (value.length === 3 && value[value.length - 1] !== 'all')
+    ) {
       setVerificationStatus(
         verificationStatus.length === verificationStatesArr.length
           ? []
           : verificationStatesArr,
       );
+      setActive(undefined);
+      setApproved(undefined);
       return;
     }
+    handleChangeActiveApproved(value);
     setVerificationStatus(value);
   };
+
+  // set active and approved field based on the checkbox values
+  function handleChangeActiveApproved(value) {
+    let status = { active: 0, approved: 0 };
+    value.forEach((val) => {
+      if (val === verificationStates.APPROVED) {
+        status.approved += 1;
+        status.active += 1;
+        setActive(true);
+        setApproved(true);
+      } else if (val === verificationStates.AWAITING) {
+        status.approved += 1;
+        setActive(true);
+        setApproved(false);
+      } else {
+        status.active += 1;
+        setActive(false);
+        setApproved(false);
+      }
+    });
+
+    if (status.active === 2 && status.approved === 1) {
+      setActive(undefined);
+      setApproved(undefined);
+    }
+    if (status.approved === 2 && status.active === 1) {
+      setActive(true);
+      setApproved(undefined);
+    }
+    if (status.approved === 1 && status.active === 1 && value.length > 1) {
+      setActive(undefined);
+      setApproved(false);
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -174,10 +213,10 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
+    setActive(true);
+    setApproved(undefined);
 
     const filter = new FilterModel();
-    filter.approved = approved; // keeps last value set
-    filter.active = active; // keeps last value set
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -220,30 +259,6 @@ function Filter(props) {
                   renderValue: (verificationStatus) =>
                     verificationStatus.join(', '),
                 }}
-                // renderValue={(verificationStatus) => verificationStatus.join(", ")}
-                // value={
-                //   active === undefined && approved === undefined
-                //     ? filterOptionAll
-                //     : getVerificationStatus(active, approved)
-                // }
-                // onChange={(e) => {
-                //   setApproved(
-                //     e.target.value === filterOptionAll
-                //       ? undefined
-                //       : e.target.value === verificationStates.AWAITING ||
-                //         e.target.value === verificationStates.REJECTED
-                //       ? false
-                //       : true,
-                //   );
-                //   setActive(
-                //     e.target.value === filterOptionAll
-                //       ? undefined
-                //       : e.target.value === verificationStates.AWAITING ||
-                //         e.target.value === verificationStates.APPROVED
-                //       ? true
-                //       : false,
-                //   );
-                // }}
               >
                 <MenuItem value="all">
                   <ListItemIcon>
@@ -419,7 +434,6 @@ function Filter(props) {
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('newVal -- ', newVal);
                   if (newVal && newVal.tagName === 'Not set') {
                     setTag('Not set');
                   } else {
