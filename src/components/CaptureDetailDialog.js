@@ -340,14 +340,6 @@ function CaptureDetailDialog(props) {
           style={{ maxWidth: '100%' }}
           fixed
         />
-        <Link
-          href={renderCapture.imageUrl}
-          underline="always"
-          target="_blank"
-          className={classes.imageLink}
-        >
-          <Typography variant="body1">Open original image</Typography>
-        </Link>
       </Dialog>
       <Drawer
         anchor="right"
