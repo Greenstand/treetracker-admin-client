@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 
 export default function DialogHeader({ data }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState({ ...data });
 
   const classes = useStyles();
 
@@ -66,29 +66,77 @@ export default function DialogHeader({ data }) {
   return (
     <Grid container direction="row">
       <Grid item xs={1}>
-        {data.logo && <img src={data.logo} alt="" className={classes.logoLg} />}
-        {!data.logo && <PersonIcon className={classes.logoLg} />}
+        {data.logo_url ? (
+          <img src={data.logo_url} alt="" className={classes.logoLg} />
+        ) : (
+          <PersonIcon className={classes.logoLg} />
+        )}
       </Grid>
 
       <Grid item container xs={11} className={classes.pl}>
-        <Grid container justify="space-between" alignItems="flex-start">
-          {isEditing ? (
-            <TextField
-              name="name"
-              value={details?.name || data.name}
-              onChange={handleEdit}
-              variant="standard"
-              InputProps={{
-                classes: { root: classes.inputName },
-              }}
-              autoFocus
-            />
-          ) : (
-            <Typography variant="h4" className={classes.fields}>
-              {details?.name || data.name}
-            </Typography>
-          )}
-        </Grid>
+        {data.type === 'Organization' ? (
+          <Grid container justify="space-between" alignItems="flex-start">
+            {isEditing ? (
+              <TextField
+                name="org_name"
+                value={details?.org_name}
+                onChange={handleEdit}
+                variant="standard"
+                InputProps={{
+                  classes: { root: classes.inputName },
+                }}
+                autoFocus
+              />
+            ) : (
+              <Typography variant="h4" className={classes.fields}>
+                {details?.org_name}
+              </Typography>
+            )}
+          </Grid>
+        ) : (
+          <Grid container justify="start" alignItems="flex-start" xs={11}>
+            <Grid className={classes.pr}>
+              {isEditing ? (
+                <TextField
+                  name="first_name"
+                  value={details?.first_name}
+                  onChange={handleEdit}
+                  variant="standard"
+                  InputProps={{
+                    classes: { root: classes.inputName },
+                  }}
+                  autoFocus
+                />
+              ) : (
+                <Typography variant="h4" className={classes.fields}>
+                  {details?.first_name}
+                </Typography>
+              )}
+            </Grid>
+            <Grid>
+              {isEditing ? (
+                <TextField
+                  name="last_name"
+                  value={details?.last_name}
+                  onChange={handleEdit}
+                  variant="standard"
+                  InputProps={{
+                    classes: { root: classes.inputName },
+                  }}
+                  autoFocus
+                />
+              ) : (
+                <Typography
+                  variant="h4"
+                  className={classes.fields}
+                  // style={{ marginLeft: '0.3em' }}
+                >
+                  {details?.last_name}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
+        )}
         <Grid container direction="row">
           <Grid item xs={3}>
             <Grid
@@ -110,7 +158,7 @@ export default function DialogHeader({ data }) {
               {isEditing ? (
                 <TextField
                   name="type"
-                  value={details?.type || data.type}
+                  value={details?.type}
                   onChange={handleEdit}
                   variant="standard"
                   InputProps={{
@@ -119,7 +167,7 @@ export default function DialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  {details?.type || data.type}
+                  {details?.type}
                 </Typography>
               )}
             </Grid>
@@ -136,7 +184,7 @@ export default function DialogHeader({ data }) {
               {isEditing ? (
                 <TextField
                   name="email"
-                  value={details?.email || data.email}
+                  value={details?.email}
                   onChange={handleEdit}
                   variant="standard"
                   InputProps={{
@@ -145,7 +193,7 @@ export default function DialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  {details?.email || data.email}
+                  {details?.email}
                 </Typography>
               )}
             </Grid>
@@ -159,7 +207,7 @@ export default function DialogHeader({ data }) {
               {isEditing ? (
                 <TextField
                   name="phone"
-                  value={details?.phone || data.phone}
+                  value={details?.phone}
                   onChange={handleEdit}
                   variant="standard"
                   InputProps={{
@@ -168,7 +216,7 @@ export default function DialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  {details?.phone || data.phone}
+                  {details?.phone}
                 </Typography>
               )}
             </Grid>
@@ -184,7 +232,7 @@ export default function DialogHeader({ data }) {
               {isEditing ? (
                 <TextField
                   name="website"
-                  value={details?.website || data.website}
+                  value={details?.website}
                   onChange={handleEdit}
                   variant="standard"
                   InputProps={{
@@ -193,9 +241,7 @@ export default function DialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  <Link href={details?.website || data.website}>
-                    {details?.website || data.website}
-                  </Link>
+                  <Link href={details?.website}>{details?.website}</Link>
                 </Typography>
               )}
             </Grid>
@@ -209,7 +255,7 @@ export default function DialogHeader({ data }) {
               {isEditing ? (
                 <TextField
                   name="map"
-                  value={details?.map || data.map}
+                  value={details?.map}
                   onChange={handleEdit}
                   variant="standard"
                   InputProps={{
@@ -218,9 +264,7 @@ export default function DialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  <Link href={details?.map || data.map}>
-                    {details?.map || data.map}
-                  </Link>
+                  <Link href={details?.map}>{details?.map}</Link>
                 </Typography>
               )}
             </Grid>
