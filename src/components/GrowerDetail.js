@@ -160,10 +160,11 @@ const GrowerDetail = (props) => {
 				setLoading(true);
         let filter = new FilterModel();
         filter.planterId = growerId;
-        capturesContext.getAllCaptures({ filter }).then((response) => {
+        const captures = await capturesContext.getAllCaptures({ filter });
+				if (captures && captures.data) {
 					setVerificationStatus(emptyStatusCount);
           let statusCount = emptyStatusCount;
-          response.data.forEach(capture => {
+          captures.data.forEach(capture => {
             const verificationState = getVerificationStatus(
               capture.active,
               capture.approved,
@@ -178,7 +179,7 @@ const GrowerDetail = (props) => {
           });
           setVerificationStatus(statusCount);
 					setLoading(false);
-        })
+        }
       }
     }
     loadCaptures();

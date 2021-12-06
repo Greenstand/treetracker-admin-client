@@ -11,7 +11,7 @@ describe('Filter, with initial values about this filter object', () => {
     filter.dateEnd = '2019-07-30';
     filter.approved = true;
     filter.active = true;
-    filter.planterId = '1';
+    filter.planterId = 1;
     filter.deviceIdentifier = '1';
     filter.planterIdentifier = '1';
   });
@@ -63,7 +63,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should match: planterId=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterId: '1' }),
+      expect.objectContaining({ planterId: 1 }),
     );
   });
 
@@ -91,10 +91,10 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set planterId = ""', () => {
+  describe('set planterId = undefined', () => {
     //{{{
     beforeEach(() => {
-      filter.planterId = '';
+      filter.planterId = undefined;
     });
 
     it('loopback object should not match any [planterId]', () => {
