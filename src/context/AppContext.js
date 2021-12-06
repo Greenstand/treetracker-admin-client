@@ -10,7 +10,7 @@ import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
-import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
+import CaptureMatchingView from '../components/CaptureMatching/CaptureMatchingView';
 import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
@@ -70,7 +70,7 @@ function getRoutes(user) {
     {
       name: 'Capture Matching',
       linkTo: '/capture-matching',
-      component: CaptureMatchingFrame,
+      component: CaptureMatchingView,
       icon: CompareIcon,
       disabled:
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
