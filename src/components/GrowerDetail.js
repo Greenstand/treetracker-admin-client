@@ -15,6 +15,7 @@ import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
+import { LinearProgress } from '@material-ui/core';
 import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
@@ -107,6 +108,7 @@ const GrowerDetail = (props) => {
   const [verificationStatus, setVerificationStatus] = useState(
     emptyStatusCount,
   );
+	const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -152,15 +154,15 @@ const GrowerDetail = (props) => {
     // eslint-disable-next-line
   }, [growerId, growerContext.growers]);
 
-  useEffect(async () => {
+  useEffect(() => {
     async function loadCaptures() {
       if (growerId) {
-        setVerificationStatus(emptyStatusCount);
+				setLoading(true);
         let filter = new FilterModel();
         filter.planterId = growerId;
-        await capturesContext.getAllCaptures({ filter }).then((response) => {
+        capturesContext.getAllCaptures({ filter }).then((response) => {
+					setVerificationStatus(emptyStatusCount);
           let statusCount = emptyStatusCount;
-          console.log(response.data);
           response.data.forEach(capture => {
             const verificationState = getVerificationStatus(
               capture.active,
@@ -175,10 +177,11 @@ const GrowerDetail = (props) => {
             }
           });
           setVerificationStatus(statusCount);
+					setLoading(false);
         })
       }
     }
-    await loadCaptures();
+    loadCaptures();
   }, [growerId])
 
   async function getGrower(payload) {
@@ -273,74 +276,78 @@ const GrowerDetail = (props) => {
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Captures</Typography>
-              <List className={classes.listCaptures}>
-                <Box
-                  borderColor="grey.300"
-                  borderRadius={10}
-                  border={0.5}
-                  m={0.5}
-                >
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.approvedChip}>
-                        <Done />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="h5">
-                          {verificationStatus.approved}
-                        </Typography>
-                      }
-                      secondary="Approved"
-                    />
-                  </ListItem>
-                </Box>
-                <Box
-                  borderColor="grey.300"
-                  borderRadius={10}
-                  border={0.5}
-                  m={0.5}
-                >
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.awaitingChip}>
-                        <HourglassEmptyOutlined />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="h5">
-                          {verificationStatus.awaiting}
-                        </Typography>
-                      }
-                      secondary="Awaiting"
-                    />
-                  </ListItem>
-                </Box>
-                <Box
-                  borderColor="grey.300"
-                  borderRadius={10}
-                  border={0.5}
-                  m={0.5}
-                >
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.rejectedChip}>
-                        <Clear />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="h5">
-                          {verificationStatus.rejected}
-                        </Typography>
-                      }
-                      secondary="Rejected"
-                    />
-                  </ListItem>
-                </Box>
-              </List>
+              {loading ? (
+                <LinearProgress color="primary" />
+              ) : (
+                <List className={classes.listCaptures}>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.approvedChip}>
+                          <Done />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.approved}
+                          </Typography>
+                        }
+                        secondary="Approved"
+                      />
+                    </ListItem>
+                  </Box>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.awaitingChip}>
+                          <HourglassEmptyOutlined />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.awaiting}
+                          </Typography>
+                        }
+                        secondary="Awaiting"
+                      />
+                    </ListItem>
+                  </Box>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.rejectedChip}>
+                          <Clear />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.rejected}
+                          </Typography>
+                        }
+                        secondary="Rejected"
+                      />
+                    </ListItem>
+                  </Box>
+                </List>
+              )}
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
