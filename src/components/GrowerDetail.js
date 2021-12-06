@@ -29,6 +29,8 @@ import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import { getVerificationStatus } from '../common/utils';
 import { verificationStates } from '../common/variables';
+import { CapturesContext } from 'context/CapturesContext';
+import FilterModel from '../models/Filter';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -95,6 +97,7 @@ const GrowerDetail = (props) => {
   const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
+  const capturesContext = useContext(CapturesContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
@@ -140,23 +143,6 @@ const GrowerDetail = (props) => {
                   }))
                   .filter((id) => id),
               );
-              let statusCount = emptyStatusCount;
-              registrations.map((reg) => {
-                const verificationState = getVerificationStatus(
-                  reg.active,
-                  reg.approved,
-                );
-                if (verificationState === verificationStates.APPROVED) {
-                  statusCount.approved += 1;
-                } else if (verificationState === verificationStates.AWAITING) {
-                  statusCount.awaiting += 1;
-                } else {
-                  statusCount.rejected += 1;
-                }
-              });
-              setVerificationStatus(statusCount);
-            } else {
-              setVerificationStatus(emptyStatusCount);
             }
           });
         }
@@ -165,6 +151,35 @@ const GrowerDetail = (props) => {
     loadGrowerDetail();
     // eslint-disable-next-line
   }, [growerId, growerContext.growers]);
+
+  useEffect(async () => {
+    async function loadCaptures() {
+      if (growerId) {
+        setVerificationStatus(emptyStatusCount);
+        let filter = new FilterModel();
+        filter.planterId = growerId;
+        await capturesContext.getAllCaptures({ filter }).then((response) => {
+          let statusCount = emptyStatusCount;
+          console.log(response.data);
+          response.data.forEach(capture => {
+            const verificationState = getVerificationStatus(
+              capture.active,
+              capture.approved,
+            );
+            if (verificationState === verificationStates.APPROVED) {
+              statusCount.approved += 1;
+            } else if (verificationState === verificationStates.AWAITING) {
+              statusCount.awaiting += 1;
+            } else {
+              statusCount.rejected += 1;
+            }
+          });
+          setVerificationStatus(statusCount);
+        })
+      }
+    }
+    await loadCaptures();
+  }, [growerId])
 
   async function getGrower(payload) {
     const { id } = payload;

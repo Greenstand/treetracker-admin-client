@@ -5,6 +5,7 @@ import Growers from '../components/Growers/Growers.js';
 import { GrowerProvider } from '../context/GrowerContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
+import { CapturesProvider } from 'context/CapturesContext';
 import GrowerFilterHeader from '../components/GrowerFilterHeader';
 
 function GrowersView() {
@@ -19,12 +20,14 @@ function GrowersView() {
       style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
       <GrowerProvider>
-        <SpeciesProvider>
-          <TagsProvider>
-            <GrowerFilterHeader />
-            <Growers />
-          </TagsProvider>
-        </SpeciesProvider>
+        <CapturesProvider>
+          <SpeciesProvider>
+            <TagsProvider>
+              <GrowerFilterHeader />
+              <Growers />
+            </TagsProvider>
+          </SpeciesProvider>
+        </CapturesProvider>
       </GrowerProvider>
     </Grid>
   );
