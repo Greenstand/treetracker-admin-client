@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, TextField, Grid, Link, Typography } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
@@ -8,6 +8,7 @@ import MapIcon from '@material-ui/icons/Map';
 import WebsiteIcon from '@material-ui/icons/Language';
 import IdIcon from '@material-ui/icons/Money';
 import TypeIcon from '@material-ui/icons/Category';
+import { StakeholdersContext } from '../../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
   logoLg: {
@@ -43,6 +44,7 @@ const useStyles = makeStyles({
 });
 
 export default function DialogHeader({ data }) {
+  const { updateStakeholder } = useContext(StakeholdersContext);
   const [isEditing, setIsEditing] = useState(false);
   const [details, setDetails] = useState({ ...data });
 
@@ -50,7 +52,6 @@ export default function DialogHeader({ data }) {
 
   const handleEdit = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
-    console.log(details);
   };
 
   const handleCancel = () => {
@@ -60,7 +61,7 @@ export default function DialogHeader({ data }) {
 
   const handleSave = () => {
     setIsEditing(false);
-    console.log(details);
+    updateStakeholder(details);
   };
 
   return (
@@ -94,7 +95,13 @@ export default function DialogHeader({ data }) {
             )}
           </Grid>
         ) : (
-          <Grid container justify="start" alignItems="flex-start" xs={11}>
+          <Grid
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            item
+            xs={11}
+          >
             <Grid className={classes.pr}>
               {isEditing ? (
                 <TextField

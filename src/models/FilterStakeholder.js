@@ -1,4 +1,4 @@
-import { stringToSearchRegExp } from '../utilities';
+// import { stringToSearchRegExp } from '../utilities';
 
 /*
  * A simple model for grower filter
@@ -11,41 +11,38 @@ export default class Filter {
   constructor(options) {
     Object.assign(this, options);
   }
+
   getWhereObj() {
+    console.log('this', this);
     let where = {};
 
     if (this.type) {
       where.type = this.type;
     }
 
-    if (this.orgName) {
-      where.orgName = {
-        regexp: stringToSearchRegExp(this.orgName),
-      };
-    }
+    if (this.name) {
+      const [firstName, ...lastName] = this.name.split(' ');
+      if (this.type === 'Person') {
+        if (this.firstName) {
+          where.firstName = firstName;
+        }
 
-    if (this.firstName) {
-      where.firstName = {
-        regexp: stringToSearchRegExp(this.firstName),
-      };
-    }
-
-    if (this.lastName) {
-      where.lastName = {
-        regexp: stringToSearchRegExp(this.lastName),
-      };
+        if (this.lastName) {
+          where.lastName = lastName[0];
+        }
+        where.orgName = '';
+      } else {
+        // give all name fields the value for filter
+        where.orgName = this.name;
+        where.firstName = firstName || this.name;
+        where.lastName = lastName[0] || this.name;
+      }
     }
 
     if (this.id === ORGANIZATION_NOT_SET) {
       where.id = null;
     } else if (this.id !== ALL_ORGANIZATIONS) {
       where.id = this.id;
-    }
-
-    if (this.organizationId === ORGANIZATION_NOT_SET) {
-      where.organizationId = null;
-    } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organizationId = this.organizationId;
     }
 
     if (!this.stakeholder_uuid) {
@@ -61,15 +58,11 @@ export default class Filter {
     }
 
     if (this.email) {
-      where.email = {
-        regexp: stringToSearchRegExp(this.email),
-      };
+      where.email = this.email;
     }
 
     if (this.phone) {
-      where.phone = {
-        regexp: stringToSearchRegExp(this.phone),
-      };
+      where.phone = this.phone;
     }
 
     if (this.website) {
@@ -84,10 +77,10 @@ export default class Filter {
       where.logoUrl = null;
     }
 
-    if (this.mapName) {
-      where.mapName = this.mapName;
+    if (this.map) {
+      where.map = this.map;
     } else {
-      where.mapName = null;
+      where.map = null;
     }
 
     return where;
@@ -139,15 +132,11 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.mapName) {
+    if (this.map) {
       numFilters += 1;
     }
 
     if (this.id && this.id !== ALL_ORGANIZATIONS) {
-      numFilters += 1;
-    }
-
-    if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
 

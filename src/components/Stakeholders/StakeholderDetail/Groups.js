@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Grid, List, Typography } from '@material-ui/core';
-import { StakeholdersContext } from '../../../context/StakeholdersContext';
+import { Grid, List, Typography } from '@material-ui/core';
+// import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import AdminIcon from '@material-ui/icons/SupervisorAccount';
 import GrowerIcon from '@material-ui/icons/NaturePeople';
 import StakeholderList from './List';
+import LinkStakeholder from './LinkStakeholder';
 
 const useStyles = makeStyles({
   flex: {
@@ -32,9 +33,9 @@ const useStyles = makeStyles({
 });
 
 function StakeholderGroups({ data, render, tall }) {
-  console.log('StakeholderGroups data, render tall', data, render, tall);
+  // console.log('StakeholderGroups data, render tall', data, render, tall);
   const classes = useStyles();
-  const linkStakeholder = useContext(StakeholdersContext);
+  // const { linkStakeholder } = useContext(StakeholdersContext);
 
   const stakeholders = {
     children: { label: 'Children', icon: '' },
@@ -43,9 +44,9 @@ function StakeholderGroups({ data, render, tall }) {
     growers: { label: 'Growers', icon: <GrowerIcon className={classes.pr} /> },
   };
 
-  const handleLink = (type, id) => {
-    linkStakeholder({ type, id });
-  };
+  // const handleLink = (type, id) => {
+  //   linkStakeholder({ type, id });
+  // };
 
   return (
     <>
@@ -58,14 +59,11 @@ function StakeholderGroups({ data, render, tall }) {
                 {stakeholders[type]?.label} ({data[type]?.length || 0})
               </Typography>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.textWhite}
-              onClick={() => handleLink(type, data.id)}
-            >
-              Link {type}
-            </Button>
+            {type === 'growers' || type === 'users' ? (
+              'Linking coming soon'
+            ) : (
+              <LinkStakeholder id={data.id} type={type} />
+            )}
           </Grid>
 
           <List
@@ -76,8 +74,10 @@ function StakeholderGroups({ data, render, tall }) {
               data[type].map((stakeholder) => (
                 <StakeholderList
                   key={stakeholder.id}
+                  id={data.id}
                   data={stakeholder}
                   type={type}
+                  linked={true}
                 />
               ))}
           </List>
