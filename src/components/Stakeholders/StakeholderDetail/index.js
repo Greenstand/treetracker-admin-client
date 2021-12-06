@@ -66,7 +66,7 @@ export default function StakeholderDetail({ row, columns, child }) {
               {col.value === 'name' && row.type === 'Organization' && (
                 <>
                   <img
-                    src={row.logo_url}
+                    src={row.logo_url || './logo_192x192.png'}
                     className={classes.logo}
                     alt={row.org_name}
                   />

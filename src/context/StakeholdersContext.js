@@ -2,17 +2,20 @@ import React, { useState, useEffect, createContext } from 'react';
 import FilterStakeholder from '../models/FilterStakeholder';
 import api from '../api/stakeholders';
 import * as loglevel from 'loglevel';
+// import { getOrganizationId } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/StakeholderContext');
 
 export const StakeholdersContext = createContext({
   stakeholder: {},
   stakeholders: [],
+  unlinkedStakeholders: [],
   display: [],
   columns: [],
   page: 0,
   rowsPerPage: 1,
-  filters: {},
+  filter: new FilterStakeholder(),
+  initialFilterState: {},
   orderBy: undefined,
   order: true,
   setPage: () => {},
@@ -27,8 +30,9 @@ export const StakeholdersContext = createContext({
   getStakeholder: () => {},
   getStakeholders: () => {},
   createStakeholder: () => {},
-  linkStakeholder: () => {},
-  unlinkStakeholder: () => {},
+  updateStakeholder: () => {},
+  getUnlinkedStakeholders: () => {},
+  updateLinks: () => {},
 });
 
 const initialFilterState = {
@@ -42,17 +46,17 @@ const initialFilterState = {
   phone: null,
   website: null,
   logoUrl: null,
-  mapName: null,
+  map: null,
   stakeholder_uuid: null,
 };
 
 export function StakeholdersProvider(props) {
   const [stakeholders, setStakeholders] = useState([]);
-  const [stakeholder, setStakeholder] = useState([]);
+  const [unlinkedStakeholders, setUnlinkedStakeholders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(1);
-  const [order, setOrder] = useState(true);
-  const [orderBy, setOrderBy] = useState('asc');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState(undefined);
   const [filter, setFilter] = useState(
     new FilterStakeholder(initialFilterState),
   );
@@ -67,8 +71,7 @@ export function StakeholdersProvider(props) {
   // const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
-    // getStakeholders(); // don't want to run this every time, adjust to call it only when trying to link an org
-    getStakeholder();
+    getStakeholders();
   }, [filter, page, rowsPerPage]);
 
   useEffect(() => {
@@ -77,48 +80,9 @@ export function StakeholdersProvider(props) {
 
   // EVENT HANDLERS
 
-  const getStakeholders = async () => {
-    log.debug('load stakeholders');
-    const data = await api.getStakeholders({
-      offset: page * rowsPerPage,
-      rowsPerPage,
-      orderBy,
-      order,
-      filter,
-    });
-    console.log('getStakeholders DATA', data);
-    setStakeholders(data.stakeholders);
-  };
-
-  const getStakeholder = async (id) => {
-    log.debug('load stakeholder by uuid', id);
-    let data;
-    // compare both id and uuid while transitioning
-    // can remove id comparison when all stakeholders use uuid
-    data = stakeholders.find((p) => p.id === id || p.id === id);
-    if (!data) {
-      data = await api.getStakeholderById(id);
-      console.log('getStakeholder api DATA', data);
-    }
-    setStakeholder(data.stakeholders);
-  };
-
-  const updateStakeholder = async (payload) => {
-    await api.updateStakeholder(payload);
-    const updatedStakeholder = await api.getStakeholder(payload.id);
-    const index = stakeholders.findIndex((p) => p.id === updatedStakeholder.id);
-    if (index >= 0) {
-      const stakeholdersData = Object.assign([], stakeholders, {
-        [index]: updatedStakeholder,
-      });
-      setStakeholders(stakeholdersData);
-    }
-  };
-
   const setDisplay = () => {
     let display;
-
-    // sorting
+    // orderBy => field & order => true = asc/ false = desc
     if (orderBy) {
       if (order) {
         display = stakeholders
@@ -133,57 +97,73 @@ export function StakeholdersProvider(props) {
       display = stakeholders;
     }
 
-    // pagination
-    display = display.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
-
     setStakeholders(display);
   };
 
   const sort = (payload) => {
-    this.setSortBy(payload);
-    this.setSortAsc();
-    this.setDisplay();
+    console.log('sort', payload);
+    setOrderBy(payload.col);
+    setOrder(payload.order);
+    setDisplay();
   };
-  const updateFilter = async () => {
+
+  // call w/ or w/o an id, it will default to the organization id or null
+  const getStakeholders = async (id = null) => {
+    log.debug('load stakeholders', id);
+    let data;
+    // compare both id and uuid while transitioning
+    // can remove id comparison when all stakeholders use uuid
+    data = stakeholders.find((p) => p.id === id || p.id === id);
+    if (!data) {
+      data = await api.getStakeholders(id, {
+        offset: page * rowsPerPage,
+        rowsPerPage,
+        orderBy,
+        order,
+        filter,
+      });
+    }
+    setStakeholders(data.stakeholders);
+  };
+
+  const updateFilter = async (filter) => {
     setPage(0);
     setFilter(filter);
-    // fetch api
-    // set data
-    // set display
+  };
+
+  const updateStakeholder = async (payload) => {
+    await api.updateStakeholder(payload);
+    getStakeholders();
   };
 
   const createStakeholder = async (payload) => {
-    console.log(payload);
-    // send api request
+    console.log('create', payload);
+    await api.createStakeholder(payload);
+    getStakeholders();
   };
 
-  const linkStakeholder = async (payload) => {
-    console.log('link');
-    console.log({
-      type: payload.type,
-      id: payload.id,
-    });
-    updateStakeholder(payload);
-    //determine which request to make (growers, users, etc)
-    //get stakeholders
-    //when one's selected
-    //add id to the array of that type on the current stakeholder & update the stakeholder
+  const getUnlinkedStakeholders = async (id) => {
+    const unlinked = await api.getUnlinkedStakeholders(id);
+    setUnlinkedStakeholders(unlinked.stakeholders);
   };
 
-  const unlinkStakeholder = async (payload) => {
-    console.log('unlink');
-    console.log({ type: payload.type, id: payload.id });
-    updateStakeholder(payload);
-    //remove the id from the type array in the current stakeholder
+  const updateLinks = async (stakeholder_id, payload) => {
+    const { id, type, linked, data } = payload;
+    console.log('update links', stakeholder_id, id, type, linked, data);
+    // update parent_id or child_id fields
+    await api.updateLinks(stakeholder_id, payload);
+    // get updated list of unlinked
+    getUnlinkedStakeholders();
   };
 
   const value = {
-    stakeholder,
     stakeholders,
+    unlinkedStakeholders,
     columns,
     page,
     rowsPerPage,
     filter,
+    initialFilterState,
     orderBy,
     order,
     setPage,
@@ -195,11 +175,12 @@ export function StakeholdersProvider(props) {
     setDisplay,
     sort,
     updateFilter,
-    getStakeholder,
+    // getStakeholder,
     getStakeholders,
     createStakeholder,
-    linkStakeholder,
-    unlinkStakeholder,
+    updateStakeholder,
+    getUnlinkedStakeholders,
+    updateLinks,
   };
 
   return (
