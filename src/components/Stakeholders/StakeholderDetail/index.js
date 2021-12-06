@@ -63,11 +63,24 @@ export default function StakeholderDetail({ row, columns, child }) {
             className={idx === 0 && child ? classes.pl : ''}
           >
             <div className={classes.flex}>
-              {col.value === 'name' && row.logo && (
-                <img src={row.logo} className={classes.logo} alt="" />
+              {col.value === 'name' && row.type === 'Organization' && (
+                <>
+                  <img
+                    src={row.logo_url}
+                    className={classes.logo}
+                    alt={row.org_name}
+                  />
+                  {row.org_name}
+                </>
               )}
-              {col.value === 'name' && !row.logo && (
-                <PersonIcon className={classes.logo} />
+              {col.value === 'name' && row.type === 'Person' && (
+                <>
+                  <PersonIcon
+                    className={classes.logo}
+                    alt={`${row.first_name} ${row.last_name}`}
+                  />
+                  {`${row.first_name} ${row.last_name}`}
+                </>
               )}
               {row[col.value]}
             </div>

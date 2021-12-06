@@ -14,13 +14,17 @@ const useStyles = makeStyles({
   },
 });
 
+function makeFullName(first, last) {
+  return `${first} ${last}`;
+}
+
 export default function GrowerListItem({ data }) {
   const classes = useStyles();
 
   return (
     <>
       <Grid item xs={5}>
-        <Typography>{data.fullName}</Typography>
+        <Typography>{makeFullName(data.first_name, data.last_name)}</Typography>
       </Grid>
       <Grid item xs={3} className={classes.flex}>
         <IdIcon className={classes.pr} />

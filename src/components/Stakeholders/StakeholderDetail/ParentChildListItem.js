@@ -26,7 +26,7 @@ export default function ParentChildListItem({ data }) {
         <img src="./logo_192x192.png" alt="" className={classes.logoSm} />
       </Grid>
       <Grid item xs={6}>
-        <Typography>{data.name}</Typography>
+        <Typography>{data.org_name}</Typography>
       </Grid>
       <Grid item xs={5} className={classes.flex}>
         <IdIcon className={classes.pr} />
