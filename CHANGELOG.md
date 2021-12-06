@@ -1,3 +1,12 @@
+## [1.29.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.2...v1.29.3) (2021-12-06)
+
+
+### Bug Fixes
+
+* **capture-match:** add candidate data to mock api ([7fdf248](https://github.com/Greenstand/treetracker-admin-client/commit/7fdf248a18dd0038aa497206ecdddbeed9ca29b9))
+* **capture-match:** display candidate images and reduce # of vertical scroll containers: ([09b88ca](https://github.com/Greenstand/treetracker-admin-client/commit/09b88ca1d38d179021089bc96ca2aa5db43055af))
+* update CaptureImage to use the correct API ([1c827e5](https://github.com/Greenstand/treetracker-admin-client/commit/1c827e593a5c536b6cab1af168b5dcccf3f02058))
+
 ## [1.29.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.1...v1.29.2) (2021-12-04)
 
 
