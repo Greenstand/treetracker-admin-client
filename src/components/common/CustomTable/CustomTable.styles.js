@@ -2,19 +2,19 @@ import { makeStyles } from '@material-ui/core/styles';
 
 /**
  * @function
- * @name EarningsTableTopBarStyles
- * @description styles for EarningsTableTopBar component
+ * @name CustomTableTopBarStyles
+ * @description styles for CustomTableTopBar component
  * @param {object} theme - material-ui theme object
- * @returns {object} styles for EarningsTableTopBar component
+ * @returns {object} styles for CustomTableTopBar component
  */
-const earningsTableTopBarStyles = (theme) => ({
+const customTableTopBarStyles = (theme) => ({
   csvLink: {
     color: theme.palette.primary.main,
     display: 'flex',
     alignItems: 'flex-end',
     textDecoration: 'none',
   },
-  earningsTableTopBar: {
+  customTableTopBar: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -50,10 +50,10 @@ const earningsTableTopBarStyles = (theme) => ({
     color: theme.palette.primary.main,
     cursor: 'pointer',
   },
-  earningsTableTopTitle: {
+  customTableTopTitle: {
     padding: theme.spacing(0, 0, 0, 2),
   },
-  earningsTableDateFilterButton: {
+  customTableDateFilterButton: {
     padding: theme.spacing(3, 7.5, 3, 4),
   },
   filterButton: {
@@ -63,66 +63,66 @@ const earningsTableTopBarStyles = (theme) => ({
 
 /**
  * @function
- * @name earningTableFilterStyles
- * @description styles for EarningsTableFilter component
+ * @name customTableFilterStyles
+ * @description styles for CustomTableFilter component
  * @param {object} theme - material-ui theme object
- * @returns {object} styles for EarningsTableFilter component
+ * @returns {object} styles for CustomTableFilter component
  */
-const earningTableFilterStyles = (theme) => ({
-  earningTableFilterSubmitButton: {
+const customTableFilterStyles = (theme) => ({
+  customTableFilterSubmitButton: {
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
-  earningTableFilterCancelButton: {
+  customTableFilterCancelButton: {
     border: 'none',
   },
-  earningsTableFilterForm: {
+  customTableFilterForm: {
     width: theme.spacing(80),
     padding: theme.spacing(5, 4),
   },
-  earningsTableHeader: {
+  customTableHeader: {
     borderBottom: `${theme.spacing(0.5)} solid ${
       theme.palette.stats.lavenderPinocchio
     }`,
   },
-  earningsTableFilterCloseIcon: {
+  customTableFilterCloseIcon: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
     backgroundColor: theme.palette.primary.lightVery,
   },
-  earningsTableFilterAvatar: {
+  customTableFilterAvatar: {
     backgroundColor: theme.palette.primary.lightVery,
     color: theme.palette.primary.main,
     marginLeft: theme.spacing(2),
     width: theme.spacing(7.5),
     height: theme.spacing(7.5),
   },
-  earningsFIlterSelectFormControl: {
+  customFIlterSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
   },
 });
 
 /**
  * @function
- * @name earningsTableStyles
- * @description styles for EarningsTable component
+ * @name customTableStyles
+ * @description styles for CustomTable component
  * @param {object} theme - material-ui theme object
- * @returns {object} styles for EarningsTable component
+ * @returns {object} styles for CustomTable component
  */
-const earningsTableStyles = (theme) => ({
+const customTableStyles = (theme) => ({
   progressContainer: {
     padding: theme.spacing(5, 0, 5, 0),
     position: 'relative',
     left: theme.spacing(120),
     bottom: theme.spacing(0),
   },
-  earningsTable: {
+  customTable: {
     padding: theme.spacing(0, 10, 0, 10),
   },
-  selectedEarningsTableRow: {
+  selectedCustomTableRow: {
     backgroundColor: theme.palette.primary.lightVery,
   },
-  earningsTableHeadSortIcon: {
+  customTableHeadSortIcon: {
     color: `${theme.palette.primary.main} !important`,
     padding: theme.spacing(0.25),
     backgroundColor: theme.palette.primary.lightVery,
@@ -147,7 +147,7 @@ const earningsTableStyles = (theme) => ({
     left: theme.spacing(1),
   },
 
-  earningsTablePagination: {
+  customTablePagination: {
     border: 'none',
     paddingRight: theme.spacing(0),
   },
@@ -160,15 +160,15 @@ const earningsTableStyles = (theme) => ({
   },
 });
 
-const earningDetailsStyles = (theme) => ({
-  earningDetailsContents: {
+const customDetailsStyles = (theme) => ({
+  customDetailsContents: {
     padding: theme.spacing(5, 0, 0, 0),
   },
-  earningGrowerDetail: {
+  customGrowerDetail: {
     padding: theme.spacing(1, 0, 0, 0),
     color: theme.palette.stats.carbonGrey,
   },
-  earningDetailsContentsDivider: {
+  customDetailsContentsDivider: {
     margin: theme.spacing(4, 0, 4, 0),
   },
   infoIconOutlined: {
@@ -189,16 +189,16 @@ const earningDetailsStyles = (theme) => ({
  * @returns {object} styles
  */
 const useStyles = makeStyles((theme) => {
-  const earningsTableTopBar = earningsTableTopBarStyles(theme);
-  const earningsTable = earningsTableStyles(theme);
-  const earningTableFilter = earningTableFilterStyles(theme);
-  const earningDetails = earningDetailsStyles(theme);
+  const customTableTopBar = customTableTopBarStyles(theme);
+  const customTable = customTableStyles(theme);
+  const customTableFilter = customTableFilterStyles(theme);
+  const customDetails = customDetailsStyles(theme);
 
   return {
-    ...earningsTableTopBar,
-    ...earningsTable,
-    ...earningTableFilter,
-    ...earningDetails,
+    ...customTableTopBar,
+    ...customTable,
+    ...customTableFilter,
+    ...customDetails,
   };
 });
 

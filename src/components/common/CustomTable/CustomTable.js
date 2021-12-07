@@ -27,7 +27,7 @@ import { covertDateStringToHumanReadableFormat } from 'utilities';
 /**
  * @function
  * @name CustomTableHeader
- * @description renders earnings table top bar which contains table actions(i.e. filter, export, etc)
+ * @description renders custom table top bar which contains table actions(i.e. filter, export, etc)
  * @param {object} props - properties passed to component
  * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {string} props.setIsFilterOpen - sets filter open/closed
@@ -41,14 +41,14 @@ function CustomTableHeader(props) {
   const classes = useStyles();
   const openFilter = () => setIsFilterOpen(true);
   return (
-    <Grid container className={classes.earningsTableTopBar}>
+    <Grid container className={classes.customTableTopBar}>
       <Grid item xs={4}>
-        <Typography className={classes.earningsTableTopTitle} variant="h4">
+        <Typography className={classes.customTableTopTitle} variant="h4">
           {headerTitle}
         </Typography>
       </Grid>
 
-      {/*  start earning table actions */}
+      {/*  start custom table actions */}
       <Grid item xs={8}>
         <Grid container direction="row" justify="flex-end" alignItems="center">
           {/*  show export button if actionButtonType is 'export' */}
@@ -84,7 +84,7 @@ function CustomTableHeader(props) {
           {/* start Date Range button */}
           <Grid item lg={3}>
             <Grid container direction="row" justify="flex-end">
-              <Button className={classes.earningsTableDateFilterButton}>
+              <Button className={classes.customTableDateFilterButton}>
                 <Grid container direction="row" justify="center">
                   <div>
                     <Typography className={classes.dateFiterButonSmallText}>
@@ -121,7 +121,7 @@ function CustomTableHeader(props) {
           </Grid>
         </Grid>
       </Grid>
-      {/* end earnings table actions */}
+      {/* end custom table actions */}
     </Grid>
   );
 }
@@ -134,13 +134,13 @@ CustomTableHeader.propTypes = {
 
 /**
  * @function
- * @name prepareEarnings
- * @description transform earnings such that are well formated compatible with earnigs table meta data
- * @param {object} earnings
- * @returns {Array}
+ * @name prepareRows
+ * @description transform rows such that are well formated compatible with the table meta data
+ * @param {object} rows - rows to be transformed
+ * @returns {Array} - transformed rows
  */
-const prepareEarnings = (earnings) =>
-  earnings.map((earning) => {
+const prepareRows = (rows) =>
+  rows.map((row) => {
     const {
       id,
       grower,
@@ -150,7 +150,7 @@ const prepareEarnings = (earnings) =>
       payment_system,
       paid_at,
       calculated_at,
-    } = earning;
+    } = row;
     return {
       id,
       grower,
@@ -165,14 +165,14 @@ const prepareEarnings = (earnings) =>
 /**
  * @function
  * @name CustomTable
- * @description displays table containing  earnings data
+ * @description displays table containing  rows with data
  * @param {object} props - properties passed to component
- * @param {function} props.handleGetData - handler function that gets data to be displayed in table
+ * @param {function} props.handleGetData - handler function that triggers get data to be displayed in table
  * @param {Array} props.data - data to be displayed in table
  * @param {React.Component} props.filter - renders table filter form
  * @param {string} props.headerTitle - title of the table header
  * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
- * @returns {React.Component} earnings table
+ * @returns {React.Component} custom table
  */
 function CustomTable(props) {
   const {
@@ -181,7 +181,7 @@ function CustomTable(props) {
     filter,
     headerTitle,
     actionButtonType,
-    setSelectedRow,
+    setSelected,
     data,
     totalCount,
     rowDetails,
@@ -189,12 +189,12 @@ function CustomTable(props) {
 
   // managing custom table  state
   const classes = useStyles();
-  const [earnings, setEarnings] = useState([]);
+  const [rows, setRows] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [selectedEarning, setSelectedEarning] = useState(null);
+  const [selectedRow, setSelectedRow] = useState(null);
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
   const [sortBy, setSortBy] = useState(null);
 
@@ -209,12 +209,12 @@ function CustomTable(props) {
 
   function fetchData(limit, currentPage, sorByInfo) {
     const offset = limit * currentPage;
-    setEarnings([]);
+    setRows([]);
     handleGetData(limit, offset, sorByInfo);
   }
 
-  const handleOpenEarningDetails = (earning) => {
-    setSelectedRow(earning);
+  const handleOpenRowDetails = (row) => {
+    setSelectedRow(row);
     setIsDetailsDrawerOpen(true);
   };
 
@@ -236,11 +236,11 @@ function CustomTable(props) {
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
-  const isRowSelected = (id) => id === selectedEarning?.id;
+  const isRowSelected = (id) => id === selectedRow?.id;
 
   useEffect(() => {
-    const preparedEarnings = prepareEarnings(data);
-    setEarnings(preparedEarnings);
+    const preparedRows = prepareRows(data);
+    setRows(preparedRows);
   }, [data]);
 
   useEffect(() => {
@@ -248,17 +248,17 @@ function CustomTable(props) {
   }, [rowsPerPage, page, sortBy]);
 
   return (
-    <Grid container direction="column" className={classes.earningsTable}>
+    <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
         setIsFilterOpen={setIsFilterOpen}
-        data={earnings}
+        data={rows}
         headerTitle={headerTitle}
         actionButtonType={actionButtonType}
       />
       <TableContainer>
         <Table>
           <TableHead>
-            <TableRow className={classes.earningsTableHeader}>
+            <TableRow className={classes.customTableHeader}>
               {tableMetaData.map((column, i) => (
                 <TableCell
                   key={`${i}-${column.description}`}
@@ -271,7 +271,7 @@ function CustomTable(props) {
                       active={sortBy?.field === column.name}
                       onClick={() => handleSortableColumns(column)}
                       direction={sortableColumnsObject[column.name]}
-                      classes={{ icon: classes.earningsTableHeadSortIcon }}
+                      classes={{ icon: classes.customTableHeadSortIcon }}
                       IconComponent={ArrowDropDownIcon}
                     >
                       <Typography variant="h6">
@@ -294,22 +294,20 @@ function CustomTable(props) {
             </TableRow>
           </TableHead>
 
-          {earnings.length > 0 ? (
+          {rows.length > 0 ? (
             <TableBody>
-              {earnings.map((earning, i) => (
+              {rows.map((row, i) => (
                 <TableRow
-                  key={`${i}-${earning.id}`}
-                  onClick={() => handleOpenEarningDetails(earning)}
+                  key={`${i}-${row.id}`}
+                  onClick={() => handleOpenRowDetails(row)}
                   className={
-                    isRowSelected(earning.id)
-                      ? classes.selectedEarningsTableRow
-                      : ''
+                    isRowSelected(row.id) ? classes.selectedcustomTableRow : ''
                   }
                 >
                   {tableMetaData.map((column, j) => (
                     <TableCell key={`${i}-${j}-${column.name}`}>
                       <Typography variant="body1">
-                        {earning[column.name]}
+                        {row[column.name]}
                       </Typography>
                     </TableCell>
                   ))}
@@ -327,7 +325,7 @@ function CustomTable(props) {
         count={totalCount}
         classes={{
           selectRoot: classes.selectRoot,
-          root: classes.earningsTablePagination,
+          root: classes.customTablePagination,
         }}
         component="div"
         rowsPerPageOptions={[20, 50, 100, { label: 'All', value: -1 }]}
@@ -350,7 +348,7 @@ function CustomTable(props) {
         <Grid
           container
           direction="column"
-          className={classes.earningsTableFilterForm}
+          className={classes.customTableFilterForm}
         >
           {/* start filter header */}
           <Grid item>
@@ -363,14 +361,14 @@ function CustomTable(props) {
                   justify="flex-start"
                 >
                   <Typography variant="h4">Filters</Typography>
-                  <Avatar className={classes.earningsTableFilterAvatar}>
+                  <Avatar className={classes.customTableFilterAvatar}>
                     <Typography variant="h5">1</Typography>
                   </Avatar>
                 </Grid>
               </Grid>
               <CloseIcon
                 onClick={() => setIsFilterOpen(false)}
-                className={classes.earningsTableFilterCloseIcon}
+                className={classes.customTableFilterCloseIcon}
               />
             </Grid>
           </Grid>
@@ -389,9 +387,9 @@ function CustomTable(props) {
         <Grid
           container
           direction="column"
-          className={classes.earningsTableFilterForm}
+          className={classes.customTableFilterForm}
         >
-          {/* start earning details header */}
+          {/* start  details header */}
           <Grid item>
             <Grid container direction="row" justify="space-between">
               <Grid item>
@@ -406,11 +404,11 @@ function CustomTable(props) {
               </Grid>
               <CloseIcon
                 onClick={() => handleCloseDetails()}
-                className={classes.earningsTableFilterCloseIcon}
+                className={classes.customTableFilterCloseIcon}
               />
             </Grid>
           </Grid>
-          {/* end earnings detail header */}
+          {/* end detail header */}
 
           {rowDetails}
         </Grid>
