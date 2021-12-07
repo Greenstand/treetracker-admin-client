@@ -224,6 +224,7 @@ const GrowerDetail = (props) => {
   }
 
   const sendGrowerMessage = (currentGrower) => {
+    // console.log(currentGrower);
     sendMessageFromGrowers(currentGrower);
   };
 

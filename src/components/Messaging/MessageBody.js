@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
@@ -110,12 +110,8 @@ export const AnnounceMessage = ({ message }) => {
   );
 };
 
-export const SurveyMessage = ({ message, setSurveyId }) => {
+export const SurveyMessage = ({ message }) => {
   const { messageRowRight, sentMessage, surveyContent } = useStyles();
-
-  useEffect(() => {
-    setSurveyId(message.survey.id);
-  }, []);
 
   return (
     <div className={messageRowRight}>
@@ -216,11 +212,9 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const { paper, messagesBody, textInput } = useStyles();
   const { user, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [surveyId, setSurveyId] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let date = new Date().toISOString();
 
     const messagePayload = {
       parent_message_id: messages[messages.length - 1].id
@@ -232,28 +226,11 @@ const MessageBody = ({ messages, messageRecipient }) => {
       body: messageContent,
     };
 
-    const surveyResponsePayload = {
-      parent_message_id: messages[0].id,
-      author_handle: user.userName,
-      subject: 'Survey Response',
-      survey_id: surveyId,
-      survey_response: messageContent,
-      body: messageContent,
-      composed_at: date,
-    };
-
     if (messageContent !== '') {
-      if (messages[0].subject.includes('Survey')) {
-        if (user.userName && messageRecipient) {
-          console.log(surveyResponsePayload);
-          // await postMessageSend(surveyResponsePayload);
-        }
-      } else {
-        if (user.userName && messageRecipient) {
-          console.log('payload', messagePayload);
+      if (user.userName && messageRecipient) {
+        console.log('payload', messagePayload);
 
-          await postMessageSend(messagePayload);
-        }
+        await postMessageSend(messagePayload);
       }
     }
     setMessageContent('');
@@ -288,7 +265,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
                 <SurveyMessage
                   key={message.id ? message.id : i}
                   message={message}
-                  setSurveyId={setSurveyId}
                 />
               );
             } else if (message.subject.includes('Announce')) {

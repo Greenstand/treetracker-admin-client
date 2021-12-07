@@ -59,7 +59,7 @@ export default {
   postMessageSend(payload) {
     const query = `https://dev-k8s.treetracker.org/messaging/message/send`;
 
-    fetch(query, {
+    return fetch(query, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

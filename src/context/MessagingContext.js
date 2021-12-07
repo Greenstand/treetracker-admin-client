@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import api from '../api/messaging';
 
 export const MessagingContext = createContext({
@@ -21,7 +21,7 @@ export const MessagingProvider = (props) => {
   const [messages, setMessages] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log(user);
+
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
     let newMessages = rawMessages
@@ -82,7 +82,7 @@ export const MessagingProvider = (props) => {
 
   const loadRegions = async () => {
     const res = await api.getRegion();
-    console.log(res);
+
     if (res) {
       setRegions(res);
     }
@@ -113,7 +113,7 @@ export const MessagingProvider = (props) => {
   };
 
   const sendMessageFromGrowers = (payload) => {
-    console.log('grower', payload);
+    console.log('growerInfo', payload);
     let messageData = {
       author_id: user.id,
       subject: 'Message',
@@ -131,21 +131,15 @@ export const MessagingProvider = (props) => {
     if (!checkExisting) {
       setGrowerMessage(messageData);
     }
+    console.log(growerMessage);
   };
-
-  console.log(growerMessage);
-
-  useEffect(() => {
-    loadMessages();
-    loadRegions();
-  }, []);
-
-  console.log(messages);
 
   const value = {
     user,
     messages,
     regions,
+    loadMessages,
+    loadRegions,
     postRegion,
     getRegionById,
     postMessage,

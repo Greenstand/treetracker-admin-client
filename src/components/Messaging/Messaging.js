@@ -67,7 +67,12 @@ const Messaging = () => {
     body,
   } = useStyles();
 
-  const { messages } = useContext(MessagingContext);
+  const { messages, loadMessages, loadRegions } = useContext(MessagingContext);
+
+  useEffect(() => {
+    loadMessages();
+    loadRegions();
+  }, []);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
