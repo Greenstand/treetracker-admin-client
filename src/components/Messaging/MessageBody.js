@@ -218,7 +218,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const [messageContent, setMessageContent] = useState('');
   const [surveyId, setSurveyId] = useState('');
 
-  console.log(messages);
   const handleSubmit = async (e) => {
     e.preventDefault();
     let date = new Date().toISOString();
@@ -233,19 +232,20 @@ const MessageBody = ({ messages, messageRecipient }) => {
       body: messageContent,
     };
 
-    // const surveyResponsePayload = {
-    //   parent_message_id: messages[0].id,
-    //   author_handle: user.userName,
-    //   subject: 'Survey Response',
-    //   survey_id: surveyId,
-    //   survey_response: messageContent,
-    //   body: messageContent,
-    //   composed_at: date,
-    // };
+    const surveyResponsePayload = {
+      parent_message_id: messages[0].id,
+      author_handle: user.userName,
+      subject: 'Survey Response',
+      survey_id: surveyId,
+      survey_response: messageContent,
+      body: messageContent,
+      composed_at: date,
+    };
 
     if (messageContent !== '') {
       if (messages[0].subject.includes('Survey')) {
         if (user.userName && messageRecipient) {
+          console.log(surveyResponsePayload);
           // await postMessageSend(surveyResponsePayload);
         }
       } else {
@@ -270,25 +270,19 @@ const MessageBody = ({ messages, messageRecipient }) => {
         {messages ? (
           messages.map((message, i) => {
             if (message.subject === 'Message') {
-              if (message.from === user.userName) {
-                return (
-                  <SentMessage
-                    key={message.id ? message.id : i}
-                    message={message}
-                  />
-                );
-              } else {
-                if (message.body.length > 1) {
-                  return (
-                    <RecievedMessage
-                      key={message.id ? message.id : i}
-                      message={message}
-                    />
-                  );
-                } else {
-                  return <div key={i}></div>;
-                }
-              }
+              return message.from === user.userName ? (
+                <SentMessage
+                  key={message.id ? message.id : i}
+                  message={message}
+                />
+              ) : message.body.length > 1 ? (
+                <RecievedMessage
+                  key={message.id ? message.id : i}
+                  message={message}
+                />
+              ) : (
+                <div key={i}></div>
+              );
             } else if (message.subject.includes('Survey')) {
               return (
                 <SurveyMessage

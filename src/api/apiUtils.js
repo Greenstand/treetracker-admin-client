@@ -1,7 +1,6 @@
 import { session } from '../models/auth';
 
 export async function handleResponse(response) {
-  console.log(response);
   if (response.status === 204) return {};
   if (response.ok) return response.json();
   if (response.status === 400) {
