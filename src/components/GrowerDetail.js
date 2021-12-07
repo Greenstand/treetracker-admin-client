@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -17,12 +18,14 @@ import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
 import { LinearProgress } from '@material-ui/core';
 import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/GrowerContext';
+import { MessagingContext } from 'context/MessagingContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
@@ -87,6 +90,19 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: '0.8em',
   },
+  messageButton: {
+    background: theme.palette.primary.main,
+    color: 'white',
+    position: 'relative',
+    right: -175,
+    bottom: 90,
+    borderRadius: '25px',
+    '&:hover': {
+      backgroundColor: '#fff',
+      borderColor: theme.palette.primary.main,
+      color: theme.palette.primary.main,
+    },
+  },
 }));
 
 const GrowerDetail = (props) => {
@@ -95,6 +111,7 @@ const GrowerDetail = (props) => {
   const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
+  const { sendMessageFromGrowers } = useContext(MessagingContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
@@ -125,7 +142,7 @@ const GrowerDetail = (props) => {
             console.log('grower registrations: ', registrations);
             if (registrations && registrations.length) {
               const sortedRegistrations = registrations.sort((a, b) =>
-                a.created_at > b.created_at ? 1 : -1,
+                a.created_at > b.created_at ? 1 : -1
               );
               setGrowerRegistrations(sortedRegistrations);
               setDeviceIdentifiers(
@@ -137,7 +154,7 @@ const GrowerDetail = (props) => {
                         ? 'iOS'
                         : 'Android',
                   }))
-                  .filter((id) => id),
+                  .filter((id) => id)
               );
             }
           });
@@ -206,6 +223,10 @@ const GrowerDetail = (props) => {
     setSnackbarOpen(true);
   }
 
+  const sendGrowerMessage = (currentGrower) => {
+    sendMessageFromGrowers(currentGrower);
+  };
+
   return (
     <>
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
@@ -270,6 +291,18 @@ const GrowerDetail = (props) => {
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
             </Grid>
+            {hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
+              <Grid item>
+                <Button
+                  className={classes.messageButton}
+                  onClick={() => sendGrowerMessage(grower)}
+                  component={Link}
+                  to={'/messaging'}
+                >
+                  Send Message
+                </Button>
+              </Grid>
+            )}
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Captures</Typography>
@@ -385,8 +418,7 @@ const GrowerDetail = (props) => {
                   growerRegistrations
                     .map((item) => item.country)
                     .filter(
-                      (country, i, arr) =>
-                        country && arr.indexOf(country) === i,
+                      (country, i, arr) => country && arr.indexOf(country) === i
                     )
                     .join(', ')) ||
                   '---'}
