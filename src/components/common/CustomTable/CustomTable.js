@@ -181,7 +181,8 @@ function CustomTable(props) {
     filter,
     headerTitle,
     actionButtonType,
-    setSelected,
+    setSelectedRow,
+    selectedRow,
     data,
     totalCount,
     rowDetails,
@@ -194,7 +195,6 @@ function CustomTable(props) {
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [selectedRow, setSelectedRow] = useState(null);
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
   const [sortBy, setSortBy] = useState(null);
 
@@ -236,7 +236,11 @@ function CustomTable(props) {
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
-  const isRowSelected = (id) => id === selectedRow?.id;
+  const isRowSelected = (id) => {
+    console.log('lets see--------------', id === selectedRow?.id);
+
+    return id === selectedRow?.id;
+  };
 
   useEffect(() => {
     const preparedRows = prepareRows(data);

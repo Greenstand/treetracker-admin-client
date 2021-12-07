@@ -326,6 +326,7 @@ export default function EarningsTable() {
       totalCount={totalEarnings}
       handleGetData={getEarnings}
       setSelectedRow={setSelectedEarning}
+      selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
       filter={<EarningsTableFilter />}
