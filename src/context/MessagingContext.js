@@ -117,7 +117,6 @@ export const MessagingProvider = (props) => {
 
   const loadRegions = async () => {
     const res = await api.getRegion();
-
     if (res) {
       setRegions(res);
     }
