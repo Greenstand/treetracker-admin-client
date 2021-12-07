@@ -21,7 +21,7 @@ export const MessagingProvider = (props) => {
   const [messages, setMessages] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log(user);
+
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
     let newMessages = rawMessages
