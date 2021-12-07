@@ -236,11 +236,7 @@ function CustomTable(props) {
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
-  const isRowSelected = (id) => {
-    console.log('lets see--------------', id === selectedRow?.id);
-
-    return id === selectedRow?.id;
-  };
+  const isRowSelected = (id) => id === selectedRow?.id;
 
   useEffect(() => {
     const preparedRows = prepareRows(data);
@@ -304,9 +300,7 @@ function CustomTable(props) {
                 <TableRow
                   key={`${i}-${row.id}`}
                   onClick={() => handleOpenRowDetails(row)}
-                  className={
-                    isRowSelected(row.id) ? classes.selectedcustomTableRow : ''
-                  }
+                  className={isRowSelected(row.id) ? classes.selectedRow : ''}
                 >
                   {tableMetaData.map((column, j) => (
                     <TableCell key={`${i}-${j}-${column.name}`}>

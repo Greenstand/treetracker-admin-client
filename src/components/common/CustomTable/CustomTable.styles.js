@@ -119,7 +119,7 @@ const customTableStyles = (theme) => ({
   customTable: {
     padding: theme.spacing(0, 10, 0, 10),
   },
-  selectedCustomTableRow: {
+  selectedRow: {
     backgroundColor: theme.palette.primary.lightVery,
   },
   customTableHeadSortIcon: {
