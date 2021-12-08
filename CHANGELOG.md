@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.3...v1.30.0) (2021-12-08)
+
+
+### Features
+
+* link to original image file ([#206](https://github.com/Greenstand/treetracker-admin-client/issues/206)) ([89f628d](https://github.com/Greenstand/treetracker-admin-client/commit/89f628db7bb2cc23cedffca136b7fdddd2c8e0c9))
+
 ## [1.29.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.2...v1.29.3) (2021-12-06)
 
 
