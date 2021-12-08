@@ -16,6 +16,7 @@ import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -65,6 +66,14 @@ const useStyles = makeStyles((theme) => ({
   },
   box: {
     padding: theme.spacing(4),
+  },
+  imageLink: {
+    position: 'absolute',
+    bottom: 0,
+    margin: '0 auto',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#fff',
   },
 }));
 
@@ -172,12 +181,30 @@ function CaptureDetailDialog(props) {
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
+            {
+              label: 'Original Image URL',
+              value: renderCapture.imageUrl,
+              copy: true,
+              link: true,
+              image: true,
+            },
           ].map((item) => (
             <Grid item key={item.label}>
               <Typography variant="subtitle1">{item.label}</Typography>
               <Typography variant="body1">
                 {item.link ? (
-                  <LinkToWebmap value={item.value} type="user" />
+                  // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
+                  item.image ? (
+                    <Link
+                      href={renderCapture.imageUrl}
+                      underline="always"
+                      target="_blank"
+                    >
+                      Open in new tab
+                    </Link>
+                  ) : (
+                    <LinkToWebmap value={item.value} type="user" />
+                  )
                 ) : (
                   item.value || '---'
                 )}
