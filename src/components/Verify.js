@@ -311,11 +311,11 @@ const Verify = (props) => {
               capture.placeholder && classes.placeholderCard,
             )}
           >
-            {isCaptureSelected(capture.id) && (
+            {/* {isCaptureSelected(capture.id) && (
               <Paper className={classes.cardCheckbox} elevation={4}>
                 <CheckIcon />
               </Paper>
-            )}
+            )} */}
             <Card
               onClick={(e) => handleCaptureClick(e, capture.id)}
               id={`card_${capture.id}`}
@@ -323,6 +323,9 @@ const Verify = (props) => {
               elevation={capture.placeholder ? 0 : 3}
             >
               <CardContent className={classes.cardContent}>
+                <Paper className={classes.cardCheckbox} elevation={4}>
+                  <CheckIcon />
+                </Paper>
                 <OptimizedImage
                   src={capture.imageUrl}
                   width={400}

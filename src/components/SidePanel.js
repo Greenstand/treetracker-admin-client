@@ -40,6 +40,17 @@ const useStyles = makeStyles((theme) => ({
   sidePanelSubmitButton: {
     width: '128px',
   },
+  subtitle: {
+    fontSize: '0.8em',
+    color: 'rgba(0,0,0,0.5)',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  selectButton: {
+    color: theme.palette.primary.lightVery,
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 function SidePanel(props) {
@@ -106,6 +117,30 @@ function SidePanel(props) {
         direction={'column'}
         className={classes.sidePanelContainer}
       >
+        <Grid className={classes.sidePanelItem}>
+          <Typography variant="h6">
+            Selected Captures
+          </Typography>
+          <Typography className={classes.subtitle}>
+            Quantity of selected Captures
+          </Typography>
+        </Grid>
+        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.selectButton}
+            >
+              Select All
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              className={classes.selectButton}
+            >
+              Unselect All
+            </Button>
+        </Grid>
         <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
           <Tabs
             indicatorColor="primary"
