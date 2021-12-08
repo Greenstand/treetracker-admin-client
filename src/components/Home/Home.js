@@ -1,8 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 
+import FilterListIcon from '@material-ui/icons/FilterList';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './Home.styles';
 import { documentTitle } from '../../common/variables';
@@ -17,6 +20,8 @@ import {
 } from '../DashStat.container';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
 import GrowerReportingCard from '../ReportingCards';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuMui from '@material-ui/core/Menu';
 
 /**
  * @function
@@ -30,10 +35,19 @@ import GrowerReportingCard from '../ReportingCards';
 function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
   }, []);
+
+  const handleTimeClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleTimeClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div className={classes.box}>
@@ -44,12 +58,37 @@ function Home(props) {
       </div>
       <div className={classes.rightBox}>
         <Box className={classes.box2}>
-          <Grid container spacing={5}>
+          <Grid container spacing={5} className={classes.version}>
             <Grid item xs={3}>
               <GreenStandSvgLogo />
               <Box display="inline" ml={2}>
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
+            </Grid>
+            <Grid item xs={5} className={classes.timeBox}>
+              <Typography variant="body1" className={classes.time}>
+                Last updated 22h ago
+              </Typography>
+              <Button
+                variant="outlined"
+                onClick={handleTimeClick}
+                className={classes.timeButton}
+              >
+                <FilterListIcon color="primary" />
+                <Typography variant="body1">Last month</Typography>
+              </Button>
+              <MenuMui
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleTimeClose}
+                classes={{ paper: classes.timeMenu }}
+              >
+                <MenuItem onClick={handleTimeClose}>Last month</MenuItem>
+                <MenuItem onClick={handleTimeClose}>Last two month</MenuItem>
+                <MenuItem onClick={handleTimeClose}>Last six month</MenuItem>
+                <MenuItem onClick={handleTimeClose}>Last year</MenuItem>
+              </MenuMui>
             </Grid>
           </Grid>
           <Grid

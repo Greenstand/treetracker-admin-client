@@ -1,12 +1,21 @@
 /*
  * The reporting card components
  */
-import { Box, Grid, Typography, Avatar } from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  Card,
+  Modal,
+  Typography,
+  Avatar,
+  Button,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import React from 'react';
 import ArrayIcon from '@material-ui/icons/ArrowForward';
 import theme from './common/theme';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import log from 'loglevel';
 import * as d3 from 'd3';
 
 console.error('color:', theme.palette.stats.green);
@@ -91,40 +100,102 @@ const style = (theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  modal: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    maxWidth: '80%',
+    minWidth: 400,
+    minHeight: 600,
+    maxHeight: 600,
+    overflow: 'auto',
+  },
 });
 
 function GrowerReportingCard(props) {
   const { classes } = props;
+  const [open, setOpen] = React.useState(false);
+
+  function handleSeeMore() {
+    log.log('see more');
+    setOpen(true);
+  }
+
   return (
-    <Box className={classes.root}>
-      <Typography className={classes.title}>Grower</Typography>
-      <Box className={classes.box2}>
-        <Box className={classes.iconTotalBox}>
-          <PeopleOutlineIcon className={classes.iconTotal} />
+    <>
+      <Box className={classes.root}>
+        <Typography className={classes.title}>Grower</Typography>
+        <Box className={classes.box2}>
+          <Box className={classes.iconTotalBox}>
+            <PeopleOutlineIcon className={classes.iconTotal} />
+          </Box>
+          <Box className={classes.box3}>
+            <Typography className={classes.total}>785</Typography>
+            <Typography className={classes.totalText}>total</Typography>
+          </Box>
         </Box>
-        <Box className={classes.box3}>
-          <Typography className={classes.total}>785</Typography>
-          <Typography className={classes.totalText}>total</Typography>
+        <Box mt={6} />
+        <Box className={classes.box4}>
+          <Typography className={classes.name}>CAN SL</Typography>
+          <Typography className={classes.number}>56</Typography>
+        </Box>
+        <Box className={classes.box4}>
+          <Typography className={classes.name}>CAN SL</Typography>
+          <Typography className={classes.number}>56</Typography>
+        </Box>
+        <Box className={classes.box4}>
+          <Typography className={classes.name}>CAN SL</Typography>
+          <Typography className={classes.number}>56</Typography>
+        </Box>
+        <Box className={classes.box1}>
+          <ArrayIcon className={classes.icon} />
+          <Button onClick={handleSeeMore} variant="text" color="primary">
+            <Typography className={classes.seeMore}>SEE MORE</Typography>
+          </Button>
         </Box>
       </Box>
-      <Box mt={6} />
-      <Box className={classes.box4}>
-        <Typography className={classes.name}>CAN SL</Typography>
-        <Typography className={classes.number}>56</Typography>
-      </Box>
-      <Box className={classes.box4}>
-        <Typography className={classes.name}>CAN SL</Typography>
-        <Typography className={classes.number}>56</Typography>
-      </Box>
-      <Box className={classes.box4}>
-        <Typography className={classes.name}>CAN SL</Typography>
-        <Typography className={classes.number}>56</Typography>
-      </Box>
-      <Box className={classes.box1}>
-        <ArrayIcon className={classes.icon} />
-        <Typography className={classes.seeMore}>SEE MORE</Typography>
-      </Box>
-    </Box>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        className={classes.modal}
+      >
+        <Card className={classes.card}>
+          <Box className={classes.root}>
+            <Typography className={classes.title}>Grower</Typography>
+            <Box className={classes.box2}>
+              <Box className={classes.iconTotalBox}>
+                <PeopleOutlineIcon className={classes.iconTotal} />
+              </Box>
+              <Box className={classes.box3}>
+                <Typography className={classes.total}>785</Typography>
+                <Typography className={classes.totalText}>total</Typography>
+              </Box>
+            </Box>
+            <Box mt={6} />
+            <Box className={classes.box4}>
+              <Typography className={classes.name}>CAN SL</Typography>
+              <Typography className={classes.number}>56</Typography>
+            </Box>
+            <Box className={classes.box4}>
+              <Typography className={classes.name}>CAN SL</Typography>
+              <Typography className={classes.number}>56</Typography>
+            </Box>
+            <Box className={classes.box4}>
+              <Typography className={classes.name}>CAN SL</Typography>
+              <Typography className={classes.number}>56</Typography>
+            </Box>
+            {Array.from(new Array(20)).map((_, i) => (
+              <Box key={i} className={classes.box4}>
+                <Typography className={classes.name}>CAN SL</Typography>
+                <Typography className={classes.number}>56</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Card>
+      </Modal>
+    </>
   );
 }
 
