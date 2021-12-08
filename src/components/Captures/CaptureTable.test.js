@@ -76,7 +76,7 @@ describe('Captures', () => {
       const table = screen.getByRole(/table/i);
       const headers = within(table).getAllByRole(/columnheader/i);
       const arr = headers.map((header) => header.textContent);
-      expect(arr).toHaveLength(8);
+      expect(arr).toHaveLength(9);
     });
 
     it('renders headers for captures table', () => {
@@ -96,6 +96,8 @@ describe('Captures', () => {
       item = within(table).getByText(/Species/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Token Status/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Capture Tags/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Created/i);
       expect(item).toBeInTheDocument();

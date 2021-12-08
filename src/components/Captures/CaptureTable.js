@@ -63,6 +63,11 @@ const columns = [
       val ? tokenizationStates.TOKENIZED : tokenizationStates.NOT_TOKENIZED,
   },
   {
+    attr: 'captureTags',
+    label: 'Capture Tags',
+    noSort: true,
+  },
+  {
     attr: 'timeCreated',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),
@@ -247,6 +252,15 @@ export const formatCell = (capture, speciesState, attr, renderer) => {
     return capture['active'] === null || capture['approved'] === null
       ? '--'
       : getVerificationStatus(capture['active'], capture['approved']);
+  } else if (attr === 'captureTags') {
+    return [
+      capture.age,
+      capture.morphology,
+      capture.captureApprovalTag,
+      capture.rejectionReason,
+    ]
+      .filter((tag) => tag !== null)
+      .join(', ');
   } else {
     return renderer ? renderer(capture[attr]) : capture[attr];
   }
