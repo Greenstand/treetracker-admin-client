@@ -19,9 +19,14 @@ import {
   DashStatVerifiedCaptures,
 } from '../DashStat.container';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
-import GrowerReportingCard from '../ReportingCards';
+import ReportingCard1 from '../reportingCards/ReportingCard1';
+import ReportingCard2 from '../reportingCards/ReportingCard2';
+import ReportingCard3 from '../reportingCards/ReportingCard3';
+import ReportingCard4 from '../reportingCards/ReportingCard4';
+import ReportingCard5 from '../reportingCards/ReportingCard5';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
+import moment from 'moment';
 
 /**
  * @function
@@ -41,12 +46,32 @@ function Home(props) {
     document.title = `${documentTitle}`;
   }, []);
 
+  // the time range
+  const timeRange = [
+    { range: 30, text: 'Last Month' },
+    { range: 30 * 60, text: 'Last 6 Months' },
+    { range: 356, text: 'Last Year' },
+    { range: 356 * 50, text: 'All' },
+  ];
+  const [timeRangeIndex, setTimeRangeIndex] = React.useState(0);
+  const [startDate, setStartDate] = React.useState(
+    moment()
+      .add(-1 * timeRange[timeRangeIndex], 'day')
+      .format('YYYY-MM-DD'),
+  );
+  const [endDate, setEndDate] = React.useState(moment().format('YYYY-MM-DD'));
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleTimeClose = () => {
+  const handleTimeClose = (index) => {
     setAnchorEl(null);
+    setTimeRangeIndex(index);
+    setStartDate(
+      moment()
+        .add(-1 * timeRange[index].range, 'day')
+        .format('YYYY-MM-DD'),
+    );
   };
 
   return (
@@ -75,7 +100,9 @@ function Home(props) {
                 className={classes.timeButton}
               >
                 <FilterListIcon color="primary" />
-                <Typography variant="body1">Last month</Typography>
+                <Typography variant="body1">
+                  {timeRange[timeRangeIndex].text}
+                </Typography>
               </Button>
               <MenuMui
                 anchorEl={anchorEl}
@@ -84,10 +111,11 @@ function Home(props) {
                 onClose={handleTimeClose}
                 classes={{ paper: classes.timeMenu }}
               >
-                <MenuItem onClick={handleTimeClose}>Last month</MenuItem>
-                <MenuItem onClick={handleTimeClose}>Last two month</MenuItem>
-                <MenuItem onClick={handleTimeClose}>Last six month</MenuItem>
-                <MenuItem onClick={handleTimeClose}>Last year</MenuItem>
+                {timeRange.map((item, index) => (
+                  <MenuItem key={index} onClick={() => handleTimeClose(index)}>
+                    {timeRange[index].text}
+                  </MenuItem>
+                ))}
               </MenuMui>
             </Grid>
           </Grid>
@@ -114,16 +142,19 @@ function Home(props) {
             ]) && <DashStatGrowerCount />}
             <Grid className={classes.statCardGrid} container xs={12}>
               <Grid item xs={4}>
-                <GrowerReportingCard />
+                <ReportingCard1 startDate={startDate} endDate={endDate} />
               </Grid>
               <Grid item xs={4}>
-                <GrowerReportingCard />
+                <ReportingCard2 startDate={startDate} endDate={endDate} />
               </Grid>
               <Grid item xs={4}>
-                <GrowerReportingCard />
+                <ReportingCard3 startDate={startDate} endDate={endDate} />
               </Grid>
               <Grid item xs={4}>
-                <GrowerReportingCard />
+                <ReportingCard4 startDate={startDate} endDate={endDate} />
+              </Grid>
+              <Grid item xs={4}>
+                <ReportingCard5 startDate={startDate} endDate={endDate} />
               </Grid>
             </Grid>
           </Grid>
