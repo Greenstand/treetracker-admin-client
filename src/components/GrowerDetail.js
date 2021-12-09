@@ -28,10 +28,8 @@ import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
-import { getVerificationStatus } from '../common/utils';
-import { verificationStates } from '../common/variables';
-import { CapturesContext } from 'context/CapturesContext';
 import FilterModel from '../models/Filter';
+import treeTrackerApi from 'api/treeTrackerApi';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -94,21 +92,17 @@ const useStyle = makeStyles((theme) => ({
 const GrowerDetail = (props) => {
   // console.log('render: grower detail');
   const classes = useStyle();
-  const emptyStatusCount = { approved: 0, awaiting: 0, rejected: 0 };
   const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
-  const capturesContext = useContext(CapturesContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
-  const [verificationStatus, setVerificationStatus] = useState(
-    emptyStatusCount,
-  );
-	const [loading, setLoading] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -157,33 +151,35 @@ const GrowerDetail = (props) => {
   useEffect(() => {
     async function loadCaptures() {
       if (growerId) {
-				setLoading(true);
-        let filter = new FilterModel();
-        filter.planterId = growerId;
-        const captures = await capturesContext.getAllCaptures({ filter });
-				if (captures && captures.data) {
-					setVerificationStatus(emptyStatusCount);
-          let statusCount = emptyStatusCount;
-          captures.data.forEach(capture => {
-            const verificationState = getVerificationStatus(
-              capture.active,
-              capture.approved,
-            );
-            if (verificationState === verificationStates.APPROVED) {
-              statusCount.approved += 1;
-            } else if (verificationState === verificationStates.AWAITING) {
-              statusCount.awaiting += 1;
-            } else {
-              statusCount.rejected += 1;
-            }
-          });
-          setVerificationStatus(statusCount);
-					setLoading(false);
-        }
+        setLoading(true);
+        const [
+          approvedCount,
+          awaitingCount,
+          rejectedCount,
+        ] = await Promise.all([
+          getCaptureCountGrower(true, true, growerId),
+          getCaptureCountGrower(true, false, growerId),
+          getCaptureCountGrower(false, false, growerId),
+        ]);
+        setVerificationStatus({
+          approved: approvedCount,
+          awaiting: awaitingCount,
+          rejected: rejectedCount,
+        });
+        setLoading(false);
       }
     }
     loadCaptures();
-  }, [growerId])
+  }, [growerId]);
+
+  async function getCaptureCountGrower(active, approved, growerId) {
+    let filter = new FilterModel();
+    filter.planterId = growerId;
+    filter.active = active;
+    filter.approved = approved;
+    const countResponse = await treeTrackerApi.getCaptureCount(filter);
+    return countResponse && countResponse.count ? countResponse.count : 0;
+  }
 
   async function getGrower(payload) {
     const { id } = payload;
@@ -296,7 +292,7 @@ const GrowerDetail = (props) => {
                       <ListItemText
                         primary={
                           <Typography variant="h5">
-                            {verificationStatus.approved}
+                            {verificationStatus.approved || 0}
                           </Typography>
                         }
                         secondary="Approved"
@@ -318,7 +314,7 @@ const GrowerDetail = (props) => {
                       <ListItemText
                         primary={
                           <Typography variant="h5">
-                            {verificationStatus.awaiting}
+                            {verificationStatus.awaiting || 0}
                           </Typography>
                         }
                         secondary="Awaiting"
@@ -340,7 +336,7 @@ const GrowerDetail = (props) => {
                       <ListItemText
                         primary={
                           <Typography variant="h5">
-                            {verificationStatus.rejected}
+                            {verificationStatus.rejected || 0}
                           </Typography>
                         }
                         secondary="Rejected"
