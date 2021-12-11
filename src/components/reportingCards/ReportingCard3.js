@@ -5,7 +5,7 @@ import useLoadData from './ReportingCard.hook';
 import Icon from '@material-ui/icons/LiveHelp';
 
 export default function component(props) {
-  const { startDate, endDate } = props;
+  const { startDate, endDate, disableSeeMore } = props;
 
   const data = useLoadData(
     startDate,
@@ -23,6 +23,7 @@ export default function component(props) {
       icon={Icon}
       color="#ef8031"
       data={data}
+      disableSeeMore={disableSeeMore}
     />
   );
 }

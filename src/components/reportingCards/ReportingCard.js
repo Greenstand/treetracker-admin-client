@@ -31,6 +31,7 @@ const style = (theme) => ({
     backgroundColor: 'white',
     padding: theme.spacing(4, 6),
     minHeight: theme.spacing(74),
+    minWidth: theme.spacing(79),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -121,7 +122,7 @@ const style = (theme) => ({
 });
 
 function GrowerReportingCard(props) {
-  const { classes, data, text, color, icon } = props;
+  const { classes, data, text, color, icon, disableSeeMore } = props;
   const [open, setOpen] = React.useState(false);
 
   const Icon = icon;
@@ -176,16 +177,17 @@ function GrowerReportingCard(props) {
           )}
         </Box>
         <Box className={classes.box1}>
-          {data ? (
-            <>
-              <ArrayIcon className={classes.icon} />
-              <Button onClick={handleSeeMore} variant="text" color="primary">
-                <Typography className={classes.seeMore}>SEE MORE</Typography>
-              </Button>
-            </>
-          ) : (
-            <Skeleton style={{ width: '100%' }} />
-          )}
+          {!disableSeeMore &&
+            (data ? (
+              <>
+                <ArrayIcon className={classes.icon} />
+                <Button onClick={handleSeeMore} variant="text" color="primary">
+                  <Typography className={classes.seeMore}>SEE MORE</Typography>
+                </Button>
+              </>
+            ) : (
+              <Skeleton style={{ width: '100%' }} />
+            ))}
         </Box>
       </Box>
       {data && (

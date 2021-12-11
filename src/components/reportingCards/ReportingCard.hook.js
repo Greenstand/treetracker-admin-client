@@ -30,7 +30,11 @@ export default function useLoadData(
 
   React.useEffect(() => {
     setData(undefined);
-    load('http://47.91.14.192:3006/capture/statistics', startDate, endDate);
+    load(
+      `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+      startDate,
+      endDate,
+    );
   }, [startDate, endDate]);
 
   return data;
