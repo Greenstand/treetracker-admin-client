@@ -149,72 +149,47 @@ CustomTableHeader.defaultProps = {
 
 /**
  * @function
- * @name prepareRows
- * @description transform rows such that are well formated compatible with the table meta data
- * @param {object} rows - rows to be transformed
- * @returns {Array} - transformed rows
- */
-const prepareRows = (rows) =>
-  rows.map((row) => {
-    const {
-      id,
-      grower,
-      currency,
-      funder,
-      amount,
-      payment_system,
-      paid_at,
-      calculated_at,
-    } = row;
-    return {
-      id,
-      grower,
-      funder,
-      amount: `${currency} ${amount}`,
-      payment_system,
-      paid_at,
-      calculated_at: covertDateStringToHumanReadableFormat(calculated_at),
-    };
-  });
-
-/**
- * @function
  * @name CustomTable
  * @description displays table containing  rows with data
  * @param {object} props - properties passed to component
+ * @param {object} props.filter - filter object for filtering rows
  * @param {function} props.handleGetData - handler function that triggers get data to be displayed in table
  * @param {function} props.openDateFilter - opens date filter
- * @param {Array} props.data - data to be displayed in table
- * @param {React.Component} props.filter - renders table filter form
+ * @param {function} props.setPage - sets current page number
+ * @param {function} props.setRowsPerPage - sets number of rows per page number
+ * @param {function} props.setSortBy - sets sort by field and sort order
+ * @param {object} props.sortBy - current sort by field and sort order
+ * @param {Array} props.rows - rows to be displayed in table
  * @param {string} props.headerTitle - title of the table header
  * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
  * @returns {React.Component} custom table
  */
 function CustomTable(props) {
   const {
-    handleGetData,
     tableMetaData,
-    filter,
-    dateFilter,
+    mainFilterComponent,
+    dateFilterComponent,
     headerTitle,
     actionButtonType,
     setSelectedRow,
     selectedRow,
-    data,
+    sortBy,
+    rows,
     totalCount,
     rowDetails,
     openDateFilter,
+    setPage,
+    setRowsPerPage,
+    rowsPerPage,
+    setSortBy,
+    page,
   } = props;
 
   // managing custom table  state
   const classes = useStyles();
-  const [rows, setRows] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
-  const [sortBy, setSortBy] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -224,12 +199,6 @@ function CustomTable(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  function fetchData(limit, currentPage, sorByInfo) {
-    const offset = limit * currentPage;
-    setRows([]);
-    handleGetData(limit, offset, sorByInfo);
-  }
 
   const handleOpenRowDetails = (row) => {
     setSelectedRow(row);
@@ -255,15 +224,6 @@ function CustomTable(props) {
   };
 
   const isRowSelected = (id) => id === selectedRow?.id;
-
-  useEffect(() => {
-    const preparedRows = prepareRows(data);
-    setRows(preparedRows);
-  }, [data]);
-
-  useEffect(() => {
-    fetchData(rowsPerPage, page, sortBy);
-  }, [rowsPerPage, page, sortBy]);
 
   return (
     <Grid container direction="column" className={classes.customTable}>
@@ -390,13 +350,13 @@ function CustomTable(props) {
             </Grid>
           </Grid>
           {/* end  main filter header */}
-          {filter}
+          {mainFilterComponent}
         </Grid>
       </Drawer>
       {/* end table main filter */}
 
       {/* start table date filter */}
-      {dateFilter}
+      {dateFilterComponent}
       {/* end table date filter */}
 
       {/* start table row details */}
@@ -443,6 +403,10 @@ export default CustomTable;
 CustomTable.propTypes = {
   handleGetData: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
+  setRowsPerPage: PropTypes.func.isRequired,
+  sortBy: PropTypes.func.isRequired,
+  setSortBy: PropTypes.func.isRequired,
   tableMetaData: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -451,8 +415,8 @@ CustomTable.propTypes = {
       showInfoIcon: PropTypes.bool.isRequired,
     }),
   ),
-  filter: PropTypes.element.isRequired,
-  dateFilter: PropTypes.element.isRequired,
+  dateFilterComponent: PropTypes.element.isRequired,
+  mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   actionButtonType: PropTypes.element.isRequired,
   data: PropTypes.objectOf(PropTypes.any).isRequired,

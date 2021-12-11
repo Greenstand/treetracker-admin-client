@@ -41,6 +41,7 @@ const earningTableFilterStyles = (theme) => ({
   },
   earningsFIlterSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
+    width: '100%',
   },
 
   // styles for export button

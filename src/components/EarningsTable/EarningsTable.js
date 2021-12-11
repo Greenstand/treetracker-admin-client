@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ import FormControl from '@material-ui/core/FormControl';
 import earningsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
 import useStyles from './EarningsTable.styles';
+import { covertDateStringToHumanReadableFormat } from 'utilities';
 
 /**
  * @function
@@ -99,13 +100,33 @@ function EarningsTableFilter() {
  * @description render date filter UI for earnings table
  * @param {object} props
  * @param {function} props.setIsDateFilterOpen - toggle open date filter
+ * @param {function} props.setFilter - set date filter
+ * @param {function} props.triggerGetEarnings - trigger get earnings api
+ * @param {object} props.filter - earnings filter object
  * @param {boolean} props.isDateFilterOpen - flag determining if date filter is open/closed
  * @description render filter UI for earnings table
  * @returns {React.Component}
  */
 function EarningsTableDateFilter(props) {
-  const { isDateFilterOpen, setIsDateFilterOpen } = props;
+  const {
+    isDateFilterOpen,
+    setIsDateFilterOpen,
+    filter,
+    setFilter,
+    triggerGetEarnings,
+  } = props;
+
   const classes = useStyles();
+
+  const handleOnFormControlChange = (e) => {
+    e.preventDefault();
+    const { id, value } = e.target;
+    const updatedFilter = { ...filter, [id]: value };
+    console.log(updatedFilter);
+    setFilter(updatedFilter);
+  };
+
+  const handleOnFilterFormSubmit = () => triggerGetEarnings();
 
   return (
     <Drawer
@@ -139,7 +160,7 @@ function EarningsTableDateFilter(props) {
 
         {/* start filter body */}
         <Grid item>
-          <Grid container direction="column" justify="space-between">
+          <form onSubmit={handleOnFilterFormSubmit}>
             <FormControl
               variant="outlined"
               className={classes.earningsFIlterSelectFormControl}
@@ -148,6 +169,7 @@ function EarningsTableDateFilter(props) {
                 id="start_date"
                 label="Start Date"
                 type="date"
+                onChange={handleOnFormControlChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -161,13 +183,14 @@ function EarningsTableDateFilter(props) {
               <TextField
                 id="end_date"
                 label="End Date"
+                onChange={handleOnFormControlChange}
                 type="date"
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
             </FormControl>
-          </Grid>
+          </form>
 
           <Divider style={{ margin: '100px 0 20px 0' }} />
 
@@ -201,6 +224,9 @@ function EarningsTableDateFilter(props) {
 
 EarningsTableDateFilter.propTypes = {
   setIsDateFilterOpen: PropTypes.func.isRequired,
+  triggerGetEarnings: PropTypes.func.isRequired,
+  filter: PropTypes.object.isRequired,
+  setFilter: PropTypes.func.isRequired,
   isDateFilterOpen: PropTypes.bool.isRequired,
 };
 
@@ -426,24 +452,79 @@ const earningTableMetaData = [
   },
 ];
 
+/**
+ * @function
+ * @name prepareRows
+ * @description transform rows such that are well formated compatible with the table meta data
+ * @param {object} rows - rows to be transformed
+ * @returns {Array} - transformed rows
+ */
+const prepareRows = (rows) =>
+  rows.map((row) => {
+    const {
+      id,
+      grower,
+      currency,
+      funder,
+      amount,
+      payment_system,
+      paid_at,
+      calculated_at,
+    } = row;
+    return {
+      id,
+      grower,
+      currency,
+      funder,
+      amount,
+      payment_system,
+      paid_at,
+      calculated_at: covertDateStringToHumanReadableFormat(calculated_at),
+    };
+  });
+
 export default function EarningsTable() {
   // state for earnings table
   const [earnings, setEarnings] = useState([]);
+  const [filter, setFilter] = useState({});
+  const [page, setPage] = useState(0);
+  const [earningsPerPage, setEarningsPerPage] = useState(20);
+  const [sortBy, setSortBy] = useState(null);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
 
-  async function getEarnings(...args) {
-    const response = await earningsAPI.getEarnings(...args);
-    setEarnings(response.earnings);
+  async function getEarnings() {
+    setEarnings([]);
+    const queryParams = {
+      offset: page * earningsPerPage,
+      sort_by: sortBy?.field,
+      order: sortBy?.order,
+      limit: earningsPerPage,
+      ...filter,
+    };
+    const response = await earningsAPI.getEarnings(queryParams);
+    const result = prepareRows(response.earnings);
+    setEarnings(result);
     setTotalEarnings(response.totalCount);
   }
+
+  useEffect(() => {
+    getEarnings();
+  }, [page, earningsPerPage, sortBy, filter]);
 
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
 
   return (
     <CustomTable
       data={earnings}
+      setPage={setPage}
+      page={page}
+      sortBy={sortBy}
+      rows={earnings}
+      setRowsPerPage={setEarningsPerPage}
+      rowsPerPage={earningsPerPage}
+      setSortBy={setSortBy}
       totalCount={totalEarnings}
       openDateFilter={handleOpenDateFilter}
       handleGetData={getEarnings}
@@ -451,10 +532,12 @@ export default function EarningsTable() {
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
-      filter={<EarningsTableFilter />}
-      dateFilter={
+      mainFilterComponent={<EarningsTableFilter />}
+      dateFilterComponent={
         <EarningsTableDateFilter
           isDateFilterOpen={isDateFilterOpen}
+          filter={filter}
+          setFilter={setFilter}
           setIsDateFilterOpen={setIsDateFilterOpen}
         />
       }
