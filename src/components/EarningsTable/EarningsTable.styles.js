@@ -8,6 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
  * @returns {object} styles for EarningsTableFilter component
  */
 const earningTableFilterStyles = (theme) => ({
+  dateFilterHeader: {
+    padding: theme.spacing(0, 0, 5, 0),
+  },
   earningTableFilterSubmitButton: {
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,

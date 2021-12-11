@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import Drawer from '@material-ui/core/Drawer';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
 import earningsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
@@ -88,6 +92,117 @@ function EarningsTableFilter() {
     </Grid>
   );
 }
+
+/**
+ * @function
+ * @name EarningsTableFilter
+ * @description render date filter UI for earnings table
+ * @param {object} props
+ * @param {function} props.setIsDateFilterOpen - toggle open date filter
+ * @param {boolean} props.isDateFilterOpen - flag determining if date filter is open/closed
+ * @description render filter UI for earnings table
+ * @returns {React.Component}
+ */
+function EarningsTableDateFilter(props) {
+  const { isDateFilterOpen, setIsDateFilterOpen } = props;
+  const classes = useStyles();
+
+  return (
+    <Drawer
+      anchor="right"
+      BackdropProps={{ invisible: true }}
+      open={isDateFilterOpen}
+    >
+      <Grid
+        container
+        direction="column"
+        className={classes.earningsTableFilterForm}
+      >
+        {/* start date filter header */}
+        <Grid item className={classes.dateFilterHeader}>
+          <Grid container direction="row" justify="space-between">
+            <Grid item>
+              <Grid container direction="row">
+                <Typography variant="h6">Filter By Effective Date</Typography>
+                <Avatar className={classes.earningsTableFilterAvatar}>
+                  <Typography variant="h6">1</Typography>
+                </Avatar>
+              </Grid>
+            </Grid>
+            <CloseIcon
+              onClick={() => setIsDateFilterOpen(false)}
+              className={classes.earningsTableFilterCloseIcon}
+            />
+          </Grid>
+        </Grid>
+        {/* end  date filter header */}
+
+        {/* start filter body */}
+        <Grid item>
+          <Grid container direction="column" justify="space-between">
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
+            >
+              <TextField
+                id="start_date"
+                label="Start Date"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </FormControl>
+
+            <FormControl
+              variant="outlined"
+              className={classes.earningsFIlterSelectFormControl}
+            >
+              <TextField
+                id="end_date"
+                label="End Date"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </FormControl>
+          </Grid>
+
+          <Divider style={{ margin: '100px 0 20px 0' }} />
+
+          <Grid
+            container
+            direction="column"
+            className={classes.earningTableFilterActions}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              className={classes.earningTableFilterSubmitButton}
+            >
+              APPLY
+            </Button>
+            <Button
+              color="primary"
+              variant="text"
+              className={classes.earningTableFilterCancelButton}
+            >
+              CANCEL
+            </Button>
+          </Grid>
+        </Grid>
+        {/* end  filter body */}
+      </Grid>
+    </Drawer>
+  );
+}
+
+EarningsTableDateFilter.propTypes = {
+  setIsDateFilterOpen: PropTypes.func.isRequired,
+  isDateFilterOpen: PropTypes.bool.isRequired,
+};
 
 /**
  * @function
@@ -312,24 +427,37 @@ const earningTableMetaData = [
 ];
 
 export default function EarningsTable() {
+  // state for earnings table
   const [earnings, setEarnings] = useState([]);
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
+
   async function getEarnings(...args) {
     const response = await earningsAPI.getEarnings(...args);
     setEarnings(response.earnings);
     setTotalEarnings(response.totalCount);
   }
+
+  const handleOpenDateFilter = () => setIsDateFilterOpen(true);
+
   return (
     <CustomTable
       data={earnings}
       totalCount={totalEarnings}
+      openDateFilter={handleOpenDateFilter}
       handleGetData={getEarnings}
       setSelectedRow={setSelectedEarning}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
       filter={<EarningsTableFilter />}
+      dateFilter={
+        <EarningsTableDateFilter
+          isDateFilterOpen={isDateFilterOpen}
+          setIsDateFilterOpen={setIsDateFilterOpen}
+        />
+      }
       rowDetails={<EarningDetails selectedEarning={selectedEarning} />}
       actionButtonType="export"
     />

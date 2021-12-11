@@ -30,7 +30,7 @@ import { covertDateStringToHumanReadableFormat } from 'utilities';
  * @description renders custom table top bar which contains table actions(i.e. filter, export, etc)
  * @param {object} props - properties passed to component
  * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
- * @param {function} props.setIsDateFilterOpen - sets date filter open/closed
+ * @param {function} props.openDateFilter - opens date filter when called
  * @param {function} props.setIsFilterOpen - sets filter open/closed
  * @param {string} props.headerTitle - title of the table
  * @param {Array} props.data - data to be exported
@@ -43,7 +43,7 @@ function CustomTableHeader(props) {
     actionButtonType,
     headerTitle,
     data,
-    setIsDateFilterOpen,
+    openDateFilter,
   } = props;
   const classes = useStyles();
   const openFilter = () => setIsFilterOpen(true);
@@ -93,7 +93,7 @@ function CustomTableHeader(props) {
             <Grid container direction="row" justify="flex-end">
               <Button
                 className={classes.customTableDateFilterButton}
-                onClick={() => setIsDateFilterOpen(true)}
+                onClick={() => openDateFilter()}
               >
                 <Grid container direction="row" justify="center">
                   <div>
@@ -179,6 +179,7 @@ const prepareRows = (rows) =>
  * @description displays table containing  rows with data
  * @param {object} props - properties passed to component
  * @param {function} props.handleGetData - handler function that triggers get data to be displayed in table
+ * @param {function} props.openDateFilter - opens date filter
  * @param {Array} props.data - data to be displayed in table
  * @param {React.Component} props.filter - renders table filter form
  * @param {string} props.headerTitle - title of the table header
@@ -198,13 +199,13 @@ function CustomTable(props) {
     data,
     totalCount,
     rowDetails,
+    openDateFilter,
   } = props;
 
   // managing custom table  state
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -264,7 +265,7 @@ function CustomTable(props) {
     <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
         setIsFilterOpen={setIsFilterOpen}
-        setIsDateFilterOpen={setIsDateFilterOpen}
+        openDateFilter={openDateFilter}
         data={rows}
         headerTitle={headerTitle}
         actionButtonType={actionButtonType}
@@ -391,43 +392,7 @@ function CustomTable(props) {
       {/* end table main filter */}
 
       {/* start table date filter */}
-      <Drawer
-        anchor="right"
-        BackdropProps={{ invisible: true }}
-        open={isDateFilterOpen}
-      >
-        <Grid
-          container
-          direction="column"
-          className={classes.customTableFilterForm}
-        >
-          {/* start date filter header */}
-          <Grid item>
-            <Grid container direction="row" justify="space-between">
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignContent="flex-end"
-                  justify="flex-start"
-                >
-                  <Typography variant="h4">Filters</Typography>
-                  <Avatar className={classes.customTableFilterAvatar}>
-                    <Typography variant="h5">1</Typography>
-                  </Avatar>
-                </Grid>
-              </Grid>
-              <CloseIcon
-                onClick={() => setIsDateFilterOpen(false)}
-                className={classes.customTableFilterCloseIcon}
-              />
-            </Grid>
-          </Grid>
-          {/* end  date filter header */}
-          {/* {dateFilter} */}
-          <h1>Date filter works</h1>
-        </Grid>
-      </Drawer>
+      {dateFilter}
       {/* end table date filter */}
 
       {/* start table row details */}
@@ -461,7 +426,6 @@ function CustomTable(props) {
             </Grid>
           </Grid>
           {/* end detail header */}
-
           {rowDetails}
         </Grid>
       </Drawer>
@@ -474,6 +438,7 @@ export default CustomTable;
 
 CustomTable.propTypes = {
   handleGetData: PropTypes.func.isRequired,
+  openDateFilter: PropTypes.func.isRequired,
   tableMetaData: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -483,6 +448,7 @@ CustomTable.propTypes = {
     }),
   ),
   filter: PropTypes.element.isRequired,
+  dateFilter: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   actionButtonType: PropTypes.element.isRequired,
   data: PropTypes.objectOf(PropTypes.any).isRequired,
