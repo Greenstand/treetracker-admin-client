@@ -137,10 +137,14 @@ function CustomTableHeader(props) {
 }
 CustomTableHeader.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired,
-  setIsDateFilterOpen: PropTypes.func.isRequired,
+  openDateFilter: PropTypes.func,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
   actionButtonType: PropTypes.string.isRequired,
+};
+
+CustomTableHeader.defaultProps = {
+  openDateFilter: () => {},
 };
 
 /**
