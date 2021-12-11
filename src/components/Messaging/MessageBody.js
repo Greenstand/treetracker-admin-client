@@ -229,7 +229,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
         console.log('payload', messagePayload);
-
         await postMessageSend(messagePayload);
       }
     }

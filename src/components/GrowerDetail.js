@@ -111,7 +111,7 @@ const GrowerDetail = (props) => {
   const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
-  const { sendMessageFromGrowers } = useContext(MessagingContext);
+  const { sendMessageFromGrower } = useContext(MessagingContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
@@ -223,11 +223,6 @@ const GrowerDetail = (props) => {
     setSnackbarOpen(true);
   }
 
-  const sendGrowerMessage = (currentGrower) => {
-    // console.log(currentGrower);
-    sendMessageFromGrowers(currentGrower);
-  };
-
   return (
     <>
       <Drawer anchor="right" open={props.open} onClose={props.onClose}>
@@ -296,7 +291,7 @@ const GrowerDetail = (props) => {
               <Grid item>
                 <Button
                   className={classes.messageButton}
-                  onClick={() => sendGrowerMessage(grower)}
+                  onClick={() => sendMessageFromGrower(grower)}
                   component={Link}
                   to={'/messaging'}
                 >

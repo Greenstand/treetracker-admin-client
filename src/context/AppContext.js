@@ -12,6 +12,7 @@ import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
 import CaptureMatchingView from '../components/CaptureMatching/CaptureMatchingView';
+import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
@@ -257,6 +258,8 @@ export const AppProvider = (props) => {
 
   // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={value}>
+      <MessagingProvider>{props.children}</MessagingProvider>
+    </AppContext.Provider>
   );
 };

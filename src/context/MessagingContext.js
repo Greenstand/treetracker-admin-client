@@ -2,23 +2,24 @@ import React, { useState, createContext } from 'react';
 import api from '../api/messaging';
 
 export const MessagingContext = createContext({
+  user: {},
   messages: [],
+  resMessages: [],
+  growerMessage: {},
   regions: [],
+  sendMessageFromGrower: () => {},
   loadMessages: () => {},
   loadRegions: () => {},
-  getRegion: () => {},
   postRegion: () => {},
   getRegionById: () => {},
-  getMessage: () => {},
   postMessage: () => {},
   postMessageSend: () => {},
-  handlerecipient: () => {},
-  sendMessageFromGrowers: () => {},
 });
 
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [resMessages, setResMessages] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -72,22 +73,6 @@ export const MessagingProvider = (props) => {
     ]);
   };
 
-  const loadMessages = async () => {
-    const res = await api.getMessage(user.userName);
-
-    if (res) {
-      groupMessageByHandle(res.messages);
-    }
-  };
-
-  const loadRegions = async () => {
-    const res = await api.getRegion();
-
-    if (res) {
-      setRegions(res);
-    }
-  };
-
   const postRegion = async (payload) => {
     const res = await api.postRegion(payload);
     console.log(res, payload);
@@ -112,39 +97,51 @@ export const MessagingProvider = (props) => {
     }
   };
 
-  const sendMessageFromGrowers = (payload) => {
-    console.log('growerInfo', payload);
-    let messageData = {
-      author_id: user.id,
-      subject: 'Message',
-      from: user.userName,
-      to: payload.phone ? payload.phone : payload.email,
+  const sendMessageFromGrower = (grower) => {
+    const payload = {
       body: '',
-      recipient_organization_id: payload.organizationId
-        ? payload.organizationId
-        : '',
-      recipient_id: payload.id,
+      from: user.userName,
+      subject: 'Message',
+      to: grower.phone ? grower.phone : grower.email,
     };
 
-    // check if messages already exist
-    let checkExisting = messages.find((message) => message.to === payload.to);
-    if (!checkExisting) {
-      setGrowerMessage(messageData);
+    if (payload.to) {
+      console.log(payload);
+      setGrowerMessage(payload);
     }
-    console.log(growerMessage);
   };
+
+  const loadMessages = async () => {
+    const res = await api.getMessage(user.userName);
+
+    if (res) {
+      setResMessages(res.messages);
+    }
+  };
+
+  const loadRegions = async () => {
+    const res = await api.getRegion();
+
+    if (res) {
+      setRegions(res);
+    }
+  };
+
+  console.log(growerMessage);
 
   const value = {
     user,
     messages,
+    resMessages,
+    growerMessage,
     regions,
+    sendMessageFromGrower,
     loadMessages,
     loadRegions,
     postRegion,
     getRegionById,
     postMessage,
     postMessageSend,
-    sendMessageFromGrowers,
   };
 
   return (

@@ -67,12 +67,22 @@ const Messaging = () => {
     body,
   } = useStyles();
 
-  const { messages, loadMessages, loadRegions } = useContext(MessagingContext);
+  const {
+    messages,
+    resMessages,
+    growerMessage,
+    // loadMessages,
+    // loadRegions,
+  } = useContext(MessagingContext);
 
-  useEffect(() => {
-    loadMessages();
-    loadRegions();
-  }, []);
+  console.log(growerMessage);
+  // useEffect(() => {
+  // }, []);
+
+  // useEffect(() => {
+  //   loadMessages();
+  //   loadRegions();
+  // }, []);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
