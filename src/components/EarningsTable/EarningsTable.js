@@ -32,7 +32,7 @@ function EarningsTableFilter() {
       <Grid container direction="column" justify="space-between">
         <FormControl
           variant="outlined"
-          className={classes.earningsFIlterSelectFormControl}
+          className={classes.earningsFilterSelectFormControl}
         >
           <InputLabel id="demo-simple-select-outlined-label">Funder</InputLabel>
           <Select
@@ -49,7 +49,7 @@ function EarningsTableFilter() {
 
         <FormControl
           variant="outlined"
-          className={classes.earningsFIlterSelectFormControl}
+          className={classes.earningsilterSelectFormControl}
         >
           <InputLabel id="demo-simple-select-outlined-label">
             Payment System
@@ -93,6 +93,28 @@ function EarningsTableFilter() {
     </Grid>
   );
 }
+
+/**
+ * @function
+ * @name generateActiveDateRangeFilterString
+ * @description generate active date rage filter string e.g. 'Oct 1 - Oct 31'
+ * @param {string} startDate - start date
+ * @param {string} endDate - end date
+ *
+ * @returns {string} - active date range filter string
+ */
+
+const generateActiveDateRangeFilterString = (startDate, endDate) => {
+  const format = 'mmm d';
+
+  const startDateString = covertDateStringToHumanReadableFormat(
+    startDate,
+    format,
+  );
+  const endDateString = covertDateStringToHumanReadableFormat(endDate, format);
+
+  return `${startDateString} - ${endDateString}`;
+};
 
 /**
  * @function
@@ -153,9 +175,6 @@ function EarningsTableDateFilter(props) {
             <Grid item>
               <Grid container direction="row">
                 <Typography variant="h6">Filter By Effective Date</Typography>
-                <Avatar className={classes.earningsTableFilterAvatar}>
-                  <Typography variant="h6">1</Typography>
-                </Avatar>
               </Grid>
             </Grid>
             <CloseIcon
@@ -170,7 +189,7 @@ function EarningsTableDateFilter(props) {
         <form onSubmit={handleOnFilterFormSubmit}>
           <FormControl
             variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
+            className={classes.earningsFilterSelectFormControl}
           >
             <TextField
               id="start_date"
@@ -186,7 +205,7 @@ function EarningsTableDateFilter(props) {
 
           <FormControl
             variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
+            className={classes.earningsFilterSelectFormControl}
           >
             <TextField
               id="end_date"
@@ -344,7 +363,7 @@ function EarningDetails(props) {
         <Grid container direction="column" justify="space-between">
           <FormControl
             variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
+            className={classes.earningsFilterSelectFormControl}
           >
             <TextField
               id="outlined-basic"
@@ -355,7 +374,7 @@ function EarningDetails(props) {
 
           <FormControl
             variant="outlined"
-            className={classes.earningsFIlterSelectFormControl}
+            className={classes.earningsFilterSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
               Payment System
@@ -496,6 +515,7 @@ const prepareRows = (rows) =>
 export default function EarningsTable() {
   // state for earnings table
   const [earnings, setEarnings] = useState([]);
+  const [activeDateRageString, setActiveDateRageString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -525,6 +545,16 @@ export default function EarningsTable() {
   }
 
   useEffect(() => {
+    if (filter?.start_date && filter?.end_date) {
+      const dateRangeString = generateActiveDateRangeFilterString(
+        filter?.start_date,
+        filter?.end_date,
+      );
+      setActiveDateRageString(dateRangeString);
+    } else {
+      setActiveDateRageString('');
+    }
+
     getEarnings();
   }, [page, earningsPerPage, sortBy, filter]);
 
@@ -538,6 +568,7 @@ export default function EarningsTable() {
       sortBy={sortBy}
       rows={earnings}
       isLoading={isLoading}
+      activeDateRage={activeDateRageString}
       setRowsPerPage={setEarningsPerPage}
       rowsPerPage={earningsPerPage}
       setSortBy={setSortBy}

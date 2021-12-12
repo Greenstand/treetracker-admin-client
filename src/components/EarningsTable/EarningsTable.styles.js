@@ -39,7 +39,7 @@ const earningTableFilterStyles = (theme) => ({
     width: theme.spacing(7.5),
     height: theme.spacing(7.5),
   },
-  earningsFIlterSelectFormControl: {
+  earningsFilterSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
     width: '100%',
   },

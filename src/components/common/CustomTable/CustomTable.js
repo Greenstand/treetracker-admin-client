@@ -32,6 +32,7 @@ import useStyles from './CustomTable.styles';
  * @param {function} props.openDateFilter - opens date filter when called
  * @param {function} props.setIsFilterOpen - sets filter open/closed
  * @param {string} props.headerTitle - title of the table
+ * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @param {Array} props.data - data to be exported
  *
  * @returns {React.Component}
@@ -43,6 +44,7 @@ function CustomTableHeader(props) {
     headerTitle,
     data,
     openDateFilter,
+    activeDateRage,
   } = props;
   const classes = useStyles();
   const openFilter = () => setIsFilterOpen(true);
@@ -99,9 +101,15 @@ function CustomTableHeader(props) {
                     <Typography className={classes.dateFiterButonSmallText}>
                       Date Range
                     </Typography>
-                    <Typography className={classes.dateFiterButonMediumText}>
-                      Oct 1 - Oct 5
-                    </Typography>
+                    {activeDateRage ? (
+                      <Typography className={classes.dateFiterButonMediumText}>
+                        {activeDateRage}
+                      </Typography>
+                    ) : (
+                      <Typography className={classes.dateFiterButonSmallText}>
+                        select date range
+                      </Typography>
+                    )}
                   </div>
                   <ArrowDropDownIcon
                     className={classes.arrowDropDownIcon}
@@ -139,6 +147,7 @@ CustomTableHeader.propTypes = {
   openDateFilter: PropTypes.func,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
+  activeDateRage: PropTypes.string.isRequired,
   actionButtonType: PropTypes.string.isRequired,
 };
 
@@ -161,7 +170,8 @@ CustomTableHeader.defaultProps = {
  * @param {boolean} props.isLoading - shows loading spinner when true
  * @param {Array} props.rows - rows to be displayed in table
  * @param {string} props.headerTitle - title of the table header
- * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
+ * @param {string} props.headerTitle - title of the table header
+ * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @returns {React.Component} custom table
  */
 function CustomTable(props) {
@@ -183,6 +193,7 @@ function CustomTable(props) {
     rowsPerPage,
     setSortBy,
     isLoading,
+    activeDateRage,
     page,
   } = props;
 
@@ -233,6 +244,7 @@ function CustomTable(props) {
         openDateFilter={openDateFilter}
         data={rows}
         headerTitle={headerTitle}
+        activeDateRage={activeDateRage}
         actionButtonType={actionButtonType}
       />
       <TableContainer>
@@ -424,6 +436,7 @@ CustomTable.propTypes = {
   dateFilterComponent: PropTypes.element.isRequired,
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
+  activeDateRage: PropTypes.string.isRequired,
   actionButtonType: PropTypes.element.isRequired,
   data: PropTypes.objectOf(PropTypes.any).isRequired,
 };

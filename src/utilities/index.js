@@ -1,3 +1,6 @@
+import dateFormat, { masks } from 'dateformat';
+const now = new Date();
+
 /**
  * @function
  * @name stringToSearchRegExp
@@ -28,12 +31,17 @@ export const getOrganizationById = (organizations, organizationId) =>
  * @name covertDateStringToHumanReadableFormat
  * @description receives a date iso string and converts it to a human readable format
  *
- * @param {string} dateString
+ * @param {string} dateString - date iso string to convert
+ * @param {string} format - format to convert to
+ * @link https://github.com/felixge/node-dateformat - library used to convert date(follow link to see format options)
  *
  * @returns {string} human readable date
  */
-export const covertDateStringToHumanReadableFormat = (dateString) => {
+export const covertDateStringToHumanReadableFormat = (
+  dateString,
+  format = 'dddd, mmm d, yyyy',
+) => {
   const date = new Date(dateString);
 
-  return date.toDateString();
+  return dateFormat(date, format);
 };
