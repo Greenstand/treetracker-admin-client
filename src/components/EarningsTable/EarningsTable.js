@@ -126,6 +126,16 @@ function EarningsTableDateFilter(props) {
     setIsDateFilterOpen(false);
   };
 
+  const handleOnFilterFormCancel = (e) => {
+    e.preventDefault();
+    if (Object.keys(dateFilter).length !== 0) {
+      const { start_date, end_date, ...withoutDateFilter } = filter;
+      setFilter(withoutDateFilter);
+      setDateFilter({});
+    }
+    setIsDateFilterOpen(false);
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -164,6 +174,7 @@ function EarningsTableDateFilter(props) {
           >
             <TextField
               id="start_date"
+              value={dateFilter?.start_date}
               label="Start Date"
               type="date"
               onChange={handleOnFormControlChange}
@@ -180,6 +191,7 @@ function EarningsTableDateFilter(props) {
             <TextField
               id="end_date"
               label="End Date"
+              value={dateFilter?.end_date}
               onChange={handleOnFormControlChange}
               type="date"
               InputLabelProps={{
@@ -207,6 +219,7 @@ function EarningsTableDateFilter(props) {
             <Button
               color="primary"
               variant="text"
+              onClick={handleOnFilterFormCancel}
               className={classes.earningTableFilterCancelButton}
             >
               CANCEL
