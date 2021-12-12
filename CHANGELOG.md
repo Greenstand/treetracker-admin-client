@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.30.0...v1.31.0) (2021-12-12)
+
+
+### Features
+
+* add Capture counts to Grower Details dialog ([#222](https://github.com/Greenstand/treetracker-admin-client/issues/222)) ([3528683](https://github.com/Greenstand/treetracker-admin-client/commit/3528683ae50d4d00764ab79c1b3e1496181b2afe))
+
 # [1.30.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.29.3...v1.30.0) (2021-12-08)
 
 
