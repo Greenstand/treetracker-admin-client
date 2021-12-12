@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -22,7 +22,6 @@ import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTable.styles';
-import { covertDateStringToHumanReadableFormat } from 'utilities';
 
 /**
  * @function
@@ -159,6 +158,7 @@ CustomTableHeader.defaultProps = {
  * @param {function} props.setRowsPerPage - sets number of rows per page number
  * @param {function} props.setSortBy - sets sort by field and sort order
  * @param {object} props.sortBy - current sort by field and sort order
+ * @param {boolean} props.isLoading - shows loading spinner when true
  * @param {Array} props.rows - rows to be displayed in table
  * @param {string} props.headerTitle - title of the table header
  * @param {string} props.actionButtonType - determines type of action button to be displayed(its value is either upload or export only!)
@@ -182,6 +182,7 @@ function CustomTable(props) {
     setRowsPerPage,
     rowsPerPage,
     setSortBy,
+    isLoading,
     page,
   } = props;
 
@@ -273,7 +274,11 @@ function CustomTable(props) {
             </TableRow>
           </TableHead>
 
-          {rows.length > 0 ? (
+          {isLoading ? (
+            <Grid item container className={classes.progressContainer}>
+              <CircularProgress />
+            </Grid>
+          ) : rows.length > 0 ? (
             <TableBody>
               {rows.map((row, i) => (
                 <TableRow
@@ -292,9 +297,9 @@ function CustomTable(props) {
               ))}
             </TableBody>
           ) : (
-            <Grid item container className={classes.progressContainer}>
-              <CircularProgress />
-            </Grid>
+            <Typography variant="body1" className={classes.noDataToDisplay}>
+              No data to display
+            </Typography>
           )}
         </Table>
       </TableContainer>
@@ -404,6 +409,7 @@ CustomTable.propTypes = {
   handleGetData: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func.isRequired,
   setPage: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   setRowsPerPage: PropTypes.func.isRequired,
   sortBy: PropTypes.func.isRequired,
   setSortBy: PropTypes.func.isRequired,

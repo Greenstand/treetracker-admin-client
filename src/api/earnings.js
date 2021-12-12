@@ -1,4 +1,3 @@
-import { handleResponse, handleError } from './apiUtils';
 import axios from 'axios';
 import { session } from '../models/auth';
 

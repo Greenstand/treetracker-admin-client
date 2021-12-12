@@ -110,6 +110,15 @@ const customTableFilterStyles = (theme) => ({
  * @returns {object} styles for CustomTable component
  */
 const customTableStyles = (theme) => ({
+  noDataToDisplay: {
+    color: theme.palette.stats.lavenderPinocchio,
+    fontSize: theme.spacing(5),
+    padding: theme.spacing(5, 0, 5, 0),
+    position: 'relative',
+    left: theme.spacing(120),
+    bottom: theme.spacing(0),
+  },
+
   progressContainer: {
     padding: theme.spacing(5, 0, 5, 0),
     position: 'relative',

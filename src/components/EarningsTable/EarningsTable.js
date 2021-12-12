@@ -108,25 +108,23 @@ function EarningsTableFilter() {
  * @returns {React.Component}
  */
 function EarningsTableDateFilter(props) {
-  const {
-    isDateFilterOpen,
-    setIsDateFilterOpen,
-    filter,
-    setFilter,
-    triggerGetEarnings,
-  } = props;
+  const [dateFilter, setDateFilter] = useState({});
+  const { isDateFilterOpen, setIsDateFilterOpen, filter, setFilter } = props;
 
   const classes = useStyles();
 
   const handleOnFormControlChange = (e) => {
     e.preventDefault();
     const { id, value } = e.target;
-    const updatedFilter = { ...filter, [id]: value };
-    console.log(updatedFilter);
-    setFilter(updatedFilter);
+    const updatedFilter = { ...dateFilter, [id]: value };
+    setDateFilter(updatedFilter);
   };
 
-  const handleOnFilterFormSubmit = () => triggerGetEarnings();
+  const handleOnFilterFormSubmit = (e) => {
+    e.preventDefault();
+    setFilter({ ...filter, ...dateFilter });
+    setIsDateFilterOpen(false);
+  };
 
   return (
     <Drawer
@@ -159,40 +157,38 @@ function EarningsTableDateFilter(props) {
         {/* end  date filter header */}
 
         {/* start filter body */}
-        <Grid item>
-          <form onSubmit={handleOnFilterFormSubmit}>
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <TextField
-                id="start_date"
-                label="Start Date"
-                type="date"
-                onChange={handleOnFormControlChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </FormControl>
+        <form onSubmit={handleOnFilterFormSubmit}>
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFIlterSelectFormControl}
+          >
+            <TextField
+              id="start_date"
+              label="Start Date"
+              type="date"
+              onChange={handleOnFormControlChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
 
-            <FormControl
-              variant="outlined"
-              className={classes.earningsFIlterSelectFormControl}
-            >
-              <TextField
-                id="end_date"
-                label="End Date"
-                onChange={handleOnFormControlChange}
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            </FormControl>
-          </form>
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFIlterSelectFormControl}
+          >
+            <TextField
+              id="end_date"
+              label="End Date"
+              onChange={handleOnFormControlChange}
+              type="date"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
 
-          <Divider style={{ margin: '100px 0 20px 0' }} />
+          <Divider style={{ margin: '50px 0 20px 0' }} />
 
           <Grid
             container
@@ -202,6 +198,7 @@ function EarningsTableDateFilter(props) {
             <Button
               variant="contained"
               color="primary"
+              type="submit"
               disableElevation
               className={classes.earningTableFilterSubmitButton}
             >
@@ -215,7 +212,7 @@ function EarningsTableDateFilter(props) {
               CANCEL
             </Button>
           </Grid>
-        </Grid>
+        </form>
         {/* end  filter body */}
       </Grid>
     </Drawer>
@@ -488,6 +485,7 @@ export default function EarningsTable() {
   const [earnings, setEarnings] = useState([]);
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [earningsPerPage, setEarningsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState(null);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
@@ -495,7 +493,8 @@ export default function EarningsTable() {
   const [selectedEarning, setSelectedEarning] = useState(null);
 
   async function getEarnings() {
-    setEarnings([]);
+    setIsLoading(true); // show loading indicator when fetching data
+
     const queryParams = {
       offset: page * earningsPerPage,
       sort_by: sortBy?.field,
@@ -503,10 +502,13 @@ export default function EarningsTable() {
       limit: earningsPerPage,
       ...filter,
     };
+
     const response = await earningsAPI.getEarnings(queryParams);
     const result = prepareRows(response.earnings);
     setEarnings(result);
     setTotalEarnings(response.totalCount);
+
+    setIsLoading(false); // hide loading indicator when data is fetched
   }
 
   useEffect(() => {
@@ -522,6 +524,7 @@ export default function EarningsTable() {
       page={page}
       sortBy={sortBy}
       rows={earnings}
+      isLoading={isLoading}
       setRowsPerPage={setEarningsPerPage}
       rowsPerPage={earningsPerPage}
       setSortBy={setSortBy}
