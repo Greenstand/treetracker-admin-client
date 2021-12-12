@@ -8,6 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
  * @returns {object} styles for CustomTableTopBar component
  */
 const customTableTopBarStyles = (theme) => ({
+  uploadFileInput: {
+    display: 'none',
+  },
   csvLink: {
     color: theme.palette.primary.main,
     display: 'flex',

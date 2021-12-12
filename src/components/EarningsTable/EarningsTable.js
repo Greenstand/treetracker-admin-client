@@ -100,7 +100,6 @@ function EarningsTableFilter() {
  *
  * @returns {string} - active date range filter string
  */
-
 const generateActiveDateRangeFilterString = (startDate, endDate) => {
   const format = 'mmm d';
 

@@ -81,10 +81,18 @@ function CustomTableHeader(props) {
           {actionButtonType === 'upload' && (
             <Grid item lg={2}>
               <Grid container direction="row" justify="flex-end">
-                <Button color="primary" variant="text">
-                  <PublishIcon />
-                  <Typography variant="h6">UPLOAD</Typography>
-                </Button>
+                <input
+                  accept="multipart/form-data"
+                  className={classes.uploadFileInput}
+                  id="file-upload-button"
+                  type="file"
+                />
+                <label htmlFor="file-upload-button">
+                  <Button variant="text" color="primary" component="span">
+                    <PublishIcon />
+                    <Typography variant="h6">UPLOAD</Typography>
+                  </Button>
+                </label>
               </Grid>
             </Grid>
           )}
