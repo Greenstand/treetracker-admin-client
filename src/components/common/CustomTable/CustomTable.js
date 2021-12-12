@@ -322,7 +322,7 @@ function CustomTable(props) {
           root: classes.customTablePagination,
         }}
         component="div"
-        rowsPerPageOptions={[20, 50, 100, { label: 'All', value: -1 }]}
+        rowsPerPageOptions={[20, 50, 100]}
         page={page}
         rowsPerPage={rowsPerPage}
         onChangePage={handleChangePage}
