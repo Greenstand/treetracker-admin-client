@@ -61,7 +61,7 @@ export default class Filter {
       where.active = this.active;
     }
 
-    if (this.planterId !== undefined && this.planterId.length > 0) {
+    if (this.planterId !== undefined) {
       where.planterId = this.planterId;
     }
 
