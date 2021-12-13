@@ -19,7 +19,6 @@ export const MessagingContext = createContext({
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [resMessages, setResMessages] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -108,7 +107,6 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
-
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -126,8 +124,6 @@ export const MessagingProvider = (props) => {
   const value = {
     user,
     messages,
-    resMessages,
-    growerMessage,
     regions,
     sendMessageFromGrower,
     loadMessages,
