@@ -16,7 +16,6 @@ import { StakeholdersContext } from '../../context/StakeholdersContext';
 function StakeholderTable() {
   const {
     stakeholders,
-    // stakeholder,
     columns,
     page,
     rowsPerPage,
@@ -25,8 +24,6 @@ function StakeholderTable() {
     setPage,
     setRowsPerPage,
     sort,
-    // getStakeholder,
-    // getStakeholders,
   } = useContext(StakeholdersContext);
 
   const handleRowsPerPageChange = (e) => {

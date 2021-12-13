@@ -7,8 +7,6 @@ import {
   DialogContent,
   DialogActions,
   List,
-  // TextField,
-  // FormControl,
 } from '@material-ui/core';
 import { StakeholdersContext } from 'context/StakeholdersContext';
 import StakeholderList from './List';
@@ -38,12 +36,6 @@ function LinkStakeholder({ id, type }) {
   );
   const [open, setOpen] = useState(false);
   const [filteredStakeholders, setFilteredStakeholders] = useState(false);
-  // const [data, setData] = useState({
-  //   id,
-  //   relation,
-  //   stakeholder_id: null,
-  //   linked: false,
-  // });
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -70,10 +62,6 @@ function LinkStakeholder({ id, type }) {
     setOpen(false);
   };
 
-  // const submit = () => {
-  //   updateLinks(id, relation, data.id, linked);
-  // };
-
   return (
     <>
       <Button
@@ -97,24 +85,12 @@ function LinkStakeholder({ id, type }) {
                     data={stakeholder}
                     type={type}
                     linked={false}
-                  >
-                    {/* <TextField
-                    label="Link"
-                    variant="outlined"
-                    name="link"
-                    type="checkbox"
-                    onClick={(e) => handleChange(stakeholder.id, e)}
-                    value={data.linked}
-                  /> */}
-                  </StakeholderList>
+                  ></StakeholderList>
                 );
               })}
           </List>
         </DialogContent>
         <DialogActions>
-          {/* <Button color="primary" onClick={submit}>
-            Link {relation}
-          </Button> */}
           <Button onClick={closeModal}>Close</Button>
         </DialogActions>
       </Dialog>

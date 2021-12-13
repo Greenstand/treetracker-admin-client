@@ -68,7 +68,6 @@ export function StakeholdersProvider(props) {
     { label: 'Phone', value: 'phone' },
     { label: 'Website', value: 'website' },
   ];
-  // const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
     getStakeholders();
@@ -107,7 +106,7 @@ export function StakeholdersProvider(props) {
     setDisplay();
   };
 
-  // call w/ or w/o an id, it will default to the organization id or null
+  // call w/ or w/o an id, it will default to the organization id or be null
   const getStakeholders = async (id = null) => {
     log.debug('load stakeholders', id);
     let data;
@@ -137,7 +136,6 @@ export function StakeholdersProvider(props) {
   };
 
   const createStakeholder = async (payload) => {
-    console.log('create', payload);
     await api.createStakeholder(payload);
     getStakeholders();
   };
@@ -148,12 +146,9 @@ export function StakeholdersProvider(props) {
   };
 
   const updateLinks = async (stakeholder_id, payload) => {
-    const { id, type, linked, data } = payload;
-    console.log('update links', stakeholder_id, id, type, linked, data);
-    // update parent_id or child_id fields
     await api.updateLinks(stakeholder_id, payload);
-    // get updated list of unlinked
-    getUnlinkedStakeholders();
+    // getUnlinkedStakeholders();
+    getStakeholders();
   };
 
   const value = {
@@ -175,7 +170,6 @@ export function StakeholdersProvider(props) {
     setDisplay,
     sort,
     updateFilter,
-    // getStakeholder,
     getStakeholders,
     createStakeholder,
     updateStakeholder,

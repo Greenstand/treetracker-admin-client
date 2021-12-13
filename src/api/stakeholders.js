@@ -12,7 +12,6 @@ export default {
   getStakeholders(id, { offset, rowsPerPage, orderBy, order, filter }) {
     const orgId = getOrganizationId();
     const where = filter.getWhereObj();
-    console.log('where', where);
     const lbFilter = {
       where,
       order: [`${orderBy} ${order}`],
@@ -37,8 +36,8 @@ export default {
     let query = '';
     if (!id && orgId && Number(orgId)) {
       query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(lbFilter)}`;
-      // } else if (id) {
-      //   query = `${STAKEHOLDER_API}/${id}?filter=${JSON.stringify(lbFilter)}`;
+    } else if (id) {
+      query = `${STAKEHOLDER_API}/${id}?filter=${JSON.stringify(lbFilter)}`;
     } else {
       query = `${STAKEHOLDER_API}?filter=${JSON.stringify(lbFilter)}`;
     }
@@ -85,8 +84,6 @@ export default {
   updateLinks(id, stakeholdersData) {
     const orgId = getOrganizationId();
 
-    console.log('id orgId', id, orgId);
-
     let query = '';
     if (orgId && Number(orgId)) {
       query = `${STAKEHOLDER_API}/links/${orgId}`;
@@ -95,8 +92,6 @@ export default {
     } else {
       query = `${STAKEHOLDER_API}/links`;
     }
-
-    console.log('updateLinks ---->', query);
 
     return fetch(query, {
       method: 'PATCH',
@@ -111,8 +106,8 @@ export default {
   },
 
   updateStakeholder(stakeholderUpdate) {
-    console.log('org ---> ', getOrganizationId());
-    const query = `${STAKEHOLDER_API}/${getOrganizationId()}`;
+    const orgId = getOrganizationId();
+    const query = `${STAKEHOLDER_API}/${orgId()}`;
 
     return fetch(query, {
       method: 'PATCH',

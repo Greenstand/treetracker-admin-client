@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, List, Typography } from '@material-ui/core';
-// import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import AdminIcon from '@material-ui/icons/SupervisorAccount';
 import GrowerIcon from '@material-ui/icons/NaturePeople';
 import StakeholderList from './List';
@@ -33,9 +32,7 @@ const useStyles = makeStyles({
 });
 
 function StakeholderGroups({ data, render, tall }) {
-  // console.log('StakeholderGroups data, render tall', data, render, tall);
   const classes = useStyles();
-  // const { linkStakeholder } = useContext(StakeholdersContext);
 
   const stakeholders = {
     children: { label: 'Children', icon: '' },
@@ -43,10 +40,6 @@ function StakeholderGroups({ data, render, tall }) {
     users: { label: 'Admin Users', icon: <AdminIcon className={classes.pr} /> },
     growers: { label: 'Growers', icon: <GrowerIcon className={classes.pr} /> },
   };
-
-  // const handleLink = (type, id) => {
-  //   linkStakeholder({ type, id });
-  // };
 
   return (
     <>

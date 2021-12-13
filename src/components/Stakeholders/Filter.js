@@ -55,7 +55,6 @@ function Filter() {
   };
 
   const handleChanges = (e) => {
-    // console.log('handleChanges', e.target);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 

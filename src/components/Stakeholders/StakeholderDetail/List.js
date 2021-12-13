@@ -21,17 +21,12 @@ function StakeholderList({ id, data, type, linked }) {
   const [isLinked, setIsLinked] = useState(linked);
   const { updateLinks } = useContext(StakeholdersContext);
 
-  // const handleUnlink = (type, id) => {
-  //   unlinkStakeholder({ type, id });
-  // };
-
-  const handleChange = (e, stakeholder) => {
+  const handleChange = (e, data) => {
     setIsLinked(!isLinked);
     updateLinks(id, {
-      id: stakeholder.id,
       type,
       linked: !linked,
-      data: stakeholder,
+      data: data,
     });
   };
 
@@ -45,9 +40,9 @@ function StakeholderList({ id, data, type, linked }) {
           direction="row"
         >
           <Grid item container direction="row" alignItems="center" xs={11}>
-            {type === 'User' ? (
+            {type === 'users' ? (
               <UserListItem data={data} />
-            ) : type === 'Person' ? (
+            ) : type === 'growers' ? (
               <GrowerListItem data={data} />
             ) : (
               <ParentChildListItem data={data} />
