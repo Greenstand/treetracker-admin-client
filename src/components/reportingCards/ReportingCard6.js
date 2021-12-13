@@ -2,7 +2,7 @@ import React from 'react';
 import ReportingCard from './ReportingCard';
 import log from 'loglevel';
 import useLoadData from './ReportingCard.hook';
-import Icon from '@material-ui/icons/LiveHelp';
+import Icon from '@material-ui/icons/PhotoCamera';
 
 export default function component(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -10,20 +10,20 @@ export default function component(props) {
   const data = useLoadData(
     startDate,
     endDate,
-    'unverified_captures',
-    'unverified_captures',
-    undefined,
+    'trees_per_planters',
+    'trees_per_planters',
+    (data) => data.average,
     rows,
   );
 
   return (
     <ReportingCard
       text={{
-        title: 'Unverified Captures',
-        text1: 'Total',
+        title: 'Average captures per planter per organization',
+        text1: 'Average',
       }}
       icon={Icon}
-      color="#ef8031"
+      color="#76bb23"
       data={data}
       disableSeeMore={disableSeeMore}
     />

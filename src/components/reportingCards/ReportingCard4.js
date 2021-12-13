@@ -5,7 +5,7 @@ import useLoadData from './ReportingCard.hook';
 import Icon from '@material-ui/icons/Flag';
 
 export default function component(props) {
-  const { startDate, endDate, disableSeeMore } = props;
+  const { startDate, endDate, disableSeeMore, rows } = props;
 
   const data = useLoadData(
     startDate,
@@ -13,6 +13,7 @@ export default function component(props) {
     'top_planters',
     'top_planters',
     (data) => data.average,
+    rows,
   );
 
   return (

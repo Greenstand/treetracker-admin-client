@@ -8,33 +8,67 @@ export default function useLoadData(
   field1,
   field2,
   getNum1 = (e) => e.total,
+  rows,
 ) {
   const [data, setData] = React.useState(undefined);
 
-  async function load(baseUrl, startDate, endDate) {
-    const res = await axios.get(
-      `${baseUrl}?${
-        startDate ? 'capture_created_start_date=' + startDate : ''
-      }&${endDate ? 'capture_created_end_date=' + endDate : ''}`,
-    );
+  async function loadMore() {
+    const res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics/card`,
+      params: {
+        card_title: field1,
+        // TODO optimize when data increases
+        limit: 100,
+      },
+    });
+    setData((data) => ({
+      ...data,
+      moreData: res.data.card_information,
+    }));
+  }
+
+  async function load(startDate, endDate) {
+    const res = await axios({
+      method: 'get',
+      url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+      params: {
+        capture_created_start_date: startDate ? startDate : undefined,
+        capture_created_end_date: endDate ? endDate : undefined,
+      },
+    });
     const { data } = res;
     log.warn('load data: ', data);
+
+    let top;
+    if (rows !== undefined) {
+      // there is rows set, use single API to load it
+      const res = await axios({
+        method: 'get',
+        url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics/card`,
+        params: {
+          capture_created_start_date: startDate ? startDate : undefined,
+          capture_created_end_date: endDate ? endDate : undefined,
+          card_title: field1,
+          limit: rows,
+        },
+      });
+      top = res.data.card_information;
+    }
+
     setData({
       num1: getNum1(data[field1]),
-      top: data[field1][field2].map((p) => ({
+      top: (top || data[field1][field2]).map((p) => ({
         name: p.name,
         num: p.number,
       })),
+      loadMore,
     });
   }
 
   React.useEffect(() => {
     setData(undefined);
-    load(
-      `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
-      startDate,
-      endDate,
-    );
+    load(startDate, endDate);
   }, [startDate, endDate]);
 
   return data;

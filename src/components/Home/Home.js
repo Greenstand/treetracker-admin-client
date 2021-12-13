@@ -24,9 +24,11 @@ import ReportingCard2 from '../reportingCards/ReportingCard2';
 import ReportingCard3 from '../reportingCards/ReportingCard3';
 import ReportingCard4 from '../reportingCards/ReportingCard4';
 import ReportingCard5 from '../reportingCards/ReportingCard5';
+import ReportingCard6 from '../reportingCards/ReportingCard6';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
+import axios from 'axios';
 
 /**
  * @function
@@ -41,12 +43,23 @@ function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [updateTime, setUpdateTime] = React.useState(undefined);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
   }, []);
 
-  // the time range
+  // the reporting card, update time, the time range
+  React.useEffect(() => {
+    async function loadUpdateTime() {
+      const res = await axios(
+        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+      );
+      const { data } = res;
+      setUpdateTime(data.last_updated_at);
+    }
+    loadUpdateTime();
+  }, []);
   const timeRange = [
     { range: 30, text: 'Last Month' },
     { range: 30 * 60, text: 'Last 6 Months' },
@@ -92,9 +105,11 @@ function Home(props) {
             </Grid>
             {process.env.REACT_APP_REPORTING_ENABLED === 'true' && (
               <Grid item xs={5} className={classes.timeBox}>
-                <Typography variant="body1" className={classes.time}>
-                  Last updated 22h ago
-                </Typography>
+                {updateTime && (
+                  <Typography variant="body1" className={classes.time}>
+                    Last updated {moment(updateTime).fromNow()}
+                  </Typography>
+                )}
                 <Button
                   variant="outlined"
                   onClick={handleTimeClick}
@@ -161,6 +176,9 @@ function Home(props) {
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard5 startDate={startDate} endDate={endDate} />
+                </Grid>
+                <Grid item xs={4}>
+                  <ReportingCard6 startDate={startDate} endDate={endDate} />
                 </Grid>
               </Grid>
             )}

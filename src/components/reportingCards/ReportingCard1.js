@@ -5,9 +5,16 @@ import useLoadData from './ReportingCard.hook';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 
 export default function ReportingCard1(props) {
-  const { startDate, endDate, disableSeeMore } = props;
+  const { startDate, endDate, disableSeeMore, rows } = props;
 
-  const data = useLoadData(startDate, endDate, 'planters', 'planters');
+  const data = useLoadData(
+    startDate,
+    endDate,
+    'planters',
+    'planters',
+    undefined,
+    rows,
+  );
 
   return (
     <ReportingCard

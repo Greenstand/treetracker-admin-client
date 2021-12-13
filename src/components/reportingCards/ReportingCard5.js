@@ -5,9 +5,16 @@ import useLoadData from './ReportingCard.hook';
 import Icon from '@material-ui/icons/Eco';
 
 export default function component(props) {
-  const { startDate, endDate, disableSeeMore } = props;
+  const { startDate, endDate, disableSeeMore, rows } = props;
 
-  const data = useLoadData(startDate, endDate, 'species', 'species');
+  const data = useLoadData(
+    startDate,
+    endDate,
+    'species',
+    'species',
+    undefined,
+    rows,
+  );
 
   return (
     <ReportingCard

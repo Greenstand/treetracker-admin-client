@@ -122,13 +122,14 @@ const style = (theme) => ({
 });
 
 function GrowerReportingCard(props) {
-  const { classes, data, text, color, icon, disableSeeMore } = props;
+  const { classes, data, text, color, icon, disableSeeMore, moreData } = props;
   const [open, setOpen] = React.useState(false);
 
   const Icon = icon;
 
   function handleSeeMore() {
     log.log('see more');
+    data.loadMore();
     setOpen(true);
   }
 
@@ -165,7 +166,9 @@ function GrowerReportingCard(props) {
             data.top.slice(0, 3).map((item, i) => (
               <Box key={i} className={classes.box4}>
                 <Typography className={classes.name}>{item.name}</Typography>
-                <Typography className={classes.number}>{item.num}</Typography>
+                <Typography className={classes.number}>
+                  {new Intl.NumberFormat().format(item.num)}
+                </Typography>
               </Box>
             ))
           ) : (
@@ -197,10 +200,21 @@ function GrowerReportingCard(props) {
           className={classes.modal}
         >
           <Card className={classes.card}>
-            <Box className={classes.root}>
+            <Box
+              className={classes.root}
+              style={{ justifyContent: 'flex-start' }}
+            >
               <Typography className={classes.title}>{text.title}</Typography>
               <Box className={classes.box2}>
-                <Box className={classes.iconTotalBox}>
+                <Box
+                  className={classes.iconTotalBox}
+                  style={{
+                    backgroundColor: d3
+                      .color(color)
+                      .copy({ opacity: 0.15 })
+                      .toString(),
+                  }}
+                >
                   <Icon className={classes.iconTotal} style={{ color }} />
                 </Box>
                 <Box className={classes.box3}>
@@ -211,12 +225,17 @@ function GrowerReportingCard(props) {
                 </Box>
               </Box>
               <Box mt={6} />
-              {data.top.map((item, i) => (
-                <Box key={i} className={classes.box4}>
-                  <Typography className={classes.name}>{item.name}</Typography>
-                  <Typography className={classes.number}>{item.num}</Typography>
-                </Box>
-              ))}
+              {data.moreData &&
+                data.moreData.map((item, i) => (
+                  <Box key={i} className={classes.box4}>
+                    <Typography className={classes.name}>
+                      {item.name}
+                    </Typography>
+                    <Typography className={classes.number}>
+                      {new Intl.NumberFormat().format(item.number)}
+                    </Typography>
+                  </Box>
+                ))}
             </Box>
           </Card>
         </Modal>

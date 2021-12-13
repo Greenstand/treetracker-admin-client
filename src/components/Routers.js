@@ -11,6 +11,7 @@ import ReportingCard2 from './reportingCards/ReportingCard2';
 import ReportingCard3 from './reportingCards/ReportingCard3';
 import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
+import ReportingCard6 from './reportingCards/ReportingCard6';
 
 export default function Routers() {
   const refContainer = useRef();
@@ -68,6 +69,7 @@ export default function Routers() {
                   const props = {
                     startDate: queryParams.get('start-date'),
                     endDate: queryParams.get('end-date'),
+                    rows: queryParams.get('rows'),
                     disableSeeMore: true,
                   };
                   return (
@@ -86,6 +88,9 @@ export default function Routers() {
                       </Route>
                       <Route path="/reporting/card5">
                         <ReportingCard5 {...props} />
+                      </Route>
+                      <Route path="/reporting/card6">
+                        <ReportingCard6 {...props} />
                       </Route>
                     </Switch>
                   );
