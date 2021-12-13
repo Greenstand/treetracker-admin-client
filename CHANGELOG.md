@@ -1,3 +1,10 @@
+## [1.31.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.0...v1.31.1) (2021-12-13)
+
+
+### Bug Fixes
+
+* **verify:** resolve tagging issues ([#231](https://github.com/Greenstand/treetracker-admin-client/issues/231)) ([c6d1baf](https://github.com/Greenstand/treetracker-admin-client/commit/c6d1bafa0ecbdd6d26869763a1b524a3f40dd5cc))
+
 # [1.31.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.30.0...v1.31.0) (2021-12-12)
 
 
