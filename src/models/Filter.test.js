@@ -6,22 +6,24 @@ describe('Filter, with initial values about this filter object', () => {
   beforeEach(() => {
     filter = new Filter();
     filter.uuid = '11942400-6617-4c6c-bf5e';
-    filter.captureId = 10;
+    filter.captureId = '10';
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
     filter.approved = true;
     filter.active = true;
-    filter.planterId = 1;
+    filter.planterId = '1';
     filter.deviceIdentifier = '1';
     filter.planterIdentifier = '1';
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }));
+    expect(filter.getWhereObj()).toEqual(
+      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }),
+    );
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: 10 }));
+    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: '10' }));
   });
 
   it('getWhereObj() should match: timeCreated between', () => {
@@ -63,7 +65,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should match: planterId=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterId: 1 }),
+      expect.objectContaining({ planterId: '1' }),
     );
   });
 
@@ -91,10 +93,10 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set planterId = undefined', () => {
+  describe('set planterId = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.planterId = undefined;
+      filter.planterId = '';
     });
 
     it('loopback object should not match any [planterId]', () => {
