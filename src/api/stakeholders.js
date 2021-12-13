@@ -107,7 +107,7 @@ export default {
 
   updateStakeholder(stakeholderUpdate) {
     const orgId = getOrganizationId();
-    const query = `${STAKEHOLDER_API}/${orgId()}`;
+    const query = `${STAKEHOLDER_API}/${orgId}`;
 
     return fetch(query, {
       method: 'PATCH',

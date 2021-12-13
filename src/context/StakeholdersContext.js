@@ -145,8 +145,8 @@ export function StakeholdersProvider(props) {
     setUnlinkedStakeholders(unlinked.stakeholders);
   };
 
-  const updateLinks = async (stakeholder_id, payload) => {
-    await api.updateLinks(stakeholder_id, payload);
+  const updateLinks = async (id, payload) => {
+    await api.updateLinks(id, payload);
     // getUnlinkedStakeholders();
     getStakeholders();
   };
