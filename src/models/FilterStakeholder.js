@@ -13,7 +13,6 @@ export default class Filter {
   }
 
   getWhereObj() {
-    console.log('this', this);
     let where = {};
 
     if (this.type) {
