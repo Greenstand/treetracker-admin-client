@@ -1,3 +1,10 @@
+## [1.31.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.1...v1.31.2) (2021-12-13)
+
+
+### Bug Fixes
+
+* remove unset grower ID from captures filter ([#245](https://github.com/Greenstand/treetracker-admin-client/issues/245)) ([533506a](https://github.com/Greenstand/treetracker-admin-client/commit/533506a4506de387a3735b93a281f951aa48b0a9))
+
 ## [1.31.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.0...v1.31.1) (2021-12-13)
 
 
