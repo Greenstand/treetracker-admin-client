@@ -174,7 +174,7 @@ const GrowerDetail = (props) => {
 
   async function getCaptureCountGrower(active, approved, growerId) {
     let filter = new FilterModel();
-    filter.planterId = growerId;
+    filter.planterId = growerId?.toString();
     filter.active = active;
     filter.approved = approved;
     const countResponse = await treeTrackerApi.getCaptureCount(filter);
