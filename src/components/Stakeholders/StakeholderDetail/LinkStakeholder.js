@@ -7,8 +7,6 @@ import {
   DialogContent,
   DialogActions,
   List,
-  // TextField,
-  // FormControl,
 } from '@material-ui/core';
 import { StakeholdersContext } from 'context/StakeholdersContext';
 import StakeholderList from './List';
@@ -38,12 +36,6 @@ function LinkStakeholder({ id, type }) {
   );
   const [open, setOpen] = useState(false);
   const [filteredStakeholders, setFilteredStakeholders] = useState(false);
-  // const [data, setData] = useState({
-  //   id,
-  //   relation,
-  //   stakeholder_id: null,
-  //   linked: false,
-  // });
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -54,10 +46,16 @@ function LinkStakeholder({ id, type }) {
   }, []);
 
   useEffect(() => {
-    // console.log('unlinkedStakeholders', id, type, unlinkedStakeholders.length);
+    // filter unlinked by the stakeholder type: organization, person so only appropriate types can be linked by relation: parents, children, users, growers
+    // need to update db relations table first
+
     // const filtered = unlinkedStakeholders.filter((s) => {
-    //   return s.type === type;
+    //   const relation =
+    //     type === 'children' || type === 'parents' ? 'Organization' : 'Person';
+    //   return s.type === relation;
     // });
+
+    // setFilteredStakeholders(filtered);
     setFilteredStakeholders(unlinkedStakeholders);
   }, [unlinkedStakeholders]);
 
@@ -69,10 +67,6 @@ function LinkStakeholder({ id, type }) {
     // setFilteredStakeholders([]);
     setOpen(false);
   };
-
-  // const submit = () => {
-  //   updateLinks(id, relation, data.id, linked);
-  // };
 
   return (
     <>
@@ -97,24 +91,12 @@ function LinkStakeholder({ id, type }) {
                     data={stakeholder}
                     type={type}
                     linked={false}
-                  >
-                    {/* <TextField
-                    label="Link"
-                    variant="outlined"
-                    name="link"
-                    type="checkbox"
-                    onClick={(e) => handleChange(stakeholder.id, e)}
-                    value={data.linked}
-                  /> */}
-                  </StakeholderList>
+                  ></StakeholderList>
                 );
               })}
           </List>
         </DialogContent>
         <DialogActions>
-          {/* <Button color="primary" onClick={submit}>
-            Link {relation}
-          </Button> */}
           <Button onClick={closeModal}>Close</Button>
         </DialogActions>
       </Dialog>

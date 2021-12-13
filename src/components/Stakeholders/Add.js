@@ -45,7 +45,9 @@ function AddStakeholder() {
   };
 
   const submit = () => {
-    createStakeholder(data);
+    createStakeholder(data).then(() => {
+      closeModal();
+    });
   };
 
   return (
