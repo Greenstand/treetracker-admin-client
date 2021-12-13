@@ -167,16 +167,6 @@ const Verify = (props) => {
   const refContainer = useRef();
   const numFilters = verifyContext.filter.countAppliedFilters();
 
-  // log.debug(
-  //   'render: verify',
-  //   'captures:',
-  //   verifyContext.captureImages.length,
-  //   'species:',
-  //   speciesContext.speciesList.length,
-  //   'tags:',
-  //   tagsContext.tagList.length,
-  // );
-
   /*
    * effect to load page when mounted
    */
@@ -191,14 +181,6 @@ const Verify = (props) => {
     // console.log('-- approve all complete');
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
-
-  /* load more captures when the page or page size changes */
-  useEffect(() => {
-    // console.log('-- load images', verifyContext.filter);
-    const abortController = new AbortController();
-    verifyContext.loadCaptureImages({ signal: abortController.signal });
-    return () => abortController.abort();
-  }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
 
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
@@ -256,7 +238,6 @@ const Verify = (props) => {
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
-    verifyContext.loadCaptureImages();
   }
 
   async function handleShowGrowerDetail(e, capture) {
@@ -292,6 +273,7 @@ const Verify = (props) => {
   }
 
   function handleChangePageSize(event) {
+    verifyContext.setCurrentPage(0);
     verifyContext.setPageSize(event.target.value);
   }
 
@@ -303,15 +285,10 @@ const Verify = (props) => {
     return verifyContext.captureImagesSelected.indexOf(id) >= 0;
   }
 
-  const captureImages = verifyContext.captureImages.filter((capture, index) => {
-    return (
-      index >= verifyContext.currentPage * verifyContext.pageSize &&
-      index < (verifyContext.currentPage + 1) * verifyContext.pageSize
-    );
-  });
+  const captureImages = verifyContext.captureImages;
 
   const placeholderImages = verifyContext.isLoading
-    ? Array(verifyContext.pageSize - captureImages.length)
+    ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
         .fill()
         .map((_, index) => {
           return {
@@ -406,7 +383,7 @@ const Verify = (props) => {
 
   let imagePagination = (
     <TablePagination
-      rowsPerPageOptions={[12, 24, 48, 96, 192]}
+      rowsPerPageOptions={[24, 96, 192, 384]}
       component="div"
       count={verifyContext.captureCount || 0}
       rowsPerPage={verifyContext.pageSize}
