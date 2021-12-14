@@ -46,10 +46,16 @@ function LinkStakeholder({ id, type }) {
   }, []);
 
   useEffect(() => {
-    // console.log('unlinkedStakeholders', id, type, unlinkedStakeholders.length);
+    // filter unlinked by the stakeholder type: organization, person so only appropriate types can be linked by relation: parents, children, users, growers
+    // need to update db relations table first
+
     // const filtered = unlinkedStakeholders.filter((s) => {
-    //   return s.type === type;
+    //   const relation =
+    //     type === 'children' || type === 'parents' ? 'Organization' : 'Person';
+    //   return s.type === relation;
     // });
+
+    // setFilteredStakeholders(filtered);
     setFilteredStakeholders(unlinkedStakeholders);
   }, [unlinkedStakeholders]);
 

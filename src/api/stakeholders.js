@@ -56,8 +56,6 @@ export default {
   getUnlinkedStakeholders(id, abortController) {
     const orgId = getOrganizationId();
 
-    console.log('id orgId', id, orgId);
-
     let query = '';
     if (!id && orgId && Number(orgId)) {
       query = `${STAKEHOLDER_API}/links/${orgId}`;
@@ -66,8 +64,6 @@ export default {
     } else {
       query = `${STAKEHOLDER_API}/links`;
     }
-
-    console.log('getUnlinkedStakeholders ---->', query);
 
     return fetch(query, {
       method: 'GET',
