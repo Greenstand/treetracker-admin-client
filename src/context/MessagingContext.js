@@ -73,24 +73,20 @@ export const MessagingProvider = (props) => {
   };
 
   const postRegion = async (payload) => {
-    const res = await api.postRegion(payload);
-    console.log(res, payload);
+    await api.postRegion(payload);
   };
 
   const getRegionById = async (id) => {
     await api.getRegionById(id);
-    // console.log(res, region);
   };
 
   const postMessage = async (payload) => {
-    const res = await api.postMessage(payload);
-    console.log(res, payload);
+    await api.postMessage(payload);
   };
 
   const postMessageSend = async (payload) => {
     if (payload) {
-      const res = await api.postMessageSend(payload);
-      console.log(res);
+      await api.postMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }
@@ -105,14 +101,13 @@ export const MessagingProvider = (props) => {
     };
 
     if (payload.to) {
-      console.log(payload);
       setGrowerMessage(payload);
     }
   };
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
-    console.log(growerMessage, res.messages);
+
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -127,8 +122,6 @@ export const MessagingProvider = (props) => {
       setRegions(res);
     }
   };
-
-  console.log(growerMessage);
 
   const value = {
     user,

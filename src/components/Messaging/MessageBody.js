@@ -94,18 +94,23 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const AnnounceMessage = ({ message }) => {
-  const { messageRow, recievedMessage, messageContent } = useStyles();
+  const {
+    messageRow,
+    recievedMessage,
+    messageContent,
+    messageTimeStampRight,
+  } = useStyles();
+
   return (
     <div className={messageRow}>
-      {/* <Avatar alt={''} src={message.authorId ? '' : ''}></Avatar> */}
       <div className={recievedMessage}>
         <div>
           <Typography className={messageContent}>{message.body}</Typography>
         </div>
       </div>
-      {/* <Grid item className={messageTimeStampRight}>
-          <Typography>{message.composed_at.slice(0, 10)}</Typography>
-        </Grid> */}
+      <Grid item className={messageTimeStampRight}>
+        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+      </Grid>
     </div>
   );
 };
@@ -113,13 +118,14 @@ export const AnnounceMessage = ({ message }) => {
 export const SurveyMessage = ({ message }) => {
   const { messageRowRight, sentMessage, surveyContent } = useStyles();
 
+  const { questions } = message.survey;
   return (
     <div className={messageRowRight}>
       <Grid item className={sentMessage}>
         <Typography variant={'h5'} className={surveyContent}>
-          {message.body}
+          {message.body ? message.body : ''}
         </Typography>
-        {message.survey.questions.map((question, i) => (
+        {questions.map((question, i) => (
           <div key={i} className={surveyContent}>
             <Typography variant={'h6'}>
               Question {i + 1}:{' '}
@@ -128,8 +134,8 @@ export const SurveyMessage = ({ message }) => {
             <Typography variant={'h6'}>
               Choices:
               <ol type="A">
-                {question.choices.map((choice, j) => (
-                  <li key={j + 1}>{choice}</li>
+                {question.choices.map((choice) => (
+                  <li key={choice}>{choice}</li>
                 ))}
               </ol>
             </Typography>
@@ -150,7 +156,6 @@ export const RecievedMessage = ({ message }) => {
   return (
     <>
       <div className={messageRow}>
-        {/* <Avatar alt={''} src={message.authorId ? '' : ''}></Avatar> */}
         <div className={recievedMessage}>
           <div>
             <Typography className={messageContent}>{message.body}</Typography>
@@ -216,10 +221,10 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let lastMessage = messages[messages.length - 1];
+
     const messagePayload = {
-      parent_message_id: messages[messages.length - 1].id
-        ? messages[messages.length - 1].id
-        : null,
+      parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
       subject: 'Message',
@@ -228,7 +233,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        console.log('payload', messagePayload);
         await postMessageSend(messagePayload);
       }
     }

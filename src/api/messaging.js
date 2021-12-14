@@ -3,7 +3,7 @@ import { session } from '../models/auth';
 
 export default {
   getRegion() {
-    const query = `https://dev-k8s.treetracker.org/messaging/region`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
 
     return fetch(query, {
       method: 'GET',
@@ -16,7 +16,7 @@ export default {
       .catch(handleError);
   },
   postRegion(payload) {
-    const query = `https://dev-k8s.treetracker.org/messaging/region`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
     const { id, name, description, created_at } = payload;
 
     return fetch(query, {
@@ -26,24 +26,28 @@ export default {
         Authorization: session.token,
       },
       body: JSON.stringify({ id, name, description, created_at }),
-    });
+    })
+      .then(handleResponse)
+      .catch(handleError);
   },
   getRegionById(region_id) {
-    const query = `https://dev-k8s.treetracker.org/messaging/region/${region_id}`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region/${region_id}`;
 
     return fetch(query, {
       headers: {
         Authorization: session.token,
       },
-    }).then((res) => console.log(res));
+    })
+      .then(handleResponse)
+      .catch(handleError);
   },
   getMessage(author_handle) {
-    const query = `https://dev-k8s.treetracker.org/messaging/message?author_handle=${author_handle}`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?author_handle=${author_handle}`;
 
     return fetch(query).then(handleResponse).catch(handleError);
   },
   postMessage(payload) {
-    const query = `https://dev-k8s.treetracker.org/messaging/message`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 
     return fetch(query, {
       method: 'POST',
@@ -57,7 +61,7 @@ export default {
       .catch(handleError);
   },
   postMessageSend(payload) {
-    const query = `https://dev-k8s.treetracker.org/messaging/message/send`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message/send`;
 
     return fetch(query, {
       method: 'POST',

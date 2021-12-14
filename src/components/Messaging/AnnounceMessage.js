@@ -90,7 +90,6 @@ const AnnounceMessageForm = () => {
       author_handle: user.userName,
       subject: 'Announce Message',
       body: values.message,
-      // video_link: values.videoLink,
     };
     if (region) {
       payload['region_id'] = region;
@@ -99,7 +98,6 @@ const AnnounceMessageForm = () => {
       payload['organization_id'] = organization;
     }
     if (payload.organization_id || payload.region_id) {
-      console.log(payload);
       await postMessageSend(payload);
     }
   };
@@ -171,6 +169,7 @@ const AnnounceMessage = ({
 }) => {
   const iOS =
     typeof navigator !== 'undefined' &&
+    typeof navigator.userAgent !== 'undefined' &&
     /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const { drawer, title, formTitle, directions, closeAnnounce } = useStyles();

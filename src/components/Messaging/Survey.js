@@ -69,214 +69,135 @@ const SurveyForm = () => {
   const { form, submitButton, input } = useStyles();
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
-  const [survey, setSurvey] = useState({
-    questionOne: '',
+  const [questionOne, setQuestionOne] = useState({
+    prompt: '',
     choiceOne: '',
     choiceTwo: '',
     choiceThree: '',
-    questionTwo: '',
-    choiceFour: '',
-    choiceFive: '',
-    choiceSix: '',
-    questionThree: '',
-    choiceSeven: '',
-    choiceEight: '',
-    choiceNine: '',
-    organization: '',
-    region: '',
   });
+  const [questionTwo, setQuestionTwo] = useState({
+    prompt: '',
+    choiceOne: '',
+    choiceTwo: '',
+    choiceThree: '',
+  });
+  const [questionThree, setQuestionThree] = useState({
+    prompt: '',
+    choiceOne: '',
+    choiceTwo: '',
+    choiceThree: '',
+  });
+
+  const [values, setValues] = useState({ region: '', organization: '' });
+
+  const handleQuestionsChange = (e, question) => {
+    const { name, value } = e.target;
+    if (question === 'questionOne') {
+      setQuestionOne({
+        ...questionOne,
+        [name]: value,
+      });
+    } else if (question === 'questionTwo') {
+      setQuestionTwo({
+        ...questionTwo,
+        [name]: value,
+      });
+    } else if (question === 'questionThree') {
+      setQuestionThree({
+        ...questionThree,
+        [name]: value,
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSurvey({
-      ...survey,
+    setValues({
+      ...values,
       [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let one = { prompt: '', choices: [] };
-    let two = { prompt: '', choices: [] };
-    let three = { prompt: '', choices: [] };
-
-    // Map through survey info to match api spec
-    Object.entries(survey).map(([key, val]) => {
-      switch (key) {
-        case 'questionOne':
-          one.prompt = val;
-          break;
-        case 'choiceOne':
-        case 'choiceTwo':
-        case 'choiceThree':
-          one.choices.push(val);
-          break;
-        case 'questionTwo':
-          two.prompt = val;
-          break;
-        case 'choiceFour':
-        case 'choiceFive':
-        case 'choiceSix':
-          two.choices.push(val);
-          break;
-        case 'questionThree':
-          three.prompt = val;
-          break;
-        case 'choiceSeven':
-        case 'choiceEight':
-        case 'choiceNine':
-          three.choices.push(val);
-          break;
-      }
-    });
-
+    const allQuestions = { questionOne, questionTwo, questionThree };
     const payload = {
       author_handle: user.userName,
       subject: 'Survey',
       body: 'Survey',
       survey: {
-        title: survey.questionOne,
+        title: questionOne.prompt,
         questions: [],
       },
     };
 
-    // check which questions were asked
-    if (one.prompt.length > 1) {
-      payload.survey.questions.push(one);
+    if (values.region.length > 1) {
+      payload['region_id'] = values.region;
     }
-    if (two.prompt.length > 1) {
-      payload.survey.questions.push(two);
+
+    if (values.organization.length > 1) {
+      payload['organization_id'] = values.organization;
     }
-    if (three.prompt.length > 1) {
-      payload.survey.questions.push(three);
-    }
-    // set one or both region_id - organization_id
-    if (survey.organization) {
-      payload['organization_id'] = survey.organization;
-    }
-    if (survey.region) {
-      payload['region_id'] = survey.region;
-    }
+
+    Object.values(allQuestions).map((question) => {
+      const { prompt, choiceOne, choiceTwo, choiceThree } = question;
+      if (prompt.length > 1 && choiceOne && choiceTwo && choiceThree) {
+        payload.survey.questions.push({
+          prompt,
+          choices: [choiceOne, choiceTwo, choiceThree],
+        });
+      }
+    });
 
     try {
       if (payload.author_handle && payload.survey.title.length > 1) {
-        console.log(payload);
         await postMessageSend(payload);
       }
     } catch (err) {
       console.log(err);
     }
   };
-
   return (
     <form className={form} onSubmit={handleSubmit}>
+      {['One', 'Two', 'Three'].map((num) => (
+        <div key={num}>
+          <GSInputLabel text={`Survey Question ${num}`} />
+          <TextField
+            className={input}
+            fullWidth
+            label="Write your question: "
+            name="prompt"
+            value={`question${num}`['prompt']}
+            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+          />
+          <GSInputLabel text={`Question ${num} Answer Options`} />
+          <TextField
+            className={input}
+            fullWidth
+            label="A: "
+            name="choiceOne"
+            value={`question${num}`['choiceOne']}
+            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+          />
+          <TextField
+            className={input}
+            fullWidth
+            label="B: "
+            name="choiceTwo"
+            value={`question${num}`['choiceTwo']}
+            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+          />
+          <TextField
+            className={input}
+            fullWidth
+            label="C: "
+            name="choiceThree"
+            value={`question${num}`['choiceThree']}
+            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+          />
+        </div>
+      ))}
       <div>
-        <GSInputLabel text={`Survey Question One`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="Write your question: "
-          name="questionOne"
-          value={survey.questionOne}
-          onChange={handleChange}
-        />
-        <GSInputLabel text={`Question One Answer Options`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="A: "
-          name="choiceOne"
-          value={survey.choiceOne}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="B: "
-          name="choiceTwo"
-          value={survey.choiceTwo}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="C: "
-          name="choiceThree"
-          value={survey.choiceThree}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <GSInputLabel text={`Survey Question Two`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="Write your question: "
-          name="questionTwo"
-          value={survey.questionTwo}
-          onChange={handleChange}
-        />
-        <GSInputLabel text={`Question Two Answer Options`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="A: "
-          name="choiceFour"
-          value={survey.choiceFour}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="B: "
-          name="choiceFive"
-          value={survey.choiceFive}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="C: "
-          name="choiceSix"
-          value={survey.choiceSix}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <GSInputLabel text={`Survey Question Three`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="Write your question: "
-          name="questionThree"
-          value={survey.questionThree}
-          onChange={handleChange}
-        />
-        <GSInputLabel text={`Question Three Answer Options`} />
-        <TextField
-          className={input}
-          fullWidth
-          label="A: "
-          name="choiceSeven"
-          value={survey.choiceSeven}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="B: "
-          name="choiceEight"
-          value={survey.choiceEight}
-          onChange={handleChange}
-        />
-        <TextField
-          className={input}
-          fullWidth
-          label="C: "
-          name="choiceNine"
-          value={survey.choiceNine}
-          onChange={handleChange}
-        />
         <FormControl fullWidth>
           <GSInputLabel
             id="select-label"
@@ -288,7 +209,7 @@ const SurveyForm = () => {
             id="select"
             input={<OutlinedInput label="Organizations" />}
             name="organization"
-            value={survey.organization}
+            value={values.organization}
             onChange={handleChange}
           >
             {orgList.map((org, i) => (
@@ -309,7 +230,7 @@ const SurveyForm = () => {
             label="Regions"
             input={<OutlinedInput />}
             name="region"
-            value={survey.region}
+            value={values.region}
             onChange={handleChange}
             id="select-reg"
           >
@@ -331,6 +252,7 @@ const SurveyForm = () => {
 const Survey = ({ toggleSurvey, setToggleSurvey }) => {
   const iOS =
     typeof navigator !== 'undefined' &&
+    typeof navigator.userAgent !== 'undefined' &&
     /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const {
