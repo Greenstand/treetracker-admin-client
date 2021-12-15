@@ -15,6 +15,7 @@ import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -156,6 +157,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
+  const [isToggle, setIsToggle] = useState(false);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -200,6 +202,9 @@ const Verify = (props) => {
     return () => abortController.abort();
   }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
 
+  function toggleSizes() {
+    setIsToggle(!isToggle);
+  }
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
@@ -325,7 +330,14 @@ const Verify = (props) => {
     .concat(placeholderImages)
     .map((capture) => {
       return (
-        <Grid item xs={12} sm={6} md={4} xl={3} key={capture.id}>
+        <Grid
+          item
+          xs={!isToggle ? 3 : 0}
+          sm={!isToggle ? 12 : 0}
+          md={!isToggle ? 4 : 0}
+          xl={!isToggle ? 3 : 0}
+          key={capture.id}
+        >
           <div
             className={clsx(
               classes.cardWrapper,
@@ -481,6 +493,12 @@ const Verify = (props) => {
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
                     </Typography>
+                  </Grid>
+                  <Grid>
+                    <ToggleButtonGroup onChange={toggleSizes}>
+                      <ToggleButton value="">Large size</ToggleButton>
+                      <ToggleButton value="small">small size</ToggleButton>
+                    </ToggleButtonGroup>
                   </Grid>
                   <Grid item>{imagePagination}</Grid>
                 </Grid>
