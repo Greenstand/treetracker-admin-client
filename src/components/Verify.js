@@ -34,6 +34,7 @@ import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { CaptureDetailProvider } from '../context/CaptureDetailContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -541,11 +542,13 @@ const Verify = (props) => {
         growerId={growerDetail.growerId}
         onClose={() => handleCloseGrowerDetail()}
       />
-      <CaptureDetailDialog
-        open={captureDetail.isOpen}
-        onClose={() => handleCloseCaptureDetail()}
-        capture={captureDetail.capture}
-      />
+      <CaptureDetailProvider>
+        <CaptureDetailDialog
+          open={captureDetail.isOpen}
+          onClose={() => handleCloseCaptureDetail()}
+          capture={captureDetail.capture}
+        />
+      </CaptureDetailProvider>
     </>
   );
 };

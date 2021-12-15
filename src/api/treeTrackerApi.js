@@ -1,6 +1,28 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+const CAPTURE_FIELDS = {
+  uuid: true,
+  imageUrl: true,
+  lat: true,
+  lon: true,
+  id: true,
+  timeCreated: true,
+  timeUpdated: true,
+  active: true,
+  approved: true,
+  planterId: true,
+  deviceIdentifier: true,
+  planterIdentifier: true,
+  speciesId: true,
+  tokenId: true,
+  morphology: true,
+  age: true,
+  captureApprovalTag: true,
+  rejectionReason: true,
+  note: true,
+};
+
 export default {
   getCaptureImages(
     {
@@ -20,20 +42,7 @@ export default {
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip,
-      fields: {
-        uuid: true,
-        imageUrl: true,
-        lat: true,
-        lon: true,
-        id: true,
-        timeCreated: true,
-        timeUpdated: true,
-        active: true,
-        approved: true,
-        planterId: true,
-        deviceIdentifier: true,
-        planterIdentifier: true,
-      },
+      fields: CAPTURE_FIELDS,
     };
 
     const query = `${

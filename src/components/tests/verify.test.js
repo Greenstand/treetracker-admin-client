@@ -70,29 +70,37 @@ describe('Verify', () => {
   // mock the treeTrackerApi
   captureApi = require('../../api/treeTrackerApi').default;
 
-  captureApi.getCaptureImages = (id) => {
+  captureApi.getCaptureImages = () => {
     log.debug('mock getCaptureImages:');
     return Promise.resolve(CAPTURES);
   };
-  captureApi.getCaptureCount = (id) => {
+  captureApi.getCaptureCount = () => {
     log.debug('mock getCaptureCount:');
     return Promise.resolve({ count: 4 });
   };
-  captureApi.getCaptureById = (id) => {
+  captureApi.getCaptureById = (_id) => {
     log.debug('mock getCaptureById:');
     return Promise.resolve(CAPTURE);
   };
   captureApi.getSpecies = () => {
-    log.debug('mock getSpeciesById:');
+    log.debug('mock getSpecies:');
     return Promise.resolve(SPECIES);
+  };
+  captureApi.getSpeciesById = (_id) => {
+    log.debug('mock getSpeciesById:');
+    return Promise.resolve(SPECIES[0]);
   };
   captureApi.getCaptureCountPerSpecies = () => {
     log.debug('mock getCaptureCountPerSpecies:');
     return Promise.resolve({ count: 7 });
   };
-  captureApi.getTags = (id) => {
-    log.debug('mock getTagById:');
+  captureApi.getTags = () => {
+    log.debug('mock getTags:');
     return Promise.resolve(TAGS);
+  };
+  captureApi.getTagById = (_id) => {
+    log.debug('mock getTagById:');
+    return Promise.resolve(TAG);
   };
   captureApi.getOrganizations = () => {
     log.debug('mock getOrganizations:');

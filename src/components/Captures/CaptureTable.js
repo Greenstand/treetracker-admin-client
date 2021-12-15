@@ -21,6 +21,7 @@ import CaptureDetailDialog from '../CaptureDetailDialog';
 import { tokenizationStates } from '../../common/variables';
 import useStyle from './CaptureTable.styles.js';
 import ExportCaptures from 'components/ExportCaptures';
+import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 
 const columns = [
   {
@@ -221,11 +222,13 @@ const CaptureTable = () => {
         </TableBody>
       </Table>
       {tablePagination()}
-      <CaptureDetailDialog
-        open={isDetailsPaneOpen}
-        capture={capture}
-        onClose={closeDrawer}
-      />
+      <CaptureDetailProvider>
+        <CaptureDetailDialog
+          open={isDetailsPaneOpen}
+          capture={capture}
+          onClose={closeDrawer}
+        />
+      </CaptureDetailProvider>
     </Grid>
   );
 };

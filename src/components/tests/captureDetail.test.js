@@ -21,15 +21,15 @@ describe('captureDetail', () => {
     //mock the api
     api = require('../../api/treeTrackerApi').default;
 
-    api.getCaptureById = (id) => {
+    api.getCaptureById = (_id) => {
       log.debug('mock getCaptureById:');
       return Promise.resolve(CAPTURE);
     };
-    api.getSpeciesById = (id) => {
+    api.getSpeciesById = (_id) => {
       log.debug('mock getSpeciesById');
-      return Promise.resolve(SPECIES);
+      return Promise.resolve(SPECIES[0]);
     };
-    api.getTagById = (id) => {
+    api.getTagById = (_id) => {
       log.debug('mock getTagById');
       return Promise.resolve(TAG);
     };
@@ -42,7 +42,6 @@ describe('captureDetail', () => {
         species: null,
         tags: [],
         getCaptureDetail: () => {},
-        getCapture: () => {},
         getSpecies: () => {},
         getTags: () => {},
         reset: () => {},
