@@ -34,6 +34,7 @@ import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { CaptureDetailProvider } from '../context/CaptureDetailContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -166,16 +167,6 @@ const Verify = (props) => {
   });
   const refContainer = useRef();
   const numFilters = verifyContext.filter.countAppliedFilters();
-
-  // log.debug(
-  //   'render: verify',
-  //   'captures:',
-  //   verifyContext.captureImages.length,
-  //   'species:',
-  //   speciesContext.speciesList.length,
-  //   'tags:',
-  //   tagsContext.tagList.length,
-  // );
 
   /*
    * effect to load page when mounted
@@ -564,11 +555,13 @@ const Verify = (props) => {
         growerId={growerDetail.growerId}
         onClose={() => handleCloseGrowerDetail()}
       />
-      <CaptureDetailDialog
-        open={captureDetail.isOpen}
-        onClose={() => handleCloseCaptureDetail()}
-        capture={captureDetail.capture}
-      />
+      <CaptureDetailProvider>
+        <CaptureDetailDialog
+          open={captureDetail.isOpen}
+          onClose={() => handleCloseCaptureDetail()}
+          capture={captureDetail.capture}
+        />
+      </CaptureDetailProvider>
     </>
   );
 };

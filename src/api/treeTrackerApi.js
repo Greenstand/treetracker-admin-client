@@ -1,7 +1,7 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
-const FIELDS = {
+const CAPTURE_FIELDS = {
   uuid: true,
   imageUrl: true,
   lat: true,
@@ -21,7 +21,7 @@ const FIELDS = {
   captureApprovalTag: true,
   rejectionReason: true,
   note: true,
-}
+};
 
 export default {
   getCaptureImages(
@@ -42,7 +42,7 @@ export default {
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip,
-      fields: FIELDS,
+      fields: CAPTURE_FIELDS,
     };
 
     const query = `${
@@ -122,15 +122,9 @@ export default {
       .catch(handleError);
   },
   getCaptureById(id) {
-    const lbFilter = {
-      order: [`${'asc'} ${'id'}`],
-      fields: FIELDS,
-    };
-
-    const paramString = `filter=${JSON.stringify(lbFilter)}`;
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees/${id}${paramString ? '?' + paramString : ''}`;
+    }/api/${getOrganization()}trees/${id}`;
     return fetch(query, {
       headers: {
         Authorization: session.token,
