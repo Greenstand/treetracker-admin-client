@@ -1,3 +1,10 @@
+## [1.31.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.2...v1.31.3) (2021-12-15)
+
+
+### Bug Fixes
+
+* display Full Capture Details in Verify and Captures pages ([#228](https://github.com/Greenstand/treetracker-admin-client/issues/228)) ([705fb2d](https://github.com/Greenstand/treetracker-admin-client/commit/705fb2d1905abccf60d51fb955a17e1f82bfc68a))
+
 ## [1.31.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.1...v1.31.2) (2021-12-13)
 
 
