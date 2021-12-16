@@ -3,6 +3,10 @@ import { session } from '../models/auth';
 
 const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 
+async function fetchJSON(query, options) {
+  return fetch(query, options).then(handleResponse).catch(handleError);
+}
+
 export default {
   getStakeholders(id, { offset, rowsPerPage, orderBy, order, filter }) {
     const orgId = id || getOrganizationId();
@@ -19,17 +23,15 @@ export default {
       query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
     }
 
-    console.log('query', query);
-
-    return fetch(query, {
+    const options = {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
       },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    };
+
+    return fetchJSON(query, options);
   },
 
   getUnlinkedStakeholders(id, abortController) {
@@ -49,16 +51,16 @@ export default {
       query = `${STAKEHOLDER_API}/links`;
     }
 
-    return fetch(query, {
+    const options = {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
       },
       signal: abortController?.signal,
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    };
+
+    return fetchJSON(query, options);
   },
 
   updateLinks(id, stakeholdersData) {
@@ -69,16 +71,16 @@ export default {
       query = `${STAKEHOLDER_API}/links/${orgId}`;
     }
 
-    return fetch(query, {
+    const options = {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
       },
       body: JSON.stringify(stakeholdersData),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    };
+
+    return fetchJSON(query, options);
   },
 
   // only need the orgId, the id of the stakeholder is in the stakeholderUpdate
@@ -90,16 +92,16 @@ export default {
       query = `${STAKEHOLDER_API}/${orgId}`;
     }
 
-    return fetch(query, {
+    const options = {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
       },
       body: JSON.stringify(stakeholderUpdate),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    };
+
+    return fetchJSON(query, options);
   },
 
   createStakeholder(stakeholderData) {
@@ -110,15 +112,15 @@ export default {
       query = `${STAKEHOLDER_API}/${orgId}`;
     }
 
-    return fetch(query, {
+    const options = {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
       },
       body: JSON.stringify(stakeholderData),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    };
+
+    return fetchJSON(query, options);
   },
 };
