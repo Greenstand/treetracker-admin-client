@@ -25,48 +25,55 @@ const useStyle = makeStyles({
   },
 
   candidateIconBox: {
-    marginLeft: theme.spacing(5),
+    margin: theme.spacing(5),
   },
 });
 
 // Set API as a variable
-const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/captures`;
+const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
-function CaptureMachineFrame() {
+function CaptureMatchingView() {
   const classes = useStyle();
 
   const [captureImages, setCaptureImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [cadidateImgData, setCandidateImgData] = useState([]);
-
-  // for set how many pages we need in total for pagination
-  const [noOfPages, setNoOfPages] = useState(null);
-
-  // for get the total imag count for header Icon
-  const [imgCount, setImgCount] = useState(null);
-
+  const [candidateImgData, setCandidateImgData] = useState([]);
+  const [noOfPages, setNoOfPages] = useState(null); //for pagination
+  const [imgCount, setImgCount] = useState(null); //for header icon
+  const [treesCount, setTreesCount] = useState(0);
   // To get total tree count on candidate capture image icon
-  const treesCount = cadidateImgData.length;
+  // const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
   useEffect(() => {
+    console.log('loading candidate images');
     async function fetchCandidateTrees(captureId) {
       // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}/${captureId}/potential_trees`, {
-        headers: {
-          // Authorization: session.token,
+      const data = await fetch(
+        `${CAPTURE_API}/${captureId}/potential_matches`,
+        {
+          headers: {
+            // Authorization: session.token,
+          },
         },
-      }).then((res) => res.json());
-      setCandidateImgData(data.trees);
+      ).then((res) => res.json());
+      console.log('candidate images ---> ', data);
+      setCandidateImgData(data.matches);
+      setTreesCount(data.matches.length);
       setLoading(false);
     }
 
-    setCandidateImgData([]);
+    // setCandidateImgData([]);
 
-    if (currentPage > 0 && currentPage <= captureImages.length) {
-      const captureId = captureImages[currentPage - 1].captureId;
+    if (
+      captureImages &&
+      currentPage > 0 &&
+      currentPage <= captureImages.length
+    ) {
+      const captureId = captureImages[currentPage - 1].id;
+      console.log('captureId', captureId);
       if (captureId) {
         fetchCandidateTrees(captureId);
       }
@@ -74,6 +81,7 @@ function CaptureMachineFrame() {
   }, [currentPage, captureImages]);
 
   useEffect(() => {
+    console.log('loading captures');
     async function fetchCaptures() {
       // TODO: handle errors and give user feedback
       setLoading(true);
@@ -82,7 +90,7 @@ function CaptureMachineFrame() {
           // Authorization: session.token,
         },
       }).then((res) => res.json());
-      setCaptureImages(data.captures);
+      setCaptureImages(data);
       setLoading(false);
     }
     fetchCaptures();
@@ -107,7 +115,8 @@ function CaptureMachineFrame() {
   // Same Tree Capture function
   const sameTreeHandler = (treeId) => {
     // TODO: handle errors and give user feedback
-    const captureId = captureImages[currentPage - 1].captureId;
+    const captureId = captureImages[currentPage - 1].id;
+    console.log('captureId treeId', captureId, treeId);
     fetch(`${CAPTURE_API}/${captureId}`, {
       method: 'PATCH',
       headers: {
@@ -137,7 +146,11 @@ function CaptureMachineFrame() {
   }, []);
 
   return (
-    <>
+    <Grid
+      container
+      direction="column"
+      style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
+    >
       <Navbar />
       <Box className={classes.container}>
         <Grid container direction="row">
@@ -154,7 +167,7 @@ function CaptureMachineFrame() {
           />
 
           <Box style={{ width: '50%' }}>
-            <Box p={2} className={classes.candidateIconBox}>
+            <Box className={classes.candidateIconBox}>
               <CurrentCaptureNumber
                 text={`Candidate Match${treesCount !== 1 && 'es'}`}
                 treeIcon={treeIcon}
@@ -162,15 +175,14 @@ function CaptureMachineFrame() {
               />
             </Box>
             <CandidateImages
-              cadidateImgData={cadidateImgData}
+              candidateImgData={candidateImgData}
               sameTreeHandler={sameTreeHandler}
-              captureImages={captureImages}
             />
           </Box>
         </Grid>
       </Box>
-    </>
+    </Grid>
   );
 }
 
-export default CaptureMachineFrame;
+export default CaptureMatchingView;

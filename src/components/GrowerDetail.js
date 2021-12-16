@@ -5,11 +5,18 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Box from '@material-ui/core/Box';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 import Drawer from '@material-ui/core/Drawer';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
+import { LinearProgress } from '@material-ui/core';
+import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
@@ -19,6 +26,10 @@ import { GrowerContext } from '../context/GrowerContext';
 import EditGrower from './EditGrower';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
+import { CopyButton } from './common/CopyButton';
+import CopyNotification from './common/CopyNotification';
+import FilterModel from '../models/Filter';
+import treeTrackerApi from 'api/treeTrackerApi';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -54,6 +65,28 @@ const useStyle = makeStyles((theme) => ({
     position: 'relative',
     height: `${GROWER_IMAGE_SIZE}px`,
   },
+  listCaptures: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  rejectedChip: {
+    backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.red,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  awaitingChip: {
+    backgroundColor: theme.palette.stats.orange.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.orange,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
+  approvedChip: {
+    backgroundColor: theme.palette.stats.green.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.green,
+    fontWeight: 700,
+    fontSize: '0.8em',
+  },
 }));
 
 const GrowerDetail = (props) => {
@@ -66,6 +99,10 @@ const GrowerDetail = (props) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState('');
+  const [verificationStatus, setVerificationStatus] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadGrowerDetail() {
@@ -93,7 +130,13 @@ const GrowerDetail = (props) => {
               setGrowerRegistrations(sortedRegistrations);
               setDeviceIdentifiers(
                 sortedRegistrations
-                  .map((reg) => reg.device_identifier)
+                  .map((reg) => ({
+                    id: reg.device_identifier,
+                    os:
+                      reg.manufacturer.toLowerCase() === 'apple'
+                        ? 'iOS'
+                        : 'Android',
+                  }))
                   .filter((id) => id),
               );
             }
@@ -104,6 +147,39 @@ const GrowerDetail = (props) => {
     loadGrowerDetail();
     // eslint-disable-next-line
   }, [growerId, growerContext.growers]);
+
+  useEffect(() => {
+    async function loadCaptures() {
+      if (growerId) {
+        setLoading(true);
+        const [
+          approvedCount,
+          awaitingCount,
+          rejectedCount,
+        ] = await Promise.all([
+          getCaptureCountGrower(true, true, growerId),
+          getCaptureCountGrower(true, false, growerId),
+          getCaptureCountGrower(false, false, growerId),
+        ]);
+        setVerificationStatus({
+          approved: approvedCount,
+          awaiting: awaitingCount,
+          rejected: rejectedCount,
+        });
+        setLoading(false);
+      }
+    }
+    loadCaptures();
+  }, [growerId]);
+
+  async function getCaptureCountGrower(active, approved, growerId) {
+    let filter = new FilterModel();
+    filter.planterId = growerId?.toString();
+    filter.active = active;
+    filter.approved = approved;
+    const countResponse = await treeTrackerApi.getCaptureCount(filter);
+    return countResponse && countResponse.count ? countResponse.count : 0;
+  }
 
   async function getGrower(payload) {
     const { id } = payload;
@@ -120,6 +196,14 @@ const GrowerDetail = (props) => {
 
   function handleEditClose() {
     setEditDialogOpen(false);
+    setSnackbarOpen(false);
+    setSnackbarLabel('');
+  }
+
+  function confirmCopy(label) {
+    setSnackbarOpen(false);
+    setSnackbarLabel(label);
+    setSnackbarOpen(true);
   }
 
   return (
@@ -188,6 +272,82 @@ const GrowerDetail = (props) => {
             </Grid>
             <Divider />
             <Grid container direction="column" className={classes.box}>
+              <Typography variant="subtitle1">Captures</Typography>
+              {loading ? (
+                <LinearProgress color="primary" />
+              ) : (
+                <List className={classes.listCaptures}>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.approvedChip}>
+                          <Done />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.approved || 0}
+                          </Typography>
+                        }
+                        secondary="Approved"
+                      />
+                    </ListItem>
+                  </Box>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.awaitingChip}>
+                          <HourglassEmptyOutlined />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.awaiting || 0}
+                          </Typography>
+                        }
+                        secondary="Awaiting"
+                      />
+                    </ListItem>
+                  </Box>
+                  <Box
+                    borderColor="grey.300"
+                    borderRadius={10}
+                    border={0.5}
+                    m={0.5}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar className={classes.rejectedChip}>
+                          <Clear />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h5">
+                            {verificationStatus.rejected || 0}
+                          </Typography>
+                        }
+                        secondary="Rejected"
+                      />
+                    </ListItem>
+                  </Box>
+                </List>
+              )}
+            </Grid>
+            <Divider />
+            <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Email address</Typography>
               <Typography variant="body1">{grower.email || '---'}</Typography>
             </Grid>
@@ -247,16 +407,38 @@ const GrowerDetail = (props) => {
               <Typography variant="subtitle1">
                 Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
               </Typography>
-              {(deviceIdentifiers.length &&
-                deviceIdentifiers.map((identifier, index) => (
-                  <Typography variant="body1" key={index}>
-                    {identifier}
-                  </Typography>
-                ))) || <Typography variant="body1">---</Typography>}
+              {(deviceIdentifiers.length && (
+                <table>
+                  <tbody>
+                    {deviceIdentifiers.map((device, i) => (
+                      <tr key={i}>
+                        <td>
+                          <Typography variant="body1">
+                            {device.id}
+                            <CopyButton
+                              label={'Device Identifier'}
+                              value={device.id}
+                              confirmCopy={confirmCopy}
+                            />
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography variant="body1">({device.os})</Typography>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )) || <Typography variant="body1">---</Typography>}
             </Grid>
           </Grid>
         </Grid>
       </Drawer>
+      <CopyNotification
+        snackbarLabel={snackbarLabel}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
       <EditGrower
         isOpen={editDialogOpen}
         grower={grower}

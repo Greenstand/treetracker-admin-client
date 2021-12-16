@@ -7,17 +7,16 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import Close from '@material-ui/icons/Close';
-
-import FileCopy from '@material-ui/icons/FileCopy';
-import CloseIcon from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
+import CopyNotification from './common/CopyNotification';
+import { CopyButton } from './common/CopyButton';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -47,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: '0.8em',
   },
-  copyButton: {
-    margin: theme.spacing(-2, 0),
-  },
   subtitle: {
     ...theme.typography.button,
     fontSize: '0.8em',
@@ -71,6 +67,14 @@ const useStyles = makeStyles((theme) => ({
   box: {
     padding: theme.spacing(4),
   },
+  imageLink: {
+    position: 'absolute',
+    bottom: 0,
+    margin: '0 auto',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#fff',
+  },
 }));
 
 function CaptureDetailDialog(props) {
@@ -89,13 +93,15 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    cdContext.getCaptureDetail(capture.id);
+    cdContext.getCaptureDetail(capture?.id);
+  }, [capture]);
 
+  useEffect(() => {
     window.addEventListener('resize', resizeWindow);
     return () => {
       window.removeEventListener('resize', resizeWindow);
     };
-  }, [capture, resizeWindow]);
+  }, [resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
@@ -132,30 +138,6 @@ function CaptureDetailDialog(props) {
       setSnackbarOpen(true);
     }
 
-    function handleSnackbarClose(event, reason) {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setSnackbarOpen(false);
-    }
-
-    function CopyButton(props) {
-      const { value, label } = props;
-
-      return (
-        <IconButton
-          className={classes.copyButton}
-          title="Copy to clipboard"
-          onClick={() => {
-            navigator.clipboard.writeText(value);
-            confirmCopy(label);
-          }}
-        >
-          <FileCopy fontSize="small" />
-        </IconButton>
-      );
-    }
-
     return (
       <Grid container direction="column">
         <Grid item>
@@ -164,7 +146,11 @@ function CaptureDetailDialog(props) {
               <Box m={4}>
                 <Typography color="primary" variant="h6">
                   Capture <LinkToWebmap value={capture.id} type="tree" />
-                  <CopyButton label="Capture ID" value={capture.id} />
+                  <CopyButton
+                    label="Capture ID"
+                    value={capture.id}
+                    confirmCopy={confirmCopy}
+                  />
                 </Typography>
               </Box>
             </Grid>
@@ -197,17 +183,39 @@ function CaptureDetailDialog(props) {
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
+            {
+              label: 'Original Image URL',
+              value: renderCapture.imageUrl,
+              copy: true,
+              link: true,
+              image: true,
+            },
           ].map((item) => (
             <Grid item key={item.label}>
               <Typography variant="subtitle1">{item.label}</Typography>
               <Typography variant="body1">
                 {item.link ? (
-                  <LinkToWebmap value={item.value} type="user" />
+                  // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
+                  item.image ? (
+                    <Link
+                      href={renderCapture.imageUrl}
+                      underline="always"
+                      target="_blank"
+                    >
+                      Open in new tab
+                    </Link>
+                  ) : (
+                    <LinkToWebmap value={item.value} type="user" />
+                  )
                 ) : (
                   item.value || '---'
                 )}
                 {item.value && item.copy && (
-                  <CopyButton label={item.label} value={item.value} />
+                  <CopyButton
+                    label={item.label}
+                    value={item.value}
+                    confirmCopy={confirmCopy}
+                  />
                 )}
               </Typography>
             </Grid>
@@ -267,28 +275,10 @@ function CaptureDetailDialog(props) {
             {getTokenStatus(capture.tokenId)}
           </Typography>
         </Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          key={snackbarLabel.length ? snackbarLabel : undefined}
-          open={snackbarOpen}
-          autoHideDuration={2000}
-          onClose={handleSnackbarClose}
-          message={`${snackbarLabel} copied to clipboard`}
-          color="primary"
-          action={
-            <>
-              <IconButton
-                size="small"
-                aria-label="close"
-                onClick={handleSnackbarClose}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </>
-          }
+        <CopyNotification
+          snackbarLabel={snackbarLabel}
+          snackbarOpen={snackbarOpen}
+          setSnackbarOpen={setSnackbarOpen}
         />
       </Grid>
     );

@@ -102,11 +102,9 @@ function Filter(props) {
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   useEffect(() => {
-    if (tagSearchString === '') {
-      const abortController = new AbortController();
-      tagsContext.getTags(tagSearchString, { signal: abortController.signal });
-      return () => abortController.abort();
-    }
+		const abortController = new AbortController();
+		tagsContext.getTags(tagSearchString, { signal: abortController.signal });
+		return () => abortController.abort();
   }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
