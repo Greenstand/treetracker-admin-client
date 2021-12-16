@@ -1,16 +1,11 @@
-import {
-  handleResponse,
-  handleError,
-  // getOrganization,
-  getOrganizationId,
-} from './apiUtils';
+import { handleResponse, handleError, getOrganizationId } from './apiUtils';
 import { session } from '../models/auth';
 
 const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 
 export default {
   getStakeholders(id, { offset, rowsPerPage, orderBy, order, filter }) {
-    const orgId = getOrganizationId();
+    const orgId = id || getOrganizationId();
     const filterObj = {
       where: filter,
       order: [`${orderBy} ${order}`],
@@ -41,15 +36,11 @@ export default {
   },
 
   getUnlinkedStakeholders(id, abortController) {
-    const orgId = getOrganizationId();
+    const orgId = id || getOrganizationId();
+    let query = `${STAKEHOLDER_API}/links`;
 
-    let query = '';
-    if (!id && orgId && Number(orgId)) {
+    if (orgId) {
       query = `${STAKEHOLDER_API}/links/${orgId}`;
-    } else if (id) {
-      query = `${STAKEHOLDER_API}/links/${id}`;
-    } else {
-      query = `${STAKEHOLDER_API}/links`;
     }
 
     return fetch(query, {
@@ -65,15 +56,11 @@ export default {
   },
 
   updateLinks(id, stakeholdersData) {
-    const orgId = getOrganizationId();
+    const orgId = id || getOrganizationId();
+    let query = `${STAKEHOLDER_API}/links`;
 
-    let query = '';
-    if (orgId && Number(orgId)) {
+    if (orgId) {
       query = `${STAKEHOLDER_API}/links/${orgId}`;
-    } else if (id) {
-      query = `${STAKEHOLDER_API}/links/${id}`;
-    } else {
-      query = `${STAKEHOLDER_API}/links`;
     }
 
     return fetch(query, {
@@ -88,9 +75,14 @@ export default {
       .catch(handleError);
   },
 
+  // only need the orgId, the id of the stakeholder is in the stakeholderUpdate
   updateStakeholder(stakeholderUpdate) {
     const orgId = getOrganizationId();
-    const query = `${STAKEHOLDER_API}/${orgId}`;
+    let query = `${STAKEHOLDER_API}`;
+
+    if (orgId) {
+      query = `${STAKEHOLDER_API}/${orgId}`;
+    }
 
     return fetch(query, {
       method: 'PATCH',
@@ -105,9 +97,9 @@ export default {
   },
 
   createStakeholder(stakeholderData) {
-    console.log('org ---> ', getOrganizationId());
-    let query = `${STAKEHOLDER_API}`;
+    console.log('create stakeholder');
     const orgId = getOrganizationId();
+    let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
       query = `${STAKEHOLDER_API}/${orgId}`;

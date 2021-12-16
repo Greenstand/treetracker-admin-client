@@ -47,7 +47,8 @@ const initialFilterState = {
   website: null,
   logoUrl: null,
   map: null,
-  stakeholder_uuid: null,
+  organization_id: null,
+  owner_id: null,
 };
 
 export function StakeholdersProvider(props) {
@@ -112,7 +113,7 @@ export function StakeholdersProvider(props) {
     let data;
     // compare both id and uuid while transitioning
     // can remove id comparison when all stakeholders use uuid
-    data = stakeholders.find((p) => p.id === id || p.id === id);
+    data = stakeholders.find((p) => p.id === id);
     if (!data) {
       data = await api.getStakeholders(id, {
         offset: page * rowsPerPage,
@@ -131,22 +132,26 @@ export function StakeholdersProvider(props) {
   };
 
   const updateStakeholder = async (payload) => {
-    await api.updateStakeholder(payload);
-    getStakeholders();
+    const updated = await api.updateStakeholder(payload);
+    console.log('updated', updated);
+    await getStakeholders();
   };
 
   const createStakeholder = async (payload) => {
-    await api.createStakeholder(payload);
-    getStakeholders();
+    const created = await api.createStakeholder(payload);
+    console.log('created', created);
+    await getStakeholders();
   };
 
   const getUnlinkedStakeholders = async (id) => {
-    const unlinked = await api.getUnlinkedStakeholders(id);
-    setUnlinkedStakeholders(unlinked.stakeholders);
+    // const unlinked = await api.getUnlinkedStakeholders(id);
+    // setUnlinkedStakeholders(unlinked.stakeholders);
+    return api.getUnlinkedStakeholders(id);
   };
 
   const updateLinks = async (id, payload) => {
-    await api.updateLinks(id, payload);
+    const updatedLinks = await api.updateLinks(id, payload);
+    console.log('updated link', updatedLinks);
     // getUnlinkedStakeholders();
     getStakeholders();
   };

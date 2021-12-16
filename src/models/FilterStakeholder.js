@@ -60,7 +60,7 @@ export default class FilterStakeholder {
       numFilters += 1;
     }
 
-    if (this.stakeholder_uuid) {
+    if (this.owner_id) {
       numFilters += 1;
     }
 
