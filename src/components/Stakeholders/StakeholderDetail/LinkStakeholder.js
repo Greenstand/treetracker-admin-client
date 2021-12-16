@@ -35,7 +35,9 @@ function LinkStakeholder({ id, type }) {
     StakeholdersContext,
   );
   const [open, setOpen] = useState(false);
-  const [filteredStakeholders, setFilteredStakeholders] = useState(false);
+  const [filteredStakeholders, setFilteredStakeholders] = useState(
+    unlinkedStakeholders,
+  );
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -64,7 +66,7 @@ function LinkStakeholder({ id, type }) {
   };
 
   const closeModal = () => {
-    // setFilteredStakeholders([]);
+    setFilteredStakeholders([]);
     setOpen(false);
   };
 
