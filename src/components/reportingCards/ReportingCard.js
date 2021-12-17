@@ -3,11 +3,11 @@
  */
 import {
   Box,
-  Grid,
+  // Grid,
   Card,
   Modal,
   Typography,
-  Avatar,
+  // Avatar,
   Button,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
@@ -122,7 +122,14 @@ const style = (theme) => ({
 });
 
 function GrowerReportingCard(props) {
-  const { classes, data, text, color, icon, disableSeeMore, moreData } = props;
+  const {
+    classes,
+    data,
+    text,
+    color,
+    icon,
+    disableSeeMore /*, moreData*/,
+  } = props;
   const [open, setOpen] = React.useState(false);
 
   const Icon = icon;

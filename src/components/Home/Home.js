@@ -72,7 +72,9 @@ function Home(props) {
       .add(-1 * timeRange[timeRangeIndex], 'day')
       .format('YYYY-MM-DD'),
   );
-  const [endDate, setEndDate] = React.useState(moment().format('YYYY-MM-DD'));
+  const [endDate /*, setEndDate*/] = React.useState(
+    moment().format('YYYY-MM-DD'),
+  );
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

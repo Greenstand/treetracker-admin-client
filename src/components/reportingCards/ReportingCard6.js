@@ -1,6 +1,5 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
-import log from 'loglevel';
 import useLoadData from './ReportingCard.hook';
 import Icon from '@material-ui/icons/PhotoCamera';
 
