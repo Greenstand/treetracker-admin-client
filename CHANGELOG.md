@@ -1,3 +1,11 @@
+## [1.32.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.0...v1.32.1) (2021-12-17)
+
+
+### Bug Fixes
+
+* run build:staging to use .env.staging in workflow ([345bb29](https://github.com/Greenstand/treetracker-admin-client/commit/345bb29f9ad12077012829961536978b338ee220))
+* set up environment file for staging ([9bcd470](https://github.com/Greenstand/treetracker-admin-client/commit/9bcd470ec0432e1ed16c2587a91a29c8e161fb33))
+
 # [1.32.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.3...v1.32.0) (2021-12-17)
 
 
