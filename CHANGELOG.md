@@ -1,3 +1,16 @@
+# [1.32.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.3...v1.32.0) (2021-12-17)
+
+
+### Bug Fixes
+
+* clean up build warnings ([79afb62](https://github.com/Greenstand/treetracker-admin-client/commit/79afb62858ed96b8285d5fb99b635643d22b4635))
+
+
+### Features
+
+* layout of the reporting ([3a5e4dd](https://github.com/Greenstand/treetracker-admin-client/commit/3a5e4dd66767104ad96fe913299e5b7eea07bd69))
+* the draft of reporting cards ([73158bc](https://github.com/Greenstand/treetracker-admin-client/commit/73158bcf10b6f0581c978c13f6d8b10725765f39))
+
 ## [1.31.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.31.2...v1.31.3) (2021-12-15)
 
 
