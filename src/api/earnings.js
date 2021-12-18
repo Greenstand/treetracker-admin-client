@@ -18,4 +18,21 @@ export default {
 
     return Axios.get(`earnings`, { params, headers }).then((res) => res.data);
   },
+
+  /**
+   * @funtion batchPatchEarnings
+   * @description Batch patch earnings
+   * @param {File} csv file
+   * @returns {Promise}
+   * */
+  async batchPatchEarnings(file) {
+    const headers = {
+      'content-type': 'multipart/form-data',
+      Authorization: session.token,
+    };
+
+    return Axios.patch(`earnings/batch`, file, { headers }).then(
+      (res) => res.data,
+    );
+  },
 };

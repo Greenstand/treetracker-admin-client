@@ -23,6 +23,29 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTable.styles';
 
+function ImportAction() {
+  const classes = useStyles();
+
+  return (
+    <Grid item lg={2}>
+      <Grid container direction="row" justify="flex-end">
+        <input
+          accept="multipart/form-data"
+          className={classes.uploadFileInput}
+          id="file-upload-button"
+          type="file"
+        />
+        <label htmlFor="file-upload-button">
+          <Button variant="text" color="primary" component="span">
+            <PublishIcon />
+            <Typography variant="h6">UPLOAD</Typography>
+          </Button>
+        </label>
+      </Grid>
+    </Grid>
+  );
+}
+
 /**
  * @function
  * @name CustomTableHeader
@@ -78,24 +101,7 @@ function CustomTableHeader(props) {
             </Grid>
           )}
 
-          {actionButtonType === 'upload' && (
-            <Grid item lg={2}>
-              <Grid container direction="row" justify="flex-end">
-                <input
-                  accept="multipart/form-data"
-                  className={classes.uploadFileInput}
-                  id="file-upload-button"
-                  type="file"
-                />
-                <label htmlFor="file-upload-button">
-                  <Button variant="text" color="primary" component="span">
-                    <PublishIcon />
-                    <Typography variant="h6">UPLOAD</Typography>
-                  </Button>
-                </label>
-              </Grid>
-            </Grid>
-          )}
+          {actionButtonType === 'upload' && <ImportAction />}
 
           {/* start Date Range button */}
           <Grid item lg={3}>
