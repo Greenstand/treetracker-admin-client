@@ -31,7 +31,8 @@ const style = (theme) => ({
     backgroundColor: 'white',
     padding: theme.spacing(4, 6),
     minHeight: theme.spacing(74),
-    minWidth: theme.spacing(79),
+    //minWidth: theme.spacing(79),
+    maxWidth: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -118,6 +119,9 @@ const style = (theme) => ({
     minHeight: 600,
     maxHeight: 600,
     overflow: 'auto',
+  },
+  name: {
+    marginRight: theme.spacing(12),
   },
 });
 
