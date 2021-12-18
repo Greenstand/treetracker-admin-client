@@ -26,12 +26,14 @@ export default {
    * @returns {Promise}
    * */
   async batchPatchEarnings(file) {
+    const formData = new FormData();
+    formData.append('csv', file);
     const headers = {
-      'content-type': 'multipart/form-data',
+      accept: 'multipart/form-data',
       Authorization: session.token,
     };
 
-    return Axios.patch(`earnings/batch`, file, { headers }).then(
+    return Axios.patch(`earnings/batch`, formData, { headers }).then(
       (res) => res.data,
     );
   },

@@ -136,6 +136,10 @@ export default function PaymentsTable() {
     setIsLoading(false); // hide loading indicator when data is fetched
   }
 
+  async function handleUploadFile(file) {
+    await earningsAPI.batchPatchEarnings(file);
+  }
+
   useEffect(() => {
     if (filter?.start_date && filter?.end_date) {
       const dateRangeString = generateActiveDateRangeFilterString(
@@ -169,6 +173,7 @@ export default function PaymentsTable() {
       handleGetData={getEarnings}
       setSelectedRow={setSelectedEarning}
       selectedRow={selectedEarning}
+      onSelectFile={handleUploadFile}
       tableMetaData={earningTableMetaData}
       headerTitle="Payments"
       mainFilterComponent={<h1>Payments filter works</h1>}

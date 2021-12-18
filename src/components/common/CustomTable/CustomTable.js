@@ -23,7 +23,22 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTable.styles';
 
-function ImportAction() {
+/**
+ * @function
+ * @name ImportAction
+ * @description component that renders the import action button & import csv file logic
+ * @param {object} props - properties passed to component
+ * @param {function} props.onSelectFile - callback function to be called when file is selected
+ *
+ * @returns {React.Component}
+ * */
+function ImportAction(props) {
+  const { onSelectFile } = props;
+
+  const handleOnSelectFile = (e) => {
+    onSelectFile(e.target.files[0]);
+  };
+
   const classes = useStyles();
 
   return (
@@ -32,6 +47,7 @@ function ImportAction() {
         <input
           accept="multipart/form-data"
           className={classes.uploadFileInput}
+          onChange={handleOnSelectFile}
           id="file-upload-button"
           type="file"
         />
@@ -46,6 +62,14 @@ function ImportAction() {
   );
 }
 
+ImportAction.propTypes = {
+  onSelectFile: PropTypes.func,
+};
+
+ImportAction.defaultProps = {
+  onSelectFile: () => {},
+};
+
 /**
  * @function
  * @name CustomTableHeader
@@ -54,6 +78,7 @@ function ImportAction() {
  * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {function} props.openDateFilter - opens date filter when called
  * @param {function} props.openMainFilter - opens main filter when called
+ * @param {function} props.onSelectFile - callback function to be called when file is selected
  * @param {string} props.headerTitle - title of the table
  * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @param {Array} props.data - data to be exported
@@ -68,6 +93,7 @@ function CustomTableHeader(props) {
     openDateFilter,
     openMainFilter,
     activeDateRage,
+    onSelectFile,
   } = props;
   const classes = useStyles();
 
@@ -101,7 +127,9 @@ function CustomTableHeader(props) {
             </Grid>
           )}
 
-          {actionButtonType === 'upload' && <ImportAction />}
+          {actionButtonType === 'upload' && (
+            <ImportAction onSelectFile={onSelectFile} />
+          )}
 
           {/* start Date Range button */}
           <Grid item lg={3}>
@@ -160,6 +188,7 @@ CustomTableHeader.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
   openMainFilter: PropTypes.func,
+  onSelectFile: PropTypes.func,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRage: PropTypes.string.isRequired,
@@ -169,6 +198,7 @@ CustomTableHeader.propTypes = {
 CustomTableHeader.defaultProps = {
   openDateFilter: () => {},
   openMainFilter: () => {},
+  onSelectFile: () => {},
 };
 
 /**
@@ -183,6 +213,7 @@ CustomTableHeader.defaultProps = {
  * @param {function} props.setPage - sets current page number
  * @param {function} props.setRowsPerPage - sets number of rows per page number
  * @param {function} props.setSortBy - sets sort by field and sort order
+ * @param {function} props.onSelectFile - callback function to be called when file is selected
  * @param {object} props.sortBy - current sort by field and sort order
  * @param {boolean} props.isLoading - shows loading spinner when true
  * @param {Array} props.rows - rows to be displayed in table
@@ -212,6 +243,7 @@ function CustomTable(props) {
     setSortBy,
     isLoading,
     activeDateRage,
+    onSelectFile,
     page,
   } = props;
 
@@ -265,6 +297,7 @@ function CustomTable(props) {
         headerTitle={headerTitle}
         activeDateRage={activeDateRage}
         actionButtonType={actionButtonType}
+        onSelectFile={onSelectFile}
       />
       <TableContainer>
         <Table>
@@ -405,6 +438,7 @@ CustomTable.propTypes = {
   handleGetData: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func.isRequired,
   setPage: PropTypes.func.isRequired,
+  onSelectFile: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
   setRowsPerPage: PropTypes.func.isRequired,
   sortBy: PropTypes.func.isRequired,
@@ -423,4 +457,8 @@ CustomTable.propTypes = {
   activeDateRage: PropTypes.string.isRequired,
   actionButtonType: PropTypes.element.isRequired,
   data: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+
+CustomTable.defaultProps = {
+  onSelectFile: () => {},
 };
