@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
 import earningsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
 import { covertDateStringToHumanReadableFormat } from 'utilities';
