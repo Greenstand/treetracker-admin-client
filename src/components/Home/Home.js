@@ -29,6 +29,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
 import axios from 'axios';
+import log from 'loglevel';
 
 /**
  * @function
@@ -53,7 +54,7 @@ function Home(props) {
   React.useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
-        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`,
       );
       const { data } = res;
       setUpdateTime(data.last_updated_at);
@@ -62,16 +63,12 @@ function Home(props) {
   }, []);
   const timeRange = [
     { range: 30, text: 'Last Month' },
-    { range: 30 * 60, text: 'Last 6 Months' },
-    { range: 356, text: 'Last Year' },
-    { range: 356 * 50, text: 'All' },
+    { range: 30 * 6, text: 'Last 6 Months' },
+    { range: 365, text: 'Last Year' },
+    { range: 365 * 100, text: 'All' },
   ];
-  const [timeRangeIndex, setTimeRangeIndex] = React.useState(0);
-  const [startDate, setStartDate] = React.useState(
-    moment()
-      .add(-1 * timeRange[timeRangeIndex], 'day')
-      .format('YYYY-MM-DD'),
-  );
+  const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
+  const [startDate, setStartDate] = React.useState('1970-01-01');
   const [endDate /*, setEndDate*/] = React.useState(
     moment().format('YYYY-MM-DD'),
   );
@@ -80,7 +77,9 @@ function Home(props) {
   };
 
   const handleTimeClose = (index) => {
+    log.warn("index: ", index);
     setAnchorEl(null);
+    if(isNaN(index)) return;
     setTimeRangeIndex(index);
     setStartDate(
       moment()

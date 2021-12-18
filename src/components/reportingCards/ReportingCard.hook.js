@@ -18,6 +18,8 @@ export default function useLoadData(
       url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics/card`,
       params: {
         card_title: field1,
+        capture_created_start_date: startDate ? startDate : undefined,
+        capture_created_end_date: endDate ? endDate : undefined,
         // TODO optimize when data increases
         limit: 100,
       },
