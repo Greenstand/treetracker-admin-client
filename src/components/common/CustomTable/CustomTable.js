@@ -30,7 +30,7 @@ import useStyles from './CustomTable.styles';
  * @param {object} props - properties passed to component
  * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {function} props.openDateFilter - opens date filter when called
- * @param {function} props.setIsFilterOpen - sets filter open/closed
+ * @param {function} props.openMainFilter - opens main filter when called
  * @param {string} props.headerTitle - title of the table
  * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @param {Array} props.data - data to be exported
@@ -39,15 +39,15 @@ import useStyles from './CustomTable.styles';
  */
 function CustomTableHeader(props) {
   const {
-    setIsFilterOpen,
     actionButtonType,
     headerTitle,
     data,
     openDateFilter,
+    openMainFilter,
     activeDateRage,
   } = props;
   const classes = useStyles();
-  const openFilter = () => setIsFilterOpen(true);
+
   return (
     <Grid container className={classes.customTableTopBar}>
       <Grid item xs={4}>
@@ -133,7 +133,7 @@ function CustomTableHeader(props) {
           <Grid item lg={3} xs={4}>
             <Grid container direction="row" justify="flex-end">
               <Button
-                onClick={openFilter}
+                onClick={openMainFilter}
                 className={classes.filterButton}
                 startIcon={<IconFilter className={classes.iconFilter} />}
               >
@@ -153,6 +153,7 @@ function CustomTableHeader(props) {
 CustomTableHeader.propTypes = {
   setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
+  openMainFilter: PropTypes.func,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRage: PropTypes.string.isRequired,
@@ -161,6 +162,7 @@ CustomTableHeader.propTypes = {
 
 CustomTableHeader.defaultProps = {
   openDateFilter: () => {},
+  openMainFilter: () => {},
 };
 
 /**
@@ -171,6 +173,7 @@ CustomTableHeader.defaultProps = {
  * @param {object} props.filter - filter object for filtering rows
  * @param {function} props.handleGetData - handler function that triggers get data to be displayed in table
  * @param {function} props.openDateFilter - opens date filter
+ * @param {function} props.openMainFilter - opens main filter
  * @param {function} props.setPage - sets current page number
  * @param {function} props.setRowsPerPage - sets number of rows per page number
  * @param {function} props.setSortBy - sets sort by field and sort order
@@ -196,6 +199,7 @@ function CustomTable(props) {
     totalCount,
     rowDetails,
     openDateFilter,
+    openMainFilter,
     setPage,
     setRowsPerPage,
     rowsPerPage,
@@ -250,6 +254,7 @@ function CustomTable(props) {
       <CustomTableHeader
         setIsFilterOpen={setIsFilterOpen}
         openDateFilter={openDateFilter}
+        openMainFilter={openMainFilter}
         data={rows}
         headerTitle={headerTitle}
         activeDateRage={activeDateRage}
@@ -342,42 +347,7 @@ function CustomTable(props) {
       />
 
       {/* start table main filter */}
-      <Drawer
-        anchor="right"
-        BackdropProps={{ invisible: true }}
-        open={isFilterOpen}
-      >
-        <Grid
-          container
-          direction="column"
-          className={classes.customTableFilterForm}
-        >
-          {/* start main filter header */}
-          <Grid item>
-            <Grid container direction="row" justify="space-between">
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignContent="flex-end"
-                  justify="flex-start"
-                >
-                  <Typography variant="h4">Filters</Typography>
-                  <Avatar className={classes.customTableFilterAvatar}>
-                    <Typography variant="h5">1</Typography>
-                  </Avatar>
-                </Grid>
-              </Grid>
-              <CloseIcon
-                onClick={() => setIsFilterOpen(false)}
-                className={classes.customTableFilterCloseIcon}
-              />
-            </Grid>
-          </Grid>
-          {/* end  main filter header */}
-          {mainFilterComponent}
-        </Grid>
-      </Drawer>
+      {mainFilterComponent}
       {/* end table main filter */}
 
       {/* start table date filter */}

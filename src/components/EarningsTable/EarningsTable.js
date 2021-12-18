@@ -14,82 +14,7 @@ import CustomTable from '../common/CustomTable/CustomTable';
 import useStyles from './EarningsTable.styles';
 import { covertDateStringToHumanReadableFormat } from 'utilities';
 import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
-
-/**
- * @function
- * @name EarningsTableFilter
- * @description render filter UI for earnings table
- * @returns {React.Component}
- */
-function EarningsTableFilter() {
-  const classes = useStyles();
-
-  return (
-    <Grid item>
-      <Grid container direction="column" justify="space-between">
-        <FormControl
-          variant="outlined"
-          className={classes.earningsFilterSelectFormControl}
-        >
-          <InputLabel id="demo-simple-select-outlined-label">Funder</InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            label="Funder"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Environment For Africa</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl
-          variant="outlined"
-          className={classes.earningsilterSelectFormControl}
-        >
-          <InputLabel id="demo-simple-select-outlined-label">
-            Payment System
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            label="Payment System"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Visa</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-
-      <Divider style={{ margin: '100px 0 20px 0' }} />
-
-      <Grid
-        container
-        direction="column"
-        className={classes.earningTableFilterActions}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          className={classes.earningTableFilterSubmitButton}
-        >
-          APPLY
-        </Button>
-        <Button
-          color="primary"
-          variant="text"
-          className={classes.earningTableFilterCancelButton}
-        >
-          CANCEL
-        </Button>
-      </Grid>
-    </Grid>
-  );
-}
+import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
 
 /**
  * @function
@@ -375,6 +300,7 @@ export default function EarningsTable() {
   const [earningsPerPage, setEarningsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState(null);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
+  const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
 
@@ -411,6 +337,7 @@ export default function EarningsTable() {
     getEarnings();
   }, [page, earningsPerPage, sortBy, filter]);
 
+  const handleOpenMainFilter = () => setIsMainFilterOpen(true);
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
 
   return (
@@ -426,13 +353,21 @@ export default function EarningsTable() {
       rowsPerPage={earningsPerPage}
       setSortBy={setSortBy}
       totalCount={totalEarnings}
+      openMainFilter={handleOpenMainFilter}
       openDateFilter={handleOpenDateFilter}
       handleGetData={getEarnings}
       setSelectedRow={setSelectedEarning}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
-      mainFilterComponent={<EarningsTableFilter />}
+      mainFilterComponent={
+        <EarningsTableMainFilter
+          isMainFilterOpen={isMainFilterOpen}
+          filter={filter}
+          setFilter={setFilter}
+          setIsMainFilterOpen={setIsMainFilterOpen}
+        />
+      }
       dateFilterComponent={
         <EarningsTableDateFilter
           isDateFilterOpen={isDateFilterOpen}
