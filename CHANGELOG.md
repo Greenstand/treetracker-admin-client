@@ -1,3 +1,12 @@
+## [1.32.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.2...v1.32.3) (2021-12-18)
+
+
+### Bug Fixes
+
+* bug when initial the card ([2866afd](https://github.com/Greenstand/treetracker-admin-client/commit/2866afdaf990f172b445d1e7fe4f6d882fec86cb))
+* bugs in reporting card ([243d498](https://github.com/Greenstand/treetracker-admin-client/commit/243d49894ed7b232e6411a2b1893bebf2fa4aea8))
+* default time range; bug; layout ([970accb](https://github.com/Greenstand/treetracker-admin-client/commit/970accb0ddefc9ad24dc4596900a9bb83ea09f37))
+
 ## [1.32.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.1...v1.32.2) (2021-12-18)
 
 
