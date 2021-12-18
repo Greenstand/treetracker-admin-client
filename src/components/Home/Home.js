@@ -29,6 +29,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
 import axios from 'axios';
+import log from 'loglevel';
 
 /**
  * @function
@@ -62,9 +63,9 @@ function Home(props) {
   }, []);
   const timeRange = [
     { range: 30, text: 'Last Month' },
-    { range: 30 * 60, text: 'Last 6 Months' },
-    { range: 356, text: 'Last Year' },
-    { range: 356 * 50, text: 'All' },
+    { range: 30 * 6, text: 'Last 6 Months' },
+    { range: 365, text: 'Last Year' },
+    { range: 365 * 100, text: 'All' },
   ];
   const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
   const [startDate, setStartDate] = React.useState(
@@ -80,7 +81,9 @@ function Home(props) {
   };
 
   const handleTimeClose = (index) => {
+    log.warn("index: ", index);
     setAnchorEl(null);
+    if(isNaN(index)) return;
     setTimeRangeIndex(index);
     setStartDate(
       moment()
