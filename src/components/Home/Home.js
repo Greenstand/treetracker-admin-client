@@ -68,11 +68,7 @@ function Home(props) {
     { range: 365 * 100, text: 'All' },
   ];
   const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
-  const [startDate, setStartDate] = React.useState(
-    moment()
-      .add(-1 * timeRange[timeRangeIndex], 'day')
-      .format('YYYY-MM-DD'),
-  );
+  const [startDate, setStartDate] = React.useState('1970-01-01');
   const [endDate /*, setEndDate*/] = React.useState(
     moment().format('YYYY-MM-DD'),
   );
