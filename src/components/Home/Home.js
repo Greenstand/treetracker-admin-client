@@ -59,7 +59,11 @@ function Home(props) {
   React.useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
+<<<<<<< HEAD
         `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`
+=======
+        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`,
+>>>>>>> fix: default time range; bug; layout
       );
       const { data } = res;
       setUpdateTime(data.last_updated_at);
