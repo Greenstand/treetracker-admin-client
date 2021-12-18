@@ -1,3 +1,10 @@
+## [1.32.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.1...v1.32.2) (2021-12-18)
+
+
+### Bug Fixes
+
+* fix path to treetracker API in env ([2c06578](https://github.com/Greenstand/treetracker-admin-client/commit/2c06578f462342a4f93e7820e1ba1930670f7c00))
+
 ## [1.32.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.0...v1.32.1) (2021-12-17)
 
 
