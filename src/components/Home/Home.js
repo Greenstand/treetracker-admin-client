@@ -53,7 +53,7 @@ function Home(props) {
   React.useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
-        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`,
       );
       const { data } = res;
       setUpdateTime(data.last_updated_at);
@@ -66,7 +66,7 @@ function Home(props) {
     { range: 356, text: 'Last Year' },
     { range: 356 * 50, text: 'All' },
   ];
-  const [timeRangeIndex, setTimeRangeIndex] = React.useState(0);
+  const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
   const [startDate, setStartDate] = React.useState(
     moment()
       .add(-1 * timeRange[timeRangeIndex], 'day')

@@ -61,6 +61,7 @@ const styles = (theme) => ({
   },
   statCardGrid: {
     padding: 0,
+    flexWrap: 'wrap',
   },
 });
 
