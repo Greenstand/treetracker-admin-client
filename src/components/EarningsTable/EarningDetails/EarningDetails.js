@@ -36,7 +36,7 @@ function LogPaymentForm(props) {
         <Grid container direction="column" justify="space-between">
           <FormControl
             variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
+            className={classes.earningsLogPaymentFormSelectFormControl}
           >
             <TextField
               id="outlined-basic"
@@ -47,7 +47,7 @@ function LogPaymentForm(props) {
 
           <FormControl
             variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
+            className={classes.earningsLogPaymentFormSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
               Payment System

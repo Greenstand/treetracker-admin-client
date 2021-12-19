@@ -12,6 +12,10 @@ const earningDetailsStyles = (theme) => ({
     width: theme.spacing(80),
     padding: theme.spacing(5, 4),
   },
+  earningsLogPaymentFormSelectFormControl: {
+    margin: theme.spacing(2, 0, 2, 0),
+    width: '100%',
+  },
   earningDetailsCloseIcon: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
