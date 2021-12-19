@@ -8,6 +8,15 @@ import { makeStyles } from '@material-ui/core/styles';
  * @returns {object} - styling object
  */
 const earningDetailsStyles = (theme) => ({
+  earningsDrawerDetails: {
+    width: theme.spacing(80),
+    padding: theme.spacing(5, 4),
+  },
+  earningDetailsCloseIcon: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.lightVery,
+  },
   earningDetailsContents: {
     padding: theme.spacing(5, 0, 0, 0),
   },

@@ -20,10 +20,11 @@ import useStyles from './EarningDetails.styles';
  * @description render form to log payment
  * @param {object} props - properties  passed to the component
  * @param {object} props.selectedEarning - earning object
+ * @param {function} props.closeForm - function used to close form
  * @returns {React.Component} - form to log payment
  */
 function LogPaymentForm(props) {
-  const { selectedEarning } = props;
+  const { selectedEarning, closeForm } = props;
   const classes = useStyles();
   return (
     <>
@@ -100,6 +101,7 @@ function LogPaymentForm(props) {
           color="primary"
           variant="text"
           className={classes.earningTableFilterCancelButton}
+          onClick={closeForm}
         >
           CANCEL
         </Button>
@@ -110,6 +112,7 @@ function LogPaymentForm(props) {
 
 LogPaymentForm.propTypes = {
   selectedEarning: PropTypes.object.isRequired,
+  closeForm: PropTypes.func.isRequired,
 };
 
 /**
@@ -137,7 +140,7 @@ function EarningDetails(props) {
       <Grid
         container
         direction="column"
-        className={classes.customTableFilterForm}
+        className={classes.earningsDrawerDetails}
       >
         {/* start  details header */}
         <Grid item>
@@ -154,7 +157,7 @@ function EarningDetails(props) {
             </Grid>
             <CloseIcon
               onClick={closeDetails}
-              className={classes.customTableFilterCloseIcon}
+              className={classes.earningDetailsCloseIcon}
             />
           </Grid>
         </Grid>
@@ -237,7 +240,10 @@ function EarningDetails(props) {
           </Grid>
 
           {showLogPaymentForm && (
-            <LogPaymentForm selectedEarning={selectedEarning} />
+            <LogPaymentForm
+              selectedEarning={selectedEarning}
+              closeForm={closeDetails}
+            />
           )}
         </Grid>
       </Grid>
