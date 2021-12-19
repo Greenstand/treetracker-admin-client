@@ -24,9 +24,6 @@ describe('FilterTop', () => {
           state: {
             tagList: [],
           },
-          effects: {
-            getTags(_payload, _state) {},
-          },
         },
         organizations: {
           state: {

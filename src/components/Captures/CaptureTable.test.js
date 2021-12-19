@@ -12,6 +12,7 @@ import axios from 'axios';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { SpeciesContext } from '../../context/SpeciesContext';
+import { TagsContext } from '../../context/TagsContext';
 import {
   CapturesContext,
   CapturesProvider,
@@ -22,9 +23,10 @@ import FilterModel from '../../models/Filter';
 import * as loglevel from 'loglevel';
 import {
   CAPTURES,
-  SPECIES,
+  CAPTURE_TAGS,
   capturesValues,
   speciesValues,
+  tagsValues,
 } from '../tests/fixtures';
 
 const log = loglevel.getLogger('../models/captures.test');
@@ -35,13 +37,23 @@ describe('Captures', () => {
   let component;
   let data = CAPTURES;
 
+  // mock the treeTrackerApi
+  const captureApi = require('../../api/treeTrackerApi').default;
+
+  captureApi.getCaptureTags = () => {
+    log.debug(`mock getCaptureTags: ${CAPTURE_TAGS}`);
+    return Promise.resolve(CAPTURE_TAGS);
+  };
+
   describe('CapturesTable renders properly', () => {
     beforeEach(async () => {
       component = (
         <ThemeProvider theme={theme}>
           <CapturesContext.Provider value={capturesValues}>
             <SpeciesContext.Provider value={speciesValues}>
-              <CaptureTable />
+              <TagsContext.Provider value={tagsValues}>
+                <CaptureTable />
+              </TagsContext.Provider>
             </SpeciesContext.Provider>
           </CapturesContext.Provider>
         </ThemeProvider>
@@ -72,11 +84,11 @@ describe('Captures', () => {
       expect(arr[1]).toBe('1-4 of 4');
     });
 
-    it('should have 8 headers', () => {
+    it('should have 9 headers', () => {
       const table = screen.getByRole(/table/i);
       const headers = within(table).getAllByRole(/columnheader/i);
       const arr = headers.map((header) => header.textContent);
-      expect(arr).toHaveLength(8);
+      expect(arr).toHaveLength(9);
     });
 
     it('renders headers for captures table', () => {
@@ -96,6 +108,8 @@ describe('Captures', () => {
       item = within(table).getByText(/Species/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Token Status/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Capture Tags/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Created/i);
       expect(item).toBeInTheDocument();
@@ -127,6 +141,8 @@ describe('Captures', () => {
       expect(tokens).toHaveLength(4);
       const device = within(table).getAllByText(/1-abcdef123456/i);
       expect(device).toHaveLength(1);
+      const captureTag = within(table).getAllByText(/tag_c/i);
+      expect(captureTag).toHaveLength(4);
     });
   });
 
@@ -161,6 +177,16 @@ describe('Captures', () => {
     //   .mockReturnValueOnce({ data });
 
     // PASSES TESTS BUT STILL DOESN'T RETURN DATA
+    context.queryCapturesApi = jest.fn(() => {
+      console.log('mock queryCapturesApi');
+      // return Promise.resolve({ data });
+      return axios.get
+        .mockReturnValueOnce({
+          data: { count: data.length },
+        })
+        .mockReturnValueOnce({ data });
+    });
+
     context.queryCapturesApi = jest.fn(() => {
       console.log('mock queryCapturesApi');
       // return Promise.resolve({ data });
