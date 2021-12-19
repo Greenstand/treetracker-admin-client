@@ -103,21 +103,24 @@ const CaptureTable = () => {
 
   useEffect(() => {
     populateSpeciesLookup();
+  }, [speciesContext.speciesList]);
+
+  useEffect(() => {
     populateTagLookup();
-  }, [filter]);
+  }, [tagsContext.tagList]);
 
   useEffect(async () => {
-    console.log(`Captures (${captures.length}): ${JSON.stringify(captures)}`);
-
     // Don't do anything if there are no captures
     if (!captures?.length) {
       return;
     }
 
-    // Get the capture tags for all of the captures
+    // Get the capture tags for all of the displayed captures
     const captureTags = await api.getCaptureTags({
       captureIds: captures.map((c) => c.id),
     });
+
+    // Populate a lookup for quick access when rendering the table
     let lookup = {};
     captureTags.forEach((captureTag) => {
       if (!lookup[captureTag.treeId]) {
@@ -125,7 +128,6 @@ const CaptureTable = () => {
       }
       lookup[captureTag.treeId].push(tagLookup[captureTag.tagId]);
     });
-    console.log(`captureTagLookup: ${JSON.stringify(lookup)}`);
     setCaptureTagLookup(lookup);
   }, [captures, tagLookup]);
 
@@ -142,7 +144,6 @@ const CaptureTable = () => {
     tagsContext.tagList.forEach((t) => {
       tags[t.id] = t.tagName;
     });
-    console.log(`tagLookup: ${JSON.stringify(tags)}`);
     setTagLookup(tags);
   };
 
