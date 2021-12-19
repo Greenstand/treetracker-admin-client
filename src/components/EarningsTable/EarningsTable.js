@@ -61,25 +61,9 @@ const earningTableMetaData = [
  */
 const prepareRows = (rows) =>
   rows.map((row) => {
-    const {
-      id,
-      grower,
-      currency,
-      funder,
-      amount,
-      payment_system,
-      paid_at,
-      calculated_at,
-    } = row;
     return {
-      id,
-      grower,
-      currency,
-      funder,
-      amount,
-      payment_system,
-      paid_at,
-      calculated_at: covertDateStringToHumanReadableFormat(calculated_at),
+      ...row,
+      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
     };
   });
 

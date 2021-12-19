@@ -20,6 +20,24 @@ export default {
   },
 
   /**
+   * @function patchEarning
+   * @description Patch earning from the API
+   *
+   * @param {object} earning - earning to patch
+   * @returns {Promise}
+   */
+  async patchEarning(earning) {
+    const headers = {
+      'content-type': 'application/json',
+      Authorization: session.token,
+    };
+
+    return Axios.patch(`earnings`, earning, { headers }).then(
+      (res) => res.data,
+    );
+  },
+
+  /**
    * @funtion batchPatchEarnings
    * @description Batch patch earnings
    * @param {File} csv file

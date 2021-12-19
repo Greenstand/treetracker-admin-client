@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
+import earningsAPI from 'api/earnings';
 import useStyles from './EarningDetails.styles';
 
 /**
@@ -30,14 +31,14 @@ function LogPaymentForm(props) {
 
   const handleOnInputChange = (e) => {
     e.preventDefault();
-    console.log('handleOnInputChange', e.target.value);
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
   };
 
   const handleOnFormSubmit = () => {
-    console.log('handleOnFormSubmit', payload);
+    const { id, worker_id, amount, currency } = selectedEarning;
+    earningsAPI.patchEarning({ id, worker_id, amount, currency, ...payload });
     closeForm();
   };
 
@@ -54,8 +55,8 @@ function LogPaymentForm(props) {
             className={classes.earningsLogPaymentFormSelectFormControl}
           >
             <TextField
-              id="payment_confimation_id"
-              name="payment_confimation_id"
+              id="payment_confirmation_id"
+              name="payment_confirmation_id"
               label="Payment Confirmation Id"
               variant="outlined"
               onChange={handleOnInputChange}
