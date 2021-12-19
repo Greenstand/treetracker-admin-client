@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import Drawer from '@material-ui/core/Drawer';
@@ -25,7 +25,22 @@ import useStyles from './EarningDetails.styles';
  */
 function LogPaymentForm(props) {
   const { selectedEarning, closeForm } = props;
+  const [payload, setPayload] = useState({});
   const classes = useStyles();
+
+  const handleOnInputChange = (e) => {
+    e.preventDefault();
+    console.log('handleOnInputChange', e.target.value);
+    const { value, name } = e.target;
+    const updatedPayload = { ...payload, [name]: value };
+    setPayload(updatedPayload);
+  };
+
+  const handleOnFormSubmit = () => {
+    console.log('handleOnFormSubmit', payload);
+    closeForm();
+  };
+
   return (
     <>
       <Grid container direction="column" justify="space-around">
@@ -39,9 +54,11 @@ function LogPaymentForm(props) {
             className={classes.earningsLogPaymentFormSelectFormControl}
           >
             <TextField
-              id="outlined-basic"
+              id="payment_confimation_id"
+              name="payment_confimation_id"
               label="Payment Confirmation Id"
               variant="outlined"
+              onChange={handleOnInputChange}
             />
           </FormControl>
 
@@ -54,13 +71,15 @@ function LogPaymentForm(props) {
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
+              id="payment_system"
+              name="payment_system"
               label="Payment System"
+              onChange={handleOnInputChange}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
+              <MenuItem value="visa">Visa</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -93,6 +112,7 @@ function LogPaymentForm(props) {
           variant="contained"
           color="primary"
           disableElevation
+          onClick={handleOnFormSubmit}
           className={classes.earningTableFilterSubmitButton}
         >
           LOG PAYMENT
