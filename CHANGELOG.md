@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.3...v1.33.0) (2021-12-19)
+
+
+### Features
+
+* add capture tags to Captures table ([#237](https://github.com/Greenstand/treetracker-admin-client/issues/237)) ([770e034](https://github.com/Greenstand/treetracker-admin-client/commit/770e03431df05abb59af392ba37503c86c51a6cf))
+
 ## [1.32.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.2...v1.32.3) (2021-12-18)
 
 
