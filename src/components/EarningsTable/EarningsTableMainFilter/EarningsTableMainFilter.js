@@ -71,7 +71,7 @@ function EarningsTableMainFilter(props) {
           <Grid container direction="row" justify="space-between">
             <Grid item>
               <Grid container direction="row">
-                <Typography variant="h6">Filter By Effective Main</Typography>
+                <Typography variant="h6">Filter</Typography>
               </Grid>
             </Grid>
             <CloseIcon
