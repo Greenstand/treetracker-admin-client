@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import earningsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
-import { covertDateStringToHumanReadableFormat } from 'utilities';
+import {
+  covertDateStringToHumanReadableFormat,
+  generateActiveDateRangeFilterString,
+} from 'utilities';
 import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
 import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
 import EarningDetails from './EarningDetails/EarningDetails';
-
-/**
- * @function
- * @name generateActiveDateRangeFilterString
- * @description generate active date rage filter string e.g. 'Oct 1 - Oct 31'
- * @param {string} startDate - start date
- * @param {string} endDate - end date
- *
- * @returns {string} - active date range filter string
- */
-const generateActiveDateRangeFilterString = (startDate, endDate) => {
-  const format = 'mmm d';
-
-  const startDateString = covertDateStringToHumanReadableFormat(
-    startDate,
-    format,
-  );
-  const endDateString = covertDateStringToHumanReadableFormat(endDate, format);
-
-  return `${startDateString} - ${endDateString}`;
-};
 
 /**
  * @constant
@@ -101,7 +83,14 @@ const prepareRows = (rows) =>
     };
   });
 
-export default function EarningsTable() {
+/**
+ * @function
+ * @name EarningsTable
+ * @description renders the earnings table
+ *
+ * @returns {React.Component} - earnings table component
+ * */
+function EarningsTable() {
   // state for earnings table
   const [earnings, setEarnings] = useState([]);
   const [activeDateRageString, setActiveDateRageString] = useState('');
@@ -192,3 +181,5 @@ export default function EarningsTable() {
     />
   );
 }
+
+export default EarningsTable;

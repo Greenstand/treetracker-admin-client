@@ -45,3 +45,24 @@ export const covertDateStringToHumanReadableFormat = (
 
   return dateFormat(date, format);
 };
+
+/**
+ * @function
+ * @name generateActiveDateRangeFilterString
+ * @description generate active date rage filter string e.g. 'Oct 1 - Oct 31'
+ * @param {string} startDate - start date
+ * @param {string} endDate - end date
+ *
+ * @returns {string} - active date range filter string
+ */
+export const generateActiveDateRangeFilterString = (startDate, endDate) => {
+  const format = 'mmm d';
+
+  const startDateString = covertDateStringToHumanReadableFormat(
+    startDate,
+    format,
+  );
+  const endDateString = covertDateStringToHumanReadableFormat(endDate, format);
+
+  return `${startDateString} - ${endDateString}`;
+};
