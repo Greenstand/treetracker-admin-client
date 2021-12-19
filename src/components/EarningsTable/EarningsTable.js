@@ -142,7 +142,6 @@ function EarningsTable() {
 
   return (
     <CustomTable
-      data={earnings}
       setPage={setPage}
       page={page}
       sortBy={sortBy}
@@ -176,7 +175,13 @@ function EarningsTable() {
           setIsDateFilterOpen={setIsDateFilterOpen}
         />
       }
-      rowDetails={<EarningDetails selectedEarning={selectedEarning} />}
+      rowDetails={
+        <EarningDetails
+          selectedEarning={selectedEarning}
+          showLogPaymentForm={true}
+          closeDetails={() => setSelectedEarning(null)}
+        />
+      }
       actionButtonType="export"
     />
   );

@@ -5,7 +5,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import PublishIcon from '@material-ui/icons/Publish';
 import TableBody from '@material-ui/core/TableBody';
-import Drawer from '@material-ui/core/Drawer';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { CSVLink } from 'react-csv';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -15,7 +14,6 @@ import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import IconFilter from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Avatar from '@material-ui/core/Avatar';
@@ -74,7 +72,7 @@ ImportAction.defaultProps = {
  * @function
  * @name CustomTableHeader
  * @description renders custom table top bar which contains table actions(i.e. filter, export, etc)
- * @param {object} props - properties passed to component
+ * @param {Object} props - properties passed to component
  * @param {React.Component} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {function} props.openDateFilter - opens date filter when called
  * @param {function} props.openMainFilter - opens main filter when called
@@ -205,8 +203,11 @@ CustomTableHeader.defaultProps = {
  * @function
  * @name CustomTable
  * @description displays table containing  rows with data
- * @param {object} props - properties passed to component
- * @param {object} props.filter - filter object for filtering rows
+ *
+ * @param {Object} props - properties passed to component
+ * @param {Object} props.sortBy - current sort by field and sort order
+ * @param {Object} props.selectedRow - selected row
+ * @param {Object[]} props.tableMetaData - meta data of the table (carries infomation about table columns etc..)
  * @param {function} props.handleGetData - handler function that triggers get data to be displayed in table
  * @param {function} props.openDateFilter - opens date filter
  * @param {function} props.openMainFilter - opens main filter
@@ -214,12 +215,19 @@ CustomTableHeader.defaultProps = {
  * @param {function} props.setRowsPerPage - sets number of rows per page number
  * @param {function} props.setSortBy - sets sort by field and sort order
  * @param {function} props.onSelectFile - callback function to be called when file is selected
- * @param {object} props.sortBy - current sort by field and sort order
- * @param {boolean} props.isLoading - shows loading spinner when true
- * @param {Array} props.rows - rows to be displayed in table
+ * @param {function} props.setSelectedRow - sets selected/clicked row
  * @param {string} props.headerTitle - title of the table header
- * @param {string} props.headerTitle - title of the table header
+ * @param {string} props.actionButtonType - determines which action button to render(value can either be 'export' or 'upload')
  * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
+ * @param {boolean} props.isLoading - shows loading spinner when true
+ * @param {number} props.page - current page number
+ * @param {number} props.rowsPerPage - current number of rows per page
+ * @param {number} props.totalCount - total number of rows to be displayed
+ * @param {Array} props.rows - rows to be displayed in table
+ * @param {React.Component}  props.rowDetails - row  component to display details of a selected row
+ * @param {React.Component} props.mainFilterComponent - renders main filter component
+ * @param {React.Component} props.dateFilterComponent - renders date filter component
+ *
  * @returns {React.Component} custom table
  */
 function CustomTable(props) {
@@ -394,39 +402,7 @@ function CustomTable(props) {
       {/* end table date filter */}
 
       {/* start table row details */}
-      <Drawer
-        anchor="right"
-        BackdropProps={{ invisible: true }}
-        open={isDetailsDrawerOpen}
-      >
-        <Grid
-          container
-          direction="column"
-          className={classes.customTableFilterForm}
-        >
-          {/* start  details header */}
-          <Grid item>
-            <Grid container direction="row" justify="space-between">
-              <Grid item>
-                <Grid
-                  container
-                  direction="row"
-                  alignContent="flex-end"
-                  justify="flex-start"
-                >
-                  <Typography variant="h4">Details</Typography>
-                </Grid>
-              </Grid>
-              <CloseIcon
-                onClick={() => handleCloseDetails()}
-                className={classes.customTableFilterCloseIcon}
-              />
-            </Grid>
-          </Grid>
-          {/* end detail header */}
-          {rowDetails}
-        </Grid>
-      </Drawer>
+      {rowDetails}
       {/* end table row details */}
     </Grid>
   );
@@ -441,7 +417,7 @@ CustomTable.propTypes = {
   onSelectFile: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
   setRowsPerPage: PropTypes.func.isRequired,
-  sortBy: PropTypes.func.isRequired,
+  sortBy: PropTypes.object.isRequired,
   setSortBy: PropTypes.func.isRequired,
   tableMetaData: PropTypes.arrayOf(
     PropTypes.shape({
@@ -455,10 +431,17 @@ CustomTable.propTypes = {
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRage: PropTypes.string.isRequired,
+  rowDetails: PropTypes.element.isRequired,
   actionButtonType: PropTypes.element.isRequired,
-  data: PropTypes.objectOf(PropTypes.any).isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  totalCount: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  setSelectedRow: PropTypes.func.isRequired,
+  selectedRow: PropTypes.object,
 };
 
 CustomTable.defaultProps = {
   onSelectFile: () => {},
+  selectedRow: null,
 };
