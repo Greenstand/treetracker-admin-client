@@ -20,6 +20,8 @@ const POLICIES = {
   MATCH_CAPTURES: 'match_captures',
   MANAGE_REGIONS: 'manage_regions',
   LIST_REGIONS: 'list_regions',
+  LIST_STAKEHOLDERS: 'list_stakeholders',
+  MANAGE_STAKEHOLDERS: 'manage_stakeholders',
 };
 
 function hasPermission(user, p) {

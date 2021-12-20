@@ -12,7 +12,7 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import CloseIcon from '@material-ui/icons/Close';
 
-import DialogHeader from './Header';
+import StakeholderDialogHeader from './Header';
 import StakeholderGroups from './Groups';
 
 const useStyles = makeStyles({
@@ -100,7 +100,7 @@ export default function StakeholderDetail({ row, columns, child }) {
         </IconButton>
 
         <DialogContent className={`${classes.my} ${classes.noScroll}`}>
-          <DialogHeader data={row} />
+          <StakeholderDialogHeader data={row} />
 
           <Divider className={classes.my} />
 

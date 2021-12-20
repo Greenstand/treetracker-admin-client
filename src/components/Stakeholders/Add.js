@@ -104,7 +104,7 @@ function AddStakeholder() {
               label="Map"
               variant="outlined"
               name="map"
-              placeholder="/map_address"
+              placeholder="map_address"
               onChange={handleChange}
               value={data?.map || ''}
             />

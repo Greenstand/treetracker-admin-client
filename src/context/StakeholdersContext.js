@@ -13,7 +13,7 @@ export const StakeholdersContext = createContext({
   display: [],
   columns: [],
   page: 0,
-  rowsPerPage: 1,
+  rowsPerPage: 5,
   filter: new FilterStakeholder(),
   initialFilterState: {},
   orderBy: undefined,
@@ -54,7 +54,7 @@ export function StakeholdersProvider(props) {
   const [stakeholders, setStakeholders] = useState([]);
   const [unlinkedStakeholders, setUnlinkedStakeholders] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(undefined);
   const [filter, setFilter] = useState(

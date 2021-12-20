@@ -11,36 +11,23 @@ const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 export default {
   getStakeholders(id, { offset, rowsPerPage, orderBy, order, filter }) {
     const orgId = getOrganizationId();
-    const where = filter.getWhereObj();
-    const lbFilter = {
-      where,
+    const filterObj = {
+      where: filter,
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       offset,
-      fields: {
-        id: true,
-        type: true,
-        orgName: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        website: true,
-        logoUrl: true,
-        imageUrl: true,
-        map: true,
-        stakeholder_uuid: true,
-      },
     };
 
     let query = '';
     if (!id && orgId && Number(orgId)) {
-      query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(lbFilter)}`;
+      query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
     } else if (id) {
-      query = `${STAKEHOLDER_API}/${id}?filter=${JSON.stringify(lbFilter)}`;
+      query = `${STAKEHOLDER_API}/${id}?filter=${JSON.stringify(filterObj)}`;
     } else {
-      query = `${STAKEHOLDER_API}?filter=${JSON.stringify(lbFilter)}`;
+      query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
     }
+
+    console.log('query', query);
 
     return fetch(query, {
       method: 'GET',
