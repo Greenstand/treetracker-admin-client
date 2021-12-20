@@ -44,6 +44,7 @@ const earningTableMetaData = [
     sortable: false,
     showInfoIcon: true,
   },
+
   {
     description: 'Payment Date',
     name: 'paid_at',
@@ -63,6 +64,14 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      consolidation_period_start: covertDateStringToHumanReadableFormat(
+        row.consolidation_period_start,
+        'mmm d, yyyy',
+      ),
+      consolidation_period_end: covertDateStringToHumanReadableFormat(
+        row.consolidation_period_end,
+        'mmm d, yyyy',
+      ),
       calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
     };
   });
