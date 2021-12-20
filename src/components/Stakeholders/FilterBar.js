@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Filter from './Filter';
+import StakeholderFilter from './Filter';
 import Add from './Add';
 
 const useStyles = makeStyles({
@@ -17,13 +17,13 @@ const useStyles = makeStyles({
   },
 });
 
-export default function FilterBar() {
+export default function StakeholderFilterBar() {
   const classes = useStyles();
 
   return (
     <div className={`${classes.flex} ${classes.spaceBetween} ${classes.my}`}>
       <div>
-        <Filter />
+        <StakeholderFilter />
       </div>
       <div className={classes.flex}>
         <Add />

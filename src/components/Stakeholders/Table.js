@@ -81,7 +81,7 @@ function StakeholderTable() {
         <TablePagination
           component="div"
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[1, 2, 5]}
+          rowsPerPageOptions={[5, 10, 20]}
           onChangeRowsPerPage={handleRowsPerPageChange}
           count={stakeholders.length}
           page={page}
