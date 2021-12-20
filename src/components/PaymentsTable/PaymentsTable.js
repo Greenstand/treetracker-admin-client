@@ -176,7 +176,6 @@ function PaymentsTable() {
       rowDetails={
         <PaymentDetails
           selectedPayment={selectedPayment}
-          showLogPaymentForm={true}
           closeDetails={() => setSelectedPayment(null)}
         />
       }
