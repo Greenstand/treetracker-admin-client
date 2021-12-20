@@ -125,7 +125,12 @@ function getRoutes(user) {
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
           POLICIES.APPROVE_TREE,
-        ]),
+          POLICIES.LIST_STAKEHOLDERS,
+          POLICIES.MANAGE_STAKEHOLDERS,
+          // Need APPROVE_TREE and to remove lines 132 & 133 until new policies implemented
+        ]) ||
+        !user ||
+        user.policy.organization !== undefined,
     },
     {
       name: 'Settings',

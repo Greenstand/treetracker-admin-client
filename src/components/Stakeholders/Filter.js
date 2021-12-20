@@ -35,7 +35,7 @@ const useStyles = makeStyles({
   },
 });
 
-function Filter() {
+function StakeholderFilter() {
   const classes = useStyles();
   const { orgList, userHasOrg } = useContext(AppContext);
 
@@ -248,4 +248,4 @@ function Filter() {
   );
 }
 
-export default Filter;
+export default StakeholderFilter;

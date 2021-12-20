@@ -12,6 +12,8 @@ const POLICIES = {
   APPROVE_TREE: 'approve_tree',
   LIST_GROWER: 'list_planter',
   MANAGE_GROWER: 'manage_planter',
+  LIST_STAKEHOLDERS: 'list_stakeholders',
+  MANAGE_STAKEHOLDERS: 'manage_stakeholders',
 };
 
 function hasPermission(user, p) {
