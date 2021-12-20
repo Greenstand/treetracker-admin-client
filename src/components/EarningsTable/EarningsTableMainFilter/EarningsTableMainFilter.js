@@ -34,8 +34,9 @@ function EarningsTableMainFilter(props) {
 
   const handleOnFormControlChange = (e) => {
     e.preventDefault();
-    const { id, value } = e.target;
-    const updatedFilter = { ...mainFilter, [id]: value };
+    const { name, value } = e.target;
+    const updatedFilter = { ...mainFilter, [name]: value };
+    console.log(updatedFilter);
     setMainFilter(updatedFilter);
   };
 
@@ -93,13 +94,15 @@ function EarningsTableMainFilter(props) {
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
+              id="payment_system"
+              name="payment_system"
               label="Payment System"
+              onChange={handleOnFormControlChange}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
+              <MenuItem value="visa">Visa</MenuItem>
             </Select>
           </FormControl>
 
@@ -113,6 +116,7 @@ function EarningsTableMainFilter(props) {
 
             <TextField
               id="phone"
+              name="phone"
               value={mainFilter?.phone}
               type="text"
               onChange={handleOnFormControlChange}
@@ -128,6 +132,7 @@ function EarningsTableMainFilter(props) {
           >
             <TextField
               id="grower"
+              name="grower"
               label="Grower Name"
               value={mainFilter?.grower}
               onChange={handleOnFormControlChange}

@@ -17,12 +17,12 @@ import useStyles from './PaymentsTableMainFilter.styles';
 /**
  * @function
  * @name PaymentsTableFilter
- * @description render date filter UI for earnings table
+ * @description render date filter UI for payments table
  * @param {object} props
  * @param {function} props.setIsMainFilterOpen - toggle open date filter
  * @param {function} props.setFilter - set date filter
- * @param {function} props.triggerGetPayments - trigger get earnings api
- * @param {object} props.filter - earnings filter object
+ * @param {function} props.triggerGetPayments - trigger get payments api
+ * @param {object} props.filter - payments filter object
  * @param {boolean} props.isMainFilterOpen - flag determining if date filter is open/closed
  * @returns {React.Component}
  */
@@ -34,8 +34,8 @@ function PaymentsTableMainFilter(props) {
 
   const handleOnFormControlChange = (e) => {
     e.preventDefault();
-    const { id, value } = e.target;
-    const updatedFilter = { ...mainFilter, [id]: value };
+    const { name, value } = e.target;
+    const updatedFilter = { ...mainFilter, [name]: value };
     setMainFilter(updatedFilter);
   };
 
@@ -64,7 +64,7 @@ function PaymentsTableMainFilter(props) {
       <Grid
         container
         direction="column"
-        className={classes.earningsTableFilterForm}
+        className={classes.paymentsTableFilterForm}
       >
         {/* start date filter header */}
         <Grid item className={classes.dateFilterHeader}>
@@ -76,7 +76,7 @@ function PaymentsTableMainFilter(props) {
             </Grid>
             <CloseIcon
               onClick={() => setIsMainFilterOpen(false)}
-              className={classes.earningsTableFilterCloseIcon}
+              className={classes.paymentsTableFilterCloseIcon}
             />
           </Grid>
         </Grid>
@@ -86,26 +86,28 @@ function PaymentsTableMainFilter(props) {
         <form onSubmit={handleOnFilterFormSubmit}>
           <FormControl
             variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
+            className={classes.paymentsFilterSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
               Payment System
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
+              id="payment_system"
+              name="payment_system"
               label="Payment System"
+              onChange={handleOnFormControlChange}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Visa</MenuItem>
+              <MenuItem value="visa">Visa</MenuItem>
             </Select>
           </FormControl>
 
           <FormControl
             variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
+            className={classes.paymentsFilterSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
               Grower Phone Number
@@ -113,6 +115,7 @@ function PaymentsTableMainFilter(props) {
 
             <TextField
               id="phone"
+              name="phone"
               value={mainFilter?.phone}
               type="text"
               onChange={handleOnFormControlChange}
@@ -124,10 +127,11 @@ function PaymentsTableMainFilter(props) {
 
           <FormControl
             variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
+            className={classes.paymentsFilterSelectFormControl}
           >
             <TextField
               id="grower"
+              name="grower"
               label="Grower Name"
               value={mainFilter?.grower}
               onChange={handleOnFormControlChange}
@@ -145,14 +149,14 @@ function PaymentsTableMainFilter(props) {
           <Grid
             container
             direction="column"
-            className={classes.earningTableFilterActions}
+            className={classes.paymentTableFilterActions}
           >
             <Button
               variant="contained"
               color="primary"
               type="submit"
               disableElevation
-              className={classes.earningTableFilterSubmitButton}
+              className={classes.paymentTableFilterSubmitButton}
             >
               APPLY
             </Button>
@@ -160,7 +164,7 @@ function PaymentsTableMainFilter(props) {
               color="primary"
               variant="text"
               onClick={handleOnFilterFormCancel}
-              className={classes.earningTableFilterCancelButton}
+              className={classes.paymentTableFilterCancelButton}
             >
               CANCEL
             </Button>
