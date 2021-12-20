@@ -257,8 +257,6 @@ function CustomTable(props) {
 
   // managing custom table  state
   const classes = useStyles();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = useState(false);
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
 
   const handleChangePage = (event, newPage) => {
@@ -272,12 +270,6 @@ function CustomTable(props) {
 
   const handleOpenRowDetails = (row) => {
     setSelectedRow(row);
-    setIsDetailsDrawerOpen(true);
-  };
-
-  const handleCloseDetails = () => {
-    setIsDetailsDrawerOpen(false);
-    setSelectedRow(null);
   };
 
   const handleSortableColumns = (column) => {
@@ -298,7 +290,6 @@ function CustomTable(props) {
   return (
     <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
-        setIsFilterOpen={setIsFilterOpen}
         openDateFilter={openDateFilter}
         openMainFilter={openMainFilter}
         data={rows}

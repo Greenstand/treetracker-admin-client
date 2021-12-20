@@ -44,7 +44,10 @@ function PaymentsTableDateFilter(props) {
   const handleOnFilterFormCancel = (e) => {
     e.preventDefault();
     if (Object.keys(dateFilter).length !== 0) {
-      const { start_date, end_date, ...withoutDateFilter } = filter;
+      const withoutDateFilter = Object.assign({}, filter);
+      delete withoutDateFilter.start_date;
+      delete withoutDateFilter.end_date;
+
       setFilter(withoutDateFilter);
       setDateFilter({});
     }

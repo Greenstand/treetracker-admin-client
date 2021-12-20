@@ -48,7 +48,10 @@ function PaymentsTableMainFilter(props) {
   const handleOnFilterFormCancel = (e) => {
     e.preventDefault();
     if (Object.keys(mainFilter).length !== 0) {
-      const { phone, grower, ...withoutMainFilter } = filter;
+      const withoutMainFilter = Object.assign({}, filter);
+      delete withoutMainFilter.payment_system;
+      delete withoutMainFilter.grower;
+      delete withoutMainFilter.phone;
       setFilter(withoutMainFilter);
       setMainFilter({});
     }

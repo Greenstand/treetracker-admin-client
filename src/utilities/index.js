@@ -1,5 +1,4 @@
-import dateFormat, { masks } from 'dateformat';
-const now = new Date();
+import dateFormat from 'dateformat';
 
 /**
  * @function
