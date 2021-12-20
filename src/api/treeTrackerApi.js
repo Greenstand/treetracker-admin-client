@@ -1,6 +1,28 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+const CAPTURE_FIELDS = {
+  uuid: true,
+  imageUrl: true,
+  lat: true,
+  lon: true,
+  id: true,
+  timeCreated: true,
+  timeUpdated: true,
+  active: true,
+  approved: true,
+  planterId: true,
+  deviceIdentifier: true,
+  planterIdentifier: true,
+  speciesId: true,
+  tokenId: true,
+  morphology: true,
+  age: true,
+  captureApprovalTag: true,
+  rejectionReason: true,
+  note: true,
+};
+
 export default {
   getCaptureImages(
     {
@@ -20,20 +42,7 @@ export default {
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip,
-      fields: {
-        uuid: true,
-        imageUrl: true,
-        lat: true,
-        lon: true,
-        id: true,
-        timeCreated: true,
-        timeUpdated: true,
-        active: true,
-        approved: true,
-        planterId: true,
-        deviceIdentifier: true,
-        planterIdentifier: true,
-      },
+      fields: CAPTURE_FIELDS,
     };
 
     const query = `${
@@ -271,10 +280,8 @@ export default {
   /*
    * get tag list
    */
-  getTags(filter, abortController) {
-    const filterString =
-      `filter[limit]=25&` +
-      (filter ? `filter[where][tagName][ilike]=${filter}%` : '');
+  getTags(abortController) {
+    const filterString = `filter[order]=tagName`;
     const query = `${process.env.REACT_APP_API_ROOT}/api/tags?${filterString}`;
     return fetch(query, {
       method: 'GET',
@@ -346,10 +353,20 @@ export default {
   /*
    * get tags for a given tree
    */
-  getCaptureTags({ captureId, tagId }) {
-    const filterString =
-      (captureId ? `filter[where][treeId]=${captureId}` : '') +
-      (tagId ? `&filter[where][tagId]=${tagId}` : '');
+  getCaptureTags({ captureIds, tagIds }) {
+    const useAnd = captureIds && tagIds;
+    const captureIdClauses = (captureIds || []).map(
+      (id, index) =>
+        `filter[where]${useAnd ? '[and][0]' : ''}[or][${index}][treeId]=${id}`,
+    );
+    const tagIdClauses = (tagIds || []).map(
+      (id, index) =>
+        `filter[where][and]${
+          useAnd ? '[and][1]' : ''
+        }[or][${index}][tagId]=${id}`,
+    );
+
+    const filterString = [...captureIdClauses, ...tagIdClauses].join('&');
     const query = `${process.env.REACT_APP_API_ROOT}/api/tree_tags?${filterString}`;
     return fetch(query, {
       method: 'GET',

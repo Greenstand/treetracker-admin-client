@@ -1,5 +1,4 @@
-import React, { useState, createContext } from 'react';
-import * as _ from 'lodash';
+import React, { useState, createContext, useEffect } from 'react';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
@@ -8,7 +7,7 @@ const log = loglevel.getLogger('../context/TagsContext');
 export const TagsContext = createContext({
   tagList: [],
   tagInput: [],
-  getTags: () => {},
+  loadTags: () => {},
   createTags: () => {},
   setTagInput: () => {},
 });
@@ -17,21 +16,17 @@ export function TagsProvider(props) {
   const [tagList, setTagList] = useState([]);
   const [tagInput, setTagInput] = useState([]);
 
-  // STATE HELPER FUNCTIONS
-
-  const appendToTagList = (tags) => {
-    const sortedTagList = _.unionBy(tagList, tags, 'id').sort((a, b) =>
-      a.tagName.localeCompare(b.tagName),
-    );
-    setTagList(sortedTagList);
-  };
+  useEffect(() => {
+    const abortController = new AbortController();
+    loadTags({ signal: abortController.signal });
+    return () => abortController.abort();
+  }, []);
 
   // EVENT HANDLERS
-
-  const getTags = async (filter, abortController) => {
-    const newTags = await api.getTags(filter, abortController);
-    log.debug('load (more) tags from api:', newTags.length);
-    appendToTagList(newTags);
+  const loadTags = async () => {
+    const tags = await api.getTags();
+    log.debug('load tags from api:', tags.length);
+    setTagList(tags);
   };
   /*
    * check for new tags in tagInput and add them to the database
@@ -41,13 +36,13 @@ export function TagsProvider(props) {
       return api.createTag(t);
     });
 
-    return Promise.all(savedTags);
+    return Promise.all(savedTags).then(loadTags);
   };
 
   const value = {
     tagList,
     tagInput,
-    getTags,
+    loadTags,
     createTags,
     setTagInput,
   };

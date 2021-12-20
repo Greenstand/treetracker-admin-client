@@ -38,13 +38,6 @@ const CAPTURES = [
     morphology: 'seedling',
     age: 'new_tree',
     captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
   },
   {
     id: 110,
@@ -60,13 +53,6 @@ const CAPTURES = [
     morphology: 'seedling',
     age: 'new_tree',
     captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
   },
   {
     id: 120,
@@ -82,13 +68,6 @@ const CAPTURES = [
     morphology: 'seedling',
     age: 'new_tree',
     captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
   },
   {
     id: 101,
@@ -104,13 +83,29 @@ const CAPTURES = [
     morphology: 'seedling',
     age: 'new_tree',
     captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
+  },
+];
+
+const CAPTURE_TAGS = [
+  {
+    id: 1,
+    treeId: 100,
+    tagId: 3,
+  },
+  {
+    id: 1,
+    treeId: 110,
+    tagId: 3,
+  },
+  {
+    id: 1,
+    treeId: 120,
+    tagId: 3,
+  },
+  {
+    id: 1,
+    treeId: 101,
+    tagId: 3,
   },
 ];
 
@@ -183,13 +178,19 @@ const TAG = {
 const TAGS = [
   {
     id: 0,
-    tagName: 'tag_b',
+    tagName: 'tag_a',
     public: true,
     active: true,
   },
   {
     id: 1,
-    tagName: 'tag_a',
+    tagName: 'tag_b',
+    public: true,
+    active: true,
+  },
+  {
+    id: 3,
+    tagName: 'tag_c',
     public: true,
     active: true,
   },
@@ -276,7 +277,7 @@ const verifyValues = {
 const tagsValues = {
   tagList: TAGS,
   tagInput: [],
-  getTags: () => {},
+  loadTags: () => {},
   createTags: () => {},
   setTagInput: () => {},
 };
@@ -298,6 +299,7 @@ const speciesValues = {
 module.exports = {
   CAPTURE,
   CAPTURES,
+  CAPTURE_TAGS,
   GROWER,
   GROWERS,
   ORGS,
