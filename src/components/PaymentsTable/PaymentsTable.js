@@ -121,6 +121,10 @@ function PaymentsTable() {
     setIsLoading(false); // hide loading indicator when data is fetched
   }
 
+  const uploadCsvFile = (file) => {
+    paymentsAPI.batchPatchEarnings(file);
+  };
+
   const handleOpenMainFilter = () => setIsMainFilterOpen(true);
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
 
@@ -145,6 +149,7 @@ function PaymentsTable() {
       sortBy={sortBy}
       rows={payments}
       isLoading={isLoading}
+      onSelectFile={uploadCsvFile}
       activeDateRage={activeDateRageString}
       setRowsPerPage={setPaymentsPerPage}
       rowsPerPage={paymentsPerPage}
