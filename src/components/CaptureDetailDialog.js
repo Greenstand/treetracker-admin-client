@@ -93,13 +93,15 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    cdContext.getCaptureDetail(capture.id);
+    cdContext.getCaptureDetail(capture?.id);
+  }, [capture]);
 
+  useEffect(() => {
     window.addEventListener('resize', resizeWindow);
     return () => {
       window.removeEventListener('resize', resizeWindow);
     };
-  }, [capture, resizeWindow]);
+  }, [resizeWindow]);
 
   /*
    * Render the most complete capture detail we have

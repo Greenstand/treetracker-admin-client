@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import ChipInput from 'material-ui-chip-input';
 import Autosuggest from 'react-autosuggest';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import * as _ from 'lodash';
 import { TagsContext } from '../context/TagsContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -67,21 +66,12 @@ function getSuggestionValue(suggestion) {
   return suggestion.tagName;
 }
 
-// This is needed to pass the same function to debounce() each time
-const debounceCallback = ({ value, callback }) => {
-  return callback && callback(value);
-};
-
 const CaptureTags = (props) => {
   // console.log('render: capture tags');
   const classes = useStyles(props);
   const tagsContext = useContext(TagsContext);
   const [textFieldInput, setTextFieldInput] = useState('');
   const [error, setError] = useState(false);
-  const debouncedInputHandler = useCallback(
-    _.debounce(debounceCallback, 250),
-    [],
-  );
   const TAG_PATTERN = '^\\w*$';
 
   function renderInput(inputProps) {
@@ -113,34 +103,20 @@ const CaptureTags = (props) => {
 
   const isValidTagString = (value) => RegExp(TAG_PATTERN).test(value);
 
-  let handleSuggestionsFetchRequested = ({ value }) => {
-    debouncedInputHandler({
-      value,
-      callback: (val) => {
-        if (isValidTagString(val)) {
-          return tagsContext.getTags(val);
-        }
-        return null;
-      },
-    });
-  };
-
-  let handleSuggestionsClearRequested = () => {};
-
-  let handletextFieldInputChange = (event, { newValue }) => {
+  const handletextFieldInputChange = (event, { newValue }) => {
     setTextFieldInput(newValue);
     setError(!isValidTagString(newValue));
   };
 
-  let handleBeforeAddChip = () => {
+  const handleBeforeAddChip = () => {
     return !error;
   };
 
-  let handleAddChip = (chip) => {
+  const handleAddChip = (chip) => {
     tagsContext.setTagInput(tagsContext.tagInput.concat([chip]));
   };
 
-  let handleDeleteChip = (_chip, index) => {
+  const handleDeleteChip = (_chip, index) => {
     const temp = tagsContext.tagInput;
     temp.splice(index, 1);
     tagsContext.setTagInput(temp);
@@ -164,8 +140,8 @@ const CaptureTags = (props) => {
           !tagsContext.tagInput.find((i) => i.toLowerCase() === tagName)
         );
       })}
-      onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
-      onSuggestionsClearRequested={handleSuggestionsClearRequested}
+      onSuggestionsFetchRequested={() => {}}
+      onSuggestionsClearRequested={() => {}}
       renderSuggestionsContainer={renderSuggestionsContainer}
       getSuggestionValue={getSuggestionValue}
       renderSuggestion={renderSuggestion}

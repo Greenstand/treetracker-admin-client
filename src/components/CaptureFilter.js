@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -100,12 +100,6 @@ function Filter(props) {
     filter.organizationId || ALL_ORGANIZATIONS,
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-
-  useEffect(() => {
-		const abortController = new AbortController();
-		tagsContext.getTags(tagSearchString, { signal: abortController.signal });
-		return () => abortController.abort();
-  }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -360,7 +354,11 @@ function Filter(props) {
                   //   active: true,
                   //   public: true,
                   // },
-                  ...tagsContext.tagList,
+                  ...tagsContext.tagList.filter((t) =>
+                    t.tagName
+                      .toLowerCase()
+                      .startsWith(tagSearchString.toLowerCase()),
+                  ),
                 ]}
                 value={tag}
                 defaultValue={'Not set'}

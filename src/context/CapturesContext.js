@@ -124,6 +124,10 @@ export function CapturesProvider(props) {
         deviceIdentifier: true,
         speciesId: true,
         tokenId: true,
+        age: true,
+        morphology: true,
+        captureApprovalTag: true,
+        rejectionReason: true,
       },
     };
 
@@ -156,6 +160,10 @@ export function CapturesProvider(props) {
         deviceIdentifier: true,
         speciesId: true,
         tokenId: true,
+        age: true,
+        morphology: true,
+        captureApprovalTag: true,
+        rejectionReason: true,
       },
     };
 
