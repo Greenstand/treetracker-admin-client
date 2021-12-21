@@ -101,10 +101,6 @@ const CaptureTable = () => {
   const [captureTagLookup, setCaptureTagLookup] = useState({});
   const [isOpenExport, setOpenExport] = useState(false);
   const classes = useStyle();
-  const [captureDetail, setCaptureDetail] = useState({
-    isOpen: false,
-    capture: {},
-  });
 
   useEffect(() => {
     populateSpeciesLookup();
@@ -155,10 +151,6 @@ const CaptureTable = () => {
   const toggleDrawer = (id) => {
     getCaptureAsync(id);
     setIsDetailsPaneOpen(!isDetailsPaneOpen);
-    setCaptureDetail({
-      isOpen: true,
-      capture: capture,
-    });
   };
 
   const createToggleDrawerHandler = (id) => {
@@ -169,10 +161,6 @@ const CaptureTable = () => {
 
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
-    setCaptureDetail({
-      isOpen: false,
-      capture: {},
-    });
     setCapture({});
   };
 
@@ -288,7 +276,7 @@ const CaptureTable = () => {
       {tablePagination()}
       <CaptureDetailProvider>
         <CaptureDetailDialog
-          open={captureDetail.isOpen}
+          open={isDetailsPaneOpen}
           capture={capture}
           onClose={closeDrawer}
         />
