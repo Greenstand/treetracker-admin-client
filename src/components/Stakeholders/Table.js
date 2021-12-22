@@ -16,6 +16,7 @@ import { StakeholdersContext } from '../../context/StakeholdersContext';
 function StakeholderTable() {
   const {
     stakeholders,
+    count,
     columns,
     page,
     rowsPerPage,
@@ -61,21 +62,22 @@ function StakeholderTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stakeholders.map((stakeholder) => (
-              <React.Fragment key={stakeholder.id}>
-                {/* Main stakeholder */}
-                <StakeholderDetail row={stakeholder} columns={columns} />
-                {stakeholder.children &&
-                  stakeholder.children.map((child) => (
-                    <StakeholderDetail
-                      key={child.id}
-                      row={child}
-                      columns={columns}
-                      child
-                    />
-                  ))}
-              </React.Fragment>
-            ))}
+            {stakeholders &&
+              stakeholders.map((stakeholder) => (
+                <React.Fragment key={stakeholder.id}>
+                  {/* Main stakeholder */}
+                  <StakeholderDetail row={stakeholder} columns={columns} />
+                  {stakeholder.children &&
+                    stakeholder.children.map((child) => (
+                      <StakeholderDetail
+                        key={child.id}
+                        row={child}
+                        columns={columns}
+                        child
+                      />
+                    ))}
+                </React.Fragment>
+              ))}
           </TableBody>
         </Table>
         <TablePagination
@@ -83,7 +85,7 @@ function StakeholderTable() {
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[5, 10, 20]}
           onChangeRowsPerPage={handleRowsPerPageChange}
-          count={stakeholders.length}
+          count={count}
           page={page}
           onChangePage={handlePageChange}
         />

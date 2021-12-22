@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderList({ id, data, type, linked }) {
+function StakeholderList({ id, data, type, linked, onLinkUpdate }) {
   const classes = useStyles();
   const [isLinked, setIsLinked] = useState(linked);
   const { updateLinks } = useContext(StakeholdersContext);
@@ -27,6 +27,9 @@ function StakeholderList({ id, data, type, linked }) {
       type,
       linked: !linked,
       data: data,
+    }).then(() => {
+      // only when linking to remove item from the list
+      onLinkUpdate && onLinkUpdate(data.id);
     });
   };
 
