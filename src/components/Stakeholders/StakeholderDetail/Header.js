@@ -56,7 +56,7 @@ export default function StakeholderDialogHeader({ data }) {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setDetails({});
+    setDetails({ ...data });
   };
 
   const handleSave = () => {

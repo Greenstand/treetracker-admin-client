@@ -13,13 +13,10 @@ export default {
       offset,
     };
 
-    let query = '';
-    if (!id && orgId && Number(orgId)) {
+    let query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
+
+    if (orgId) {
       query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
-    } else if (id) {
-      query = `${STAKEHOLDER_API}/${id}?filter=${JSON.stringify(filterObj)}`;
-    } else {
-      query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
     }
 
     console.log('query', query);
@@ -36,11 +33,20 @@ export default {
   },
 
   getUnlinkedStakeholders(id, abortController) {
-    const orgId = id || getOrganizationId();
+    const orgId = getOrganizationId();
     let query = `${STAKEHOLDER_API}/links`;
 
-    if (orgId) {
-      query = `${STAKEHOLDER_API}/links/${orgId}`;
+    // if (orgId) {
+    //   query = `${STAKEHOLDER_API}/links/${orgId}`;
+    // }
+
+    if (id && orgId && orgId !== id) {
+      // pass both ids of the login org and the current stakeholder being viewed
+      query = `${STAKEHOLDER_API}/links/${id}/${orgId}`;
+    } else if (id || orgId) {
+      query = `${STAKEHOLDER_API}/links/${id || orgId}`;
+    } else {
+      query = `${STAKEHOLDER_API}/links`;
     }
 
     return fetch(query, {
@@ -97,7 +103,6 @@ export default {
   },
 
   createStakeholder(stakeholderData) {
-    console.log('create stakeholder');
     const orgId = getOrganizationId();
     let query = `${STAKEHOLDER_API}`;
 

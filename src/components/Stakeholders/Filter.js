@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   root: {
     '& .MuiTextField-root': {
       margin: '4px',
-      // width: '25ch',
+      width: '25ch',
     },
   },
   flex: {
@@ -59,7 +59,7 @@ function StakeholderFilter() {
   };
 
   const resetFilters = () => {
-    setFormData({});
+    setFormData(initialFilterState);
     const resetFilter = new FilterModel(initialFilterState);
     updateFilter(resetFilter);
   };
@@ -142,99 +142,110 @@ function StakeholderFilter() {
         <DialogTitle>Filters</DialogTitle>
         <DialogContent>
           <FormControl className={classes.root}>
-            <div className={classes.flex}>
-              <TextField
-                label="ID"
-                variant="outlined"
-                name="id"
-                onChange={handleChanges}
-                value={formData?.id || ''}
-              />
-              <TextField
-                data-testid="type-dropdown"
-                select
-                label="type"
-                htmlFor="type"
-                id="type"
-                name="type"
-                value={formData?.type || ''}
-                onChange={(e) => handleChanges(e)}
-              >
-                {defaultTypeList.map((type) => (
-                  <MenuItem
-                    data-testid="type-item"
-                    key={type.name}
-                    value={type.value}
-                  >
-                    {type.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-                data-testid="org-dropdown"
-                select
-                label="Organization"
-                htmlFor="organization"
-                id="organizationId"
-                value={organizationId}
-                onChange={(e) => setOrganizationId(e.target.value)}
-              >
-                {[...defaultOrgList, ...orgList].map((org) => (
-                  <MenuItem data-testid="org-item" key={org.id} value={org.id}>
-                    {org.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              {/* <TextField
+            <TextField
+              label="ID"
+              variant="outlined"
+              name="id"
+              onChange={handleChanges}
+              value={formData.id}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              data-testid="type-dropdown"
+              select
+              label="type"
+              htmlFor="type"
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={(e) => handleChanges(e)}
+            >
+              {defaultTypeList.map((type) => (
+                <MenuItem
+                  data-testid="type-item"
+                  key={type.name}
+                  value={type.value}
+                >
+                  {type.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              data-testid="org-dropdown"
+              select
+              label="Organization"
+              htmlFor="organization"
+              id="organizationId"
+              name="organization_id"
+              value={organizationId}
+              onChange={(e) => setOrganizationId(e.target.value)}
+            >
+              {[...defaultOrgList, ...orgList].map((org) => (
+                <MenuItem data-testid="org-item" key={org.id} value={org.id}>
+                  {org.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
+          <FormControl className={classes.root}>
+            {/* <TextField
                 label="Org Name"
                 variant="outlined"
                 name="org_name"
                 onChange={handleChanges}
-                value={formData?.org_name || ''}
+                value={formData.org_name}
               />
               <TextField
                 label="First Name"
                 variant="outlined"
                 name="first_name"
                 onChange={handleChanges}
-                value={formData?.first_name || ''}
+                value={formData.first_name}
               />
               <TextField
                 label="Last Name"
                 variant="outlined"
                 name="last_name"
                 onChange={handleChanges}
-                value={formData?.last_name || ''}
+                value={formData.last_name}
               /> */}
-              <TextField
-                label="Map"
-                variant="outlined"
-                name="map"
-                onChange={handleChanges}
-                value={formData?.map || ''}
-              />
-              <TextField
-                label="Email"
-                variant="outlined"
-                name="email"
-                onChange={handleChanges}
-                value={formData?.email || ''}
-              />
-              <TextField
-                label="Phone"
-                variant="outlined"
-                name="phone"
-                onChange={handleChanges}
-                value={formData?.phone || ''}
-              />
-              <TextField
-                label="Website"
-                variant="outlined"
-                name="website"
-                onChange={handleChanges}
-                value={formData?.website || ''}
-              />
-            </div>
+            <TextField
+              label="Map"
+              variant="outlined"
+              name="map"
+              onChange={handleChanges}
+              value={formData.map}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              label="Email"
+              variant="outlined"
+              name="email"
+              onChange={handleChanges}
+              value={formData.email}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              label="Phone"
+              variant="outlined"
+              name="phone"
+              onChange={handleChanges}
+              value={formData.phone}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              label="Website"
+              variant="outlined"
+              name="website"
+              onChange={handleChanges}
+              value={formData.website}
+            />
           </FormControl>
         </DialogContent>
         <DialogActions>

@@ -41,9 +41,9 @@ function LinkStakeholder({ id, type }) {
 
   useEffect(() => {
     const abortController = new AbortController();
-    if (unlinkedStakeholders.length === 0) {
-      getUnlinkedStakeholders(id, { signal: abortController.signal });
-    }
+
+    getUnlinkedStakeholders(id, { signal: abortController.signal });
+
     return () => abortController.abort();
   }, []);
 
@@ -66,8 +66,12 @@ function LinkStakeholder({ id, type }) {
   };
 
   const closeModal = () => {
-    setFilteredStakeholders([]);
     setOpen(false);
+  };
+
+  const onLinkUpdate = (id) => {
+    const stillUnlinked = filteredStakeholders.filter((s) => s.id != id);
+    setFilteredStakeholders(stillUnlinked);
   };
 
   return (
@@ -93,6 +97,7 @@ function LinkStakeholder({ id, type }) {
                     data={stakeholder}
                     type={type}
                     linked={false}
+                    onLinkUpdate={onLinkUpdate}
                   ></StakeholderList>
                 );
               })}
