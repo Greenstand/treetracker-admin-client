@@ -36,6 +36,7 @@ import MenuMui from '@material-ui/core/Menu';
 import { format, subDays, formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import log from 'loglevel';
+import { useKeycloak } from '@react-keycloak/web';
 
 /**
  * @function
@@ -89,6 +90,8 @@ function Home(props) {
     setTimeRangeIndex(index);
     setStartDate(format(subDays(new Date(), timeRange[0].range), 'yyyy-MM-dd'));
   };
+
+  const { keycloak } = useKeycloak();
 
   return (
     <Grid className={classes.box}>
