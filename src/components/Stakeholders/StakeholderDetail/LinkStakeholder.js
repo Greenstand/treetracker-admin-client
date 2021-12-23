@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -24,6 +25,14 @@ const useStyles = makeStyles({
     padding: 8,
     border: '1px solid rgba(0,0,0,0.1)',
   },
+  placeholder: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    height: '60vh',
+    width: '100vw',
+  },
   tall: {
     height: 300,
   },
@@ -31,9 +40,11 @@ const useStyles = makeStyles({
 
 function LinkStakeholder({ id, type }) {
   const classes = useStyles();
-  const { unlinkedStakeholders, getUnlinkedStakeholders } = useContext(
-    StakeholdersContext,
-  );
+  const {
+    isLoading,
+    unlinkedStakeholders,
+    getUnlinkedStakeholders,
+  } = useContext(StakeholdersContext);
   const [open, setOpen] = useState(false);
   const [filteredStakeholders, setFilteredStakeholders] = useState(
     unlinkedStakeholders,
@@ -88,7 +99,12 @@ function LinkStakeholder({ id, type }) {
         <DialogTitle>Link Stakeholder</DialogTitle>
         <DialogContent>
           <List className={`${classes.listBox} ${classes.tall}`}>
-            {filteredStakeholders &&
+            {isLoading ? (
+              <div className={classes.placeholder}>
+                <CircularProgress id="loading" />
+              </div>
+            ) : (
+              filteredStakeholders &&
               filteredStakeholders.map((stakeholder) => {
                 return (
                   <StakeholderList
@@ -100,7 +116,8 @@ function LinkStakeholder({ id, type }) {
                     onLinkUpdate={onLinkUpdate}
                   ></StakeholderList>
                 );
-              })}
+              })
+            )}
           </List>
         </DialogContent>
         <DialogActions>
