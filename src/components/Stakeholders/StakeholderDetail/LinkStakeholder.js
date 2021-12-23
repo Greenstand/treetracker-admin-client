@@ -59,17 +59,15 @@ function LinkStakeholder({ id, type }) {
   }, []);
 
   useEffect(() => {
-    // filter unlinked by the stakeholder type: organization, person so only appropriate types can be linked by relation: parents, children, users, growers
-    // need to update db relations table first
+    // filter unlinked by the stakeholder type: organization, person so only appropriate types can be linked
+    const filtered = unlinkedStakeholders.filter((s) => {
+      const relation =
+        type === 'children' || type === 'parents' ? 'Organization' : 'Person';
+      return s.type === relation;
+    });
 
-    // const filtered = unlinkedStakeholders.filter((s) => {
-    //   const relation =
-    //     type === 'children' || type === 'parents' ? 'Organization' : 'Person';
-    //   return s.type === relation;
-    // });
-
-    // setFilteredStakeholders(filtered);
-    setFilteredStakeholders(unlinkedStakeholders);
+    setFilteredStakeholders(filtered);
+    // setFilteredStakeholders(unlinkedStakeholders);
   }, [unlinkedStakeholders]);
 
   const openModal = () => {
@@ -80,7 +78,7 @@ function LinkStakeholder({ id, type }) {
     setOpen(false);
   };
 
-  const onLinkUpdate = (id) => {
+  const onLink = (id) => {
     const stillUnlinked = filteredStakeholders.filter((s) => s.id != id);
     setFilteredStakeholders(stillUnlinked);
   };
@@ -113,7 +111,7 @@ function LinkStakeholder({ id, type }) {
                     data={stakeholder}
                     type={type}
                     linked={false}
-                    onLinkUpdate={onLinkUpdate}
+                    onLinkUpdate={onLink}
                   ></StakeholderList>
                 );
               })
