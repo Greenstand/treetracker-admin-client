@@ -6,11 +6,13 @@ import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
+import MessagingView from 'views/MessagingView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
 import CaptureMatchingView from '../components/CaptureMatching/CaptureMatchingView';
+import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
@@ -25,6 +27,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
+import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
@@ -134,6 +137,16 @@ function getRoutes(user) {
       icon: IconPermIdentity,
       disabled: false,
     },
+    {
+      name: 'Inbox',
+      linkTo: '/messaging',
+      component: MessagingView,
+      icon: InboxRounded,
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.SEND_MESSAGES,
+      ]),
+    },
   ];
 }
 
@@ -169,7 +182,7 @@ export const AppProvider = (props) => {
             headers: {
               Authorization: localToken,
             },
-          },
+          }
         )
         .then((response) => {
           // console.log('CONTEXT CHECK SESSION', response.data, 'USER', localUser, 'TOKEN', localToken);
@@ -245,6 +258,8 @@ export const AppProvider = (props) => {
 
   // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={value}>
+      <MessagingProvider>{props.children}</MessagingProvider>
+    </AppContext.Provider>
   );
 };

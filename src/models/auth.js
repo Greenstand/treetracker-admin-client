@@ -12,6 +12,7 @@ const POLICIES = {
   APPROVE_TREE: 'approve_tree',
   LIST_GROWER: 'list_planter',
   MANAGE_GROWER: 'manage_planter',
+  SEND_MESSAGES: 'send_messages',
 };
 
 function hasPermission(user, p) {
