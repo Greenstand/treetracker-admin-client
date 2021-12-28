@@ -90,6 +90,7 @@ const CaptureTable = () => {
     setRowsPerPage,
     setOrder,
     setOrderBy,
+    setCapture,
     getCaptureAsync,
   } = useContext(CapturesContext);
   const speciesContext = useContext(SpeciesContext);
@@ -160,6 +161,7 @@ const CaptureTable = () => {
 
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
+    setCapture({});
   };
 
   const handleOpenExport = () => {
