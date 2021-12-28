@@ -137,7 +137,7 @@ function PaymentsTableDateFilter(props) {
               onClick={handleOnFilterFormCancel}
               className={classes.paymentTableFilterCancelButton}
             >
-              CANCEL
+              RESET
             </Button>
           </Grid>
         </form>

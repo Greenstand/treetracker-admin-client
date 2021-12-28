@@ -136,7 +136,7 @@ function EarningsTableDateFilter(props) {
               onClick={handleOnFilterFormCancel}
               className={classes.earningTableFilterCancelButton}
             >
-              CANCEL
+              RESET
             </Button>
           </Grid>
         </form>
