@@ -17,6 +17,7 @@ import theme from '../common/theme';
 import log from 'loglevel';
 import * as d3 from 'd3';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { countToLocaleString } from '../../common/numbers';
 
 console.error('color:', theme.palette.stats.green);
 console.error(
@@ -165,7 +166,11 @@ function GrowerReportingCard(props) {
             </Box>
             <Box className={classes.box3}>
               <Typography className={classes.total}>
-                {data ? data.num1 : <Skeleton />}
+                {countToLocaleString(data) ? (
+                  countToLocaleString(data.num1)
+                ) : (
+                  <Skeleton />
+                )}
               </Typography>
               <Typography className={classes.totalText}>
                 {text.text1}
