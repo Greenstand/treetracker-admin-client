@@ -1,3 +1,10 @@
+## [1.35.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.35.0...v1.35.1) (2021-12-28)
+
+
+### Bug Fixes
+
+* numbers were not  using commas on dashboard screen due a bug ([#255](https://github.com/Greenstand/treetracker-admin-client/issues/255)) ([324f562](https://github.com/Greenstand/treetracker-admin-client/commit/324f5628156a7204f0b2a7cddc0dc849e9ad74e4))
+
 # [1.35.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.34.0...v1.35.0) (2021-12-25)
 
 
