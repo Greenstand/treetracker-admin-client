@@ -45,7 +45,7 @@ function PaymentsTableMainFilter(props) {
     setIsMainFilterOpen(false);
   };
 
-  const handleOnFilterFormCancel = (e) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
     if (Object.keys(mainFilter).length !== 0) {
       const withoutMainFilter = Object.assign({}, filter);
@@ -166,8 +166,8 @@ function PaymentsTableMainFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={handleOnFilterFormCancel}
-              className={classes.paymentTableFilterCancelButton}
+              onClick={handleOnFilterFormReset}
+              className={classes.paymentTableFilterResetButton}
             >
               RESET
             </Button>

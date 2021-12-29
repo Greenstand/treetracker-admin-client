@@ -15,7 +15,7 @@ const earningTableDateFilterStyles = (theme) => ({
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
-  earningTableFilterCancelButton: {
+  earningTableFilterResetButton: {
     border: 'none',
   },
   earningsTableFilterForm: {

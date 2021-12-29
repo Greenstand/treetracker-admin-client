@@ -121,7 +121,7 @@ function LogPaymentForm(props) {
         <Button
           color="primary"
           variant="text"
-          className={classes.paymentTableFilterCancelButton}
+          className={classes.paymentTableFilterResetButton}
           onClick={closeForm}
         >
           CANCEL

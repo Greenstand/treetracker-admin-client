@@ -41,7 +41,7 @@ function PaymentsTableDateFilter(props) {
     setIsDateFilterOpen(false);
   };
 
-  const handleOnFilterFormCancel = (e) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
     if (Object.keys(dateFilter).length !== 0) {
       const withoutDateFilter = Object.assign({}, filter);
@@ -134,8 +134,8 @@ function PaymentsTableDateFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={handleOnFilterFormCancel}
-              className={classes.paymentTableFilterCancelButton}
+              onClick={handleOnFilterFormReset}
+              className={classes.paymentTableFilterResetButton}
             >
               RESET
             </Button>

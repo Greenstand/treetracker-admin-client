@@ -41,7 +41,7 @@ function EarningsTableDateFilter(props) {
     setIsDateFilterOpen(false);
   };
 
-  const handleOnFilterFormCancel = (e) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
     if (Object.keys(dateFilter).length !== 0) {
       const withoutDateFilter = Object.assign({}, filter);
@@ -133,8 +133,8 @@ function EarningsTableDateFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={handleOnFilterFormCancel}
-              className={classes.earningTableFilterCancelButton}
+              onClick={handleOnFilterFormReset}
+              className={classes.earningTableFilterResetButton}
             >
               RESET
             </Button>

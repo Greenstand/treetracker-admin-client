@@ -46,7 +46,7 @@ function EarningsTableMainFilter(props) {
     setIsMainFilterOpen(false);
   };
 
-  const handleOnFilterFormCancel = (e) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
     if (Object.keys(mainFilter).length !== 0) {
       const withoutMainFilter = Object.assign({}, filter);
@@ -167,8 +167,8 @@ function EarningsTableMainFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={handleOnFilterFormCancel}
-              className={classes.earningTableFilterCancelButton}
+              onClick={handleOnFilterFormReset}
+              className={classes.earningTableFilterResetButton}
             >
               RESET
             </Button>

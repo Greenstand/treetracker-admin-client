@@ -76,7 +76,7 @@ const customTableFilterStyles = (theme) => ({
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
-  customTableFilterCancelButton: {
+  customTableFilterResetButton: {
     border: 'none',
   },
   customTableFilterForm: {

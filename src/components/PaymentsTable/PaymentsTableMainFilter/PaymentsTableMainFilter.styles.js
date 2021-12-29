@@ -15,7 +15,7 @@ const paymentTableDateFilterStyles = (theme) => ({
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
-  paymentTableFilterCancelButton: {
+  paymentTableFilterResetButton: {
     border: 'none',
   },
   paymentsTableFilterForm: {
