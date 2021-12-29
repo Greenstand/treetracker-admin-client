@@ -104,20 +104,17 @@
 
 # [1.41.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.4...v1.41.0) (2022-01-26)
 
-
 ### Features
 
 * align icons vertically in the menu ([#308](https://github.com/Greenstand/treetracker-admin-client/issues/308)) ([b36eca2](https://github.com/Greenstand/treetracker-admin-client/commit/b36eca2cbc2e43e58a978524e24bd79c17719392))
 
 ## [1.40.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.3...v1.40.4) (2022-01-25)
 
-
 ### Bug Fixes
 
 * wrap count labels in capture matching ([#322](https://github.com/Greenstand/treetracker-admin-client/issues/322)) ([1dfd366](https://github.com/Greenstand/treetracker-admin-client/commit/1dfd366886efb9bd32cf9785a5894b90641a0c09))
 
 ## [1.40.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.2...v1.40.3) (2022-01-25)
-
 
 ### Bug Fixes
 
@@ -126,13 +123,11 @@
 
 ## [1.40.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.1...v1.40.2) (2022-01-22)
 
-
 ### Bug Fixes
 
 * add manager_user and list_user permissions to display user manager tab ([#281](https://github.com/Greenstand/treetracker-admin-client/issues/281)) ([be8ff32](https://github.com/Greenstand/treetracker-admin-client/commit/be8ff32324adb0bf74ebebe338bfa32eb05f58ac))
 
 ## [1.40.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.0...v1.40.1) (2022-01-21)
-
 
 ### Bug Fixes
 
