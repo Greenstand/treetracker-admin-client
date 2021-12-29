@@ -1,7 +1,4 @@
-const countToLocaleString = (num) => {
+export function countToLocaleString(num) {
   if (!num?.toLocaleString || typeof num !== 'number') return num;
-  let formatedNumber = num.toLocaleString();
-  return formatedNumber;
-};
-
-export { countToLocaleString };
+  return num.toLocaleString();
+}
