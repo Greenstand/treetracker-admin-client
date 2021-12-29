@@ -179,7 +179,7 @@ function GrowerReportingCard(props) {
               <Box key={i} className={classes.box4}>
                 <Typography className={classes.name}>{item.name}</Typography>
                 <Typography className={classes.number}>
-                  {new Intl.NumberFormat().format(Math.ceil(item.num))}
+                  {new Intl.NumberFormat().format(item.num)}
                 </Typography>
               </Box>
             ))
