@@ -11,7 +11,7 @@ import styles from './Home.styles';
 import { documentTitle } from '../../common/variables';
 import Menu from '../common/Menu';
 import { AppContext } from '../../context/AppContext';
-import { hasPermission, POLICIES } from '../../models/auth';
+import { hasFreetownPermission, hasPermission, POLICIES } from '../../models/auth';
 import {
   DashStatGrowerCount,
   DashStatTotalCaptures,
@@ -104,7 +104,7 @@ function Home(props) {
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
             </Grid>
-            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && (
+            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && hasFreetownPermission(appContext.user) && (
               <Grid item xs={5} className={classes.timeBox}>
                 {updateTime && (
                   <Typography variant="body1" className={classes.time}>
@@ -150,7 +150,7 @@ function Home(props) {
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_TREE,
               POLICIES.APPROVE_TREE,
-            ]) && (
+            ]) && !hasFreetownPermission(appContext.user) && (
               <>
                 <DashStatTotalCaptures />
                 <DashStatUnprocessedCaptures />
@@ -160,8 +160,8 @@ function Home(props) {
             {hasPermission(appContext.user, [
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_PLANTER,
-            ]) && <DashStatGrowerCount />}
-            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && (
+            ]) && !hasFreetownPermission(appContext.user) && <DashStatGrowerCount />}
+            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && hasFreetownPermission(appContext.user) && (
               <Grid className={classes.statCardGrid} container xs={12}>
                 <Grid item xs={4}>
                   <ReportingCard1 startDate={startDate} endDate={endDate} />

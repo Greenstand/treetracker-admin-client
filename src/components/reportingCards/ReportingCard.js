@@ -166,7 +166,7 @@ function GrowerReportingCard(props) {
             </Box>
             <Box className={classes.box3}>
               <Typography className={classes.total}>
-                {countToLocaleString(data) ? (
+                {data ? (
                   countToLocaleString(data.num1)
                 ) : (
                   <Skeleton />

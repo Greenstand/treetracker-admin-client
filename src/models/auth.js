@@ -28,6 +28,14 @@ function hasPermission(user, p) {
   }
 }
 
+function hasFreetownPermission(user) {
+  if(!user) return false;
+  // // super admin has freetown permission
+  // if(hasPermssion(user, POLICIES.SUPER_PERMISSION)) return true;
+  if(user.policy?.organization?.name?.toLowerCase() === 'freetown') return true;
+  return false;
+}
+
 /*
  * to save the token
  */
@@ -39,4 +47,4 @@ const session = () => {
   };
 };
 
-export { PERMISSIONS, POLICIES, hasPermission, session };
+export { PERMISSIONS, POLICIES, hasPermission, hasFreetownPermission, session };
