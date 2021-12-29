@@ -1,3 +1,15 @@
+# [1.36.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.35.1...v1.36.0) (2021-12-29)
+
+
+### Bug Fixes
+
+* show reporting cases for freetown ([#258](https://github.com/Greenstand/treetracker-admin-client/issues/258)) ([73b5fe7](https://github.com/Greenstand/treetracker-admin-client/commit/73b5fe7533869422b9038f3f9533fa457beebbd8))
+
+
+### Features
+
+* **earnings:** integrate ui with API ([#226](https://github.com/Greenstand/treetracker-admin-client/issues/226)) ([241d583](https://github.com/Greenstand/treetracker-admin-client/commit/241d5834c8bb938dca10023466343932ee408c3d))
+
 ## [1.35.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.35.0...v1.35.1) (2021-12-28)
 
 
