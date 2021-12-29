@@ -108,7 +108,7 @@ function DashStatGrowerCount(props) {
 
   const getTotalGrowerCount = async () => {
     const { count } = await apiPlanters.getCount(growerFilter);
-    setTotalGrowerCount(parseInt(count));
+    setTotalGrowerCount(count);
   };
 
   useEffect(() => {
