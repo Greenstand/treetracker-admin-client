@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import earningsAPI from '../../api/earnings';
+import paymentsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
-import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
-import EarningDetails from './EarningDetails/EarningDetails';
+import PaymentsTableDateFilter from './PaymentsTableDateFilter/PaymentsTableDateFilter';
+import PaymentsTableMainFilter from './PaymentsTableMainFilter/PaymentsTableMainFilter';
+import PaymentDetails from './PaymentDetails/PaymentDetails';
 
 /**
  * @constant
- * @name earningTableMetaData
+ * @name paymentTableMetaData
  * @description contains table meta data
  * @type {Object[]}
- * @param {string} earningTableMetaData[].name - earning property used to get earning property value from earning object to display in table
- * @param {string} earningTableMetaData[].description - column description/label to be displayed in table
- * @param {boolean} earningTableMetaData[].sortable - determines if column is sortable
- * @param {boolean} earningTableMetaData[].showInfoIcon - determines if column has info icon
+ * @param {string} paymentTableMetaData[].name - payment property used to get payment property value from payment object to display in table
+ * @param {string} paymentTableMetaData[].description - column description/label to be displayed in table
+ * @param {boolean} paymentTableMetaData[].sortable - determines if column is sortable
+ * @param {boolean} paymentTableMetaData[].showInfoIcon - determines if column has info icon
  */
-const earningTableMetaData = [
+const paymentTableMetaData = [
   {
     description: 'Grower',
     name: 'grower',
@@ -44,7 +44,12 @@ const earningTableMetaData = [
     sortable: false,
     showInfoIcon: true,
   },
-
+  {
+    description: 'Payment System',
+    name: 'payment_system',
+    sortable: false,
+    showInfoIcon: false,
+  },
   {
     description: 'Payment Date',
     name: 'paid_at',
@@ -78,43 +83,47 @@ const prepareRows = (rows) =>
 
 /**
  * @function
- * @name EarningsTable
- * @description renders the earnings table
+ * @name PaymentsTable
+ * @description renders the payments table
  *
- * @returns {React.Component} - earnings table component
+ * @returns {React.Component} - payments table component
  * */
-function EarningsTable() {
-  // state for earnings table
-  const [earnings, setEarnings] = useState([]);
+function PaymentsTable() {
+  // state for payments table
+  const [payments, setPayments] = useState([]);
   const [activeDateRageString, setActiveDateRageString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [earningsPerPage, setEarningsPerPage] = useState(20);
+  const [paymentsPerPage, setPaymentsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState(null);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
-  const [totalEarnings, setTotalEarnings] = useState(0);
-  const [selectedEarning, setSelectedEarning] = useState(null);
+  const [totalPayments, setTotalPayments] = useState(0);
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
-  async function getEarnings() {
+  async function getPayments() {
     setIsLoading(true); // show loading indicator when fetching data
 
     const queryParams = {
-      offset: page * earningsPerPage,
+      offset: page * paymentsPerPage,
       sort_by: sortBy?.field,
       order: sortBy?.order,
-      limit: earningsPerPage,
+      limit: paymentsPerPage,
       ...filter,
     };
 
-    const response = await earningsAPI.getEarnings(queryParams);
+    const response = await paymentsAPI.getEarnings(queryParams);
     const result = prepareRows(response.earnings);
-    setEarnings(result);
-    setTotalEarnings(response.totalCount);
+    setPayments(result);
+    setTotalPayments(response.totalCount);
 
     setIsLoading(false); // hide loading indicator when data is fetched
   }
+
+  const uploadCsvFile = (file) => {
+    paymentsAPI.batchPatchEarnings(file);
+  };
 
   const handleOpenMainFilter = () => setIsMainFilterOpen(true);
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
@@ -130,30 +139,31 @@ function EarningsTable() {
       setActiveDateRageString('');
     }
 
-    getEarnings();
-  }, [page, earningsPerPage, sortBy, filter]);
+    getPayments();
+  }, [page, paymentsPerPage, sortBy, filter]);
 
   return (
     <CustomTable
       setPage={setPage}
       page={page}
       sortBy={sortBy}
-      rows={earnings}
+      rows={payments}
       isLoading={isLoading}
+      onSelectFile={uploadCsvFile}
       activeDateRage={activeDateRageString}
-      setRowsPerPage={setEarningsPerPage}
-      rowsPerPage={earningsPerPage}
+      setRowsPerPage={setPaymentsPerPage}
+      rowsPerPage={paymentsPerPage}
       setSortBy={setSortBy}
-      totalCount={totalEarnings}
+      totalCount={totalPayments}
       openMainFilter={handleOpenMainFilter}
       openDateFilter={handleOpenDateFilter}
-      handleGetData={getEarnings}
-      setSelectedRow={setSelectedEarning}
-      selectedRow={selectedEarning}
-      tableMetaData={earningTableMetaData}
-      headerTitle="Earnings"
+      handleGetData={getPayments}
+      setSelectedRow={setSelectedPayment}
+      selectedRow={selectedPayment}
+      tableMetaData={paymentTableMetaData}
+      headerTitle="Payments"
       mainFilterComponent={
-        <EarningsTableMainFilter
+        <PaymentsTableMainFilter
           isMainFilterOpen={isMainFilterOpen}
           filter={filter}
           setFilter={setFilter}
@@ -161,7 +171,7 @@ function EarningsTable() {
         />
       }
       dateFilterComponent={
-        <EarningsTableDateFilter
+        <PaymentsTableDateFilter
           isDateFilterOpen={isDateFilterOpen}
           filter={filter}
           setFilter={setFilter}
@@ -169,15 +179,14 @@ function EarningsTable() {
         />
       }
       rowDetails={
-        <EarningDetails
-          selectedEarning={selectedEarning}
-          showLogPaymentForm={true}
-          closeDetails={() => setSelectedEarning(null)}
+        <PaymentDetails
+          selectedPayment={selectedPayment}
+          closeDetails={() => setSelectedPayment(null)}
         />
       }
-      actionButtonType="export"
+      actionButtonType="upload"
     />
   );
 }
 
-export default EarningsTable;
+export default PaymentsTable;

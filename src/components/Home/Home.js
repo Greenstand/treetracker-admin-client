@@ -77,9 +77,9 @@ function Home(props) {
   };
 
   const handleTimeClose = (index) => {
-    log.warn("index: ", index);
+    log.warn('index: ', index);
     setAnchorEl(null);
-    if(isNaN(index)) return;
+    if (isNaN(index)) return;
     setTimeRangeIndex(index);
     setStartDate(
       moment()

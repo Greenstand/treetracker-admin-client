@@ -6,6 +6,7 @@ import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
+import PaymentsView from '../views/PaymentsView/PaymentsView';
 import MessagingView from 'views/MessagingView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
@@ -21,7 +22,7 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-import IconCompareArrows from '@material-ui/icons/CompareArrows';
+import PaymentsIcon from '../components/images/PaymentsIcon';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
@@ -84,10 +85,22 @@ function getRoutes(user) {
     },
     {
       name: 'Earnings',
-      linkTo: '/earnings',
-      component: EarningsView,
-      icon: CreditCardIcon,
-      disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+      children: [
+        {
+          name: 'Earnings',
+          linkTo: '/earnings',
+          component: EarningsView,
+          icon: CreditCardIcon,
+          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+        },
+        {
+          name: 'Payments',
+          linkTo: '/payments',
+          component: PaymentsView,
+          icon: PaymentsIcon,
+          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+        },
+      ],
     },
     {
       name: 'Growers',
@@ -98,12 +111,6 @@ function getRoutes(user) {
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_GROWER,
       ]),
-    },
-    {
-      name: 'Payments',
-      linkTo: '/payments',
-      icon: IconCompareArrows,
-      disabled: true,
     },
     {
       name: 'Species',

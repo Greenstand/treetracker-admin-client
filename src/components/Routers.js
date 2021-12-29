@@ -47,14 +47,32 @@ export default function Routers() {
                   }}
                 />
               </Route>
-              {appContext.routes.map(
-                ({ linkTo, exact = false, component, disabled }, idx) => (
+              {appContext.routes.map((route, idx) =>
+                route?.children ? (
+                  route.children.map((child, i) => (
+                    <PrivateRoute
+                      path={child?.linkTo}
+                      component={
+                        child?.disabled ? Unauthorized : child?.component
+                      }
+                      exact={child?.exact}
+                      getScrollContainerRef={
+                        child?.linkTo === '/verify'
+                          ? () => refContainer.current
+                          : undefined
+                      }
+                      key={`route_${i}`}
+                    />
+                  ))
+                ) : (
                   <PrivateRoute
-                    path={linkTo}
-                    component={disabled ? Unauthorized : component}
-                    exact={exact}
+                    path={route?.linkTo}
+                    component={
+                      route?.disabled ? Unauthorized : route?.component
+                    }
+                    exact={route?.exact}
                     getScrollContainerRef={
-                      linkTo === '/verify'
+                      route?.linkTo === '/verify'
                         ? () => refContainer.current
                         : undefined
                     }
