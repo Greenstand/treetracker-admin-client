@@ -1,3 +1,17 @@
+# [1.35.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.34.0...v1.35.0) (2021-12-25)
+
+
+### Features
+
+* add customizable CircularProgress for loading stats ([#246](https://github.com/Greenstand/treetracker-admin-client/issues/246)) ([4bd9cec](https://github.com/Greenstand/treetracker-admin-client/commit/4bd9cecb5a7cd5d37a31ff13a21d8d0663077703))
+
+# [1.34.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.33.0...v1.34.0) (2021-12-24)
+
+
+### Features
+
+* admin messaging ([#236](https://github.com/Greenstand/treetracker-admin-client/issues/236)) ([2117f9b](https://github.com/Greenstand/treetracker-admin-client/commit/2117f9b455505c4481477655b45d0404cd4d26ff))
+
 # [1.33.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.32.3...v1.33.0) (2021-12-19)
 
 ### Features
