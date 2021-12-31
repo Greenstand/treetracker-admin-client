@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import keycloak from './Keycloak';
+import IconLogo from './components/IconLogo';
 
 class App extends Component {
   componentDidMount() {
@@ -20,6 +21,7 @@ class App extends Component {
       <ReactKeycloakProvider
         authClient={keycloak}
         initOptions={{ onLoad: 'login-required', checkLoginIframe: false }}
+        LoadingComponent={IconLogo}
       >
         <ThemeProvider theme={theme}>
           <>

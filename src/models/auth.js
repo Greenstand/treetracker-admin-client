@@ -24,7 +24,6 @@ function hasPermission(permissions) {
   const {
     keycloak: { tokenParsed },
   } = useKeycloak();
-
   const roles = tokenParsed?.realm_access?.roles;
   return permissions
     .map((permission) => roles?.includes(permission))
@@ -47,7 +46,7 @@ const session = () => {
   const {
     keycloak: { token },
   } = useKeycloak();
-
+  // why does this return undefined???
   return token;
 };
 
