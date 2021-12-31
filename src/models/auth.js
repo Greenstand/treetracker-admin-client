@@ -51,4 +51,4 @@ const session = () => {
   return token;
 };
 
-export { POLICIES, hasPermission, session };
+export { POLICIES, hasPermission, hasFreetownPermission, session };

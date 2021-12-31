@@ -198,7 +198,7 @@ function getRoutes(user) {
       icon: InboxRounded,
       disabled:
         process.env.REACT_APP_ENABLE_MESSAGING !== 'true' ||
-        !hasPermission(user, [
+        !hasPermission([
           POLICIES.SUPER_PERMISSION,
           POLICIES.SEND_MESSAGES,
         ]),
