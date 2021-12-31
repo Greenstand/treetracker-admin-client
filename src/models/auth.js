@@ -1,11 +1,5 @@
 import { useKeycloak } from '@react-keycloak/web';
 
-const PERMISSIONS = {
-  ADMIN: 1,
-  TREE_AUDIT: 2,
-  GROWER: 3,
-};
-
 const POLICIES = {
   SUPER_PERMISSION: 'super_permission',
   MANAGE_EARNINGS: 'manage_earnings',
@@ -50,11 +44,11 @@ function hasFreetownPermission(user) {
  * to save the token
  */
 const session = () => {
-  let token = localStorage.getItem('token') || '';
+  const {
+    keycloak: { token },
+  } = useKeycloak();
 
-  return {
-    token,
-  };
+  return token;
 };
 
-export { PERMISSIONS, POLICIES, hasPermission, hasFreetownPermission, session };
+export { POLICIES, hasPermission, session };
