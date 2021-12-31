@@ -1,3 +1,5 @@
+import { useKeycloak } from '@react-keycloak/web';
+
 const PERMISSIONS = {
   ADMIN: 1,
   TREE_AUDIT: 2,
@@ -24,17 +26,15 @@ const POLICIES = {
   MATCH_CAPTURES: 'match_captures',
 };
 
-function hasPermission(user, p) {
-  // Chris github - BirdTho 9/21 user may fail if called when logged out, as in the case in Context.js
-  // console.assert(user, "Why user fail?", user);
-  if (!user) return false;
-  if (p instanceof Array) {
-    return p.some((permission) => {
-      return user.policy.policies.some((r) => r.name === permission);
-    });
-  } else {
-    return user.policy.policies.some((r) => r.name === p) ? true : false;
-  }
+function hasPermission(permissions) {
+  const {
+    keycloak: { tokenParsed },
+  } = useKeycloak();
+
+  const roles = tokenParsed?.realm_access?.roles;
+  return permissions
+    .map((permission) => roles?.includes(permission))
+    .reduce((a, b) => a && b);
 }
 
 function hasFreetownPermission(user) {
