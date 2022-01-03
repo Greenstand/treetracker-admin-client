@@ -31,6 +31,7 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import Regions from 'components/Regions';
 
 export const AppContext = createContext({}); // no initial context here because we want login values to be 'undefined' until they are confirmed
 
@@ -134,6 +135,13 @@ function getRoutes(user) {
       name: 'User Manager',
       linkTo: '/user-manager',
       component: Users,
+      icon: IconGroup,
+      disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
+    },
+    {
+      name: 'Region Manager',
+      linkTo: '/region-manager',
+      component: Regions,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
     },
