@@ -1,6 +1,6 @@
 import Keycloak from 'keycloak-js';
 const keycloak = new Keycloak({
-  url: 'https://dev-k8s.treetracker.org/auth',
+  url: `${process.env.REACT_APP_KEYCLOAK_URL}`,
   realm: 'greenstand',
   clientId: 'admin-panel',
 });
