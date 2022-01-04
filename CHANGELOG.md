@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.36.0...v1.37.0) (2022-01-04)
+
+
+### Features
+
+* add options for any-tag-set and tag-not-set ([#227](https://github.com/Greenstand/treetracker-admin-client/issues/227)) ([b9598b8](https://github.com/Greenstand/treetracker-admin-client/commit/b9598b8d6008511cd4823b552c4736b4597b5564))
+
 # [1.36.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.35.1...v1.36.0) (2021-12-29)
 
 
