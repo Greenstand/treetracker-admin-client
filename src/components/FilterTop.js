@@ -69,9 +69,6 @@ const styles = (theme) => {
     noSpecies: {
       fontStyle: 'italic',
     },
-    // tagDecorator: {
-    //   borderBottom : '1px solid grey'
-    // }
   };
 };
 
@@ -393,12 +390,7 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
-                // Option B for divider
-                // renderOption={(props, option) => (
-                //   <li {...props} className={props.id === ANY_TAG_SET ? classes.tagDecorator : null}>
-                //     {props.tagName}
-                //   </li>
-                // )}
+                getOptionSelected={(option, value) => option.id === value.id}
                 // selectOnFocus
                 // clearOnBlur
                 // handleHomeEndKeys
