@@ -96,13 +96,6 @@ describe('tags', () => {
         const text = screen.getByText('testTag');
         expect(text).toBeTruthy();
       });
-
-      it('api.getTags should be called', async () => {
-        console.log('mock calls -- ', api.getTags.mock.calls);
-        await waitFor(() => expect(api.getTags).toHaveBeenCalledTimes(3));
-        expect(api.getTags.mock.calls[1][0]).toBe('searchTag');
-        // expect(api.getTags.mock.calls[2][0]).toBe('testTag');
-      });
     });
 
     //}}}

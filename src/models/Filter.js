@@ -62,21 +62,15 @@ export default class Filter {
       where.active = this.active;
     }
 
-    if (this.planterId !== undefined && this.planterId.length > 0) {
+    if (this.planterId) {
       where.planterId = this.planterId;
     }
 
-    if (
-      this.deviceIdentifier !== undefined &&
-      this.deviceIdentifier.length > 0
-    ) {
+    if (this.deviceIdentifier) {
       where.deviceIdentifier = this.deviceIdentifier;
     }
 
-    if (
-      this.planterIdentifier !== undefined &&
-      this.planterIdentifier.length > 0
-    ) {
+    if (this.planterIdentifier) {
       where.planterIdentifier = this.planterIdentifier;
     }
 

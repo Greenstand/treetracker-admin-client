@@ -9,7 +9,10 @@ import theme from '../common/theme';
 
 const useStyles = makeStyles({
   containerBox: {
-    margin: theme.spacing(5),
+    marginTop: 0,
+    marginRight: theme.spacing(5),
+    marginBottom: theme.spacing(5),
+    marginLeft: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     background: '#fff',
     borderRadius: '4px',
@@ -20,8 +23,7 @@ const useStyles = makeStyles({
   },
 
   imgContainer: {
-    width: '350px',
-    height: 'auto',
+    height: '100%',
     padding: '5px',
     objectFit: 'cover',
     paddingBottom: '10px',
@@ -32,10 +34,11 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'auto',
+    overflowY: 'hidden',
   },
 
   imageScroll: {
-    height: '100vh',
+    height: '76vh',
     overflow: 'scroll',
   },
 
@@ -44,17 +47,15 @@ const useStyles = makeStyles({
   },
 });
 
-function CandidateImages(props) {
+function CandidateImages({ candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
-
-  const cadidateImgData = props.cadidateImgData;
 
   const [showBox, setShowBox] = useState([]);
 
   useEffect(() => {
-    const initialCandidateData = cadidateImgData.map((tree) => tree.tree_id);
+    const initialCandidateData = candidateImgData.map((tree) => tree.id);
     setShowBox(initialCandidateData);
-  }, [cadidateImgData]);
+  }, [candidateImgData]);
 
   const hideImgBox = (i) => {
     const newInitialState = showBox.filter((id) => id !== i);
@@ -67,79 +68,90 @@ function CandidateImages(props) {
 
   return (
     <Box className={classes.imageScroll}>
-      {cadidateImgData.map((tree, i) => {
-        return (
-          <Box className={classes.containerBox} key={tree.tree_id}>
-            <Box className={classes.headerBox}>
-              <Grid
-                container
-                direction="row"
-                justify="space-between"
-                alignItems="baseline"
-                onClick={() => showImgBox(tree.tree_id)}
-              >
-                <Box>
-                  <Typography variant="h5" style={{ padding: '10px' }}>
-                    Tree {tree.tree_id}
-                  </Typography>
-                </Box>
-                <Box>
-                  <ZoomOutMapIcon
-                    style={{ paddingRight: '10px', fontSize: '34px' }}
-                  />
-                </Box>
-              </Grid>
-            </Box>
-
-            {showBox.includes(tree.tree_id) ? (
-              <Box>
-                {typeof tree.captures === 'object' ? (
-                  <Box className={classes.gridList} cols={3}>
-                    {tree.captures.map((capture) => {
-                      // console.log(tree.captures)
-                      return (
-                        <Box
-                          style={{ height: '300px' }}
-                          key={capture.captureId}
-                        >
-                          <img
-                            className={classes.imgContainer}
-                            src={capture.imageUrl}
-                            alt={`Candidate capture ${capture.captureId}`}
-                          />
-                        </Box>
-                      );
-                    })}
+      {candidateImgData &&
+        candidateImgData.map((tree, i) => {
+          return (
+            <Box className={classes.containerBox} key={`${i}-${tree.id}`}>
+              <Box className={classes.headerBox}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="baseline"
+                  onClick={() => showImgBox(tree.id)}
+                >
+                  <Box>
+                    <Typography variant="h5" style={{ padding: '10px' }}>
+                      Tree {tree.tree_id}
+                    </Typography>
                   </Box>
-                ) : null}
-
-                <Box className={classes.candidateImgBtn}>
-                  <Button
-                    style={{ margin: '0 0 20px 20px' }}
-                    variant="contained"
-                    color="primary"
-                    startIcon={<CheckIcon />}
-                    onClick={() => props.sameTreeHandler(tree.tree_id)}
-                  >
-                    Same Tree
-                  </Button>
-                  <Button
-                    style={{ margin: '0 0 20px 20px' }}
-                    id={tree.tree_id}
-                    variant="outlined"
-                    color="primary"
-                    startIcon={<ClearIcon />}
-                    onClick={() => hideImgBox(tree.tree_id)}
-                    value={i}
-                  >
-                    Different Tree
-                  </Button>
-                </Box>
+                  <Box>
+                    <ZoomOutMapIcon
+                      style={{ paddingRight: '10px', fontSize: '34px' }}
+                    />
+                  </Box>
+                </Grid>
               </Box>
-            ) : null}
-          </Box>
-        );
-      })}
+
+              {showBox.includes(tree.id) ? (
+                <Box>
+                  {tree.captures.length ? (
+                    <Box className={classes.gridList} cols={3}>
+                      {tree.captures.map((capture) => {
+                        return (
+                          <Box
+                            style={{ height: '300px', color: 'blue' }}
+                            key={capture.id}
+                          >
+                            <img
+                              className={classes.imgContainer}
+                              src={capture.image_url}
+                              alt={`Candidate capture ${capture.id}`}
+                            />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  ) : (
+                    <Box
+                      style={{ height: '300px', color: 'blue' }}
+                      key={tree.id}
+                    >
+                      <img
+                        className={classes.imgContainer}
+                        src={tree.image_url}
+                        alt={`Candidate capture ${tree.id}`}
+                      />
+                    </Box>
+                  )}
+
+                  <Box className={classes.candidateImgBtn}>
+                    <Button
+                      style={{ margin: '0 0 20px 20px' }}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CheckIcon />}
+                      onClick={() => sameTreeHandler(tree.id)}
+                    >
+                      Same Tree
+                    </Button>
+                    <Button
+                      style={{ margin: '0 0 20px 20px' }}
+                      id={tree.tree_id}
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<ClearIcon />}
+                      onClick={() => hideImgBox(tree.id)}
+                      value={i}
+                    >
+                      Different Tree
+                    </Button>
+                  </Box>
+                </Box>
+              ) : null}
+            </Box>
+          );
+        })}
     </Box>
   );
 }

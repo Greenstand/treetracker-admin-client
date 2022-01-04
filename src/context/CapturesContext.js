@@ -20,6 +20,7 @@ export const CapturesContext = createContext({
   setPage: () => {},
   setOrder: () => {},
   setOrderBy: () => {},
+  setCapture: () => {},
   queryCapturesApi: () => {},
   getCaptureCount: () => {},
   getCapturesAsync: () => {},
@@ -124,6 +125,10 @@ export function CapturesProvider(props) {
         deviceIdentifier: true,
         speciesId: true,
         tokenId: true,
+        age: true,
+        morphology: true,
+        captureApprovalTag: true,
+        rejectionReason: true,
       },
     };
 
@@ -156,6 +161,10 @@ export function CapturesProvider(props) {
         deviceIdentifier: true,
         speciesId: true,
         tokenId: true,
+        age: true,
+        morphology: true,
+        captureApprovalTag: true,
+        rejectionReason: true,
       },
     };
 
@@ -228,6 +237,7 @@ export function CapturesProvider(props) {
     getCaptureCount,
     getCapturesAsync,
     getCaptureAsync,
+    setCapture,
     getAllCaptures,
     updateFilter,
     // getLocationName,

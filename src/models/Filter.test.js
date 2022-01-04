@@ -6,7 +6,7 @@ describe('Filter, with initial values about this filter object', () => {
   beforeEach(() => {
     filter = new Filter();
     filter.uuid = '11942400-6617-4c6c-bf5e';
-    filter.captureId = 10;
+    filter.captureId = '10';
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
     filter.approved = true;
@@ -17,11 +17,13 @@ describe('Filter, with initial values about this filter object', () => {
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }));
+    expect(filter.getWhereObj()).toEqual(
+      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }),
+    );
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: 10 }));
+    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: '10' }));
   });
 
   it('getWhereObj() should match: timeCreated between', () => {

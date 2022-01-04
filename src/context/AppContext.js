@@ -5,11 +5,15 @@ import axios from 'axios';
 import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
+import EarningsView from '../views/EarningsView/EarningsView';
+import PaymentsView from '../views/PaymentsView/PaymentsView';
+import MessagingView from 'views/MessagingView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
-import CaptureMatchingFrame from '../components/CaptureMatching/CaptureMatchingFrame';
+import CaptureMatchingView from '../components/CaptureMatching/CaptureMatchingView';
+import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
 import IconSettings from '@material-ui/icons/Settings';
@@ -18,11 +22,13 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-import IconCompareArrows from '@material-ui/icons/CompareArrows';
+import PaymentsIcon from '../components/images/PaymentsIcon';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
@@ -68,7 +74,7 @@ function getRoutes(user) {
     {
       name: 'Capture Matching',
       linkTo: '/capture-matching',
-      component: CaptureMatchingFrame,
+      component: CaptureMatchingView,
       icon: CompareIcon,
       disabled:
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
@@ -76,6 +82,25 @@ function getRoutes(user) {
           POLICIES.SUPER_PERMISSION,
           POLICIES.APPROVE_TREE,
         ]),
+    },
+    {
+      name: 'Earnings',
+      children: [
+        {
+          name: 'Earnings',
+          linkTo: '/earnings',
+          component: EarningsView,
+          icon: CreditCardIcon,
+          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+        },
+        {
+          name: 'Payments',
+          linkTo: '/payments',
+          component: PaymentsView,
+          icon: PaymentsIcon,
+          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+        },
+      ],
     },
     {
       name: 'Growers',
@@ -86,12 +111,6 @@ function getRoutes(user) {
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_GROWER,
       ]),
-    },
-    {
-      name: 'Payments',
-      linkTo: '/payments',
-      icon: IconCompareArrows,
-      disabled: true,
     },
     {
       name: 'Species',
@@ -124,6 +143,16 @@ function getRoutes(user) {
       component: Account,
       icon: IconPermIdentity,
       disabled: false,
+    },
+    {
+      name: 'Inbox',
+      linkTo: '/messaging',
+      component: MessagingView,
+      icon: InboxRounded,
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.SEND_MESSAGES,
+      ]),
     },
   ];
 }
@@ -160,7 +189,7 @@ export const AppProvider = (props) => {
             headers: {
               Authorization: localToken,
             },
-          },
+          }
         )
         .then((response) => {
           // console.log('CONTEXT CHECK SESSION', response.data, 'USER', localUser, 'TOKEN', localToken);
@@ -236,6 +265,8 @@ export const AppProvider = (props) => {
 
   // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={value}>
+      <MessagingProvider>{props.children}</MessagingProvider>
+    </AppContext.Provider>
   );
 };

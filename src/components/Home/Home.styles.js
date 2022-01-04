@@ -1,6 +1,6 @@
 import { MENU_WIDTH } from '../common/Menu';
 
-const styles = () => ({
+const styles = (theme) => ({
   box: {
     width: '100%',
     height: '100%',
@@ -12,6 +12,26 @@ const styles = () => ({
     position: 'absolute',
     left: 0,
     top: 0,
+  },
+  version: {
+    justifyContent: 'space-between',
+  },
+  timeBox: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: theme.spacing(4),
+  },
+  timeButton: {
+    width: theme.spacing(62),
+    justifyContent: 'start',
+    backgroundColor: 'white',
+    '& svg': {
+      marginRight: theme.spacing(2),
+    },
+  },
+  timeMenu: {
+    width: theme.spacing(62),
   },
   menu: {
     height: '100%',
@@ -27,6 +47,7 @@ const styles = () => ({
     right: 0,
     backgroundColor: 'rgb(239, 239, 239)',
     boxSizing: 'border-box',
+    overflowY: 'scroll',
   },
   welcomeBox: {
     height: '100%',
@@ -37,6 +58,13 @@ const styles = () => ({
     fontFamily: 'Lato,Roboto,Helvetica,Arial,sans-serif',
     fontWeight: '400',
     lineHeight: '1.235',
+  },
+  statCardGrid: {
+    padding: 0,
+    flexWrap: 'wrap',
+    '&>div': {
+      minWidth: '336px',
+    },
   },
 });
 
