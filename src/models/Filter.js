@@ -7,6 +7,7 @@ export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
+export const ANY_TAG_SET = 'ANY_TAG_SET';
 import { tokenizationStates } from '../common/variables';
 
 export default class Filter {
@@ -81,6 +82,8 @@ export default class Filter {
 
     if (this.tagId === TAG_NOT_SET) {
       where.tagId = null;
+    } else if (this.tagId === ANY_TAG_SET) {
+      where.tagId = '0';
     } else if (this.tagId) {
       where.tagId = this.tagId;
     }
