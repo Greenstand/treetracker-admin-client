@@ -1,17 +1,17 @@
 /* eslint-disable */
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import theme from './common/theme';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import OptimizedImage from './OptimizedImage';
+import OptimizedImage from '../../src/components/OptimizedImage';
 
 describe('OptimizedImage', () => {
   it('works', () => {
     mount(
       <ThemeProvider theme={theme}>
         <OptimizedImage />
-      </ThemeProvider>,
+      </ThemeProvider>
     );
     cy.get('img').should('not.exist');
   });
@@ -24,7 +24,7 @@ describe('OptimizedImage', () => {
       mount(
         <ThemeProvider theme={theme}>
           <OptimizedImage src={imageUrl} />
-        </ThemeProvider>,
+        </ThemeProvider>
       );
     });
 
@@ -53,7 +53,7 @@ describe('OptimizedImage', () => {
       mount(
         <ThemeProvider theme={theme}>
           <OptimizedImage src={imageUrl} />
-        </ThemeProvider>,
+        </ThemeProvider>
       );
     });
 

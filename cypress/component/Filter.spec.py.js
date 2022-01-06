@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import theme from './common/theme';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import Filter from './Filter';
-import FilterModel from '../models/Filter';
+import Filter from '../../src/components/Filter';
+import FilterModel from '../../src/models/Filter';
 
 describe('Filter', () => {
   const filterModel = new FilterModel();
@@ -13,7 +13,7 @@ describe('Filter', () => {
     mount(
       <ThemeProvider theme={theme}>
         <Filter filter={filterModel} isOpen={true} />
-      </ThemeProvider>,
+      </ThemeProvider>
     );
   });
 
@@ -27,14 +27,14 @@ describe('Filter', () => {
       // Check forward button is disabled
       cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
         'have.length',
-        1,
+        1
       );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
         cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
           'have.length',
-          0,
+          0
         );
       });
     });
@@ -46,14 +46,14 @@ describe('Filter', () => {
       // Check forward button is disabled
       cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
         'have.length',
-        1,
+        1
       );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
         cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
           'have.length',
-          0,
+          0
         );
       });
     });
