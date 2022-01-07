@@ -41,14 +41,14 @@ export const StakeholdersContext = createContext({
 const initialFilterState = {
   id: '',
   type: '',
-  orgName: '',
-  firstName: '',
-  lastName: '',
-  imageUrl: '',
+  org_name: '',
+  first_name: '',
+  last_name: '',
+  image_url: '',
   email: '',
   phone: '',
   website: '',
-  logoUrl: '',
+  logo_url: '',
   map: '',
   organization_id: '',
   owner_id: '',
@@ -64,7 +64,7 @@ export function StakeholdersProvider(props) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(undefined);
   const [filter, setFilter] = useState(
-    new FilterStakeholder(initialFilterState),
+    new FilterStakeholder(initialFilterState)
   );
   const columns = [
     { label: 'Name', value: 'name' },
@@ -143,7 +143,7 @@ export function StakeholdersProvider(props) {
           updated.parents.find((p) => p.id === s.id)
         ) {
           const updatedChildren = s.children.map((c) =>
-            c.id === updated.id ? updated : c,
+            c.id === updated.id ? updated : c
           );
           s.children = updatedChildren;
         }

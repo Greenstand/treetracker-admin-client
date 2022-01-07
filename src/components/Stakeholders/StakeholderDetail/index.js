@@ -42,6 +42,32 @@ const useStyles = makeStyles({
 });
 
 export default function StakeholderDetail({ row, columns, child }) {
+  const {
+    type,
+    org_name,
+    first_name,
+    last_name,
+    image_url,
+    email,
+    phone,
+    website,
+    logo_url,
+    map,
+  } = row;
+  const rowData = {
+    ...row,
+    type: type || '',
+    org_name: org_name || '',
+    first_name: first_name || '',
+    last_name: last_name || '',
+    image_url: image_url || '',
+    email: email || '',
+    phone: phone || '',
+    website: website || '',
+    logo_url: logo_url || '',
+    map: map || '',
+  };
+
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
@@ -56,33 +82,33 @@ export default function StakeholderDetail({ row, columns, child }) {
   return (
     <>
       {/* Table row */}
-      <TableRow hover key={row.id} onClick={openModal}>
+      <TableRow hover key={rowData.id} onClick={openModal}>
         {columns.map((col, idx) => (
           <TableCell
             key={col.value}
             className={idx === 0 && child ? classes.pl : ''}
           >
             <div className={classes.flex}>
-              {col.value === 'name' && row.type === 'Organization' && (
+              {col.value === 'name' && rowData.type === 'Organization' && (
                 <>
                   <img
-                    src={row.logo_url || './logo_192x192.png'}
+                    src={rowData.logo_url || './logo_192x192.png'}
                     className={classes.logo}
-                    alt={row.org_name}
+                    alt={rowData.org_name}
                   />
-                  {row.org_name}
+                  {rowData.org_name}
                 </>
               )}
-              {col.value === 'name' && row.type === 'Person' && (
+              {col.value === 'name' && rowData.type === 'Person' && (
                 <>
                   <PersonIcon
                     className={classes.logo}
-                    alt={`${row.first_name} ${row.last_name}`}
+                    alt={`${rowData.first_name} ${rowData.last_name}`}
                   />
-                  {`${row.first_name} ${row.last_name}`}
+                  {`${rowData.first_name} ${rowData.last_name}`}
                 </>
               )}
-              {row[col.value]}
+              {rowData[col.value]}
             </div>
           </TableCell>
         ))}
@@ -100,18 +126,25 @@ export default function StakeholderDetail({ row, columns, child }) {
         </IconButton>
 
         <DialogContent className={`${classes.my} ${classes.noScroll}`}>
-          <StakeholderDialogHeader data={row} />
+          <StakeholderDialogHeader data={rowData} />
 
           <Divider className={classes.my} />
 
           <Grid item container xs={12} spacing={6}>
-            <StakeholderGroups data={row} render={['parents', 'children']} />
+            <StakeholderGroups
+              data={rowData}
+              render={['parents', 'children']}
+            />
           </Grid>
 
           <Divider className={classes.my} />
 
           <Grid item container xs={12} spacing={6}>
-            <StakeholderGroups data={row} render={['users', 'growers']} tall />
+            <StakeholderGroups
+              data={rowData}
+              render={['users', 'growers']}
+              tall
+            />
           </Grid>
         </DialogContent>
       </Dialog>

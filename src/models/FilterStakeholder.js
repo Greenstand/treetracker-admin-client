@@ -20,19 +20,19 @@ export default class FilterStakeholder {
       numFilters += 1;
     }
 
-    if (this.orgName) {
+    if (this.org_name) {
       numFilters += 1;
     }
 
-    if (this.firstName) {
+    if (this.first_name) {
       numFilters += 1;
     }
 
-    if (this.lastName) {
+    if (this.last_name) {
       numFilters += 1;
     }
 
-    if (this.imageUrl) {
+    if (this.image_url) {
       numFilters += 1;
     }
 
@@ -48,7 +48,7 @@ export default class FilterStakeholder {
       numFilters += 1;
     }
 
-    if (this.logoUrl) {
+    if (this.logo_url) {
       numFilters += 1;
     }
 
