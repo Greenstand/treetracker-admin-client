@@ -1,97 +1,95 @@
 import React, { useState, useContext } from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 
 import { MessagingContext } from 'context/MessagingContext.js';
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    messageRow: {
-      display: 'flex',
+const useStyles = makeStyles((theme) => ({
+  messageRow: {
+    display: 'flex',
+  },
+  messageRowRight: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  recievedMessage: {
+    position: 'relative',
+    marginLeft: '20px',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: 'lightGrey',
+    textAlign: 'left',
+    borderRadius: '10px',
+  },
+  sentMessage: {
+    position: 'relative',
+    marginRight: '20px',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: theme.palette.primary.main,
+    textAlign: 'left',
+    borderRadius: '10px',
+  },
+  messageContent: {
+    padding: 0,
+    margin: 0,
+    wordWrap: 'break-word',
+  },
+  messageTimeStampLeft: {
+    display: 'flex',
+    marginRight: 'auto',
+    alignItems: 'center',
+    color: 'grey',
+  },
+  messageTimeStampRight: {
+    display: 'flex',
+    marginLeft: 'auto',
+    alignItems: 'center',
+    color: 'grey',
+  },
+  displayName: {
+    marginLeft: '20px',
+  },
+  paper: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  senderInfo: {
+    padding: '10px',
+    borderBottom: '2px solid black',
+  },
+  messagesBody: {
+    height: '80%',
+    width: '95%',
+    padding: '7.5px',
+    overflowY: 'auto',
+  },
+  senderItem: {
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
+  },
+  avatar: {
+    width: '5em',
+    height: '5em',
+    [theme.breakpoints.down('md')]: {
+      width: '4em',
+      height: '4em',
     },
-    messageRowRight: {
-      display: 'flex',
-      justifyContent: 'flex-end',
+    [theme.breakpoints.down('sm')]: {
+      width: '2em',
+      height: '2em',
     },
-    recievedMessage: {
-      position: 'relative',
-      marginLeft: '20px',
-      marginBottom: '10px',
-      padding: '10px',
-      backgroundColor: 'lightGrey',
-      textAlign: 'left',
-      borderRadius: '10px',
-    },
-    sentMessage: {
-      position: 'relative',
-      marginRight: '20px',
-      marginBottom: '10px',
-      padding: '10px',
-      backgroundColor: theme.palette.primary.main,
-      textAlign: 'left',
-      borderRadius: '10px',
-    },
-    messageContent: {
-      padding: 0,
-      margin: 0,
-      wordWrap: 'break-word',
-    },
-    messageTimeStampLeft: {
-      display: 'flex',
-      marginRight: 'auto',
-      alignItems: 'center',
-      color: 'grey',
-    },
-    messageTimeStampRight: {
-      display: 'flex',
-      marginLeft: 'auto',
-      alignItems: 'center',
-      color: 'grey',
-    },
-    displayName: {
-      marginLeft: '20px',
-    },
-    paper: {
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      flexDirection: 'column',
-    },
-    senderInfo: {
-      padding: '10px',
-      borderBottom: '2px solid black',
-    },
-    messagesBody: {
-      height: '80%',
-      width: '95%',
-      padding: '7.5px',
-      overflowY: 'auto',
-    },
-    senderItem: {
-      padding: theme.spacing(1),
-      margin: theme.spacing(1),
-    },
-    avatar: {
-      width: '5em',
-      height: '5em',
-      [theme.breakpoints.down('md')]: {
-        width: '4em',
-        height: '4em',
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '2em',
-        height: '2em',
-      },
-    },
-    textInput: {
-      borderTop: '2px solid black',
-    },
-    surveyContent: {
-      color: '#fff',
-    },
-  })
-);
+  },
+  textInput: {
+    borderTop: '2px solid black',
+  },
+  surveyContent: {
+    color: '#fff',
+  },
+}));
 
 export const AnnounceMessage = ({ message }) => {
   const {
@@ -134,8 +132,8 @@ export const SurveyMessage = ({ message }) => {
             <Typography variant={'h6'}>
               Choices:
               <ol type="A">
-                {question.choices.map((choice) => (
-                  <li key={choice}>{choice}</li>
+                {question.choices.map((choice, i) => (
+                  <li key={choice ? choice : i}>{choice}</li>
                 ))}
               </ol>
             </Typography>
@@ -244,7 +242,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
       {messageRecipient && messages ? (
         <SenderInformation messageRecipient={messageRecipient} id={''} />
       ) : (
-        <SenderInformation></SenderInformation>
+        <SenderInformation />
       )}
       <div id="style-1" className={messagesBody}>
         {messages ? (

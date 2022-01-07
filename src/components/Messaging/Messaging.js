@@ -5,7 +5,7 @@ import Inbox from './Inbox';
 import MessageBody from './MessageBody';
 import Survey from './Survey';
 import AnnounceMessage from './AnnounceMessage';
-
+import NewMessage from './NewMessage';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
@@ -78,7 +78,9 @@ const Messaging = () => {
   const [toggleSurvey, setToggleSurvey] = useState(false);
   const [messageRecipient, setMessageRecipient] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
   useEffect(() => {
     if (messages.length && messageRecipient === '') {
       setMessageRecipient(messages[0].userName);
@@ -98,6 +100,10 @@ const Messaging = () => {
           <h1>Inbox</h1>
         </Grid>
         <Grid item className={buttonContainer}>
+          <Button className={button} onClick={handleOpen}>
+            New Message
+          </Button>
+          <NewMessage openModal={openModal} handleClose={handleClose} />
           <Button
             className={button}
             onClick={() => setToggleAnnounceMessage(!toggleAnnounceMessage)}

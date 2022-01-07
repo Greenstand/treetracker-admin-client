@@ -27,7 +27,10 @@ export const MessagingProvider = (props) => {
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (message.subject === 'Message') {
+        if (
+          message.subject === 'Message' ||
+          message.subject === 'Announce Message'
+        ) {
           let key =
             message.to !== user.userName ? message[`to`] : message['from'];
           if (key) {
@@ -39,7 +42,7 @@ export const MessagingProvider = (props) => {
         } else if (message.subject === 'Survey') {
           let key = message.survey.title;
           if (grouped[key]) {
-            if (grouped[key].survey.id === message.survey.id) {
+            if (grouped[key][0].survey.id === message.survey.id) {
               return;
             } else {
               grouped[key] = [];
@@ -48,19 +51,10 @@ export const MessagingProvider = (props) => {
             grouped[key] = [];
           }
           grouped[key].push(message);
-        } else if (message.subject === 'Announce Message') {
-          let key =
-            message.to !== user.userName ? message[`to`] : message['from'];
-          if (key) {
-            if (!grouped[key] && !messages[key]) {
-              grouped[key] = [];
-            }
-            grouped[key].push(message);
-          }
         }
         return grouped;
       }, {});
-    setMessages([
+    const filteredMessages = [
       ...Object.entries(newMessages).map(([key, val]) => {
         if (key && val) {
           return {
@@ -69,7 +63,8 @@ export const MessagingProvider = (props) => {
           };
         }
       }),
-    ]);
+    ];
+    setMessages(filteredMessages);
   };
 
   const postRegion = async (payload) => {
