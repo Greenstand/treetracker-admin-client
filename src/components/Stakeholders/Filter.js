@@ -11,12 +11,12 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
-// import FilterModel from '../../models/FilterStakeholder';
-import FilterModel, {
-  ALL_ORGANIZATIONS,
-  ORGANIZATION_NOT_SET,
-} from '../../models/FilterStakeholder';
-import { AppContext } from '../../context/AppContext';
+import FilterModel from '../../models/FilterStakeholder';
+// import FilterModel, {
+//   ALL_ORGANIZATIONS,
+//   ORGANIZATION_NOT_SET,
+// } from '../../models/FilterStakeholder';
+//import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -37,14 +37,14 @@ const useStyles = makeStyles({
 
 function StakeholderFilter() {
   const classes = useStyles();
-  const { orgList, userHasOrg } = useContext(AppContext);
+  // const { orgList, userHasOrg } = useContext(AppContext);
 
   const { filter, updateFilter, initialFilterState } = useContext(
-    StakeholdersContext,
+    StakeholdersContext
   );
-  const [organizationId, setOrganizationId] = useState(
-    filter.id || ALL_ORGANIZATIONS,
-  );
+  // const [organizationId, setOrganizationId] = useState(
+  //   filter.id || ALL_ORGANIZATIONS
+  // );
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState(initialFilterState);
   const [open, setOpen] = useState(false);
@@ -65,40 +65,41 @@ function StakeholderFilter() {
   };
 
   const applyFilters = () => {
-    const resetFilter = new FilterModel({
+    const newFilter = new FilterModel({
       ...filter,
       ...formData,
+      // organization_id: organizationId,
     });
-    updateFilter(resetFilter);
+    updateFilter(newFilter);
     setOpen(false);
   };
 
   const applySearch = (e) => {
     setSearch(e.target.value);
-    const resetFilter = new FilterModel({ ...filter, search: e.target.value });
-    updateFilter(resetFilter);
+    const newFilter = new FilterModel({ ...filter, search: e.target.value });
+    updateFilter(newFilter);
   };
 
-  const defaultOrgList = userHasOrg
-    ? [
-        {
-          id: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-      ]
-    : [
-        {
-          id: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-        {
-          id: ORGANIZATION_NOT_SET,
-          name: 'Not set',
-          value: null,
-        },
-      ];
+  // const defaultOrgList = userHasOrg
+  //   ? [
+  //       {
+  //         id: ALL_ORGANIZATIONS,
+  //         name: 'All',
+  //         value: 'All',
+  //       },
+  //     ]
+  //   : [
+  //       {
+  //         id: ALL_ORGANIZATIONS,
+  //         name: 'All',
+  //         value: 'All',
+  //       },
+  //       {
+  //         id: ORGANIZATION_NOT_SET,
+  //         name: 'Not set',
+  //         value: null,
+  //       },
+  //     ];
 
   const defaultTypeList = [
     {
@@ -122,7 +123,7 @@ function StakeholderFilter() {
         name="search"
         label="Search"
         variant="outlined"
-        value={search || ''}
+        value={search}
         onChange={applySearch}
         autoComplete="off"
       />
@@ -172,7 +173,7 @@ function StakeholderFilter() {
               ))}
             </TextField>
           </FormControl>
-          <FormControl className={classes.root}>
+          {/* <FormControl className={classes.root}>
             <TextField
               data-testid="org-dropdown"
               select
@@ -189,29 +190,36 @@ function StakeholderFilter() {
                 </MenuItem>
               ))}
             </TextField>
+          </FormControl> */}
+
+          <FormControl className={classes.root}>
+            <TextField
+              label="Org Name"
+              variant="outlined"
+              name="org_name"
+              onChange={handleChanges}
+              value={formData.org_name}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            {/* <TextField
-                label="Org Name"
-                variant="outlined"
-                name="org_name"
-                onChange={handleChanges}
-                value={formData.org_name}
-              />
-              <TextField
-                label="First Name"
-                variant="outlined"
-                name="first_name"
-                onChange={handleChanges}
-                value={formData.first_name}
-              />
-              <TextField
-                label="Last Name"
-                variant="outlined"
-                name="last_name"
-                onChange={handleChanges}
-                value={formData.last_name}
-              /> */}
+            <TextField
+              label="First Name"
+              variant="outlined"
+              name="first_name"
+              onChange={handleChanges}
+              value={formData.first_name}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              label="Last Name"
+              variant="outlined"
+              name="last_name"
+              onChange={handleChanges}
+              value={formData.last_name}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
             <TextField
               label="Map"
               variant="outlined"

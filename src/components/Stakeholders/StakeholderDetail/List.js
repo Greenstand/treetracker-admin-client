@@ -28,8 +28,7 @@ function StakeholderList({ id, data, type, linked, onLinkUpdate }) {
       linked: !linked,
       data: data,
     }).then(() => {
-      // only when linking to remove item from the list
-      onLinkUpdate && onLinkUpdate(data.id);
+      // onLinkUpdate && onLinkUpdate(data.id);
     });
   };
 
