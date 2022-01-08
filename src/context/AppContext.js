@@ -91,16 +91,17 @@ function getRoutes(user) {
           linkTo: '/earnings',
           component: EarningsView,
           icon: CreditCardIcon,
-          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
           icon: PaymentsIcon,
-          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
         },
       ],
+      disabled:
+        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
     },
     {
       name: 'Growers',
@@ -149,10 +150,12 @@ function getRoutes(user) {
       linkTo: '/messaging',
       component: MessagingView,
       icon: InboxRounded,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.SEND_MESSAGES,
-      ]),
+      disabled:
+        process.env.REACT_APP_ENABLE_INBOX !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.SEND_MESSAGES,
+        ]),
     },
   ];
 }
