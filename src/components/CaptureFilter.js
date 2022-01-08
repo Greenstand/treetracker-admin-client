@@ -28,6 +28,7 @@ import {
 import {
   verificationStates,
   tokenizationStates,
+  verificationStatesArr,
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { AppContext } from '../context/AppContext';
@@ -103,11 +104,6 @@ function Filter(props) {
     filter.organizationId || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-  const verificationStatesArr = [
-    verificationStates.APPROVED,
-    verificationStates.AWAITING,
-    verificationStates.REJECTED,
-  ];
   const [verificationStatus, setVerificationStatus] = useState([
     verificationStates.APPROVED,
     verificationStates.AWAITING,
