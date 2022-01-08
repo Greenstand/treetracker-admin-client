@@ -70,6 +70,12 @@ const columns = [
     noSort: true,
   },
   {
+    attr: 'note',
+    label: 'Notes',
+    noSort: true,
+    renderer: (val) => val,
+  },
+  {
     attr: 'timeCreated',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),
@@ -265,7 +271,7 @@ const CaptureTable = () => {
                       speciesLookup,
                       captureTagLookup[capture.id] || [],
                       attr,
-                      renderer,
+                      renderer
                     )}
                   </TableCell>
                 ))}
@@ -290,7 +296,7 @@ export const formatCell = (
   speciesLookup,
   additionalTags,
   attr,
-  renderer,
+  renderer
 ) => {
   if (attr === 'id' || attr === 'planterId') {
     return (

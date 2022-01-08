@@ -44,7 +44,7 @@ export function CapturesProvider(props) {
     new FilterModel({
       approved: true,
       active: true,
-    }),
+    })
   );
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export function CapturesProvider(props) {
   const getCaptureCount = async () => {
     log.debug('load capture count');
     const paramString = `where=${JSON.stringify(
-      filter ? filter.getWhereObj() : {},
+      filter ? filter.getWhereObj() : {}
     )}`;
     const response = await queryCapturesApi({
       count: true,
@@ -129,6 +129,7 @@ export function CapturesProvider(props) {
         morphology: true,
         captureApprovalTag: true,
         rejectionReason: true,
+        note: true,
       },
     };
 
@@ -165,6 +166,7 @@ export function CapturesProvider(props) {
         morphology: true,
         captureApprovalTag: true,
         rejectionReason: true,
+        note: true,
       },
     };
 
@@ -179,7 +181,7 @@ export function CapturesProvider(props) {
         setCapture(res.data);
       })
       .catch((err) =>
-        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`),
+        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
       );
   };
 
