@@ -127,13 +127,6 @@ const SpeciesTable = (props) => {
 
   const tableRef = useRef(null);
 
-  const emptyRows =
-    rowsPerPage -
-    Math.min(
-      rowsPerPage,
-      speciesContext.speciesList.length - page * rowsPerPage,
-    );
-
   useEffect(() => {
     const sortBy = (option) => {
       let sortedSpecies;
@@ -312,11 +305,6 @@ const SpeciesTable = (props) => {
                   </TableHead>
                   <TableBody>
                     {renderSpecies()}
-                    {emptyRows > 0 && (
-                      <TableRow style={{ height: 53 * emptyRows }}>
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
                   </TableBody>
                   <TableFooter>
                     <TableRow>{tablePagination()}</TableRow>
