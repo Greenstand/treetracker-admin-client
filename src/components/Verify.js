@@ -157,6 +157,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
+  const [captureSelected, setCaptureSelected] = useState({});
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -187,12 +188,14 @@ const Verify = (props) => {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on capture:%d', captureId);
-    verifyContext.clickCapture({
-      captureId,
-      isShift: e.shiftKey,
-      isCmd: e.metaKey,
-      isCtrl: e.ctrlKey,
-    });
+    if (captureSelected[captureId]) {
+      setCaptureSelected({
+        ...captureSelected,
+        [captureId]: !captureSelected[captureId],
+      });
+    } else {
+      setCaptureSelected({ ...captureSelected, [captureId]: true });
+    }
   }
 
   function handleCapturePinClick(e, captureId) {
@@ -219,7 +222,8 @@ const Verify = (props) => {
   async function handleSubmit(approveAction) {
     // log.debug('approveAction:', approveAction);
     //check selection
-    if (verifyContext.captureImagesSelected.length === 0) {
+    const captureImagesSelected = getCaptureImagesSelected();
+    if (captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
     }
@@ -282,8 +286,14 @@ const Verify = (props) => {
     verifyContext.setCurrentPage(page);
   }
 
-  function isCaptureSelected(id) {
-    return verifyContext.captureImagesSelected.indexOf(id) >= 0;
+  function getCaptureImagesSelected() {
+    let selectedImages = [];
+    Object.keys(captureSelected).forEach((captureId) => {
+      selectedImages = captureSelected[captureId]
+        ? [...selectedImages, captureId]
+        : selectedImages;
+    });
+    return selectedImages;
   }
 
   const captureImages = verifyContext.captureImages;
@@ -307,15 +317,10 @@ const Verify = (props) => {
           <div
             className={clsx(
               classes.cardWrapper,
-              isCaptureSelected(capture.id) ? classes.cardSelected : undefined,
-              capture.placeholder && classes.placeholderCard,
+              captureSelected[capture.id] ? classes.cardSelected : undefined,
+              capture.placeholder && classes.placeholderCard
             )}
           >
-            {/* {isCaptureSelected(capture.id) && (
-              <Paper className={classes.cardCheckbox} elevation={4}>
-                <CheckIcon />
-              </Paper>
-            )} */}
             <Card
               onClick={(e) => handleCaptureClick(e, capture.id)}
               id={`card_${capture.id}`}
@@ -324,7 +329,7 @@ const Verify = (props) => {
             >
               <CardContent className={classes.cardContent}>
                 <Paper className={classes.cardCheckbox} elevation={4}>
-                  <CheckIcon />
+                  {captureSelected[capture.id] ? <CheckIcon /> : <></>}
                 </Paper>
                 <OptimizedImage
                   src={capture.imageUrl}
@@ -457,7 +462,7 @@ const Verify = (props) => {
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
-                          verifyContext.captureCount,
+                          verifyContext.captureCount
                         )} capture${
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
@@ -484,7 +489,7 @@ const Verify = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={verifyContext.captureImagesSelected.length > 0}
+          submitEnabled={getCaptureImagesSelected().length > 0}
         />
       </Grid>
       {verifyContext.isApproveAllProcessing && (
