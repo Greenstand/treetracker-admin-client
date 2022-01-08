@@ -86,19 +86,21 @@ function Filter(props) {
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || '',
+    filter?.planterIdentifier || ''
   );
-  const [approved, setApproved] = useState(undefined);
-  const [active, setActive] = useState(true);
+  const [verifyStatus, setVerifyStatus] = useState([
+    { active: true, approved: true },
+    { active: true, approved: false },
+  ]);
   const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault
   );
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS,
+    filter.organizationId || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
   const verificationStatesArr = [
@@ -128,6 +130,7 @@ function Filter(props) {
 
   const handleVerificationStatusChange = (event) => {
     const value = event.target.value;
+    let status = [];
     if (
       value[value.length - 1] === 'all' ||
       (value.length === 3 && value[value.length - 1] !== 'all')
@@ -135,49 +138,22 @@ function Filter(props) {
       setVerificationStatus(
         verificationStatus.length === verificationStatesArr.length
           ? []
-          : verificationStatesArr,
+          : verificationStatesArr
       );
-      setActive(undefined);
-      setApproved(undefined);
-      return;
+    } else {
+      setVerificationStatus(value);
     }
-    handleChangeActiveApproved(value);
-    setVerificationStatus(value);
-  };
-
-  // set active and approved field based on the checkbox values
-  function handleChangeActiveApproved(value) {
-    let status = { active: 0, approved: 0 };
     value.forEach((val) => {
       if (val === verificationStates.APPROVED) {
-        status.approved += 1;
-        status.active += 1;
-        setActive(true);
-        setApproved(true);
+        status.push({ active: true, approved: true });
       } else if (val === verificationStates.AWAITING) {
-        status.approved += 1;
-        setActive(true);
-        setApproved(false);
-      } else {
-        status.active += 1;
-        setActive(false);
-        setApproved(false);
+        status.push({ active: true, approved: false });
+      } else if (val === verificationStates.REJECTED) {
+        status.push({ active: false, approved: false });
       }
     });
-
-    if (status.active === 2 && status.approved === 1) {
-      setActive(undefined);
-      setApproved(undefined);
-    }
-    if (status.approved === 2 && status.active === 1) {
-      setActive(true);
-      setApproved(undefined);
-    }
-    if (status.approved === 1 && status.active === 1 && value.length > 1) {
-      setActive(undefined);
-      setApproved(false);
-    }
-  }
+    setVerifyStatus(status);
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -190,12 +166,11 @@ function Filter(props) {
     filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.tokenId = tokenId;
+    filter.verifyStatus = verifyStatus;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -213,9 +188,10 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
-    setActive(true);
-    setApproved(undefined);
-
+    setVerifyStatus([
+      { active: true, approved: true },
+      { active: true, approved: false },
+    ]);
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   }
@@ -421,7 +397,7 @@ function Filter(props) {
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
-                      .startsWith(tagSearchString.toLowerCase()),
+                      .startsWith(tagSearchString.toLowerCase())
                   ),
                 ]}
                 value={tag}
