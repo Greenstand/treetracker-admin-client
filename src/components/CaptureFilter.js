@@ -125,7 +125,7 @@ function Filter(props) {
   };
 
   const handleVerificationStatusChange = (event) => {
-    const value = event.target.value;
+    let value = event.target.value;
     let status = [];
     if (
       value[value.length - 1] === 'all' ||
@@ -136,6 +136,7 @@ function Filter(props) {
           ? []
           : verificationStatesArr
       );
+      value = verificationStatesArr;
     } else {
       setVerificationStatus(value);
     }
