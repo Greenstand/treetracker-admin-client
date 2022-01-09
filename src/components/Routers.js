@@ -16,6 +16,7 @@ import ReportingCard6 from './reportingCards/ReportingCard6';
 export default function Routers() {
   const refContainer = useRef();
   const appContext = useContext(AppContext);
+  const { search } = useLocation();
 
   return useMemo(() => {
     return (
@@ -78,11 +79,10 @@ export default function Routers() {
                     }
                     key={`route_${idx}`}
                   />
-                ),
+                )
               )}
               <Route path="/reporting">
                 {(() => {
-                  const { search } = useLocation();
                   const queryParams = new URLSearchParams(search);
                   const props = {
                     startDate: queryParams.get('start-date'),
