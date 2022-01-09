@@ -24,6 +24,7 @@ export default class Filter {
   tagId;
   organizationId;
   tokenId;
+  verifyStatus;
 
   constructor(options) {
     Object.assign(this, options);
@@ -98,6 +99,10 @@ export default class Filter {
       where.tokenId = { neq: null };
     } else if (this.tokenId === tokenizationStates.NOT_TOKENIZED) {
       where.tokenId = { eq: null };
+    }
+
+    if (this.verifyStatus) {
+      where.verifyStatus = this.verifyStatus;
     }
 
     return where;
