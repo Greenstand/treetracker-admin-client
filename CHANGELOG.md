@@ -1,3 +1,15 @@
+# [1.39.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.38.0...v1.39.0) (2022-01-09)
+
+
+### Bug Fixes
+
+* sort captures table by time created desc ([#275](https://github.com/Greenstand/treetracker-admin-client/issues/275)) ([2383d69](https://github.com/Greenstand/treetracker-admin-client/commit/2383d698c4f6e4060bd8ae3d5e8a88d479f4d114))
+
+
+### Features
+
+* display unique devices and if they're iOS or Android ([#279](https://github.com/Greenstand/treetracker-admin-client/issues/279)) ([01dd684](https://github.com/Greenstand/treetracker-admin-client/commit/01dd6848b4090f859d4e24193d8caef037a28848))
+
 # [1.38.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.37.0...v1.38.0) (2022-01-09)
 
 
