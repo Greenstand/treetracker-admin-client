@@ -130,6 +130,7 @@ export function StakeholdersProvider(props) {
   };
 
   const updateFilter = async (filter) => {
+    log.debug('update filter', filter);
     setPage(0);
     setFilter(filter);
   };
@@ -168,11 +169,13 @@ export function StakeholdersProvider(props) {
   };
 
   const getUnlinkedStakeholders = async (id) => {
+    log.debug('get unlinked', id);
     const unlinked = await api.getUnlinkedStakeholders(id);
     setUnlinkedStakeholders(unlinked.stakeholders);
   };
 
   const updateLinks = async (id, payload) => {
+    log.debug('update links', id);
     await api.updateLinks(id, payload);
     getUnlinkedStakeholders(id);
     setIsLoading(true);

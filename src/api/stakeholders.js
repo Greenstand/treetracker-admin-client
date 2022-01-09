@@ -38,17 +38,10 @@ export default {
     const orgId = getOrganizationId();
     let query = `${STAKEHOLDER_API}/links`;
 
-    // if (orgId) {
-    //   query = `${STAKEHOLDER_API}/links/${orgId}`;
-    // }
-
     if (id && orgId && orgId !== id) {
-      // pass both ids of the login org and the current stakeholder being viewed
       query = `${STAKEHOLDER_API}/links/${id}/${orgId}`;
     } else if (id || orgId) {
       query = `${STAKEHOLDER_API}/links/${id || orgId}`;
-    } else {
-      query = `${STAKEHOLDER_API}/links`;
     }
 
     const options = {
@@ -67,8 +60,10 @@ export default {
     const orgId = id || getOrganizationId();
     let query = `${STAKEHOLDER_API}/links`;
 
-    if (orgId) {
-      query = `${STAKEHOLDER_API}/links/${orgId}`;
+    if (id && orgId && orgId !== id) {
+      query = `${STAKEHOLDER_API}/links/${id}/${orgId}`;
+    } else if (id || orgId) {
+      query = `${STAKEHOLDER_API}/links/${id || orgId}`;
     }
 
     const options = {
