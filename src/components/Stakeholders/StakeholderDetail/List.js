@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderList({ id, data, type, linked, onLinkUpdate }) {
+function StakeholderList({ id, data, type, linked /* onLinkUpdate */ }) {
   const classes = useStyles();
   const [isLinked, setIsLinked] = useState(linked);
   const { updateLinks } = useContext(StakeholdersContext);
