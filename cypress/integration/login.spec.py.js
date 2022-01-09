@@ -9,6 +9,11 @@ describe.only('Login', () => {
     loginPage.login('incorrectName', 'incorrectPassword');
     loginPage.expect_Displayed(login.error_message);
   });
+
+  it('logs in when "correct" credentials are entered', () => {
+    loginPage.login(login.user_name, login.password);
+    cy.get('div.Home-menuAside-18').should('contain.text', 'Home');
+  });
 });
 
 describe('Login', () => {
