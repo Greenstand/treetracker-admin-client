@@ -42,8 +42,10 @@ export function CapturesProvider(props) {
   // const [byId, setById] = useState({});
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: true,
-      active: true,
+      verifyStatus: [
+        { active: true, approved: true },
+        { active: true, approved: false },
+      ],
     })
   );
 
@@ -70,6 +72,29 @@ export function CapturesProvider(props) {
   // };
 
   // EVENT HANDLERS
+  const getWhereCondition = () => {
+    const { verifyStatus, ...restFilter } = filter ? filter.getWhereObj() : {};
+    let orCondition = false;
+    let where;
+    if (verifyStatus.length == 1) {
+      where = {
+        ...restFilter,
+        active: verifyStatus[0].active,
+        approved: verifyStatus[0].approved,
+      };
+    } else {
+      orCondition = true;
+      where = [];
+      verifyStatus.forEach((status) => {
+        where.push({
+          ...restFilter,
+          active: status.active,
+          approved: status.approved,
+        });
+      });
+    }
+    return orCondition ? { or: where } : { ...where };
+  };
 
   const queryCapturesApi = ({ id = null, count = false, paramString = null }) =>
     // abortController,
@@ -93,9 +118,7 @@ export function CapturesProvider(props) {
 
   const getCaptureCount = async () => {
     log.debug('load capture count');
-    const paramString = `where=${JSON.stringify(
-      filter ? filter.getWhereObj() : {}
-    )}`;
+    const paramString = `where=${JSON.stringify(getWhereCondition())}`;
     const response = await queryCapturesApi({
       count: true,
       paramString,
@@ -106,11 +129,9 @@ export function CapturesProvider(props) {
   };
 
   const getCapturesAsync = async () => {
-    // log.debug('4 - load captures');
-    const where = filter ? filter.getWhereObj() : {};
-
+    log.debug('4 - load captures');
     const lbFilter = {
-      where: { ...where },
+      where: getWhereCondition(),
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip: page * rowsPerPage,
@@ -142,12 +163,9 @@ export function CapturesProvider(props) {
     console.log('captures filterInfo -- ', filterInfo);
 
     // if filterInfo contains new values override the defaults in state hooks
-    const { filter = new FilterModel() } = filterInfo;
-
-    const where = filter ? filter.getWhereObj() : {};
 
     const lbFilter = {
-      where: { ...where },
+      where: getWhereCondition(),
       order: [`${orderBy} ${order}`],
       limit: 20000,
       fields: {

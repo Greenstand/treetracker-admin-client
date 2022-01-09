@@ -226,6 +226,7 @@ const CaptureTable = () => {
             columns={columns}
             filter={filter}
             speciesLookup={speciesLookup}
+            captureTagLookup={captureTagLookup}
           />
           {tablePagination()}
         </Grid>
@@ -265,7 +266,7 @@ const CaptureTable = () => {
                       speciesLookup,
                       captureTagLookup[capture.id] || [],
                       attr,
-                      renderer,
+                      renderer
                     )}
                   </TableCell>
                 ))}
@@ -290,7 +291,7 @@ export const formatCell = (
   speciesLookup,
   additionalTags,
   attr,
-  renderer,
+  renderer
 ) => {
   if (attr === 'id' || attr === 'planterId') {
     return (
