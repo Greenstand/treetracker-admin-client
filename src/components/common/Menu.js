@@ -82,7 +82,10 @@ export default function GSMenu(props) {
             .filter(({ disabled }) => !disabled)
             .map((item, i) =>
               item?.children ? (
-                <div className={classes.menuItemWithChildren}>
+                <div
+                  key={`${item}-${i}`}
+                  className={classes.menuItemWithChildren}
+                >
                   <Typography className={classes.menuTitle}>
                     {item.name}
                   </Typography>
@@ -144,9 +147,9 @@ export default function GSMenu(props) {
                     </Grid>
                   </MenuItem>
                 </Link>
-              ),
+              )
             ),
-        [appContext.routes, props.active, classes],
+        [appContext.routes, props.active, classes]
       )}
     </>
   );
