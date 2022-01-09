@@ -64,6 +64,7 @@ function SidePanel(props) {
 
   const classes = useStyles(props);
   const verifyContext = useContext(VerifyContext);
+  const captureSelected = verifyContext.getCaptureSelectedArr();
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
@@ -135,7 +136,7 @@ function SidePanel(props) {
           <Typography variant="h6">Selected Captures</Typography>
           <Typography className={classes.subtitle}>
             Quantity of selected Captures:{' '}
-            {verifyContext.getCaptureSelectedArr().length}/
+            {(captureSelected && captureSelected.length) || 0}/
             {verifyContext.captureImages.length}
           </Typography>
         </Grid>

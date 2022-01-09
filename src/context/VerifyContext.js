@@ -160,7 +160,7 @@ export function VerifyProvider(props) {
     let selectedImages = [];
     Object.keys(captureImagesSelected).forEach((captureId) => {
       selectedImages = captureImagesSelected[captureId]
-        ? [...selectedImages, captureId]
+        ? [...selectedImages, parseInt(captureId)]
         : selectedImages;
     });
     return selectedImages;

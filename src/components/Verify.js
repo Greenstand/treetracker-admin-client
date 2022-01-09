@@ -166,6 +166,7 @@ const Verify = (props) => {
     grower: {},
   });
   const refContainer = useRef();
+  const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
 
   /*
@@ -224,8 +225,7 @@ const Verify = (props) => {
   async function handleSubmit(approveAction) {
     // log.debug('approveAction:', approveAction);
     //check selection
-    const captureImagesSelected = verifyContext.getCaptureSelectedArr();
-    if (captureImagesSelected.length === 0) {
+    if (captureSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
     }
@@ -487,7 +487,7 @@ const Verify = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={verifyContext.getCaptureSelectedArr().length > 0}
+          submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
       {verifyContext.isApproveAllProcessing && (
