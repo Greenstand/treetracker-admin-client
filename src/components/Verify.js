@@ -157,7 +157,6 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
-  const [captureSelected, setCaptureSelected] = useState({});
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -188,13 +187,16 @@ const Verify = (props) => {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on capture:%d', captureId);
-    if (captureSelected[captureId]) {
-      setCaptureSelected({
-        ...captureSelected,
-        [captureId]: !captureSelected[captureId],
+    if (verifyContext.captureImagesSelected[captureId]) {
+      verifyContext.setCaptureImagesSelected({
+        ...verifyContext.captureImagesSelected,
+        [captureId]: !verifyContext.captureImagesSelected[captureId],
       });
     } else {
-      setCaptureSelected({ ...captureSelected, [captureId]: true });
+      verifyContext.setCaptureImagesSelected({
+        ...verifyContext.captureImagesSelected,
+        [captureId]: true,
+      });
     }
   }
 
@@ -222,7 +224,7 @@ const Verify = (props) => {
   async function handleSubmit(approveAction) {
     // log.debug('approveAction:', approveAction);
     //check selection
-    const captureImagesSelected = getCaptureImagesSelected();
+    const captureImagesSelected = verifyContext.getCaptureSelectedArr();
     if (captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
@@ -286,16 +288,6 @@ const Verify = (props) => {
     verifyContext.setCurrentPage(page);
   }
 
-  function getCaptureImagesSelected() {
-    let selectedImages = [];
-    Object.keys(captureSelected).forEach((captureId) => {
-      selectedImages = captureSelected[captureId]
-        ? [...selectedImages, captureId]
-        : selectedImages;
-    });
-    return selectedImages;
-  }
-
   const captureImages = verifyContext.captureImages;
 
   const placeholderImages = verifyContext.isLoading
@@ -317,7 +309,9 @@ const Verify = (props) => {
           <div
             className={clsx(
               classes.cardWrapper,
-              captureSelected[capture.id] ? classes.cardSelected : undefined,
+              verifyContext.captureImagesSelected[capture.id]
+                ? classes.cardSelected
+                : undefined,
               capture.placeholder && classes.placeholderCard
             )}
           >
@@ -329,7 +323,11 @@ const Verify = (props) => {
             >
               <CardContent className={classes.cardContent}>
                 <Paper className={classes.cardCheckbox} elevation={4}>
-                  {captureSelected[capture.id] ? <CheckIcon /> : <></>}
+                  {verifyContext.captureImagesSelected[capture.id] ? (
+                    <CheckIcon />
+                  ) : (
+                    <></>
+                  )}
                 </Paper>
                 <OptimizedImage
                   src={capture.imageUrl}
@@ -489,7 +487,7 @@ const Verify = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={getCaptureImagesSelected().length > 0}
+          submitEnabled={verifyContext.getCaptureSelectedArr().length > 0}
         />
       </Grid>
       {verifyContext.isApproveAllProcessing && (
