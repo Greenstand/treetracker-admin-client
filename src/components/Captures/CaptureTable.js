@@ -232,6 +232,7 @@ const CaptureTable = () => {
             columns={columns}
             filter={filter}
             speciesLookup={speciesLookup}
+            captureTagLookup={captureTagLookup}
           />
           {tablePagination()}
         </Grid>

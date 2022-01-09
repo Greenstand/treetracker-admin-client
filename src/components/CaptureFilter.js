@@ -4,6 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FilterModel, {
   ALL_SPECIES,
@@ -25,9 +28,9 @@ import {
 import {
   verificationStates,
   tokenizationStates,
+  verificationStatesArr,
   datePickerDefaultMinDate,
 } from '../common/variables';
-import { getVerificationStatus } from '../common/utils';
 import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
@@ -72,7 +75,6 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  // console.log('render: filter top');
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { orgList, userHasOrg } = useContext(AppContext);
@@ -85,21 +87,30 @@ function Filter(props) {
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || '',
+    filter?.planterIdentifier || ''
   );
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
+  const [verifyStatus, setVerifyStatus] = useState([
+    { active: true, approved: true },
+    { active: true, approved: false },
+  ]);
   const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault
   );
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS,
+    filter.organizationId || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  const [verificationStatus, setVerificationStatus] = useState([
+    verificationStates.APPROVED,
+    verificationStates.AWAITING,
+  ]);
+  const isAllVerification =
+    verificationStatus.length &&
+    verificationStatus.length === verificationStatesArr.length;
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -113,6 +124,34 @@ function Filter(props) {
     return convertDateToDefaultSqlDate(date);
   };
 
+  const handleVerificationStatusChange = (event) => {
+    let value = event.target.value;
+    let status = [];
+    if (
+      value[value.length - 1] === 'all' ||
+      (value.length === 3 && value[value.length - 1] !== 'all')
+    ) {
+      setVerificationStatus(
+        verificationStatus.length === verificationStatesArr.length
+          ? []
+          : verificationStatesArr
+      );
+      value = verificationStatesArr;
+    } else {
+      setVerificationStatus(value);
+    }
+    value.forEach((val) => {
+      if (val === verificationStates.APPROVED) {
+        status.push({ active: true, approved: true });
+      } else if (val === verificationStates.AWAITING) {
+        status.push({ active: true, approved: false });
+      } else if (val === verificationStates.REJECTED) {
+        status.push({ active: false, approved: false });
+      }
+    });
+    setVerifyStatus(status);
+  };
+
   function handleSubmit(e) {
     e.preventDefault();
     // save the filer to context for editing & submit
@@ -124,12 +163,11 @@ function Filter(props) {
     filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.tokenId = tokenId;
+    filter.verifyStatus = verifyStatus;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -147,10 +185,11 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
-
+    setVerifyStatus([
+      { active: true, approved: true },
+      { active: true, approved: false },
+    ]);
     const filter = new FilterModel();
-    filter.approved = approved; // keeps last value set
-    filter.active = active; // keeps last value set
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -186,38 +225,36 @@ function Filter(props) {
                 htmlFor="verification-status"
                 id="verification-status"
                 label="Verification Status"
-                value={
-                  active === undefined && approved === undefined
-                    ? filterOptionAll
-                    : getVerificationStatus(active, approved)
-                }
-                onChange={(e) => {
-                  setApproved(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.REJECTED
-                      ? false
-                      : true,
-                  );
-                  setActive(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.APPROVED
-                      ? true
-                      : false,
-                  );
+                SelectProps={{
+                  multiple: true,
+                  value: verificationStatus,
+                  onChange: handleVerificationStatusChange,
+                  renderValue: (verificationStatus) =>
+                    verificationStatus.join(', '),
                 }}
               >
-                {[
-                  filterOptionAll,
-                  verificationStates.APPROVED,
-                  verificationStates.AWAITING,
-                  verificationStates.REJECTED,
-                ].map((name) => (
+                <MenuItem value="all">
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={
+                        isAllVerification === 0 ? false : isAllVerification
+                      }
+                      indeterminate={
+                        verificationStatus.length > 0 &&
+                        verificationStatus.length < verificationStatesArr.length
+                      }
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Select All" />
+                </MenuItem>
+                {verificationStatesArr.map((name) => (
                   <MenuItem key={name} value={name}>
-                    {name}
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={verificationStatus.indexOf(name) > -1}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={name} />
                   </MenuItem>
                 ))}
               </TextField>
@@ -357,7 +394,7 @@ function Filter(props) {
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
-                      .startsWith(tagSearchString.toLowerCase()),
+                      .startsWith(tagSearchString.toLowerCase())
                   ),
                 ]}
                 value={tag}
@@ -370,7 +407,6 @@ function Filter(props) {
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('newVal -- ', newVal);
                   if (newVal && newVal.tagName === 'Not set') {
                     setTag('Not set');
                   } else {

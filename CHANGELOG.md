@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.37.0...v1.38.0) (2022-01-09)
+
+
+### Features
+
+* add multi-select dropdown for verification status of captures f… ([#212](https://github.com/Greenstand/treetracker-admin-client/issues/212)) ([a67c1dd](https://github.com/Greenstand/treetracker-admin-client/commit/a67c1dd6c7da098a6cda3a4f181968df6aa701ca))
+
 # [1.37.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.36.0...v1.37.0) (2022-01-04)
 
 
