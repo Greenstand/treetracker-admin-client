@@ -13,8 +13,8 @@ export const CapturesContext = createContext({
   capture: {},
   page: 0,
   rowsPerPage: 25,
-  order: 'asc',
-  orderBy: 'id',
+  order: 'desc',
+  orderBy: 'timeCreated',
   filter: new FilterModel(),
   setRowsPerPage: () => {},
   setPage: () => {},
@@ -37,8 +37,8 @@ export function CapturesProvider(props) {
   const [capture, setCapture] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('id');
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('timeCreated');
   // const [byId, setById] = useState({});
   const [filter, setFilter] = useState(
     new FilterModel({
