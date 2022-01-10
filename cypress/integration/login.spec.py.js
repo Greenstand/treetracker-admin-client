@@ -14,6 +14,12 @@ describe.only('Login', () => {
     loginPage.login(login.user_name, login.password);
     cy.get('div.Home-menuAside-18').should('contain.text', 'Home');
   });
+
+  it('can uncheck the Remember Me checkbox, which is checked by default', () => {
+    cy.visit('/');
+    cy.get('input[type="checkbox"]').should('be.checked');
+    cy.get('input[type="checkbox"]').click().should('not.be.checked');
+  });
 });
 
 describe('Login', () => {
