@@ -1,3 +1,10 @@
+## [1.39.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.1...v1.39.2) (2022-01-10)
+
+
+### Bug Fixes
+
+* enable reporting cards in production ([45e26f9](https://github.com/Greenstand/treetracker-admin-client/commit/45e26f9c8a9ca3f72ccd104d811c47ed52d0302a))
+
 ## [1.39.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.0...v1.39.1) (2022-01-10)
 
 
