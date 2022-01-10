@@ -52,7 +52,7 @@ const paymentTableMetaData = [
   },
   {
     description: 'Payment Date',
-    name: 'paid_at',
+    name: 'payment_confirmed_at',
     sortable: false,
     showInfoIcon: false,
   },
@@ -71,13 +71,16 @@ const prepareRows = (rows) =>
       ...row,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy',
+        'mmm d, yyyy'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy',
+        'mmm d, yyyy'
       ),
       calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      payment_confirmed_at: covertDateStringToHumanReadableFormat(
+        row.payment_confirmed_at
+      ),
     };
   });
 
@@ -132,7 +135,7 @@ function PaymentsTable() {
     if (filter?.start_date && filter?.end_date) {
       const dateRangeString = generateActiveDateRangeFilterString(
         filter?.start_date,
-        filter?.end_date,
+        filter?.end_date
       );
       setActiveDateRageString(dateRangeString);
     } else {
