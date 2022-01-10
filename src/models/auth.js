@@ -8,6 +8,10 @@ const POLICIES = {
   SUPER_PERMISSION: 'super_permission',
   LIST_USER: 'list_user',
   MANAGER_USER: 'manager_user',
+  MANAGE_EARNINGS: 'manage_earnings',
+  MANAGE_PAYMENTS: 'manage_payments',
+  LIST_EARNINGS: 'list_earnings',
+  LIST_PAYMENTS: 'list_payments',
   LIST_TREE: 'list_tree',
   APPROVE_TREE: 'approve_tree',
   LIST_GROWER: 'list_planter',
@@ -29,10 +33,11 @@ function hasPermission(user, p) {
 }
 
 function hasFreetownPermission(user) {
-  if(!user) return false;
+  if (!user) return false;
   // // super admin has freetown permission
   // if(hasPermssion(user, POLICIES.SUPER_PERMISSION)) return true;
-  if(user.policy?.organization?.name?.toLowerCase() === 'freetown') return true;
+  if (user.policy?.organization?.name?.toLowerCase() === 'freetown')
+    return true;
   return false;
 }
 
