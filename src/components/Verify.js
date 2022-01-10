@@ -14,6 +14,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
+import Avatar from '@material-ui/core/Avatar';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -23,17 +24,17 @@ import Map from '@material-ui/icons/Map';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import Navbar from './Navbar';
-import PlanterDetail from './PlanterDetail';
+import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
 import CaptureDetailDialog from './CaptureDetailDialog';
-import withData from './common/withData';
 import OptimizedImage from './OptimizedImage';
 import { LocationOn } from '@material-ui/icons';
 import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { CaptureDetailProvider } from '../context/CaptureDetailContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -139,14 +140,15 @@ const useStyles = makeStyles((theme) => ({
   mb: {
     marginBottom: '1rem',
   },
+  activeFilters: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    marginLeft: '0.75rem',
+    backgroundColor: theme.palette.stats.green,
+    fontSize: 'smaller',
+    fontWeight: 'bold',
+  },
 }));
-
-const ToVerifyCounter = withData(({ data }) => (
-  <>
-    {data !== null &&
-      `${countToLocaleString(data)} capture${data === 1 ? '' : 's'}`}
-  </>
-));
 
 const Verify = (props) => {
   const verifyContext = useContext(VerifyContext);
@@ -159,21 +161,12 @@ const Verify = (props) => {
     isOpen: false,
     capture: {},
   });
-  const [planterDetail, setPlanterDetail] = useState({
+  const [growerDetail, setGrowerDetail] = useState({
     isOpen: false,
-    planter: {},
+    grower: {},
   });
   const refContainer = useRef();
-
-  // log.debug(
-  //   'render: verify',
-  //   'captures:',
-  //   verifyContext.captureImages.length,
-  //   'species:',
-  //   speciesContext.speciesList.length,
-  //   'tags:',
-  //   tagsContext.tagList.length,
-  // );
+  const numFilters = verifyContext.filter.countAppliedFilters();
 
   /*
    * effect to load page when mounted
@@ -189,14 +182,6 @@ const Verify = (props) => {
     // console.log('-- approve all complete');
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
-
-  /* load more captures when the page or page size changes */
-  useEffect(() => {
-    // console.log('-- load images', verifyContext.filter);
-    const abortController = new AbortController();
-    verifyContext.loadCaptureImages({ signal: abortController.signal });
-    return () => abortController.abort();
-  }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
 
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
@@ -218,11 +203,11 @@ const Verify = (props) => {
     window.open(url, '_blank').opener = null;
   }
 
-  function handlePlanterMapClick(e, planterId) {
+  function handleGrowerMapClick(e, growerId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on planter:%d', planterId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${planterId}`;
+    log.debug('click on grower:%d', growerId);
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
   }
 
@@ -237,29 +222,6 @@ const Verify = (props) => {
     if (verifyContext.captureImagesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
-    }
-    /*
-     * check species
-     */
-    const isNew = await speciesContext.isNewSpecies();
-    if (isNew) {
-      const answer = await new Promise((resolve) => {
-        if (
-          window.confirm(
-            `The species ${speciesContext.speciesInput} is a new one, create it?`,
-          )
-        ) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-      if (!answer) {
-        return;
-      } else {
-        //create new species
-        await speciesContext.createSpecies();
-      }
     }
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
@@ -277,22 +239,21 @@ const Verify = (props) => {
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
-    verifyContext.loadCaptureImages();
   }
 
-  async function handleShowPlanterDetail(e, capture) {
+  async function handleShowGrowerDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
-    setPlanterDetail({
+    setGrowerDetail({
       isOpen: true,
-      planterId: capture.planterId,
+      growerId: capture.planterId,
     });
   }
 
-  function handleClosePlanterDetail() {
-    setPlanterDetail({
+  function handleCloseGrowerDetail() {
+    setGrowerDetail({
       isOpen: false,
-      planterId: null,
+      growerId: null,
     });
   }
 
@@ -313,6 +274,7 @@ const Verify = (props) => {
   }
 
   function handleChangePageSize(event) {
+    verifyContext.setCurrentPage(0);
     verifyContext.setPageSize(event.target.value);
   }
 
@@ -324,15 +286,10 @@ const Verify = (props) => {
     return verifyContext.captureImagesSelected.indexOf(id) >= 0;
   }
 
-  const captureImages = verifyContext.captureImages.filter((capture, index) => {
-    return (
-      index >= verifyContext.currentPage * verifyContext.pageSize &&
-      index < (verifyContext.currentPage + 1) * verifyContext.pageSize
-    );
-  });
+  const captureImages = verifyContext.captureImages;
 
   const placeholderImages = verifyContext.isLoading
-    ? Array(verifyContext.pageSize - captureImages.length)
+    ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
         .fill()
         .map((_, index) => {
           return {
@@ -376,9 +333,9 @@ const Verify = (props) => {
               <Grid justify="center" container className={classes.cardActions}>
                 <Grid item>
                   <IconButton
-                    onClick={(e) => handleShowPlanterDetail(e, capture)}
-                    aria-label={`Planter details`}
-                    title={`Planter details`}
+                    onClick={(e) => handleShowGrowerDetail(e, capture)}
+                    aria-label={`Grower details`}
+                    title={`Grower details`}
                   >
                     <Person color="primary" />
                   </IconButton>
@@ -403,9 +360,9 @@ const Verify = (props) => {
                     variant="link"
                     href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
                     target="_blank"
-                    onClick={(e) => handlePlanterMapClick(e, capture.planterId)}
-                    aria-label={`Planter map`}
-                    title={`Planter map`}
+                    onClick={(e) => handleGrowerMapClick(e, capture.planterId)}
+                    aria-label={`Grower map`}
+                    title={`Grower map`}
                   >
                     <Map color="primary" />
                   </IconButton>
@@ -427,7 +384,7 @@ const Verify = (props) => {
 
   let imagePagination = (
     <TablePagination
-      rowsPerPageOptions={[12, 24, 48, 96, 192]}
+      rowsPerPageOptions={[24, 96, 192, 384]}
       component="div"
       count={verifyContext.captureCount || 0}
       rowsPerPage={verifyContext.pageSize}
@@ -446,13 +403,18 @@ const Verify = (props) => {
             <Navbar
               buttons={[
                 <Button
-                  variant="text"
+                  variant="outlined"
                   color="primary"
                   onClick={handleFilterClick}
                   startIcon={<IconFilter />}
                   key={1}
                 >
                   Filter
+                  {numFilters > 0 && (
+                    <Avatar className={classes.activeFilters}>
+                      {numFilters}
+                    </Avatar>
+                  )}
                 </Button>,
               ]}
             >
@@ -490,11 +452,12 @@ const Verify = (props) => {
                 >
                   <Grid item>
                     <Typography variant="h5">
-                      <ToVerifyCounter
-                        needsRefresh={verifyContext.invalidateCaptureCount}
-                        fetch={verifyContext.getCaptureCount}
-                        data={verifyContext.captureCount}
-                      />
+                      {verifyContext.captureCount !== null &&
+                        `${countToLocaleString(
+                          verifyContext.captureCount,
+                        )} capture${
+                          verifyContext.captureCount === 1 ? '' : 's'
+                        }`}
                     </Typography>
                   </Grid>
                   <Grid item>{imagePagination}</Grid>
@@ -574,16 +537,18 @@ const Verify = (props) => {
             className={classes.snackbar}
           />
         )}
-      <PlanterDetail
-        open={planterDetail.isOpen}
-        planterId={planterDetail.planterId}
-        onClose={() => handleClosePlanterDetail()}
+      <GrowerDetail
+        open={growerDetail.isOpen}
+        growerId={growerDetail.growerId}
+        onClose={() => handleCloseGrowerDetail()}
       />
-      <CaptureDetailDialog
-        open={captureDetail.isOpen}
-        onClose={() => handleCloseCaptureDetail()}
-        capture={captureDetail.capture}
-      />
+      <CaptureDetailProvider>
+        <CaptureDetailDialog
+          open={captureDetail.isOpen}
+          onClose={() => handleCloseCaptureDetail()}
+          capture={captureDetail.capture}
+        />
+      </CaptureDetailProvider>
     </>
   );
 };

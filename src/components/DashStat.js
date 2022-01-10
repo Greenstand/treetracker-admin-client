@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
 
 const style = (theme) => ({
   dashstatContainer: {
@@ -87,7 +88,9 @@ function DashStat(props) {
           ></Icon>
         </div>
         <div className={classes.dashstatText}>
-          <h3 className={classes.dashstatData}>{data}</h3>
+          <h3 className={classes.dashstatData}>
+            {data || <CircularProgress size={'32px'} style={{ color }} />}
+          </h3>
           <br />
           <p className={classes.dashstatLabel}>{label}</p>
         </div>

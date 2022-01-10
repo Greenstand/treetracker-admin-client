@@ -1,16 +1,11 @@
-/*
-Captures
-
-Captures is a container component (no visual representation of its own and concerned with
-handling the comms between the captures view components and the store/models)
-
-*/
 import React, { useEffect } from 'react';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
-import Navbar from '../components/Navbar';
-import CaptureTable from '../components/CaptureTable';
+import CaptureTable from '../components/Captures/CaptureTable';
 import { CapturesProvider } from '../context/CapturesContext';
+import { SpeciesProvider } from '../context/SpeciesContext';
+import { TagsProvider } from '../context/TagsContext';
+import CaptureFilterHeader from '../components/CaptureFilterHeader';
 
 function CapturesView() {
   useEffect(() => {
@@ -21,16 +16,16 @@ function CapturesView() {
     <Grid
       container
       direction="column"
-      style={{ flexWrap: 'nowrap', height: '100%' }}
+      style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
-      <Grid item>
-        <Navbar />
-      </Grid>
-      <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
-        <CapturesProvider>
-          <CaptureTable />
-        </CapturesProvider>
-      </Grid>
+      <CapturesProvider>
+        <SpeciesProvider>
+          <TagsProvider>
+            <CaptureFilterHeader />
+            <CaptureTable />
+          </TagsProvider>
+        </SpeciesProvider>
+      </CapturesProvider>
     </Grid>
   );
 }

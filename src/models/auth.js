@@ -1,7 +1,7 @@
 const PERMISSIONS = {
   ADMIN: 1,
   TREE_AUDIT: 2,
-  PLANTER: 3,
+  GROWER: 3,
 };
 
 const POLICIES = {
@@ -10,8 +10,9 @@ const POLICIES = {
   MANAGER_USER: 'manager_user',
   LIST_TREE: 'list_tree',
   APPROVE_TREE: 'approve_tree',
-  LIST_PLANTER: 'list_planter',
-  MANAGE_PLANTER: 'manage_planter',
+  LIST_GROWER: 'list_planter',
+  MANAGE_GROWER: 'manage_planter',
+  SEND_MESSAGES: 'send_messages',
 };
 
 function hasPermission(user, p) {
@@ -27,6 +28,14 @@ function hasPermission(user, p) {
   }
 }
 
+function hasFreetownPermission(user) {
+  if(!user) return false;
+  // // super admin has freetown permission
+  // if(hasPermssion(user, POLICIES.SUPER_PERMISSION)) return true;
+  if(user.policy?.organization?.name?.toLowerCase() === 'freetown') return true;
+  return false;
+}
+
 /*
  * to save the token
  */
@@ -38,4 +47,4 @@ const session = () => {
   };
 };
 
-export { PERMISSIONS, POLICIES, hasPermission, session };
+export { PERMISSIONS, POLICIES, hasPermission, hasFreetownPermission, session };

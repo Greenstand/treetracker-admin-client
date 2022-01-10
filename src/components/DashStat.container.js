@@ -9,7 +9,7 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
-import apiPlanters from '../api/planters';
+import apiPlanters from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 
@@ -99,35 +99,35 @@ function DashStatVerifiedCaptures(props) {
   );
 }
 
-function DashStatPlanterCount(props) {
-  const planterFilter = new FilterModel({
+function DashStatGrowerCount(props) {
+  const growerFilter = new FilterModel({
     active: true,
   });
 
-  const [totalPlanterCount, setTotalPlanterCount] = useState(null);
+  const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
-  const getTotalPlanterCount = async () => {
-    const { count } = await apiPlanters.getCount(planterFilter);
-    setTotalPlanterCount(count);
+  const getTotalGrowerCount = async () => {
+    const { count } = await apiPlanters.getCount(growerFilter);
+    setTotalGrowerCount(parseInt(count));
   };
 
   useEffect(() => {
-    getTotalPlanterCount();
+    getTotalGrowerCount();
   }, []);
 
   return (
     <DashStat
       color={theme.palette.stats.orange}
       Icon={PeopleOutlineOutlinedIcon}
-      label={'Planters'}
-      data={countToLocaleString(totalPlanterCount)}
+      label={'Growers'}
+      data={countToLocaleString(totalGrowerCount)}
       {...props}
     />
   );
 }
 
 export {
-  DashStatPlanterCount,
+  DashStatGrowerCount,
   DashStatVerifiedCaptures,
   DashStatUnprocessedCaptures,
   DashStatTotalCaptures,

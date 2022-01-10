@@ -31,7 +31,6 @@ function Species(props) {
         speciesContext.onChange(value || '');
       }}
       className={props.classes.root}
-      freeSolo={true}
       inputValue={speciesContext.speciesInput}
       renderInput={(params) => (
         <TextField {...params} placeholder="e.g. Mango" variant="outlined" />

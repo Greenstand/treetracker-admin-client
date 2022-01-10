@@ -3,45 +3,18 @@ import { act, render, cleanup, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
+import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
-import { TagsProvider } from '../../context/TagsContext';
+import { TagsContext, TagsProvider } from '../../context/TagsContext';
 import Verify from '../Verify';
 import CaptureTags from '../CaptureTags';
-import FilterTop from '../FilterTop';
+import CaptureFilter from '../CaptureFilter';
+import { ORGS, TAGS, tagsValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
-import userEvent from '@testing-library/user-event';
 const log = loglevel.getLogger('../tests/tags.test');
 
-const TAGS = [
-  {
-    id: 0,
-    tagName: 'tag_b',
-    public: true,
-    active: true,
-  },
-  {
-    id: 1,
-    tagName: 'tag_a',
-    public: true,
-    active: true,
-  },
-];
-
-const ORGS = [
-  {
-    id: 0,
-    name: 'Dummy Org',
-  },
-  {
-    id: 1,
-    name: 'Another Org',
-  },
-];
-
 describe('tags', () => {
-  //{{{
-  let tagsValues;
   let api;
   let component;
 
@@ -57,10 +30,10 @@ describe('tags', () => {
       return Promise.resolve(TAGS);
     });
 
-    // api.setTagInput = jest.fn((filter) => {
-    //   log.debug('mock setTagInput:');
-    //   return Promise.resolve(['newly_created_tag']);
-    // });
+    tagsValues.setTagInput = jest.fn((filter) => {
+      log.debug('mock setTagInput:');
+      return Promise.resolve(['newly_created_tag']);
+    });
 
     api.createTag = jest.fn((tagName) => {
       log.debug('mock createTag');
@@ -74,16 +47,8 @@ describe('tags', () => {
   });
 
   describe('CaptureTags (alone)', () => {
-    //{{{
     describe('renders', () => {
       beforeEach(async () => {
-        tagsValues = {
-          tagList: [],
-          tagInput: [],
-          getTags: () => {},
-          createTags: () => {},
-        };
-
         render(
           <TagsProvider value={tagsValues}>
             <CaptureTags placeholder="test placeholder text" />
@@ -131,37 +96,22 @@ describe('tags', () => {
         const text = screen.getByText('testTag');
         expect(text).toBeTruthy();
       });
-
-      it('api.getTags should be called', async () => {
-        console.log('mock calls -- ', api.getTags.mock.calls);
-        await waitFor(() => expect(api.getTags).toHaveBeenCalledTimes(3));
-        expect(api.getTags.mock.calls[1][0]).toBe('searchTag');
-        // expect(api.getTags.mock.calls[2][0]).toBe('testTag');
-      });
     });
 
     //}}}
   });
 
   describe('CaptureTags renders in Verify', () => {
-    //{{{
     beforeEach(async () => {
-      tagsValues = {
-        tagList: [],
-        tagInput: [],
-        getTags: () => {},
-        createTags: () => {},
-      };
-
       render(
         <ThemeProvider theme={theme}>
           <BrowserRouter>
             <AppProvider>
-              <TagsProvider value={tagsValues}>
+              <TagsContext.Provider value={tagsValues}>
                 <Verify>
                   {/* <CaptureTags placeholder="test placeholder text" /> */}
                 </Verify>
-              </TagsProvider>
+              </TagsContext.Provider>
             </AppProvider>
           </BrowserRouter>
         </ThemeProvider>,
@@ -197,45 +147,21 @@ describe('tags', () => {
         expect(chip).toBeInTheDocument();
         // screen.logTestingPlaygroundURL(chip);
 
-        const item = screen.getByText('testTag');
+        const item = screen.findByText('testTag');
         expect(item).toBeTruthy();
 
         const text = screen.getByDisplayValue('test');
         expect(text).toBeInTheDocument();
       });
     });
-
-    //}}}
   });
 
-  describe('FilterTop renders in Verify', () => {
-    //{{{
+  describe('CaptureFilter renders tags search and dropdown', () => {
     beforeEach(async () => {
-      tagsValues = {
-        tagList: [],
-        tagInput: [],
-        getTags: () => {},
-        createTags: () => {},
-      };
-
-      // render(
-      //   <ThemeProvider theme={theme}>
-      //     <BrowserRouter>
-      //       <AppProvider value={{ orgList: ORGS }}>
-      //         <TagsProvider value={tagsValues}>
-      //           <Verify>
-      //             <FilterTop />
-      //           </Verify>
-      //         </TagsProvider>
-      //       </AppProvider>
-      //     </BrowserRouter>
-      //   </ThemeProvider>,
-      // );
-
       render(
         <AppProvider value={{ orgList: ORGS }}>
           <TagsProvider value={tagsValues}>
-            <FilterTop />
+            <CaptureFilter />
           </TagsProvider>
         </AppProvider>,
       );
@@ -255,25 +181,14 @@ describe('tags', () => {
         ).toBeInTheDocument();
 
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();
-
         expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
-
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
-
-        expect(screen.getByLabelText('Planter ID')).toBeInTheDocument();
-
+        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
-
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
-
-        expect(
-          screen.getByLabelText(/planter identifier/i),
-        ).toBeInTheDocument();
-
+        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
-
         expect(screen.getByLabelText(/tag/i)).toBeInTheDocument();
-
         expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
 
         // expect(screen.getByLabelText(/submit/i)).toBeInTheDocument();
@@ -321,13 +236,6 @@ describe('tags', () => {
 
   // describe('TagsContext', () => {
   //   beforeEach(async () => {
-  //     tagsValues = {
-  //       tagList: TAGS,
-  //       tagInput: [],
-  //       getTags: () => {},
-  //       createTags: () => {},
-  //     };
-
   //     render(
   //       <ThemeProvider theme={theme}>
   //         <BrowserRouter>

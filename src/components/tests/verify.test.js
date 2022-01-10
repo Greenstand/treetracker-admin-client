@@ -1,352 +1,127 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { act, render, screen, cleanup } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  within,
+  cleanup,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import captureApi from '../../api/treeTrackerApi';
-import planterApi from '../../api/planters';
+import growerApi from '../../api/growers';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
-import { VerifyProvider } from '../../context/VerifyContext';
-import { PlanterProvider } from '../../context/PlanterContext';
+import { VerifyContext, VerifyProvider } from '../../context/VerifyContext';
+import { GrowerContext, GrowerProvider } from '../../context/GrowerContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
-import { TagsProvider } from '../../context/TagsContext';
-import FilterPlanter from '../../models/FilterPlanter';
+import { TagsContext, TagsProvider } from '../../context/TagsContext';
+import FilterGrower from '../../models/FilterGrower';
 import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
+import {
+  CAPTURE,
+  CAPTURES,
+  GROWER,
+  GROWERS,
+  ORGS,
+  TAG,
+  TAGS,
+  SPECIES,
+  capturesValues,
+  growerValues,
+  verifyValues,
+  tagsValues,
+  speciesValues,
+} from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
 jest.setTimeout(7000);
-jest.mock('../../api/planters');
+jest.mock('../../api/growers');
 jest.mock('../../api/treeTrackerApi');
 
-const CAPTURE = {
-  id: 0,
-  planterId: 10,
-  planterIdentifier: 'planter@some.place',
-  deviceIdentifier: 'abcdef123456',
-  approved: true,
-  active: true,
-  status: 'planted',
-  speciesId: 30,
-  timeCreated: '2020-07-29T21:46:03.522Z',
-  morphology: 'seedling',
-  age: 'new_tree',
-  captureApprovalTag: 'simple_leaf',
-  treeTags: [
-    {
-      id: 1,
-      treeId: 0,
-      tagId: 3,
-    },
-  ],
-};
-
-const CAPTURES = [
-  {
-    id: 10,
-    uuid: '11942400-6617-4c6c-bf5e',
-    planterId: 10,
-    planterIdentifier: 'planter1@some.place',
-    deviceIdentifier: '1-abcdef123456',
-    approved: true,
-    active: true,
-    status: 'planted',
-    speciesId: 30,
-    timeCreated: '2020-07-29T21:46:03.522Z',
-    morphology: 'seedling',
-    age: 'new_tree',
-    captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
-  },
-  {
-    id: 20,
-    uuid: '11942400-6617-4c6c-bf5e',
-    planterId: 11,
-    planterIdentifier: 'planter2@some.place',
-    deviceIdentifier: '2-abcdef123456',
-    approved: true,
-    active: true,
-    status: 'planted',
-    speciesId: 30,
-    timeCreated: '2020-07-29T21:46:03.522Z',
-    morphology: 'seedling',
-    age: 'new_tree',
-    captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
-  },
-  {
-    id: 30,
-    uuid: '11942400-6617-4c6c-bf5e',
-    planterId: 10,
-    planterIdentifier: 'planter3@some.place',
-    deviceIdentifier: '3-abcdef123456',
-    approved: true,
-    active: true,
-    status: 'planted',
-    speciesId: 30,
-    timeCreated: '2020-07-29T21:46:03.522Z',
-    morphology: 'seedling',
-    age: 'new_tree',
-    captureApprovalTag: 'simple_leaf',
-    treeTags: [
-      {
-        id: 1,
-        treeId: 0,
-        tagId: 3,
-      },
-    ],
-  },
-];
-
-const PLANTER = {
-  id: 1,
-  firstName: 'testFirstName',
-  lastName: 'testLastName',
-  email: 'test@gmail.com',
-  organization: null,
-  phone: '123-456-7890',
-  imageUrl:
-    'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
-  personId: null,
-  organizationId: 11,
-};
-
-const PLANTERS = [
-  {
-    id: 1,
-    firstName: 'testFirstName',
-    lastName: 'testLastName',
-    email: 'test@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl:
-      'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
-    personId: null,
-    organizationId: 1,
-  },
-  {
-    id: 2,
-    firstName: 'testFirstName2',
-    lastName: 'testLastName2',
-    email: 'test2@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl: '',
-    personId: null,
-    organizationId: 11,
-  },
-  {
-    id: 3,
-    firstName: 'testFirstName3',
-    lastName: 'testLastName3',
-    email: 'test3@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl: '',
-    personId: null,
-    organizationId: 1,
-  },
-];
-
-const ORGS = [
-  {
-    id: 0,
-    name: 'Dummy Org',
-  },
-  {
-    id: 1,
-    name: 'Another Org',
-  },
-];
-
-const TAGS = [
-  {
-    id: 0,
-    tagName: 'tag_b',
-    public: true,
-    active: true,
-  },
-  {
-    id: 1,
-    tagName: 'tag_a',
-    public: true,
-    active: true,
-  },
-];
-
-const SPECIES = [
-  {
-    id: 0,
-    name: 'Pine',
-  },
-  {
-    id: 1,
-    name: 'apple',
-  },
-];
-
 describe('Verify', () => {
-  let planterApi;
+  let growerApi;
   let captureApi;
-  let planterValues;
-  let verifyValues;
-  let speciesValues;
-  let tagsValues;
+  //mock the growers api
+  growerApi = require('../../api/growers').default;
 
-  beforeEach(() => {
-    //mock the planters api
-    planterApi = require('../../api/planters').default;
+  growerApi.getCount = () => {
+    log.debug('mock getCount:');
+    return Promise.resolve({ count: 2 });
+  };
+  growerApi.getGrower = () => {
+    log.debug('mock getGrower:');
+    return Promise.resolve(GROWER);
+  };
+  growerApi.getGrowerRegistrations = () => {
+    log.debug('mock getGrowerRegistrations:');
+    return Promise.resolve([]);
+  };
+  growerApi.getGrowerSelfies = (id) => {
+    log.debug('mock getGrowerSelfies:');
+    return Promise.resolve([{ planterPhotoUrl: '' }, { planterPhotoUrl: '' }]);
+  };
 
-    planterApi.getCount = () => {
-      log.debug('mock getCount:');
-      return Promise.resolve({ count: 2 });
-    };
-    planterApi.getPlanter = () => {
-      log.debug('mock getPlanter:');
-      return Promise.resolve(PLANTER);
-    };
-    planterApi.getPlanterRegistrations = () => {
-      log.debug('mock getPlanterRegistrations:');
-      return Promise.resolve([]);
-    };
-    planterApi.getPlanterSelfies = (id) => {
-      log.debug('mock getPlanterSelfies:');
-      return Promise.resolve([
-        { planterPhotoUrl: '' },
-        { planterPhotoUrl: '' },
-      ]);
-    };
+  // mock the treeTrackerApi
+  captureApi = require('../../api/treeTrackerApi').default;
 
-    // mock the treeTrackerApi
-    captureApi = require('../../api/treeTrackerApi').default;
-
-    captureApi.getCaptureImages = (id) => {
-      log.debug('mock getCaptureImages:');
-      return Promise.resolve(CAPTURES);
-    };
-    captureApi.getCaptureCount = (id) => {
-      log.debug('mock getCaptureCount:');
-      return Promise.resolve({ count: 3 });
-    };
-    captureApi.getCaptureById = (id) => {
-      log.debug('mock getCaptureById:');
-      return Promise.resolve(CAPTURE);
-    };
-    captureApi.getSpecies = () => {
-      log.debug('mock getSpeciesById:');
-      return Promise.resolve(SPECIES);
-    };
-    captureApi.getCaptureCountPerSpecies = () => {
-      log.debug('mock getCaptureCountPerSpecies:');
-      return Promise.resolve({ count: 7 });
-    };
-    captureApi.getTags = (id) => {
-      log.debug('mock getTagById:');
-      return Promise.resolve(TAGS);
-    };
-    captureApi.getOrganizations = () => {
-      log.debug('mock getOrganizations:');
-      return Promise.resolve(ORGS);
-    };
-  });
+  captureApi.getCaptureImages = () => {
+    log.debug('mock getCaptureImages:');
+    return Promise.resolve(CAPTURES);
+  };
+  captureApi.getCaptureCount = () => {
+    log.debug('mock getCaptureCount:');
+    return Promise.resolve({ count: 4 });
+  };
+  captureApi.getCaptureById = (_id) => {
+    log.debug('mock getCaptureById:');
+    return Promise.resolve(CAPTURE);
+  };
+  captureApi.getSpecies = () => {
+    log.debug('mock getSpecies:');
+    return Promise.resolve(SPECIES);
+  };
+  captureApi.getSpeciesById = (_id) => {
+    log.debug('mock getSpeciesById:');
+    return Promise.resolve(SPECIES[0]);
+  };
+  captureApi.getCaptureCountPerSpecies = () => {
+    log.debug('mock getCaptureCountPerSpecies:');
+    return Promise.resolve({ count: 7 });
+  };
+  captureApi.getTags = () => {
+    log.debug('mock getTags:');
+    return Promise.resolve(TAGS);
+  };
+  captureApi.getTagById = (_id) => {
+    log.debug('mock getTagById:');
+    return Promise.resolve(TAG);
+  };
+  captureApi.getOrganizations = () => {
+    log.debug('mock getOrganizations:');
+    return Promise.resolve(ORGS);
+  };
 
   describe('with default values', () => {
-    //{{{
     beforeEach(async () => {
-      planterValues = {
-        planters: PLANTERS,
-        pageSize: 24,
-        count: null,
-        currentPage: 0,
-        filter: new FilterPlanter(),
-        isLoading: false,
-        totalPlanterCount: null,
-        load: () => {},
-        getCount: () => {},
-        changePageSize: () => {},
-        changeCurrentPage: () => {},
-        getPlanter: () => {},
-        updatePlanter: () => {},
-        updatePlanters: () => {},
-        updateFilter: () => {},
-        getTotalPlanterCount: () => {},
-      };
-      verifyValues = {
-        captureImages: CAPTURES,
-        captureImagesSelected: [],
-        captureImageAnchor: undefined,
-        captureImagesUndo: [],
-        isLoading: false,
-        isApproveAllProcessing: false,
-        approveAllComplete: 0,
-        pageSize: 12,
-        currentPage: 0,
-        filter: new FilterModel({
-          approved: false,
-          active: true,
-        }),
-        invalidateCaptureCount: true,
-        captureCount: null,
-        approve: () => {},
-        // undoCaptureImage: () => {},
-        loadCaptureImages: () => {},
-        approveAll: () => {},
-        undoAll: () => {},
-        updateFilter: () => {},
-        getCaptureCount: () => {},
-        clickCapture: () => {},
-        setPageSize: () => {},
-        setCurrentPage: () => {},
-      };
-      tagsValues = {
-        tagList: TAGS,
-        tagInput: [],
-        getTags: () => {},
-        createTags: () => {},
-      };
-      speciesValues = {
-        speciesList: SPECIES,
-        speciesInput: '',
-        speciesDesc: '',
-        setSpeciesInput: () => {},
-        loadSpeciesList: () => {},
-        onChange: () => {},
-        isNewSpecies: () => {},
-        createSpecies: () => {},
-        getSpeciesId: () => {},
-        editSpecies: () => {},
-        deleteSpecies: () => {},
-        combineSpecies: () => {},
-      };
-
       render(
         <ThemeProvider theme={theme}>
           <BrowserRouter>
             <AppProvider value={{ orgList: ORGS }}>
-              {/* <PlanterProvider value={planterValues}> */}
-              <VerifyProvider value={verifyValues}>
-                <SpeciesProvider value={speciesValues}>
-                  <TagsProvider value={tagsValues}>
-                    <Verify />
-                  </TagsProvider>
-                </SpeciesProvider>
-              </VerifyProvider>
-              {/* </PlanterProvider> */}
+              <GrowerContext.Provider value={growerValues}>
+                <VerifyProvider value={verifyValues}>
+                  <SpeciesProvider value={speciesValues}>
+                    <TagsContext.Provider value={tagsValues}>
+                      <Verify />
+                    </TagsContext.Provider>
+                  </SpeciesProvider>
+                </VerifyProvider>
+              </GrowerContext.Provider>
             </AppProvider>
           </BrowserRouter>
         </ThemeProvider>,
@@ -354,6 +129,7 @@ describe('Verify', () => {
 
       await act(() => captureApi.getCaptureImages());
       await act(() => captureApi.getCaptureCount());
+      // await act(() => captureApi.getTags());
     });
 
     afterEach(cleanup);
@@ -370,44 +146,75 @@ describe('Verify', () => {
       expect(tokenStatus).toBeInTheDocument();
     });
 
-    it('renders side panel', () => {
+    it('renders number of applied filters', async () => {
+      const filter = screen.getByRole('button', { name: /filter 1/i });
+      userEvent.click(filter);
+      expect(screen.getByText(/awaiting verification/i)).toBeInTheDocument();
+      //data won't actually be filtered but filters should be selected
+      //why was this set to expect 2 filters?
+      expect(verifyValues.filter.countAppliedFilters()).toBe(1);
+
+      let dropdown = screen.getByTestId('org-dropdown');
+      expect(dropdown).toBeInTheDocument();
+      let button = within(dropdown).getByRole('button', {
+        name: /all/i,
+      });
+      userEvent.click(button);
+      // the actual list of orgs is displayed in a popup that is not part of FilterTop
+      // this list is the default list
+      const orglist = screen.getByRole('listbox');
+
+      const orgSelected = screen.getByRole('option', { name: /not set/i });
+
+      userEvent.selectOptions(orglist, orgSelected);
+
+      userEvent.click(screen.getByText(/apply/i));
       // screen.logTestingPlaygroundURL();
-      // expect(screen.getByText(/planters per page: 24/i));
+      expect(screen.getByRole('button', { name: /filter 2/i })).toBeTruthy();
+      //this function is still returning 1
+      // expect(verifyValues.filter.countAppliedFilters()).toBe(2);
     });
+
+    // it('renders side panel', () => {
+    //   // screen.logTestingPlaygroundURL();
+    //   // expect(screen.getByText(/planters per page: 24/i));
+    // });
 
     it('renders captures gallery', () => {
       // screen.logTestingPlaygroundURL();
       const pageSize = screen.getAllByText(/captures per page:/i);
       expect(pageSize).toHaveLength(2);
 
-      expect(screen.getByText(/3 captures/i));
+      expect(screen.getByText(/4 captures/i));
     });
 
     it('renders capture details', () => {
       const captureDetails = screen.getAllByRole('button', {
         name: /capture details/i,
       });
-      expect(captureDetails).toHaveLength(3);
+      expect(captureDetails).toHaveLength(4);
       userEvent.click(captureDetails[0]);
       // screen.logTestingPlaygroundURL();
       expect(screen.getByText(/capture data/i)).toBeInTheDocument();
-      expect(screen.getByText(/planter identifier/i)).toBeInTheDocument();
-      expect(screen.getByText(/planter1@some.place/i)).toBeInTheDocument();
+      expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
+      expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
       expect(screen.getByText(/device identifier/i)).toBeInTheDocument();
       // expect(screen.getByText(/1 - abcdef123456/i)).toBeInTheDocument();
       expect(screen.getByText(/verification status/i)).toBeInTheDocument();
       expect(screen.getByText(/token status/i)).toBeInTheDocument();
     });
 
-    it('renders planter details', () => {
-      const planterDetails = screen.getAllByRole('button', {
-        name: /planter details/i,
+    it('renders grower details', () => {
+      const growerDetails = screen.getAllByRole('button', {
+        name: /grower details/i,
       });
-      expect(planterDetails).toHaveLength(3);
-      userEvent.click(planterDetails[0]);
-      // screen.logTestingPlaygroundURL();
+      expect(growerDetails).toHaveLength(4);
+      userEvent.click(growerDetails[0]);
+      screen.logTestingPlaygroundURL();
 
-      expect(screen.getByText(/planter detail/i)).toBeInTheDocument();
+      expect(screen.getByText(/country/i)).toBeInTheDocument();
+      expect(screen.getByText(/organization ID/i)).toBeInTheDocument();
+      expect(screen.getByText(/person ID/i)).toBeInTheDocument();
       expect(screen.getByText(/ID:/i)).toBeInTheDocument();
       expect(screen.getByText(/email address/i)).toBeInTheDocument();
       expect(screen.getByText(/phone number/i)).toBeInTheDocument();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,7 +10,8 @@ import FilterModel, {
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
-  // TAG_NOT_SET,
+  TAG_NOT_SET,
+  ANY_TAG_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -27,6 +28,7 @@ import {
   tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
+import { getVerificationStatus } from '../common/utils';
 import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
@@ -81,9 +83,9 @@ function Filter(props) {
   const dateEndDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [planterId, setPlanterId] = useState(filter?.planterId || '');
+  const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
-  const [planterIdentifier, setPlanterIdentifier] = useState(
+  const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || '',
   );
   const [approved, setApproved] = useState(filter?.approved);
@@ -99,14 +101,6 @@ function Filter(props) {
     filter.organizationId || ALL_ORGANIZATIONS,
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-
-  useEffect(() => {
-    if (tagSearchString === '') {
-      const abortController = new AbortController();
-      tagsContext.getTags(tagSearchString, { signal: abortController.signal });
-      return () => abortController.abort();
-    }
-  }, [tagSearchString]);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -126,9 +120,9 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.uuid = uuid;
     filter.captureId = captureId;
-    filter.planterId = planterId;
+    filter.planterId = growerId;
     filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = planterIdentifier;
+    filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
@@ -144,9 +138,9 @@ function Filter(props) {
     // reset form values, except 'approved' and 'active' which we'll keep
     setUUID('');
     setCaptureId('');
-    setPlanterId('');
+    setGrowerId('');
     setDeviceId('');
-    setPlanterIdentifier('');
+    setGrowerIdentifier('');
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setSpeciesId(ALL_SPECIES);
@@ -166,16 +160,19 @@ function Filter(props) {
         {
           id: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
       ]
     : [
         {
           id: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
         {
           id: ORGANIZATION_NOT_SET,
           name: 'Not set',
+          value: null,
         },
       ];
 
@@ -278,12 +275,12 @@ function Filter(props) {
                 />
               </MuiPickersUtilsProvider>
               <TextField
-                htmlFor="planter-id"
-                id="planter-id"
-                label="Planter ID"
+                htmlFor="grower-id"
+                id="grower-id"
+                label="Grower ID"
                 placeholder="e.g. 7"
-                value={planterId}
-                onChange={(e) => setPlanterId(e.target.value)}
+                value={growerId}
+                onChange={(e) => setGrowerId(e.target.value)}
               />
               <TextField
                 htmlFor="capture-id"
@@ -310,12 +307,12 @@ function Filter(props) {
                 onChange={(e) => setDeviceId(e.target.value)}
               />
               <TextField
-                htmlFor="planter-identifier"
-                id="planter-identifier"
-                label="Planter Identifier"
-                placeholder="e.g. planter@example.com"
-                value={planterIdentifier}
-                onChange={(e) => setPlanterIdentifier(e.target.value)}
+                htmlFor="grower-identifier"
+                id="grower-identifier"
+                label="Grower Identifier"
+                placeholder="e.g. grower@example.com"
+                value={growerIdentifier}
+                onChange={(e) => setGrowerIdentifier(e.target.value)}
               />
               <TextField
                 data-testid="species-dropdown"
@@ -352,13 +349,23 @@ function Filter(props) {
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
-                  // {
-                  //   id: TAG_NOT_SET,
-                  //   tagName: 'Not set',
-                  //   active: true,
-                  //   public: true,
-                  // },
-                  ...tagsContext.tagList,
+                  {
+                    id: TAG_NOT_SET,
+                    tagName: 'Not set',
+                    active: true,
+                    public: true,
+                  },
+                  {
+                    id: ANY_TAG_SET,
+                    tagName: 'Any tag set',
+                    active: true,
+                    public: true,
+                  },
+                  ...tagsContext.tagList.filter((t) =>
+                    t.tagName
+                      .toLowerCase()
+                      .startsWith(tagSearchString.toLowerCase()),
+                  ),
                 ]}
                 value={tag}
                 defaultValue={'Not set'}
@@ -371,11 +378,7 @@ function Filter(props) {
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
                   console.log('newVal -- ', newVal);
-                  if (newVal && newVal.tagName === 'Not set') {
-                    setTag('Not set');
-                  } else {
-                    setTag(newVal);
-                  }
+                  setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -383,6 +386,7 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
+                getOptionSelected={(option, value) => option.id === value.id}
                 // selectOnFocus
                 // clearOnBlur
                 // handleHomeEndKeys
@@ -442,15 +446,5 @@ function Filter(props) {
     </>
   );
 }
-
-const getVerificationStatus = (active, approved) => {
-  if (active === true && approved === false) {
-    return verificationStates.AWAITING;
-  } else if (active === true && approved === true) {
-    return verificationStates.APPROVED;
-  } else if (active === false && approved === false) {
-    return verificationStates.REJECTED;
-  }
-};
 
 export default withStyles(styles)(Filter);

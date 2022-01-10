@@ -4,24 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, within, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
-import FilterTop from '../FilterTop';
+import CaptureFilter from '../CaptureFilter';
 import Verify from '../Verify';
 import * as loglevel from 'loglevel';
+import { ORGS } from '../tests/fixtures';
 
 const log = loglevel.getLogger('../tests/organizations.test');
 
-const ORGS = [
-  {
-    id: 0,
-    name: 'Dummy Org',
-  },
-  {
-    id: 1,
-    name: 'Another Org',
-  },
-];
-
-describe.skip('FilterTop organizations', () => {
+describe('CaptureFilter organizations', () => {
   let api;
 
   beforeEach(() => {
@@ -34,14 +24,14 @@ describe.skip('FilterTop organizations', () => {
     };
   });
 
-  describe('FilterTop', () => {
+  describe('CaptureFilter', () => {
     describe('w/o data in context', () => {
       let component;
 
       beforeEach(async () => {
         component = (
           <AppProvider>
-            <FilterTop />
+            <CaptureFilter />
           </AppProvider>
         );
       });
@@ -100,7 +90,7 @@ describe.skip('FilterTop organizations', () => {
 
         userEvent.click(button);
 
-        // the actual list of orgs is displayed in a popup that is not part of FilterTop
+        // the actual list of orgs is displayed in a popup that is not part of CaptureFilter
         // this list is the default list
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
@@ -119,7 +109,7 @@ describe.skip('FilterTop organizations', () => {
         orgs = await api.getOrganizations();
         component = (
           <AppProvider value={{ orgList: orgs }}>
-            <FilterTop />
+            <CaptureFilter />
           </AppProvider>
         );
         // render(component);
@@ -149,7 +139,7 @@ describe.skip('FilterTop organizations', () => {
 
         // screen.logTestingPlaygroundURL();
 
-        // the actual list of orgs is displayed in a popup that is not part of FilterTop
+        // the actual list of orgs is displayed in a popup that is not part of CaptureFilter
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
