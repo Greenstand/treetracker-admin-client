@@ -87,12 +87,14 @@ function getRoutes(user) {
       name: 'Earnings',
       children: [
         {
+          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
           name: 'Earnings',
           linkTo: '/earnings',
           component: EarningsView,
           icon: CreditCardIcon,
         },
         {
+          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
@@ -100,7 +102,7 @@ function getRoutes(user) {
         },
       ],
       disabled:
-        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
         process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
     },
     {
@@ -151,7 +153,7 @@ function getRoutes(user) {
       component: MessagingView,
       icon: InboxRounded,
       disabled:
-        process.env.REACT_APP_ENABLE_INBOX !== 'true' ||
+        process.env.REACT_APP_ENABLE_MESSAGING !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
           POLICIES.SEND_MESSAGES,

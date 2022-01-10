@@ -287,18 +287,19 @@ const GrowerDetail = (props) => {
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
             </Grid>
-            {hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
-              <Grid item>
-                <Button
-                  className={classes.messageButton}
-                  onClick={() => sendMessageFromGrower(grower)}
-                  component={Link}
-                  to={'/messaging'}
-                >
-                  Send Message
-                </Button>
-              </Grid>
-            )}
+            {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
+              hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
+                <Grid item>
+                  <Button
+                    className={classes.messageButton}
+                    onClick={() => sendMessageFromGrower(grower)}
+                    component={Link}
+                    to={'/messaging'}
+                  >
+                    Send Message
+                  </Button>
+                </Grid>
+              )}
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Captures</Typography>
