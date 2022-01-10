@@ -32,7 +32,8 @@ import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
-export const AppContext = createContext({}); // no initial context here because we want login values to be 'undefined' until they are confirmed
+// no initial context here because we want login values to be 'undefined' until they are confirmed
+export const AppContext = createContext({});
 
 function getRoutes(user) {
   return [
@@ -87,18 +88,18 @@ function getRoutes(user) {
       name: 'Earnings',
       children: [
         {
-          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
           name: 'Earnings',
           linkTo: '/earnings',
           component: EarningsView,
           icon: CreditCardIcon,
+          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
         },
         {
-          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
           icon: PaymentsIcon,
+          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
         },
       ],
       disabled:
@@ -172,7 +173,6 @@ export const AppProvider = (props) => {
 
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
-    // if (user && token && !user?.policy?.organization?.id) {
     if (user && token) {
       loadOrganizations();
     }
@@ -197,7 +197,6 @@ export const AppProvider = (props) => {
           }
         )
         .then((response) => {
-          // console.log('CONTEXT CHECK SESSION', response.data, 'USER', localUser, 'TOKEN', localToken);
           if (response.status === 200) {
             if (response.data.token === undefined) {
               //the role has not changed
