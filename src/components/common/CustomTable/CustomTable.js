@@ -95,6 +95,26 @@ function CustomTableHeader(props) {
   } = props;
   const classes = useStyles();
 
+  const dataToExport = data.map(
+    ({
+      id: earnings_id,
+      worker_id,
+      funder_id,
+      amount,
+      currency,
+      payment_confirmation_id,
+      payment_system,
+    }) => ({
+      earnings_id,
+      worker_id,
+      funder_id,
+      amount,
+      currency,
+      payment_confirmation_id,
+      payment_system,
+    })
+  );
+
   return (
     <Grid container className={classes.customTableTopBar}>
       <Grid item xs={4}>
@@ -112,7 +132,7 @@ function CustomTableHeader(props) {
               <Grid container direction="row" justify="flex-end">
                 <Button color="primary" variant="text">
                   <CSVLink
-                    data={data}
+                    data={dataToExport}
                     filename={'earnings.csv'}
                     className={classes.csvLink}
                     target="_blank"
@@ -416,7 +436,7 @@ CustomTable.propTypes = {
       description: PropTypes.string.isRequired,
       sortable: PropTypes.bool.isRequired,
       showInfoIcon: PropTypes.bool.isRequired,
-    }),
+    })
   ),
   dateFilterComponent: PropTypes.element.isRequired,
   mainFilterComponent: PropTypes.element.isRequired,
