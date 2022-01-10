@@ -1,3 +1,10 @@
+## [1.39.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.0...v1.39.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* disabled wip of new features in production ([#276](https://github.com/Greenstand/treetracker-admin-client/issues/276)) ([cf5501a](https://github.com/Greenstand/treetracker-admin-client/commit/cf5501a730c366aa6f068f95e68653a3b23f7d81))
+
 # [1.39.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.38.0...v1.39.0) (2022-01-09)
 
 
