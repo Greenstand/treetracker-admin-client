@@ -4,6 +4,7 @@ import api from '../api/messaging';
 export const MessagingContext = createContext({
   user: {},
   messages: [],
+  authors: [],
   resMessages: [],
   growerMessage: {},
   regions: [],
@@ -19,6 +20,7 @@ export const MessagingContext = createContext({
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -65,6 +67,13 @@ export const MessagingProvider = (props) => {
       }),
     ];
     setMessages(filteredMessages);
+  };
+
+  const loadAuthors = async () => {
+    const res = await api.getAuthors();
+    if (res) {
+      setAuthors(res);
+    }
   };
 
   const postRegion = async (payload) => {
@@ -119,10 +128,12 @@ export const MessagingProvider = (props) => {
   const value = {
     user,
     messages,
+    authors,
     regions,
     sendMessageFromGrower,
     loadMessages,
     loadRegions,
+    loadAuthors,
     postRegion,
     getRegionById,
     postMessage,

@@ -67,11 +67,14 @@ const Messaging = () => {
     body,
   } = useStyles();
 
-  const { messages, loadMessages, loadRegions } = useContext(MessagingContext);
+  const { messages, loadMessages, loadRegions, loadAuthors } = useContext(
+    MessagingContext
+  );
 
   useEffect(() => {
     loadMessages();
     loadRegions();
+    // loadAuthors();
   }, []);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);

@@ -9,6 +9,7 @@ import {
   MenuItem,
   Typography,
   Button,
+  InputLabel,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NewMessage = ({ openModal, handleClose }) => {
   const { box, header, button } = useStyles();
-  const { user, postMessageSend } = useContext(MessagingContext);
+  const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState({ to: '', body: '' });
 
   const handleChange = (e) => {
@@ -83,14 +84,12 @@ const NewMessage = ({ openModal, handleClose }) => {
     >
       <Box className={box}>
         <form onSubmit={handleSubmit}>
-          <FormControl fullWidth spacing={2}>
-            <Box className={header} my={1}>
-              <Typography variant="h3">Send New Message</Typography>
-            </Box>
-            <GSInputLabel
-              id="select-label"
-              text="Choose the message recipient"
-            />
+          <Box className={header} my={1}>
+            <Typography variant="h3">Send New Message</Typography>
+          </Box>
+          <GSInputLabel text="Choose the message recipient" />
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Message Recipient</InputLabel>
             <Select
               labelId="select-label"
               id="select"
@@ -100,8 +99,12 @@ const NewMessage = ({ openModal, handleClose }) => {
               value={messageContent.to}
               onChange={handleChange}
             >
-              <MenuItem>Something</MenuItem>
+              {authors.map((author) => (
+                <MenuItem key={author.id}>{author.handle}</MenuItem>
+              ))}
             </Select>
+          </FormControl>
+          <FormControl fullWidth>
             <GSInputLabel text="Message" />
             <TextField
               multiline
