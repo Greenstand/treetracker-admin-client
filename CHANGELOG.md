@@ -1,3 +1,10 @@
+## [1.39.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.2...v1.39.3) (2022-01-10)
+
+
+### Bug Fixes
+
+* set reporting API for production build ([6be4ab1](https://github.com/Greenstand/treetracker-admin-client/commit/6be4ab10129d0a913df549594398d063b3e3d7b7))
+
 ## [1.39.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.1...v1.39.2) (2022-01-10)
 
 
