@@ -9,4 +9,11 @@ describe('Icon component', () => {
     const path_class_value = path.attributes.getNamedItem('class').value;
     expect(path_class_value).toMatch('Icon-active');
   });
+  test('path class value contains "Icon-default" when <Icon active="" /> or <Icon />', () => {
+    const component = render(<Icon active="" />);
+    const path = component.container.querySelector('path');
+    const path_class_value = path.attributes.getNamedItem('class').value;
+    console.log(path_class_value);
+    expect(path_class_value).toMatch('Icon-default');
+  });
 });
