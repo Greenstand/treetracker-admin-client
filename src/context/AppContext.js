@@ -91,26 +91,22 @@ function getRoutes(user) {
           linkTo: '/earnings',
           component: EarningsView,
           icon: CreditCardIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_EARNINGS,
-              POLICIES.LIST_EARNINGS,
-            ]),
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_EARNINGS,
+            POLICIES.LIST_EARNINGS,
+          ]),
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
           icon: PaymentsIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' &&
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_PAYMENTS,
-              POLICIES.LIST_PAYMENTS,
-            ]),
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_PAYMENTS,
+            POLICIES.LIST_PAYMENTS,
+          ]),
         },
       ],
       disabled: !hasPermission(user, [
