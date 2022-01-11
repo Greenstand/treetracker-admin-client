@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
 import paymentsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
@@ -94,16 +103,20 @@ const prepareRows = (rows) =>
 function PaymentsTable() {
   // state for payments table
   const [payments, setPayments] = useState([]);
+  const [paymentsUploadError, setPaymentsUploadError] = useState(null);
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
   const [activeDateRageString, setActiveDateRageString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowUploadSnack, setIsShowUploadSnack] = useState(false);
   const [paymentsPerPage, setPaymentsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState(null);
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalPayments, setTotalPayments] = useState(0);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [snackBarMessage, setSnackBarMessage] = useState('');
 
   async function getPayments() {
     setIsLoading(true); // show loading indicator when fetching data
@@ -125,11 +138,26 @@ function PaymentsTable() {
   }
 
   const uploadCsvFile = (file) => {
-    paymentsAPI.batchPatchEarnings(file);
+    setIsShowUploadSnack(true);
+    setSnackBarMessage('Uploading Payments...');
+    paymentsAPI
+      .batchPatchEarnings(file)
+      .then((res) => {
+        setIsShowUploadSnack(true);
+        setSnackBarMessage('Payments Uploaded Successfully');
+        setPaymentsUploadError(null);
+        setIsErrorDialogOpen(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        setIsErrorDialogOpen(true);
+        setPaymentsUploadError(error);
+      });
   };
 
   const handleOpenMainFilter = () => setIsMainFilterOpen(true);
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
+  const handleClose = () => setIsErrorDialogOpen(false);
 
   useEffect(() => {
     if (filter?.start_date && filter?.end_date) {
@@ -146,49 +174,94 @@ function PaymentsTable() {
   }, [page, paymentsPerPage, sortBy, filter]);
 
   return (
-    <CustomTable
-      setPage={setPage}
-      page={page}
-      sortBy={sortBy}
-      rows={payments}
-      isLoading={isLoading}
-      onSelectFile={uploadCsvFile}
-      activeDateRage={activeDateRageString}
-      setRowsPerPage={setPaymentsPerPage}
-      rowsPerPage={paymentsPerPage}
-      setSortBy={setSortBy}
-      totalCount={totalPayments}
-      openMainFilter={handleOpenMainFilter}
-      openDateFilter={handleOpenDateFilter}
-      handleGetData={getPayments}
-      setSelectedRow={setSelectedPayment}
-      selectedRow={selectedPayment}
-      tableMetaData={paymentTableMetaData}
-      headerTitle="Payments"
-      mainFilterComponent={
-        <PaymentsTableMainFilter
-          isMainFilterOpen={isMainFilterOpen}
-          filter={filter}
-          setFilter={setFilter}
-          setIsMainFilterOpen={setIsMainFilterOpen}
-        />
-      }
-      dateFilterComponent={
-        <PaymentsTableDateFilter
-          isDateFilterOpen={isDateFilterOpen}
-          filter={filter}
-          setFilter={setFilter}
-          setIsDateFilterOpen={setIsDateFilterOpen}
-        />
-      }
-      rowDetails={
-        <PaymentDetails
-          selectedPayment={selectedPayment}
-          closeDetails={() => setSelectedPayment(null)}
-        />
-      }
-      actionButtonType="upload"
-    />
+    <>
+      <CustomTable
+        setPage={setPage}
+        page={page}
+        sortBy={sortBy}
+        rows={payments}
+        isLoading={isLoading}
+        onSelectFile={uploadCsvFile}
+        activeDateRage={activeDateRageString}
+        setRowsPerPage={setPaymentsPerPage}
+        rowsPerPage={paymentsPerPage}
+        setSortBy={setSortBy}
+        totalCount={totalPayments}
+        openMainFilter={handleOpenMainFilter}
+        openDateFilter={handleOpenDateFilter}
+        handleGetData={getPayments}
+        setSelectedRow={setSelectedPayment}
+        selectedRow={selectedPayment}
+        tableMetaData={paymentTableMetaData}
+        headerTitle="Payments"
+        mainFilterComponent={
+          <PaymentsTableMainFilter
+            isMainFilterOpen={isMainFilterOpen}
+            filter={filter}
+            setFilter={setFilter}
+            setIsMainFilterOpen={setIsMainFilterOpen}
+          />
+        }
+        dateFilterComponent={
+          <PaymentsTableDateFilter
+            isDateFilterOpen={isDateFilterOpen}
+            filter={filter}
+            setFilter={setFilter}
+            setIsDateFilterOpen={setIsDateFilterOpen}
+          />
+        }
+        rowDetails={
+          <PaymentDetails
+            selectedPayment={selectedPayment}
+            closeDetails={() => setSelectedPayment(null)}
+          />
+        }
+        actionButtonType="upload"
+      />
+      <Dialog
+        open={isErrorDialogOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {paymentsUploadError?.message}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {paymentsUploadError?.cause.response.data.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={isShowUploadSnack}
+        autoHideDuration={3000}
+        onClose={() => setIsShowUploadSnack(false)}
+        message={snackBarMessage}
+        action={
+          <React.Fragment>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="primary"
+              onClick={handleClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
+    </>
   );
 }
 
