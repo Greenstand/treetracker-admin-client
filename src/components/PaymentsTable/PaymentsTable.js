@@ -142,7 +142,7 @@ function PaymentsTable() {
     setSnackBarMessage('Uploading Payments...');
     paymentsAPI
       .batchPatchEarnings(file)
-      .then((res) => {
+      .then(() => {
         setIsShowUploadSnack(true);
         setSnackBarMessage('Payments Uploaded Successfully');
         setPaymentsUploadError(null);
