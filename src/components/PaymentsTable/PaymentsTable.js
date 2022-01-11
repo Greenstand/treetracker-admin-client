@@ -60,6 +60,12 @@ const paymentTableMetaData = [
     showInfoIcon: false,
   },
   {
+    description: 'Status',
+    name: 'status',
+    sortable: false,
+    showInfoIcon: false,
+  },
+  {
     description: 'Payment Date',
     name: 'payment_confirmed_at',
     sortable: false,

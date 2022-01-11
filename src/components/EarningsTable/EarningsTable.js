@@ -44,6 +44,12 @@ const earningTableMetaData = [
     sortable: false,
     showInfoIcon: true,
   },
+  {
+    description: 'Status',
+    name: 'status',
+    sortable: false,
+    showInfoIcon: false,
+  },
 
   {
     description: 'Payment Date',
