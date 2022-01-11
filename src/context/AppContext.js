@@ -32,7 +32,8 @@ import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 
-export const AppContext = createContext({}); // no initial context here because we want login values to be 'undefined' until they are confirmed
+// no initial context here because we want login values to be 'undefined' until they are confirmed
+export const AppContext = createContext({});
 
 function getRoutes(user) {
   return [
@@ -164,10 +165,12 @@ function getRoutes(user) {
       linkTo: '/messaging',
       component: MessagingView,
       icon: InboxRounded,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.SEND_MESSAGES,
-      ]),
+      disabled:
+        process.env.REACT_APP_ENABLE_MESSAGING !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.SEND_MESSAGES,
+        ]),
     },
   ];
 }
@@ -182,7 +185,6 @@ export const AppProvider = (props) => {
 
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
-    // if (user && token && !user?.policy?.organization?.id) {
     if (user && token) {
       loadOrganizations();
     }
@@ -207,7 +209,6 @@ export const AppProvider = (props) => {
           }
         )
         .then((response) => {
-          // console.log('CONTEXT CHECK SESSION', response.data, 'USER', localUser, 'TOKEN', localToken);
           if (response.status === 200) {
             if (response.data.token === undefined) {
               //the role has not changed
