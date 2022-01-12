@@ -32,6 +32,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { SpeciesContext } from '../context/SpeciesContext';
 
 const styles = (theme) => ({
+  speciesTableContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    gap: '2rem',
+  },
   box: {
     height: '100%',
   },
@@ -126,6 +132,13 @@ const SpeciesTable = (props) => {
   const [showCombine, setShowCombine] = useState(false);
 
   const tableRef = useRef(null);
+
+  const emptyRows =
+    rowsPerPage -
+    Math.min(
+      rowsPerPage,
+      speciesContext.speciesList.length - page * rowsPerPage
+    );
 
   useEffect(() => {
     const sortBy = (option) => {
@@ -232,87 +245,86 @@ const SpeciesTable = (props) => {
     />
   );
 
-  // console.log('context', context);
-
   return (
-    <>
-      <Grid container className={classes.box}>
-        <Grid item xs={3}>
-          <Paper elevation={3} className={classes.menu}>
-            <Menu variant="plain" />
-          </Paper>
-        </Grid>
-        <Grid item xs={9} container className={classes.rightBox}>
-          <Grid item xs={12}>
-            <Grid
-              container
-              justify="space-between"
-              className={classes.titleBox}
-            >
-              <Grid item>
-                <Grid container>
-                  <Grid item>
-                    <Typography variant="h2">Species</Typography>
-                  </Grid>
+    <Grid className={classes.speciesTableContainer}>
+      <Paper elevation={3}>
+        <Menu variant="plain" />
+      </Paper>
+
+      <Grid item style={{ flexGrow: 1 }} container className={classes.rightBox}>
+        <Grid item xs={12}>
+          <Grid container justify="space-between" className={classes.titleBox}>
+            <Grid item>
+              <Grid container>
+                <Grid item>
+                  <Typography variant="h2">Species</Typography>
                 </Grid>
               </Grid>
-              <Grid item className={classes.addUserBox}>
-                <Button
-                  onClick={openCombineModal}
-                  variant="outlined"
-                  color="primary"
-                >
-                  COMBINE SPECIES
-                </Button>
-                <Button
-                  onClick={() => setIsAdding(true)}
-                  variant="contained"
-                  className={classes.addUser}
-                  color="primary"
-                >
-                  ADD NEW SPECIES
-                </Button>
-              </Grid>
             </Grid>
-            <Grid container direction="column" className={classes.bodyBox}>
-              <TableContainer component={Paper} ref={tableRef}>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell></TableCell>
-                      <TableCell>
-                        ID
-                        <IconButton
-                          title="sortbyId"
-                          onClick={() => setOption(sortOptions.byId)}
-                        >
-                          <SortIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>
-                        name
-                        <IconButton
-                          title="sortbyName"
-                          onClick={() => setOption(sortOptions.byName)}
-                        >
-                          <SortIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>Description</TableCell>
-                      <TableCell>Tagged Captures</TableCell>
-                      <TableCell>Operations</TableCell>
+            <Grid item className={classes.addUserBox}>
+              <Button
+                onClick={openCombineModal}
+                variant="outlined"
+                color="primary"
+              >
+                COMBINE SPECIES
+              </Button>
+              <Button
+                onClick={() => setIsAdding(true)}
+                variant="contained"
+                className={classes.addUser}
+                color="primary"
+              >
+                ADD NEW SPECIES
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container direction="column" className={classes.bodyBox}>
+            <TableContainer component={Paper} ref={tableRef}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      ID
+                      <IconButton
+                        title="sortbyId"
+                        onClick={() => setOption(sortOptions.byId)}
+                      >
+                        <SortIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      name
+                      <IconButton
+                        title="sortbyName"
+                        onClick={() => setOption(sortOptions.byName)}
+                      >
+                        <SortIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell>Tagged Captures</TableCell>
+                    <TableCell>Operations</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {renderSpecies()}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  </TableHead>
-                  <TableBody>{renderSpecies()}</TableBody>
-                  <TableFooter>
-                    <TableRow>{tablePagination()}</TableRow>
-                  </TableFooter>
-                </Table>
-              </TableContainer>
-            </Grid>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>{tablePagination()}</TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
           </Grid>
         </Grid>
       </Grid>
+
       <EditModal
         isEdit={isAdding || isEdit}
         setIsEdit={isAdding ? setIsAdding : setIsEdit}
@@ -342,7 +354,7 @@ const SpeciesTable = (props) => {
         selected={selected}
         styles={{ ...classes }}
       />
-    </>
+    </Grid>
   );
 };
 

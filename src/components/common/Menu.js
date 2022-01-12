@@ -14,7 +14,6 @@ import { Typography } from '@material-ui/core';
 export const MENU_WIDTH = 232;
 
 const useStyles = makeStyles((theme) => ({
-  drawer: {},
   drawerPaper: {
     width: MENU_WIDTH,
     position: 'inherit',
@@ -27,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 0, 0, 4),
   },
   menuItem: {
+    width: MENU_WIDTH,
+    minHeight: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.lightVery,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
-    marginRight: 35,
+    marginRight: -15,
     '&.Mui-selected': {
       color: theme.palette.primary.main,
       fontWeight: 400,
@@ -71,7 +72,7 @@ export default function GSMenu(props) {
       <Box p={4}>
         <IconLogo />
       </Box>
-      <Box height={20} />
+      <Box />
       {useMemo(
         () =>
           appContext.routes &&

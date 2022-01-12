@@ -59,11 +59,7 @@ function Home(props) {
   React.useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
-<<<<<<< HEAD
         `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`
-=======
-        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`,
->>>>>>> fix: default time range; bug; layout
       );
       const { data } = res;
       setUpdateTime(data.last_updated_at);
@@ -98,13 +94,13 @@ function Home(props) {
   };
 
   return (
-    <div className={classes.box}>
-      <div className={classes.menuAside}>
-        <Paper elevation={3} className={classes.menu}>
+    <Grid className={classes.box}>
+      <Grid className={classes.menuAside}>
+        <Paper style={{ boxShadow: 'none' }}>
           <Menu variant="plain" />
         </Paper>
-      </div>
-      <div className={classes.rightBox}>
+      </Grid>
+      <Grid className={classes.rightBox} style={{ flexGrow: 1 }}>
         <Box className={classes.box2}>
           <Grid container spacing={5} className={classes.version}>
             <Grid item xs={3}>
@@ -200,11 +196,11 @@ function Home(props) {
                     <ReportingCard7 startDate={startDate} endDate={endDate} />
                   </Grid>
                 </Grid>
-            )}
+              )}
           </Grid>
         </Box>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 
