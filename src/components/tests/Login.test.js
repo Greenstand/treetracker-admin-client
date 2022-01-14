@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Login from 'components/Login';
 
@@ -34,6 +35,26 @@ describe('Login Page', () => {
       render(<Login />, { wrapper: MemoryRouter });
       const loginButton = screen.queryByRole('button', { name: 'LOG IN' });
       expect(loginButton).toBeInTheDocument();
+    });
+  });
+  describe('Interactions', () => {
+    it('keeps the "LOG IN" button disabled until one of the input fields is empty', () => {
+      render(<Login />, { wrapper: MemoryRouter });
+      const emailInput = screen.queryByLabelText(/username/i);
+      const passwordInput = screen.queryByLabelText(/password/i);
+      const loginButton = screen.queryByRole('button', { name: 'LOG IN' });
+
+      userEvent.type(emailInput, 'admin');
+      expect(loginButton).toBeDisabled();
+      userEvent.clear(emailInput);
+
+      userEvent.type(passwordInput, 'P4ssword');
+      expect(loginButton).toBeDisabled();
+      userEvent.clear(passwordInput);
+
+      userEvent.type(emailInput, 'admin');
+      userEvent.type(passwordInput, 'P4ssword');
+      expect(loginButton).toBeEnabled();
     });
   });
 });
