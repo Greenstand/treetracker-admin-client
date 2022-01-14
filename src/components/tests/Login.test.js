@@ -56,5 +56,20 @@ describe('Login Page', () => {
       userEvent.type(passwordInput, 'P4ssword');
       expect(loginButton).toBeEnabled();
     });
+    it('displays spinner after clicking the "LOG IN" button', () => {
+      render(<Login />, { wrapper: MemoryRouter });
+      const emailInput = screen.queryByLabelText(/username/i);
+      const passwordInput = screen.queryByLabelText(/password/i);
+      const loginButton = screen.queryByRole('button', { name: 'LOG IN' });
+
+      userEvent.type(emailInput, 'admin');
+      userEvent.type(passwordInput, 'P4ssword');
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+
+      userEvent.click(loginButton);
+
+      const progressbar = screen.queryByRole('progressbar');
+      expect(progressbar).toBeInTheDocument();
+    });
   });
 });
