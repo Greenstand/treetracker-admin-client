@@ -87,7 +87,7 @@ const ExportCaptures = (props) => {
       (val) => val[1].status === true
     );
     const selectedColumns = Object.fromEntries(filterColumns);
-    await capturesContext.getAllCaptures({ filter }).then((response) => {
+    await capturesContext.getCaptureExports({ filter }).then((response) => {
       setDownloadData(processDownloadData(response.data, selectedColumns));
       setLoading(false);
     });

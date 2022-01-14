@@ -12,7 +12,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
+import ImageIcon from '@material-ui/icons/Image';
+// import Map from '@material-ui/icons/Map';
+import Nature from '@material-ui/icons/Nature';
+import Person from '@material-ui/icons/Person';
+// import TableChartIcon from '@material-ui/icons/TableChart';
 import { getDateTimeStringLocale } from '../../common/locale';
+import { countToLocaleString } from '../../common/numbers';
 import { getVerificationStatus } from '../../common/utils';
 import LinkToWebmap from '../common/LinkToWebmap';
 import { CapturesContext } from '../../context/CapturesContext';
@@ -83,7 +90,11 @@ const columns = [
   },
 ];
 
-const CaptureTable = () => {
+const CaptureTable = ({
+  setShowGallery,
+  handleShowCaptureDetail,
+  handleShowGrowerDetail,
+}) => {
   const {
     filter,
     rowsPerPage,
@@ -99,7 +110,7 @@ const CaptureTable = () => {
     setOrder,
     setOrderBy,
     setCapture,
-    getCaptureAsync,
+    getCaptureById,
   } = useContext(CapturesContext);
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
@@ -160,7 +171,7 @@ const CaptureTable = () => {
   };
 
   const toggleDrawer = (id) => {
-    getCaptureAsync(id);
+    getCaptureById(id);
     setIsDetailsPaneOpen(!isDetailsPaneOpen);
   };
 
@@ -199,7 +210,7 @@ const CaptureTable = () => {
   const tablePagination = () => {
     return (
       <TablePagination
-        rowsPerPageOptions={[25, 50, 100, 250, 500]}
+        rowsPerPageOptions={[24, 96, 192, 384]}
         component="div"
         count={captureCount || 0}
         page={page}
@@ -211,17 +222,29 @@ const CaptureTable = () => {
   };
 
   return (
-    <Grid style={{ height: '100%', overflow: 'auto', textAlign: 'center' }}>
+    <Grid style={{ height: '100%', overflow: 'auto', padding: '8px 32px' }}>
       <Grid
         container
         direction="row"
         justify="space-between"
         alignItems="center"
       >
-        <Typography variant="h5" className={classes.title}>
-          Captures
+        <Typography variant="h5">
+          {captureCount !== null &&
+            `${countToLocaleString(captureCount)} capture${
+              captureCount === 1 ? '' : 's'
+            }`}
         </Typography>
+
         <Grid className={classes.cornerTable}>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={() => setShowGallery(true)}
+            startIcon={<ImageIcon />}
+          >
+            Gallery View
+          </Button>
           <Button
             variant="outlined"
             color="primary"
@@ -269,25 +292,28 @@ const CaptureTable = () => {
             </Grid>
           ) : (
             <>
-              {captures.map((capture) => (
-                <TableRow
-                  key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.id)}
-                  className={classes.tableRow}
-                >
-                  {columns.map(({ attr, renderer }) => (
-                    <TableCell key={attr}>
-                      {formatCell(
-                        capture,
-                        speciesLookup,
-                        captureTagLookup[capture.id] || [],
-                        attr,
-                        renderer
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {captures &&
+                captures.map((capture) => (
+                  <TableRow
+                    key={capture.id}
+                    onClick={createToggleDrawerHandler(capture.id)}
+                    className={classes.tableRow}
+                  >
+                    {columns.map(({ attr, renderer }) => (
+                      <TableCell key={attr}>
+                        {formatCell(
+                          capture,
+                          speciesLookup,
+                          captureTagLookup[capture.id] || [],
+                          attr,
+                          renderer,
+                          handleShowCaptureDetail,
+                          handleShowGrowerDetail
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
             </>
           )}
         </TableBody>
@@ -309,14 +335,41 @@ export const formatCell = (
   speciesLookup,
   additionalTags,
   attr,
-  renderer
+  renderer,
+  handleShowCaptureDetail,
+  handleShowGrowerDetail
 ) => {
-  if (attr === 'id' || attr === 'planterId') {
+  if (attr === 'id') {
     return (
-      <LinkToWebmap
-        value={capture[attr]}
-        type={attr === 'id' ? 'tree' : 'user'}
-      />
+      <Grid item>
+        {capture[attr]}
+        <IconButton
+          onClick={(e) => handleShowCaptureDetail(e, capture)}
+          aria-label={`View/Edit Capture details`}
+          title={`View/Edit Capture details`}
+          style={{ padding: '0 4px 2px' }}
+        >
+          {/* <Typography color="primary">{capture[attr]}</Typography> */}
+          <Nature color="primary" />
+        </IconButton>
+        <LinkToWebmap value={'Map'} type={'tree'} />
+      </Grid>
+    );
+  } else if (attr === 'planterId') {
+    return (
+      <Grid item>
+        {capture[attr]}
+        <IconButton
+          onClick={(e) => handleShowGrowerDetail(e, capture.planterId)}
+          aria-label={`View/Edit Grower details`}
+          title={`View/Edit Grower details`}
+          style={{ padding: '0 2px 2px 0' }}
+        >
+          {/* <Typography color="primary">{capture[attr]}</Typography> */}
+          <Person color="primary" />
+        </IconButton>
+        <LinkToWebmap value={'Map'} type={'user'} />
+      </Grid>
     );
   } else if (attr === 'speciesId') {
     return capture[attr] === null ? '--' : speciesLookup[capture[attr]];

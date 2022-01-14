@@ -218,7 +218,7 @@ const capturesValues = {
   capture: {},
   numSelected: 0,
   page: 0,
-  rowsPerPage: 25,
+  rowsPerPage: 24,
   order: 'asc',
   orderBy: 'id',
   allIds: [],
@@ -226,8 +226,8 @@ const capturesValues = {
   filter: new FilterModel(),
   queryCapturesApi: () => {},
   getCaptureCount: () => {},
-  getCapturesAsync: () => {},
-  getCaptureAsync: () => {},
+  getCaptures: () => {},
+  getCaptureById: () => {},
 };
 const growerValues = {
   growers: GROWERS,

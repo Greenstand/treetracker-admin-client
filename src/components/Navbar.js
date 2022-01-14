@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   navbar: {
-    // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
     width: '100%',
     position: 'relative',
     left: 0,
@@ -37,7 +35,13 @@ const Navbar = (props) => {
 
   return (
     <>
-      <AppBar color="default" className={classes.navbar}>
+      <AppBar
+        color="default"
+        className={classes.navbar}
+        style={{
+          width: `calc(100% - ${props.sidepanelWidth}px)`,
+        }}
+      >
         <Grid container direction="column">
           <Toolbar className={classes.toolbar} disableGutters={true}>
             <Grid container justify="space-between">

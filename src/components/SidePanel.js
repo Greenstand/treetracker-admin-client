@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button'; // replace with icons down the line
-// import { selectedHighlightColor } from '../common/variables.js';
+import { Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 import CaptureTags from './CaptureTags';
-import { VerifyContext } from 'context/VerifyContext';
+// import { CapturesContext } from '../context/CapturesContext';
 
 const SIDE_PANEL_WIDTH = 315;
 
@@ -56,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
 
 function SidePanel(props) {
   // console.log('render: sidepanel');
+  // const { captures, capture, captureCount, setCapture } = useContext(
+  //   CapturesContext
+  // );
   const DEFAULT_SWITCH_APPROVE = 0;
   const DEFAULT_MORPHOLOGY = 'seedling';
   const DEFAULT_AGE = 'new_tree';
@@ -250,7 +252,7 @@ function SidePanel(props) {
                 <br />
               </Grid>
               <RadioGroup
-                className={classes.sidePanelItem}
+                className={classes.radioGroup}
                 value={captureApprovalTag}
               >
                 <FormControlLabel
@@ -307,7 +309,7 @@ function SidePanel(props) {
           {switchApprove === 1 && (
             <>
               <RadioGroup
-                className={classes.sidePanelItem}
+                className={classes.radioGroup}
                 value={rejectionReason}
               >
                 <FormControlLabel

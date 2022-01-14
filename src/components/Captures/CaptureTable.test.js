@@ -71,7 +71,7 @@ describe('Captures', () => {
 
     it('should show rows per page at top and bottom', () => {
       const pageNums = screen.getAllByRole('button', {
-        name: /rows per page: 25/i,
+        name: /rows per page: 24/i,
       });
       expect(pageNums).toHaveLength(2);
     });
@@ -155,7 +155,7 @@ describe('Captures', () => {
       capture: {},
       numSelected: 0,
       page: 0,
-      rowsPerPage: 25,
+      rowsPerPage: 24,
       order: 'asc',
       orderBy: 'id',
       allIds: [],
@@ -164,8 +164,8 @@ describe('Captures', () => {
       // queryCapturesApi: jest.fn(),
       queryCapturesApi: () => {},
       getCaptureCount: () => {},
-      getCapturesAsync: () => {},
-      getCaptureAsync: () => {},
+      getCaptures: () => {},
+      getCaptureById: () => {},
     };
 
     // Mock the API
@@ -225,7 +225,7 @@ describe('Captures', () => {
       const filter = JSON.stringify({
         where: { approved: true, active: true },
         order: ['id asc'],
-        limit: 25,
+        limit: 24,
         skip: 0,
         fields: {
           id: true,
