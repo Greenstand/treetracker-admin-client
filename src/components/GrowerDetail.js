@@ -105,10 +105,9 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const GrowerDetail = (props) => {
+const GrowerDetail = ({ open, growerId, onClose }) => {
   // console.log('render: grower detail');
   const classes = useStyle();
-  const { growerId } = props;
   const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
@@ -125,6 +124,7 @@ const GrowerDetail = (props) => {
     async function loadGrowerDetail() {
       if (grower && grower.id !== growerId) {
         setGrower({});
+        setDeviceIdentifiers([]);
       }
       if (growerId) {
         const match = await getGrower({
@@ -139,23 +139,28 @@ const GrowerDetail = (props) => {
         ) {
           setGrowerRegistrations(null);
           api.getGrowerRegistrations(growerId).then((registrations) => {
-            console.log('grower registrations: ', registrations);
             if (registrations && registrations.length) {
-              const sortedRegistrations = registrations.sort((a, b) =>
+              const sortedReg = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1
               );
-              setGrowerRegistrations(sortedRegistrations);
-              setDeviceIdentifiers(
-                sortedRegistrations
-                  .map((reg) => ({
+              const uniqueDevices = {};
+              const devices = sortedReg.reduce((result, reg) => {
+                if (!uniqueDevices[reg.device_identifier]) {
+                  uniqueDevices[reg.device_identifier] = true;
+                  // if manufacturer isn't 'apple' it's an android phone
+                  result.push({
                     id: reg.device_identifier,
                     os:
                       reg.manufacturer.toLowerCase() === 'apple'
                         ? 'iOS'
                         : 'Android',
-                  }))
-                  .filter((id) => id)
-              );
+                  });
+                }
+                return result;
+              }, []);
+
+              setDeviceIdentifiers(devices);
+              setGrowerRegistrations(sortedReg);
             }
           });
         }
@@ -225,7 +230,7 @@ const GrowerDetail = (props) => {
 
   return (
     <>
-      <Drawer anchor="right" open={props.open} onClose={props.onClose}>
+      <Drawer anchor="right" open={open} onClose={onClose}>
         <Grid
           style={{
             width: GROWER_IMAGE_SIZE,
@@ -242,7 +247,7 @@ const GrowerDetail = (props) => {
                   </Box>
                 </Grid>
                 <Grid item>
-                  <IconButton onClick={() => props.onClose()}>
+                  <IconButton onClick={() => onClose()}>
                     <Close />
                   </IconButton>
                 </Grid>
@@ -287,18 +292,19 @@ const GrowerDetail = (props) => {
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
             </Grid>
-            {hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
-              <Grid item>
-                <Button
-                  className={classes.messageButton}
-                  onClick={() => sendMessageFromGrower(grower)}
-                  component={Link}
-                  to={'/messaging'}
-                >
-                  Send Message
-                </Button>
-              </Grid>
-            )}
+            {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
+              hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
+                <Grid item>
+                  <Button
+                    className={classes.messageButton}
+                    onClick={() => sendMessageFromGrower(grower)}
+                    component={Link}
+                    to={'/messaging'}
+                  >
+                    Send Message
+                  </Button>
+                </Grid>
+              )}
             <Divider />
             <Grid container direction="column" className={classes.box}>
               <Typography variant="subtitle1">Captures</Typography>

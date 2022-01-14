@@ -32,7 +32,14 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const ExportCaptures = (props) => {
-  const { isOpen, handleClose, columns, filter, speciesState } = props;
+  const {
+    isOpen,
+    handleClose,
+    columns,
+    filter,
+    speciesLookup,
+    captureTagLookup,
+  } = props;
   const classes = useStyle();
   let nameColumns = {};
   columns.forEach(({ attr, renderer }) => {
@@ -63,9 +70,10 @@ const ExportCaptures = (props) => {
           const renderer = selectedColumns[attr].renderer;
           formatCapture[attr] = formatCell(
             capture,
-            speciesState,
+            speciesLookup,
+            captureTagLookup[capture.id] || [],
             attr,
-            renderer,
+            renderer
           );
         }
       });
@@ -76,7 +84,7 @@ const ExportCaptures = (props) => {
   async function downloadCaptures() {
     setLoading(true);
     const filterColumns = Object.entries(checkedColumns).filter(
-      (val) => val[1].status === true,
+      (val) => val[1].status === true
     );
     const selectedColumns = Object.fromEntries(filterColumns);
     await capturesContext.getAllCaptures({ filter }).then((response) => {

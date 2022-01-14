@@ -60,9 +60,6 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: theme.palette.primary.main,
   },
-  disabledLinkItem: {
-    pointerEvents: 'none',
-  },
 }));
 
 export default function GSMenu(props) {
@@ -82,53 +79,50 @@ export default function GSMenu(props) {
             .filter(({ disabled }) => !disabled)
             .map((item, i) =>
               item?.children ? (
-                <div className={classes.menuItemWithChildren}>
+                <div
+                  key={`${item}-${i}`}
+                  className={classes.menuItemWithChildren}
+                >
                   <Typography className={classes.menuTitle}>
                     {item.name}
                   </Typography>
-                  {item.children.map((child, i) => (
-                    <Link
-                      key={`menu_${i}`}
-                      className={
-                        classes.linkItemText +
-                        (child.disabled ? ' ' + classes.disabledLinkItem : '')
-                      }
-                      to={`${child.disabled ? '/' : child.linkTo}`}
-                    >
-                      <MenuItem
-                        className={classes.menuItem}
-                        selected={props.active === item.name}
-                        disabled={child.disabled}
+                  {item.children
+                    .filter(({ disabled }) => !disabled)
+                    .map((child, i) => (
+                      <Link
+                        key={`menu_${i}`}
+                        className={classes.linkItemText}
+                        to={child.linkTo}
                       >
-                        <Grid container>
-                          <Grid item>
-                            <ListItemIcon className={classes.listItemIcon}>
-                              {child.icon && <child.icon />}
-                            </ListItemIcon>
+                        <MenuItem
+                          className={classes.menuItem}
+                          selected={props.active === item.name}
+                        >
+                          <Grid container>
+                            <Grid item>
+                              <ListItemIcon className={classes.listItemIcon}>
+                                {child.icon && <child.icon />}
+                              </ListItemIcon>
+                            </Grid>
+                            <Grid item>
+                              <ListItemText className={classes.listItemText}>
+                                {child.name}
+                              </ListItemText>
+                            </Grid>
                           </Grid>
-                          <Grid item>
-                            <ListItemText className={classes.listItemText}>
-                              {child.name}
-                            </ListItemText>
-                          </Grid>
-                        </Grid>
-                      </MenuItem>
-                    </Link>
-                  ))}
+                        </MenuItem>
+                      </Link>
+                    ))}
                 </div>
               ) : (
                 <Link
                   key={`menu_${i}`}
-                  className={
-                    classes.linkItemText +
-                    (item.disabled ? ' ' + classes.disabledLinkItem : '')
-                  }
-                  to={`${item.disabled ? '/' : item.linkTo}`}
+                  className={classes.linkItemText}
+                  to={item.linkTo}
                 >
                   <MenuItem
                     className={classes.menuItem}
                     selected={props.active === item.name}
-                    disabled={item.disabled}
                   >
                     <Grid container>
                       <Grid item>
@@ -144,9 +138,9 @@ export default function GSMenu(props) {
                     </Grid>
                   </MenuItem>
                 </Link>
-              ),
+              )
             ),
-        [appContext.routes, props.active, classes],
+        [appContext.routes, props.active, classes]
       )}
     </>
   );

@@ -1,3 +1,50 @@
+## [1.39.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.2...v1.39.3) (2022-01-10)
+
+
+### Bug Fixes
+
+* set reporting API for production build ([6be4ab1](https://github.com/Greenstand/treetracker-admin-client/commit/6be4ab10129d0a913df549594398d063b3e3d7b7))
+
+## [1.39.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.1...v1.39.2) (2022-01-10)
+
+
+### Bug Fixes
+
+* enable reporting cards in production ([45e26f9](https://github.com/Greenstand/treetracker-admin-client/commit/45e26f9c8a9ca3f72ccd104d811c47ed52d0302a))
+
+## [1.39.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.0...v1.39.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* disabled wip of new features in production ([#276](https://github.com/Greenstand/treetracker-admin-client/issues/276)) ([cf5501a](https://github.com/Greenstand/treetracker-admin-client/commit/cf5501a730c366aa6f068f95e68653a3b23f7d81))
+
+# [1.39.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.38.0...v1.39.0) (2022-01-09)
+
+
+### Bug Fixes
+
+* sort captures table by time created desc ([#275](https://github.com/Greenstand/treetracker-admin-client/issues/275)) ([2383d69](https://github.com/Greenstand/treetracker-admin-client/commit/2383d698c4f6e4060bd8ae3d5e8a88d479f4d114))
+
+
+### Features
+
+* display unique devices and if they're iOS or Android ([#279](https://github.com/Greenstand/treetracker-admin-client/issues/279)) ([01dd684](https://github.com/Greenstand/treetracker-admin-client/commit/01dd6848b4090f859d4e24193d8caef037a28848))
+
+# [1.38.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.37.0...v1.38.0) (2022-01-09)
+
+
+### Features
+
+* add multi-select dropdown for verification status of captures f… ([#212](https://github.com/Greenstand/treetracker-admin-client/issues/212)) ([a67c1dd](https://github.com/Greenstand/treetracker-admin-client/commit/a67c1dd6c7da098a6cda3a4f181968df6aa701ca))
+
+# [1.37.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.36.0...v1.37.0) (2022-01-04)
+
+
+### Features
+
+* add options for any-tag-set and tag-not-set ([#227](https://github.com/Greenstand/treetracker-admin-client/issues/227)) ([b9598b8](https://github.com/Greenstand/treetracker-admin-client/commit/b9598b8d6008511cd4823b552c4736b4597b5564))
+
 # [1.36.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.35.1...v1.36.0) (2021-12-29)
 
 

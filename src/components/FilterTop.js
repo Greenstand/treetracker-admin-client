@@ -10,7 +10,8 @@ import FilterModel, {
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
-  // TAG_NOT_SET,
+  TAG_NOT_SET,
+  ANY_TAG_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -348,12 +349,18 @@ function Filter(props) {
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
-                  // {
-                  //   id: TAG_NOT_SET,
-                  //   tagName: 'Not set',
-                  //   active: true,
-                  //   public: true,
-                  // },
+                  {
+                    id: TAG_NOT_SET,
+                    tagName: 'Not set',
+                    active: true,
+                    public: true,
+                  },
+                  {
+                    id: ANY_TAG_SET,
+                    tagName: 'Any tag set',
+                    active: true,
+                    public: true,
+                  },
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
@@ -371,11 +378,7 @@ function Filter(props) {
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
                   console.log('newVal -- ', newVal);
-                  if (newVal && newVal.tagName === 'Not set') {
-                    setTag('Not set');
-                  } else {
-                    setTag(newVal);
-                  }
+                  setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -383,6 +386,7 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
+                getOptionSelected={(option, value) => option.id === value.id}
                 // selectOnFocus
                 // clearOnBlur
                 // handleHomeEndKeys

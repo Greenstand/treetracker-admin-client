@@ -10,6 +10,11 @@ export const tokenizationStates = {
   TOKENIZED: 'Tokenized',
   NOT_TOKENIZED: 'Not Tokenized',
 };
+export const verificationStatesArr = [
+  verificationStates.APPROVED,
+  verificationStates.AWAITING,
+  verificationStates.REJECTED,
+];
 
 // These are the default min/max dates for the MUI KeyboardDatePicker component
 // See https://material-ui-pickers.dev/api/KeyboardDatePicker

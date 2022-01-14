@@ -1,3 +1,16 @@
+import LoginPage from '../support/pages/LoginPage';
+
+describe.only('Login', () => {
+  const loginPage = new LoginPage();
+
+  before(() => cy.fixture('login').then((login) => (globalThis.login = login)));
+
+  it('displays an error message when "incorrect" credentials are entered', () => {
+    loginPage.login('incorrectName', 'incorrectPassword');
+    loginPage.expect_Displayed(login.error_message);
+  });
+});
+
 describe('Login', () => {
   beforeEach(() => {
     cy.visit('/');
