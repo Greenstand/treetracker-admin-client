@@ -16,7 +16,7 @@ export const CapturesContext = createContext({
   capturesSelected: [],
   capturesUndo: [],
   captureImageAnchor: undefined,
-  isLoading: false,
+  invalidateCaptureCount: false,
   isApproveAllProcessing: false,
   approveAllComplete: 0,
   page: 0,
@@ -24,6 +24,7 @@ export const CapturesContext = createContext({
   order: 'desc',
   orderBy: 'timeCreated',
   filter: new FilterModel(),
+  setIsLoading: () => {},
   setCapture: () => {},
   setRowsPerPage: () => {},
   setPage: () => {},
@@ -48,6 +49,7 @@ export function CapturesProvider(props) {
   const [capturesSelected, setCapturesSelected] = useState([]);
   const [capturesUndo, setCapturesUndo] = useState([]);
   const [captureImageAnchor, setCaptureImageAnchor] = useState(undefined);
+  const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(false);
   const [isApproveAllProcessing, setIsApproveAllProcessing] = useState(false);
   const [approveAllComplete, setApproveAllComplete] = useState(0);
   const [page, setPage] = useState(0);
@@ -95,9 +97,12 @@ export function CapturesProvider(props) {
     const response = await queryCapturesApi({
       count: true,
       paramString,
-    });
+    }).catch((err) =>
+      console.error(`ERROR: Failed to get capture count: ${err}`)
+    );
     const { count } = response.data;
     setCaptureCount(Number(count));
+    setInvalidateCaptureCount(false);
   };
 
   const getCaptures = async () => {
@@ -108,15 +113,20 @@ export function CapturesProvider(props) {
       limit: rowsPerPage,
       skip: page * rowsPerPage,
     };
+
     const paramString = `filter=${JSON.stringify(filterData)}`;
     setIsLoading(true);
-    const response = await queryCapturesApi({ paramString });
+    log.debug('load page with params:', paramString);
+    const { data } = await queryCapturesApi({ paramString }).catch((err) =>
+      console.error(`ERROR: Failed to get captures: ${err}`)
+    );
+    log.debug('loaded captures:', data.length);
+    setCaptures(data);
     setIsLoading(false);
-    setCaptures(response.data);
   };
 
   // GET CAPTURES FOR EXPORT
-  const getAllCaptures = async () => {
+  const getCaptureExports = async () => {
     log.debug('load all captures for export');
     const filterData = {
       where: filter.getWhereObj(),
@@ -125,7 +135,9 @@ export function CapturesProvider(props) {
     };
 
     const paramString = `filter=${JSON.stringify(filterData)}`;
-    const response = await queryCapturesApi({ paramString });
+    const response = await queryCapturesApi({ paramString }).catch((err) =>
+      console.error(`ERROR: Failed to get captures for export: ${err}`)
+    );
     return response;
   };
 
@@ -136,9 +148,9 @@ export function CapturesProvider(props) {
         setCapture(res.data);
       })
       .catch((err) => {
-        setIsLoading(false);
-        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
-    });
+        // setIsLoading(false);
+        console.error(`ERROR: Failed to get selected capture: ${err}`);
+      });
   };
 
   const updateFilter = async (filter) => {
@@ -151,6 +163,7 @@ export function CapturesProvider(props) {
     setCaptures([]);
     setPage(0);
     setCaptureCount(null);
+    setInvalidateCaptureCount(true);
   };
 
   /**  VERIFICATION METHODS **/
@@ -242,7 +255,7 @@ export function CapturesProvider(props) {
     const undo = captures.filter((capture) =>
       capturesSelected.some((id) => id === capture.id)
     );
-    log.debug('items:%d', captures.length);
+    log.debug('captures total:%d, undo:%d', captures.length, undo.length);
     try {
       for (let i = 0; i < total; i++) {
         const captureId = capturesSelected[i];
@@ -272,7 +285,7 @@ export function CapturesProvider(props) {
     await getCaptures();
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    // setInvalidateCaptureCount(true);
+    setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -311,7 +324,7 @@ export function CapturesProvider(props) {
         await undoCaptureImage(captureImage.id);
 
         setApproveAllComplete(100 * ((i + 1) / total));
-        // setInvalidateCaptureCount(true);
+        setInvalidateCaptureCount(true);
       }
     } catch (e) {
       log.warn('get error:', e);
@@ -324,7 +337,7 @@ export function CapturesProvider(props) {
     setIsLoading(false);
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    // setInvalidateCaptureCount(true);
+    setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -345,12 +358,8 @@ export function CapturesProvider(props) {
     order,
     orderBy,
     filter,
-<<<<<<< HEAD
-    isLoading,
     setIsLoading,
-=======
     setCapture,
->>>>>>> feat: add gallery view to Captures with edit dialogs, fix verifyStatus reset
     setRowsPerPage,
     setPage,
     setOrder,

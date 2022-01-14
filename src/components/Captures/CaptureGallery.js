@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
@@ -9,142 +9,18 @@ import Typography from '@material-ui/core/Typography';
 import Snackbar from '@material-ui/core/Snackbar';
 import TablePagination from '@material-ui/core/TablePagination';
 
-import { LocationOn } from '@material-ui/icons';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import CaptureImageCard from './CaptureImageCard';
 import SidePanel from './../SidePanel';
+import styles from './CaptureGalllery.styles';
 import { countToLocaleString } from '../../common/numbers';
-import {
-  selectedHighlightColor,
-  SIDE_PANEL_WIDTH,
-} from '../../common/variables.js';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import { TagsContext } from '../../context/TagsContext';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
-const useStyles = makeStyles((theme) => ({
-  wrapper: {
-    padding: theme.spacing(2, 8, 4, 8),
-  },
-  cornerTable: {
-    margin: theme.spacing(1),
-    '&>*': {
-      display: 'inline-flex',
-      margin: theme.spacing(1, 1),
-    },
-  },
-  cardImg: {
-    width: '100%',
-    height: 'auto',
-  },
-  cardTitle: {
-    color: '#f00',
-  },
-  card: {
-    cursor: 'pointer',
-    '&:hover $cardMedia': {
-      transform: 'scale(1.04)',
-    },
-  },
-  cardCheckbox: {
-    position: 'absolute',
-    height: '1.2em',
-    width: '1.2em',
-    top: '0.2rem',
-    left: '0.3rem',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  cardSelected: {
-    backgroundColor: theme.palette.action.selected,
-  },
-  cardContent: {
-    padding: '87% 0 0 0',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  selected: {
-    border: `2px ${selectedHighlightColor} solid`,
-  },
-  cardMedia: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    transform: 'scale(1)',
-    transition: theme.transitions.create('transform', {
-      easing: theme.transitions.easing.easeInOut,
-      duration: '0.2s',
-    }),
-  },
-  cardWrapper: {
-    position: 'relative',
-    padding: theme.spacing(2),
-  },
-  placeholderCard: {
-    pointerEvents: 'none',
-    '& $card': {
-      background: '#eee',
-      '& *': {
-        opacity: 0,
-      },
-    },
-  },
-  title: {
-    padding: theme.spacing(2, 8),
-  },
-  snackbar: {
-    bottom: 20,
-  },
-  snackbarContent: {
-    backgroundColor: theme.palette.action.active,
-  },
-  cardActions: {
-    display: 'flex',
-    padding: theme.spacing(0, 2),
-  },
-  button: {
-    marginRight: '8px',
-  },
-  body: {
-    width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'auto',
-    height: '100%',
-  },
-  bodyInner: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tooltip: {
-    maxWidth: 'none',
-  },
-  MuiDialogActionsSpacing: {
-    paddingLeft: '16px',
-    paddingRight: '16px',
-  },
-  sidePanelSubmitButton: {
-    width: '128px',
-  },
-  mb: {
-    marginBottom: '1rem',
-  },
-  activeFilters: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
-    marginLeft: '0.75rem',
-    backgroundColor: theme.palette.stats.green,
-    fontSize: 'smaller',
-    fontWeight: 'bold',
-  },
-}));
+const useStyles = makeStyles(styles);
 
 const CaptureGallery = ({
   setShowGallery,
@@ -174,12 +50,9 @@ const CaptureGallery = ({
   const classes = useStyles();
   const [complete, setComplete] = useState(0);
 
-  // const [isLoading, setIsLoading] = useState(false);
-  const refContainer = useRef();
-
   /* to display progress */
   useEffect(() => {
-    // console.log('-- approve all complete');
+    log.debug('-- approve all complete');
     setComplete(approveAllComplete);
   }, [approveAllComplete]);
 
@@ -217,8 +90,8 @@ const CaptureGallery = ({
   }
 
   async function handleSubmit(approveAction) {
-    // log.debug('approveAction:', approveAction);
-    //check selection
+    log.debug('approveAction:', approveAction);
+    // check selection
     if (capturesSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
@@ -229,7 +102,7 @@ const CaptureGallery = ({
       console.log('species id:', speciesId);
     }
 
-    //create/retrieve tags
+    // create/retrieve tags
     approveAction.tags = await tagsContext.createTags();
     const result = await approveAll(approveAction);
     if (!result) {

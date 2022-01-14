@@ -83,7 +83,7 @@ const CaptureImageCard = ({
   const classes = useStyles();
 
   return (
-    <Grid item xs={12} sm={3} md={2} xl={2}>
+    <Grid item xs={12} sm={6} md={3} xl={2}>
       <div
         className={clsx(
           classes.cardWrapper,
