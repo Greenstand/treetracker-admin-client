@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
 import useStyles from './EarningsTableMainFilter.styles';
 
+const PAYMENT_STATUS = ['paid', 'calculated', 'cancled', 'all'];
+
 /**
  * @function
  * @name EarningsTableFilter
@@ -93,19 +95,20 @@ function EarningsTableMainFilter(props) {
             className={classes.earningsFilterSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
+              Payment Status
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              id="payment_system"
-              name="payment_system"
-              label="Payment System"
+              id="payment_status"
+              name="payment_status"
+              label="Payment Status"
               onChange={handleOnFormControlChange}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="visa">Visa</MenuItem>
+              {PAYMENT_STATUS.map((paymentStatus, i) => (
+                <MenuItem key={`${paymentStatus}_${i}`} value={paymentStatus}>
+                  {paymentStatus}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
@@ -113,19 +116,15 @@ function EarningsTableMainFilter(props) {
             variant="outlined"
             className={classes.earningsFilterSelectFormControl}
           >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Grower Phone Number
-            </InputLabel>
-
             <TextField
               id="phone"
               name="phone"
+              htmlFor="phone"
+              label="Grower Phone Number"
+              placeholder="Grower Phone Number"
               value={mainFilter?.phone}
               type="text"
               onChange={handleOnFormControlChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </FormControl>
 
@@ -136,13 +135,12 @@ function EarningsTableMainFilter(props) {
             <TextField
               id="grower"
               name="grower"
+              htmlFor="grower"
               label="Grower Name"
+              placeholder="Grower Name"
               value={mainFilter?.grower}
               onChange={handleOnFormControlChange}
               type="text"
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </FormControl>
 
