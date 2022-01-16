@@ -46,7 +46,9 @@ function EarningsTableMainFilter(props) {
     e.preventDefault();
     const filtersToSubmit = { ...filter, ...mainFilter };
     Object.keys(filtersToSubmit).forEach(
-      (k) => filtersToSubmit[k] == 'all' && delete filtersToSubmit[k]
+      (k) =>
+        (filtersToSubmit[k] == 'all' || filtersToSubmit[k] == '') &&
+        delete filtersToSubmit[k]
     ); // filter our keys we don't want to submit
     setFilter(filtersToSubmit);
     setIsMainFilterOpen(false);
