@@ -18,19 +18,15 @@ import { VerifyContext, VerifyProvider } from '../../context/VerifyContext';
 import { GrowerContext, GrowerProvider } from '../../context/GrowerContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsContext, TagsProvider } from '../../context/TagsContext';
-import FilterGrower from '../../models/FilterGrower';
-import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 import {
   CAPTURE,
   CAPTURES,
   GROWER,
-  GROWERS,
   ORGS,
   TAG,
   TAGS,
   SPECIES,
-  capturesValues,
   growerValues,
   verifyValues,
   tagsValues,
@@ -137,7 +133,6 @@ describe('Verify', () => {
     it('renders filter top', () => {
       const filter = screen.getByRole('button', { name: /filter/i });
       userEvent.click(filter);
-      // screen.logTestingPlaygroundURL();
 
       const verifyStatus = screen.getByLabelText(/awaiting verification/i);
       expect(verifyStatus).toBeInTheDocument();
@@ -147,12 +142,13 @@ describe('Verify', () => {
     });
 
     it('renders number of applied filters', async () => {
-      const filter = screen.getByRole('button', { name: /filter 1/i });
+      const filter = screen.getByRole('button', {
+        name: /filter 1/i,
+      });
       userEvent.click(filter);
       expect(screen.getByText(/awaiting verification/i)).toBeInTheDocument();
-      //data won't actually be filtered but filters should be selected
-      //why was this set to expect 2 filters?
-      expect(verifyValues.filter.countAppliedFilters()).toBe(1);
+
+      // screen.logTestingPlaygroundURL();
 
       let dropdown = screen.getByTestId('org-dropdown');
       expect(dropdown).toBeInTheDocument();
@@ -160,25 +156,20 @@ describe('Verify', () => {
         name: /all/i,
       });
       userEvent.click(button);
-      // the actual list of orgs is displayed in a popup that is not part of FilterTop
-      // this list is the default list
+      // the actual list of orgs is displayed in a popup that is not part of FilterTop, this list is the default list
       const orglist = screen.getByRole('listbox');
-
-      const orgSelected = screen.getByRole('option', { name: /not set/i });
+      const orgSelected = screen.getByRole('option', {
+        name: /not set/i,
+      });
 
       userEvent.selectOptions(orglist, orgSelected);
-
       userEvent.click(screen.getByText(/apply/i));
-      // screen.logTestingPlaygroundURL();
-      expect(screen.getByRole('button', { name: /filter 2/i })).toBeTruthy();
-      //this function is still returning 1
-      // expect(verifyValues.filter.countAppliedFilters()).toBe(2);
+      expect(
+        screen.getByRole('button', {
+          name: /filter 2/i,
+        })
+      ).toBeTruthy();
     });
-
-    // it('renders side panel', () => {
-    //   // screen.logTestingPlaygroundURL();
-    //   // expect(screen.getByText(/planters per page: 24/i));
-    // });
 
     it('renders captures gallery', () => {
       // screen.logTestingPlaygroundURL();
@@ -194,7 +185,6 @@ describe('Verify', () => {
       });
       expect(captureDetails).toHaveLength(4);
       userEvent.click(captureDetails[0]);
-      // screen.logTestingPlaygroundURL();
       expect(screen.getByText(/capture data/i)).toBeInTheDocument();
       expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
       expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
@@ -210,7 +200,6 @@ describe('Verify', () => {
       });
       expect(growerDetails).toHaveLength(4);
       userEvent.click(growerDetails[0]);
-      screen.logTestingPlaygroundURL();
 
       expect(screen.getByText(/country/i)).toBeInTheDocument();
       expect(screen.getByText(/organization/i)).toBeInTheDocument();
@@ -220,19 +209,6 @@ describe('Verify', () => {
       expect(screen.getByText(/phone number/i)).toBeInTheDocument();
       expect(screen.getByText(/registered/i)).toBeInTheDocument();
     });
-
-    // it('renders edit planter', () => {
-    //   const planterDetails = screen.getAllByRole('button', {
-    //     name: /planter details/i,
-    //   });
-    //   userEvent.click(planterDetails[0]);
-
-    //   screen.logTestingPlaygroundURL();
-    //   //
-    //   const editPlanter = screen.getByTestId(/edit-planter/i);
-    //   expect(editPlanter).toBeInTheDocument();
-    //   userEvent.click(editPlanter);
-    // });
   });
 });
 

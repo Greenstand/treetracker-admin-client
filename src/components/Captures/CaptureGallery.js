@@ -12,7 +12,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import CaptureImageCard from './CaptureImageCard';
 import SidePanel from './../SidePanel';
-import styles from './CaptureGalllery.styles';
+import styles from './CaptureGallery.styles';
 import { countToLocaleString } from '../../common/numbers';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
@@ -28,6 +28,8 @@ const CaptureGallery = ({
   handleShowGrowerDetail,
 }) => {
   const {
+    captures,
+    captureCount,
     capturesSelected,
     capturesUndo,
     isLoading,
@@ -35,8 +37,6 @@ const CaptureGallery = ({
     isBulkApproving,
     rowsPerPage,
     page,
-    captures,
-    captureCount,
     approveAllComplete,
     approveAll,
     clickCapture,
@@ -205,7 +205,12 @@ const CaptureGallery = ({
               </Grid>
             </Grid>
             <Grid item>
-              <Grid container className={classes.wrapper} spacing={1}>
+              <Grid
+                container
+                className={classes.wrapper}
+                spacing={1}
+                data-testid="captures-gallery"
+              >
                 {captureImageItems}
               </Grid>
             </Grid>
@@ -236,7 +241,7 @@ const CaptureGallery = ({
       )}
       {isApproveAllProcessing && (
         <Modal open={true}>
-          <div>isApproveAllProcessing is true</div>
+          <div></div>
         </Modal>
       )}
       {false && !isApproveAllProcessing && capturesUndo.length > 0 && (

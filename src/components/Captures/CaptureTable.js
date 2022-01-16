@@ -265,7 +265,7 @@ const CaptureTable = ({
           {tablePagination()}
         </Grid>
       </Grid>
-      <Table data-testid="captures-table">
+      <Table>
         <TableHead>
           <TableRow>
             {columns.map(({ attr, label, noSort }) => (
