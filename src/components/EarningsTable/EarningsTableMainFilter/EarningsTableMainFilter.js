@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
 import useStyles from './EarningsTableMainFilter.styles';
 
-const PAYMENT_STATUS = ['paid', 'calculated', 'cancled', 'all'];
+const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
 /**
  * @function
