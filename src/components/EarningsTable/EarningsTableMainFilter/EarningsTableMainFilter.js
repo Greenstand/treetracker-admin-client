@@ -44,7 +44,11 @@ function EarningsTableMainFilter(props) {
 
   const handleOnFilterFormSubmit = (e) => {
     e.preventDefault();
-    setFilter({ ...filter, ...mainFilter });
+    const filtersToSubmit = { ...filter, ...mainFilter };
+    Object.keys(filtersToSubmit).forEach(
+      (k) => filtersToSubmit[k] == 'all' && delete filtersToSubmit[k]
+    ); // filter our keys we don't want to submit
+    setFilter(filtersToSubmit);
     setIsMainFilterOpen(false);
   };
 
@@ -99,14 +103,16 @@ function EarningsTableMainFilter(props) {
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
-              id="payment_status"
-              name="payment_status"
+              id="earnings_status"
+              name="earnings_status"
               label="Payment Status"
               onChange={handleOnFormControlChange}
             >
               {PAYMENT_STATUS.map((paymentStatus, i) => (
                 <MenuItem key={`${paymentStatus}_${i}`} value={paymentStatus}>
-                  {paymentStatus}
+                  <span style={{ textTransform: 'capitalize' }}>
+                    {paymentStatus}
+                  </span>
                 </MenuItem>
               ))}
             </Select>

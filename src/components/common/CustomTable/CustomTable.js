@@ -371,7 +371,10 @@ function CustomTable(props) {
                 >
                   {tableMetaData.map((column, j) => (
                     <TableCell key={`${i}-${j}-${column.name}`}>
-                      <Typography variant="body1">
+                      <Typography
+                        variant="body1"
+                        style={{ textTransform: 'capitalize' }}
+                      >
                         {row[column.name]}
                       </Typography>
                     </TableCell>
