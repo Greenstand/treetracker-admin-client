@@ -71,8 +71,9 @@ export const MessagingProvider = (props) => {
 
   const loadAuthors = async () => {
     const res = await api.getAuthors();
+
     if (res) {
-      setAuthors(res);
+      setAuthors(res.authors);
     }
   };
 
@@ -88,9 +89,9 @@ export const MessagingProvider = (props) => {
     await api.postMessage(payload);
   };
 
-  const postMessageSend = async (payload) => {
+  const postMessageSend = (payload) => {
     if (payload) {
-      await api.postMessageSend(payload);
+      api.postMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }

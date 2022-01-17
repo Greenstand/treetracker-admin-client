@@ -67,14 +67,14 @@ const Messaging = () => {
     body,
   } = useStyles();
 
-  const { messages, loadMessages, loadRegions, loadAuthors } = useContext(
+  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
     MessagingContext
   );
 
   useEffect(() => {
     loadMessages();
     loadRegions();
-    // loadAuthors();
+    loadAuthors();
   }, []);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
@@ -84,9 +84,17 @@ const Messaging = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
+
+  const findMessageRecipient = (messagesArray) => {
+    return messagesArray[0].messages[0].to !== user.userName
+      ? setMessageRecipient(messagesArray[0].messages[0].to)
+      : setMessageRecipient(messagesArray[0].messages[0].from);
+  };
+
   useEffect(() => {
     if (messages.length && messageRecipient === '') {
-      setMessageRecipient(messages[0].userName);
+      findMessageRecipient(messages);
+      // setMessageRecipient(messages[0].userName);
     }
   }, [messages]);
 
@@ -119,21 +127,17 @@ const Messaging = () => {
           >
             Quick Survey
           </Button>
-          {toggleAnnounceMessage ? (
+          {toggleAnnounceMessage && (
             <AnnounceMessage
               toggleAnnounceMessage={toggleAnnounceMessage}
               setToggleAnnounceMessage={setToggleAnnounceMessage}
             />
-          ) : (
-            <></>
           )}
-          {toggleSurvey ? (
+          {toggleSurvey && (
             <Survey
               toggleSurvey={toggleSurvey}
               setToggleSurvey={setToggleSurvey}
             />
-          ) : (
-            <></>
           )}
         </Grid>
       </Grid>
@@ -142,7 +146,6 @@ const Messaging = () => {
           <Inbox
             messages={messages}
             selectedIndex={selectedIndex}
-            messageRecipient={messageRecipient}
             handleListItemClick={handleListItemClick}
           />
         </Grid>

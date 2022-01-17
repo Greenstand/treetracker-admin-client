@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { MessagingContext } from 'context/MessagingContext';
 import {
   FormControl,
@@ -47,6 +47,10 @@ const NewMessage = ({ openModal, handleClose }) => {
   const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState({ to: '', body: '' });
 
+  useEffect(() => {
+    if (openModal === false) setMessageContent({ to: '', body: '' });
+  }, [openModal]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMessageContent({
@@ -64,7 +68,6 @@ const NewMessage = ({ openModal, handleClose }) => {
       subject: 'Message',
       body: messageContent.body,
     };
-    ``;
 
     if (
       messagePayload.body !== '' &&
@@ -75,6 +78,7 @@ const NewMessage = ({ openModal, handleClose }) => {
     }
     setMessageContent({ to: '', body: '' });
   };
+
   return (
     <Modal
       open={openModal}
@@ -100,7 +104,9 @@ const NewMessage = ({ openModal, handleClose }) => {
               onChange={handleChange}
             >
               {authors.map((author) => (
-                <MenuItem key={author.id}>{author.handle}</MenuItem>
+                <MenuItem key={author.id} value={author.handle}>
+                  {author.handle}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
@@ -41,12 +41,18 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto',
     alignItems: 'center',
     color: 'grey',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   messageTimeStampRight: {
     display: 'flex',
     marginLeft: 'auto',
     alignItems: 'center',
     color: 'grey',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   displayName: {
     marginLeft: '20px',
@@ -124,7 +130,7 @@ export const SurveyMessage = ({ message }) => {
           {message.body ? message.body : ''}
         </Typography>
         {questions.map((question, i) => (
-          <div key={i} className={surveyContent}>
+          <div key={question + `:${i + 1}`} className={surveyContent}>
             <Typography variant={'h6'}>
               Question {i + 1}:{' '}
               <Typography variant={'body1'}>{question.prompt}</Typography>
@@ -133,7 +139,9 @@ export const SurveyMessage = ({ message }) => {
               Choices:
               <ol type="A">
                 {question.choices.map((choice, i) => (
-                  <li key={choice ? choice : i}>{choice}</li>
+                  <li key={choice ? `choice ${i + 1}:${choice}` : i}>
+                    {choice}
+                  </li>
                 ))}
               </ol>
             </Typography>
@@ -193,7 +201,7 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ messageRecipient, id }) => {
+const SenderInformation = ({ messageRecipient, subject, id }) => {
   const { senderInfo, senderItem, avatar } = useStyles();
 
   return (
@@ -202,9 +210,11 @@ const SenderInformation = ({ messageRecipient, id }) => {
         <Avatar src="" className={avatar}></Avatar>
       </Grid>
       <Grid item className={senderItem}>
-        <Typography variant="h5">{messageRecipient}</Typography>
-        <Typography align="left" color="primary" variant="h5">
-          ID:{id}
+        <Typography variant="h5">
+          {subject === 'Survey' ? subject : messageRecipient}
+        </Typography>
+        <Typography align="left" color="primary" variant="h6">
+          {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
       </Grid>
     </Grid>
@@ -213,10 +223,27 @@ const SenderInformation = ({ messageRecipient, id }) => {
 
 const MessageBody = ({ messages, messageRecipient }) => {
   const { paper, messagesBody, textInput } = useStyles();
-  const { user, postMessageSend } = useContext(MessagingContext);
+  const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
+  const [subject, setSubject] = useState('');
+  const [recipientId, setRecipientId] = useState('');
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    if (messages) {
+      setSubject(messages[0].subject);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (authors && messageRecipient) {
+      let res = authors.find((author) => author.handle === messageRecipient);
+      if (res) {
+        setRecipientId(res.id);
+      }
+    }
+  }, [messageRecipient]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     let lastMessage = messages[messages.length - 1];
@@ -231,7 +258,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        await postMessageSend(messagePayload);
+        postMessageSend(messagePayload);
       }
     }
     setMessageContent('');
@@ -240,7 +267,11 @@ const MessageBody = ({ messages, messageRecipient }) => {
   return (
     <Paper className={paper}>
       {messageRecipient && messages ? (
-        <SenderInformation messageRecipient={messageRecipient} id={''} />
+        <SenderInformation
+          messageRecipient={messageRecipient}
+          subject={subject}
+          id={recipientId}
+        />
       ) : (
         <SenderInformation />
       )}
@@ -250,12 +281,12 @@ const MessageBody = ({ messages, messageRecipient }) => {
             if (message.subject === 'Message') {
               return message.from === user.userName ? (
                 <SentMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
                 />
               ) : message.body.length > 1 ? (
                 <RecievedMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
                 />
               ) : (
@@ -264,14 +295,14 @@ const MessageBody = ({ messages, messageRecipient }) => {
             } else if (message.subject.includes('Survey')) {
               return (
                 <SurveyMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : i}
                   message={message}
                 />
               );
             } else if (message.subject.includes('Announce')) {
               return (
                 <AnnounceMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : i}
                   message={message}
                 />
               );
