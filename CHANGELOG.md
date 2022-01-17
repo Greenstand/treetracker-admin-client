@@ -1,3 +1,10 @@
+## [1.39.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.4...v1.39.5) (2022-01-17)
+
+
+### Bug Fixes
+
+* readme update node version from 12 to 16 ([#302](https://github.com/Greenstand/treetracker-admin-client/issues/302)) ([538b5cd](https://github.com/Greenstand/treetracker-admin-client/commit/538b5cd1e08b3a454390840ff830931af64cdfca))
+
 ## [1.39.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.3...v1.39.4) (2022-01-17)
 
 
