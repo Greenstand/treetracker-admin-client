@@ -87,13 +87,12 @@ export function CapturesProvider(props) {
       where = [];
       verifyStatus.forEach((status) => {
         where.push({
-          ...restFilter,
           active: status.active,
           approved: status.approved,
         });
       });
     }
-    return orCondition ? { or: where } : { ...where };
+    return orCondition ? { ...restFilter, or: where } : { ...where };
   };
 
   const queryCapturesApi = ({ id = null, count = false, paramString = null }) =>
