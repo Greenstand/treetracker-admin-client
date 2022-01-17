@@ -1,3 +1,10 @@
+## [1.39.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.3...v1.39.4) (2022-01-17)
+
+
+### Bug Fixes
+
+* bug in capture filter when using >1 verify status ([#301](https://github.com/Greenstand/treetracker-admin-client/issues/301)) ([2f88020](https://github.com/Greenstand/treetracker-admin-client/commit/2f88020cb9b20487ca551727b745c054393b6f9e))
+
 ## [1.39.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.2...v1.39.3) (2022-01-10)
 
 
