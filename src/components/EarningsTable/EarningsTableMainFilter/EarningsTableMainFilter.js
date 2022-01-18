@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import api from '../../../api/treeTrackerApi';
 
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -30,6 +31,7 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  */
 function EarningsTableMainFilter(props) {
   const [mainFilter, setMainFilter] = useState({});
+  const [organisations, setOrganisations] = useState([]);
   const { isMainFilterOpen, setIsMainFilterOpen, filter, setFilter } = props;
 
   const classes = useStyles();
@@ -67,6 +69,12 @@ function EarningsTableMainFilter(props) {
     setIsMainFilterOpen(false);
   };
 
+  useEffect(() => {
+    api.getOrganizations().then((res) => {
+      setOrganisations(res);
+    });
+  }, [mainFilter]);
+
   return (
     <Drawer
       anchor="right"
@@ -100,11 +108,9 @@ function EarningsTableMainFilter(props) {
             variant="outlined"
             className={classes.earningsFilterSelectFormControl}
           >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment Status
-            </InputLabel>
+            <InputLabel id="earnings_status">Payment Status</InputLabel>
             <Select
-              labelId="demo-simple-select-outlined-label"
+              labelId="earnings_status"
               id="earnings_status"
               name="earnings_status"
               label="Payment Status"
@@ -114,6 +120,53 @@ function EarningsTableMainFilter(props) {
                 <MenuItem key={`${paymentStatus}_${i}`} value={paymentStatus}>
                   <span style={{ textTransform: 'capitalize' }}>
                     {paymentStatus}
+                  </span>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFilterSelectFormControl}
+          >
+            <InputLabel id="organisation_id">Organisation</InputLabel>
+            <Select
+              labelId="organisation_id"
+              id="organisation_id"
+              name="organisation_id"
+              label="Organisation"
+              onChange={handleOnFormControlChange}
+            >
+              {organisations.map((organisation, i) => (
+                <MenuItem
+                  key={`${organisation.id}_${i}`}
+                  value={organisation.id}
+                >
+                  <span style={{ textTransform: 'capitalize' }}>
+                    {organisation.name}
+                  </span>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            variant="outlined"
+            className={classes.earningsFilterSelectFormControl}
+          >
+            <InputLabel id="contract_type_id">Contract Type</InputLabel>
+            <Select
+              labelId="contract_type_id"
+              id="contract_type_id"
+              name="contract_type_id"
+              label="Contract Type"
+              onChange={handleOnFormControlChange}
+            >
+              {[].map((contractType, i) => (
+                <MenuItem key={`${contractType}_${i}`} value={contractType}>
+                  <span style={{ textTransform: 'capitalize' }}>
+                    {contractType}
                   </span>
                 </MenuItem>
               ))}
