@@ -15,7 +15,8 @@ import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '87% 0 0 0',
     position: 'relative',
     overflow: 'hidden',
+    justifyContent: 'center',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -158,6 +160,7 @@ const Verify = (props) => {
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
+  const [alignment, setAlignment] = useState('left');
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -202,9 +205,11 @@ const Verify = (props) => {
     return () => abortController.abort();
   }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
 
-  function toggleSizes() {
+  function toggleSizes(event, newAlignment) {
     setIsToggle(!isToggle);
+    setAlignment(newAlignment);
   }
+
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
@@ -332,10 +337,10 @@ const Verify = (props) => {
       return (
         <Grid
           item
-          xs={!isToggle ? 3 : 0}
-          sm={!isToggle ? 12 : 0}
+          xs={!isToggle ? 12 : 0}
+          sm={!isToggle ? 6 : 0}
           md={!isToggle ? 4 : 0}
-          xl={!isToggle ? 3 : 0}
+          xl={!isToggle ? 2 : 0}
           key={capture.id}
         >
           <div
@@ -495,9 +500,18 @@ const Verify = (props) => {
                     </Typography>
                   </Grid>
                   <Grid>
-                    <ToggleButtonGroup onChange={toggleSizes}>
-                      <ToggleButton value="">Large size</ToggleButton>
-                      <ToggleButton value="small">small size</ToggleButton>
+                    <ToggleButtonGroup
+                      value={alignment}
+                      exclusive
+                      onChange={toggleSizes}
+                      aria-label="text alignment"
+                    >
+                      <ToggleButton value="left" aria-label="left aligned">
+                        Large size
+                      </ToggleButton>
+                      <ToggleButton value="right" aria-label="right aligned">
+                        Small size
+                      </ToggleButton>
                     </ToggleButtonGroup>
                   </Grid>
                   <Grid item>{imagePagination}</Grid>
