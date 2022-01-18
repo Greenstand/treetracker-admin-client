@@ -155,28 +155,6 @@ function EarningsTableMainFilter(props) {
             variant="outlined"
             className={classes.earningsFilterSelectFormControl}
           >
-            <InputLabel id="contract_type_id">Contract Type</InputLabel>
-            <Select
-              labelId="contract_type_id"
-              id="contract_type_id"
-              name="contract_type_id"
-              label="Contract Type"
-              onChange={handleOnFormControlChange}
-            >
-              {[].map((contractType, i) => (
-                <MenuItem key={`${contractType}_${i}`} value={contractType}>
-                  <span style={{ textTransform: 'capitalize' }}>
-                    {contractType}
-                  </span>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl
-            variant="outlined"
-            className={classes.earningsFilterSelectFormControl}
-          >
             <TextField
               id="phone"
               name="phone"
