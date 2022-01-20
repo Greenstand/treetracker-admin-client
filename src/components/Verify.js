@@ -335,10 +335,10 @@ const Verify = (props) => {
       return (
         <Grid
           item
-          xs={showBigSize ? 0 : 'auto'}
-          sm={showBigSize ? 0 : 'auto'}
-          md={showBigSize ? 0 : 3}
-          xl={showBigSize ? 0 : 'auto'}
+          xs={showBigSize ? 0 : 12}
+          sm={showBigSize ? 0 : 6}
+          md={showBigSize ? 0 : 4}
+          xl={showBigSize ? 0 : 2}
           key={capture.id}
         >
           <div
@@ -544,13 +544,11 @@ const Verify = (props) => {
                         exclusive
                         onChange={toggleSizes}
                         aria-label="text alignment"
-                        paddingTop="8px"
                       >
                         <ToggleButton
                           value="left"
                           aria-label="left aligned"
                           disabled={!showBigSize ? true : false}
-                          className={classes.showButtonSize}
                         >
                           Large size
                         </ToggleButton>
@@ -558,7 +556,6 @@ const Verify = (props) => {
                           value="right"
                           aria-label="right aligned"
                           disabled={showBigSize ? true : false}
-                          className={classes.showButtonSize}
                         >
                           Small size
                         </ToggleButton>
