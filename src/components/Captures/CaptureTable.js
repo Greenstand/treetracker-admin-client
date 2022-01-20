@@ -70,6 +70,12 @@ const columns = [
     noSort: true,
   },
   {
+    attr: 'note',
+    label: 'Notes',
+    noSort: true,
+    renderer: (val) => val,
+  },
+  {
     attr: 'timeCreated',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),

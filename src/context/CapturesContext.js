@@ -149,6 +149,7 @@ export function CapturesProvider(props) {
         morphology: true,
         captureApprovalTag: true,
         rejectionReason: true,
+        note: true,
       },
     };
 
@@ -182,6 +183,7 @@ export function CapturesProvider(props) {
         morphology: true,
         captureApprovalTag: true,
         rejectionReason: true,
+        note: true,
       },
     };
 
