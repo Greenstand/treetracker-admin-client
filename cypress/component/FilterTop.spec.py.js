@@ -42,7 +42,7 @@ describe('FilterTop', () => {
           <FilterTop filter={filterModel} isOpen={true} />
         </ThemeProvider>
         ,
-      </Provider>,
+      </Provider>
     );
   });
 
@@ -52,14 +52,14 @@ describe('FilterTop', () => {
       // Check forward button is disabled
       cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
         'have.length',
-        1,
+        1
       );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
         cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
           'have.length',
-          0,
+          0
         );
       });
     });
@@ -71,14 +71,14 @@ describe('FilterTop', () => {
       // Check forward button is disabled
       cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
         'have.length',
-        1,
+        1
       );
       cy.get('.MuiPickersCalendarHeader-iconButton').then(($headerButtons) => {
         $headerButtons[0].click();
         // Check both buttons are enabled
         cy.get('.MuiPickersCalendarHeader-iconButton.Mui-disabled').should(
           'have.length',
-          0,
+          0
         );
       });
     });

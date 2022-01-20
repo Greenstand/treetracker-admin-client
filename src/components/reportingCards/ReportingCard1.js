@@ -12,7 +12,7 @@ export default function ReportingCard1(props) {
     'planters',
     'planters',
     undefined,
-    rows,
+    rows
   );
 
   return (

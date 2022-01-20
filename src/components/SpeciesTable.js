@@ -132,12 +132,12 @@ const SpeciesTable = (props) => {
       let sortedSpecies;
       if (option === sortOptions.byId) {
         sortedSpecies = [...speciesContext.speciesList].sort(
-          (a, b) => a[option] - b[option],
+          (a, b) => a[option] - b[option]
         );
       }
       if (option === sortOptions.byName) {
         sortedSpecies = [...speciesContext.speciesList].sort((a, b) =>
-          a[option].localeCompare(b[option]),
+          a[option].localeCompare(b[option])
         );
       }
       setSortedSpeciesList(sortedSpecies);
@@ -185,7 +185,7 @@ const SpeciesTable = (props) => {
     return (rowsPerPage > 0
       ? sortedSpeciesList.slice(
           page * rowsPerPage,
-          page * rowsPerPage + rowsPerPage,
+          page * rowsPerPage + rowsPerPage
         )
       : sortedSpeciesList
     ).map((species) => (
@@ -303,9 +303,7 @@ const SpeciesTable = (props) => {
                       <TableCell>Operations</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {renderSpecies()}
-                  </TableBody>
+                  <TableBody>{renderSpecies()}</TableBody>
                   <TableFooter>
                     <TableRow>{tablePagination()}</TableRow>
                   </TableFooter>
@@ -383,7 +381,7 @@ const EditModal = ({
       ? data.filter((species) => Number(species.id) !== speciesEdit.id)
       : data;
     const nameSpecies = otherSpeciesList.map((species) =>
-      species.name.toLowerCase(),
+      species.name.toLowerCase()
     );
     if (nameSpecies.includes(editName)) {
       setError('Species already exists');

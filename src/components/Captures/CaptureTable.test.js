@@ -78,7 +78,7 @@ describe('Captures', () => {
 
     it('should show page # and capture count', () => {
       const counts = Array.from(
-        document.querySelectorAll('.MuiTablePagination-caption'),
+        document.querySelectorAll('.MuiTablePagination-caption')
       );
       const arr = counts.map((count) => count.firstChild.textContent);
       expect(arr[1]).toBe('1-4 of 4');

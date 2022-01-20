@@ -38,7 +38,7 @@ export const getOrganizationById = (organizations, organizationId) =>
  */
 export const covertDateStringToHumanReadableFormat = (
   dateString,
-  format = 'dddd, mmm d, yyyy',
+  format = 'dddd, mmm d, yyyy'
 ) => {
   const date = new Date(dateString);
 
@@ -59,7 +59,7 @@ export const generateActiveDateRangeFilterString = (startDate, endDate) => {
 
   const startDateString = covertDateStringToHumanReadableFormat(
     startDate,
-    format,
+    format
   );
   const endDateString = covertDateStringToHumanReadableFormat(endDate, format);
 
