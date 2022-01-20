@@ -14,10 +14,8 @@ import {
 import { GetApp } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import ImageIcon from '@material-ui/icons/Image';
-// import Map from '@material-ui/icons/Map';
 import Nature from '@material-ui/icons/Nature';
 import Person from '@material-ui/icons/Person';
-// import TableChartIcon from '@material-ui/icons/TableChart';
 import { getDateTimeStringLocale } from '../../common/locale';
 import { countToLocaleString } from '../../common/numbers';
 import { getVerificationStatus } from '../../common/utils';
@@ -349,7 +347,6 @@ export const formatCell = (
           title={`View/Edit Capture details`}
           style={{ padding: '0 4px 2px' }}
         >
-          {/* <Typography color="primary">{capture[attr]}</Typography> */}
           <Nature color="primary" />
         </IconButton>
         <LinkToWebmap value={'Map'} type={'tree'} />
@@ -365,7 +362,6 @@ export const formatCell = (
           title={`View/Edit Grower details`}
           style={{ padding: '0 2px 2px 0' }}
         >
-          {/* <Typography color="primary">{capture[attr]}</Typography> */}
           <Person color="primary" />
         </IconButton>
         <LinkToWebmap value={'Map'} type={'user'} />

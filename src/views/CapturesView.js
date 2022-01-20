@@ -4,7 +4,6 @@ import { Grid } from '@material-ui/core';
 import CaptureDetailDialog from '../components/CaptureDetailDialog';
 import GrowerDetail from '../components/GrowerDetail';
 import CaptureGallery from '../components/Captures/CaptureGallery';
-// import SidePanel from '../components/SidePanel';
 import CaptureTable from '../components/Captures/CaptureTable';
 import { CaptureDetailProvider } from '../context/CaptureDetailContext';
 import { CapturesProvider } from '../context/CapturesContext';

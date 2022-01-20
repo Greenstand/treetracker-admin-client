@@ -1,33 +1,14 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import {
-  act,
-  render,
-  screen,
-  within,
-  cleanup,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import captureApi from '../../api/treeTrackerApi';
+import { act, render, screen, within, cleanup } from '@testing-library/react';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { AppProvider } from '../../context/AppContext';
 import { CapturesContext } from '../../context/CapturesContext';
-import { GrowerContext } from '../../context/GrowerContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import { TagsContext } from '../../context/TagsContext';
 import CaptureGallery from './CaptureGallery';
 import {
-  CAPTURE,
   CAPTURES,
-  GROWER,
-  ORGS,
-  TAG,
-  TAGS,
-  SPECIES,
   capturesValues,
-  growerValues,
   tagsValues,
   speciesValues,
 } from '../tests/fixtures';
@@ -49,45 +30,10 @@ describe('Captures', () => {
     return Promise.resolve({ count: 4 });
   };
 
-  // mock the treeTrackerApi
-  // let captureApi = require('../../api/treeTrackerApi').default;
-
-  // captureApi.getCaptureById = (_id) => {
-  //   log.debug('mock getCaptureById:');
-  //   return Promise.resolve(CAPTURE);
-  // };
-  // captureApi.getSpecies = () => {
-  //   log.debug('mock getSpecies:');
-  //   return Promise.resolve(SPECIES);
-  // };
-  // captureApi.getSpeciesById = (_id) => {
-  //   log.debug('mock getSpeciesById:');
-  //   return Promise.resolve(SPECIES[0]);
-  // };
-  // captureApi.getCaptureCountPerSpecies = () => {
-  //   log.debug('mock getCaptureCountPerSpecies:');
-  //   return Promise.resolve({ count: 7 });
-  // };
-  // captureApi.getTags = () => {
-  //   log.debug('mock getTags:');
-  //   return Promise.resolve(TAGS);
-  // };
-  // captureApi.getTagById = (_id) => {
-  //   log.debug('mock getTagById:');
-  //   return Promise.resolve(TAG);
-  // };
-  // captureApi.getOrganizations = () => {
-  //   log.debug('mock getOrganizations:');
-  //   return Promise.resolve(ORGS);
-  // };
-
   describe('with default values', () => {
     beforeEach(async () => {
       render(
         <ThemeProvider theme={theme}>
-          {/* <BrowserRouter> */}
-          {/* <AppProvider value={{ orgList: ORGS }}> */}
-          {/* <GrowerContext.Provider value={growerValues}> */}
           <CapturesContext.Provider value={capturesValues}>
             <SpeciesContext.Provider value={speciesValues}>
               <TagsContext.Provider value={tagsValues}>
@@ -99,9 +45,6 @@ describe('Captures', () => {
               </TagsContext.Provider>
             </SpeciesContext.Provider>
           </CapturesContext.Provider>
-          {/* </GrowerContext.Provider> */}
-          {/* </AppProvider> */}
-          {/* </BrowserRouter> */}
         </ThemeProvider>
       );
 

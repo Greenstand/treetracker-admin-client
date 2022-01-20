@@ -117,12 +117,13 @@ export function CapturesProvider(props) {
     const paramString = `filter=${JSON.stringify(filterData)}`;
     setIsLoading(true);
     log.debug('load page with params:', paramString);
-    const { data } = await queryCapturesApi({ paramString }).catch((err) =>
-      console.error(`ERROR: Failed to get captures: ${err}`)
-    );
-    log.debug('loaded captures:', data.length);
-    setCaptures(data);
-    setIsLoading(false);
+    await queryCapturesApi({ paramString })
+      .then(({ data }) => {
+        log.debug('loaded captures:', data.length);
+        setCaptures(data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.error(`ERROR: Failed to get captures: ${err}`));
   };
 
   // GET CAPTURES FOR EXPORT
@@ -174,7 +175,6 @@ export function CapturesProvider(props) {
   };
 
   const clickCapture = (payload) => {
-    //{{{
     const { captureId, isShift, isCmd, isCtrl } = payload;
     if (!isShift && !isCmd && !isCtrl) {
       setCapturesSelected([captureId]);
@@ -218,7 +218,6 @@ export function CapturesProvider(props) {
       }
       setCapturesSelected(selectedImages);
     }
-    //}}}
   };
 
   const approve = async ({ approveAction, id }) => {
@@ -259,13 +258,10 @@ export function CapturesProvider(props) {
     try {
       for (let i = 0; i < total; i++) {
         const captureId = capturesSelected[i];
-        const captureImage = captures.reduce((a, c) => {
-          if (c && c.id === captureId) {
-            return c;
-          } else {
-            return a;
-          }
-        }, undefined);
+        const captureImage = captures.reduce(
+          (a, c) => (c && c.id === captureId ? c : a),
+          undefined
+        );
         log.debug('approve:%d', captureImage.id);
         log.trace('approve:%d', captureImage.id);
         await approve({
@@ -293,8 +289,9 @@ export function CapturesProvider(props) {
 
   const undoneCaptureImage = (captureId) => {
     //put the capture back, from undo list, sort by id
-    const captureUndo = capturesUndo.reduce((a, c) =>
-      c.id === captureId ? c : a
+    const captureUndo = capturesUndo.reduce(
+      (a, c) => (c.id === captureId ? c : a),
+      undefined
     );
     const undoneImages = capturesUndo.filter(
       (capture) => capture.id !== captureId

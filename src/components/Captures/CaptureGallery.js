@@ -18,7 +18,7 @@ import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import { TagsContext } from '../../context/TagsContext';
 
-const log = require('loglevel').getLogger('../components/Verify');
+const log = require('loglevel').getLogger('../components/CaptureGallery');
 
 const useStyles = makeStyles(styles);
 
@@ -99,7 +99,7 @@ const CaptureGallery = ({
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
-      console.log('species id:', speciesId);
+      log.debug('species id:', speciesId);
     }
 
     // create/retrieve tags

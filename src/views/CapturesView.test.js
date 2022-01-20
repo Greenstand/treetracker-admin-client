@@ -32,26 +32,6 @@ jest.mock('../api/growers');
 jest.mock('../api/treeTrackerApi');
 
 describe.skip('Captures View', () => {
-  //mock the growers api
-  // let growerApi = require('../api/growers').default;
-
-  // growerApi.getCount = () => {
-  //   log.debug('mock getCount:');
-  //   return Promise.resolve({ count: 2 });
-  // };
-  // growerApi.getGrower = () => {
-  //   log.debug('mock getGrower:');
-  //   return Promise.resolve(GROWER);
-  // };
-  // growerApi.getGrowerRegistrations = () => {
-  //   log.debug('mock getGrowerRegistrations:');
-  //   return Promise.resolve([]);
-  // };
-  // growerApi.getGrowerSelfies = (id) => {
-  //   log.debug('mock getGrowerSelfies:');
-  //   return Promise.resolve([{ planterPhotoUrl: '' }, { planterPhotoUrl: '' }]);
-  // };
-
   // mock the treeTrackerApi
   let captureApi = require('../api/treeTrackerApi').default;
 
