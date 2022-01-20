@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.5...v1.40.0) (2022-01-20)
+
+
+### Features
+
+* add notes to captures table and captures export csv ([#309](https://github.com/Greenstand/treetracker-admin-client/issues/309)) ([734e925](https://github.com/Greenstand/treetracker-admin-client/commit/734e9254f0ffe02d2525b0f3e0d7314a2cacb04d))
+
 ## [1.39.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.4...v1.39.5) (2022-01-17)
 
 
