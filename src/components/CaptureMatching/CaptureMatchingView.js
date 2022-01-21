@@ -52,12 +52,12 @@ function CaptureMatchingView() {
       // TODO: handle errors and give user feedback
       setLoading(true);
       const data = await fetch(
-        `${CAPTURE_API}/${captureId}/potential_matches`,
+        `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
         {
           headers: {
             // Authorization: session.token,
           },
-        },
+        }
       ).then((res) => res.json());
       console.log('candidate images ---> ', data);
       setCandidateImgData(data.matches);
@@ -85,7 +85,7 @@ function CaptureMatchingView() {
     async function fetchCaptures() {
       // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}`, {
+      const data = await fetch(`${CAPTURE_API}/captures`, {
         headers: {
           // Authorization: session.token,
         },
@@ -117,7 +117,7 @@ function CaptureMatchingView() {
     // TODO: handle errors and give user feedback
     const captureId = captureImages[currentPage - 1].id;
     console.log('captureId treeId', captureId, treeId);
-    fetch(`${CAPTURE_API}/${captureId}`, {
+    fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
