@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.0...v1.40.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* correct paths to treetracker API ([0c8e3ec](https://github.com/Greenstand/treetracker-admin-client/commit/0c8e3ecb4cac4c631446c3a48925eedeed1ef264))
+
 # [1.40.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.5...v1.40.0) (2022-01-20)
 
 
