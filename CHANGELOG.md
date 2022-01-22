@@ -1,3 +1,10 @@
+## [1.40.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.1...v1.40.2) (2022-01-22)
+
+
+### Bug Fixes
+
+* add manager_user and list_user permissions to display user manager tab ([#281](https://github.com/Greenstand/treetracker-admin-client/issues/281)) ([be8ff32](https://github.com/Greenstand/treetracker-admin-client/commit/be8ff32324adb0bf74ebebe338bfa32eb05f58ac))
+
 ## [1.40.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.0...v1.40.1) (2022-01-21)
 
 
