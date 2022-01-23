@@ -13,7 +13,6 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 import CaptureTags from './CaptureTags';
-// import { CapturesContext } from '../context/CapturesContext';
 
 const SIDE_PANEL_WIDTH = 315;
 
@@ -54,10 +53,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SidePanel(props) {
-  // console.log('render: sidepanel');
-  // const { captures, capture, captureCount, setCapture } = useContext(
-  //   CapturesContext
-  // );
   const DEFAULT_SWITCH_APPROVE = 0;
   const DEFAULT_MORPHOLOGY = 'seedling';
   const DEFAULT_AGE = 'new_tree';

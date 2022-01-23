@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
-import Snackbar from '@material-ui/core/Snackbar';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import TableChartIcon from '@material-ui/icons/TableChart';
@@ -31,10 +30,8 @@ const CaptureGallery = ({
     captures,
     captureCount,
     capturesSelected,
-    capturesUndo,
     isLoading,
     isApproveAllProcessing,
-    isBulkApproving,
     rowsPerPage,
     page,
     approveAllComplete,
@@ -42,7 +39,6 @@ const CaptureGallery = ({
     clickCapture,
     setPage,
     setRowsPerPage,
-    undoAll,
   } = useContext(CapturesContext);
 
   const speciesContext = useContext(SpeciesContext);
@@ -240,39 +236,16 @@ const CaptureGallery = ({
         </AppBar>
       )}
       {isApproveAllProcessing && (
-        <Modal open={true}>
-          <div></div>
+        <Modal open={true} className={classes.modal}>
+          <div className={classes.modalContent}>
+            <h3>PROCESSING ... {parseInt(complete)}% complete</h3>
+            <LinearProgress
+              color="primary"
+              variant="determinate"
+              value={complete}
+            />
+          </div>
         </Modal>
-      )}
-      {false && !isApproveAllProcessing && capturesUndo.length > 0 && (
-        <Snackbar
-          open
-          autoHideDuration={15000}
-          ContentProps={{
-            className: classes.snackbarContent,
-            'aria-describedby': 'snackbar-fab-message-id',
-          }}
-          message={
-            <span id="snackbar-fab-message-id">
-              You have {isBulkApproving === true ? ' approved ' : ' rejected '}
-              {capturesUndo.length} captures
-            </span>
-          }
-          color="primary"
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={async () => {
-                await undoAll();
-                log.log('finished');
-              }}
-            >
-              Undo
-            </Button>
-          }
-          className={classes.snackbar}
-        />
       )}
     </>
   );

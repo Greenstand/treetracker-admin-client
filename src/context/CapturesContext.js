@@ -14,7 +14,6 @@ export const CapturesContext = createContext({
   captureCount: 0,
   capture: {},
   capturesSelected: [],
-  capturesUndo: [],
   captureImageAnchor: undefined,
   invalidateCaptureCount: false,
   isApproveAllProcessing: false,
@@ -37,7 +36,6 @@ export const CapturesContext = createContext({
   getCaptureById: () => {},
   getCaptureExports: () => {},
   approveAll: () => {},
-  undoAll: () => {},
   updateFilter: () => {},
 });
 
@@ -47,7 +45,6 @@ export function CapturesProvider(props) {
   const [captureCount, setCaptureCount] = useState(0);
   const [capture, setCapture] = useState({});
   const [capturesSelected, setCapturesSelected] = useState([]);
-  const [capturesUndo, setCapturesUndo] = useState([]);
   const [captureImageAnchor, setCaptureImageAnchor] = useState(undefined);
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(false);
   const [isApproveAllProcessing, setIsApproveAllProcessing] = useState(false);
@@ -183,22 +180,16 @@ export function CapturesProvider(props) {
       log.debug('press shift, and there is an anchor:', captureImageAnchor);
       //if no anchor, then, select from beginning
       let indexAnchor = 0;
-      if (captureImageAnchor !== undefined) {
-        indexAnchor = captures.reduce((a, c, i) => {
-          if (c !== undefined && c.id === captureImageAnchor) {
-            return i;
-          } else {
-            return a;
-          }
-        }, -1);
+      if (captureImageAnchor) {
+        indexAnchor = captures.reduce(
+          (a, c, i) => (c && c.id === captureImageAnchor ? i : a),
+          -1
+        );
       }
-      const indexCurrent = captures.reduce((a, c, i) => {
-        if (c !== undefined && c.id === captureId) {
-          return i;
-        } else {
-          return a;
-        }
-      }, -1);
+      const indexCurrent = captures.reduce(
+        (a, c, i) => (c && c.id === captureId ? i : a),
+        -1
+      );
       const capturesSelected = captures
         .slice(
           Math.min(indexAnchor, indexCurrent),
@@ -210,9 +201,9 @@ export function CapturesProvider(props) {
       // Toggle the selection state
       let selectedImages;
       if (capturesSelected.find((el) => el === captureId)) {
-        selectedImages = capturesSelected.filter(function (capture) {
-          return capture !== captureId;
-        });
+        selectedImages = capturesSelected.filter(
+          (capture) => capture !== captureId
+        );
       } else {
         selectedImages = [...capturesSelected, captureId];
       }
@@ -251,10 +242,8 @@ export function CapturesProvider(props) {
     setIsApproveAllProcessing(true);
 
     const total = capturesSelected.length;
-    const undo = captures.filter((capture) =>
-      capturesSelected.some((id) => id === capture.id)
-    );
-    log.debug('captures total:%d, undo:%d', captures.length, undo.length);
+
+    log.debug('captures total:%d', captures.length);
     try {
       for (let i = 0; i < total; i++) {
         const captureId = capturesSelected[i];
@@ -276,62 +265,9 @@ export function CapturesProvider(props) {
       setIsApproveAllProcessing(false);
       return false;
     }
-    //push to undo list and set status flags
-    setCapturesUndo(undo), setIsLoading(false);
-    await getCaptures();
-    setIsApproveAllProcessing(false);
-    setApproveAllComplete(0);
-    setInvalidateCaptureCount(true);
 
-    resetSelection();
-    return true;
-  };
-
-  const undoneCaptureImage = (captureId) => {
-    //put the capture back, from undo list, sort by id
-    const captureUndo = capturesUndo.reduce(
-      (a, c) => (c.id === captureId ? c : a),
-      undefined
-    );
-    const undoneImages = capturesUndo.filter(
-      (capture) => capture.id !== captureId
-    );
-    const captures = [...captures, captureUndo].sort((a, b) => a.id - b.id);
-    setCaptures(captures);
-    setCapturesUndo(undoneImages);
-  };
-
-  const undoCaptureImage = async (id) => {
-    await api.undoCaptureImage(id);
-    undoneCaptureImage(id);
-    return true;
-  };
-
-  const undoAll = async () => {
-    log.debug('undo with state:', capturesUndo);
-    setIsLoading(true);
-    setIsApproveAllProcessing(true);
-
-    const total = capturesUndo.length;
-    log.debug('items:%d', captures.length);
-    try {
-      for (let i = 0; i < capturesUndo.length; i++) {
-        const captureImage = capturesUndo[i];
-        // log.trace('undo:%d', captureImage.id);
-        await undoCaptureImage(captureImage.id);
-
-        setApproveAllComplete(100 * ((i + 1) / total));
-        setInvalidateCaptureCount(true);
-      }
-    } catch (e) {
-      log.warn('get error:', e);
-
-      //   // isRejectAllProcessing: false,
-      setIsLoading(true);
-      setIsApproveAllProcessing(true);
-      return false;
-    }
     setIsLoading(false);
+    await getCaptures();
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
     setInvalidateCaptureCount(true);
@@ -346,7 +282,6 @@ export function CapturesProvider(props) {
     capture,
     capturesSelected,
     captureImageAnchor,
-    capturesUndo,
     isLoading,
     isApproveAllProcessing,
     approveAllComplete,
@@ -368,7 +303,6 @@ export function CapturesProvider(props) {
     getCaptureById,
     getCaptureExports,
     approveAll,
-    undoAll,
     updateFilter,
   };
 

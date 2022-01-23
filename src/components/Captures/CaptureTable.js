@@ -228,7 +228,8 @@ const CaptureTable = ({
         alignItems="center"
       >
         <Typography variant="h5">
-          {captureCount !== null &&
+          {/* check captureCount is a number and not undefined */}
+          {!isNaN(captureCount) &&
             `${countToLocaleString(captureCount)} capture${
               captureCount === 1 ? '' : 's'
             }`}

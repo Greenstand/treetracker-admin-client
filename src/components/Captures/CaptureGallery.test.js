@@ -13,20 +13,15 @@ import {
   speciesValues,
 } from '../tests/fixtures';
 
-import * as loglevel from 'loglevel';
-const log = loglevel.getLogger('../tests/verify.test');
-
 jest.setTimeout(7000);
 jest.mock('../../api/treeTrackerApi');
 
 describe('Captures', () => {
   // mock captures context api methods
   const getCaptures = () => {
-    log.debug('mock getCaptures:');
     return Promise.resolve(CAPTURES);
   };
   const getCaptureCount = () => {
-    log.debug('mock getCaptureCount:');
     return Promise.resolve({ count: 4 });
   };
 

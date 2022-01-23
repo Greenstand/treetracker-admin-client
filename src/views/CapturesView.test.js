@@ -36,39 +36,30 @@ describe.skip('Captures View', () => {
   let captureApi = require('../api/treeTrackerApi').default;
 
   const getCaptures = () => {
-    log.debug('mock getCaptures:');
     return Promise.resolve(CAPTURES);
   };
   const getCaptureCount = () => {
-    log.debug('mock getCaptureCount:');
     return Promise.resolve({ count: 4 });
   };
   captureApi.getCaptureById = (_id) => {
-    log.debug('mock getCaptureById:');
     return Promise.resolve(CAPTURE);
   };
   captureApi.getSpecies = () => {
-    log.debug('mock getSpecies:');
     return Promise.resolve(SPECIES);
   };
   captureApi.getSpeciesById = (_id) => {
-    log.debug('mock getSpeciesById:');
     return Promise.resolve(SPECIES[0]);
   };
   captureApi.getCaptureCountPerSpecies = () => {
-    log.debug('mock getCaptureCountPerSpecies:');
     return Promise.resolve({ count: 7 });
   };
   captureApi.getTags = () => {
-    log.debug('mock getTags:');
     return Promise.resolve(TAGS);
   };
   captureApi.getTagById = (_id) => {
-    log.debug('mock getTagById:');
     return Promise.resolve(TAG);
   };
   captureApi.getOrganizations = () => {
-    log.debug('mock getOrganizations:');
     return Promise.resolve(ORGS);
   };
 
@@ -108,7 +99,6 @@ describe.skip('Captures View', () => {
         name: /filter/i,
       });
       userEvent.click(filter);
-      // screen.logTestingPlaygroundURL();
 
       const verifyStatus = screen.getByLabelText(/awaiting verification/i);
       expect(verifyStatus).toBeInTheDocument();
@@ -123,9 +113,8 @@ describe.skip('Captures View', () => {
       });
       userEvent.click(filter);
       expect(screen.getByText(/awaiting verification/i)).toBeInTheDocument();
-      //data won't actually be filtered but filters should be selected
-      // expect(capturesValues.filter.countAppliedFilters()).toBe(1);
 
+      // data won't actually be filtered but filters should be selected
       let dropdown = screen.getByTestId('org-dropdown');
       expect(dropdown).toBeInTheDocument();
       let button = within(dropdown).getByRole('button', {
@@ -142,14 +131,11 @@ describe.skip('Captures View', () => {
       userEvent.selectOptions(orglist, orgSelected);
 
       userEvent.click(screen.getByText(/apply/i));
-      // screen.logTestingPlaygroundURL();
       expect(
         screen.getByRole('button', {
           name: /filter 2/i,
         })
       ).toBeTruthy();
-
-      // expect(capturesValues.filter.countAppliedFilters()).toBe(2);
     });
 
     it('renders gallery view', () => {
@@ -180,7 +166,6 @@ describe.skip('Captures View', () => {
       expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
       expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
       expect(screen.getByText(/device identifier/i)).toBeInTheDocument();
-      // expect(screen.getByText(/1 - abcdef123456/i)).toBeInTheDocument();
       expect(screen.getByText(/verification status/i)).toBeInTheDocument();
       expect(screen.getByText(/token status/i)).toBeInTheDocument();
     });
@@ -201,19 +186,6 @@ describe.skip('Captures View', () => {
       expect(screen.getByText(/phone number/i)).toBeInTheDocument();
       expect(screen.getByText(/registered/i)).toBeInTheDocument();
     });
-
-    // it('renders edit planter', () => {
-    //   const planterDetails = screen.getAllByRole('button', {
-    //     name: /planter details/i,
-    //   });
-    //   userEvent.click(planterDetails[0]);
-
-    //   screen.logTestingPlaygroundURL();
-    //   //
-    //   const editPlanter = screen.getByTestId(/edit-planter/i);
-    //   expect(editPlanter).toBeInTheDocument();
-    //   userEvent.click(editPlanter);
-    // });
   });
 
   describe.skip('render view with CaptureTable', () => {
@@ -243,7 +215,6 @@ describe.skip('Captures View', () => {
     afterEach(cleanup);
 
     it('renders table view', () => {
-      // screen.logTestingPlaygroundURL();
       const pageSize = screen.getAllByText(/rows per page:/i);
       expect(pageSize).toHaveLength(2);
       expect(screen.getByText(/4 captures/i));
@@ -270,7 +241,6 @@ describe.skip('Captures View', () => {
       expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
       expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
       expect(screen.getByText(/device identifier/i)).toBeInTheDocument();
-      // expect(screen.getByText(/1 - abcdef123456/i)).toBeInTheDocument();
       expect(screen.getByText(/verification status/i)).toBeInTheDocument();
       expect(screen.getByText(/token status/i)).toBeInTheDocument();
     });

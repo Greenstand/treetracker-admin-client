@@ -2,6 +2,7 @@ import {
   selectedHighlightColor,
   SIDE_PANEL_WIDTH,
 } from '../../common/variables.js';
+import { colorPrimary } from '../common/theme';
 
 const styles = (theme) => ({
   wrapper: {
@@ -65,6 +66,18 @@ const styles = (theme) => ({
   cardWrapper: {
     position: 'relative',
     padding: theme.spacing(2),
+  },
+  modal: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '40%',
+    backgroundColor: 'white',
+    color: colorPrimary,
+    padding: '20px',
+    borderRadius: '4px',
   },
   placeholderCard: {
     pointerEvents: 'none',
