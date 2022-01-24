@@ -27,7 +27,7 @@ export const VerifyContext = createContext({
   undoAll: () => {},
   updateFilter: () => {},
   getCaptureCount: () => {},
-  // clickCapture: () => {},
+  clickCapture: () => {},
   setPageSize: () => {},
   setCurrentPage: () => {},
   setCaptureImagesSelected: () => {},
@@ -157,13 +157,51 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureSelectedArr = () => {
-    let selectedImages = [];
-    Object.keys(captureImagesSelected).forEach((captureId) => {
-      selectedImages = captureImagesSelected[captureId]
-        ? [...selectedImages, parseInt(captureId)]
-        : selectedImages;
-    });
-    return selectedImages;
+    return Object.keys(captureImagesSelected)
+      .filter((captureId) => {
+        return captureImagesSelected[captureId] === true;
+      })
+      .map((captureId) => parseInt(captureId));
+  };
+
+  const clickCapture = (payload) => {
+    const { captureId, isShift } = payload;
+    if (isShift) {
+      log.debug('press shift, and there is an anchor:', captureImageAnchor);
+      //if no anchor, then, select from beginning
+      let indexAnchor = 0;
+      if (captureImageAnchor !== undefined) {
+        indexAnchor = captureImages.reduce((a, c, i) => {
+          if (c !== undefined && c.id === captureImageAnchor) {
+            return i;
+          } else {
+            return a;
+          }
+        }, -1);
+      }
+      const indexCurrent = captureImages.reduce((a, c, i) => {
+        if (c !== undefined && c.id === captureId) {
+          return i;
+        } else {
+          return a;
+        }
+      }, -1);
+      let captureShiftSelected = {};
+      captureImages
+        .slice(
+          Math.min(indexAnchor, indexCurrent),
+          Math.max(indexAnchor, indexCurrent) + 1
+        )
+        .forEach((capture) => {
+          captureShiftSelected[capture.id] = true;
+        });
+      setCaptureImagesSelected(captureShiftSelected);
+    } else {
+      setCaptureImagesSelected({
+        ...captureImagesSelected,
+        [captureId]: !captureImagesSelected[captureId],
+      });
+    }
   };
 
   const approveAll = async (approveAction) => {
@@ -259,54 +297,6 @@ export function VerifyProvider(props) {
     setInvalidateCaptureCount(false);
   };
 
-  // const clickCapture = (payload) => {
-  //   //{{{
-  //   const { captureId, isShift, isCmd, isCtrl } = payload;
-  //   if (!isShift && !isCmd && !isCtrl) {
-  //     setCaptureImagesSelected([captureId]);
-  //     setCaptureImageAnchor(captureId);
-  //   } else if (isShift) {
-  //     log.debug('press shift, and there is an anchor:', captureImageAnchor);
-  //     //if no anchor, then, select from beginning
-  //     let indexAnchor = 0;
-  //     if (captureImageAnchor !== undefined) {
-  //       indexAnchor = captureImages.reduce((a, c, i) => {
-  //         if (c !== undefined && c.id === captureImageAnchor) {
-  //           return i;
-  //         } else {
-  //           return a;
-  //         }
-  //       }, -1);
-  //     }
-  //     const indexCurrent = captureImages.reduce((a, c, i) => {
-  //       if (c !== undefined && c.id === captureId) {
-  //         return i;
-  //       } else {
-  //         return a;
-  //       }
-  //     }, -1);
-  //     const captureImagesSelected = captureImages
-  //       .slice(
-  //         Math.min(indexAnchor, indexCurrent),
-  //         Math.max(indexAnchor, indexCurrent) + 1,
-  //       )
-  //       .map((capture) => capture.id);
-  //     setCaptureImagesSelected(captureImagesSelected);
-  //   } else if (isCmd || isCtrl) {
-  //     // Toggle the selection state
-  //     let selectedImages;
-  //     if (captureImagesSelected.find((el) => el === captureId)) {
-  //       selectedImages = captureImagesSelected.filter(function (capture) {
-  //         return capture !== captureId;
-  //       });
-  //     } else {
-  //       selectedImages = [...captureImagesSelected, captureId];
-  //     }
-  //     setCaptureImagesSelected(selectedImages);
-  //   }
-  //   //}}}
-  // };
-
   const value = {
     captureImages,
     captureImagesSelected,
@@ -325,7 +315,7 @@ export function VerifyProvider(props) {
     undoAll: undoAll,
     updateFilter,
     getCaptureCount,
-    // clickCapture,
+    clickCapture,
     setPageSize,
     setCurrentPage,
     setCaptureImagesSelected,

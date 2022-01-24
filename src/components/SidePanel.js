@@ -84,7 +84,7 @@ function SidePanel(props) {
     setRejectionReason(DEFAULT_REJECTION_REASON);
   }
 
-  function setSelectedCaptures(value) {
+  function setAllSelectedCaptures(value) {
     if (value) {
       let captureSelected = {};
       verifyContext.captureImages.forEach((capture) => {
@@ -145,7 +145,7 @@ function SidePanel(props) {
             color="primary"
             variant="contained"
             className={classes.selectButton}
-            onClick={() => setSelectedCaptures(true)}
+            onClick={() => setAllSelectedCaptures(true)}
           >
             Select All
           </Button>
@@ -153,9 +153,9 @@ function SidePanel(props) {
             color="primary"
             variant="contained"
             className={classes.selectButton}
-            onClick={() => setSelectedCaptures(false)}
+            onClick={() => setAllSelectedCaptures(false)}
           >
-            Unselect All
+            Select None
           </Button>
         </Grid>
         <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>

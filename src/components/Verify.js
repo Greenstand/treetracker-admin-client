@@ -188,17 +188,10 @@ const Verify = (props) => {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on capture:%d', captureId);
-    if (verifyContext.captureImagesSelected[captureId]) {
-      verifyContext.setCaptureImagesSelected({
-        ...verifyContext.captureImagesSelected,
-        [captureId]: !verifyContext.captureImagesSelected[captureId],
-      });
-    } else {
-      verifyContext.setCaptureImagesSelected({
-        ...verifyContext.captureImagesSelected,
-        [captureId]: true,
-      });
-    }
+    verifyContext.clickCapture({
+      captureId,
+      isShift: e.shiftKey,
+    });
   }
 
   function handleCapturePinClick(e, captureId) {
@@ -323,10 +316,8 @@ const Verify = (props) => {
             >
               <CardContent className={classes.cardContent}>
                 <Paper className={classes.cardCheckbox} elevation={4}>
-                  {verifyContext.captureImagesSelected[capture.id] ? (
+                  {verifyContext.captureImagesSelected[capture.id] && (
                     <CheckIcon />
-                  ) : (
-                    <></>
                   )}
                 </Paper>
                 <OptimizedImage
