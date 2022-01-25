@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { Typography, Box, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import theme from '../common/theme';
@@ -84,11 +83,6 @@ function CandidateImages({ candidateImgData, sameTreeHandler }) {
                     <Typography variant="h5" style={{ padding: '10px' }}>
                       Tree {tree.tree_id}
                     </Typography>
-                  </Box>
-                  <Box>
-                    <ZoomOutMapIcon
-                      style={{ paddingRight: '10px', fontSize: '34px' }}
-                    />
                   </Box>
                 </Grid>
               </Box>
