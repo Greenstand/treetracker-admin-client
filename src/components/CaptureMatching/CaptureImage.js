@@ -9,6 +9,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { makeStyles } from '@material-ui/core/styles';
+import { getDateTimeStringLocale } from 'common/locale';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -83,7 +84,7 @@ function CaptureImage(props) {
                       <Box display="flex">
                         <AccessTimeIcon />
                         <Typography variant="body1">
-                          {capture.created_at}
+                          {getDateTimeStringLocale(capture.created_at)}
                         </Typography>
                       </Box>
 
