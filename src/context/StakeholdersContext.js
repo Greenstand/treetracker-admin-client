@@ -175,7 +175,7 @@ export function StakeholdersProvider(props) {
   };
 
   const updateLinks = async (id, payload) => {
-    log.debug('update links', id);
+    log.debug('update links', id, payload);
     await api.updateLinks(id, payload);
     getUnlinkedStakeholders(id);
     setIsLoading(true);
