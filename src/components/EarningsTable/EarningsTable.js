@@ -118,8 +118,11 @@ function EarningsTable() {
     };
 
     const response = await earningsAPI.getEarnings(queryParams);
-    const result = prepareRows(response.earnings);
-    setEarnings(result);
+    const results = prepareRows(response.earnings);
+    const withOutPaidEarnings = results.filter(
+      ({ status }) => status !== 'paid'
+    ); // remove paid earnings
+    setEarnings(withOutPaidEarnings);
     setTotalEarnings(response.totalCount);
 
     setIsLoading(false); // hide loading indicator when data is fetched
