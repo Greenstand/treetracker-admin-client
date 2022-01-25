@@ -36,7 +36,7 @@ function CaptureHeader(props) {
           alignItems="baseline"
         >
           <CurrentCaptureNumber
-            text={`Unmatched Capture${imgCount !== 1 && 's'}`}
+            text={`Unmatched Capture${imgCount !== 1 && 's' || ''}`}
             cameraImg={iconImgLogo}
             imgCount={imgCount}
           />
