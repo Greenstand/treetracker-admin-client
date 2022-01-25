@@ -1,7 +1,7 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
-import Icon from '@material-ui/icons/LocationOn';
+import Icon from '@material-ui/icons/Map';
 
 export default function component(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
