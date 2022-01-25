@@ -132,6 +132,7 @@ function PaymentsTable() {
       sort_by: sortBy?.field,
       order: sortBy?.order,
       limit: paymentsPerPage,
+      earnings_status: 'paid',
       ...filter,
     };
 
