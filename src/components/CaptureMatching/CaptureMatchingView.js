@@ -169,7 +169,7 @@ function CaptureMatchingView() {
           <Box style={{ width: '50%' }}>
             <Box className={classes.candidateIconBox}>
               <CurrentCaptureNumber
-                text={`Candidate Match${treesCount !== 1 && 'es'}`}
+                text={`Candidate Match${treesCount !== 1 && 'es' || ''}`}
                 treeIcon={treeIcon}
                 treesCount={treesCount}
               />
