@@ -1,3 +1,11 @@
+## [1.40.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.2...v1.40.3) (2022-01-25)
+
+
+### Bug Fixes
+
+* change datetime format in capture image matching ([#320](https://github.com/Greenstand/treetracker-admin-client/issues/320)) ([0621247](https://github.com/Greenstand/treetracker-admin-client/commit/06212474b1bc2bb5e863dc150e7f2882ae1756c4))
+* remove expand icon in capture matching ([#319](https://github.com/Greenstand/treetracker-admin-client/issues/319)) ([d7f9172](https://github.com/Greenstand/treetracker-admin-client/commit/d7f9172c43803052d890daaa0b1a731d1bd4ea57))
+
 ## [1.40.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.1...v1.40.2) (2022-01-22)
 
 
