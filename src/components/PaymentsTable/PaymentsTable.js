@@ -67,7 +67,7 @@ const paymentTableMetaData = [
   },
   {
     description: 'Payment Date',
-    name: 'payment_confirmed_at',
+    name: 'paid_at',
     sortable: false,
     showInfoIcon: false,
   },
@@ -93,9 +93,7 @@ const prepareRows = (rows) =>
         'mmm d, yyyy'
       ),
       calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
-      payment_confirmed_at: covertDateStringToHumanReadableFormat(
-        row.payment_confirmed_at
-      ),
+      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
     };
   });
 
@@ -152,7 +150,6 @@ function PaymentsTable() {
       .then(() => {
         setIsShowUploadSnack(true);
         setSnackBarMessage('Payments Uploaded Successfully');
-        console.log('Payments Uploaded Successfully');
         setPaymentsUploadError(null);
         setIsErrorDialogOpen(false);
         getPayments();
