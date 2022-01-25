@@ -7,7 +7,7 @@
 /coverage
 /cypress/videos
 /cypress/screenshots
-
+/cypress/fixtures/login.json
 # production
 /build
 
