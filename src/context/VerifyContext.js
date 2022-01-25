@@ -58,8 +58,10 @@ export function VerifyProvider(props) {
   /* load captures when the page or page size changes */
   useEffect(() => {
     const abortController = new AbortController();
-    setCaptureImages([]);
-    loadCaptureImages({ signal: abortController.signal });
+    if (!isLoading) {
+      setCaptureImages([]);
+      loadCaptureImages({ signal: abortController.signal });
+    }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage]);
 
