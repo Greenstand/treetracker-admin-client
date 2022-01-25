@@ -1,3 +1,10 @@
+## [1.40.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.3...v1.40.4) (2022-01-25)
+
+
+### Bug Fixes
+
+* wrap count labels in capture matching ([#322](https://github.com/Greenstand/treetracker-admin-client/issues/322)) ([1dfd366](https://github.com/Greenstand/treetracker-admin-client/commit/1dfd366886efb9bd32cf9785a5894b90641a0c09))
+
 ## [1.40.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.2...v1.40.3) (2022-01-25)
 
 
