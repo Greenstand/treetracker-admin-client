@@ -70,9 +70,12 @@ function EarningsTableMainFilter(props) {
   };
 
   useEffect(() => {
-    api.getOrganizations().then((res) => {
-      setOrganisations(res);
-    });
+    api
+      .getOrganizations()
+      .then((res) => {
+        setOrganisations(res);
+      })
+      .catch((err) => console.log(err));
   }, [mainFilter]);
 
   return (
