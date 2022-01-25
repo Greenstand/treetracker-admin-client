@@ -99,19 +99,21 @@ function CustomTableHeader(props) {
     ({
       id: earnings_id,
       worker_id,
-      funder_id,
-      amount,
+      phone,
       currency,
+      amount,
       payment_confirmation_id,
       payment_system,
+      paid_at,
     }) => ({
       earnings_id,
       worker_id,
-      funder_id,
-      amount,
+      phone,
       currency,
+      amount,
       payment_confirmation_id,
       payment_system,
+      paid_at,
     })
   );
 
@@ -133,7 +135,7 @@ function CustomTableHeader(props) {
                 <Button color="primary" variant="text">
                   <CSVLink
                     data={dataToExport}
-                    filename={'earnings.csv'}
+                    filename={`${headerTitle.toLowerCase()}_${new Date().toLocaleDateString()}.csv`}
                     className={classes.csvLink}
                     target="_blank"
                   >
