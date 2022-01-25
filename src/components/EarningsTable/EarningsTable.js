@@ -50,13 +50,6 @@ const earningTableMetaData = [
     sortable: false,
     showInfoIcon: false,
   },
-
-  {
-    description: 'Payment Date',
-    name: 'payment_confirmed_at',
-    sortable: false,
-    showInfoIcon: false,
-  },
 ];
 
 /**

@@ -132,7 +132,7 @@ function PaymentsTable() {
       sort_by: sortBy?.field,
       order: sortBy?.order,
       limit: paymentsPerPage,
-      earnings_status: 'paid',
+      earnings_status: 'paid', // display paid earnings only
       ...filter,
     };
 
@@ -146,17 +146,20 @@ function PaymentsTable() {
 
   const uploadCsvFile = (file) => {
     setIsShowUploadSnack(true);
-    setSnackBarMessage('Uploading Payments...');
+    setSnackBarMessage('Uploading Payments In background...');
     paymentsAPI
       .batchPatchEarnings(file)
       .then(() => {
         setIsShowUploadSnack(true);
         setSnackBarMessage('Payments Uploaded Successfully');
+        console.log('Payments Uploaded Successfully');
         setPaymentsUploadError(null);
         setIsErrorDialogOpen(false);
+        getPayments();
       })
       .catch((error) => {
         setIsLoading(false);
+        setIsShowUploadSnack(false);
         setIsErrorDialogOpen(true);
         setPaymentsUploadError(error);
       });
@@ -252,7 +255,7 @@ function PaymentsTable() {
           horizontal: 'right',
         }}
         open={isShowUploadSnack}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={() => setIsShowUploadSnack(false)}
         message={snackBarMessage}
         action={
