@@ -34,6 +34,7 @@ describe('Growers', () => {
   });
 
   describe('Pagination', () => {
+    beforeEach(() => growers_Page.grower_Image());
     it('shows the number of items per page formated as: "1-24 of 5255"', () => {
       growers_Page
         .pagination()
@@ -43,6 +44,7 @@ describe('Growers', () => {
   });
 
   describe('First page', () => {
+    beforeEach(() => growers_Page.grower_Image());
     it('disables the "Previous page" button as long as the first page is displayed', () => {
       growers_Page.pagination().should('contain.text', `1-${growersPerPage}`);
       growers_Page.previousPage_Button().should('be.disabled');
@@ -50,7 +52,10 @@ describe('Growers', () => {
   });
 
   describe('Second page', () => {
-    beforeEach(() => growers_Page.nextPage_Button().first().click());
+    beforeEach(() => {
+      growers_Page.grower_Image();
+      growers_Page.nextPage_Button().first().click();
+    });
     it('enables the "Previous page" button when the second page is displayed', () => {
       growers_Page
         .pagination()
