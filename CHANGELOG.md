@@ -1,3 +1,15 @@
+# [1.42.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.41.0...v1.42.0) (2022-01-26)
+
+
+### Bug Fixes
+
+* broken eslint ([a1b2a26](https://github.com/Greenstand/treetracker-admin-client/commit/a1b2a268970c50684fc91ae6fae751accad6abee))
+
+
+### Features
+
+* refine UI for matching tool ([245dffa](https://github.com/Greenstand/treetracker-admin-client/commit/245dffa33e77a2ccd1a28535b3809c02f78ccc66))
+
 # [1.41.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.4...v1.41.0) (2022-01-26)
 
 
