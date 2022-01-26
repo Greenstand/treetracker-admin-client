@@ -1,4 +1,5 @@
 const credentials = require('../../fixtures/login.json');
+
 class LoginPage {
   user_name_Field = () => cy.get('#userName');
   password_Field = () => cy.get('#password');
@@ -17,6 +18,31 @@ class LoginPage {
     this.user_name_Field().type(credentials.user_name);
     this.password_Field().type(credentials.password);
     this.login_Button().click();
+  }
+
+  loginAsAManager() {
+    cy.visit('/');
+    this.user_name_Field().type(credentials.user_name);
+    this.password_Field().type(credentials.password);
+    this.login_Button().click();
+  }
+
+  loginAsAMockedManager() {
+    cy.server();
+    cy.route('POST', '/api/admin/auth/login', 'fixture:loginMock.json').as(
+      'postLogin'
+    );
+
+    cy.visit('/');
+    this.user_name_Field().type('mocked admin');
+    this.password_Field().type('mocked password');
+    this.login_Button().click();
+
+    cy.wait('@postLogin').should((xhr) => {
+      expect(xhr.requestBody).to.have.property('userName', 'mocked admin');
+      expect(xhr.requestBody).to.have.property('password', 'mocked password');
+      expect(xhr).to.have.property('status', 200);
+    });
   }
 
   expect_Displayed(error_message) {
