@@ -32,6 +32,7 @@ const useStyles = makeStyles({
   imgContainer: {
     width: '100%',
   },
+  box1: {},
 });
 
 function CaptureImage(props) {
@@ -48,7 +49,7 @@ function CaptureImage(props) {
   const classes = useStyles();
 
   return (
-    <Box style={{ width: '50%' }}>
+    <Box className={classes.box1}>
       <CaptureHeader
         currentPage={currentPage}
         handleChange={handleChange}

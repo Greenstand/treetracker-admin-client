@@ -6,14 +6,14 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Paper } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import theme from '../common/theme';
 import { documentTitle } from '../../common/variables';
 
 const useStyle = makeStyles({
   container: {
-    background: '#eee',
+    backgroundColor: '#E5E5E5',
     width: '100%',
     height: 'auto',
     display: 'flex',
@@ -27,6 +27,10 @@ const useStyle = makeStyles({
   candidateIconBox: {
     margin: theme.spacing(5),
   },
+  box1: {
+    backgroundColor: '#F0F0F0',
+  },
+  box2: {},
 });
 
 // Set API as a variable
@@ -153,7 +157,7 @@ function CaptureMatchingView() {
     >
       <Navbar />
       <Box className={classes.container}>
-        <Grid container direction="row">
+        <Paper elevation={8} className={classes.box1}>
           <CaptureImage
             captureImages={captureImages}
             currentPage={currentPage}
@@ -165,21 +169,20 @@ function CaptureMatchingView() {
             imgCount={imgCount}
             handleSkip={handleSkip}
           />
-
-          <Box style={{ width: '50%' }}>
-            <Box className={classes.candidateIconBox}>
-              <CurrentCaptureNumber
-                text={`Candidate Match${treesCount !== 1 && 'es' || ''}`}
-                treeIcon={treeIcon}
-                treesCount={treesCount}
-              />
-            </Box>
-            <CandidateImages
-              candidateImgData={candidateImgData}
-              sameTreeHandler={sameTreeHandler}
+        </Paper>
+        <Box className={classes.box2}>
+          <Box className={classes.candidateIconBox}>
+            <CurrentCaptureNumber
+              text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
+              treeIcon={treeIcon}
+              treesCount={treesCount}
             />
           </Box>
-        </Grid>
+          <CandidateImages
+            candidateImgData={candidateImgData}
+            sameTreeHandler={sameTreeHandler}
+          />
+        </Box>
       </Box>
     </Grid>
   );
