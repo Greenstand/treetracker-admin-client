@@ -6,32 +6,45 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Paper } from '@material-ui/core';
+import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import theme from '../common/theme';
 import { documentTitle } from '../../common/variables';
+import EditIcon from '@material-ui/icons/Edit';
+import Fab from '@material-ui/core/Fab';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles((theme) => ({
   container: {
     backgroundColor: '#E5E5E5',
     width: '100%',
-    height: 'auto',
     display: 'flex',
-    paddingBottom: '40px',
+    height: 'calc(100vh - 43px)',
   },
 
   candidateImgIcon: {
     fontSize: '37px',
   },
 
-  candidateIconBox: {
-    margin: theme.spacing(5),
-  },
+  candidateIconBox: {},
   box1: {
     backgroundColor: '#F0F0F0',
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    height: '100%',
+    boxSizing: 'border-box',
   },
-  box2: {},
-});
+  box2: {
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    overflow: 'scroll',
+  },
+  fab: {
+    color: 'white',
+    position: 'absolute',
+    right: '16px',
+    backgroundColor: 'rgba(118, 187, 35, .8)',
+  },
+}));
 
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -111,6 +124,28 @@ function CaptureMatchingView() {
     setImgCount(captureImages.length);
   }, [captureImages]);
 
+  // detect scroll
+  const refBox = React.useRef(null);
+  const [floatTreeIcon, setFloatTreeIcon] = useState(false);
+  useEffect(() => {
+    function checkPosition() {
+      const pos = refBox.current.scrollTop;
+      console.warn('ref:', pos);
+      if (parseInt(pos) > 144 && !floatTreeIcon) {
+        console.warn('show float icon');
+        setFloatTreeIcon(true);
+      }
+      if (parseInt(pos) < 144 && floatTreeIcon) {
+        console.warn('close float icon');
+        setFloatTreeIcon(false);
+      }
+    }
+
+    refBox.current.addEventListener('scroll', checkPosition);
+    checkPosition();
+    return () => window.removeEventListener('scroll', checkPosition);
+  }, []);
+
   // Capture Image Pagination function
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -170,7 +205,19 @@ function CaptureMatchingView() {
             handleSkip={handleSkip}
           />
         </Paper>
-        <Box className={classes.box2}>
+        <Box className={classes.box2} ref={refBox}>
+          {floatTreeIcon && (
+            <Fab
+              color="primary"
+              aria-label="add"
+              className={classes.fab}
+              onClick={() => {
+                refBox.current.scrollTo(0, 0);
+              }}
+            >
+              <Typography variant="h5">{treesCount}</Typography>
+            </Fab>
+          )}
           <Box className={classes.candidateIconBox}>
             <CurrentCaptureNumber
               text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
@@ -178,6 +225,7 @@ function CaptureMatchingView() {
               treesCount={treesCount}
             />
           </Box>
+          <Box height={14} />
           <CandidateImages
             candidateImgData={candidateImgData}
             sameTreeHandler={sameTreeHandler}

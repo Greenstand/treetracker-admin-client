@@ -44,7 +44,7 @@ function CurrentCaptureNumber(props) {
   const classes = useStyles();
   return (
     <Box>
-      <Paper elevation={4} className={classes.box1}>
+      <Paper elevation={3} className={classes.box1}>
         <Box className={classes.box2}>
           <Box className={classes.box3}>
             {props.cameraImg}

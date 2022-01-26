@@ -48,7 +48,7 @@ function CaptureHeader(props) {
   );
 
   return (
-    <Box style={{ margin: '20px' }}>
+    <Box>
       <Box>
         <Grid container className={classes.box1}>
           <CurrentCaptureNumber
