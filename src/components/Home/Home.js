@@ -11,7 +11,11 @@ import styles from './Home.styles';
 import { documentTitle } from '../../common/variables';
 import Menu from '../common/Menu';
 import { AppContext } from '../../context/AppContext';
-import { hasFreetownPermission, hasPermission, POLICIES } from '../../models/auth';
+import {
+  hasFreetownPermission,
+  hasPermission,
+  POLICIES,
+} from '../../models/auth';
 import {
   DashStatGrowerCount,
   DashStatTotalCaptures,
@@ -54,7 +58,7 @@ function Home(props) {
   React.useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
-        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`,
+        `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`
       );
       const { data } = res;
       setUpdateTime(data.last_updated_at);
@@ -70,7 +74,7 @@ function Home(props) {
   const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
   const [startDate, setStartDate] = React.useState('1970-01-01');
   const [endDate /*, setEndDate*/] = React.useState(
-    moment().format('YYYY-MM-DD'),
+    moment().format('YYYY-MM-DD')
   );
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -84,7 +88,7 @@ function Home(props) {
     setStartDate(
       moment()
         .add(-1 * timeRange[index].range, 'day')
-        .format('YYYY-MM-DD'),
+        .format('YYYY-MM-DD')
     );
   };
 
@@ -104,41 +108,42 @@ function Home(props) {
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
             </Grid>
-            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && hasFreetownPermission(appContext.user) && (
-              <Grid item xs={5} className={classes.timeBox}>
-                {updateTime && (
-                  <Typography variant="body1" className={classes.time}>
-                    Last updated {moment(updateTime).fromNow()}
-                  </Typography>
-                )}
-                <Button
-                  variant="outlined"
-                  onClick={handleTimeClick}
-                  className={classes.timeButton}
-                >
-                  <FilterListIcon color="primary" />
-                  <Typography variant="body1">
-                    {timeRange[timeRangeIndex].text}
-                  </Typography>
-                </Button>
-                <MenuMui
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleTimeClose}
-                  classes={{ paper: classes.timeMenu }}
-                >
-                  {timeRange.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      onClick={() => handleTimeClose(index)}
-                    >
-                      {timeRange[index].text}
-                    </MenuItem>
-                  ))}
-                </MenuMui>
-              </Grid>
-            )}
+            {process.env.REACT_APP_REPORTING_ENABLED === 'true' &&
+              hasFreetownPermission(appContext.user) && (
+                <Grid item xs={5} className={classes.timeBox}>
+                  {updateTime && (
+                    <Typography variant="body1" className={classes.time}>
+                      Last updated {moment(updateTime).fromNow()}
+                    </Typography>
+                  )}
+                  <Button
+                    variant="outlined"
+                    onClick={handleTimeClick}
+                    className={classes.timeButton}
+                  >
+                    <FilterListIcon color="primary" />
+                    <Typography variant="body1">
+                      {timeRange[timeRangeIndex].text}
+                    </Typography>
+                  </Button>
+                  <MenuMui
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleTimeClose}
+                    classes={{ paper: classes.timeMenu }}
+                  >
+                    {timeRange.map((item, index) => (
+                      <MenuItem
+                        key={index}
+                        onClick={() => handleTimeClose(index)}
+                      >
+                        {timeRange[index].text}
+                      </MenuItem>
+                    ))}
+                  </MenuMui>
+                </Grid>
+              )}
           </Grid>
           <Grid
             container
@@ -150,39 +155,44 @@ function Home(props) {
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_TREE,
               POLICIES.APPROVE_TREE,
-            ]) && !hasFreetownPermission(appContext.user) && (
-              <>
-                <DashStatTotalCaptures />
-                <DashStatUnprocessedCaptures />
-                <DashStatVerifiedCaptures />
-              </>
-            )}
+            ]) &&
+              !hasFreetownPermission(appContext.user) && (
+                <>
+                  <DashStatTotalCaptures />
+                  <DashStatUnprocessedCaptures />
+                  <DashStatVerifiedCaptures />
+                </>
+              )}
             {hasPermission(appContext.user, [
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_PLANTER,
-            ]) && !hasFreetownPermission(appContext.user) && <DashStatGrowerCount />}
-            {process.env.REACT_APP_REPORTING_ENABLED === 'true' && hasFreetownPermission(appContext.user) && (
-              <Grid className={classes.statCardGrid} container xs={12}>
-                <Grid item xs={4}>
-                  <ReportingCard1 startDate={startDate} endDate={endDate} />
+            ]) &&
+              !hasFreetownPermission(appContext.user) && (
+                <DashStatGrowerCount />
+              )}
+            {process.env.REACT_APP_REPORTING_ENABLED === 'true' &&
+              hasFreetownPermission(appContext.user) && (
+                <Grid className={classes.statCardGrid} container xs={12}>
+                  <Grid item xs={4}>
+                    <ReportingCard1 startDate={startDate} endDate={endDate} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard2 startDate={startDate} endDate={endDate} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard3 startDate={startDate} endDate={endDate} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard4 startDate={startDate} endDate={endDate} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard5 startDate={startDate} endDate={endDate} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard6 startDate={startDate} endDate={endDate} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                  <ReportingCard2 startDate={startDate} endDate={endDate} />
-                </Grid>
-                <Grid item xs={4}>
-                  <ReportingCard3 startDate={startDate} endDate={endDate} />
-                </Grid>
-                <Grid item xs={4}>
-                  <ReportingCard4 startDate={startDate} endDate={endDate} />
-                </Grid>
-                <Grid item xs={4}>
-                  <ReportingCard5 startDate={startDate} endDate={endDate} />
-                </Grid>
-                <Grid item xs={4}>
-                  <ReportingCard6 startDate={startDate} endDate={endDate} />
-                </Grid>
-              </Grid>
-            )}
+              )}
           </Grid>
         </Box>
       </div>

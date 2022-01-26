@@ -29,10 +29,11 @@ function hasPermission(user, p) {
 }
 
 function hasFreetownPermission(user) {
-  if(!user) return false;
+  if (!user) return false;
   // // super admin has freetown permission
   // if(hasPermssion(user, POLICIES.SUPER_PERMISSION)) return true;
-  if(user.policy?.organization?.name?.toLowerCase() === 'freetown') return true;
+  if (user.policy?.organization?.name?.toLowerCase() === 'freetown')
+    return true;
   return false;
 }
 

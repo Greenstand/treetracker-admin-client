@@ -12,7 +12,7 @@ export default function component(props) {
     'species',
     'species',
     undefined,
-    rows,
+    rows
   );
 
   return (

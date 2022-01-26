@@ -8,7 +8,7 @@ export default function useLoadData(
   field1,
   field2,
   getNum1 = (e) => e.total,
-  rows,
+  rows
 ) {
   const [data, setData] = React.useState(undefined);
 

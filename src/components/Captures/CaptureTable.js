@@ -63,6 +63,17 @@ const columns = [
       val ? tokenizationStates.TOKENIZED : tokenizationStates.NOT_TOKENIZED,
   },
   {
+    attr: 'captureTags',
+    label: 'Capture Tags',
+    noSort: true,
+  },
+  {
+    attr: 'note',
+    label: 'Notes',
+    noSort: true,
+    renderer: (val) => val,
+  },
+  {
     attr: 'timeCreated',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),

@@ -22,7 +22,7 @@ import { countToLocaleString } from '../../common/numbers';
 console.error('color:', theme.palette.stats.green);
 console.error(
   'color2:',
-  d3.color(theme.palette.stats.green).brighter().toString(),
+  d3.color(theme.palette.stats.green).brighter().toString()
 );
 //use material ui withStyles to style the component
 const style = (theme) => ({
@@ -166,11 +166,7 @@ function GrowerReportingCard(props) {
             </Box>
             <Box className={classes.box3}>
               <Typography className={classes.total}>
-                {data ? (
-                  countToLocaleString(data.num1)
-                ) : (
-                  <Skeleton />
-                )}
+                {data ? countToLocaleString(data.num1) : <Skeleton />}
               </Typography>
               <Typography className={classes.totalText}>
                 {text.text1}
