@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.4...v1.41.0) (2022-01-26)
+
+
+### Features
+
+* align icons vertically in the menu ([#308](https://github.com/Greenstand/treetracker-admin-client/issues/308)) ([b36eca2](https://github.com/Greenstand/treetracker-admin-client/commit/b36eca2cbc2e43e58a978524e24bd79c17719392))
+
 ## [1.40.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.3...v1.40.4) (2022-01-25)
 
 
