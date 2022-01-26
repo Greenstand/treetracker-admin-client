@@ -8,9 +8,7 @@ import Navbar from '../Navbar';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import theme from '../common/theme';
 import { documentTitle } from '../../common/variables';
-import EditIcon from '@material-ui/icons/Edit';
 import Fab from '@material-ui/core/Fab';
 
 const useStyle = makeStyles((theme) => ({

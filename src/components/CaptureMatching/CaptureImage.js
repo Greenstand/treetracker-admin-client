@@ -2,16 +2,8 @@ import React from 'react';
 
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
-import theme from '../common/theme';
 
-import {
-  Tooltip,
-  Typography,
-  Box,
-  Button,
-  Grid,
-  Paper,
-} from '@material-ui/core';
+import { Tooltip, Typography, Box, Button, Paper } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';

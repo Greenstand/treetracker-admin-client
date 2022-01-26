@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Typography, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  test: {
+    padding: theme.spacing(1),
+  },
   box1: {
     display: 'flex',
     flexDirection: 'row',
@@ -23,6 +26,9 @@ function Grower({ planter_photo_url, planter_username, status }) {
       <Box className={classes.box2}>
         <Typography variant="h5">{planter_username}</Typography>
         <Typography variant="body1">{/*status*/ 'Other info'}</Typography>
+        <Typography variant="body1" style={{ display: 'none' }}>
+          {status}
+        </Typography>
       </Box>
     </Box>
   );

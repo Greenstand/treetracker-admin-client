@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((t) => ({
+  test: {
+    padding: t.spacing(1),
+  },
   box1: {
     width: 173,
     height: 50,
