@@ -7,11 +7,19 @@ describe('Captures Filter', () => {
   const home_Page = new HomePage();
   const captures_Page = new CapturesPage();
 
-  before(() => cy.fixture('login').then((login) => (globalThis.login = login)));
-
   beforeEach(() => {
-    login_Page.login(login.user_name, login.password);
+    login_Page.loginAsAManager();
+
+    // login_Page.loginAsAMockedManager();
+    // captures_Page.mock_TreesFilter().as('treesFilter');
+
     home_Page.captures_Button().click();
+
+    // cy.wait('@treesFilter', { timeout: 15000 }).should((xhr) => {
+    //   expect(xhr.responseBody[0]).to.have.property('id', 666666);
+    //   expect(xhr).to.have.property('status', 200);
+    // });
+
     captures_Page.captures_TableRows().should('be.visible');
   });
 
