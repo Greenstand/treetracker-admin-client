@@ -18,7 +18,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should be: ', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' }),
+      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' })
     );
   });
 
@@ -32,19 +32,19 @@ describe('Filter, with initial values about this filter object', () => {
         timeCreated: {
           between: ['2019-07-25', '2019-07-30'],
         },
-      }),
+      })
     );
   });
 
   it('getWhereObj() should match: approved=true', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ approved: true }),
+      expect.objectContaining({ approved: true })
     );
   });
 
   it('getWhereObj() should match: active=true', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ active: true }),
+      expect.objectContaining({ active: true })
     );
   });
 
@@ -56,7 +56,7 @@ describe('Filter, with initial values about this filter object', () => {
 
     it('getWhereObj() should be approved=false', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ approved: false }),
+        expect.objectContaining({ approved: false })
       );
     });
 
@@ -65,19 +65,19 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should match: planterId=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterId: '1' }),
+      expect.objectContaining({ planterId: '1' })
     );
   });
 
   it('getWhereObj() should match: deviceIdentifier=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ deviceIdentifier: '1' }),
+      expect.objectContaining({ deviceIdentifier: '1' })
     );
   });
 
   it('getWhereObj() should match: planterIdentifier=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterIdentifier: '1' }),
+      expect.objectContaining({ planterIdentifier: '1' })
     );
   });
 
@@ -138,7 +138,7 @@ describe('Filter, with initial values about this filter object', () => {
 
     it('should be lte', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { lte: '2019-07-30' } }),
+        expect.objectContaining({ timeCreated: { lte: '2019-07-30' } })
       );
     });
     //}}}
@@ -152,7 +152,7 @@ describe('Filter, with initial values about this filter object', () => {
 
     it('should be gte', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { gte: '2019-07-25' } }),
+        expect.objectContaining({ timeCreated: { gte: '2019-07-25' } })
       );
     });
     //}}}

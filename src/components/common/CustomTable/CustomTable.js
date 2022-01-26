@@ -416,7 +416,7 @@ CustomTable.propTypes = {
       description: PropTypes.string.isRequired,
       sortable: PropTypes.bool.isRequired,
       showInfoIcon: PropTypes.bool.isRequired,
-    }),
+    })
   ),
   dateFilterComponent: PropTypes.element.isRequired,
   mainFilterComponent: PropTypes.element.isRequired,
