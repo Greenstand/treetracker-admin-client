@@ -25,7 +25,7 @@ export const RegionContext = createContext({
 
 export function RegionProvider(props) {
   const [regions, setRegions] = useState([]);
-  const [pageSize, setPageSize] = useState(24);
+  const [pageSize, setPageSize] = useState(25);
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(new FilterRegion());
@@ -34,7 +34,7 @@ export function RegionProvider(props) {
   useEffect(() => {
     load();
     getCount();
-  }); //, [filter, pageSize, currentPage]
+  }, [filter, pageSize, currentPage]); //
 
   // EVENT HANDLERS
 
@@ -42,7 +42,7 @@ export function RegionProvider(props) {
     setPageSize(pageSize);
   };
 
-  const changeCurrentPage = async (currentPage) => {
+  const changeCurrentPage = async (event, currentPage) => {
     setCurrentPage(currentPage);
   };
 
@@ -65,7 +65,7 @@ export function RegionProvider(props) {
 
   const getCount = async () => {
     const { count } = await api.getRegionsCount(filter);
-    setCount(Number(count));
+    setCount(count);
   };
 
   const getRegion = async (payload) => {
@@ -90,8 +90,10 @@ export function RegionProvider(props) {
   };
 
   const updateRegion = async (payload) => {
-    await api.updateRegion(payload);
-    const updatedRegion = await api.getRegion(payload.id);
+    delete payload.shape;
+    delete payload.nameKey;
+    const updatedRegion = await api.updateRegion(payload, payload.id);
+    // await api.getRegion(payload.id);
     const index = regions.findIndex((p) => p.id === updatedRegion.id);
     if (index >= 0) {
       const regions = Object.assign([], regions, {

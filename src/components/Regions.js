@@ -152,7 +152,7 @@ const SpeciesTable = (props) => {
   const handleChangeRowsPerPage = (event) => {
     tableRef.current && tableRef.current.scrollIntoView();
 
-    setRowsPerPage(parseInt(event.target.value, 10));
+    regionContext.changePageSize(parseInt(event.target.value, 10));
     setPage(0);
   };
 
@@ -180,28 +180,28 @@ const SpeciesTable = (props) => {
       : sortedRegionList
     ).map((region) => (
       <TableRow key={region.id} role="listitem">
-        <TableCell>
+        {/* <TableCell>
           <Checkbox
             onChange={(e) => handleSelect(e.target.checked, region.id)}
             checked={selected.includes(region.id)}
           />
-        </TableCell>
+        </TableCell> */}
         <TableCell component="th" scope="row">
           {region.id}
         </TableCell>
         <TableCell component="th" scope="row" data-testid="region">
           {region.name}
         </TableCell>
-        <TableCell>{region.desc}</TableCell>
-        <TableCell>{region.captureCount}</TableCell>
-        <TableCell>{region.captureCount}</TableCell>
+        <TableCell>{JSON.stringify(region.properties)}</TableCell>
+        <TableCell>{`${region.showOnOrgMap}`}</TableCell>
+        <TableCell>{`${region.calculateStatistics}`}</TableCell>
         <TableCell>
           <IconButton title="edit" onClick={() => handleEdit(region)}>
             <Edit />
           </IconButton>
-          <IconButton title="delete" onClick={() => openDeleteDialog(region)}>
+          {/* <IconButton title="delete" onClick={() => openDeleteDialog(region)}>
             <Delete />
-          </IconButton>
+          </IconButton> */}
         </TableCell>
       </TableRow>
     ));
@@ -209,12 +209,12 @@ const SpeciesTable = (props) => {
 
   const tablePagination = () => (
     <TablePagination
-      count={regionContext.regions.length}
+      count={regionContext.count}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
       colSpan={3}
-      page={page}
-      rowsPerPage={rowsPerPage}
-      onChangePage={handleChangePage}
+      page={regionContext.currentPage}
+      rowsPerPage={regionContext.pageSize}
+      onChangePage={regionContext.changeCurrentPage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
       SelectProps={{
         inputProps: { 'aria-label': 'rows per page' },
@@ -263,7 +263,7 @@ const SpeciesTable = (props) => {
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell></TableCell>
+                      {/* <TableCell></TableCell> */}
                       <TableCell>
                         ID
                         <IconButton
@@ -285,7 +285,7 @@ const SpeciesTable = (props) => {
                       <TableCell>Properties</TableCell>
                       <TableCell>Shown on Org Map</TableCell>
                       <TableCell>Statistics Calculated</TableCell>
-                      <TableCell>Operations</TableCell>
+                      <TableCell>Edit</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>{renderSpecies()}</TableBody>
@@ -299,7 +299,8 @@ const SpeciesTable = (props) => {
         </Grid>
       </Grid>
       <EditModal
-        isEdit={isAdding || isEdit}
+        isEdit={isEdit}
+        isAdding={isAdding}
         setIsEdit={isAdding ? setIsAdding : setIsEdit}
         regionEdit={regionEdit}
         setRegionEdit={setRegionEdit}
@@ -330,15 +331,15 @@ const EditModal = ({
   styles,
   loadSpeciesList,
   editSpecies,
-  data,
+  isAdding,
 }) => {
   const [error, setError] = useState(undefined);
   const [errors, setErrors] = useState({
     name: undefined,
     tag: undefined,
   });
-  const [id] = useState(regionEdit?.id || undefined);
-  const [name, setName] = useState(regionEdit?.name || undefined);
+  const [id, setId] = useState(undefined);
+  const [name, setName] = useState(undefined);
   const [propTag, setPropTag] = useState(undefined);
   const [show, setShow] = useState(true);
   const [calc, setCalc] = useState(true);
@@ -346,6 +347,13 @@ const EditModal = ({
   const [shape, setShape] = useState(undefined);
   // const nameSpecies = data.map((region) => region.name.toLowerCase());
 
+  useEffect(() => {
+    setId(regionEdit?.id);
+    setName(regionEdit?.name);
+    setShow(regionEdit?.showOnOrgMap);
+    setCalc(regionEdit?.calculateStatistics);
+  }, [regionEdit]);
+  console.log(calc);
   const onNameChange = (e) => {
     setError(undefined);
     setName(e.target.value);
@@ -386,7 +394,7 @@ const EditModal = ({
       setErrors((prev) => {
         return { ...prev, name: 'Please designate a name for your region.' };
       });
-    } else if (!propTag && shape.type === 'FeatureCollection') {
+    } else if (!propTag && shape?.type === 'FeatureCollection') {
       setErrors((prev) => {
         return { ...prev, tag: 'Please designate a tag for your subregions.' };
       });
@@ -418,7 +426,7 @@ const EditModal = ({
   };
 
   return (
-    <Dialog open={isEdit} aria-labelledby="form-dialog-title">
+    <Dialog open={isEdit || isAdding} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Region Detail</DialogTitle>
       <DialogContent>
         <Grid container>
@@ -471,7 +479,12 @@ const EditModal = ({
               label="Calculate Statistics"
             />
           </FormGroup>
-          <input type="file" value={geojson} onChange={onFileChange}></input>
+          <input
+            hidden={isEdit}
+            type="file"
+            value={geojson}
+            onChange={onFileChange}
+          ></input>
         </Grid>
         <DialogContentText>{error}</DialogContentText>
       </DialogContent>

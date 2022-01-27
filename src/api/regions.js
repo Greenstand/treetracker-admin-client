@@ -18,11 +18,12 @@ export default {
 
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     const regionFilter = {
-      filter: { ...filter, ownerId: getOrganization() },
+      filter: { ...filter, owner_id: '123e4567-e89b-12d3-a456-426614174000' },
       order: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
     };
+    console.log(process.env);
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
     }/region?options=${JSON.stringify(regionFilter)}`;
@@ -38,7 +39,10 @@ export default {
   },
 
   getRegionsCount(filter) {
-    const filterObj = { ...filter, ownerId: getOrganization() };
+    const filterObj = {
+      ...filter,
+      owner_id: '123e4567-e89b-12d3-a456-426614174000',
+    };
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
     }/region/count?filter=${JSON.stringify(filterObj)}`;

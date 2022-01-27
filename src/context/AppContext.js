@@ -30,6 +30,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
+import MapIcon from '@material-ui/icons/Map';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
@@ -170,7 +171,7 @@ function getRoutes(user) {
       name: 'Region Manager',
       linkTo: '/region-manager',
       component: RegionsView,
-      icon: IconGroup,
+      icon: MapIcon,
       disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
     },
     {
