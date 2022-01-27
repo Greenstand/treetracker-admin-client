@@ -81,7 +81,7 @@ function getRoutes(user) {
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
-          POLICIES.APPROVE_TREE,
+          POLICIES.MATCH_CAPTURES,
         ]),
     },
     {

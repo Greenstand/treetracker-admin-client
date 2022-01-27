@@ -13,6 +13,7 @@ const POLICIES = {
   LIST_GROWER: 'list_planter',
   MANAGE_GROWER: 'manage_planter',
   SEND_MESSAGES: 'send_messages',
+  MATCH_CAPTURES: 'match_captures',
 };
 
 function hasPermission(user, p) {
