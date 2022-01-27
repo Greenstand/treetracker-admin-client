@@ -66,11 +66,11 @@ const prepareRows = (rows) =>
       ...row,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy',
+        'mmm d, yyyy'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy',
+        'mmm d, yyyy'
       ),
       calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
     };
@@ -123,7 +123,7 @@ function EarningsTable() {
     if (filter?.start_date && filter?.end_date) {
       const dateRangeString = generateActiveDateRangeFilterString(
         filter?.start_date,
-        filter?.end_date,
+        filter?.end_date
       );
       setActiveDateRageString(dateRangeString);
     } else {

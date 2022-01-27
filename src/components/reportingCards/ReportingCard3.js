@@ -12,7 +12,7 @@ export default function component(props) {
     'unverified_captures',
     'unverified_captures',
     undefined,
-    rows,
+    rows
   );
 
   return (

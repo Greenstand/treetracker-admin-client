@@ -60,7 +60,7 @@ describe('captureDetail', () => {
               </CaptureDetailProvider>
             </AppProvider>
           </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
       );
 
       await act(() => api.getCaptureById());

@@ -67,7 +67,7 @@ export function CaptureDetailProvider(props) {
     return Promise.all(
       captureTags.map((tag) => {
         return api.getTagById(tag.tagId);
-      }),
+      })
     ).then((tags) => {
       setState({ ...state, tags });
       return tags;

@@ -6,28 +6,43 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import theme from '../common/theme';
 import { documentTitle } from '../../common/variables';
+import Fab from '@material-ui/core/Fab';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles((theme) => ({
   container: {
-    background: '#eee',
+    backgroundColor: '#E5E5E5',
     width: '100%',
-    height: 'auto',
     display: 'flex',
-    paddingBottom: '40px',
+    height: 'calc(100vh - 43px)',
   },
 
   candidateImgIcon: {
     fontSize: '37px',
   },
 
-  candidateIconBox: {
-    margin: theme.spacing(5),
+  candidateIconBox: {},
+  box1: {
+    backgroundColor: '#F0F0F0',
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    height: '100%',
+    boxSizing: 'border-box',
   },
-});
+  box2: {
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    overflow: 'scroll',
+  },
+  fab: {
+    color: 'white',
+    position: 'absolute',
+    right: '16px',
+    backgroundColor: 'rgba(118, 187, 35, .8)',
+  },
+}));
 
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -52,12 +67,12 @@ function CaptureMatchingView() {
       // TODO: handle errors and give user feedback
       setLoading(true);
       const data = await fetch(
-        `${CAPTURE_API}/${captureId}/potential_matches`,
+        `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
         {
           headers: {
             // Authorization: session.token,
           },
-        },
+        }
       ).then((res) => res.json());
       console.log('candidate images ---> ', data);
       setCandidateImgData(data.matches);
@@ -85,7 +100,7 @@ function CaptureMatchingView() {
     async function fetchCaptures() {
       // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}`, {
+      const data = await fetch(`${CAPTURE_API}/captures`, {
         headers: {
           // Authorization: session.token,
         },
@@ -107,6 +122,28 @@ function CaptureMatchingView() {
     setImgCount(captureImages.length);
   }, [captureImages]);
 
+  // detect scroll
+  const refBox = React.useRef(null);
+  const [floatTreeIcon, setFloatTreeIcon] = useState(false);
+  useEffect(() => {
+    function checkPosition() {
+      const pos = refBox.current.scrollTop;
+      console.warn('ref:', pos);
+      if (parseInt(pos) > 144 && !floatTreeIcon) {
+        console.warn('show float icon');
+        setFloatTreeIcon(true);
+      }
+      if (parseInt(pos) < 144 && floatTreeIcon) {
+        console.warn('close float icon');
+        setFloatTreeIcon(false);
+      }
+    }
+
+    refBox.current.addEventListener('scroll', checkPosition);
+    checkPosition();
+    return () => window.removeEventListener('scroll', checkPosition);
+  }, []);
+
   // Capture Image Pagination function
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -117,7 +154,7 @@ function CaptureMatchingView() {
     // TODO: handle errors and give user feedback
     const captureId = captureImages[currentPage - 1].id;
     console.log('captureId treeId', captureId, treeId);
-    fetch(`${CAPTURE_API}/${captureId}`, {
+    fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
@@ -153,7 +190,7 @@ function CaptureMatchingView() {
     >
       <Navbar />
       <Box className={classes.container}>
-        <Grid container direction="row">
+        <Paper elevation={8} className={classes.box1}>
           <CaptureImage
             captureImages={captureImages}
             currentPage={currentPage}
@@ -165,21 +202,33 @@ function CaptureMatchingView() {
             imgCount={imgCount}
             handleSkip={handleSkip}
           />
-
-          <Box style={{ width: '50%' }}>
-            <Box className={classes.candidateIconBox}>
-              <CurrentCaptureNumber
-                text={`Candidate Match${treesCount !== 1 && 'es'}`}
-                treeIcon={treeIcon}
-                treesCount={treesCount}
-              />
-            </Box>
-            <CandidateImages
-              candidateImgData={candidateImgData}
-              sameTreeHandler={sameTreeHandler}
+        </Paper>
+        <Box className={classes.box2} ref={refBox}>
+          {floatTreeIcon && (
+            <Fab
+              color="primary"
+              aria-label="add"
+              className={classes.fab}
+              onClick={() => {
+                refBox.current.scrollTo(0, 0);
+              }}
+            >
+              <Typography variant="h5">{treesCount}</Typography>
+            </Fab>
+          )}
+          <Box className={classes.candidateIconBox}>
+            <CurrentCaptureNumber
+              text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
+              treeIcon={treeIcon}
+              treesCount={treesCount}
             />
           </Box>
-        </Grid>
+          <Box height={14} />
+          <CandidateImages
+            candidateImgData={candidateImgData}
+            sameTreeHandler={sameTreeHandler}
+          />
+        </Box>
       </Box>
     </Grid>
   );

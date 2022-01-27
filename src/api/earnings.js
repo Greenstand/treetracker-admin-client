@@ -33,7 +33,7 @@ export default {
     };
 
     return Axios.patch(`earnings`, earning, { headers }).then(
-      (res) => res.data,
+      (res) => res.data
     );
   },
 
@@ -52,7 +52,7 @@ export default {
     };
 
     return Axios.patch(`earnings/batch`, formData, { headers }).then(
-      (res) => res.data,
+      (res) => res.data
     );
   },
 };

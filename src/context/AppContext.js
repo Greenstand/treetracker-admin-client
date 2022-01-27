@@ -140,7 +140,11 @@ function getRoutes(user) {
       linkTo: '/user-manager',
       component: Users,
       icon: IconGroup,
-      disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.LIST_USER,
+        POLICIES.MANAGER_USER,
+      ]),
     },
     {
       name: 'Region Manager',

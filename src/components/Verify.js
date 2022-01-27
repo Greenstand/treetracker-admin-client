@@ -308,7 +308,7 @@ const Verify = (props) => {
             className={clsx(
               classes.cardWrapper,
               isCaptureSelected(capture.id) ? classes.cardSelected : undefined,
-              capture.placeholder && classes.placeholderCard,
+              capture.placeholder && classes.placeholderCard
             )}
           >
             {isCaptureSelected(capture.id) && (
@@ -454,7 +454,7 @@ const Verify = (props) => {
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
-                          verifyContext.captureCount,
+                          verifyContext.captureCount
                         )} capture${
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}

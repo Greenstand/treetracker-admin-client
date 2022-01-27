@@ -33,7 +33,7 @@ export default {
       //the filter model
       filter,
     },
-    abortController,
+    abortController
   ) {
     const where = filter.getWhereObj();
 
@@ -111,7 +111,7 @@ export default {
     const query = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}trees/count?where=${JSON.stringify(
-      filter.getWhereObj(),
+      filter.getWhereObj()
     )}`;
     return fetch(query, {
       headers: {
@@ -357,13 +357,13 @@ export default {
     const useAnd = captureIds && tagIds;
     const captureIdClauses = (captureIds || []).map(
       (id, index) =>
-        `filter[where]${useAnd ? '[and][0]' : ''}[or][${index}][treeId]=${id}`,
+        `filter[where]${useAnd ? '[and][0]' : ''}[or][${index}][treeId]=${id}`
     );
     const tagIdClauses = (tagIds || []).map(
       (id, index) =>
         `filter[where][and]${
           useAnd ? '[and][1]' : ''
-        }[or][${index}][tagId]=${id}`,
+        }[or][${index}][tagId]=${id}`
     );
 
     const filterString = [...captureIdClauses, ...tagIdClauses].join('&');
