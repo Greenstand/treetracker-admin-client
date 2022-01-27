@@ -37,19 +37,15 @@ export default {
     return fetchJSON(query, options);
   },
 
-  getUnlinkedStakeholders(id, abortController) {
+  async getUnlinkedStakeholders(id, abortController) {
     const orgId = getOrganizationId();
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
       query = `${STAKEHOLDER_API}/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${
-        id || orgId
-      }?isRelation=${false}&owner_id=${orgId}`;
+      query = `${STAKEHOLDER_API}/relations/${id || orgId}?isRelation=${false}`;
     }
-
-    // log.debug('getUnlinkedStakeholders', query);
 
     const options = {
       method: 'GET',
@@ -60,7 +56,10 @@ export default {
       signal: abortController?.signal,
     };
 
-    return fetchJSON(query, options);
+    // return fetchJSON(query, options);
+    const data = await fetchJSON(query, options);
+    console.log('data', data);
+    return data;
   },
 
   createLink(id, stakeholdersData) {
@@ -70,10 +69,8 @@ export default {
     if (id && orgId && orgId !== id) {
       query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
     }
-
-    log.debug('updateLinks', query);
 
     const options = {
       method: 'POST',
@@ -94,10 +91,8 @@ export default {
     if (id && orgId && orgId !== id) {
       query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
     }
-
-    log.debug('updateLinks', query);
 
     const options = {
       method: 'DELETE',
@@ -113,16 +108,14 @@ export default {
 
   updateLinks(id, stakeholdersData) {
     const orgId = id || getOrganizationId();
-    const { type, linked, data } = stakeholdersData;
+    const { linked } = stakeholdersData;
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
       query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
     }
-
-    log.debug('updateLinks', query);
 
     let options;
 
