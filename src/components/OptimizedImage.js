@@ -4,7 +4,6 @@ export default function OptimizedImage(props) {
   const {
     src,
     width = 320,
-    height,
     quality,
     screenWidths = [1600, 1280, 960, 0],
     imageSizes = [400, 300, 250, 200],
@@ -23,10 +22,7 @@ export default function OptimizedImage(props) {
   if (matches?.length > 1) {
     const domain = matches[1];
     const imagePath = matches[2];
-    const params =
-      `f=auto,w=${width}` +
-      (height ? `,h=${height}` : '') +
-      (quality ? `,q=${quality}` : '');
+    const params = `f=auto,w=${width}` + (quality ? `,q=${quality}` : '');
 
     cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
