@@ -1,3 +1,10 @@
+## [1.42.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.0...v1.42.1) (2022-01-28)
+
+
+### Bug Fixes
+
+* **image:** fix image black bars ([#331](https://github.com/Greenstand/treetracker-admin-client/issues/331)) ([cba60b4](https://github.com/Greenstand/treetracker-admin-client/commit/cba60b4332e650a93378f0cce131737bc86e4448))
+
 # [1.42.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.41.0...v1.42.0) (2022-01-26)
 
 
