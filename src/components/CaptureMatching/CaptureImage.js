@@ -10,6 +10,40 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { makeStyles } from '@material-ui/core/styles';
 import { getDateTimeStringLocale } from 'common/locale';
 
+function Country({ lat, lon }) {
+  const [content, setContent] = React.useState('');
+  if (lat === 'undefined' || lon === 'undefined') {
+    setContent('No data');
+  }
+
+  React.useEffect(() => {
+    setContent('loading...');
+    fetch(
+      `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status === 404) {
+          setContent('Can not find country at this place');
+          return Promise.reject();
+        } else {
+          setContent('Unknown error');
+          return Promise.reject();
+        }
+      })
+      .then((data) => {
+        setContent(data.countries[0].name);
+      });
+    // .catch(err => {
+    //   console.error('e:', err);
+    //   setContent('Unknown error');
+    // });
+  }, []);
+
+  return <span>{content}</span>;
+}
+
 const useStyles = makeStyles((theme) => ({
   containerBox: {
     background: '#fff',
@@ -110,7 +144,9 @@ function CaptureImage(props) {
 
                     <Box className={classes.box3}>
                       <LocationOnOutlinedIcon />
-                      <Typography variant="body1">USA</Typography>
+                      <Typography variant="body1">
+                        <Country lat={capture.lat} lon={capture.lon} />
+                      </Typography>
                     </Box>
                     {/* <UseLocation/> */}
                   </Box>
