@@ -122,4 +122,11 @@ describe('Captures Filter', () => {
       .then()
       .verificationStatus_Column_ShouldContainOnly('Rejected');
   });
+  it('displays only captures that contains "seedling" as one of their tags when "seedling" is entered into the Tag text field', () => {
+    captures_Page
+      .when()
+      .enterInto_Tag_TextField('seedling')
+      .then()
+      .captureTags_Column_ShouldContain('seedling');
+  });
 });
