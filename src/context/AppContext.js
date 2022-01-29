@@ -81,7 +81,7 @@ function getRoutes(user) {
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
-          POLICIES.APPROVE_TREE,
+          POLICIES.MATCH_CAPTURES,
         ]),
     },
     {
@@ -139,7 +139,11 @@ function getRoutes(user) {
       linkTo: '/user-manager',
       component: Users,
       icon: IconGroup,
-      disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.LIST_USER,
+        POLICIES.MANAGER_USER,
+      ]),
     },
     {
       name: 'Account',

@@ -12,7 +12,7 @@ export default function component(props) {
     'trees_per_planters',
     'trees_per_planters',
     (data) => data.average,
-    rows,
+    rows
   );
 
   return (

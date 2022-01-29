@@ -13,6 +13,7 @@ const POLICIES = {
   LIST_GROWER: 'list_planter',
   MANAGE_GROWER: 'manage_planter',
   SEND_MESSAGES: 'send_messages',
+  MATCH_CAPTURES: 'match_captures',
 };
 
 function hasPermission(user, p) {
@@ -29,10 +30,11 @@ function hasPermission(user, p) {
 }
 
 function hasFreetownPermission(user) {
-  if(!user) return false;
+  if (!user) return false;
   // // super admin has freetown permission
   // if(hasPermssion(user, POLICIES.SUPER_PERMISSION)) return true;
-  if(user.policy?.organization?.name?.toLowerCase() === 'freetown') return true;
+  if (user.policy?.organization?.name?.toLowerCase() === 'freetown')
+    return true;
   return false;
 }
 
