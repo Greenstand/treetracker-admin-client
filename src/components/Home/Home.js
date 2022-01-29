@@ -196,7 +196,6 @@ function Home(props) {
                     <ReportingCard7 startDate={startDate} endDate={endDate} />
                   </Grid>
                 </Grid>
-              </Grid>
             )}
           </Grid>
         </Box>
