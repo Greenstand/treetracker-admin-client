@@ -6,10 +6,9 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Paper, Typography } from '@material-ui/core';
+import { Grid, Box, Paper } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import { documentTitle } from '../../common/variables';
-import Fab from '@material-ui/core/Fab';
 
 const useStyle = makeStyles((theme) => ({
   container: {
