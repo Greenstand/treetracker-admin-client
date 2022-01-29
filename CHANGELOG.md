@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.1...v1.43.0) (2022-01-29)
+
+
+### Features
+
+* support country name ([#334](https://github.com/Greenstand/treetracker-admin-client/issues/334)) ([323fde5](https://github.com/Greenstand/treetracker-admin-client/commit/323fde57640c7c746aa9c0620830ab45f225d78f))
+
 ## [1.42.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.0...v1.42.1) (2022-01-28)
 
 
