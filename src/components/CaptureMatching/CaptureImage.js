@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   imgBox: {
     // height: '52vh',
     flexGrow: 1,
-    overflow: 'scroll',
+    overflow: 'auto',
   },
 
   imgContainer: {

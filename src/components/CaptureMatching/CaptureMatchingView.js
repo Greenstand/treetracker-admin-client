@@ -34,13 +34,7 @@ const useStyle = makeStyles((theme) => ({
   box2: {
     padding: theme.spacing(4, 4),
     width: '50%',
-    overflow: 'scroll',
-  },
-  fab: {
-    color: 'white',
-    position: 'absolute',
-    right: '16px',
-    backgroundColor: 'rgba(118, 187, 35, .8)',
+    overflow: 'auto',
   },
 }));
 
@@ -122,28 +116,6 @@ function CaptureMatchingView() {
     setImgCount(captureImages.length);
   }, [captureImages]);
 
-  // detect scroll
-  const refBox = React.useRef(null);
-  const [floatTreeIcon, setFloatTreeIcon] = useState(false);
-  useEffect(() => {
-    function checkPosition() {
-      const pos = refBox.current.scrollTop;
-      console.warn('ref:', pos);
-      if (parseInt(pos) > 144 && !floatTreeIcon) {
-        console.warn('show float icon');
-        setFloatTreeIcon(true);
-      }
-      if (parseInt(pos) < 144 && floatTreeIcon) {
-        console.warn('close float icon');
-        setFloatTreeIcon(false);
-      }
-    }
-
-    refBox.current.addEventListener('scroll', checkPosition);
-    checkPosition();
-    return () => window.removeEventListener('scroll', checkPosition);
-  }, []);
-
   // Capture Image Pagination function
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -203,19 +175,7 @@ function CaptureMatchingView() {
             handleSkip={handleSkip}
           />
         </Paper>
-        <Box className={classes.box2} ref={refBox}>
-          {floatTreeIcon && (
-            <Fab
-              color="primary"
-              aria-label="add"
-              className={classes.fab}
-              onClick={() => {
-                refBox.current.scrollTo(0, 0);
-              }}
-            >
-              <Typography variant="h5">{treesCount}</Typography>
-            </Fab>
-          )}
+        <Box className={classes.box2}>
           <Box className={classes.candidateIconBox}>
             <CurrentCaptureNumber
               text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}

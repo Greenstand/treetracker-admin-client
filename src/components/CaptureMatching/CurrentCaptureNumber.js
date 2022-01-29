@@ -30,7 +30,7 @@ const useStyles = makeStyles((t) => ({
   },
   box4: {},
   text: {
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
     fontSize: '12px',
     fontStyle: 'normal',
     fontWeight: '400',
