@@ -25,7 +25,7 @@ function Country({ lat, lon }) {
         if (res.ok) {
           return res.json();
         } else if (res.status === 404) {
-          setContent('Can not find country at this place');
+          setContent(`Can not find country at lat:${lat}, lon:${lon}`);
           return Promise.reject();
         } else {
           setContent('Unknown error');
