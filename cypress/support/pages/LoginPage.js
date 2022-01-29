@@ -20,26 +20,47 @@ class LoginPage {
     this.login_Button().click();
   }
 
-  loginAsAManager() {
     cy.visit('/');
     this.user_name_Field().type(credentials.user_name);
     this.password_Field().type(credentials.password);
     this.login_Button().click();
   }
 
-  loginAsAMockedManager() {
+  loginAsAMockedAdmin() {
     cy.server();
-    cy.route('POST', '/api/admin/auth/login', 'fixture:loginMock.json').as(
-      'postLogin'
-    );
+    cy.route(
+      'POST',
+      '/api/admin/auth/login',
+      'fixture:admin_Login_Mock.json'
+    ).as('postLogin');
 
     cy.visit('/');
-    this.user_name_Field().type('mocked admin');
+    this.user_name_Field().type('mocked user name');
     this.password_Field().type('mocked password');
     this.login_Button().click();
 
     cy.wait('@postLogin').should((xhr) => {
-      expect(xhr.requestBody).to.have.property('userName', 'mocked admin');
+      expect(xhr.requestBody).to.have.property('userName', 'mocked user name');
+      expect(xhr.requestBody).to.have.property('password', 'mocked password');
+      expect(xhr).to.have.property('status', 200);
+    });
+  }
+
+  loginAsAMockedFreetownManager() {
+    cy.server();
+    cy.route(
+      'POST',
+      '/api/admin/auth/login',
+      'fixture:freetownManager_Login_Mock.json'
+    ).as('postLogin');
+
+    cy.visit('/');
+    this.user_name_Field().type('mocked user name');
+    this.password_Field().type('mocked password');
+    this.login_Button().click();
+
+    cy.wait('@postLogin').should((xhr) => {
+      expect(xhr.requestBody).to.have.property('userName', 'mocked user name');
       expect(xhr.requestBody).to.have.property('password', 'mocked password');
       expect(xhr).to.have.property('status', 200);
     });

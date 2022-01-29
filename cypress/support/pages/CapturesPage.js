@@ -5,7 +5,7 @@ class CapturesPage {
     return cy.route(
       'GET',
       '/api/admin/api/trees?filter={"where":{"or":[{"active":true,"approved":true},{"active":true,"approved":false}]},"order":["timeCreated desc"],"limit":25,"skip":0,"fields":{"id":true,"timeCreated":true,"status":true,"active":true,"approved":true,"planterId":true,"planterIdentifier":true,"deviceIdentifier":true,"speciesId":true,"tokenId":true,"age":true,"morphology":true,"captureApprovalTag":true,"rejectionReason":true,"note":true}}',
-      'fixture:treesFilterMock.json'
+      'fixture:treesFilter_Mock.json'
     );
   }
 
@@ -25,7 +25,7 @@ class CapturesPage {
     return this;
   }
   open_VerificationStatus_DropdownMenu() {
-    cy.get('#verification-status').click();
+    this.captures_TableRows().get('#verification-status').click();
     return this;
   }
   check_VerificationStatus(verificationStatus) {
@@ -114,7 +114,9 @@ class CapturesPage {
     return this;
   }
   enterInto_Tag_TextField(captureTag) {
-    cy.get('div[role="combobox"]').type(`${captureTag}{enter}`);
+    this.captures_TableRows()
+      .get('div[role="combobox"]')
+      .type(`${captureTag}{enter}`);
     this.captures_TableRows().should('be.visible');
     return this;
   }
@@ -137,6 +139,49 @@ class CapturesPage {
           });
         }
       });
+    return this;
+  }
+  open_Organization_DropdownMenu() {
+    this.captures_TableRows().get('#organization').click();
+    return this;
+  }
+  organization_DropdownMenu_isNotEmpty() {
+    cy.get('ul > li')
+      .its('length')
+      .then((len) => {
+        cy.log(`len: ${len}`);
+        if (len > 0) {
+          cy.get('ul > li').each((organization) => {
+            cy.log(`🌱 **_${organization.text()}_**`);
+          });
+        } else {
+          cy.get('ul > li').its('length').should('not.be.null');
+        }
+      });
+
+    return this;
+  }
+  organization_DropdownMenu_containsOnly_OrgsBeginsWith(organizationName) {
+    let name = true;
+    cy.get('ul > li')
+      .each((e) => {
+        if (e.text().includes('All')) {
+          cy.log(`✔️ _'${e.text()}'_`);
+        } else if (e.text().includes(organizationName)) {
+          cy.log(`✔️ _'${e.text()}' contains '${organizationName}'_`);
+        } else {
+          name = false;
+          cy.log(`❌ **'${e.text()}' should contain '${organizationName}'**`);
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          cy.get('td:nth-child(8)').each((e) => {
+            expect(e.text()).to.contain(organizationName);
+          });
+        }
+      });
+
     return this;
   }
 }
