@@ -18,7 +18,7 @@ export default function component(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Catchements',
+        title: 'Catchments',
         text1: 'Average',
       }}
       icon={Icon}
