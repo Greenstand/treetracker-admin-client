@@ -1,3 +1,15 @@
+# [1.44.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.43.0...v1.44.0) (2022-01-29)
+
+
+### Bug Fixes
+
+* some fixing against the refine UI task ([#338](https://github.com/Greenstand/treetracker-admin-client/issues/338)) ([50ff2b9](https://github.com/Greenstand/treetracker-admin-client/commit/50ff2b93342e130ed2137f290766dd04d79b3801))
+
+
+### Features
+
+* add catchment reporing card ([#318](https://github.com/Greenstand/treetracker-admin-client/issues/318)) ([7056d88](https://github.com/Greenstand/treetracker-admin-client/commit/7056d8824271003dccebb76c351fd888dd1af88c))
+
 # [1.43.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.1...v1.43.0) (2022-01-29)
 
 
