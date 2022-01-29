@@ -118,6 +118,21 @@ describe('Captures Filter', () => {
         .verificationStatus_Column_ShouldContainOnly('Rejected');
     });
   }),
+    describe('Species dropdown menu', () => {
+      beforeEach(() => {
+        login_Page.loginAsAMockedAdmin();
+        home_Page.captures_Button().click();
+      });
+      it('displays only captures that contains "a" as one of their tags when "a" option in the "Species" dropdownmenu is selected', () => {
+        captures_Page
+          .when()
+          .from_Species_DropdownMenu_Select('a')
+          .and()
+          .click_button_Apply()
+          .then()
+          .Species_Column_ShouldContain('a');
+      });
+    }),
     describe('Tag text field', () => {
       beforeEach(() => {
         login_Page.loginAsAMockedAdmin();

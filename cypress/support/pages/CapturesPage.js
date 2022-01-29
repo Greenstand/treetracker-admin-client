@@ -184,5 +184,35 @@ class CapturesPage {
 
     return this;
   }
+  from_Species_DropdownMenu_Select(speciesName) {
+    this.captures_TableRows()
+      .get('#species')
+      .click()
+      .get('ul > li')
+      .contains(speciesName)
+      .click();
+    return this;
+  }
+  Species_Column_ShouldContain(speciesName) {
+    let name = true;
+    this.captures_TableRows()
+      .find('td:nth-child(6)')
+      .each((e) => {
+        if (e.text().includes(speciesName)) {
+          cy.log(`✔️ _'${e.text()}' contains '${speciesName}'_`);
+        } else {
+          name = false;
+          cy.log(`❌ **'${e.text()}' should contain '${speciesName}'**`);
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          cy.get('td:nth-child(8)').each((e) => {
+            expect(e.text()).to.contain(speciesName);
+          });
+        }
+      });
+    return this;
+  }
 }
 export default CapturesPage;
