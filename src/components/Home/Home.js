@@ -29,6 +29,7 @@ import ReportingCard3 from '../reportingCards/ReportingCard3';
 import ReportingCard4 from '../reportingCards/ReportingCard4';
 import ReportingCard5 from '../reportingCards/ReportingCard5';
 import ReportingCard6 from '../reportingCards/ReportingCard6';
+import ReportingCard7 from '../reportingCards/ReportingCard7';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
@@ -191,8 +192,11 @@ function Home(props) {
                   <Grid item xs={4}>
                     <ReportingCard6 startDate={startDate} endDate={endDate} />
                   </Grid>
+                  <Grid item xs={4}>
+                    <ReportingCard7 startDate={startDate} endDate={endDate} />
+                  </Grid>
                 </Grid>
-              )}
+            )}
           </Grid>
         </Box>
       </div>
