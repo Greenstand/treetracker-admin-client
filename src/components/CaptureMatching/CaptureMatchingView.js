@@ -54,55 +54,43 @@ function CaptureMatchingView() {
   // const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
-  useEffect(() => {
-    console.log('loading candidate images');
-    async function fetchCandidateTrees(captureId) {
-      // TODO: handle errors and give user feedback
-      setLoading(true);
-      const data = await fetch(
-        `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
-        {
-          headers: {
-            // Authorization: session.token,
-          },
-        }
-      ).then((res) => res.json());
-      console.log('candidate images ---> ', data);
-      setCandidateImgData(data.matches);
-      setTreesCount(data.matches.length);
-      setLoading(false);
-    }
-
-    // setCandidateImgData([]);
-
-    if (
-      captureImages &&
-      currentPage > 0 &&
-      currentPage <= captureImages.length
-    ) {
-      const captureId = captureImages[currentPage - 1].id;
-      console.log('captureId', captureId);
-      if (captureId) {
-        fetchCandidateTrees(captureId);
-      }
-    }
-  }, [currentPage, captureImages]);
-
-  useEffect(() => {
-    console.log('loading captures');
-    async function fetchCaptures() {
-      // TODO: handle errors and give user feedback
-      setLoading(true);
-      const data = await fetch(`${CAPTURE_API}/captures`, {
+  async function fetchCandidateTrees(captureId) {
+    // TODO: handle errors and give user feedback
+    setLoading(true);
+    const data = await fetch(
+      `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
+      {
         headers: {
           // Authorization: session.token,
         },
-      }).then((res) => res.json());
-      setCaptureImages(data);
-      setLoading(false);
-    }
-    fetchCaptures();
-  }, []);
+      }
+    ).then((res) => res.json());
+    setCandidateImgData(data.matches);
+    setTreesCount(data.matches.length);
+    setLoading(false);
+  }
+
+  async function fetchCaptures(currentPage) {
+    // TODO: handle errors and give user feedback
+    setLoading(true);
+    const data = await fetch(
+      `${CAPTURE_API}/captures?limit=${1}&offset=${currentPage - 1}`,
+      {
+        headers: {
+          // Authorization: session.token,
+        },
+      }
+    ).then((res) => res.json());
+    setCaptureImages(data.captures);
+    setNoOfPages(data.count);
+    setImgCount(data.count);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    console.log('loading captures', currentPage);
+    fetchCaptures(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (currentPage <= 0 || currentPage > noOfPages) {
@@ -111,8 +99,12 @@ function CaptureMatchingView() {
   }, [noOfPages, currentPage]);
 
   useEffect(() => {
-    setNoOfPages(captureImages.length);
-    setImgCount(captureImages.length);
+    if (captureImages.length) {
+      console.log('loading candidate images');
+      const captureId = captureImages[0].id;
+      console.log('captureId', captureId);
+      fetchCandidateTrees(captureId);
+    }
   }, [captureImages]);
 
   // Capture Image Pagination function
