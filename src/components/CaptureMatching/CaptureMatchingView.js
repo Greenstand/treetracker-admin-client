@@ -113,11 +113,10 @@ function CaptureMatchingView() {
   };
 
   // Same Tree Capture function
-  const sameTreeHandler = (treeId) => {
-    // TODO: handle errors and give user feedback
-    const captureId = captureImages[currentPage - 1].id;
+  const sameTreeHandler = async (treeId) => {
+    const captureId = captureImages[0].id;
     console.log('captureId treeId', captureId, treeId);
-    fetch(`${CAPTURE_API}/captures/${captureId}`, {
+    await fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
@@ -128,16 +127,17 @@ function CaptureMatchingView() {
       }),
     });
 
-    const newImgData = [
-      ...captureImages.slice(0, currentPage - 1, 1),
-      ...captureImages.slice(currentPage, captureImages.length),
-    ];
-    setCaptureImages(newImgData);
+    // make sure new captures are loaded by updating page or if it's the first page reloading directly
+    if (currentPage === 1) {
+      fetchCaptures(currentPage);
+    } else {
+      setCurrentPage(1);
+    }
   };
 
   // Skip button
   const handleSkip = () => {
-    setCurrentPage(currentPage + 1);
+    setCurrentPage((page) => page + 1);
   };
 
   /* to update html document title */
