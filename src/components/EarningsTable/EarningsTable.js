@@ -8,6 +8,7 @@ import {
 import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
 import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
 import EarningDetails from './EarningDetails/EarningDetails';
+import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 
 /**
  * @constant
@@ -162,19 +163,21 @@ function EarningsTable() {
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
       mainFilterComponent={
-        <EarningsTableMainFilter
+        <CustomTableFilter
           isMainFilterOpen={isMainFilterOpen}
           filter={filter}
+          filterType="main"
           setFilter={setFilter}
           setIsMainFilterOpen={setIsMainFilterOpen}
         />
       }
       dateFilterComponent={
-        <EarningsTableDateFilter
-          isDateFilterOpen={isDateFilterOpen}
+        <CustomTableFilter
+          isMainFilterOpen={isDateFilterOpen}
           filter={filter}
+          filterType="date"
           setFilter={setFilter}
-          setIsDateFilterOpen={setIsDateFilterOpen}
+          setIsMainFilterOpen={setIsDateFilterOpen}
         />
       }
       rowDetails={
