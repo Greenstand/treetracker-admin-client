@@ -50,6 +50,12 @@ const earningTableMetaData = [
     sortable: false,
     showInfoIcon: false,
   },
+  {
+    description: 'Payment Date',
+    name: 'paid_at',
+    sortable: false,
+    showInfoIcon: false,
+  },
 ];
 
 /**
@@ -75,6 +81,7 @@ const prepareRows = (rows) =>
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
+      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
     };
   });
 
