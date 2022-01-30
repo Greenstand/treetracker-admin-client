@@ -86,19 +86,19 @@ function Filter(props) {
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || '',
+    filter?.planterIdentifier || ''
   );
   const [approved, setApproved] = useState(filter?.approved);
   const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault
   );
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS,
+    filter.organizationId || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
@@ -199,7 +199,7 @@ function Filter(props) {
                       : e.target.value === verificationStates.AWAITING ||
                         e.target.value === verificationStates.REJECTED
                       ? false
-                      : true,
+                      : true
                   );
                   setActive(
                     e.target.value === filterOptionAll
@@ -207,7 +207,7 @@ function Filter(props) {
                       : e.target.value === verificationStates.AWAITING ||
                         e.target.value === verificationStates.APPROVED
                       ? true
-                      : false,
+                      : false
                   );
                 }}
               >
@@ -364,7 +364,7 @@ function Filter(props) {
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
-                      .startsWith(tagSearchString.toLowerCase()),
+                      .startsWith(tagSearchString.toLowerCase())
                   ),
                 ]}
                 value={tag}

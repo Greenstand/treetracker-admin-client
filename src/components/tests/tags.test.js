@@ -52,7 +52,7 @@ describe('tags', () => {
         render(
           <TagsProvider value={tagsValues}>
             <CaptureTags placeholder="test placeholder text" />
-          </TagsProvider>,
+          </TagsProvider>
         );
 
         await act(() => api.getTags());
@@ -114,7 +114,7 @@ describe('tags', () => {
               </TagsContext.Provider>
             </AppProvider>
           </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
       );
 
       await act(() => api.getTags());
@@ -163,7 +163,7 @@ describe('tags', () => {
           <TagsProvider value={tagsValues}>
             <CaptureFilter />
           </TagsProvider>
-        </AppProvider>,
+        </AppProvider>
       );
 
       await act(() => api.getTags());
@@ -177,7 +177,7 @@ describe('tags', () => {
         // userEvent.click(filter);
 
         expect(
-          screen.getByLabelText(/verification status/i),
+          screen.getByLabelText(/verification status/i)
         ).toBeInTheDocument();
 
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();

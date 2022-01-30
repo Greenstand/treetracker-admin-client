@@ -1,7 +1,7 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
-import Icon from '@material-ui/icons/Flag';
+import Icon from '@material-ui/icons/Map';
 
 export default function component(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -9,20 +9,20 @@ export default function component(props) {
   const data = useLoadData(
     startDate,
     endDate,
-    'top_planters',
-    'top_planters',
+    'catchments',
+    'catchments',
     (data) => data.average,
-    rows
+    rows,
   );
 
   return (
     <ReportingCard
       text={{
-        title: 'Top Growers',
+        title: 'Catchments',
         text1: 'Average',
       }}
       icon={Icon}
-      color="#1976d2"
+      color="#ef8031"
       data={data}
       disableSeeMore={disableSeeMore}
     />

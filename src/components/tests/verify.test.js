@@ -124,7 +124,7 @@ describe('Verify', () => {
               </GrowerContext.Provider>
             </AppProvider>
           </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
       );
 
       await act(() => captureApi.getCaptureImages());

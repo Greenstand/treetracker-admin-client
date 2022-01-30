@@ -1,10 +1,10 @@
 /* eslint-disable */
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import theme from './common/theme';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import ImageScroller from './ImageScroller';
+import ImageScroller from '../../src/components/ImageScroller';
 
 describe('ImageScroller', () => {
   it('works', () => {
@@ -17,7 +17,7 @@ describe('ImageScroller', () => {
           onSelectImage={() => {}}
           blankMessage={blankMessage}
         />
-      </ThemeProvider>,
+      </ThemeProvider>
     );
     cy.contains(blankMessage);
     cy.get('.image-list').should('exist');
@@ -36,7 +36,7 @@ describe('ImageScroller', () => {
           onSelectImage={() => {}}
           loading={true}
         />
-      </ThemeProvider>,
+      </ThemeProvider>
     );
 
     cy.get('#loading').should('exist');
@@ -65,7 +65,7 @@ describe('ImageScroller', () => {
             selectedImage={selectedImage}
             onSelectImage={selectImage}
           />
-        </ThemeProvider>,
+        </ThemeProvider>
       );
     });
 
@@ -74,7 +74,7 @@ describe('ImageScroller', () => {
         cy.get(`[title="${img}"]`).should(
           'have.css',
           'background-image',
-          `url("${img}")`,
+          `url("${img}")`
         );
       });
     });
@@ -100,7 +100,7 @@ describe('ImageScroller', () => {
             selectedImage={null}
             onSelectImage={() => {}}
           />
-        </ThemeProvider>,
+        </ThemeProvider>
       );
     });
 
