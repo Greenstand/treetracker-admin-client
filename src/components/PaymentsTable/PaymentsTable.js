@@ -17,6 +17,7 @@ import {
 import PaymentsTableDateFilter from './PaymentsTableDateFilter/PaymentsTableDateFilter';
 import PaymentsTableMainFilter from './PaymentsTableMainFilter/PaymentsTableMainFilter';
 import PaymentDetails from './PaymentDetails/PaymentDetails';
+import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 
 /**
  * @constant
@@ -202,19 +203,21 @@ function PaymentsTable() {
         tableMetaData={paymentTableMetaData}
         headerTitle="Payments"
         mainFilterComponent={
-          <PaymentsTableMainFilter
+          <CustomTableFilter
             isMainFilterOpen={isMainFilterOpen}
             filter={filter}
+            filterType="main"
             setFilter={setFilter}
             setIsMainFilterOpen={setIsMainFilterOpen}
           />
         }
         dateFilterComponent={
-          <PaymentsTableDateFilter
-            isDateFilterOpen={isDateFilterOpen}
+          <CustomTableFilter
+            isMainFilterOpen={isDateFilterOpen}
             filter={filter}
+            filterType="date"
             setFilter={setFilter}
-            setIsDateFilterOpen={setIsDateFilterOpen}
+            setIsMainFilterOpen={setIsDateFilterOpen}
           />
         }
         rowDetails={
