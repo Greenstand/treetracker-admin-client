@@ -5,8 +5,8 @@ import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import EarningDetails from './EarningDetails/EarningDetails';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
+import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
 
 /**
  * @constant
@@ -179,9 +179,8 @@ function EarningsTable() {
         />
       }
       rowDetails={
-        <EarningDetails
-          selectedEarning={selectedEarning}
-          showLogPaymentForm={true}
+        <CustomTableItemDetails
+          selectedItem={selectedEarning}
           closeDetails={() => setSelectedEarning(null)}
         />
       }
