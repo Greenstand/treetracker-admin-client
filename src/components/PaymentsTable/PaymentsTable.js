@@ -14,8 +14,8 @@ import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import PaymentDetails from './PaymentDetails/PaymentDetails';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
+import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
 
 /**
  * @constant
@@ -219,8 +219,8 @@ function PaymentsTable() {
           />
         }
         rowDetails={
-          <PaymentDetails
-            selectedPayment={selectedPayment}
+          <CustomTableItemDetails
+            selectedItem={selectedPayment}
             closeDetails={() => setSelectedPayment(null)}
           />
         }
