@@ -5,8 +5,6 @@ import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
-import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
 import EarningDetails from './EarningDetails/EarningDetails';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 

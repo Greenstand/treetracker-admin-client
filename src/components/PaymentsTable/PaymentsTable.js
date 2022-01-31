@@ -14,8 +14,6 @@ import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import PaymentsTableDateFilter from './PaymentsTableDateFilter/PaymentsTableDateFilter';
-import PaymentsTableMainFilter from './PaymentsTableMainFilter/PaymentsTableMainFilter';
 import PaymentDetails from './PaymentDetails/PaymentDetails';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 
