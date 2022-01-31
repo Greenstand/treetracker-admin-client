@@ -86,7 +86,7 @@ function CustomTableFilter(props) {
       .catch((err) => console.log(err));
   }, [mainFilter]);
 
-  const renderDateFilter = (props) => (
+  const renderDateFilter = () => (
     <>
       <FormControl
         variant="outlined"
