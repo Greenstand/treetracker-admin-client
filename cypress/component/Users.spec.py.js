@@ -1,7 +1,7 @@
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
-import Users from './Users';
-import theme from './common/theme';
+import Users from '../../src/components/Users';
+import theme from '../../src/components/common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 describe('Users', () => {
@@ -9,7 +9,7 @@ describe('Users', () => {
     mount(
       <ThemeProvider theme={theme}>
         <Users />
-      </ThemeProvider>,
+      </ThemeProvider>
     );
     cy.contains(/add user/i);
   });

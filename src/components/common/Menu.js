@@ -98,7 +98,7 @@ export default function GSMenu(props) {
                           className={classes.menuItem}
                           selected={props.active === item.name}
                         >
-                          <Grid container>
+                          <Grid container direction="row" alignItems="flex-end">
                             <Grid item>
                               <ListItemIcon className={classes.listItemIcon}>
                                 {child.icon && <child.icon />}
@@ -124,7 +124,7 @@ export default function GSMenu(props) {
                     className={classes.menuItem}
                     selected={props.active === item.name}
                   >
-                    <Grid container>
+                    <Grid container direction="row" alignItems="flex-end">
                       <Grid item>
                         <ListItemIcon className={classes.listItemIcon}>
                           {item.icon && <item.icon />}

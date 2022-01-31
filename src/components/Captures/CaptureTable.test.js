@@ -78,17 +78,17 @@ describe('Captures', () => {
 
     it('should show page # and capture count', () => {
       const counts = Array.from(
-        document.querySelectorAll('.MuiTablePagination-caption'),
+        document.querySelectorAll('.MuiTablePagination-caption')
       );
       const arr = counts.map((count) => count.firstChild.textContent);
       expect(arr[1]).toBe('1-4 of 4');
     });
 
-    it('should have 9 headers', () => {
+    it('should have 10 headers', () => {
       const table = screen.getByRole(/table/i);
       const headers = within(table).getAllByRole(/columnheader/i);
       const arr = headers.map((header) => header.textContent);
-      expect(arr).toHaveLength(9);
+      expect(arr).toHaveLength(10);
     });
 
     it('renders headers for captures table', () => {

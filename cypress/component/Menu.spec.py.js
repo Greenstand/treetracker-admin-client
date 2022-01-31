@@ -1,4 +1,4 @@
-import Menu from './Menu';
+import Menu from '../../src/components/common/Menu';
 import { mount } from 'cypress-react-unit-test';
 import React from 'react';
 

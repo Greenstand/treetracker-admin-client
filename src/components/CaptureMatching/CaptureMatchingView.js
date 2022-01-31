@@ -6,28 +6,36 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Paper } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import theme from '../common/theme';
 import { documentTitle } from '../../common/variables';
 
-const useStyle = makeStyles({
+const useStyle = makeStyles((theme) => ({
   container: {
-    background: '#eee',
+    backgroundColor: '#E5E5E5',
     width: '100%',
-    height: 'auto',
     display: 'flex',
-    paddingBottom: '40px',
+    height: 'calc(100vh - 43px)',
   },
 
   candidateImgIcon: {
     fontSize: '37px',
   },
 
-  candidateIconBox: {
-    margin: theme.spacing(5),
+  candidateIconBox: {},
+  box1: {
+    backgroundColor: '#F0F0F0',
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    height: '100%',
+    boxSizing: 'border-box',
   },
-});
+  box2: {
+    padding: theme.spacing(4, 4),
+    width: '50%',
+    overflow: 'auto',
+  },
+}));
 
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -52,12 +60,12 @@ function CaptureMatchingView() {
       // TODO: handle errors and give user feedback
       setLoading(true);
       const data = await fetch(
-        `${CAPTURE_API}/${captureId}/potential_matches`,
+        `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
         {
           headers: {
             // Authorization: session.token,
           },
-        },
+        }
       ).then((res) => res.json());
       console.log('candidate images ---> ', data);
       setCandidateImgData(data.matches);
@@ -85,7 +93,7 @@ function CaptureMatchingView() {
     async function fetchCaptures() {
       // TODO: handle errors and give user feedback
       setLoading(true);
-      const data = await fetch(`${CAPTURE_API}`, {
+      const data = await fetch(`${CAPTURE_API}/captures`, {
         headers: {
           // Authorization: session.token,
         },
@@ -117,7 +125,7 @@ function CaptureMatchingView() {
     // TODO: handle errors and give user feedback
     const captureId = captureImages[currentPage - 1].id;
     console.log('captureId treeId', captureId, treeId);
-    fetch(`${CAPTURE_API}/${captureId}`, {
+    fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
       headers: {
         'content-type': 'application/json',
@@ -153,7 +161,7 @@ function CaptureMatchingView() {
     >
       <Navbar />
       <Box className={classes.container}>
-        <Grid container direction="row">
+        <Paper elevation={8} className={classes.box1}>
           <CaptureImage
             captureImages={captureImages}
             currentPage={currentPage}
@@ -165,21 +173,21 @@ function CaptureMatchingView() {
             imgCount={imgCount}
             handleSkip={handleSkip}
           />
-
-          <Box style={{ width: '50%' }}>
-            <Box className={classes.candidateIconBox}>
-              <CurrentCaptureNumber
-                text={`Candidate Match${treesCount !== 1 && 'es'}`}
-                treeIcon={treeIcon}
-                treesCount={treesCount}
-              />
-            </Box>
-            <CandidateImages
-              candidateImgData={candidateImgData}
-              sameTreeHandler={sameTreeHandler}
+        </Paper>
+        <Box className={classes.box2}>
+          <Box className={classes.candidateIconBox}>
+            <CurrentCaptureNumber
+              text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
+              treeIcon={treeIcon}
+              treesCount={treesCount}
             />
           </Box>
-        </Grid>
+          <Box height={14} />
+          <CandidateImages
+            candidateImgData={candidateImgData}
+            sameTreeHandler={sameTreeHandler}
+          />
+        </Box>
       </Box>
     </Grid>
   );
