@@ -1,3 +1,4 @@
+const credentials = require('../../fixtures/login.json');
 class LoginPage {
   user_name_Field = () => cy.get('#userName');
   password_Field = () => cy.get('#password');
@@ -8,6 +9,13 @@ class LoginPage {
     cy.visit('/');
     this.user_name_Field().type(userName);
     this.password_Field().type(password);
+    this.login_Button().click();
+  }
+
+  loginAsAnAdmin() {
+    cy.visit('/');
+    this.user_name_Field().type(credentials.user_name);
+    this.password_Field().type(credentials.password);
     this.login_Button().click();
   }
 

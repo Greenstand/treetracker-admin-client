@@ -9,15 +9,13 @@ describe('Growers', () => {
   const home_Page = new HomePage();
   const growers_Page = new GrowersPage();
 
-  before(() => cy.fixture('login').then((login) => (globalThis.login = login)));
-
   beforeEach(() => {
-    login_Page.login(login.user_name, login.password);
+    login_Page.loginAsAnAdmin();
     home_Page.growers_Button().click();
   });
 
   it(`displays ${growersPerPage} of grower cards per page`, () => {
-    growers_Page.grower_Card().should('have.length', growersPerPage);
+    growers_Page.numberOfDisplayed_GrowerCardsPerPage_ShouldBe(growersPerPage);
   });
 
   describe('Grower Card', () => {
@@ -34,17 +32,28 @@ describe('Growers', () => {
   });
 
   describe('Pagination', () => {
-    beforeEach(() => growers_Page.grower_Image());
     it('shows the number of items per page formated as: "1-24 of 5255"', () => {
       growers_Page
         .pagination()
-        .contains(new RegExp(`^1-${growersPerPage} of \\d+`))
-        .should('be.visible');
+        .contains(new RegExp(`^1-${growersPerPage} of \\d+`));
+    });
+    it('increases the number of Grower cards displayed on the page from 24 to 48 when Growers per page dropdown menu option is changed form 24 to 48', () => {
+      growers_Page
+        .when()
+        .growersPerPage_DropdownMenu_SetTo(48)
+        .then()
+        .numberOfDisplayed_GrowerCardsPerPage_ShouldBe(48);
+    });
+    it('increases the number of Grower cards displayed on the page from 24 to 96 when Growers per page dropdown menu option is changed form 24 to 96', () => {
+      growers_Page
+        .when()
+        .growersPerPage_DropdownMenu_SetTo(96)
+        .then()
+        .numberOfDisplayed_GrowerCardsPerPage_ShouldBe(96);
     });
   });
 
   describe('First page', () => {
-    beforeEach(() => growers_Page.grower_Image());
     it('disables the "Previous page" button as long as the first page is displayed', () => {
       growers_Page.pagination().should('contain.text', `1-${growersPerPage}`);
       growers_Page.previousPage_Button().should('be.disabled');
@@ -52,10 +61,7 @@ describe('Growers', () => {
   });
 
   describe('Second page', () => {
-    beforeEach(() => {
-      growers_Page.grower_Image();
-      growers_Page.nextPage_Button().first().click();
-    });
+    beforeEach(() => growers_Page.goTo_NextPage());
     it('enables the "Previous page" button when the second page is displayed', () => {
       growers_Page
         .pagination()
