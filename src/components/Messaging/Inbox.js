@@ -61,8 +61,8 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
 
   const onClickHelper = (e, i, message) => {
     let recipient =
-      message.messages[0].to !== user.userName
-        ? message.messages[0].to
+      message.messages[0].to[0].recipient !== user.userName
+        ? message.messages[0].to[0].recipient
         : message.messages[0].from;
     handleListItemClick(e, i, recipient);
   };

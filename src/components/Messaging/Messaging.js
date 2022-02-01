@@ -86,15 +86,14 @@ const Messaging = () => {
   const handleClose = () => setOpenModal(false);
 
   const findMessageRecipient = (messagesArray) => {
-    return messagesArray[0].messages[0].to !== user.userName
-      ? setMessageRecipient(messagesArray[0].messages[0].to)
+    return messagesArray[0].messages[0].to[0].recipient !== user.userName
+      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
       : setMessageRecipient(messagesArray[0].messages[0].from);
   };
 
   useEffect(() => {
     if (messages.length && messageRecipient === '') {
       findMessageRecipient(messages);
-      // setMessageRecipient(messages[0].userName);
     }
   }, [messages]);
 

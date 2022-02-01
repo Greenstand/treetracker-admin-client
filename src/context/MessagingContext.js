@@ -34,7 +34,9 @@ export const MessagingProvider = (props) => {
           message.subject === 'Announce Message'
         ) {
           let key =
-            message.to !== user.userName ? message[`to`] : message['from'];
+            message.to[0].recipient !== user.userName
+              ? message[`to`][0].recipient
+              : message['from'];
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
@@ -112,6 +114,7 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
+    console.log(res);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -121,6 +124,7 @@ export const MessagingProvider = (props) => {
 
   const loadRegions = async () => {
     const res = await api.getRegion();
+    console.log(res);
     if (res) {
       setRegions(res);
     }
