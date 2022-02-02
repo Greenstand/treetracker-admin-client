@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from '../../api/treeTrackerApi';
 
 import CaptureImage from './CaptureImage';
 import CurrentCaptureNumber from './CurrentCaptureNumber';
@@ -6,7 +7,7 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, Paper } from '@material-ui/core';
+import { AppBar, Grid, Box, Paper, LinearProgress } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import { documentTitle } from '../../common/variables';
 
@@ -54,42 +55,31 @@ function CaptureMatchingView() {
   // const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
-  async function fetchCandidateTrees(captureId) {
-    // TODO: handle errors and give user feedback
-    setLoading(true);
-    const data = await fetch(
-      `${CAPTURE_API}/trees/potential_matches?capture_id=${captureId}`,
-      {
-        headers: {
-          // Authorization: session.token,
-        },
-      }
-    ).then((res) => res.json());
-    setCandidateImgData(data.matches);
-    setTreesCount(data.matches.length);
-    setLoading(false);
+  async function fetchCandidateTrees(captureId, abortController) {
+    const data = await api.fetchCandidateTrees(captureId, abortController);
+    if (data) {
+      setCandidateImgData(data.matches);
+      setTreesCount(data.matches.length);
+      setLoading(false);
+    }
   }
 
-  async function fetchCaptures(currentPage) {
-    // TODO: handle errors and give user feedback
+  async function fetchCaptures(currentPage, abortController) {
     setLoading(true);
-    const data = await fetch(
-      `${CAPTURE_API}/captures?limit=${1}&offset=${currentPage - 1}`,
-      {
-        headers: {
-          // Authorization: session.token,
-        },
-      }
-    ).then((res) => res.json());
-    setCaptureImages(data.captures);
-    setNoOfPages(data.count);
-    setImgCount(data.count);
-    setLoading(false);
+    const data = await api.fetchCapturesToMatch(currentPage, abortController);
+    console.log('fetchCaptures', currentPage, data);
+    if (data) {
+      setCaptureImages(data.captures);
+      setNoOfPages(data.count);
+      setImgCount(data.count);
+    }
   }
 
   useEffect(() => {
     console.log('loading captures', currentPage);
-    fetchCaptures(currentPage);
+    const abortController = new AbortController();
+    fetchCaptures(currentPage, abortController);
+    return () => abortController.abort();
   }, [currentPage]);
 
   useEffect(() => {
@@ -99,12 +89,14 @@ function CaptureMatchingView() {
   }, [noOfPages, currentPage]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     if (captureImages.length) {
       console.log('loading candidate images');
       const captureId = captureImages[0].id;
       console.log('captureId', captureId);
-      fetchCandidateTrees(captureId);
+      fetchCandidateTrees(captureId, abortController);
     }
+    return () => abortController.abort();
   }, [captureImages]);
 
   // Capture Image Pagination function
@@ -131,7 +123,7 @@ function CaptureMatchingView() {
     if (currentPage === 1) {
       fetchCaptures(currentPage);
     } else {
-      setCurrentPage(1);
+      setCurrentPage((page) => page + 1);
     }
   };
 
@@ -181,6 +173,11 @@ function CaptureMatchingView() {
           />
         </Box>
       </Box>
+      {loading && (
+        <AppBar position="fixed" style={{ zIndex: 10000 }}>
+          <LinearProgress color="primary" />
+        </AppBar>
+      )}
     </Grid>
   );
 }
