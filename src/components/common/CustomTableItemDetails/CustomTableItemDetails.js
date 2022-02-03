@@ -12,20 +12,20 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
-import paymentsAPI from 'api/earnings';
-import useStyles from './PaymentDetails.styles';
+import earningsAPI from 'api/earnings';
+import useStyles from './CustomTableItemDetails.styles';
 
 /**
  * @function
  * @name LogPaymentForm
  * @description render form to log payment
  * @param {object} props - properties  passed to the component
- * @param {object} props.selectedPayment - payment object
+ * @param {object} props.selectedItem - item
  * @param {function} props.closeForm - function used to close form
  * @returns {React.Component} - form to log payment
  */
 function LogPaymentForm(props) {
-  const { selectedPayment, closeForm } = props;
+  const { selectedItem, closeForm } = props;
   const [payload, setPayload] = useState({});
   const classes = useStyles();
 
@@ -37,22 +37,22 @@ function LogPaymentForm(props) {
   };
 
   const handleOnFormSubmit = () => {
-    const { id, worker_id, amount, currency } = selectedPayment;
-    paymentsAPI.patchPayment({ id, worker_id, amount, currency, ...payload });
+    const { id, worker_id, amount, currency } = selectedItem;
+    earningsAPI.patchEarning({ id, worker_id, amount, currency, ...payload });
     closeForm();
   };
 
   return (
     <>
       <Grid container direction="column" justify="space-around">
-        <Grid item className={classes.paymentGrowerDetail}>
+        <Grid item className={classes.itemGrowerDetail}>
           <Typography variant="h6">Payment</Typography>
         </Grid>
 
         <Grid container direction="column" justify="space-between">
           <FormControl
             variant="outlined"
-            className={classes.paymentsLogPaymentFormSelectFormControl}
+            className={classes.itemLogPaymentFormSelectFormControl}
           >
             <TextField
               id="payment_confirmation_id"
@@ -65,7 +65,7 @@ function LogPaymentForm(props) {
 
           <FormControl
             variant="outlined"
-            className={classes.paymentsLogPaymentFormSelectFormControl}
+            className={classes.itemLogPaymentFormSelectFormControl}
           >
             <InputLabel id="demo-simple-select-outlined-label">
               Payment System
@@ -85,43 +85,43 @@ function LogPaymentForm(props) {
           </FormControl>
         </Grid>
 
-        <Grid item className={classes.paymentGrowerDetail}>
+        <Grid item className={classes.itemGrowerDetail}>
           <Grid item>
             <Typography>Payment Confirmed by</Typography>
             <Typography variant="b">
-              {selectedPayment.payment_confirmed_by}
+              {selectedItem.payment_confirmed_by}
             </Typography>
           </Grid>
 
-          <Grid item className={classes.paymentGrowerDetail}>
+          <Grid item className={classes.itemGrowerDetail}>
             <Typography>Payment confirmation method</Typography>
             <Typography variant="b">
-              {selectedPayment.payment_confirmation_method}
+              {selectedItem.payment_confirmation_method}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
 
-      <Divider className={classes.paymentDetailsContentsDivider} />
+      <Divider className={classes.itemDetailsContentsDivider} />
 
       <Grid
         container
         direction="column"
-        className={classes.paymentTableFilterActions}
+        className={classes.itemTableFilterActions}
       >
         <Button
           variant="contained"
           color="primary"
           disableElevation
           onClick={handleOnFormSubmit}
-          className={classes.paymentTableFilterSubmitButton}
+          className={classes.itemTableFilterSubmitButton}
         >
           LOG PAYMENT
         </Button>
         <Button
           color="primary"
           variant="text"
-          className={classes.paymentTableFilterResetButton}
+          className={classes.itemTableFilterResetButton}
           onClick={closeForm}
         >
           CANCEL
@@ -132,37 +132,32 @@ function LogPaymentForm(props) {
 }
 
 LogPaymentForm.propTypes = {
-  selectedPayment: PropTypes.object.isRequired,
+  selectedItem: PropTypes.object.isRequired,
   closeForm: PropTypes.func.isRequired,
 };
 
 /**
  * @function
- * @name PaymentDetails
- * @description render details of an payment
+ * @name CustomTableItemDetails
+ * @description render details of table item
  * @param {object} props - properties  passed to the component
  * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
- * @param {object} props.selectedPayment - payment object
- * @param {boolean} props.showLogPayment - flag that decides wheather log payment form should be shown
- * @param {Function} props.setSelectedPayment - sets/resets selected payment object
+ * @param {object} props.selectedItem - custom table item
+ * @param {Function} props.setSelectedItem - sets/resets selected item
  *
  * @returns {React.Component}
  */
-function PaymentDetails(props) {
-  const { selectedPayment, showLogPaymentForm, closeDetails } = props;
+function CustomTableItemDetails(props) {
+  const { selectedItem, closeDetails } = props;
   const classes = useStyles();
 
-  return selectedPayment ? (
+  return selectedItem ? (
     <Drawer
       anchor="right"
       BackdropProps={{ invisible: true }}
-      open={selectedPayment}
+      open={selectedItem}
     >
-      <Grid
-        container
-        direction="column"
-        className={classes.paymentsDrawerDetails}
-      >
+      <Grid container direction="column" className={classes.itemDrawerDetails}>
         {/* start  details header */}
         <Grid item>
           <Grid container direction="row" justify="space-between">
@@ -178,46 +173,46 @@ function PaymentDetails(props) {
             </Grid>
             <CloseIcon
               onClick={closeDetails}
-              className={classes.paymentDetailsCloseIcon}
+              className={classes.itemDetailsCloseIcon}
             />
           </Grid>
         </Grid>
         {/* end detail header */}
-        <Grid item className={classes.paymentDetailsContents}>
+        <Grid item className={classes.itemDetailsContents}>
           <Grid container direction="column" justify="space-around">
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Grower</Typography>
-              <Typography variant="b">{selectedPayment.grower}</Typography>
+              <Typography variant="b">{selectedItem.grower}</Typography>
             </Grid>
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Funder</Typography>
-              <Typography variant="b">{selectedPayment.funder}</Typography>
+              <Typography variant="b">{selectedItem.funder}</Typography>
             </Grid>
           </Grid>
 
-          <Divider className={classes.paymentDetailsContentsDivider} />
+          <Divider className={classes.itemDetailsContentsDivider} />
 
           <Grid container direction="row">
             <Grid item sm={5}>
               <Typography>Amount</Typography>
-              <Typography variant="b">{selectedPayment.amount} </Typography>
+              <Typography variant="b">{selectedItem.amount} </Typography>
             </Grid>
 
             <Grid item>
               <Typography>Currency</Typography>
-              <Typography variant="b">{selectedPayment.currency}</Typography>
+              <Typography variant="b">{selectedItem.currency}</Typography>
             </Grid>
           </Grid>
 
-          <Divider className={classes.paymentDetailsContentsDivider} />
+          <Divider className={classes.itemDetailsContentsDivider} />
 
           <Grid container direction="column" justify="space-around">
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Status</Typography>
-              <Typography variant="b">{selectedPayment.status}</Typography>
+              <Typography variant="b">{selectedItem.status}</Typography>
             </Grid>
 
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>
                 Effective Payment Date
                 <InfoOutlinedIcon
@@ -225,44 +220,44 @@ function PaymentDetails(props) {
                   className={classes.infoIconOutlined}
                 />
               </Typography>
-              <Typography variant="b">{selectedPayment.paid_at}</Typography>
+              <Typography variant="b">{selectedItem.paid_at}</Typography>
             </Grid>
           </Grid>
 
-          <Divider className={classes.paymentDetailsContentsDivider} />
+          <Divider className={classes.itemDetailsContentsDivider} />
 
           <Grid container direction="column" justify="space-around">
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography variant="h6">Consolidation</Typography>
             </Grid>
 
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
               <Typography variant="b">Default</Typography>
             </Grid>
 
-            <Grid item className={classes.paymentGrowerDetail}>
+            <Grid item className={classes.itemGrowerDetail}>
               <Grid container direction="row">
                 <Grid item sm={5}>
                   <Typography>Start Date</Typography>
                   <Typography variant="b">
-                    {selectedPayment.consolidation_period_start}
+                    {selectedItem.consolidation_period_start}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography>End Date</Typography>
                   <Typography variant="b">
-                    {selectedPayment.consolidation_period_end}
+                    {selectedItem.consolidation_period_end}
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
 
-          {showLogPaymentForm && (
+          {selectedItem?.status !== 'paid' && (
             <LogPaymentForm
-              selectedPayment={selectedPayment}
+              selectedItem={selectedItem}
               closeForm={closeDetails}
             />
           )}
@@ -274,14 +269,9 @@ function PaymentDetails(props) {
   );
 }
 
-export default PaymentDetails;
+export default CustomTableItemDetails;
 
-PaymentDetails.propTypes = {
-  selectedPayment: PropTypes.object.isRequired,
+CustomTableItemDetails.propTypes = {
+  selectedItem: PropTypes.object.isRequired,
   closeDetails: PropTypes.func.isRequired,
-  showLogPaymentForm: PropTypes.bool,
-};
-
-PaymentDetails.defaultProps = {
-  showLogPaymentForm: false,
 };
