@@ -125,7 +125,9 @@ export default {
   },
   fetchCapturesToMatch(currentPage, abortController) {
     return fetch(
-      `${CAPTURE_MATCH_API}/captures?limit=${1}&offset=${currentPage - 1}`,
+      `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
+        currentPage - 1
+      }`,
       {
         headers: {
           Authorization: session.token,
