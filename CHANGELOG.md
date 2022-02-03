@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.45.0...v1.46.0) (2022-02-03)
+
+
+### Features
+
+* Limit capture-match tool to one un-matched capture at a time ([#339](https://github.com/Greenstand/treetracker-admin-client/issues/339)) ([15417d4](https://github.com/Greenstand/treetracker-admin-client/commit/15417d494325d318eab0bd3c6022e502364cf940))
+
 # [1.45.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.44.0...v1.45.0) (2022-02-03)
 
 
