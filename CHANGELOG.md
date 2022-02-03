@@ -1,3 +1,17 @@
+# [1.47.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.46.0...v1.47.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* sameTreeHandler to work with one capture and fix update request ([6e7889a](https://github.com/Greenstand/treetracker-admin-client/commit/6e7889ae95ce72fb5ab4b2312c6e1f511693cd4d))
+* use tree_associated=false when getting captures to match ([9174d4d](https://github.com/Greenstand/treetracker-admin-client/commit/9174d4de1fa010a31cfec183f0760441662955be))
+
+
+### Features
+
+* limit capture-match request to one capture at a time ([c41ae35](https://github.com/Greenstand/treetracker-admin-client/commit/c41ae35750ff5fecd710292891503753da43822b))
+* loading AppBar, move api functions to treetrackerApi file ([8c9661e](https://github.com/Greenstand/treetracker-admin-client/commit/8c9661ee7a99131a33a3d6e0b8496a699853278b))
+
 # [1.46.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.45.0...v1.46.0) (2022-02-03)
 
 
