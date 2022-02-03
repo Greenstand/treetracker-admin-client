@@ -95,6 +95,28 @@ function CustomTableHeader(props) {
   } = props;
   const classes = useStyles();
 
+  const dataToExport = data.map(
+    ({
+      id: earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    }) => ({
+      earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    })
+  );
+
   return (
     <Grid container className={classes.customTableTopBar}>
       <Grid item xs={4}>
@@ -112,8 +134,8 @@ function CustomTableHeader(props) {
               <Grid container direction="row" justify="flex-end">
                 <Button color="primary" variant="text">
                   <CSVLink
-                    data={data}
-                    filename={'earnings.csv'}
+                    data={dataToExport}
+                    filename={`${headerTitle.toLowerCase()}_${new Date().toLocaleDateString()}.csv`}
                     className={classes.csvLink}
                     target="_blank"
                   >
@@ -351,7 +373,10 @@ function CustomTable(props) {
                 >
                   {tableMetaData.map((column, j) => (
                     <TableCell key={`${i}-${j}-${column.name}`}>
-                      <Typography variant="body1">
+                      <Typography
+                        variant="body1"
+                        style={{ textTransform: 'capitalize' }}
+                      >
                         {row[column.name]}
                       </Typography>
                     </TableCell>

@@ -1,3 +1,48 @@
+# [1.46.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.45.0...v1.46.0) (2022-02-03)
+
+
+### Features
+
+* Limit capture-match tool to one un-matched capture at a time ([#339](https://github.com/Greenstand/treetracker-admin-client/issues/339)) ([15417d4](https://github.com/Greenstand/treetracker-admin-client/commit/15417d494325d318eab0bd3c6022e502364cf940))
+
+# [1.45.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.44.0...v1.45.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* remove unused variable ([7c06ba8](https://github.com/Greenstand/treetracker-admin-client/commit/7c06ba8344381460cb75418e36af8c653ef8ee24))
+
+
+### Features
+
+* **common components:** implement re-usable filter ([e56d50f](https://github.com/Greenstand/treetracker-admin-client/commit/e56d50f3f8b15651792805c9c84423c43417c98c))
+* **custom table:** export subset of earnings fields ([0993201](https://github.com/Greenstand/treetracker-admin-client/commit/0993201d655557067ccf9e668fa0e0bda29dc4f5))
+* **custom table:** implement re-usable custom table item details ([28d5fa3](https://github.com/Greenstand/treetracker-admin-client/commit/28d5fa3cc3df3ecf326bd325f8b3fdca0ef276ee))
+* **earnings  main filter:** displaay organisations in filter ([c80f42e](https://github.com/Greenstand/treetracker-admin-client/commit/c80f42ef98eed8fb82feac796356b64283514b51))
+* **earnings  main filter:** displaay organisations in filter ([bcae8ab](https://github.com/Greenstand/treetracker-admin-client/commit/bcae8ab0f878ddb586585bd0568cc2ca82a97184))
+* **earnings api:** properly throw error when payments upload fail ([7604998](https://github.com/Greenstand/treetracker-admin-client/commit/76049988c4b5091becce80cff44acf612d22e4bb))
+* **earnings export:** add more fields in csv export ([9e30182](https://github.com/Greenstand/treetracker-admin-client/commit/9e301825def181e80f6b9b0f9c261b877739709e))
+* **earnings maain filter:** update payments status enum ([3904860](https://github.com/Greenstand/treetracker-admin-client/commit/390486002f525ce23a798554d9330be49fc6721c))
+* **earnings main filter:** implement earnings status filter ([227592a](https://github.com/Greenstand/treetracker-admin-client/commit/227592aab993d62331f9db44fe256ae3f94d731e))
+* **earnings main filter:** implement grower filter ([1d4ad15](https://github.com/Greenstand/treetracker-admin-client/commit/1d4ad158e3f5f37d6fb0fc49f8051a66ea265372))
+* **earnings main filter:** remove contract type input ([467b357](https://github.com/Greenstand/treetracker-admin-client/commit/467b3579483a7aebb12d3886c6b8a5a3697417a3))
+* **earnings table main filter:** catch potential error in fetching organisations ([bb2ea0c](https://github.com/Greenstand/treetracker-admin-client/commit/bb2ea0cdeedd08d4edaafffadfb0d942dfe4e8f7))
+* **earnings table main filter:** update filter form to match designs ([4bbb155](https://github.com/Greenstand/treetracker-admin-client/commit/4bbb155743bc2b93b6b4b34af8d661510da1805b))
+* **earnings table:** display paid at column ([ad3d006](https://github.com/Greenstand/treetracker-admin-client/commit/ad3d00625269c56ba7d0f0135c407f6121a5e8a5))
+* **earnings table:** display unpaid earnibngs only ([4b6c39d](https://github.com/Greenstand/treetracker-admin-client/commit/4b6c39d59ba2afe11d1ed834e77742cb430dbce0))
+* **earnings table:** remove payments date column ([8fbf994](https://github.com/Greenstand/treetracker-admin-client/commit/8fbf9948a0ce9bb27d2942c80eddd52857f76c53))
+* **earnings table:** use re-uable item details component ([bfac70d](https://github.com/Greenstand/treetracker-admin-client/commit/bfac70d9de70d136fce586e37d1222df870135c0))
+* **earnings tool:** show status column on the tables ([d42f14d](https://github.com/Greenstand/treetracker-admin-client/commit/d42f14d510de152bc2e3ac7a12ed9d80baba7801))
+* **earnings:** apply earnings and payments permissions ([93ea008](https://github.com/Greenstand/treetracker-admin-client/commit/93ea008b74c7e3e762dd05ed1390b8a9bc3c002c)), closes [#203](https://github.com/Greenstand/treetracker-admin-client/issues/203)
+* **earnings:** diplay payments_confirmed_at as payment date table column ([cdaccf6](https://github.com/Greenstand/treetracker-admin-client/commit/cdaccf66aec9f976c5b50379c0fa344767d6cfb6))
+* **earninigs:** display all earnings ([fe7e5bb](https://github.com/Greenstand/treetracker-admin-client/commit/fe7e5bb2e38cf6fb27825c9573bcd0c9cd220f28))
+* **payments table:** use re-uable item details component ([6871da3](https://github.com/Greenstand/treetracker-admin-client/commit/6871da36dc59e1060afd170f44020fac5bceed9d))
+* **payments:** display filters using a reusble filter ([5089361](https://github.com/Greenstand/treetracker-admin-client/commit/508936192e0605c52fb1184926685d1ea9c1ee8c))
+* **payments:** display payed earnings only ([7ea94af](https://github.com/Greenstand/treetracker-admin-client/commit/7ea94af5a1b811341a94bdce4751d6af63953976))
+* **payments:** display payment date based on paid_at field ([ace2d33](https://github.com/Greenstand/treetracker-admin-client/commit/ace2d33ffb4a84f90232d957c31bff1e831ea5b2))
+* **payments:** handle all payments upload varidation errors ([e3723c1](https://github.com/Greenstand/treetracker-admin-client/commit/e3723c10884ad05c073f55ea59eabaa2929861c1))
+* **planter filter:** include partial matches in results ([c6e5c8d](https://github.com/Greenstand/treetracker-admin-client/commit/c6e5c8d551cb7eed3108e3f6453fe6d701ba5583))
+
 # [1.44.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.43.0...v1.44.0) (2022-01-29)
 
 

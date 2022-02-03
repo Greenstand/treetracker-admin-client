@@ -51,8 +51,10 @@ export default {
       Authorization: session.token,
     };
 
-    return Axios.patch(`earnings/batch`, formData, { headers }).then(
-      (res) => res.data
-    );
+    return Axios.patch(`earnings/batch`, formData, { headers })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw new Error('Payments Batch Upload Failed!', { cause: error });
+      });
   },
 };
