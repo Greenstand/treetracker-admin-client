@@ -14,6 +14,16 @@ class LoginPage {
   }
 
   loginAsAnAdmin() {
+<<<<<<< HEAD
+    cy.visit('/');
+    this.user_name_Field().type(credentials.user_name);
+    this.password_Field().type(credentials.password);
+    this.login_Button().click();
+  }
+
+  loginAsAManager() {
+=======
+>>>>>>> 89a9828 (test: add organization drop down menu tests)
     cy.visit('/');
     this.user_name_Field().type(credentials.user_name);
     this.password_Field().type(credentials.password);
