@@ -7,15 +7,10 @@ class GrowersPage {
   pagination = () => this.grower_Image().get('div.MuiTablePagination-root');
   previousPage_Button = () => cy.get('button[title="Previous page"]');
 
-  and() {
-    return this;
-  }
-  when() {
-    return this;
-  }
-  then() {
-    return this;
-  }
+  when = () => this;
+  and = () => this;
+  then = () => this;
+
   goTo_NextPage() {
     this.grower_Image().get('button[title="Next page"]').first().click();
   }
@@ -33,6 +28,18 @@ class GrowersPage {
       .get('ul>li')
       .contains(numberOfGrowers)
       .click();
+    return this;
+  }
+  click_Button_Filter() {
+    cy.get('button').contains('Filter').click();
+    return this;
+  }
+  filterForm_ShouldBe_Visible() {
+    cy.get('div>form').should('be.visible');
+    return this;
+  }
+  filterForm_Should_Not_Exist() {
+    cy.get('div>form').should('not.exist');
     return this;
   }
 }
