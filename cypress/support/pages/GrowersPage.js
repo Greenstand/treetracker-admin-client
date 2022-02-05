@@ -42,5 +42,31 @@ class GrowersPage {
     cy.get('div>form').should('not.exist');
     return this;
   }
+  enterInto_GrowerID_TextField(growerID) {
+    cy.get('input[id="Grower ID"]').type(growerID);
+    return this;
+  }
+  click_Button_Apply() {
+    cy.get('#submit').click();
+    return this;
+  }
+  single_GrowerCard_ShouldBe_Displayed() {
+    for (let i = 0; i < 9; i++) {
+      cy.get('div[id^="card_"]').then((e) => {
+        if (e.length > 1) {
+          cy.wait(1000);
+        }
+      });
+    }
+    cy.get('div[id^="card_"]').should('have.length', 1);
+    return this;
+  }
+  growerCard_ShouldContain_ID(growerID) {
+    cy.get('div[id^="card_"] p:nth-child(2)>a').should(
+      'contain.text',
+      growerID
+    );
+    return this;
+  }
 }
 export default GrowersPage;
