@@ -22,8 +22,8 @@ describe('Growers Filter', () => {
       .then()
       .filterForm_Should_Not_Exist();
   });
-  describe(`displays single grower card with the ${growerID} when a ${growerID} is entered into the Grower ID text field`, () => {
-    it('Grower ID', () => {
+  describe('Grower ID text field', () => {
+    it(`displays single grower card with the ${growerID} when a ${growerID} is entered into the Grower ID text field`, () => {
       growers_Page
         .when()
         .enterInto_GrowerID_TextField(growerID)
@@ -33,6 +33,17 @@ describe('Growers Filter', () => {
         .single_GrowerCard_ShouldBe_Displayed()
         .and()
         .growerCard_ShouldContain_ID(growerID);
+    });
+  });
+  describe('Organization dropdown menu', () => {
+    it('displays only grower cards that contains "FCC" as part of their organization name when the "FCC" option in the "Organization" dropdown menu is selected', () => {
+      growers_Page
+        .when()
+        .from_Organization_DropdownMenu_Select('FCC')
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerCards_OrganizationName_ShouldContain('FCC');
     });
   });
 });

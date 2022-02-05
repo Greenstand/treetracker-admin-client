@@ -6,23 +6,29 @@ class GrowersPage {
   grower_OrganizationName = () => this.grower_Card().get('p:nth-child(3)');
   pagination = () => this.grower_Image().get('div.MuiTablePagination-root');
   previousPage_Button = () => cy.get('button[title="Previous page"]');
-
+  nextPage_Button = () => cy.get('button[title="Next page"]');
+  growersPerPage = () => cy.get('.MuiTablePagination-root div[role="button"]');
+  apply_Button = () => cy.get('#submit');
+  filter_Button = () => cy.get('button').contains('Filter');
+  filter_Form = () => cy.get('div>form');
+  growerID_TextField = () => cy.get('input[id="Grower ID"]');
+  organization_DropdownMenu = () => cy.get('#Organization');
   when = () => this;
   and = () => this;
   then = () => this;
 
   goTo_NextPage() {
-    this.grower_Image().get('button[title="Next page"]').first().click();
+    this.grower_Image().should('be.visible');
+    this.nextPage_Button().first().click();
   }
   numberOfDisplayed_GrowerCardsPerPage_ShouldBe(numberOfGrowers) {
-    this.grower_Image()
-      .get('div.makeStyles-cardWrapper-70')
-      .should('have.length', numberOfGrowers);
+    this.grower_Image().should('be.visible');
+    this.grower_Card().should('have.length', numberOfGrowers);
     return this;
   }
   growersPerPage_DropdownMenu_SetTo(numberOfGrowers) {
-    this.grower_Image()
-      .get('div.MuiTablePagination-root div[role="button"]')
+    this.grower_Image().should('be.visible');
+    this.growersPerPage()
       .first()
       .click()
       .get('ul>li')
@@ -31,41 +37,66 @@ class GrowersPage {
     return this;
   }
   click_Button_Filter() {
-    cy.get('button').contains('Filter').click();
+    this.filter_Button().click();
     return this;
   }
   filterForm_ShouldBe_Visible() {
-    cy.get('div>form').should('be.visible');
+    this.filter_Form().should('be.visible');
     return this;
   }
   filterForm_Should_Not_Exist() {
-    cy.get('div>form').should('not.exist');
+    this.filter_Form().should('not.exist');
     return this;
   }
   enterInto_GrowerID_TextField(growerID) {
-    cy.get('input[id="Grower ID"]').type(growerID);
+    this.growerID_TextField().type(growerID);
     return this;
   }
   click_Button_Apply() {
-    cy.get('#submit').click();
+    this.apply_Button().click();
     return this;
   }
   single_GrowerCard_ShouldBe_Displayed() {
     for (let i = 0; i < 9; i++) {
-      cy.get('div[id^="card_"]').then((e) => {
+      this.grower_Card().then((e) => {
         if (e.length > 1) {
           cy.wait(1000);
         }
       });
     }
-    cy.get('div[id^="card_"]').should('have.length', 1);
+    this.grower_Card().should('have.length', 1);
     return this;
   }
   growerCard_ShouldContain_ID(growerID) {
-    cy.get('div[id^="card_"] p:nth-child(2)>a').should(
-      'contain.text',
-      growerID
-    );
+    this.grower_ID().should('contain.text', growerID);
+    return this;
+  }
+  from_Organization_DropdownMenu_Select(organizationName) {
+    this.organization_DropdownMenu()
+      .click()
+      .get('ul > li')
+      .contains(organizationName)
+      .click();
+    return this;
+  }
+  growerCards_OrganizationName_ShouldContain(organizationName) {
+    let name = true;
+    this.grower_OrganizationName()
+      .each((e) => {
+        if (e.text().includes(organizationName)) {
+          cy.log(`✔️ _'${e.text()}' contains '${organizationName}'_`);
+        } else {
+          name = false;
+          cy.log(`❌ **'${e.text()}' should contain '${organizationName}'**`);
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_OrganizationName().each((e) => {
+            expect(e.text()).to.contain(organizationName);
+          });
+        }
+      });
     return this;
   }
 }
