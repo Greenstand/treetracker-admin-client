@@ -46,4 +46,15 @@ describe('Growers Filter', () => {
         .growerCards_OrganizationName_ShouldContain('FCC');
     });
   });
+  describe('First Name text field', () => {
+    it('displays only grower cards that contains "Naruto" as part of their first name when the "Naruto" is entered into the First Name text field', () => {
+      growers_Page
+        .when()
+        .enterInto_FirstName_TextField('Naruto')
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerCards_FirstName_ShouldContain('Naruto');
+    });
+  });
 });

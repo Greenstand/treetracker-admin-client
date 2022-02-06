@@ -12,6 +12,7 @@ class GrowersPage {
   filter_Button = () => cy.get('button').contains('Filter');
   filter_Form = () => cy.get('div>form');
   growerID_TextField = () => cy.get('input[id="Grower ID"]');
+  firstName_TextField = () => cy.get('input[id="First Name"]');
   organization_DropdownMenu = () => cy.get('#Organization');
   when = () => this;
   and = () => this;
@@ -94,6 +95,33 @@ class GrowersPage {
         if (name === false) {
           this.grower_OrganizationName().each((e) => {
             expect(e.text()).to.contain(organizationName);
+          });
+        }
+      });
+    return this;
+  }
+  enterInto_FirstName_TextField(firstName) {
+    this.firstName_TextField().type(firstName);
+    return this;
+  }
+  growerCards_FirstName_ShouldContain(firstName) {
+    let name = true;
+    this.grower_Name()
+      .should('be.visible')
+      .each((e) => {
+        if (e.text().startsWith(firstName.toLowerCase())) {
+          cy.log(`✔️ _'${e.text()}' starts with '${firstName.toLowerCase()}'_`);
+        } else {
+          name = false;
+          cy.log(
+            `❌ **'${e.text()}' should start with '${firstName.toLowerCase()}'**`
+          );
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_Name().each((e) => {
+            expect(e.text()).to.match(new RegExp(`^${firstName}`, 'i'));
           });
         }
       });
