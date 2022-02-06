@@ -27,7 +27,6 @@ export const CapturesContext = createContext({
   getCaptureAsync: () => {},
   getAllCaptures: () => {},
   updateFilter: () => {},
-  // getLocationName: () => {},
 });
 
 export function CapturesProvider(props) {
@@ -39,7 +38,6 @@ export function CapturesProvider(props) {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('timeCreated');
-  // const [byId, setById] = useState({});
   const [filter, setFilter] = useState(
     new FilterModel({
       verifyStatus: [
@@ -54,140 +52,60 @@ export function CapturesProvider(props) {
     getCaptureCount();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
-  // STATE HELPER FUNCTIONS
-
-  // receiveLocation = (payload, { id, address }) => {
-  //   if (address === 'cached') {
-  //     return state;
-  //   } else {
-  //     const byId = Object.assign({}, state.byId);
-  //     if (byId[id] == null) byId[id] = {};
-  //     byId[id].location = payload.address;
-  //     setState({ ...state, byId });
-  //   }
-  // };
-
-  // receiveStatus = (payload) => {
-  //   setState((prev) => ({ ...prev, status: payload }));
-  // };
-
   // EVENT HANDLERS
-  const getWhereCondition = () => {
-    const { verifyStatus, ...restFilter } = filter ? filter.getWhereObj() : {};
-    let orCondition = false;
-    let where;
-    if (verifyStatus.length == 1) {
-      where = {
-        ...restFilter,
-        active: verifyStatus[0].active,
-        approved: verifyStatus[0].approved,
-      };
-    } else {
-      orCondition = true;
-      where = [];
-      verifyStatus.forEach((status) => {
-        where.push({
-          active: status.active,
-          approved: status.approved,
-        });
-      });
-    }
-    return orCondition ? { ...restFilter, or: where } : { ...where };
+  const queryCapturesApi = ({
+    id = null,
+    count = false,
+    paramString = null,
+  }) => {
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}trees${count ? '/count' : ''}${
+      id != null ? '/' + id : ''
+    }${paramString ? '?' + paramString : ''}`;
+
+    return axios.get(query, {
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    });
   };
-
-  const queryCapturesApi = ({ id = null, count = false, paramString = null }) =>
-    // abortController,
-    {
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}trees${count ? '/count' : ''}${
-        id != null ? '/' + id : ''
-      }${paramString ? '?' + paramString : ''}`;
-
-      // log.debug('queryCapturesApi', query, session);
-
-      return axios.get(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        // signal: abortController?.signal,
-      });
-    };
 
   const getCaptureCount = async () => {
     log.debug('load capture count');
-    const paramString = `where=${JSON.stringify(getWhereCondition())}`;
+    const paramString = `where=${JSON.stringify(filter.getWhereObj())}`;
     const response = await queryCapturesApi({
       count: true,
       paramString,
     });
     const { count } = response.data;
-
     setCaptureCount(Number(count));
   };
 
   const getCapturesAsync = async () => {
     log.debug('4 - load captures');
-    const lbFilter = {
-      where: getWhereCondition(),
+    const filterData = {
+      where: filter.getWhereObj(),
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
       skip: page * rowsPerPage,
-      fields: {
-        id: true,
-        timeCreated: true,
-        status: true,
-        active: true,
-        approved: true,
-        planterId: true,
-        planterIdentifier: true,
-        deviceIdentifier: true,
-        speciesId: true,
-        tokenId: true,
-        age: true,
-        morphology: true,
-        captureApprovalTag: true,
-        rejectionReason: true,
-        note: true,
-      },
     };
-
-    const paramString = `filter=${JSON.stringify(lbFilter)}`;
+    const paramString = `filter=${JSON.stringify(filterData)}`;
     const response = await queryCapturesApi({ paramString });
     setCaptures(response.data);
   };
 
-  const getAllCaptures = async (filterInfo = {}) => {
-    log.debug('load all captures');
-    console.log('captures filterInfo -- ', filterInfo);
-
-    // if filterInfo contains new values override the defaults in state hooks
-
-    const lbFilter = {
-      where: getWhereCondition(),
+  // GET CAPTURES FOR EXPORT
+  const getAllCaptures = async () => {
+    log.debug('load all captures for export');
+    const filterData = {
+      where: filter.getWhereObj(),
       order: [`${orderBy} ${order}`],
       limit: 20000,
-      fields: {
-        id: true,
-        timeCreated: true,
-        status: true,
-        active: true,
-        approved: true,
-        planterId: true,
-        planterIdentifier: true,
-        deviceIdentifier: true,
-        speciesId: true,
-        tokenId: true,
-        age: true,
-        morphology: true,
-        captureApprovalTag: true,
-        rejectionReason: true,
-        note: true,
-      },
     };
 
-    const paramString = `filter=${JSON.stringify(lbFilter)}`;
+    const paramString = `filter=${JSON.stringify(filterData)}`;
     const response = await queryCapturesApi({ paramString });
     return response;
   };
@@ -201,31 +119,6 @@ export function CapturesProvider(props) {
         console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
       );
   };
-
-  // getLocationName = async (payload, rootState) => {
-  //   if (
-  //     (rootState.captures.byId[payload.id] &&
-  //       rootState.captures.byId[payload.id].location &&
-  //       rootState.captures.byId[payload.id].location.lat !== payload.lat &&
-  //       rootState.captures.byId[payload.id].location.lon !== payload.lon) ||
-  //     !rootState.captures.byId[payload.id] ||
-  //     !rootState.captures.byId[payload.id].location
-  //   ) {
-  //     const query = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${payload.latitude}&lon=${payload.longitude}`;
-  //     axios
-  //       .get(query, {
-  //         headers: {
-  //           'content-type': 'application/json',
-  //           Authorization: session.token,
-  //         },
-  //       })
-  //       .then((response) => {
-  //         receiveLocation(response.data, payload);
-  //       });
-  //   } else {
-  //     receiveLocation(null, { id: payload.id, address: 'cached' });
-  //   }
-  // };
 
   const updateFilter = async (filter) => {
     log.debug('2 - updateFilter', filter);
@@ -259,7 +152,6 @@ export function CapturesProvider(props) {
     setCapture,
     getAllCaptures,
     updateFilter,
-    // getLocationName,
   };
 
   return (
