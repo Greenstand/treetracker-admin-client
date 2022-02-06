@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
-
+import OptimizedImage from '../OptimizedImage';
 import { Tooltip, Typography, Box, Button, Paper } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
@@ -103,8 +103,21 @@ function CaptureImage(props) {
     imgCount,
     handleSkip,
   } = props;
-
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const classes = useStyles();
+
+  const resizeWindow = useCallback(() => {
+    setScreenWidth(window.innerWidth);
+    setScreenHeight(window.innerHeight);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeWindow);
+    return () => {
+      window.removeEventListener('resize', resizeWindow);
+    };
+  }, [resizeWindow]);
 
   return (
     <Box className={classes.box1}>
@@ -168,11 +181,13 @@ function CaptureImage(props) {
               </Box>
 
               <Box className={classes.imgBox}>
-                <img
-                  key={capture.id}
-                  className={classes.imgContainer}
+                <OptimizedImage
+                  id={capture.id}
                   src={capture.image_url}
                   alt={`Capture ${capture.id}`}
+                  width={screenWidth * 0.5}
+                  height={screenHeight * 0.6}
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />
               </Box>
             </Paper>
