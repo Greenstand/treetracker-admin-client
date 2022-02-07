@@ -184,7 +184,7 @@ function CustomTableHeader(props) {
           {/* end Date Range button */}
 
           {/* start Filter button */}
-          <Grid item lg={3} xs={4}>
+          <Grid item lg={3}>
             <Grid container direction="row" justify="flex-end">
               <Button
                 onClick={openMainFilter}

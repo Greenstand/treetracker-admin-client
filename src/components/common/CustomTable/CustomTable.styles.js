@@ -57,10 +57,12 @@ const customTableTopBarStyles = (theme) => ({
     padding: theme.spacing(0, 0, 0, 2),
   },
   customTableDateFilterButton: {
-    padding: theme.spacing(3, 7.5, 3, 4),
+    padding: theme.spacing(3, 4),
+    margin: theme.spacing(1),
   },
   filterButton: {
-    padding: theme.spacing(4, 7.5, 5, 4),
+    padding: theme.spacing(4, 4),
+    margin: theme.spacing(1),
   },
 });
 
