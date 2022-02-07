@@ -1,3 +1,10 @@
+## [1.47.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.47.0...v1.47.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* assorted improvements to capture matching UI ([8940e24](https://github.com/Greenstand/treetracker-admin-client/commit/8940e24ce99d7f75e5c31a14cdf9e131b14be4e3))
+
 # [1.47.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.46.0...v1.47.0) (2022-02-03)
 
 
