@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(2),
   },
-
   imgContainer: {
-    objectFit: 'contain',
+    position: 'relative',
+    flexGrow: 1,
   },
   captureInfo: {
     display: 'flex',
@@ -104,12 +104,10 @@ function CaptureImage(props) {
     handleSkip,
   } = props;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const classes = useStyles();
 
   const resizeWindow = useCallback(() => {
     setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
   }, []);
 
   useEffect(() => {
@@ -181,14 +179,15 @@ function CaptureImage(props) {
               </Box>
 
               <Box className={classes.imgBox}>
-                <OptimizedImage
-                  id={capture.id}
-                  src={capture.image_url}
-                  alt={`Capture ${capture.id}`}
-                  width={screenWidth * 0.5}
-                  height={screenHeight * 0.6}
-                  style={{ maxWidth: '100%', maxHeight: '100%' }}
-                />
+                <Box className={classes.imgContainer}>
+                  <OptimizedImage
+                    id={capture.id}
+                    src={capture.image_url}
+                    alt={`Capture ${capture.id}`}
+                    width={screenWidth * 0.5}
+                    objectFit="contain"
+                  />
+                </Box>
               </Box>
             </Paper>
           );
