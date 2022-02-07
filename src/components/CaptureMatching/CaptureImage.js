@@ -58,13 +58,20 @@ const useStyles = makeStyles((theme) => ({
   },
 
   imgBox: {
-    // height: '52vh',
     flexGrow: 1,
     overflow: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
   },
 
   imgContainer: {
-    width: '100%',
+    objectFit: 'contain',
+  },
+  captureInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
   },
   box1: {
     height: '100%',
@@ -83,8 +90,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
-    width: 71,
-    height: 31,
+    height: '100%',
   },
 }));
 
@@ -128,30 +134,30 @@ function CaptureImage(props) {
                       Capture {(capture.id + '').substring(0, 10) + '...'}
                     </Typography>
                   </Tooltip>
-                  <Box className={classes.box3}>
-                    <AccessTimeIcon />
-                    <Typography variant="body1">
-                      {getDateTimeStringLocale(capture.created_at)}
-                    </Typography>
+                  <Box className={classes.captureInfo}>
+                    <Box className={classes.box3}>
+                      <AccessTimeIcon />
+                      <Typography variant="body1">
+                        {getDateTimeStringLocale(capture.created_at)}
+                      </Typography>
+                    </Box>
+                    <Box className={classes.box3}>
+                      <LocationOnOutlinedIcon />
+                      <Typography variant="body1">
+                        <Country lat={capture.lat} lon={capture.lon} />
+                      </Typography>
+                    </Box>
                   </Box>
-
-                  <Box className={classes.box3}>
-                    <LocationOnOutlinedIcon />
-                    <Typography variant="body1">
-                      <Country lat={capture.lat} lon={capture.lon} />
-                    </Typography>
-                  </Box>
-                  {/* <UseLocation/> */}
                 </Box>
 
                 <Grower
-                  planter_photo_url={capture.planter_photo_url}
-                  planter_username={capture.planter_username}
-                  status={capture.status}
+                  grower_photo_url={capture.grower_photo_url}
+                  grower_username={capture.grower_username}
+                  planting_organization_id={capture.planting_organization_id}
                 />
 
                 <Button
-                  variant="outlined"
+                  variant="text"
                   color="primary"
                   onClick={handleSkip}
                   className={classes.button}
