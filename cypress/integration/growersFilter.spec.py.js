@@ -57,4 +57,15 @@ describe('Growers Filter', () => {
         .growerCards_FirstName_ShouldContain('Naruto');
     });
   });
+  describe('Last Name text field', () => {
+    it('displays only grower cards that contains "Uzumaki" as part of their last name when the "Uzumaki" is entered into the Last Name text field', () => {
+      growers_Page
+        .when()
+        .enterInto_LastName_TextField('Uzumaki')
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerCards_LastName_ShouldContain('Uzumaki');
+    });
+  });
 });
