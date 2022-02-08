@@ -1,0 +1,25 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzEsInVzZXJOYW1lIjoiZnJlZXRvd25fbWFuYWdlciIsImZpcnN0TmFtZSI6IkZyZWV0b3duIiwibGFzdE5hbWUiOiJNYW5hZ2VyIiwicGFzc3dvcmRIYXNoIjoiOTk5MDA5MDJlM2VmOWQwMGM4OGMzZjQ1Y2JkNTIwYjdlNTRmOGI1ZjZhYTZkYTkzOTY4ZjA5YjViMDIzZWZjOWJiYTBhMDQ0NzNiNGNjM2FhYmEzZjhlYjNkYzJkMTg3YjdhZDQwNGEyNTQ0NDk4MjAwNmNhZWM5MTgxMDJiMTYiLCJzYWx0IjoiMktLeVZxIiwiZW1haWwiOiJmcmVldG93bkBtYW5hZ2VyLmZ0IiwiYWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDIyLTAxLTI4VDA1OjIzOjQwLjYxN1oiLCJlbmFibGVkIjp0cnVlLCJyb2xlIjpbNF0sInJvbGVOYW1lcyI6WyJGcmVldG93biBNYW5hZ2VyIl0sInBvbGljeSI6eyJwb2xpY2llcyI6W3sibmFtZSI6Imxpc3RfdHJlZSIsImRlc2NyaXB0aW9uIjoiQ2FuIHZpZXcgdHJlZXMifSx7Im5hbWUiOiJhcHByb3ZlX3RyZWUiLCJkZXNjcmlwdGlvbiI6IkNhbiBhcHByb3ZlL3JlamVjdCB0cmVlcyJ9LHsibmFtZSI6Imxpc3RfcGxhbnRlciIsImRlc2NyaXB0aW9uIjoiQ2FuIHZpZXcgcGxhbnRlcnMifSx7Im5hbWUiOiJtYW5hZ2VfcGxhbnRlciIsImRlc2NyaXB0aW9uIjoiQ2FuIG1vZGlmeSBwbGFudGVyIGluZm9ybWF0aW9uIn1dLCJvcmdhbml6YXRpb24iOnsiaWQiOjExLCJuYW1lIjoiZnJlZXRvd24ifX0sImlhdCI6MTY0MzM5OTI4M30.PUlP_woPCMg1Sk9wyC53hGqatei3OKoEu0JSbMmPuI8",
+  "user": {
+    "id": 71,
+    "userName": "freetown_manager",
+    "firstName": "Freetown",
+    "lastName": "Manager",
+    "email": "freetown@manager.ft",
+    "role": [4],
+    "policy": {
+      "policies": [
+        { "name": "list_tree", "description": "Can view trees" },
+        { "name": "approve_tree", "description": "Can approve/reject trees" },
+        { "name": "list_planter", "description": "Can view planters" },
+        {
+          "name": "manage_planter",
+          "description": "Can modify planter information"
+        }
+      ],
+      "organization": { "id": 11, "name": "freetown" }
+    },
+    "roleNames": ["Freetown Manager"],
+    "createdAt": "2022-01-28T05:23:40.617Z"
+  }
+}

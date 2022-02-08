@@ -8,11 +8,16 @@ const POLICIES = {
   SUPER_PERMISSION: 'super_permission',
   LIST_USER: 'list_user',
   MANAGER_USER: 'manager_user',
+  MANAGE_EARNINGS: 'manage_earnings',
+  MANAGE_PAYMENTS: 'manage_payments',
+  LIST_EARNINGS: 'list_earnings',
+  LIST_PAYMENTS: 'list_payments',
   LIST_TREE: 'list_tree',
   APPROVE_TREE: 'approve_tree',
   LIST_GROWER: 'list_planter',
   MANAGE_GROWER: 'manage_planter',
   SEND_MESSAGES: 'send_messages',
+  MATCH_CAPTURES: 'match_captures',
 };
 
 function hasPermission(user, p) {

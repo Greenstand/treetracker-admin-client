@@ -1,6 +1,9 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+// Set API as a variable
+const CAPTURE_MATCH_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
+
 const CAPTURE_FIELDS = {
   uuid: true,
   imageUrl: true,
@@ -58,7 +61,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-
   approveCaptureImage(id, morphology, age, captureApprovalTag, speciesId) {
     const query = `${
       process.env.REACT_APP_API_ROOT
@@ -117,6 +119,32 @@ export default {
       headers: {
         Authorization: session.token,
       },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  fetchCapturesToMatch(currentPage, abortController) {
+    return fetch(
+      `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
+        currentPage - 1
+      }`,
+      {
+        headers: {
+          Authorization: session.token,
+        },
+        signal: abortController?.signal,
+      }
+    )
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  fetchCandidateTrees(captureId, abortController) {
+    const query = `${CAPTURE_MATCH_API}/trees/potential_matches?capture_id=${captureId}`;
+    return fetch(query, {
+      headers: {
+        Authorization: session.token,
+      },
+      signal: abortController?.signal,
     })
       .then(handleResponse)
       .catch(handleError);
@@ -332,7 +360,7 @@ export default {
   /*
    * create new tree tags
    */
-  async createCaptureTags(captureId, tags) {
+  createCaptureTags(captureId, tags) {
     return tags.map((t) => {
       const query = `${process.env.REACT_APP_API_ROOT}/api/tree_tags`;
       return fetch(query, {

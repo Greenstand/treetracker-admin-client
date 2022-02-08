@@ -7,7 +7,6 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Chip from '@material-ui/core/Chip';
 import { CaptureMatchingContext } from 'context/CaptureMatchingContext';
 import CaptureMatchingFilter from './CaptureMatchingFilter';
 
@@ -66,16 +65,7 @@ function CaptureHeader(props) {
             imgCount={imgCount}
           />
           <Box className={classes.box2}>
-            <Box className={classes.box3}>
-              <Chip
-                onDelete={() => console.warn('delete')}
-                label={'My Organization'}
-              />
-              <Chip onDelete={() => console.warn('delete')} label={'Mongo'} />
-            </Box>
-            <Button onClick={handleClick}>
-              <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
-            </Button>
+            <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
             <Pagination
               count={noOfPages}
               page={currentPage}

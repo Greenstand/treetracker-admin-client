@@ -2,44 +2,39 @@ import { makeStyles } from '@material-ui/core/styles';
 
 /**
  * @function
- * @name paymentTableDateFilterStyles
- * @description styles for PaymentsTableFilter component
+ * @name customTableFilterStyles
+ * @description styles for CustomTableFilter component
  * @param {object} theme - material-ui theme object
  * @returns {object} styles object
  */
-const paymentTableDateFilterStyles = (theme) => ({
-  dateFilterHeader: {
+const customTableFilterStyles = (theme) => ({
+  customTableFilterHeader: {
     padding: theme.spacing(0, 0, 5, 0),
   },
-  paymentTableFilterSubmitButton: {
+  customTableFilterSubmitButton: {
     marginBottom: theme.spacing(2.5),
     color: theme.palette.stats.white,
   },
-  paymentTableFilterResetButton: {
+  customTableFilterResetButton: {
     border: 'none',
   },
-  paymentsTableFilterForm: {
+  customTableFilterForm: {
     width: theme.spacing(80),
     padding: theme.spacing(5, 4),
   },
-  paymentsTableHeader: {
-    borderBottom: `${theme.spacing(0.5)} solid ${
-      theme.palette.stats.lavenderPinocchio
-    }`,
-  },
-  paymentsTableFilterCloseIcon: {
+  customTableFilterCloseIcon: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
     backgroundColor: theme.palette.primary.lightVery,
   },
-  paymentsTableFilterAvatar: {
+  customTableFilterAvatar: {
     backgroundColor: theme.palette.primary.lightVery,
     color: theme.palette.primary.main,
     marginLeft: theme.spacing(2),
     width: theme.spacing(7.5),
     height: theme.spacing(7.5),
   },
-  paymentsFilterSelectFormControl: {
+  customTableFilterSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
     width: '100%',
   },
@@ -60,9 +55,9 @@ const paymentTableDateFilterStyles = (theme) => ({
  * @returns {object} styles
  */
 const useStyles = makeStyles((theme) => {
-  const paymentTableDateFilter = paymentTableDateFilterStyles(theme);
+  const customTableFilter = customTableFilterStyles(theme);
 
-  return { ...paymentTableDateFilter };
+  return { ...customTableFilter };
 });
 
 export default useStyles;

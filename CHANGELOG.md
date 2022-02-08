@@ -1,57 +1,131 @@
-# [1.42.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.41.0...v1.42.0) (2022-01-26)
-
+## [1.47.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.47.0...v1.47.1) (2022-02-07)
 
 ### Bug Fixes
 
-* broken eslint ([a1b2a26](https://github.com/Greenstand/treetracker-admin-client/commit/a1b2a268970c50684fc91ae6fae751accad6abee))
+- assorted improvements to capture matching UI ([8940e24](https://github.com/Greenstand/treetracker-admin-client/commit/8940e24ce99d7f75e5c31a14cdf9e131b14be4e3))
 
+# [1.47.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.46.0...v1.47.0) (2022-02-03)
+
+### Bug Fixes
+
+- sameTreeHandler to work with one capture and fix update request ([6e7889a](https://github.com/Greenstand/treetracker-admin-client/commit/6e7889ae95ce72fb5ab4b2312c6e1f511693cd4d))
+- use tree_associated=false when getting captures to match ([9174d4d](https://github.com/Greenstand/treetracker-admin-client/commit/9174d4de1fa010a31cfec183f0760441662955be))
 
 ### Features
 
-* refine UI for matching tool ([245dffa](https://github.com/Greenstand/treetracker-admin-client/commit/245dffa33e77a2ccd1a28535b3809c02f78ccc66))
+- limit capture-match request to one capture at a time ([c41ae35](https://github.com/Greenstand/treetracker-admin-client/commit/c41ae35750ff5fecd710292891503753da43822b))
+- loading AppBar, move api functions to treetrackerApi file ([8c9661e](https://github.com/Greenstand/treetracker-admin-client/commit/8c9661ee7a99131a33a3d6e0b8496a699853278b))
+
+# [1.46.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.45.0...v1.46.0) (2022-02-03)
+
+### Features
+
+- Limit capture-match tool to one un-matched capture at a time ([#339](https://github.com/Greenstand/treetracker-admin-client/issues/339)) ([15417d4](https://github.com/Greenstand/treetracker-admin-client/commit/15417d494325d318eab0bd3c6022e502364cf940))
+
+# [1.45.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.44.0...v1.45.0) (2022-02-03)
+
+### Bug Fixes
+
+- remove unused variable ([7c06ba8](https://github.com/Greenstand/treetracker-admin-client/commit/7c06ba8344381460cb75418e36af8c653ef8ee24))
+
+### Features
+
+- **common components:** implement re-usable filter ([e56d50f](https://github.com/Greenstand/treetracker-admin-client/commit/e56d50f3f8b15651792805c9c84423c43417c98c))
+- **custom table:** export subset of earnings fields ([0993201](https://github.com/Greenstand/treetracker-admin-client/commit/0993201d655557067ccf9e668fa0e0bda29dc4f5))
+- **custom table:** implement re-usable custom table item details ([28d5fa3](https://github.com/Greenstand/treetracker-admin-client/commit/28d5fa3cc3df3ecf326bd325f8b3fdca0ef276ee))
+- **earnings main filter:** displaay organisations in filter ([c80f42e](https://github.com/Greenstand/treetracker-admin-client/commit/c80f42ef98eed8fb82feac796356b64283514b51))
+- **earnings main filter:** displaay organisations in filter ([bcae8ab](https://github.com/Greenstand/treetracker-admin-client/commit/bcae8ab0f878ddb586585bd0568cc2ca82a97184))
+- **earnings api:** properly throw error when payments upload fail ([7604998](https://github.com/Greenstand/treetracker-admin-client/commit/76049988c4b5091becce80cff44acf612d22e4bb))
+- **earnings export:** add more fields in csv export ([9e30182](https://github.com/Greenstand/treetracker-admin-client/commit/9e301825def181e80f6b9b0f9c261b877739709e))
+- **earnings maain filter:** update payments status enum ([3904860](https://github.com/Greenstand/treetracker-admin-client/commit/390486002f525ce23a798554d9330be49fc6721c))
+- **earnings main filter:** implement earnings status filter ([227592a](https://github.com/Greenstand/treetracker-admin-client/commit/227592aab993d62331f9db44fe256ae3f94d731e))
+- **earnings main filter:** implement grower filter ([1d4ad15](https://github.com/Greenstand/treetracker-admin-client/commit/1d4ad158e3f5f37d6fb0fc49f8051a66ea265372))
+- **earnings main filter:** remove contract type input ([467b357](https://github.com/Greenstand/treetracker-admin-client/commit/467b3579483a7aebb12d3886c6b8a5a3697417a3))
+- **earnings table main filter:** catch potential error in fetching organisations ([bb2ea0c](https://github.com/Greenstand/treetracker-admin-client/commit/bb2ea0cdeedd08d4edaafffadfb0d942dfe4e8f7))
+- **earnings table main filter:** update filter form to match designs ([4bbb155](https://github.com/Greenstand/treetracker-admin-client/commit/4bbb155743bc2b93b6b4b34af8d661510da1805b))
+- **earnings table:** display paid at column ([ad3d006](https://github.com/Greenstand/treetracker-admin-client/commit/ad3d00625269c56ba7d0f0135c407f6121a5e8a5))
+- **earnings table:** display unpaid earnibngs only ([4b6c39d](https://github.com/Greenstand/treetracker-admin-client/commit/4b6c39d59ba2afe11d1ed834e77742cb430dbce0))
+- **earnings table:** remove payments date column ([8fbf994](https://github.com/Greenstand/treetracker-admin-client/commit/8fbf9948a0ce9bb27d2942c80eddd52857f76c53))
+- **earnings table:** use re-uable item details component ([bfac70d](https://github.com/Greenstand/treetracker-admin-client/commit/bfac70d9de70d136fce586e37d1222df870135c0))
+- **earnings tool:** show status column on the tables ([d42f14d](https://github.com/Greenstand/treetracker-admin-client/commit/d42f14d510de152bc2e3ac7a12ed9d80baba7801))
+- **earnings:** apply earnings and payments permissions ([93ea008](https://github.com/Greenstand/treetracker-admin-client/commit/93ea008b74c7e3e762dd05ed1390b8a9bc3c002c)), closes [#203](https://github.com/Greenstand/treetracker-admin-client/issues/203)
+- **earnings:** diplay payments_confirmed_at as payment date table column ([cdaccf6](https://github.com/Greenstand/treetracker-admin-client/commit/cdaccf66aec9f976c5b50379c0fa344767d6cfb6))
+- **earninigs:** display all earnings ([fe7e5bb](https://github.com/Greenstand/treetracker-admin-client/commit/fe7e5bb2e38cf6fb27825c9573bcd0c9cd220f28))
+- **payments table:** use re-uable item details component ([6871da3](https://github.com/Greenstand/treetracker-admin-client/commit/6871da36dc59e1060afd170f44020fac5bceed9d))
+- **payments:** display filters using a reusble filter ([5089361](https://github.com/Greenstand/treetracker-admin-client/commit/508936192e0605c52fb1184926685d1ea9c1ee8c))
+- **payments:** display payed earnings only ([7ea94af](https://github.com/Greenstand/treetracker-admin-client/commit/7ea94af5a1b811341a94bdce4751d6af63953976))
+- **payments:** display payment date based on paid_at field ([ace2d33](https://github.com/Greenstand/treetracker-admin-client/commit/ace2d33ffb4a84f90232d957c31bff1e831ea5b2))
+- **payments:** handle all payments upload varidation errors ([e3723c1](https://github.com/Greenstand/treetracker-admin-client/commit/e3723c10884ad05c073f55ea59eabaa2929861c1))
+- **planter filter:** include partial matches in results ([c6e5c8d](https://github.com/Greenstand/treetracker-admin-client/commit/c6e5c8d551cb7eed3108e3f6453fe6d701ba5583))
+
+# [1.44.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.43.0...v1.44.0) (2022-01-29)
+
+### Bug Fixes
+
+- some fixing against the refine UI task ([#338](https://github.com/Greenstand/treetracker-admin-client/issues/338)) ([50ff2b9](https://github.com/Greenstand/treetracker-admin-client/commit/50ff2b93342e130ed2137f290766dd04d79b3801))
+
+### Features
+
+- add catchment reporing card ([#318](https://github.com/Greenstand/treetracker-admin-client/issues/318)) ([7056d88](https://github.com/Greenstand/treetracker-admin-client/commit/7056d8824271003dccebb76c351fd888dd1af88c))
+
+# [1.43.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.1...v1.43.0) (2022-01-29)
+
+### Features
+
+- support country name ([#334](https://github.com/Greenstand/treetracker-admin-client/issues/334)) ([323fde5](https://github.com/Greenstand/treetracker-admin-client/commit/323fde57640c7c746aa9c0620830ab45f225d78f))
+
+## [1.42.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.42.0...v1.42.1) (2022-01-28)
+
+### Bug Fixes
+
+- **image:** fix image black bars ([#331](https://github.com/Greenstand/treetracker-admin-client/issues/331)) ([cba60b4](https://github.com/Greenstand/treetracker-admin-client/commit/cba60b4332e650a93378f0cce131737bc86e4448))
+
+# [1.42.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.41.0...v1.42.0) (2022-01-26)
+
+### Bug Fixes
+
+- broken eslint ([a1b2a26](https://github.com/Greenstand/treetracker-admin-client/commit/a1b2a268970c50684fc91ae6fae751accad6abee))
+
+### Features
+
+- refine UI for matching tool ([245dffa](https://github.com/Greenstand/treetracker-admin-client/commit/245dffa33e77a2ccd1a28535b3809c02f78ccc66))
 
 # [1.41.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.4...v1.41.0) (2022-01-26)
 
-
 ### Features
 
-* align icons vertically in the menu ([#308](https://github.com/Greenstand/treetracker-admin-client/issues/308)) ([b36eca2](https://github.com/Greenstand/treetracker-admin-client/commit/b36eca2cbc2e43e58a978524e24bd79c17719392))
+- align icons vertically in the menu ([#308](https://github.com/Greenstand/treetracker-admin-client/issues/308)) ([b36eca2](https://github.com/Greenstand/treetracker-admin-client/commit/b36eca2cbc2e43e58a978524e24bd79c17719392))
 
 ## [1.40.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.3...v1.40.4) (2022-01-25)
 
-
 ### Bug Fixes
 
-* wrap count labels in capture matching ([#322](https://github.com/Greenstand/treetracker-admin-client/issues/322)) ([1dfd366](https://github.com/Greenstand/treetracker-admin-client/commit/1dfd366886efb9bd32cf9785a5894b90641a0c09))
+- wrap count labels in capture matching ([#322](https://github.com/Greenstand/treetracker-admin-client/issues/322)) ([1dfd366](https://github.com/Greenstand/treetracker-admin-client/commit/1dfd366886efb9bd32cf9785a5894b90641a0c09))
 
 ## [1.40.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.2...v1.40.3) (2022-01-25)
 
-
 ### Bug Fixes
 
-* change datetime format in capture image matching ([#320](https://github.com/Greenstand/treetracker-admin-client/issues/320)) ([0621247](https://github.com/Greenstand/treetracker-admin-client/commit/06212474b1bc2bb5e863dc150e7f2882ae1756c4))
-* remove expand icon in capture matching ([#319](https://github.com/Greenstand/treetracker-admin-client/issues/319)) ([d7f9172](https://github.com/Greenstand/treetracker-admin-client/commit/d7f9172c43803052d890daaa0b1a731d1bd4ea57))
+- change datetime format in capture image matching ([#320](https://github.com/Greenstand/treetracker-admin-client/issues/320)) ([0621247](https://github.com/Greenstand/treetracker-admin-client/commit/06212474b1bc2bb5e863dc150e7f2882ae1756c4))
+- remove expand icon in capture matching ([#319](https://github.com/Greenstand/treetracker-admin-client/issues/319)) ([d7f9172](https://github.com/Greenstand/treetracker-admin-client/commit/d7f9172c43803052d890daaa0b1a731d1bd4ea57))
 
 ## [1.40.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.1...v1.40.2) (2022-01-22)
 
-
 ### Bug Fixes
 
-* add manager_user and list_user permissions to display user manager tab ([#281](https://github.com/Greenstand/treetracker-admin-client/issues/281)) ([be8ff32](https://github.com/Greenstand/treetracker-admin-client/commit/be8ff32324adb0bf74ebebe338bfa32eb05f58ac))
+- add manager_user and list_user permissions to display user manager tab ([#281](https://github.com/Greenstand/treetracker-admin-client/issues/281)) ([be8ff32](https://github.com/Greenstand/treetracker-admin-client/commit/be8ff32324adb0bf74ebebe338bfa32eb05f58ac))
 
 ## [1.40.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.40.0...v1.40.1) (2022-01-21)
 
-
 ### Bug Fixes
 
-* correct paths to treetracker API ([0c8e3ec](https://github.com/Greenstand/treetracker-admin-client/commit/0c8e3ecb4cac4c631446c3a48925eedeed1ef264))
+- correct paths to treetracker API ([0c8e3ec](https://github.com/Greenstand/treetracker-admin-client/commit/0c8e3ecb4cac4c631446c3a48925eedeed1ef264))
 
 # [1.40.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.5...v1.40.0) (2022-01-20)
 
-
 ### Features
 
-* add notes to captures table and captures export csv ([#309](https://github.com/Greenstand/treetracker-admin-client/issues/309)) ([734e925](https://github.com/Greenstand/treetracker-admin-client/commit/734e9254f0ffe02d2525b0f3e0d7314a2cacb04d))
+- add notes to captures table and captures export csv ([#309](https://github.com/Greenstand/treetracker-admin-client/issues/309)) ([734e925](https://github.com/Greenstand/treetracker-admin-client/commit/734e9254f0ffe02d2525b0f3e0d7314a2cacb04d))
 
 ## [1.39.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.39.4...v1.39.5) (2022-01-17)
 
