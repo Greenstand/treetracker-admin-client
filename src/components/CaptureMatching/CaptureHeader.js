@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import CurrentCaptureNumber from './CurrentCaptureNumber';
 
-import { Box, Grid } from '@material-ui/core';
+import { Box, Button, Grid } from '@material-ui/core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Chip from '@material-ui/core/Chip';
+import { CaptureMatchingContext } from 'context/CaptureMatchingContext';
+import CaptureMatchingFilter from './CaptureMatchingFilter';
 
 const useStyles = makeStyles((t) => ({
   containerBox: {
@@ -40,6 +42,13 @@ const useStyles = makeStyles((t) => ({
 
 function CaptureHeader(props) {
   const classes = useStyles();
+  const { isFilterShown, handleFilterClick } = useContext(
+    CaptureMatchingContext
+  );
+  const handleClick = () => {
+    console.log(handleFilterClick);
+    handleFilterClick();
+  };
 
   const { currentPage, handleChange, imgCount, noOfPages } = props;
 
@@ -64,7 +73,9 @@ function CaptureHeader(props) {
               />
               <Chip onDelete={() => console.warn('delete')} label={'Mongo'} />
             </Box>
-            <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
+            <Button onClick={handleClick}>
+              <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
+            </Button>
             <Pagination
               count={noOfPages}
               page={currentPage}
@@ -76,6 +87,14 @@ function CaptureHeader(props) {
           </Box>
         </Grid>
       </Box>
+      {isFilterShown && (
+        <CaptureMatchingFilter
+          isOpen={isFilterShown}
+          // onSubmit={handleFilterSubmit}
+          // filter={capturesContext.filter}
+          onClick={handleFilterClick}
+        />
+      )}
     </Box>
   );
 }

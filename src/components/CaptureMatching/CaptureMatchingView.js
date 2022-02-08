@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import CaptureImage from './CaptureImage';
 import CurrentCaptureNumber from './CurrentCaptureNumber';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
-
+import CaptureMatchingProvider, {
+  CaptureMatchingContext,
+} from 'context/CaptureMatchingContext';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import { documentTitle } from '../../common/variables';
 import Fab from '@material-ui/core/Fab';
+import CaptureMatchingFilter from './CaptureMatchingFilter';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -49,7 +52,9 @@ const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
   const classes = useStyle();
-
+  const { isFilterShown, handleFilterClick } = useContext(
+    CaptureMatchingContext
+  );
   const [captureImages, setCaptureImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -60,7 +65,7 @@ function CaptureMatchingView() {
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
-
+  console.log(isFilterShown);
   useEffect(() => {
     console.log('loading candidate images');
     async function fetchCandidateTrees(captureId) {
@@ -188,48 +193,50 @@ function CaptureMatchingView() {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
-      <Navbar />
-      <Box className={classes.container}>
-        <Paper elevation={8} className={classes.box1}>
-          <CaptureImage
-            captureImages={captureImages}
-            currentPage={currentPage}
-            loading={loading}
-            noOfPages={noOfPages}
-            handleChange={handleChange}
-            captureApiFetch={CAPTURE_API}
-            imgPerPage={1}
-            imgCount={imgCount}
-            handleSkip={handleSkip}
-          />
-        </Paper>
-        <Box className={classes.box2} ref={refBox}>
-          {floatTreeIcon && (
-            <Fab
-              color="primary"
-              aria-label="add"
-              className={classes.fab}
-              onClick={() => {
-                refBox.current.scrollTo(0, 0);
-              }}
-            >
-              <Typography variant="h5">{treesCount}</Typography>
-            </Fab>
-          )}
-          <Box className={classes.candidateIconBox}>
-            <CurrentCaptureNumber
-              text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
-              treeIcon={treeIcon}
-              treesCount={treesCount}
+      <CaptureMatchingProvider>
+        <Navbar />
+        <Box className={classes.container}>
+          <Paper elevation={8} className={classes.box1}>
+            <CaptureImage
+              captureImages={captureImages}
+              currentPage={currentPage}
+              loading={loading}
+              noOfPages={noOfPages}
+              handleChange={handleChange}
+              captureApiFetch={CAPTURE_API}
+              imgPerPage={1}
+              imgCount={imgCount}
+              handleSkip={handleSkip}
+            />
+          </Paper>
+          <Box className={classes.box2} ref={refBox}>
+            {floatTreeIcon && (
+              <Fab
+                color="primary"
+                aria-label="add"
+                className={classes.fab}
+                onClick={() => {
+                  refBox.current.scrollTo(0, 0);
+                }}
+              >
+                <Typography variant="h5">{treesCount}</Typography>
+              </Fab>
+            )}
+            <Box className={classes.candidateIconBox}>
+              <CurrentCaptureNumber
+                text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
+                treeIcon={treeIcon}
+                treesCount={treesCount}
+              />
+            </Box>
+            <Box height={14} />
+            <CandidateImages
+              candidateImgData={candidateImgData}
+              sameTreeHandler={sameTreeHandler}
             />
           </Box>
-          <Box height={14} />
-          <CandidateImages
-            candidateImgData={candidateImgData}
-            sameTreeHandler={sameTreeHandler}
-          />
         </Box>
-      </Box>
+      </CaptureMatchingProvider>
     </Grid>
   );
 }
