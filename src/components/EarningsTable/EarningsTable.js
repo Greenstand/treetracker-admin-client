@@ -100,7 +100,7 @@ function EarningsTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [earningsPerPage, setEarningsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState({
-    field: 'effective_payment_date',
+    field: 'paid_at',
     order: 'desc',
   });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
