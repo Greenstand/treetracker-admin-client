@@ -205,7 +205,7 @@ function CustomTableHeader(props) {
   );
 }
 CustomTableHeader.propTypes = {
-  setIsFilterOpen: PropTypes.func.isRequired,
+  // setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
   openMainFilter: PropTypes.func,
   onSelectFile: PropTypes.func,
@@ -359,36 +359,51 @@ function CustomTable(props) {
             </TableRow>
           </TableHead>
 
-          {isLoading ? (
-            <Grid item container className={classes.progressContainer}>
-              <CircularProgress />
-            </Grid>
-          ) : rows.length > 0 ? (
-            <TableBody>
-              {rows.map((row, i) => (
-                <TableRow
-                  key={`${i}-${row.id}`}
-                  onClick={() => handleOpenRowDetails(row)}
-                  className={isRowSelected(row.id) ? classes.selectedRow : ''}
-                >
-                  {tableMetaData.map((column, j) => (
-                    <TableCell key={`${i}-${j}-${column.name}`}>
-                      <Typography
-                        variant="body1"
-                        style={{ textTransform: 'capitalize' }}
-                      >
-                        {row[column.name]}
-                      </Typography>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          ) : (
-            <Typography variant="body1" className={classes.noDataToDisplay}>
-              No data to display
-            </Typography>
-          )}
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell>
+                  <Grid item container className={classes.progressContainer}>
+                    <CircularProgress />
+                  </Grid>
+                </TableCell>
+              </TableRow>
+            ) : rows.length > 0 ? (
+              <>
+                {rows.map((row, i) => (
+                  <TableRow
+                    key={`${i}-${row.id}`}
+                    onClick={() => handleOpenRowDetails(row)}
+                    className={
+                      isRowSelected(row.id) ? classes.selectedRow : null
+                    }
+                  >
+                    {tableMetaData.map((column, j) => (
+                      <TableCell key={`${i}-${j}-${column.name}`}>
+                        <Typography
+                          variant="body1"
+                          style={{ textTransform: 'capitalize' }}
+                        >
+                          {row[column.name]}
+                        </Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <Typography
+                    variant="body1"
+                    className={classes.noDataToDisplay}
+                  >
+                    No data to display
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
@@ -447,8 +462,8 @@ CustomTable.propTypes = {
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRage: PropTypes.string.isRequired,
-  rowDetails: PropTypes.element.isRequired,
-  actionButtonType: PropTypes.element.isRequired,
+  rowDetails: PropTypes.element,
+  actionButtonType: PropTypes.string.isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   totalCount: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,
