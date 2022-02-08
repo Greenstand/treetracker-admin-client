@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
-
+import OptimizedImage from '../OptimizedImage';
 import { Tooltip, Typography, Box, Button, Paper } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
@@ -64,9 +64,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(2),
   },
-
   imgContainer: {
-    objectFit: 'contain',
+    position: 'relative',
+    flexGrow: 1,
   },
   captureInfo: {
     display: 'flex',
@@ -103,8 +103,19 @@ function CaptureImage(props) {
     imgCount,
     handleSkip,
   } = props;
-
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const classes = useStyles();
+
+  const resizeWindow = useCallback(() => {
+    setScreenWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeWindow);
+    return () => {
+      window.removeEventListener('resize', resizeWindow);
+    };
+  }, [resizeWindow]);
 
   return (
     <Box className={classes.box1}>
@@ -168,12 +179,15 @@ function CaptureImage(props) {
               </Box>
 
               <Box className={classes.imgBox}>
-                <img
-                  key={capture.id}
-                  className={classes.imgContainer}
-                  src={capture.image_url}
-                  alt={`Capture ${capture.id}`}
-                />
+                <Box className={classes.imgContainer}>
+                  <OptimizedImage
+                    id={capture.id}
+                    src={capture.image_url}
+                    alt={`Capture ${capture.id}`}
+                    width={screenWidth * 0.5}
+                    objectFit="contain"
+                  />
+                </Box>
               </Box>
             </Paper>
           );
