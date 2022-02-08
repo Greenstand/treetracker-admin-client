@@ -15,7 +15,11 @@ class GrowersPage {
   firstName_TextField = () => cy.get('input[id="First Name"]');
   lastName_TextField = () => cy.get('input[id="Last Name"]');
   email_TextField = () => cy.get('input[id="Email"]');
+  phoneNumber_TextField = () => cy.get('input[id="Phone Number"]');
   organization_DropdownMenu = () => cy.get('#Organization');
+  growerDetail_Email = () => cy.get('div').contains('Email address').next();
+  growerDetail_PhoneNumber = () =>
+    cy.get('div').contains('Phone number').next();
   when = () => this;
   and = () => this;
   then = () => this;
@@ -156,6 +160,14 @@ class GrowersPage {
       });
     return this;
   }
+  open_GrowerDetail_Card(growerID) {
+    cy.get(`div[id^="card_${growerID}"]`).click();
+    return this;
+  }
+  close_GrowerDetail_Card() {
+    cy.get('div[role="presentation"]').click();
+    return this;
+  }
   enterInto_Email_TextField(emailAddress) {
     this.email_TextField().type(emailAddress);
     return this;
@@ -165,10 +177,8 @@ class GrowersPage {
     this.grower_Name().should('be.visible');
     this.grower_ID()
       .each((e) => {
-        cy.get(`div[id^="card_${String(e.text()).slice(0, 4)}"]`).click();
-        cy.get('div')
-          .contains('Email address')
-          .next()
+        this.open_GrowerDetail_Card(e.text())
+          .growerDetail_Email()
           .then((e) => {
             if (e.text().includes(email)) {
               cy.log(`✔️ _'${e.text()}' contains '${email}'_`);
@@ -177,23 +187,55 @@ class GrowersPage {
               cy.log(`❌ **'${e.text()}' should contain '${email}'**`);
             }
           });
-        cy.get('div[role="presentation"]').click();
+        this.close_GrowerDetail_Card();
       })
       .then(() => {
         if (name === false) {
           this.grower_ID().each((e) => {
-            cy.get(`div[id^="card_${String(e.text()).slice(0, 4)}"]`).click();
-            cy.get('div')
-              .contains('Email address')
-              .next()
+            this.open_GrowerDetail_Card(e.text())
+              .growerDetail_Email()
               .then((e) => {
                 expect(e.text()).to.contain(email);
               });
-            cy.get('div[role="presentation"]').click();
+            this.close_GrowerDetail_Card();
           });
         }
       });
-
+    return this;
+  }
+  enterInto_PhoneNumber_TextField(phoneNumber) {
+    this.phoneNumber_TextField().type(phoneNumber);
+    return this;
+  }
+  growerDetailCards_PhoneNumber_ShouldContain(phoneNumber) {
+    let name = true;
+    this.grower_Name().should('be.visible');
+    this.grower_ID()
+      .each((e) => {
+        this.open_GrowerDetail_Card(e.text())
+          .growerDetail_PhoneNumber()
+          .then((e) => {
+            if (e.text().includes(phoneNumber)) {
+              cy.log(`✔️ _'${e.text()}' contains '${phoneNumber}'_`);
+            } else {
+              name = false;
+              cy.log(`❌ **'${e.text()}' should contain '${phoneNumber}'**`);
+            }
+          });
+        this.close_GrowerDetail_Card();
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_ID().each((e) => {
+            this.open_GrowerDetail_Card(e.text())
+              .growerDetail_PhoneNumber()
+              .then((e) => {
+                expect(e.text()).to.contain(phoneNumber);
+              });
+            this.close_GrowerDetail_Card();
+          });
+        }
+      });
     return this;
   }
 }

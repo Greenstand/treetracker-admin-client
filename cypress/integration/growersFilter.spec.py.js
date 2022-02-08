@@ -11,7 +11,8 @@ describe('Growers Filter', () => {
   const organizationName = 'FCC';
   const firstName = 'Naruto';
   const lastName = 'Uzumaki';
-  const email = 'at9@test.com'; // name@email.com
+  const email = 'name@email.com';
+  const phoneNumber = '1223';
 
   beforeEach(() => {
     login_Page.loginAsAMockedAdmin();
@@ -27,7 +28,7 @@ describe('Growers Filter', () => {
       .filterForm_Should_Not_Exist();
   });
   describe('Grower ID text field', () => {
-    it(`displays single grower card with the ${growerID} when a ${growerID} is entered into the Grower ID text field`, () => {
+    it(`displays single grower card with the "${growerID}" when a "${growerID}" is entered into the Grower ID text field`, () => {
       growers_Page
         .when()
         .enterInto_GrowerID_TextField(growerID)
@@ -40,7 +41,7 @@ describe('Growers Filter', () => {
     });
   });
   describe('Organization dropdown menu', () => {
-    it(`displays only grower cards that contains ${organizationName} as part of their organization name when the ${organizationName} option in the "Organization" dropdown menu is selected`, () => {
+    it(`displays only grower cards that contains "${organizationName}" as part of their organization name when the "${organizationName}" option in the "Organization" dropdown menu is selected`, () => {
       growers_Page
         .when()
         .from_Organization_DropdownMenu_Select(organizationName)
@@ -51,7 +52,7 @@ describe('Growers Filter', () => {
     });
   });
   describe('First Name text field', () => {
-    it(`displays only grower cards that contains ${firstName} as part of their first name when the ${firstName} is entered into the First Name text field`, () => {
+    it(`displays only grower cards that contains "${firstName}" as part of their first name when the "${firstName}" is entered into the First Name text field`, () => {
       growers_Page
         .when()
         .enterInto_FirstName_TextField(firstName)
@@ -62,7 +63,7 @@ describe('Growers Filter', () => {
     });
   });
   describe('Last Name text field', () => {
-    it(`displays only grower cards that contains ${lastName} as part of their last name when the ${lastName} is entered into the Last Name text field`, () => {
+    it(`displays only grower cards that contains "${lastName}" as part of their last name when the "${lastName}" is entered into the Last Name text field`, () => {
       growers_Page
         .when()
         .enterInto_LastName_TextField(lastName)
@@ -73,7 +74,7 @@ describe('Growers Filter', () => {
     });
   });
   describe('Email text field', () => {
-    it(`displays only grower cards that contains ${email} as part of their email when the ${email} is entered into the Email text field`, () => {
+    it(`displays only grower cards that contains "${email}" as part of their grower detail card email when the "${email}" is entered into the Email text field`, () => {
       growers_Page
         .when()
         .enterInto_Email_TextField(email)
@@ -81,6 +82,17 @@ describe('Growers Filter', () => {
         .click_Button_Apply()
         .then()
         .growerDetailCards_EmailAddress_ShouldContain(email);
+    });
+  });
+  describe('Phone Number text field', () => {
+    it(`displays only grower cards that contains "${phoneNumber}" as part of their grower detail card phone number when the "${phoneNumber}" is entered into the Phone Number text field`, () => {
+      growers_Page
+        .when()
+        .enterInto_PhoneNumber_TextField(phoneNumber)
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerDetailCards_PhoneNumber_ShouldContain(phoneNumber);
     });
   });
 });
