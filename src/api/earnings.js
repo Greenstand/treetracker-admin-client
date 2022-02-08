@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { session } from '../models/auth';
 
-const apiUrl = `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_EARNINGS_API_MAPPING}`;
+const apiUrl = `${process.env.REACT_APP_EARNINGS_ROOT}`;
 const Axios = axios.create({ baseURL: apiUrl });
 
 export default {
@@ -51,8 +51,10 @@ export default {
       Authorization: session.token,
     };
 
-    return Axios.patch(`earnings/batch`, formData, { headers }).then(
-      (res) => res.data
-    );
+    return Axios.patch(`earnings/batch`, formData, { headers })
+      .then((res) => res.data)
+      .catch((error) => {
+        throw new Error('Payments Batch Upload Failed!', { cause: error });
+      });
   },
 };

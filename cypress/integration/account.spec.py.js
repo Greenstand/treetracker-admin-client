@@ -1,16 +1,22 @@
+import LoginPage from '../support/pages/LoginPage';
+import HomePage from '../support/pages/HomePage';
+import AccountPage from '../support/pages/AccountPage';
+
 describe('Account', () => {
+  const login_Page = new LoginPage();
+  const home_Page = new HomePage();
+  const account_Page = new AccountPage();
+
+  before(() => cy.fixture('login').then((login) => (globalThis.login = login)));
+
   beforeEach(() => {
-    cy.visit('/');
-    cy.contains(/Log in/i);
-    cy.findInputByLabel(/Username/i).type('username');
-    cy.findInputByLabel(/Password/i).type('password');
-    cy.contains(/log in/i).click();
-    // cy.contains(/admin panel/i);
+    login_Page.login(login.user_name, login.password);
   });
 
-  it('Account', () => {
-    cy.contains(/account/i).click();
-    cy.contains(/log out/i).click();
-    cy.contains(/login/i);
+  it('returns to the Login page after clicking the "LOG OUT" button', () => {
+    home_Page.account_Button().click();
+    account_Page.logout_Button().click();
+    login_Page.user_name_Field().should('be.visible');
+    login_Page.password_Field().should('be.visible');
   });
 });

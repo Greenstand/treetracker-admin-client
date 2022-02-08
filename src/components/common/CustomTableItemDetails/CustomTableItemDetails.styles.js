@@ -2,33 +2,33 @@ import { makeStyles } from '@material-ui/core/styles';
 
 /**
  * @function
- * @name paymentDetailsStyles
- * @description styling for payment details component
+ * @name itemDetailsStyles
+ * @description styling for custom table item details component
  * @params {object} theme - material ui theme object
  * @returns {object} - styling object
  */
-const paymentDetailsStyles = (theme) => ({
-  paymentsDrawerDetails: {
+const itemDetailsStyles = (theme) => ({
+  itemDrawerDetails: {
     width: theme.spacing(80),
     padding: theme.spacing(5, 4),
   },
-  paymentsLogPaymentFormSelectFormControl: {
+  itemLogPaymentFormSelectFormControl: {
     margin: theme.spacing(2, 0, 2, 0),
     width: '100%',
   },
-  paymentDetailsCloseIcon: {
+  itemDetailsCloseIcon: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
     backgroundColor: theme.palette.primary.lightVery,
   },
-  paymentDetailsContents: {
+  itemDetailsContents: {
     padding: theme.spacing(5, 0, 0, 0),
   },
-  paymentGrowerDetail: {
+  itemGrowerDetail: {
     padding: theme.spacing(1, 0, 0, 0),
     color: theme.palette.stats.carbonGrey,
   },
-  paymentDetailsContentsDivider: {
+  itemDetailsContentsDivider: {
     margin: theme.spacing(4, 0, 4, 0),
   },
   infoIconOutlined: {
@@ -49,10 +49,10 @@ const paymentDetailsStyles = (theme) => ({
  * @returns {object} styles
  */
 const useStyles = makeStyles((theme) => {
-  const paymentDetails = paymentDetailsStyles(theme);
+  const itemDetails = itemDetailsStyles(theme);
 
   return {
-    ...paymentDetails,
+    ...itemDetails,
   };
 });
 
