@@ -8,9 +8,13 @@ describe('Growers Filter', () => {
   const growers_Page = new GrowersPage();
 
   const growerID = 42;
+  const organizationName = 'FCC';
+  const firstName = 'Naruto';
+  const lastName = 'Uzumaki';
+  const email = 'at9@test.com'; // name@email.com
 
   beforeEach(() => {
-    login_Page.loginAsAnAdmin();
+    login_Page.loginAsAMockedAdmin();
     home_Page.growers_Button().click();
   });
 
@@ -36,36 +40,47 @@ describe('Growers Filter', () => {
     });
   });
   describe('Organization dropdown menu', () => {
-    it('displays only grower cards that contains "FCC" as part of their organization name when the "FCC" option in the "Organization" dropdown menu is selected', () => {
+    it(`displays only grower cards that contains ${organizationName} as part of their organization name when the ${organizationName} option in the "Organization" dropdown menu is selected`, () => {
       growers_Page
         .when()
-        .from_Organization_DropdownMenu_Select('FCC')
+        .from_Organization_DropdownMenu_Select(organizationName)
         .and()
         .click_Button_Apply()
         .then()
-        .growerCards_OrganizationName_ShouldContain('FCC');
+        .growerCards_OrganizationName_ShouldContain(organizationName);
     });
   });
   describe('First Name text field', () => {
-    it('displays only grower cards that contains "Naruto" as part of their first name when the "Naruto" is entered into the First Name text field', () => {
+    it(`displays only grower cards that contains ${firstName} as part of their first name when the ${firstName} is entered into the First Name text field`, () => {
       growers_Page
         .when()
-        .enterInto_FirstName_TextField('Naruto')
+        .enterInto_FirstName_TextField(firstName)
         .and()
         .click_Button_Apply()
         .then()
-        .growerCards_FirstName_ShouldContain('Naruto');
+        .growerCards_FirstName_ShouldContain(firstName);
     });
   });
   describe('Last Name text field', () => {
-    it('displays only grower cards that contains "Uzumaki" as part of their last name when the "Uzumaki" is entered into the Last Name text field', () => {
+    it(`displays only grower cards that contains ${lastName} as part of their last name when the ${lastName} is entered into the Last Name text field`, () => {
       growers_Page
         .when()
-        .enterInto_LastName_TextField('Uzumaki')
+        .enterInto_LastName_TextField(lastName)
         .and()
         .click_Button_Apply()
         .then()
-        .growerCards_LastName_ShouldContain('Uzumaki');
+        .growerCards_LastName_ShouldContain(lastName);
+    });
+  });
+  describe('Email text field', () => {
+    it(`displays only grower cards that contains ${email} as part of their email when the ${email} is entered into the Email text field`, () => {
+      growers_Page
+        .when()
+        .enterInto_Email_TextField(email)
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerDetailCards_EmailAddress_ShouldContain(email);
     });
   });
 });

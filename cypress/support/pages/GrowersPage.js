@@ -2,7 +2,7 @@ class GrowersPage {
   grower_Card = () => cy.get('div[id^="card_"]');
   grower_Image = () => this.grower_Card().get('div > img', { timeout: 30000 });
   grower_Name = () => this.grower_Card().get('p:nth-child(1)');
-  grower_ID = () => this.grower_Card().get('p:nth-child(2)');
+  grower_ID = () => this.grower_Card().get('p:nth-child(2)>a');
   grower_OrganizationName = () => this.grower_Card().get('p:nth-child(3)');
   pagination = () => this.grower_Image().get('div.MuiTablePagination-root');
   previousPage_Button = () => cy.get('button[title="Previous page"]');
@@ -14,6 +14,7 @@ class GrowersPage {
   growerID_TextField = () => cy.get('input[id="Grower ID"]');
   firstName_TextField = () => cy.get('input[id="First Name"]');
   lastName_TextField = () => cy.get('input[id="Last Name"]');
+  email_TextField = () => cy.get('input[id="Email"]');
   organization_DropdownMenu = () => cy.get('#Organization');
   when = () => this;
   and = () => this;
@@ -153,6 +154,46 @@ class GrowersPage {
           });
         }
       });
+    return this;
+  }
+  enterInto_Email_TextField(emailAddress) {
+    this.email_TextField().type(emailAddress);
+    return this;
+  }
+  growerDetailCards_EmailAddress_ShouldContain(email) {
+    let name = true;
+    this.grower_Name().should('be.visible');
+    this.grower_ID()
+      .each((e) => {
+        cy.get(`div[id^="card_${String(e.text()).slice(0, 4)}"]`).click();
+        cy.get('div')
+          .contains('Email address')
+          .next()
+          .then((e) => {
+            if (e.text().includes(email)) {
+              cy.log(`✔️ _'${e.text()}' contains '${email}'_`);
+            } else {
+              name = false;
+              cy.log(`❌ **'${e.text()}' should contain '${email}'**`);
+            }
+          });
+        cy.get('div[role="presentation"]').click();
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_ID().each((e) => {
+            cy.get(`div[id^="card_${String(e.text()).slice(0, 4)}"]`).click();
+            cy.get('div')
+              .contains('Email address')
+              .next()
+              .then((e) => {
+                expect(e.text()).to.contain(email);
+              });
+            cy.get('div[role="presentation"]').click();
+          });
+        }
+      });
+
     return this;
   }
 }
