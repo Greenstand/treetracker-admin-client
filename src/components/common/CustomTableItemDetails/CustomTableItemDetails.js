@@ -67,21 +67,13 @@ function LogPaymentForm(props) {
             variant="outlined"
             className={classes.itemLogPaymentFormSelectFormControl}
           >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
+            <TextField
               id="payment_system"
               name="payment_system"
               label="Payment System"
+              variant="outlined"
               onChange={handleOnInputChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="visa">Visa</MenuItem>
-            </Select>
+            />
           </FormControl>
         </Grid>
 
