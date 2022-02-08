@@ -8,9 +8,6 @@ import {
   Drawer,
   FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Tooltip,
   Typography,
@@ -83,6 +80,7 @@ function LogPaymentForm(props) {
               label="Payment System"
               variant="outlined"
               onChange={handleOnInputChange}
+              value={paymentSystem}
             />
           </FormControl>
         </Grid>
@@ -273,14 +271,14 @@ function CustomTableItemDetails(props) {
             <Grid item className={classes.itemGrowerDetail}>
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
-                <Typography variant="b">
+                <Typography variant="h6">
                   {selectedItem.payment_confirmed_by}
                 </Typography>
               </Grid>
 
               <Grid item className={classes.itemGrowerDetail}>
                 <Typography>Payment confirmation method</Typography>
-                <Typography variant="b">
+                <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
                 </Typography>
               </Grid>
