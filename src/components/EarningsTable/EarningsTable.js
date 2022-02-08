@@ -182,6 +182,7 @@ function EarningsTable() {
         <CustomTableItemDetails
           selectedItem={selectedEarning}
           closeDetails={() => setSelectedEarning(null)}
+          refreshData={getEarnings}
         />
       }
       actionButtonType="export"

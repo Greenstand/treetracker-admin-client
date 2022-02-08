@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Select from '@material-ui/core/Select';
 import Drawer from '@material-ui/core/Drawer';
 import CloseIcon from '@material-ui/icons/Close';
-import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -22,10 +19,11 @@ import useStyles from './CustomTableItemDetails.styles';
  * @param {object} props - properties  passed to the component
  * @param {object} props.selectedItem - item
  * @param {function} props.closeForm - function used to close form
+ * @param {function} props.refreshData - function refresh table data when item is updated
  * @returns {React.Component} - form to log payment
  */
 function LogPaymentForm(props) {
-  const { selectedItem, closeForm } = props;
+  const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
   const classes = useStyles();
 
@@ -38,7 +36,11 @@ function LogPaymentForm(props) {
 
   const handleOnFormSubmit = () => {
     const { id, worker_id, amount, currency } = selectedItem;
-    earningsAPI.patchEarning({ id, worker_id, amount, currency, ...payload });
+    const paid_at = new Date();
+    earningsAPI
+      .patchEarning({ id, worker_id, amount, currency, paid_at, ...payload })
+      .then(() => refreshData())
+      .catch((e) => console.log('error logging payment', e));
     closeForm();
   };
 
@@ -67,38 +69,14 @@ function LogPaymentForm(props) {
             variant="outlined"
             className={classes.itemLogPaymentFormSelectFormControl}
           >
-            <InputLabel id="demo-simple-select-outlined-label">
-              Payment System
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
+            <TextField
               id="payment_system"
               name="payment_system"
               label="Payment System"
+              variant="outlined"
               onChange={handleOnInputChange}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="visa">Visa</MenuItem>
-            </Select>
+            />
           </FormControl>
-        </Grid>
-
-        <Grid item className={classes.itemGrowerDetail}>
-          <Grid item>
-            <Typography>Payment Confirmed by</Typography>
-            <Typography variant="b">
-              {selectedItem.payment_confirmed_by}
-            </Typography>
-          </Grid>
-
-          <Grid item className={classes.itemGrowerDetail}>
-            <Typography>Payment confirmation method</Typography>
-            <Typography variant="b">
-              {selectedItem.payment_confirmation_method}
-            </Typography>
-          </Grid>
         </Grid>
       </Grid>
 
@@ -134,6 +112,7 @@ function LogPaymentForm(props) {
 LogPaymentForm.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   closeForm: PropTypes.func.isRequired,
+  refreshData: PropTypes.func.isRequired,
 };
 
 /**
@@ -144,11 +123,12 @@ LogPaymentForm.propTypes = {
  * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
  * @param {object} props.selectedItem - custom table item
  * @param {Function} props.setSelectedItem - sets/resets selected item
+ * @param {Function} props.refreshData - refresh table data after updating an item
  *
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, closeDetails } = props;
+  const { selectedItem, closeDetails, refreshData } = props;
   const classes = useStyles();
 
   return selectedItem ? (
@@ -220,7 +200,7 @@ function CustomTableItemDetails(props) {
                   className={classes.infoIconOutlined}
                 />
               </Typography>
-              <Typography variant="b">{selectedItem.paid_at}</Typography>
+              <Typography variant="b">{selectedItem.calculated_at}</Typography>
             </Grid>
           </Grid>
 
@@ -259,7 +239,26 @@ function CustomTableItemDetails(props) {
             <LogPaymentForm
               selectedItem={selectedItem}
               closeForm={closeDetails}
+              refreshData={refreshData}
             />
+          )}
+
+          {selectedItem?.status === 'paid' && (
+            <Grid item className={classes.itemGrowerDetail}>
+              <Grid item>
+                <Typography>Payment Confirmed by</Typography>
+                <Typography variant="b">
+                  {selectedItem.payment_confirmed_by}
+                </Typography>
+              </Grid>
+
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>Payment confirmation method</Typography>
+                <Typography variant="b">
+                  {selectedItem.payment_confirmation_method}
+                </Typography>
+              </Grid>
+            </Grid>
           )}
         </Grid>
       </Grid>
@@ -274,4 +273,9 @@ export default CustomTableItemDetails;
 CustomTableItemDetails.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   closeDetails: PropTypes.func.isRequired,
+  refreshData: PropTypes.func,
+};
+
+CustomTableItemDetails.defaultProps = {
+  refreshData: () => {},
 };
