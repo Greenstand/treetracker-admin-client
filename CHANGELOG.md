@@ -1,3 +1,19 @@
+# [1.48.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.47.1...v1.48.0) (2022-02-08)
+
+
+### Bug Fixes
+
+* stop capture image distorting ([a36eb80](https://github.com/Greenstand/treetracker-admin-client/commit/a36eb80299856c9510fe8e966eba08823d5e20f0))
+
+
+### Features
+
+* add collapsing menu to Earnings and  Payments, small button formatting ([9c6a1fa](https://github.com/Greenstand/treetracker-admin-client/commit/9c6a1fa2760a42fcbc13f9e8aec1989fc6ee63f5))
+* **log payment:** make payment method free text ([0a995af](https://github.com/Greenstand/treetracker-admin-client/commit/0a995afcb603ec64c8f1fe8cfd766d2dff23b155)), closes [#342](https://github.com/Greenstand/treetracker-admin-client/issues/342)
+* **log payment:** update view automatically when payment is logged ([17a5de2](https://github.com/Greenstand/treetracker-admin-client/commit/17a5de2a42f0614d98f5695b3cb39be92747bdf6))
+* **log payment:** use now() for payment data when logging single payment ([1518002](https://github.com/Greenstand/treetracker-admin-client/commit/1518002957a3ef8d2af01b5a9e250dbc689937e0)), closes [#345](https://github.com/Greenstand/treetracker-admin-client/issues/345)
+* use OpitimizedImage for CaptureImage ([ace635f](https://github.com/Greenstand/treetracker-admin-client/commit/ace635f71fa61b8488597810170e36b349f4dbb3))
+
 ## [1.47.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.47.0...v1.47.1) (2022-02-07)
 
 
