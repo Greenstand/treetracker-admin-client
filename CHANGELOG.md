@@ -1,3 +1,16 @@
+# [1.49.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.48.0...v1.49.0) (2022-02-08)
+
+
+### Bug Fixes
+
+* merge changes ([9aa012b](https://github.com/Greenstand/treetracker-admin-client/commit/9aa012b28571e0d88c05115a0f14e814b3c41506))
+
+
+### Features
+
+* default sort by paid_at ([cb2cd03](https://github.com/Greenstand/treetracker-admin-client/commit/cb2cd037e13d24074f83e99eba010ed7836cb144))
+* make all cols sortable and fix console errors ([543ced8](https://github.com/Greenstand/treetracker-admin-client/commit/543ced8ba0a553d51a6f977c7f4cbccf440883ed))
+
 # [1.48.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.47.1...v1.48.0) (2022-02-08)
 
 
