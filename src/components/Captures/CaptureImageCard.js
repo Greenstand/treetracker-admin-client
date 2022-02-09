@@ -83,7 +83,7 @@ const CaptureImageCard = ({
   const classes = useStyles();
 
   return (
-    <Grid item xs={12} sm={6} md={3} xl={2} data-testid="capture-card">
+    <Grid item xs={12} sm={4} md={2} xl={1} data-testid="capture-card">
       <div
         className={clsx(
           classes.cardWrapper,
@@ -97,7 +97,7 @@ const CaptureImageCard = ({
           </Paper>
         )}
         <Card
-          onClick={(e) => handleCaptureClick(e, capture.id)}
+          onClick={(e) => handleCaptureClick(e, capture)}
           id={`card_${capture.id}`}
           className={classes.card}
           elevation={capture.placeholder ? 0 : 3}

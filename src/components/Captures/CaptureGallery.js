@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { /*useEffect, useState,*/ useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+// import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Modal from '@material-ui/core/Modal';
+// import LinearProgress from '@material-ui/core/LinearProgress';
+// import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 
 import TableChartIcon from '@material-ui/icons/TableChart';
 import CaptureImageCard from './CaptureImageCard';
-import SidePanel from './../SidePanel';
+// import CaptureEdit from './../CaptureEdit';
 import styles from './CaptureGallery.styles';
 import { countToLocaleString } from '../../common/numbers';
 import { CapturesContext } from '../../context/CapturesContext';
-import { SpeciesContext } from '../../context/SpeciesContext';
-import { TagsContext } from '../../context/TagsContext';
+// import { SpeciesContext } from '../../context/SpeciesContext';
+// import { TagsContext } from '../../context/TagsContext';
 
 const log = require('loglevel').getLogger('../components/CaptureGallery');
 
@@ -31,37 +31,38 @@ const CaptureGallery = ({
     captureCount,
     capturesSelected,
     isLoading,
-    isApproveAllProcessing,
+    // isApproveAllProcessing,
     rowsPerPage,
     page,
-    approveAllComplete,
-    approveAll,
-    clickCapture,
+    // approveAllComplete,
+    // approveAll,
+    // clickCapture,
     setPage,
     setRowsPerPage,
   } = useContext(CapturesContext);
 
-  const speciesContext = useContext(SpeciesContext);
-  const tagsContext = useContext(TagsContext);
   const classes = useStyles();
-  const [complete, setComplete] = useState(0);
+  // const speciesContext = useContext(SpeciesContext);
+  // const tagsContext = useContext(TagsContext);
+  // const [complete, setComplete] = useState(0);
 
   /* to display progress */
-  useEffect(() => {
-    log.debug('-- approve all complete');
-    setComplete(approveAllComplete);
-  }, [approveAllComplete]);
+  // useEffect(() => {
+  //   log.debug('-- approve all complete');
+  //   setComplete(approveAllComplete);
+  // }, [approveAllComplete]);
 
-  function handleCaptureClick(e, captureId) {
+  function handleCaptureClick(e, capture) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on capture:%d', captureId);
-    clickCapture({
-      captureId,
-      isShift: e.shiftKey,
-      isCmd: e.metaKey,
-      isCtrl: e.ctrlKey,
-    });
+    log.debug('click on capture:%d', capture);
+    handleShowCaptureDetail(e, capture);
+    //   clickCapture({
+    //     capture,
+    //     isShift: e.shiftKey,
+    //     isCmd: e.metaKey,
+    //     isCtrl: e.ctrlKey,
+    //   });
   }
 
   function handleCapturePinClick(e, captureId) {
@@ -80,33 +81,33 @@ const CaptureGallery = ({
     window.open(url, '_blank').opener = null;
   }
 
-  function resetApprovalFields() {
-    tagsContext.setTagInput([]);
-    speciesContext.setSpeciesInput('');
-  }
+  // function resetApprovalFields() {
+  //   tagsContext.setTagInput([]);
+  //   speciesContext.setSpeciesInput('');
+  // }
 
-  async function handleSubmit(approveAction) {
-    log.debug('approveAction:', approveAction);
-    // check selection
-    if (capturesSelected.length === 0) {
-      window.alert('Please select one or more captures');
-      return;
-    }
-    const speciesId = await speciesContext.getSpeciesId();
-    if (speciesId) {
-      approveAction.speciesId = speciesId;
-      log.debug('species id:', speciesId);
-    }
+  // async function handleSubmit(editData) {
+  //   log.debug('updateAction:', editData);
+  //   // check selection
+  //   if (capturesSelected.length === 0) {
+  //     window.alert('Please select one or more captures');
+  //     return;
+  //   }
+  //   const speciesId = await speciesContext.getSpeciesId();
+  //   if (speciesId) {
+  //     editData.speciesId = speciesId;
+  //     log.debug('species id:', speciesId);
+  //   }
 
-    // create/retrieve tags
-    approveAction.tags = await tagsContext.createTags();
-    const result = await approveAll(approveAction);
-    if (!result) {
-      window.alert('Failed to approve a capture');
-    } else if (!approveAction.rememberSelection) {
-      resetApprovalFields();
-    }
-  }
+  //   // create/retrieve tags
+  //   editData.tags = await tagsContext.updateTags();
+  //   const result = await approveAll(editData);
+  //   if (!result) {
+  //     window.alert('Failed to update a capture');
+  //   } else if (!editData.rememberSelection) {
+  //     resetApprovalFields();
+  //   }
+  // }
 
   function handleChangeRowsPerPage(event) {
     setPage(0);
@@ -216,7 +217,7 @@ const CaptureGallery = ({
           </Grid>
         </Grid>
       </Grid>
-      <SidePanel
+      {/* <CaptureEdit
         onSubmit={handleSubmit}
         submitEnabled={captures.length > 0}
         variant="persistent"
@@ -246,7 +247,7 @@ const CaptureGallery = ({
             />
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };

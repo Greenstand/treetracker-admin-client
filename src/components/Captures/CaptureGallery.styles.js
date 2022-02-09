@@ -1,6 +1,6 @@
 import {
   selectedHighlightColor,
-  SIDE_PANEL_WIDTH,
+  // SIDE_PANEL_WIDTH,
 } from '../../common/variables.js';
 import { colorPrimary } from '../common/theme';
 
@@ -105,7 +105,7 @@ const styles = (theme) => ({
     marginRight: '8px',
   },
   body: {
-    width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
+    // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
     display: 'flex',
     flexDirection: 'column',
     overflow: 'auto',

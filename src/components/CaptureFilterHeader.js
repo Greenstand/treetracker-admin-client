@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SIDE_PANEL_WIDTH } from '../common/variables.js';
+// import { SIDE_PANEL_WIDTH } from '../common/variables.js';
 import { Grid, Button } from '@material-ui/core';
 import ImageIcon from '@material-ui/icons/Image';
 import TableChartIcon from '@material-ui/icons/TableChart';
@@ -38,7 +38,7 @@ function CaptureFilterHeader({ showGallery, setShowGallery }) {
   return (
     <Grid item>
       <Navbar
-        sidepanelWidth={showGallery ? SIDE_PANEL_WIDTH : 0}
+        // sidepanelWidth={showGallery ? SIDE_PANEL_WIDTH : 0}
         buttons={[
           <Button
             variant="text"

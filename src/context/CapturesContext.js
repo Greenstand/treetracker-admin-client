@@ -15,7 +15,6 @@ export const CapturesContext = createContext({
   capture: {},
   capturesSelected: [],
   captureImageAnchor: undefined,
-  invalidateCaptureCount: false,
   isApproveAllProcessing: false,
   approveAllComplete: 0,
   page: 0,
@@ -46,7 +45,6 @@ export function CapturesProvider(props) {
   const [capture, setCapture] = useState({});
   const [capturesSelected, setCapturesSelected] = useState([]);
   const [captureImageAnchor, setCaptureImageAnchor] = useState(undefined);
-  const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(false);
   const [isApproveAllProcessing, setIsApproveAllProcessing] = useState(false);
   const [approveAllComplete, setApproveAllComplete] = useState(0);
   const [page, setPage] = useState(0);
@@ -99,7 +97,6 @@ export function CapturesProvider(props) {
     );
     const { count } = response.data;
     setCaptureCount(Number(count));
-    setInvalidateCaptureCount(false);
   };
 
   const getCaptures = async () => {
@@ -161,7 +158,6 @@ export function CapturesProvider(props) {
     setCaptures([]);
     setPage(0);
     setCaptureCount(null);
-    setInvalidateCaptureCount(true);
   };
 
   /**  VERIFICATION METHODS **/
@@ -172,40 +168,39 @@ export function CapturesProvider(props) {
   };
 
   const clickCapture = (payload) => {
-    const { captureId, isShift, isCmd, isCtrl } = payload;
+    const { capture, isShift, isCmd, isCtrl } = payload;
     if (!isShift && !isCmd && !isCtrl) {
-      setCapturesSelected([captureId]);
-      setCaptureImageAnchor(captureId);
+      setCapturesSelected([capture.uuid]);
+      setCaptureImageAnchor(capture.uuid);
     } else if (isShift) {
       log.debug('press shift, and there is an anchor:', captureImageAnchor);
       //if no anchor, then, select from beginning
       let indexAnchor = 0;
       if (captureImageAnchor) {
         indexAnchor = captures.reduce(
-          (a, c, i) => (c && c.id === captureImageAnchor ? i : a),
+          (a, c, i) => (c && c.uuid === captureImageAnchor ? i : a),
           -1
         );
       }
       const indexCurrent = captures.reduce(
-        (a, c, i) => (c && c.id === captureId ? i : a),
+        (a, c, i) => (c && c.uuid === capture.uuid ? i : a),
         -1
       );
-      const capturesSelected = captures
-        .slice(
-          Math.min(indexAnchor, indexCurrent),
-          Math.max(indexAnchor, indexCurrent) + 1
-        )
-        .map((capture) => capture.id);
+      const capturesSelected = captures.slice(
+        Math.min(indexAnchor, indexCurrent),
+        Math.max(indexAnchor, indexCurrent) + 1
+      );
+      // .map((capture) => capture.uuid);
       setCapturesSelected(capturesSelected);
     } else if (isCmd || isCtrl) {
       // Toggle the selection state
       let selectedImages;
-      if (capturesSelected.find((el) => el === captureId)) {
+      if (capturesSelected.find((el) => el === capture.uuid)) {
         selectedImages = capturesSelected.filter(
-          (capture) => capture !== captureId
+          (capture) => capture !== capture.uuid
         );
       } else {
-        selectedImages = [...capturesSelected, captureId];
+        selectedImages = [...capturesSelected, capture.uuid];
       }
       setCapturesSelected(selectedImages);
     }
@@ -270,8 +265,6 @@ export function CapturesProvider(props) {
     await getCaptures();
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    setInvalidateCaptureCount(true);
-
     resetSelection();
     return true;
   };
