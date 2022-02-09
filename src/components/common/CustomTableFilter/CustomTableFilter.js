@@ -66,7 +66,8 @@ function CustomTableFilter(props) {
     e.preventDefault();
     if (Object.keys(mainFilter).length !== 0) {
       const withoutMainFilter = Object.assign({}, filter);
-      delete withoutMainFilter.payment_system;
+      delete withoutMainFilter.earnings_status;
+      delete withoutMainFilter.organisation_id;
       delete withoutMainFilter.grower;
       delete withoutMainFilter.phone;
       delete withoutMainFilter.start_date;
