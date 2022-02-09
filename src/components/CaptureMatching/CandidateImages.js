@@ -11,6 +11,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
@@ -170,7 +171,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                       </Typography>
                     </Tooltip>
                   </Box>
-                  <Box>{/* button */}</Box>
+                  <Box>
+                    <ExpandMoreIcon key={`expandIcon-${i}`} />
+                  </Box>
                 </Grid>
               </Box>
 
