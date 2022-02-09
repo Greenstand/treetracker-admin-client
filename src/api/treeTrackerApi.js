@@ -27,6 +27,9 @@ const CAPTURE_FIELDS = {
 };
 
 export default {
+  /**
+   * Verify Tool
+   */
   getCaptureImages(
     {
       skip,
@@ -40,7 +43,7 @@ export default {
   ) {
     const where = filter.getWhereObj();
 
-    const lbFilter = {
+    const filterData = {
       where,
       order: [`${orderBy} ${order}`],
       limit: rowsPerPage,
@@ -50,7 +53,7 @@ export default {
 
     const query = `${
       process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees?filter=${JSON.stringify(lbFilter)}`;
+    }/api/${getOrganization()}trees?filter=${JSON.stringify(filterData)}`;
 
     return fetch(query, {
       headers: {
@@ -123,6 +126,9 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  /**
+   * Capture Match Tool
+   */
   fetchCapturesToMatch(currentPage, abortController) {
     return fetch(
       `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
@@ -161,29 +167,8 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * get species list
-   */
-  getSpecies(abortController) {
-    const query = `${process.env.REACT_APP_API_ROOT}/api/species?filter[order]=name`;
-    return fetch(query, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      signal: abortController?.signal,
-    })
-      .then(handleResponse)
-      .catch(handleError);
-  },
-
   /**
-   * @function
-   * @name getEarnings
-   * @description get earnings
-   *
-   * @returns {Array} - list of earnings
+   * Earnings Tool
    */
   getEarnings() {
     const query = `earnings.json`;
@@ -198,8 +183,21 @@ export default {
       .catch(handleError);
   },
   /*
-   * get species by id
+   * Species
    */
+  getSpecies(abortController) {
+    const query = `${process.env.REACT_APP_API_ROOT}/api/species?filter[order]=name`;
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      signal: abortController?.signal,
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   getSpeciesById(id) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
@@ -212,9 +210,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * create new species
-   */
   createSpecies(payload) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species`;
     return fetch(query, {
@@ -233,7 +228,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /* edit specie */
   editSpecies(id, name, desc) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
@@ -253,9 +247,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * delete a specie
-   */
   deleteSpecies(id) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/species/${id}`;
     return fetch(query, {
@@ -289,9 +280,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * get tree count by species
-   */
   getCaptureCountPerSpecies(speciesId, abortController) {
     const query = `${
       process.env.REACT_APP_API_ROOT
@@ -306,7 +294,7 @@ export default {
       .catch(handleError);
   },
   /*
-   * get tag list
+   * Tags
    */
   getTags(abortController) {
     const filterString = `filter[order]=tagName`;
@@ -322,9 +310,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * get tag by id
-   */
   getTagById(id) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/tags/${id}`;
     return fetch(query, {
@@ -337,9 +322,6 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  /*
-   * create new tag
-   */
   createTag(tagName) {
     const query = `${process.env.REACT_APP_API_ROOT}/api/tags`;
     return fetch(query, {
@@ -358,7 +340,7 @@ export default {
       .catch(handleError);
   },
   /*
-   * create new tree tags
+   * Capture Tags
    */
   createCaptureTags(captureId, tags) {
     return tags.map((t) => {
@@ -378,9 +360,6 @@ export default {
         .catch(handleError);
     });
   },
-  /*
-   * get tags for a given tree
-   */
   getCaptureTags({ captureIds, tagIds }) {
     const useAnd = captureIds && tagIds;
     const captureIdClauses = (captureIds || []).map(
@@ -407,7 +386,7 @@ export default {
       .catch(handleError);
   },
   /*
-   * get organizations for
+   * get organizations
    */
   getOrganizations() {
     const query = `${

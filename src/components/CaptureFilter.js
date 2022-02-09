@@ -103,6 +103,9 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS
   );
+  const [stakeholderUUID, setStakeholderUUID] = useState(
+    filter.stakeholderUUID || ALL_ORGANIZATIONS
+  );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
   const [verificationStatus, setVerificationStatus] = useState([
     verificationStates.APPROVED,
@@ -166,6 +169,7 @@ function Filter(props) {
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
+    filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
     filter.verifyStatus = verifyStatus;
     props.onSubmit && props.onSubmit(filter);
@@ -184,6 +188,7 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
+    setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
     setVerifyStatus([
       { active: true, approved: true },
@@ -197,6 +202,7 @@ function Filter(props) {
     ? [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
           value: 'All',
         },
@@ -204,11 +210,13 @@ function Filter(props) {
     : [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
           value: 'All',
         },
         {
           id: ORGANIZATION_NOT_SET,
+          stakeholder_uuid: ORGANIZATION_NOT_SET,
           name: 'Not set',
           value: null,
         },
@@ -432,7 +440,13 @@ function Filter(props) {
                   htmlFor="organization"
                   id="organization"
                   value={organizationId}
-                  onChange={(e) => setOrganizationId(e.target.value)}
+                  onChange={(e) => {
+                    const org = orgList.find((o) => o.id === e.target.value);
+                    setStakeholderUUID(
+                      org ? org.stakeholder_uuid : e.target.value
+                    );
+                    setOrganizationId(e.target.value);
+                  }}
                 >
                   {[...defaultOrgList, ...orgList].map((org) => (
                     <MenuItem

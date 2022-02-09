@@ -272,7 +272,7 @@ export const AppProvider = (props) => {
 
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
-    console.log('load organizations from api:', orgs.length);
+    console.log('load organizations from api:', orgs);
     setOrgList(orgs);
   }
 
