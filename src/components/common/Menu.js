@@ -21,7 +21,10 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
   },
   menuTitle: {
-    textTransform: 'uppercase',
+    letterSpacing: '.05em',
+    fontVariantCaps: 'all-small-caps',
+    fontSize: '16px',
+    fontWeight: '500',
   },
   menuItemWithChildren: {
     padding: theme.spacing(0, 0, 0, 4),
