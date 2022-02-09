@@ -7,6 +7,7 @@ import {
   Grid,
   Paper,
   Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
@@ -25,6 +26,17 @@ const useStyles = makeStyles({
     background: '#fff',
     borderRadius: '4px',
     overflow: 'hidden',
+  },
+
+  expandMore: {
+    transform: 'rotate(0deg)',
+    transition: 'transform 250ms ease-in-out',
+  },
+
+  showLess: {
+    cursor: 'pointer',
+    transform: 'rotate(-180deg)',
+    transition: 'transform 250ms ease-in-out',
   },
 
   headerBox: {
@@ -130,6 +142,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
 
   const [showBox, setShowBox] = useState([]);
+  const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
     const initialCandidateData = candidateImgData.map((tree) => tree.id);
@@ -137,12 +150,18 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   }, [candidateImgData]);
 
   const hideImgBox = (i) => {
+    const icon = document.getElementById(`ExpandIcon_${i}`);
+    icon.classList.replace(classes.showLess, classes.expandMore);
     const newInitialState = showBox.filter((id) => id !== i);
     setShowBox(newInitialState);
+    setExpanded(false);
   };
 
   const showImgBox = (i) => {
+    const icon = document.getElementById(`ExpandIcon_${i}`);
+    icon.classList.replace(classes.expandMore, classes.showLess);
     setShowBox([...showBox, i]);
+    setExpanded(true);
   };
 
   return (
@@ -159,7 +178,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                 <Grid
                   container
                   className={classes.box2}
-                  onClick={() => showImgBox(tree.id)}
+                  onClick={() => {
+                    expanded ? hideImgBox(tree.id) : showImgBox(tree.id);
+                  }}
                 >
                   <Box className={classes.box3}>
                     <Paper elevation={0} className={classes.box1}>
@@ -172,7 +193,20 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                     </Tooltip>
                   </Box>
                   <Box>
-                    <ExpandMoreIcon key={`expandIcon-${i}`} />
+                    <IconButton
+                      id={`ExpandIcon_${tree.id}`}
+                      className={classes.showLess}
+                      onClick={(event) => {
+                        expanded ? hideImgBox(tree.id) : showImgBox(tree.id);
+                        event.stopPropagation();
+                      }}
+                    >
+                      <ExpandMoreIcon
+                        fontSize="large"
+                        color="primary"
+                        key={`expandIcon-${i}`}
+                      />
+                    </IconButton>
                   </Box>
                 </Grid>
               </Box>
