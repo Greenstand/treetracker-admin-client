@@ -441,9 +441,7 @@ function Filter(props) {
                   id="organization"
                   value={organizationId}
                   onChange={(e) => {
-                    const org = orgList.find(
-                      (org) => org.id === e.target.value
-                    );
+                    const org = orgList.find((o) => o.id === e.target.value);
                     setStakeholderUUID(
                       org ? org.stakeholder_uuid : e.target.value
                     );

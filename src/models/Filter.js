@@ -112,7 +112,7 @@ export default class Filter {
     }
 
     let orCondition = false;
-    let { verifyStatus, ...restFilter } = where;
+    const { verifyStatus, ...restFilter } = where;
 
     if (verifyStatus) {
       if (verifyStatus.length === 1) {

@@ -56,7 +56,7 @@ function FilterTopGrower(props) {
     filter?.organizationId || ALL_ORGANIZATIONS
   );
   const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
+    filter?.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
@@ -171,9 +171,7 @@ function FilterTopGrower(props) {
                   placeholder="Organization"
                   value={organizationId}
                   onChange={(e) => {
-                    const org = orgList.find(
-                      (org) => org.id === e.target.value
-                    );
+                    const org = orgList.find((o) => o.id === e.target.value);
                     setStakeholderUUID(
                       org ? org.stakeholder_uuid : e.target.value
                     );
