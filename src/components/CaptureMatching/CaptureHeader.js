@@ -65,7 +65,14 @@ function CaptureHeader(props) {
             imgCount={imgCount}
           />
           <Box className={classes.box2}>
-            <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
+            <button>
+              <FilterListIcon
+                htmlColor="#6E6E6E"
+                className={classes.class1}
+                onClick={handleClick}
+              />
+            </button>
+
             <Pagination
               count={noOfPages}
               page={currentPage}

@@ -47,101 +47,20 @@ const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
   const classes = useStyle();
-  const { isFilterShown, handleFilterClick } = useContext(
-    CaptureMatchingContext
-  );
-  const [captureImages, setCaptureImages] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [candidateImgData, setCandidateImgData] = useState([]);
-  const [noOfPages, setNoOfPages] = useState(null); //for pagination
-  const [imgCount, setImgCount] = useState(null); //for header icon
-  const [treesCount, setTreesCount] = useState(0);
-  // To get total tree count on candidate capture image icon
-  // const treesCount = candidateImgData.length;
+  const {
+    captureImages,
+    currentPage,
+    loading,
+    candidateImgData,
+    noOfPages,
+    imgCount,
+    treesCount,
+    handleChange,
+    sameTreeHandler,
+    handleSkip,
+  } = useContext(CaptureMatchingContext);
+
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
-
-  async function fetchCandidateTrees(captureId, abortController) {
-    const data = await api.fetchCandidateTrees(captureId, abortController);
-    if (data) {
-      setCandidateImgData(data.matches);
-      setTreesCount(data.matches.length);
-      setLoading(false);
-    }
-  }
-
-  async function fetchCaptures(currentPage, abortController) {
-    setLoading(true);
-    const data = await api.fetchCapturesToMatch(currentPage, abortController);
-    console.log('fetchCaptures', currentPage, data);
-    if (data) {
-      setCaptureImages(data.captures);
-      setNoOfPages(data.count);
-      setImgCount(data.count);
-    }
-  }
-
-  useEffect(() => {
-    console.log('loading captures', currentPage);
-    const abortController = new AbortController();
-    fetchCaptures(currentPage, abortController);
-    return () => abortController.abort();
-  }, [currentPage]);
-
-  useEffect(() => {
-    if (currentPage <= 0 || currentPage > noOfPages) {
-      setCurrentPage(1);
-    }
-  }, [noOfPages, currentPage]);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    if (captureImages.length) {
-      console.log('loading candidate images');
-      const captureId = captureImages[0].id;
-      console.log('captureId', captureId);
-      fetchCandidateTrees(captureId, abortController);
-    }
-    return () => abortController.abort();
-  }, [captureImages]);
-
-  // Capture Image Pagination function
-  const handleChange = (e, value) => {
-    setCurrentPage(value);
-  };
-
-  // Same Tree Capture function
-  const sameTreeHandler = async (treeId) => {
-    const captureId = captureImages[0].id;
-    console.log('captureId treeId', captureId, treeId);
-    await fetch(`${CAPTURE_API}/captures/${captureId}`, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        // Authorization: session.token,
-      },
-      body: JSON.stringify({
-        tree_id: treeId,
-      }),
-    });
-
-    // make sure new captures are loaded by updating page or if it's the first page reloading directly
-    if (currentPage === 1) {
-      fetchCaptures(currentPage);
-    } else {
-      setCurrentPage((page) => page + 1);
-    }
-  };
-
-  // Skip button
-  const handleSkip = () => {
-    setCurrentPage((page) => page + 1);
-  };
-
-  /* to update html document title */
-  useEffect(() => {
-    document.title = `Capture Matching - ${documentTitle}`;
-  }, []);
 
   return (
     <Grid
