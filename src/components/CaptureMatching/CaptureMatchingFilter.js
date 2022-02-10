@@ -1,16 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import FilterModel, {
-  ALL_SPECIES,
-  SPECIES_NOT_SET,
+import {
   ALL_ORGANIZATIONS,
   ORGANIZATION_NOT_SET,
   // TAG_NOT_SET,
@@ -23,14 +17,9 @@ import {
 import {
   getDatePickerLocale,
   getDateFormatLocale,
-  convertDateToDefaultSqlDate,
+  // convertDateToDefaultSqlDate,
 } from 'common/locale';
-import {
-  verificationStates,
-  tokenizationStates,
-  verificationStatesArr,
-  datePickerDefaultMinDate,
-} from 'common/variables';
+import { datePickerDefaultMinDate } from 'common/variables';
 import { AppContext } from 'context/AppContext';
 import { CaptureMatchingContext } from 'context/CaptureMatchingContext';
 
@@ -97,8 +86,7 @@ function Filter(props) {
     setOrganizationId,
   } = useContext(CaptureMatchingContext);
   const { orgList, userHasOrg } = useContext(AppContext);
-  const { classes, filter = new FilterModel() } = props;
-  const filterOptionAll = 'All';
+  const { classes } = props;
   const dateStartDefault = null;
   const dateEndDefault = null;
   const handleDateStartChange = (date) => {
@@ -109,9 +97,9 @@ function Filter(props) {
     setDateEnd(date);
   };
 
-  const formatDate = (date) => {
-    return convertDateToDefaultSqlDate(date);
-  };
+  // const formatDate = (date) => {
+  //   return convertDateToDefaultSqlDate(date);
+  // };
 
   function handleSubmit(e) {
     e.preventDefault();

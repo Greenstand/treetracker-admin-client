@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import CurrentCaptureNumber from './CurrentCaptureNumber';
 
-import { Box, Button, Grid } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';

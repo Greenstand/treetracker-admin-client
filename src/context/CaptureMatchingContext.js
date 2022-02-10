@@ -1,12 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
-import { getOrganization } from '../api/apiUtils';
-import { session } from '../models/auth';
-import FilterModel from '../models/Filter';
 
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
-const dateStartDefault = null;
-const dateEndDefault = null;
 
 export const CaptureMatchingContext = createContext({
   isFilterShown: false,
@@ -56,6 +51,7 @@ export default function CaptureMatchingProvider(props) {
 
   async function fetchCandidateTrees(captureId, abortController) {
     const data = await api.fetchCandidateTrees(captureId, abortController);
+    console.log(data);
     if (data) {
       setCandidateImgData(data.matches);
       setTreesCount(data.matches.length);
@@ -66,6 +62,7 @@ export default function CaptureMatchingProvider(props) {
   async function fetchCaptures(currentPage, abortController) {
     setLoading(true);
     const data = await api.fetchCapturesToMatch(currentPage, abortController);
+    console.log(data);
     console.log('fetchCaptures', currentPage, data);
     if (data) {
       setCaptureImages(data.captures);
