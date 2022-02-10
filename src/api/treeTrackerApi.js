@@ -168,7 +168,11 @@ export default {
       .catch(handleError);
   },
   /**
-   * Earnings Tool
+   * @function
+   * @name getEarnings
+   * @description get earnings
+   *
+   * @returns {Array} - list of earnings
    */
   getEarnings() {
     const query = `earnings.json`;
