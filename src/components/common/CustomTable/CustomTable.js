@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import PublishIcon from '@material-ui/icons/Publish';
-import TableBody from '@material-ui/core/TableBody';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import React, { useState } from 'react';
 import { CSVLink } from 'react-csv';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Grid from '@material-ui/core/Grid';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import IconFilter from '@material-ui/icons/FilterList';
-import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
+import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import Avatar from '@material-ui/core/Avatar';
-import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import IconFilter from '@material-ui/icons/FilterList';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import PublishIcon from '@material-ui/icons/Publish';
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Typography,
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
 import useStyles from './CustomTable.styles';
-import { AppContext } from '../../../context/AppContext';
-
-import dateFormat from 'dateformat';
+import GrowerDetail from '../../GrowerDetail';
 
 /**
  * @function
@@ -321,6 +323,10 @@ function CustomTable(props) {
   // managing custom table  state
   const classes = useStyles();
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
+  const [growerDetail, setGrowerDetail] = useState({
+    isOpen: false,
+    grower: {},
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -347,6 +353,22 @@ function CustomTable(props) {
     setSortableColumnsObject(sortableColumns);
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
+
+  const handleShowGrowerDetail = (e, planterId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setGrowerDetail({
+      isOpen: true,
+      growerId: planterId,
+    });
+  };
+
+  function handleCloseGrowerDetail() {
+    setGrowerDetail({
+      isOpen: false,
+      growerId: null,
+    });
+  }
 
   const isRowSelected = (id) => id === selectedRow?.id;
 
@@ -437,12 +459,32 @@ function CustomTable(props) {
                   >
                     {tableMetaData.map((column, j) => (
                       <TableCell key={`${i}-${j}-${column.name}`}>
-                        <Typography
-                          variant="body1"
-                          style={{ textTransform: 'capitalize' }}
-                        >
-                          {row[column.name]}
-                        </Typography>
+                        {column.name === 'grower' ? (
+                          <Grid item>
+                            <Typography
+                              variant="body1"
+                              style={{ textTransform: 'capitalize' }}
+                            >
+                              {row[column.name]}
+
+                              <IconButton
+                                onClick={(e) => handleShowGrowerDetail(e)}
+                                aria-label={`View/Edit Grower details`}
+                                title={`View/Edit Grower details`}
+                                style={{ padding: '0 2px 2px 0' }}
+                              >
+                                <Person color="primary" />
+                              </IconButton>
+                            </Typography>
+                          </Grid>
+                        ) : (
+                          <Typography
+                            variant="body1"
+                            style={{ textTransform: 'capitalize' }}
+                          >
+                            {row[column.name]}
+                          </Typography>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -464,6 +506,12 @@ function CustomTable(props) {
         </Table>
       </TableContainer>
       {tablePagination()}
+
+      <GrowerDetail
+        open={growerDetail.isOpen}
+        growerId={growerDetail.growerId}
+        onClose={() => handleCloseGrowerDetail()}
+      />
 
       {/* start table main filter */}
       {mainFilterComponent}
