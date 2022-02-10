@@ -1,3 +1,12 @@
+## [1.49.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.49.0...v1.49.1) (2022-02-10)
+
+
+### Bug Fixes
+
+* make table pagination the same as CapturesTable and fix console errors for Payments ([eba40ac](https://github.com/Greenstand/treetracker-admin-client/commit/eba40ac1554ee7cc5edca2277402d4a9378535f0))
+* menu title and icons for Earnings and Payments ([d07442e](https://github.com/Greenstand/treetracker-admin-client/commit/d07442e02804087f13230ae5bfadfe55b8ebc770))
+* restore documentation for earnings api ([7794267](https://github.com/Greenstand/treetracker-admin-client/commit/779426794fdfc877b018269fd84fa05ee36adffc))
+
 # [1.49.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.48.0...v1.49.0) (2022-02-08)
 
 
