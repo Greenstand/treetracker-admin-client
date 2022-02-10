@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-  Grid,
-  Table,
   Button,
+  Grid,
+  IconButton,
+  Table,
   TableHead,
   TableBody,
   TableRow,
@@ -11,11 +12,8 @@ import {
   TableSortLabel,
   Typography,
 } from '@material-ui/core';
-import { GetApp } from '@material-ui/icons';
-import IconButton from '@material-ui/core/IconButton';
+import { GetApp, Nature, Person } from '@material-ui/icons';
 import ImageIcon from '@material-ui/icons/Image';
-import Nature from '@material-ui/icons/Nature';
-import Person from '@material-ui/icons/Person';
 import { getDateTimeStringLocale } from '../../common/locale';
 import { countToLocaleString } from '../../common/numbers';
 import { getVerificationStatus } from '../../common/utils';
