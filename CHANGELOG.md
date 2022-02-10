@@ -1,3 +1,25 @@
+# [1.50.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.49.1...v1.50.0) (2022-02-10)
+
+
+### Bug Fixes
+
+* create new message setup ([4f2620d](https://github.com/Greenstand/treetracker-admin-client/commit/4f2620d5faa682f7cab7b0f8724ee9e6bd583c47))
+* message recipient ([a375f70](https://github.com/Greenstand/treetracker-admin-client/commit/a375f70b8d7b8fb80f49c5190d5bda027f00d85b))
+* message to grower context issue ([88764cb](https://github.com/Greenstand/treetracker-admin-client/commit/88764cb91c67021f177ee87f0b7be6103e695760))
+* messaging context ([e536c0d](https://github.com/Greenstand/treetracker-admin-client/commit/e536c0d52f9ee5622d3d92f2a1b40246455036fb))
+* remove all tests ([76b5b06](https://github.com/Greenstand/treetracker-admin-client/commit/76b5b0657bde3b88c000108021d7cfb52e46fe22))
+* update branch ([62d6096](https://github.com/Greenstand/treetracker-admin-client/commit/62d609652f9633231043663d3caac6043b5c7acc))
+* update for changes ([b534ad8](https://github.com/Greenstand/treetracker-admin-client/commit/b534ad814c4e695f5b5733b31a2eef65ebd79a13))
+
+
+### Features
+
+* create new message ([f7f9d43](https://github.com/Greenstand/treetracker-admin-client/commit/f7f9d435cfde9734626882a85e5af05dbead87ed))
+* create new message setup ([0f5738e](https://github.com/Greenstand/treetracker-admin-client/commit/0f5738e6830125decba41ac5cab4b579eb2167e9))
+* **messaging:** unresolved survey and announce ([112f416](https://github.com/Greenstand/treetracker-admin-client/commit/112f416a4f6f5debe0615cc468587a4ce3c1e156))
+* **messaging:** unresolved survey and announce ([b428fee](https://github.com/Greenstand/treetracker-admin-client/commit/b428feed5780e9779eb5fd91fe195ccbc81e6d94))
+* unresolved-messaging ([ca9c6e5](https://github.com/Greenstand/treetracker-admin-client/commit/ca9c6e548a54fa3cc808d9d12031b6df89b02fe5))
+
 ## [1.49.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.49.0...v1.49.1) (2022-02-10)
 
 
