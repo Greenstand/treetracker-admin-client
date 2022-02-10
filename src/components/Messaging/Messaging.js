@@ -5,7 +5,7 @@ import Inbox from './Inbox';
 import MessageBody from './MessageBody';
 import Survey from './Survey';
 import AnnounceMessage from './AnnounceMessage';
-
+import NewMessage from './NewMessage';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
@@ -67,21 +67,33 @@ const Messaging = () => {
     body,
   } = useStyles();
 
-  const { messages, loadMessages, loadRegions } = useContext(MessagingContext);
+  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
+    MessagingContext
+  );
 
   useEffect(() => {
     loadMessages();
     loadRegions();
+    loadAuthors();
   }, []);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
   const [messageRecipient, setMessageRecipient] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
+
+  const findMessageRecipient = (messagesArray) => {
+    return messagesArray[0].messages[0].to[0].recipient !== user.userName
+      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
+      : setMessageRecipient(messagesArray[0].messages[0].from);
+  };
 
   useEffect(() => {
     if (messages.length && messageRecipient === '') {
-      setMessageRecipient(messages[0].userName);
+      findMessageRecipient(messages);
     }
   }, [messages]);
 
@@ -93,11 +105,15 @@ const Messaging = () => {
   return (
     <>
       <Navbar />
-      <Grid container direction="row" className={rootContainer}>
+      <Grid container direction="row" className={rootContainer} id="Messaging">
         <Grid item className={title}>
           <h1>Inbox</h1>
         </Grid>
         <Grid item className={buttonContainer}>
+          <Button className={button} onClick={handleOpen}>
+            New Message
+          </Button>
+          <NewMessage openModal={openModal} handleClose={handleClose} />
           <Button
             className={button}
             onClick={() => setToggleAnnounceMessage(!toggleAnnounceMessage)}
@@ -110,21 +126,17 @@ const Messaging = () => {
           >
             Quick Survey
           </Button>
-          {toggleAnnounceMessage ? (
+          {toggleAnnounceMessage && (
             <AnnounceMessage
               toggleAnnounceMessage={toggleAnnounceMessage}
               setToggleAnnounceMessage={setToggleAnnounceMessage}
             />
-          ) : (
-            <></>
           )}
-          {toggleSurvey ? (
+          {toggleSurvey && (
             <Survey
               toggleSurvey={toggleSurvey}
               setToggleSurvey={setToggleSurvey}
             />
-          ) : (
-            <></>
           )}
         </Grid>
       </Grid>
@@ -133,7 +145,6 @@ const Messaging = () => {
           <Inbox
             messages={messages}
             selectedIndex={selectedIndex}
-            messageRecipient={messageRecipient}
             handleListItemClick={handleListItemClick}
           />
         </Grid>
