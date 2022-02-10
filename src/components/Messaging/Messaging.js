@@ -105,7 +105,7 @@ const Messaging = () => {
   return (
     <>
       <Navbar />
-      <Grid container direction="row" className={rootContainer}>
+      <Grid container direction="row" className={rootContainer} id="Messaging">
         <Grid item className={title}>
           <h1>Inbox</h1>
         </Grid>

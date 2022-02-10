@@ -114,7 +114,7 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
-    console.log(res);
+
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -124,7 +124,7 @@ export const MessagingProvider = (props) => {
 
   const loadRegions = async () => {
     const res = await api.getRegion();
-    console.log(res);
+
     if (res) {
       setRegions(res);
     }
