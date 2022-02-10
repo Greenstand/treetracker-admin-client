@@ -354,12 +354,13 @@ function CustomTable(props) {
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
-  const handleShowGrowerDetail = (e, planterId) => {
+  const handleShowGrowerDetail = (e, grower) => {
+    console.log('grower', grower);
     e.preventDefault();
     e.stopPropagation();
     setGrowerDetail({
       isOpen: true,
-      growerId: planterId,
+      growerId: grower.id,
     });
   };
 
@@ -468,7 +469,7 @@ function CustomTable(props) {
                               {row[column.name]}
 
                               <IconButton
-                                onClick={(e) => handleShowGrowerDetail(e)}
+                                onClick={(e) => handleShowGrowerDetail(e, row)}
                                 aria-label={`View/Edit Grower details`}
                                 title={`View/Edit Grower details`}
                                 style={{ padding: '0 2px 2px 0' }}
