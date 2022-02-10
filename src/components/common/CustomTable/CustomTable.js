@@ -309,6 +309,21 @@ function CustomTable(props) {
 
   const isRowSelected = (id) => id === selectedRow?.id;
 
+  const tablePagination = () => {
+    return (
+      <TablePagination
+        rowsPerPageOptions={[20, 50, 100]}
+        component="div"
+        count={totalCount || 0}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        aria-label="rows per page"
+      />
+    );
+  };
+
   return (
     <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
@@ -320,6 +335,7 @@ function CustomTable(props) {
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
       />
+      {tablePagination()}
       <TableContainer>
         <Table>
           <TableHead>
@@ -406,23 +422,7 @@ function CustomTable(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        count={totalCount}
-        classes={{
-          selectRoot: classes.selectRoot,
-          root: classes.customTablePagination,
-        }}
-        component="div"
-        rowsPerPageOptions={[20, 50, 100]}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-        SelectProps={{
-          inputProps: { 'aria-label': 'rows per page' },
-          native: true,
-        }}
-      />
+      {tablePagination()}
 
       {/* start table main filter */}
       {mainFilterComponent}
