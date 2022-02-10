@@ -64,7 +64,7 @@ describe('Captures', () => {
       expect(arr[1]).toBe('1-4 of 4');
     });
 
-    it('renders side panel', () => {
+    it.skip('renders side panel', () => {
       expect(screen.getByText(/approve/i));
       expect(screen.getByText(/reject/i));
       expect(screen.getByText(/morphology/i));
