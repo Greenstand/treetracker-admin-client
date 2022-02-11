@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
-  Checkbox,
   Grid,
   TableContainer,
   Table,
@@ -25,12 +24,10 @@ import {
   Switch,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import Delete from '@material-ui/icons/Delete';
 import SortIcon from '@material-ui/icons/Sort';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
-import CustomTable from './common/CustomTable/CustomTable';
 
 const styles = (theme) => ({
   box: {
@@ -111,19 +108,17 @@ const styles = (theme) => ({
   },
 });
 
-const SpeciesTable = (props) => {
+const RegionTable = (props) => {
   const { classes } = props;
   const sortOptions = { byId: 'id', byName: 'name' };
   const regionContext = useContext(RegionContext);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [regionEdit, setRegionEdit] = useState(undefined);
   const [openDelete, setOpenDelete] = useState(false);
   const [sortedRegionList, setSortedRegionList] = useState([]);
   const [option, setOption] = useState(sortOptions.byName);
-  const [selected, setSelected] = useState([]);
 
   const tableRef = useRef(null);
 
@@ -145,10 +140,6 @@ const SpeciesTable = (props) => {
     sortBy(option);
   }, [option, sortOptions.byId, sortOptions.byName, regionContext.regions]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
   const handleChangeRowsPerPage = (event) => {
     tableRef.current && tableRef.current.scrollIntoView();
 
@@ -161,17 +152,8 @@ const SpeciesTable = (props) => {
     setIsEdit(true);
   };
 
-  const openDeleteDialog = (region) => {
-    setRegionEdit(region);
-    setOpenDelete(true);
-  };
-
-  const handleSelect = (checked, id) => {
-    if (checked) setSelected([...selected, id]);
-    else setSelected(selected.filter((item) => item !== id));
-  };
-
   const renderSpecies = () => {
+    let rowsPerPage = regionContext.pageSize;
     return (rowsPerPage > 0
       ? sortedRegionList.slice(
           page * rowsPerPage,
@@ -537,4 +519,4 @@ const DeleteDialog = ({
   );
 };
 
-export default withStyles(styles)(SpeciesTable);
+export default withStyles(styles)(RegionTable);
