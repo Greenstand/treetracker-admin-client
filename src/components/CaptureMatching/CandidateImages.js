@@ -150,16 +150,12 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   }, [candidateImgData]);
 
   const hideImgBox = (i) => {
-    const icon = document.getElementById(`ExpandIcon_${i}`);
-    icon.classList.replace(classes.showLess, classes.expandMore);
     const newInitialState = showBox.filter((id) => id !== i);
     setShowBox(newInitialState);
     setExpanded(false);
   };
 
   const showImgBox = (i) => {
-    const icon = document.getElementById(`ExpandIcon_${i}`);
-    icon.classList.replace(classes.expandMore, classes.showLess);
     setShowBox([...showBox, i]);
     setExpanded(true);
   };
@@ -195,7 +191,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                   <Box>
                     <IconButton
                       id={`ExpandIcon_${tree.id}`}
-                      className={classes.showLess}
+                      className={
+                        showBox.includes(tree.id)
+                          ? classes.showLess
+                          : classes.expandMore
+                      }
                       onClick={(event) => {
                         expanded ? hideImgBox(tree.id) : showImgBox(tree.id);
                         event.stopPropagation();
