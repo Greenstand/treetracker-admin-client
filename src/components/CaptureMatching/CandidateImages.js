@@ -41,6 +41,7 @@ const useStyles = makeStyles({
 
   headerBox: {
     display: 'flex',
+    cursor: 'pointer',
   },
 
   imgContainer: {
@@ -142,7 +143,6 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
 
   const [showBox, setShowBox] = useState([]);
-  const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
     const initialCandidateData = candidateImgData.map((tree) => tree.id);
@@ -152,12 +152,10 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const hideImgBox = (i) => {
     const newInitialState = showBox.filter((id) => id !== i);
     setShowBox(newInitialState);
-    setExpanded(false);
   };
 
   const showImgBox = (i) => {
     setShowBox([...showBox, i]);
-    setExpanded(true);
   };
 
   return (
@@ -175,7 +173,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                   container
                   className={classes.box2}
                   onClick={() => {
-                    expanded ? hideImgBox(tree.id) : showImgBox(tree.id);
+                    showBox.includes(tree.id)
+                      ? hideImgBox(tree.id)
+                      : showImgBox(tree.id);
                   }}
                 >
                   <Box className={classes.box3}>
@@ -197,7 +197,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           : classes.expandMore
                       }
                       onClick={(event) => {
-                        expanded ? hideImgBox(tree.id) : showImgBox(tree.id);
+                        showBox.includes(tree.id)
+                          ? hideImgBox(tree.id)
+                          : showImgBox(tree.id);
                         event.stopPropagation();
                       }}
                     >
