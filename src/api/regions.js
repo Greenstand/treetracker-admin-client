@@ -58,7 +58,9 @@ export default {
 
   createRegion(payload) {
     // const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?ownerId=${getOrganization()}`;
-    const query = `localhost:3006/region?ownerId=${getOrganization()}`;
+    const query = `${
+      process.env.REACT_APP_REGION_API_ROOT
+    }/region?ownerId=${getOrganization()}`;
     return fetch(query, {
       method: 'POST',
       headers: {
@@ -75,7 +77,7 @@ export default {
     // const query = `${
     //   process.env.REACT_APP_REGION_API_ROOT
     // }/collection?ownerId=${getOrganization()}`;
-    const query = `http://localhost:3006/collection?ownerId=123e4567-e89b-12d3-a456-426614174000`;
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/collection?ownerId=123e4567-e89b-12d3-a456-426614174000`;
 
     console.log(JSON.stringify(payload));
     return fetch(query, {

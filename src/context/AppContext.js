@@ -172,7 +172,9 @@ function getRoutes(user) {
       linkTo: '/region-manager',
       component: RegionsView,
       icon: MapIcon,
-      disabled: !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
+      disabled:
+        process.env.REACT_APP_ENABLE_REGIONS !== 'true' ||
+        !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
     },
     {
       name: 'Account',
