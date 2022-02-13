@@ -7,10 +7,12 @@ import {
   Grid,
   Paper,
   Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
@@ -26,8 +28,20 @@ const useStyles = makeStyles({
     overflow: 'hidden',
   },
 
+  expandMore: {
+    transform: 'rotate(0deg)',
+    transition: 'transform 250ms ease-in-out',
+  },
+
+  showLess: {
+    cursor: 'pointer',
+    transform: 'rotate(-180deg)',
+    transition: 'transform 250ms ease-in-out',
+  },
+
   headerBox: {
     display: 'flex',
+    cursor: 'pointer',
   },
 
   imgContainer: {
@@ -158,7 +172,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                 <Grid
                   container
                   className={classes.box2}
-                  onClick={() => showImgBox(tree.id)}
+                  onClick={() => {
+                    showBox.includes(tree.id)
+                      ? hideImgBox(tree.id)
+                      : showImgBox(tree.id);
+                  }}
                 >
                   <Box className={classes.box3}>
                     <Paper elevation={0} className={classes.box1}>
@@ -170,7 +188,28 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                       </Typography>
                     </Tooltip>
                   </Box>
-                  <Box>{/* button */}</Box>
+                  <Box>
+                    <IconButton
+                      id={`ExpandIcon_${tree.id}`}
+                      className={
+                        showBox.includes(tree.id)
+                          ? classes.showLess
+                          : classes.expandMore
+                      }
+                      onClick={(event) => {
+                        showBox.includes(tree.id)
+                          ? hideImgBox(tree.id)
+                          : showImgBox(tree.id);
+                        event.stopPropagation();
+                      }}
+                    >
+                      <ExpandMoreIcon
+                        fontSize="large"
+                        color="primary"
+                        key={`expandIcon-${i}`}
+                      />
+                    </IconButton>
+                  </Box>
                 </Grid>
               </Box>
 
