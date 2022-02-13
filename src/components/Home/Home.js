@@ -100,7 +100,7 @@ function Home(props) {
           <Menu variant="plain" />
         </Paper>
       </Grid>
-      <Grid className={classes.rightBox} style={{ flexGrow: 1 }}>
+      <Grid className={classes.rightBox}>
         <Box className={classes.box2}>
           <Grid container spacing={5} className={classes.version}>
             <Grid item xs={3}>

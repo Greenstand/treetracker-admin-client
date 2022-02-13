@@ -45,7 +45,7 @@ const styles = (theme) => ({
     right: 0,
     backgroundColor: 'rgb(239, 239, 239)',
     boxSizing: 'border-box',
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
   welcomeBox: {
     height: '100%',
