@@ -14,11 +14,13 @@ import { Typography } from '@material-ui/core';
 export const MENU_WIDTH = 232;
 
 const useStyles = makeStyles((theme) => ({
-  drawer: {},
   drawerPaper: {
     width: MENU_WIDTH,
     position: 'inherit',
     height: '100vh',
+  },
+  menuContainer: {
+    width: MENU_WIDTH,
   },
   menuTitle: {
     letterSpacing: '.05em',
@@ -30,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 0, 0, 4),
   },
   menuItem: {
+    minHeight: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.lightVery,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
-    marginRight: 35,
+    marginRight: theme.spacing(4),
     '&.Mui-selected': {
       color: theme.palette.primary.main,
       fontWeight: 400,
@@ -149,7 +152,7 @@ export default function GSMenu(props) {
   );
 
   return props.variant === 'plain' ? (
-    <>{menu}</>
+    <div className={classes.menuContainer}>{menu}</div>
   ) : (
     <Drawer
       PaperProps={{
