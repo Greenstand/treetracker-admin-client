@@ -8,7 +8,6 @@ const styles = (theme) => ({
   },
   menuAside: {
     height: '100%',
-    width: MENU_WIDTH,
     position: 'absolute',
     left: 0,
     top: 0,
@@ -35,7 +34,6 @@ const styles = (theme) => ({
   },
   menu: {
     height: '100%',
-    width: MENU_WIDTH,
     overflow: 'hidden',
   },
   rightBox: {

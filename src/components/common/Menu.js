@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'inherit',
     height: '100vh',
   },
+  menuContainer: {
+    width: MENU_WIDTH,
+  },
   menuTitle: {
     textTransform: 'uppercase',
   },
@@ -26,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 0, 0, 4),
   },
   menuItem: {
-    width: MENU_WIDTH,
     minHeight: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.lightVery,
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
-    marginRight: -15,
+    marginRight: theme.spacing(4),
     '&.Mui-selected': {
       color: theme.palette.primary.main,
       fontWeight: 400,
@@ -72,7 +74,7 @@ export default function GSMenu(props) {
       <Box p={4}>
         <IconLogo />
       </Box>
-      <Box />
+      <Box height={20} />
       {useMemo(
         () =>
           appContext.routes &&
@@ -147,7 +149,7 @@ export default function GSMenu(props) {
   );
 
   return props.variant === 'plain' ? (
-    <>{menu}</>
+    <div className={classes.menuContainer}>{menu}</div>
   ) : (
     <Drawer
       PaperProps={{

@@ -55,7 +55,7 @@ const style = (theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    gap: '2rem',
+    width: '100%',
   },
   box: {
     height: '100%',
@@ -568,7 +568,7 @@ function Users(props) {
         <Menu variant="plain" />
       </Paper>
 
-      <Grid Grid item container style={{ flexGrow: 1 }}>
+      <Grid item container className={classes.rightBox}>
         <Grid item xs={12}>
           <Grid container justify="space-between" className={classes.titleBox}>
             <Grid item>

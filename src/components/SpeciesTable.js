@@ -36,7 +36,7 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    gap: '2rem',
+    width: '100%',
   },
   box: {
     height: '100%',
@@ -48,6 +48,7 @@ const styles = (theme) => ({
     height: '100%',
     overflow: 'auto',
     padding: theme.spacing(8),
+    flexGrow: 1,
   },
   titleBox: {
     marginBottom: theme.spacing(4),
@@ -132,13 +133,6 @@ const SpeciesTable = (props) => {
   const [showCombine, setShowCombine] = useState(false);
 
   const tableRef = useRef(null);
-
-  const emptyRows =
-    rowsPerPage -
-    Math.min(
-      rowsPerPage,
-      speciesContext.speciesList.length - page * rowsPerPage
-    );
 
   useEffect(() => {
     const sortBy = (option) => {
@@ -247,11 +241,11 @@ const SpeciesTable = (props) => {
 
   return (
     <Grid className={classes.speciesTableContainer}>
-      <Paper elevation={3}>
+      <Paper elevation={3} className={classes.menu}>
         <Menu variant="plain" />
       </Paper>
 
-      <Grid item style={{ flexGrow: 1 }} container className={classes.rightBox}>
+      <Grid item container className={classes.rightBox}>
         <Grid item xs={12}>
           <Grid container justify="space-between" className={classes.titleBox}>
             <Grid item>
@@ -308,14 +302,7 @@ const SpeciesTable = (props) => {
                     <TableCell>Operations</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {renderSpecies()}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
+                <TableBody>{renderSpecies()}</TableBody>
                 <TableFooter>
                   <TableRow>{tablePagination()}</TableRow>
                 </TableFooter>
