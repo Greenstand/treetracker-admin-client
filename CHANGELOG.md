@@ -1,3 +1,10 @@
+## [1.50.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.50.0...v1.50.1) (2022-02-13)
+
+
+### Bug Fixes
+
+* Fixed Menu Width ([#286](https://github.com/Greenstand/treetracker-admin-client/issues/286)) ([e1b053f](https://github.com/Greenstand/treetracker-admin-client/commit/e1b053fd7193126e0ac2d57489a3e472fb32ddba)), closes [#226](https://github.com/Greenstand/treetracker-admin-client/issues/226)
+
 # [1.50.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.49.1...v1.50.0) (2022-02-10)
 
 
