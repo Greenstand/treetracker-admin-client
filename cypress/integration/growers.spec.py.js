@@ -24,7 +24,13 @@ describe('Growers', () => {
       growers_Page.grower_Name().contains(/[A-Z]\w+ [A-Z]\w+/);
     });
     it('displays user id formated as: "ID: 1234" on the bottom of the grower card', () => {
-      growers_Page.grower_ID().contains(/ID: \d+/);
+      growers_Page
+        .grower_ID()
+        .parent()
+        .each((e) => {
+          cy.log(`ID: ${e.text()}`);
+          expect(e.text()).to.match(new RegExp(`ID: \\d+`));
+        });
     });
     it('displays organization name id formated as: "Organization" on the bottom of the grower card', () => {
       growers_Page.grower_OrganizationName().contains(/[A-Z]\w+/);
