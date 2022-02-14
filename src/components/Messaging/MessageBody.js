@@ -93,7 +93,13 @@ const useStyles = makeStyles((theme) => ({
     borderTop: '2px solid black',
   },
   surveyContent: {
+    display: 'flex',
+    marginLeft: 'auto',
+    backgroundColor: theme.palette.primary.main,
     color: '#fff',
+    width: '65%',
+    borderRadius: '10px',
+    padding: '10px',
   },
 }));
 
@@ -120,17 +126,17 @@ export const AnnounceMessage = ({ message }) => {
 };
 
 export const SurveyMessage = ({ message }) => {
-  const { messageRowRight, sentMessage, surveyContent } = useStyles();
+  const { surveyContent } = useStyles();
 
   const { questions } = message.survey;
   return (
-    <div className={messageRowRight}>
-      <Grid item className={sentMessage}>
-        <Typography variant={'h5'} className={surveyContent}>
+    <div className={surveyContent}>
+      <Grid item className={''}>
+        <Typography variant={'h4'}>
           {message.body ? message.body : ''}
         </Typography>
         {questions.map((question, i) => (
-          <div key={question + `:${i + 1}`} className={surveyContent}>
+          <div key={question + `:${i + 1}`}>
             <Typography variant={'h6'}>
               Question {i + 1}:{' '}
               <Typography variant={'body1'}>{question.prompt}</Typography>

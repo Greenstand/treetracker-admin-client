@@ -12,7 +12,7 @@ const MessagingView = () => {
   return (
     <>
       <Navbar />
-      <Messaging />;
+      <Messaging />
     </>
   );
 };

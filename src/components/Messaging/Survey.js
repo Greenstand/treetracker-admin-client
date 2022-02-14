@@ -156,7 +156,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
     } catch (err) {
       console.log(err);
     }
-    setToggleSurvey(false);
     setQuestionOne({
       prompt: '',
       choiceOne: '',
@@ -176,6 +175,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
       choiceThree: '',
     });
     setValues({ region: '', organization: '' });
+    setToggleSurvey(false);
   };
   return (
     <form className={form} onSubmit={handleSubmit}>

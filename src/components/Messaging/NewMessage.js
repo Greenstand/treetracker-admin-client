@@ -21,14 +21,24 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 300,
-    height: 400,
     backgroundColor: '#FFF',
     border: `2px solid ${theme.palette.primary.main}`,
     borderRadius: 20,
     boxShadow: 24,
     padding: 20,
     textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      height: 450,
+      width: 300,
+    },
+    [theme.breakpoints.up('md')]: {
+      height: 550,
+      width: 400,
+    },
+    [theme.breakpoints.up('lg')]: {
+      height: 650,
+      width: 500,
+    },
   },
   header: {
     color: theme.palette.primary.main,

@@ -11,10 +11,6 @@ import { makeStyles } from '@material-ui/styles';
 import { MessagingContext } from '../../context/MessagingContext';
 
 const useStyles = makeStyles((theme) => ({
-  rootContainer: {
-    paddingBottom: '1em',
-    marginBottom: '2em',
-  },
   title: {
     marginLeft: theme.spacing(7),
     fontSize: '24px',
@@ -35,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '90vw',
-    height: '85vh',
+    height: '75vh',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: '6em',
@@ -57,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
 const Messaging = () => {
   // styles
   const {
-    rootContainer,
     title,
     button,
     buttonContainer,
@@ -103,7 +98,7 @@ const Messaging = () => {
 
   return (
     <>
-      <Grid container direction="row" className={rootContainer} id="Messaging">
+      <Grid container id="Messaging">
         <Grid item className={title}>
           <h1>Inbox</h1>
         </Grid>
