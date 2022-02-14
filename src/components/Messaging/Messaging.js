@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import Navbar from 'components/Navbar';
 import Inbox from './Inbox';
 import MessageBody from './MessageBody';
 import Survey from './Survey';
@@ -104,7 +103,6 @@ const Messaging = () => {
 
   return (
     <>
-      <Navbar />
       <Grid container direction="row" className={rootContainer} id="Messaging">
         <Grid item className={title}>
           <h1>Inbox</h1>

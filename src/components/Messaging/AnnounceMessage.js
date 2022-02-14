@@ -63,7 +63,7 @@ const MenuProps = {
   },
 };
 
-const AnnounceMessageForm = () => {
+const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const { orgList } = useContext(AppContext);
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
@@ -100,6 +100,13 @@ const AnnounceMessageForm = () => {
     if (payload.organization_id || payload.region_id) {
       await postMessageSend(payload);
     }
+    setToggleAnnounceMessage(false);
+    setValues({
+      message: '',
+      videoLink: '',
+      organization: '',
+      region: '',
+    });
   };
 
   return (
@@ -206,7 +213,9 @@ const AnnounceMessage = ({
           </Typography>
         </Grid>
         <Grid item>
-          <AnnounceMessageForm />
+          <AnnounceMessageForm
+            setToggleAnnounceMessage={setToggleAnnounceMessage}
+          />
         </Grid>
       </Grid>
     </SwipeableDrawer>

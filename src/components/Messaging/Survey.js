@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SurveyForm = () => {
+const SurveyForm = ({ setToggleSurvey }) => {
   const { form, submitButton, input } = useStyles();
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
@@ -156,6 +156,26 @@ const SurveyForm = () => {
     } catch (err) {
       console.log(err);
     }
+    setToggleSurvey(false);
+    setQuestionOne({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setQuestionTwo({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setQuestionThree({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setValues({ region: '', organization: '' });
   };
   return (
     <form className={form} onSubmit={handleSubmit}>
@@ -296,7 +316,7 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <SurveyForm />
+            <SurveyForm setToggleSurvey={setToggleSurvey} />
           </Grid>
         </Grid>
       </SwipeableDrawer>

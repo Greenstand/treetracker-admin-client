@@ -26,6 +26,7 @@ export const MessagingProvider = (props) => {
 
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
+    console.log(rawMessages);
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
@@ -36,7 +37,7 @@ export const MessagingProvider = (props) => {
           let key =
             message.to[0].recipient !== user.userName
               ? message[`to`][0].recipient
-              : message['from'];
+              : message['from'].author;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];

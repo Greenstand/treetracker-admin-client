@@ -76,7 +76,7 @@ const NewMessage = ({ openModal, handleClose }) => {
     ) {
       await postMessageSend(messagePayload);
     }
-    setMessageContent({ to: '', body: '' });
+    handleClose();
   };
 
   return (
