@@ -205,20 +205,20 @@ function PaymentsTable() {
         headerTitle="Payments"
         mainFilterComponent={
           <CustomTableFilter
-            isMainFilterOpen={isMainFilterOpen}
+            isFilterOpen={isMainFilterOpen}
             filter={filter}
             filterType="main"
             setFilter={setFilter}
-            setIsMainFilterOpen={setIsMainFilterOpen}
+            setIsFilterOpen={setIsMainFilterOpen}
           />
         }
         dateFilterComponent={
           <CustomTableFilter
-            isMainFilterOpen={isDateFilterOpen}
+            isFilterOpen={isDateFilterOpen}
             filter={filter}
             filterType="date"
             setFilter={setFilter}
-            setIsMainFilterOpen={setIsDateFilterOpen}
+            setIsFilterOpen={setIsDateFilterOpen}
           />
         }
         rowDetails={

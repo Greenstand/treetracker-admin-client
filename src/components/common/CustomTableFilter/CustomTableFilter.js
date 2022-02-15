@@ -22,19 +22,19 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @name CustomTableFilter
  * @description render date filter UI for custom table
  * @param {object} props
- * @param {function} props.setIsMainFilterOpen - toggle open  filter
+ * @param {function} props.setIsFilterOpen - toggle open  filter
  * @param {function} props.setFilter - set  filter
  * @param {object} props.filter -  filter object
  * @param {string} props.filterType -  filter type, either 'main' or 'date'
- * @param {boolean} props.isMainFilterOpen - flag determining if filter is open/closed
+ * @param {boolean} props.isFilterOpen - flag determining if filter is open/closed
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
-  const [mainFilter, setMainFilter] = useState({});
+  const [localFilter, setLocalFilter] = useState({});
   const [organisations, setOrganisations] = useState([]);
   const {
-    isMainFilterOpen,
-    setIsMainFilterOpen,
+    isFilterOpen,
+    setIsFilterOpen,
     filter,
     setFilter,
     filterType,
@@ -45,37 +45,37 @@ function CustomTableFilter(props) {
   const handleOnFormControlChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    const updatedFilter = { ...mainFilter, [name]: value };
+    const updatedFilter = { ...localFilter, [name]: value };
     console.log(updatedFilter);
-    setMainFilter(updatedFilter);
+    setLocalFilter(updatedFilter);
   };
 
   const handleOnFilterFormSubmit = (e) => {
     e.preventDefault();
-    const filtersToSubmit = { ...filter, ...mainFilter };
+    const filtersToSubmit = { ...filter, ...localFilter };
     Object.keys(filtersToSubmit).forEach(
       (k) =>
         (filtersToSubmit[k] === 'all' || filtersToSubmit[k] === '') &&
         delete filtersToSubmit[k]
     ); // filter out keys we don't want to submit
     setFilter(filtersToSubmit);
-    setIsMainFilterOpen(false);
+    setIsFilterOpen(false);
   };
 
   const handleOnFilterFormReset = (e) => {
     e.preventDefault();
-    if (Object.keys(mainFilter).length !== 0) {
+    if (Object.keys(localFilter).length !== 0) {
       const withoutMainFilter = Object.assign({}, filter);
       delete withoutMainFilter.earnings_status;
-      delete withoutMainFilter.organisation_id;
+      delete withoutMainFilter.funder_id;
       delete withoutMainFilter.grower;
       delete withoutMainFilter.phone;
       delete withoutMainFilter.start_date;
       delete withoutMainFilter.end_date;
       setFilter(withoutMainFilter);
-      setMainFilter({});
+      setLocalFilter({});
     }
-    setIsMainFilterOpen(false);
+    setIsFilterOpen(false);
   };
 
   useEffect(() => {
@@ -85,7 +85,7 @@ function CustomTableFilter(props) {
         setOrganisations(res);
       })
       .catch((err) => console.log(err));
-  }, [mainFilter]);
+  }, [localFilter]);
 
   const renderDateFilter = () => (
     <>
@@ -96,7 +96,7 @@ function CustomTableFilter(props) {
         <TextField
           id="start_date"
           name="start_date"
-          value={mainFilter?.start_date}
+          value={localFilter?.start_date}
           label="Start Date"
           type="date"
           onChange={handleOnFormControlChange}
@@ -114,7 +114,7 @@ function CustomTableFilter(props) {
           id="end_date"
           name="end_date"
           label="End Date"
-          value={mainFilter?.end_date}
+          value={localFilter?.end_date}
           onChange={handleOnFormControlChange}
           type="date"
           InputLabelProps={{
@@ -134,6 +134,7 @@ function CustomTableFilter(props) {
         <InputLabel id="earnings_status">Payment Status</InputLabel>
         <Select
           labelId="earnings_status"
+          defaultValue={localFilter?.earnings_status}
           id="earnings_status"
           name="earnings_status"
           label="Payment Status"
@@ -153,16 +154,20 @@ function CustomTableFilter(props) {
         variant="outlined"
         className={classes.customTableFilterSelectFormControl}
       >
-        <InputLabel id="organisation_id">Organisation</InputLabel>
+        <InputLabel id="funder_id">Organisation</InputLabel>
         <Select
-          labelId="organisation_id"
-          id="organisation_id"
-          name="organisation_id"
+          labelId="funder_id"
+          defaultValue={localFilter?.funder_id}
+          id="funder_id"
+          name="funder_id"
           label="Organisation"
           onChange={handleOnFormControlChange}
         >
           {organisations.map((organisation, i) => (
-            <MenuItem key={`${organisation.id}_${i}`} value={organisation.id}>
+            <MenuItem
+              key={`${organisation.id}_${i}`}
+              value={organisation.stakeholder_uuid}
+            >
               <span style={{ textTransform: 'capitalize' }}>
                 {organisation.name}
               </span>
@@ -181,7 +186,7 @@ function CustomTableFilter(props) {
           htmlFor="phone"
           label="Grower Phone Number"
           placeholder="Grower Phone Number"
-          value={mainFilter?.phone}
+          value={localFilter?.phone}
           type="text"
           onChange={handleOnFormControlChange}
         />
@@ -197,7 +202,7 @@ function CustomTableFilter(props) {
           htmlFor="grower"
           label="Grower Name"
           placeholder="Grower Name"
-          value={mainFilter?.grower}
+          value={localFilter?.grower}
           onChange={handleOnFormControlChange}
           type="text"
         />
@@ -209,7 +214,7 @@ function CustomTableFilter(props) {
     <Drawer
       anchor="right"
       BackdropProps={{ invisible: true }}
-      open={isMainFilterOpen}
+      open={isFilterOpen}
     >
       <Grid
         container
@@ -225,7 +230,7 @@ function CustomTableFilter(props) {
               </Grid>
             </Grid>
             <CloseIcon
-              onClick={() => setIsMainFilterOpen(false)}
+              onClick={() => setIsFilterOpen(false)}
               className={classes.customTableFilterCloseIcon}
             />
           </Grid>
@@ -274,9 +279,9 @@ function CustomTableFilter(props) {
 export default CustomTableFilter;
 
 CustomTableFilter.propTypes = {
-  setIsMainFilterOpen: PropTypes.func.isRequired,
+  setIsFilterOpen: PropTypes.func.isRequired,
   filter: PropTypes.object.isRequired,
   filterType: PropTypes.string.isRequired,
   setFilter: PropTypes.func.isRequired,
-  isMainFilterOpen: PropTypes.bool.isRequired,
+  isFilterOpen: PropTypes.bool.isRequired,
 };

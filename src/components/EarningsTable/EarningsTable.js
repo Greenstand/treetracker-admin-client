@@ -165,28 +165,29 @@ function EarningsTable() {
       headerTitle="Earnings"
       mainFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isMainFilterOpen}
+          isFilterOpen={isMainFilterOpen}
           filter={filter}
           filterType="main"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsMainFilterOpen}
+          setIsFilterOpen={setIsMainFilterOpen}
         />
       }
       dateFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isDateFilterOpen}
+          isFilterOpen={isDateFilterOpen}
           filter={filter}
           filterType="date"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsDateFilterOpen}
+          setIsFilterOpen={setIsDateFilterOpen}
         />
       }
-      rowDetails={selectedEarning ? (
-        <CustomTableItemDetails
-          selectedItem={selectedEarning}
-          closeDetails={() => setSelectedEarning(null)}
-          refreshData={getEarnings}
-        />
+      rowDetails={
+        selectedEarning ? (
+          <CustomTableItemDetails
+            selectedItem={selectedEarning}
+            closeDetails={() => setSelectedEarning(null)}
+            refreshData={getEarnings}
+          />
         ) : null
       }
       actionButtonType="export"
