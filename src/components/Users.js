@@ -544,7 +544,7 @@ function Users(props) {
         <TableCell component="th" scope="row">
           {getDateTimeStringLocale(user.createdAt)}
         </TableCell>
-        <TableCell>
+        <TableCell style={{ minWidth: '130px' }}>
           <IconButton title="edit" onClick={() => handleEdit(user)}>
             <Edit />
           </IconButton>
