@@ -40,19 +40,19 @@ const earningTableMetaData = [
   {
     description: 'Effective Date',
     name: 'calculated_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: true,
   },
   {
     description: 'Status',
     name: 'status',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
   {
     description: 'Payment Date',
     name: 'paid_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
 ];
@@ -99,7 +99,10 @@ function EarningsTable() {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [earningsPerPage, setEarningsPerPage] = useState(20);
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState({
+    field: 'paid_at',
+    order: 'desc',
+  });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
@@ -178,12 +181,13 @@ function EarningsTable() {
           setIsMainFilterOpen={setIsDateFilterOpen}
         />
       }
-      rowDetails={
+      rowDetails={selectedEarning ? (
         <CustomTableItemDetails
           selectedItem={selectedEarning}
           closeDetails={() => setSelectedEarning(null)}
           refreshData={getEarnings}
         />
+        ) : null
       }
       actionButtonType="export"
     />

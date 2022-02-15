@@ -49,25 +49,25 @@ const paymentTableMetaData = [
   {
     description: 'Effective Date',
     name: 'calculated_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: true,
   },
   {
     description: 'Payment System',
     name: 'payment_system',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
   {
     description: 'Status',
     name: 'status',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
   {
     description: 'Payment Date',
     name: 'paid_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
 ];
@@ -114,7 +114,10 @@ function PaymentsTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowUploadSnack, setIsShowUploadSnack] = useState(false);
   const [paymentsPerPage, setPaymentsPerPage] = useState(20);
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState({
+    field: 'effective_payment_date',
+    order: 'desc',
+  });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalPayments, setTotalPayments] = useState(0);
@@ -219,10 +222,12 @@ function PaymentsTable() {
           />
         }
         rowDetails={
-          <CustomTableItemDetails
-            selectedItem={selectedPayment}
-            closeDetails={() => setSelectedPayment(null)}
-          />
+          selectedPayment ? (
+            <CustomTableItemDetails
+              selectedItem={selectedPayment}
+              closeDetails={() => setSelectedPayment(null)}
+            />
+          ) : null
         }
         actionButtonType="upload"
       />

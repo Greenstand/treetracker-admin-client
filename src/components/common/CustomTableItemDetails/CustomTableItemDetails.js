@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Drawer from '@material-ui/core/Drawer';
-import CloseIcon from '@material-ui/icons/Close';
-import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
+import CloseIcon from '@material-ui/icons/Close';
+import {
+  Button,
+  Divider,
+  Drawer,
+  FormControl,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import earningsAPI from 'api/earnings';
 import useStyles from './CustomTableItemDetails.styles';
 
@@ -25,6 +28,7 @@ import useStyles from './CustomTableItemDetails.styles';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
+  const [paymentSystem, setPaymentSystem] = useState('');
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -32,6 +36,7 @@ function LogPaymentForm(props) {
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
+    setPaymentSystem(value);
   };
 
   const handleOnFormSubmit = () => {
@@ -75,6 +80,7 @@ function LogPaymentForm(props) {
               label="Payment System"
               variant="outlined"
               onChange={handleOnInputChange}
+              value={paymentSystem}
             />
           </FormControl>
         </Grid>
@@ -131,11 +137,11 @@ function CustomTableItemDetails(props) {
   const { selectedItem, closeDetails, refreshData } = props;
   const classes = useStyles();
 
-  return selectedItem ? (
+  return (
     <Drawer
       anchor="right"
       BackdropProps={{ invisible: true }}
-      open={selectedItem}
+      open={!!selectedItem}
     >
       <Grid container direction="column" className={classes.itemDrawerDetails}>
         {/* start  details header */}
@@ -162,11 +168,11 @@ function CustomTableItemDetails(props) {
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Grower</Typography>
-              <Typography variant="b">{selectedItem.grower}</Typography>
+              <Typography variant="h6">{selectedItem.grower}</Typography>
             </Grid>
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Funder</Typography>
-              <Typography variant="b">{selectedItem.funder}</Typography>
+              <Typography variant="h6">{selectedItem.funder}</Typography>
             </Grid>
           </Grid>
 
@@ -175,12 +181,12 @@ function CustomTableItemDetails(props) {
           <Grid container direction="row">
             <Grid item sm={5}>
               <Typography>Amount</Typography>
-              <Typography variant="b">{selectedItem.amount} </Typography>
+              <Typography variant="h6">{selectedItem.amount} </Typography>
             </Grid>
 
             <Grid item>
               <Typography>Currency</Typography>
-              <Typography variant="b">{selectedItem.currency}</Typography>
+              <Typography variant="h6">{selectedItem.currency}</Typography>
             </Grid>
           </Grid>
 
@@ -189,18 +195,36 @@ function CustomTableItemDetails(props) {
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Status</Typography>
-              <Typography variant="b">{selectedItem.status}</Typography>
+              <Typography variant="h6">{selectedItem.status}</Typography>
             </Grid>
 
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>
-                Effective Payment Date
-                <InfoOutlinedIcon
-                  fontSize="large"
-                  className={classes.infoIconOutlined}
-                />
+                Effective Date
+                <Tooltip
+                  title="Date amount was calculated"
+                  placement="right-start"
+                >
+                  <InfoOutlinedIcon
+                    fontSize="large"
+                    className={classes.infoIconOutlined}
+                  />
+                </Tooltip>
               </Typography>
-              <Typography variant="b">{selectedItem.calculated_at}</Typography>
+              <Typography variant="h6">{selectedItem.calculated_at}</Typography>
+            </Grid>
+
+            <Grid item className={classes.itemGrowerDetail}>
+              <Typography>
+                Payment Date
+                <Tooltip title="Date amount was paid" placement="right-start">
+                  <InfoOutlinedIcon
+                    fontSize="large"
+                    className={classes.infoIconOutlined}
+                  />
+                </Tooltip>
+              </Typography>
+              <Typography variant="h6">{selectedItem.paid_at}</Typography>
             </Grid>
           </Grid>
 
@@ -213,21 +237,21 @@ function CustomTableItemDetails(props) {
 
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
-              <Typography variant="b">Default</Typography>
+              <Typography variant="h6">Default</Typography>
             </Grid>
 
             <Grid item className={classes.itemGrowerDetail}>
               <Grid container direction="row">
                 <Grid item sm={5}>
                   <Typography>Start Date</Typography>
-                  <Typography variant="b">
+                  <Typography variant="h6">
                     {selectedItem.consolidation_period_start}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography>End Date</Typography>
-                  <Typography variant="b">
+                  <Typography variant="h6">
                     {selectedItem.consolidation_period_end}
                   </Typography>
                 </Grid>
@@ -247,14 +271,14 @@ function CustomTableItemDetails(props) {
             <Grid item className={classes.itemGrowerDetail}>
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
-                <Typography variant="b">
+                <Typography variant="h6">
                   {selectedItem.payment_confirmed_by}
                 </Typography>
               </Grid>
 
               <Grid item className={classes.itemGrowerDetail}>
                 <Typography>Payment confirmation method</Typography>
-                <Typography variant="b">
+                <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
                 </Typography>
               </Grid>
@@ -263,8 +287,6 @@ function CustomTableItemDetails(props) {
         </Grid>
       </Grid>
     </Drawer>
-  ) : (
-    ''
   );
 }
 

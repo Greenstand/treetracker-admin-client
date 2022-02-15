@@ -1,97 +1,101 @@
-import React, { useState, useContext } from 'react';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import React, { useState, useContext, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 
 import { MessagingContext } from 'context/MessagingContext.js';
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    messageRow: {
-      display: 'flex',
+const useStyles = makeStyles((theme) => ({
+  messageRow: {
+    display: 'flex',
+  },
+  messageRowRight: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  recievedMessage: {
+    position: 'relative',
+    marginLeft: '20px',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: 'lightGrey',
+    textAlign: 'left',
+    borderRadius: '10px',
+  },
+  sentMessage: {
+    position: 'relative',
+    marginRight: '20px',
+    marginBottom: '10px',
+    padding: '10px',
+    backgroundColor: theme.palette.primary.main,
+    textAlign: 'left',
+    borderRadius: '10px',
+  },
+  messageContent: {
+    padding: 0,
+    margin: 0,
+    wordWrap: 'break-word',
+  },
+  messageTimeStampLeft: {
+    display: 'flex',
+    marginRight: 'auto',
+    alignItems: 'center',
+    color: 'grey',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
     },
-    messageRowRight: {
-      display: 'flex',
-      justifyContent: 'flex-end',
+  },
+  messageTimeStampRight: {
+    display: 'flex',
+    marginLeft: 'auto',
+    alignItems: 'center',
+    color: 'grey',
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
     },
-    recievedMessage: {
-      position: 'relative',
-      marginLeft: '20px',
-      marginBottom: '10px',
-      padding: '10px',
-      backgroundColor: 'lightGrey',
-      textAlign: 'left',
-      borderRadius: '10px',
+  },
+  displayName: {
+    marginLeft: '20px',
+  },
+  paper: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  senderInfo: {
+    padding: '10px',
+    borderBottom: '2px solid black',
+  },
+  messagesBody: {
+    height: '80%',
+    width: '95%',
+    padding: '7.5px',
+    overflowY: 'auto',
+  },
+  senderItem: {
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
+  },
+  avatar: {
+    width: '5em',
+    height: '5em',
+    [theme.breakpoints.down('md')]: {
+      width: '4em',
+      height: '4em',
     },
-    sentMessage: {
-      position: 'relative',
-      marginRight: '20px',
-      marginBottom: '10px',
-      padding: '10px',
-      backgroundColor: theme.palette.primary.main,
-      textAlign: 'left',
-      borderRadius: '10px',
+    [theme.breakpoints.down('sm')]: {
+      width: '2em',
+      height: '2em',
     },
-    messageContent: {
-      padding: 0,
-      margin: 0,
-      wordWrap: 'break-word',
-    },
-    messageTimeStampLeft: {
-      display: 'flex',
-      marginRight: 'auto',
-      alignItems: 'center',
-      color: 'grey',
-    },
-    messageTimeStampRight: {
-      display: 'flex',
-      marginLeft: 'auto',
-      alignItems: 'center',
-      color: 'grey',
-    },
-    displayName: {
-      marginLeft: '20px',
-    },
-    paper: {
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      flexDirection: 'column',
-    },
-    senderInfo: {
-      padding: '10px',
-      borderBottom: '2px solid black',
-    },
-    messagesBody: {
-      height: '80%',
-      width: '95%',
-      padding: '7.5px',
-      overflowY: 'auto',
-    },
-    senderItem: {
-      padding: theme.spacing(1),
-      margin: theme.spacing(1),
-    },
-    avatar: {
-      width: '5em',
-      height: '5em',
-      [theme.breakpoints.down('md')]: {
-        width: '4em',
-        height: '4em',
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '2em',
-        height: '2em',
-      },
-    },
-    textInput: {
-      borderTop: '2px solid black',
-    },
-    surveyContent: {
-      color: '#fff',
-    },
-  })
-);
+  },
+  textInput: {
+    borderTop: '2px solid black',
+  },
+  surveyContent: {
+    color: '#fff',
+  },
+}));
 
 export const AnnounceMessage = ({ message }) => {
   const {
@@ -126,7 +130,7 @@ export const SurveyMessage = ({ message }) => {
           {message.body ? message.body : ''}
         </Typography>
         {questions.map((question, i) => (
-          <div key={i} className={surveyContent}>
+          <div key={question + `:${i + 1}`} className={surveyContent}>
             <Typography variant={'h6'}>
               Question {i + 1}:{' '}
               <Typography variant={'body1'}>{question.prompt}</Typography>
@@ -134,8 +138,10 @@ export const SurveyMessage = ({ message }) => {
             <Typography variant={'h6'}>
               Choices:
               <ol type="A">
-                {question.choices.map((choice) => (
-                  <li key={choice}>{choice}</li>
+                {question.choices.map((choice, i) => (
+                  <li key={choice ? `choice ${i + 1}:${choice}` : i}>
+                    {choice}
+                  </li>
                 ))}
               </ol>
             </Typography>
@@ -195,7 +201,7 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ messageRecipient, id }) => {
+const SenderInformation = ({ messageRecipient, subject, id }) => {
   const { senderInfo, senderItem, avatar } = useStyles();
 
   return (
@@ -204,9 +210,11 @@ const SenderInformation = ({ messageRecipient, id }) => {
         <Avatar src="" className={avatar}></Avatar>
       </Grid>
       <Grid item className={senderItem}>
-        <Typography variant="h5">{messageRecipient}</Typography>
-        <Typography align="left" color="primary" variant="h5">
-          ID:{id}
+        <Typography variant="h5">
+          {subject === 'Survey' ? subject : messageRecipient}
+        </Typography>
+        <Typography align="left" color="primary" variant="h6">
+          {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
       </Grid>
     </Grid>
@@ -215,10 +223,27 @@ const SenderInformation = ({ messageRecipient, id }) => {
 
 const MessageBody = ({ messages, messageRecipient }) => {
   const { paper, messagesBody, textInput } = useStyles();
-  const { user, postMessageSend } = useContext(MessagingContext);
+  const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
+  const [subject, setSubject] = useState('');
+  const [recipientId, setRecipientId] = useState('');
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    if (messages) {
+      setSubject(messages[0].subject);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (authors && messageRecipient) {
+      let res = authors.find((author) => author.handle === messageRecipient);
+      if (res) {
+        setRecipientId(res.id);
+      }
+    }
+  }, [messageRecipient]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     let lastMessage = messages[messages.length - 1];
@@ -233,7 +258,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        await postMessageSend(messagePayload);
+        postMessageSend(messagePayload);
       }
     }
     setMessageContent('');
@@ -242,9 +267,13 @@ const MessageBody = ({ messages, messageRecipient }) => {
   return (
     <Paper className={paper}>
       {messageRecipient && messages ? (
-        <SenderInformation messageRecipient={messageRecipient} id={''} />
+        <SenderInformation
+          messageRecipient={messageRecipient}
+          subject={subject}
+          id={recipientId}
+        />
       ) : (
-        <SenderInformation></SenderInformation>
+        <SenderInformation />
       )}
       <div id="style-1" className={messagesBody}>
         {messages ? (
@@ -252,12 +281,12 @@ const MessageBody = ({ messages, messageRecipient }) => {
             if (message.subject === 'Message') {
               return message.from === user.userName ? (
                 <SentMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
                 />
               ) : message.body.length > 1 ? (
                 <RecievedMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
                 />
               ) : (
@@ -266,14 +295,14 @@ const MessageBody = ({ messages, messageRecipient }) => {
             } else if (message.subject.includes('Survey')) {
               return (
                 <SurveyMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : i}
                   message={message}
                 />
               );
             } else if (message.subject.includes('Announce')) {
               return (
                 <AnnounceMessage
-                  key={message.id ? message.id : i}
+                  key={message.id ? `messageId=${message.id}i=${i}` : i}
                   message={message}
                 />
               );

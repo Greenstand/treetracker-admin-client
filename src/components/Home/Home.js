@@ -94,13 +94,13 @@ function Home(props) {
   };
 
   return (
-    <div className={classes.box}>
-      <div className={classes.menuAside}>
+    <Grid className={classes.box}>
+      <Grid className={classes.menuAside}>
         <Paper elevation={3} className={classes.menu}>
           <Menu variant="plain" />
         </Paper>
-      </div>
-      <div className={classes.rightBox}>
+      </Grid>
+      <Grid className={classes.rightBox}>
         <Box className={classes.box2}>
           <Grid container spacing={5} className={classes.version}>
             <Grid item xs={3}>
@@ -196,11 +196,11 @@ function Home(props) {
                     <ReportingCard7 startDate={startDate} endDate={endDate} />
                   </Grid>
                 </Grid>
-            )}
+              )}
           </Grid>
         </Box>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 

@@ -1,46 +1,64 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, Box, Button, Grid, Paper } from '@material-ui/core';
+import {
+  Typography,
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Tooltip,
+  IconButton,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
+import { getDateStringLocale } from 'common/locale';
+import { getDistance } from 'geolib';
 
 const useStyles = makeStyles({
   containerBox: {
     marginTop: 0,
     marginBottom: theme.spacing(5),
-    paddingBottom: theme.spacing(2),
     background: '#fff',
     borderRadius: '4px',
+    overflow: 'hidden',
+  },
+
+  expandMore: {
+    transform: 'rotate(0deg)',
+    transition: 'transform 250ms ease-in-out',
+  },
+
+  showLess: {
+    cursor: 'pointer',
+    transform: 'rotate(-180deg)',
+    transition: 'transform 250ms ease-in-out',
   },
 
   headerBox: {
     display: 'flex',
+    cursor: 'pointer',
   },
 
   imgContainer: {
     height: '100%',
-    padding: '5px',
     objectFit: 'cover',
-    paddingBottom: '10px',
-    overFlow: 'hidden',
   },
   gridList: {
-    padding: '10px',
+    padding: theme.spacing(0, 4),
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'auto',
     overflowY: 'hidden',
-  },
-
-  imageScroll: {
-    // height: '76vh',
-    // overflow: 'scroll',
+    gap: theme.spacing(2),
   },
 
   candidateImgBtn: {
-    padding: theme.spacing(5, 4),
+    padding: theme.spacing(4),
     display: 'flex',
     gap: theme.spacing(2),
   },
@@ -48,28 +66,80 @@ const useStyles = makeStyles({
     fontSize: '16px',
   },
   box2: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    padding: '8px 16px',
+    padding: theme.spacing(2),
   },
   box3: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: theme.spacing(2),
   },
   box1: {
     width: '24px',
     height: '24px',
-    backgroundColor: '#75B926',
+    lineHeight: '24px',
+    color: theme.palette.primary.main,
+    border: `solid 1px ${theme.palette.primary.main}`,
+    borderRadius: '50%',
+    textAlign: 'center',
+  },
+  candidateCaptureContainer: {
+    height: '300px',
+    position: 'relative',
+  },
+  captureInfo: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'white',
+    flexDirection: 'row',
+    background: 'rgba(0,0,0,0.7)',
+    color: theme.palette.primary.main,
+  },
+  captureInfoDetail: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: theme.spacing(2),
+    gap: theme.spacing(1),
+  },
+  candidateTreeContent: {
+    transition: 'max-height 250ms ease-in-out',
   },
 });
 
-function CandidateImages({ candidateImgData, sameTreeHandler }) {
+function DistanceTo({ lat1, lon1, lat2, lon2 }) {
+  const [content, setContent] = useState('');
+  if (
+    lat1 === 'undefined' ||
+    lon1 === 'undefined' ||
+    lat2 === 'undefined' ||
+    lon2 === 'undefined'
+  ) {
+    setContent('');
+  }
+
+  useEffect(() => {
+    const distance = getDistance(
+      {
+        latitude: lat1,
+        longitude: lon1,
+      },
+      {
+        latitude: lat2,
+        longitude: lon2,
+      }
+    );
+    setContent(`${distance}m away`);
+  }, []);
+
+  return <span>{content}</span>;
+}
+
+function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
 
   const [showBox, setShowBox] = useState([]);
@@ -102,77 +172,119 @@ function CandidateImages({ candidateImgData, sameTreeHandler }) {
                 <Grid
                   container
                   className={classes.box2}
-                  onClick={() => showImgBox(tree.id)}
+                  onClick={() => {
+                    showBox.includes(tree.id)
+                      ? hideImgBox(tree.id)
+                      : showImgBox(tree.id);
+                  }}
                 >
                   <Box className={classes.box3}>
                     <Paper elevation={0} className={classes.box1}>
-                      {++i}
+                      {i + 1}
                     </Paper>
-                    <Typography variant="h5" style={{ padding: '10px' }}>
-                      Tree {tree.tree_id}
-                    </Typography>
+                    <Tooltip title={tree.id}>
+                      <Typography variant="h5">
+                        Tree {(tree.id + '').substring(0, 10) + '...'}
+                      </Typography>
+                    </Tooltip>
                   </Box>
-                  <Box>{/* button */}</Box>
+                  <Box>
+                    <IconButton
+                      id={`ExpandIcon_${tree.id}`}
+                      className={
+                        showBox.includes(tree.id)
+                          ? classes.showLess
+                          : classes.expandMore
+                      }
+                      onClick={(event) => {
+                        showBox.includes(tree.id)
+                          ? hideImgBox(tree.id)
+                          : showImgBox(tree.id);
+                        event.stopPropagation();
+                      }}
+                    >
+                      <ExpandMoreIcon
+                        fontSize="large"
+                        color="primary"
+                        key={`expandIcon-${i}`}
+                      />
+                    </IconButton>
+                  </Box>
                 </Grid>
               </Box>
 
-              {showBox.includes(tree.id) ? (
-                <Box>
-                  {tree.captures.length ? (
-                    <Box className={classes.gridList} cols={3}>
-                      {tree.captures.map((capture) => {
-                        return (
-                          <Box
-                            style={{ height: '300px', color: 'blue' }}
-                            key={capture.id}
-                          >
-                            <img
-                              className={classes.imgContainer}
-                              src={capture.image_url}
-                              alt={`Candidate capture ${capture.id}`}
-                            />
+              <Box
+                className={classes.candidateTreeContent}
+                style={{
+                  maxHeight: showBox.includes(tree.id) ? '400px' : '0px',
+                }}
+              >
+                <Box className={classes.gridList} cols={3}>
+                  {(tree.captures.length ? tree.captures : [tree]).map(
+                    (candidateCapture) => {
+                      return (
+                        <Box
+                          key={`${tree.id}_${candidateCapture.id}`}
+                          className={classes.candidateCaptureContainer}
+                        >
+                          <img
+                            className={classes.imgContainer}
+                            src={candidateCapture.image_url}
+                            alt={`Candidate capture ${candidateCapture.id}`}
+                          />
+                          <Box className={classes.captureInfo}>
+                            <Box className={classes.captureInfoDetail}>
+                              <AccessTimeIcon />
+                              <Typography variant="body1">
+                                {getDateStringLocale(
+                                  candidateCapture.created_at
+                                )}
+                              </Typography>
+                            </Box>
+                            <Box className={classes.captureInfoDetail}>
+                              <LocationOnOutlinedIcon />
+                              <Typography variant="body1">
+                                {capture && (
+                                  <DistanceTo
+                                    lat1={capture.lat}
+                                    lon1={capture.lon}
+                                    lat2={candidateCapture.lat}
+                                    lon2={candidateCapture.lon}
+                                  />
+                                )}
+                              </Typography>
+                            </Box>
                           </Box>
-                        );
-                      })}
-                    </Box>
-                  ) : (
-                    <Box
-                      style={{ height: '300px', color: 'blue' }}
-                      key={tree.id}
-                    >
-                      <img
-                        className={classes.imgContainer}
-                        src={tree.image_url}
-                        alt={`Candidate capture ${tree.id}`}
-                      />
-                    </Box>
+                        </Box>
+                      );
+                    }
                   )}
-
-                  <Box className={classes.candidateImgBtn}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      startIcon={<CheckIcon />}
-                      onClick={() => sameTreeHandler(tree.id)}
-                      style={{ color: 'white' }}
-                      className={classes.button}
-                    >
-                      Same Tree
-                    </Button>
-                    <Button
-                      id={tree.tree_id}
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<ClearIcon />}
-                      onClick={() => hideImgBox(tree.id)}
-                      className={classes.button}
-                      value={i}
-                    >
-                      Different Tree
-                    </Button>
-                  </Box>
                 </Box>
-              ) : null}
+
+                <Box className={classes.candidateImgBtn}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<CheckIcon />}
+                    onClick={() => sameTreeHandler(tree.id)}
+                    style={{ color: 'white' }}
+                    className={classes.button}
+                  >
+                    Confirm Match
+                  </Button>
+                  <Button
+                    id={tree.tree_id}
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<ClearIcon />}
+                    onClick={() => hideImgBox(tree.id)}
+                    className={classes.button}
+                    value={i}
+                  >
+                    Dismiss
+                  </Button>
+                </Box>
+              </Box>
             </Paper>
           );
         })}

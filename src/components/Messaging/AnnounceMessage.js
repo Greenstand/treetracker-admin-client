@@ -135,7 +135,7 @@ const AnnounceMessageForm = () => {
         MenuProps={MenuProps}
       >
         {orgList.map((org, i) => (
-          <MenuItem key={i} value={org.id}>
+          <MenuItem key={org.id ? org.id : i} value={org.id}>
             {org.name}
           </MenuItem>
         ))}
@@ -150,8 +150,8 @@ const AnnounceMessageForm = () => {
         input={<OutlinedInput />}
         id="select-reg"
       >
-        {regions.map((region) => (
-          <MenuItem key={region.id} value={region.id}>
+        {regions.map((region, i) => (
+          <MenuItem key={region.id ? region.id : i} value={region.id}>
             {region.name}
           </MenuItem>
         ))}
