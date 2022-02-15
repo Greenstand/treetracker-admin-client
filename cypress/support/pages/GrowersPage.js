@@ -110,6 +110,39 @@ class GrowersPage {
     this.firstName_TextField().type(firstName);
     return this;
   }
+  growerCards_OrganizationName_ShouldBeEmpty() {
+    let name = true;
+    this.grower_OrganizationName();
+    this.grower_Card()
+      .each((e) => {
+        if (e.find('p:nth-child(3)').length == 0) {
+          cy.log(
+            `✔️ _'${e
+              .find('p:nth-child(2)')
+              .text()}' has empty organization name '${
+              e.find('p:nth-child(3)').length
+            }'_`
+          );
+        } else {
+          name = false;
+          cy.log(
+            `❌ **'${e
+              .find('p:nth-child(2)')
+              .text()}' should not contain '${e
+              .find('p:nth-child(3)')
+              .text()}' as its organization name**`
+          );
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_Card().each((e) => {
+            expect(e.find('p:nth-child(3)')).not.exist;
+          });
+        }
+      });
+    return this;
+  }
   growerCards_FirstName_ShouldContain(firstName) {
     let name = true;
     this.grower_Name()

@@ -50,6 +50,15 @@ describe('Growers Filter', () => {
         .then()
         .growerCards_OrganizationName_ShouldContain(organizationName);
     });
+    it(`displays only grower cards that have empty organization name when the "Not set" option in the "Organization" dropdown menu is selected`, () => {
+      growers_Page
+        .when()
+        .from_Organization_DropdownMenu_Select('Not set')
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerCards_OrganizationName_ShouldBeEmpty();
+    });
   });
   describe('First Name text field', () => {
     it(`displays only grower cards that contains "${firstName}" as part of their first name when the "${firstName}" is entered into the First Name text field`, () => {
