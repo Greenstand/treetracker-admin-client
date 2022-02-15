@@ -35,6 +35,7 @@ function ImportAction(props) {
 
   const handleOnSelectFile = (e) => {
     onSelectFile(e.target.files[0]);
+    document.getElementById('file-upload-button').value = '';
   };
 
   const classes = useStyles();
