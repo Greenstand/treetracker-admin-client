@@ -21,6 +21,8 @@ import {
   TextField,
   InputLabel,
   MenuItem,
+  Avatar,
+  Tooltip,
 } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import { documentTitle } from '../../common/variables';
@@ -29,9 +31,8 @@ import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import log from 'loglevel';
 import OptimizedImage from 'components/OptimizedImage';
-import { Avatar } from '@material-ui/core';
+import Country from '../common/Country';
 
-import { Tooltip } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
@@ -42,36 +43,6 @@ import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import moment from 'moment';
-
-function Country({ lat, lon }) {
-  const [content, setContent] = useState('');
-  if (lat === undefined || lon === undefined) {
-    setContent('No data');
-  }
-
-  useEffect(() => {
-    setContent('loading...');
-    fetch(
-      `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else if (res.status === 404) {
-          setContent(`Can not find country at lat:${lat}, lon:${lon}`);
-          return Promise.reject();
-        } else {
-          setContent('Unknown error');
-          return Promise.reject();
-        }
-      })
-      .then((data) => {
-        setContent(data.countries[0].name);
-      });
-  }, []);
-
-  return <span>{content}</span>;
-}
 
 const useStyle = makeStyles((theme) => ({
   container: {

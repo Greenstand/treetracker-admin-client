@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
+import Country from './common/Country';
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -79,6 +80,7 @@ const CaptureDetails = (props) => {
             <Typography variant="subtitle1">Location</Typography>
             <Typography variant="body1">
               Lat: {capture.lat || '---'}, Lon: {capture.lon || '---'}
+              <Country lat={capture.lat} lon={capture.lon} />
             </Typography>
           </Grid>
           <Divider />
