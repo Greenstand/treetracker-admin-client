@@ -11,7 +11,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import SearchInbox from './SearchInbox';
 import { MessagingContext } from 'context/MessagingContext';
-
+import { timeAgoFormatDate } from 'common/locale';
 const useStyles = makeStyles((theme) => ({
   paper: {
     height: '100%',
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     border: '1px solid lightGrey',
-    height: '5em',
     '&.Mui-selected': {
       background: '#FFF',
       borderRight: `5px solid ${theme.palette.primary.main}`,
@@ -66,6 +65,7 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
         : message.messages[0].from;
     handleListItemClick(e, i, recipient);
   };
+
   return (
     <Paper className={paper}>
       <List className={list}>
@@ -100,6 +100,13 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
               ) : (
                 <ListItemText primary={message.userName} className={listText} />
               )}
+              <i>
+                {timeAgoFormatDate(
+                  new Date(
+                    message.messages[message.messages.length - 1].composed_at
+                  )
+                )}
+              </i>
             </ListItem>
           ))}
       </List>

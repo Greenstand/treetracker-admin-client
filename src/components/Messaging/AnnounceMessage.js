@@ -100,13 +100,14 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     if (payload.organization_id || payload.region_id) {
       await postMessageSend(payload);
     }
-    setToggleAnnounceMessage(false);
+
     setValues({
       message: '',
       videoLink: '',
       organization: '',
       region: '',
     });
+    setToggleAnnounceMessage(false);
   };
 
   return (

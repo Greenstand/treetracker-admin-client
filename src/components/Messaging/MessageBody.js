@@ -88,12 +88,16 @@ const useStyles = makeStyles((theme) => ({
       width: '2em',
       height: '2em',
     },
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   textInput: {
     borderTop: '2px solid black',
   },
   surveyContent: {
     display: 'flex',
+    flexDirection: 'column',
     marginLeft: 'auto',
     backgroundColor: theme.palette.primary.main,
     color: '#fff',
@@ -126,12 +130,15 @@ export const AnnounceMessage = ({ message }) => {
 };
 
 export const SurveyMessage = ({ message }) => {
-  const { surveyContent } = useStyles();
+  const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
 
   const { questions } = message.survey;
   return (
-    <div className={surveyContent}>
-      <Grid item className={''}>
+    <div className={messageRow}>
+      <Grid item className={messageTimeStampLeft}>
+        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+      </Grid>
+      <Grid item className={surveyContent}>
         <Typography variant={'h4'}>
           {message.body ? message.body : ''}
         </Typography>
@@ -285,7 +292,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
         {messages ? (
           messages.map((message, i) => {
             if (message.subject === 'Message') {
-              return message.from === user.userName ? (
+              return message.from.author === user.userName ? (
                 <SentMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}

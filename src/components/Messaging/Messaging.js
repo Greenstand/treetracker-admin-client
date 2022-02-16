@@ -11,19 +11,18 @@ import { makeStyles } from '@material-ui/styles';
 import { MessagingContext } from '../../context/MessagingContext';
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    marginLeft: theme.spacing(7),
-    fontSize: '24px',
+  headerGrid: {
+    width: '90%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 'auto',
   },
   button: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
-  },
-  buttonContainer: {
-    margin: '2em',
-    marginLeft: 'auto',
   },
   messagesContainer: {
     margin: '2em',
@@ -52,28 +51,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Messaging = () => {
   // styles
-  const {
-    title,
-    button,
-    buttonContainer,
-    container,
-    inbox,
-    body,
-  } = useStyles();
+  const { headerGrid, button, container, inbox, body } = useStyles();
 
   const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
     MessagingContext
   );
 
-  useEffect(() => {
-    loadMessages();
-    loadRegions();
-    loadAuthors();
-  }, []);
-
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
-  const [messageRecipient, setMessageRecipient] = useState('');
+  const [messageRecipient, setMessageRecipient] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
@@ -82,11 +68,17 @@ const Messaging = () => {
   const findMessageRecipient = (messagesArray) => {
     return messagesArray[0].messages[0].to[0].recipient !== user.userName
       ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
-      : setMessageRecipient(messagesArray[0].messages[0].from);
+      : setMessageRecipient(messagesArray[0].messages[0].from.author);
   };
 
   useEffect(() => {
-    if (messages.length && messageRecipient === '') {
+    loadMessages();
+    loadRegions();
+    loadAuthors();
+  }, []);
+
+  useEffect(() => {
+    if (messages.length && messageRecipient === null) {
       findMessageRecipient(messages);
     }
   }, [messages]);
@@ -98,11 +90,11 @@ const Messaging = () => {
 
   return (
     <>
-      <Grid container id="Messaging">
-        <Grid item className={title}>
+      <Grid container id="Messaging" className={headerGrid}>
+        <Grid item>
           <h1>Inbox</h1>
         </Grid>
-        <Grid item className={buttonContainer}>
+        <Grid item>
           <Button className={button} onClick={handleOpen}>
             New Message
           </Button>
