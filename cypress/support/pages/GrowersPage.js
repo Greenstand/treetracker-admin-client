@@ -11,6 +11,7 @@ class GrowersPage {
   apply_Button = () => cy.get('#submit');
   filter_Button = () => cy.get('button').contains('Filter');
   filter_Form = () => cy.get('div>form');
+  filter_Count = () => cy.get('Button>span>div');
   growerID_TextField = () => cy.get('input[id="Grower ID"]');
   firstName_TextField = () => cy.get('input[id="First Name"]');
   lastName_TextField = () => cy.get('input[id="Last Name"]');
@@ -45,6 +46,10 @@ class GrowersPage {
   }
   click_Button_Filter() {
     this.filter_Button().click();
+    return this;
+  }
+  filterCount_ShouldBe(count) {
+    this.filter_Count().should('have.text', count);
     return this;
   }
   filterForm_ShouldBe_Visible() {

@@ -27,6 +27,20 @@ describe('Growers Filter', () => {
       .then()
       .filterForm_Should_Not_Exist();
   });
+  it('It displays number 6  as a filter count inside the Filter button when 6 filter choices are used', () => {
+    growers_Page
+      .when()
+      .enterInto_GrowerID_TextField(growerID)
+      .from_Organization_DropdownMenu_Select(organizationName)
+      .enterInto_FirstName_TextField(firstName)
+      .enterInto_LastName_TextField(lastName)
+      .enterInto_Email_TextField(email)
+      .enterInto_PhoneNumber_TextField(phoneNumber)
+      .and()
+      .click_Button_Apply()
+      .then()
+      .filterCount_ShouldBe(6);
+  });
   describe('Grower ID text field', () => {
     it(`displays single grower card with the "${growerID}" when a "${growerID}" is entered into the Grower ID text field`, () => {
       growers_Page
