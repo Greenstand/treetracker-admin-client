@@ -9,6 +9,7 @@ class GrowersPage {
   nextPage_Button = () => cy.get('button[title="Next page"]');
   growersPerPage = () => cy.get('.MuiTablePagination-root div[role="button"]');
   apply_Button = () => cy.get('#submit');
+  reset_Button = () => cy.get('button').contains('Reset');
   filter_Button = () => cy.get('button').contains('Filter');
   filter_Form = () => cy.get('div>form');
   filter_Count = () => cy.get('Button>span>div');
@@ -46,6 +47,14 @@ class GrowersPage {
   }
   click_Button_Filter() {
     this.filter_Button().click();
+    return this;
+  }
+  click_Button_Reset() {
+    this.reset_Button().click();
+    return this;
+  }
+  filterCount_ShouldNot_Exist() {
+    this.filter_Count().should('not.exist');
     return this;
   }
   filterCount_ShouldBe(count) {
