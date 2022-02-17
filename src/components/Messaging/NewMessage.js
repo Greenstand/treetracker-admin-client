@@ -5,12 +5,10 @@ import {
   Box,
   Modal,
   TextField,
-  Select,
-  MenuItem,
   Typography,
   Button,
-  InputLabel,
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 
 import GSInputLabel from 'components/common/InputLabel';
@@ -40,6 +38,13 @@ const useStyles = makeStyles((theme) => ({
       width: 500,
     },
   },
+  formContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    height: '90%',
+    padding: '1em',
+  },
   header: {
     color: theme.palette.primary.main,
     borderBottom: `2px solid black`,
@@ -53,20 +58,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NewMessage = ({ openModal, handleClose }) => {
-  const { box, header, button } = useStyles();
+  const { box, formContent, header, button } = useStyles();
   const { user, authors, postMessageSend } = useContext(MessagingContext);
-  const [messageContent, setMessageContent] = useState({ to: '', body: '' });
+  const [messageContent, setMessageContent] = useState('');
+  const [recipient, setRecipient] = useState(null);
 
   useEffect(() => {
-    if (openModal === false) setMessageContent({ to: '', body: '' });
+    if (openModal === false) {
+      setMessageContent('');
+      setRecipient(null);
+    }
   }, [openModal]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setMessageContent({
-      ...messageContent,
-      [name]: value,
-    });
+    setMessageContent(e.target.value);
+  };
+
+  const handleTwo = (e) => {
+    setRecipient(e.target.textContent);
   };
 
   const handleSubmit = async (e) => {
@@ -74,9 +83,9 @@ const NewMessage = ({ openModal, handleClose }) => {
 
     const messagePayload = {
       author_handle: user.userName,
-      recipient_handle: messageContent.to,
+      recipient_handle: recipient,
       subject: 'Message',
-      body: messageContent.body,
+      body: messageContent,
     };
 
     if (
@@ -84,7 +93,8 @@ const NewMessage = ({ openModal, handleClose }) => {
       user.userName &&
       messagePayload.to !== ''
     ) {
-      await postMessageSend(messagePayload);
+      console.log(messagePayload);
+      // await postMessageSend(messagePayload);
     }
     handleClose();
   };
@@ -97,42 +107,37 @@ const NewMessage = ({ openModal, handleClose }) => {
       aria-describedby="modal-modal-description"
     >
       <Box className={box}>
-        <form onSubmit={handleSubmit}>
+        <form className={formContent} onSubmit={handleSubmit}>
           <Box className={header} my={1}>
             <Typography variant="h3">Send New Message</Typography>
           </Box>
-          <GSInputLabel text="Choose the message recipient" />
-          <FormControl fullWidth>
-            <InputLabel id="select-label">Message Recipient</InputLabel>
-            <Select
-              labelId="select-label"
-              id="select"
-              variant="filled"
-              label="Recipient"
+          <FormControl>
+            <GSInputLabel text="Choose the Message Recipient" />
+            <Autocomplete
               name="to"
-              value={messageContent.to}
-              onChange={handleChange}
-            >
-              {authors.map((author) => (
-                <MenuItem key={author.id} value={author.handle}>
-                  {author.handle}
-                </MenuItem>
-              ))}
-            </Select>
+              defaultValue={messageContent.to}
+              onChange={handleTwo}
+              options={authors.map((author) => author.handle)}
+              id="controllable-states-demo"
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Message Recipient" />
+              )}
+            />
           </FormControl>
-          <FormControl fullWidth>
+          <FormControl>
             <GSInputLabel text="Message" />
             <TextField
               multiline
               placeholder="Write you message here ..."
               name="body"
-              value={messageContent.body}
+              value={messageContent}
               onChange={handleChange}
             />
-            <Button type="submit" size="large" className={button}>
-              Send Message
-            </Button>
           </FormControl>
+          <Button type="submit" size="large" className={button}>
+            Send Message
+          </Button>
         </form>
       </Box>
     </Modal>
