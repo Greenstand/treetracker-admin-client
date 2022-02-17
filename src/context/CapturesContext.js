@@ -8,6 +8,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
 
 export const CapturesContext = createContext({
+  isLoading: true,
   captures: [],
   captureCount: 0,
   capture: {},

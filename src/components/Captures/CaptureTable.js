@@ -93,6 +93,7 @@ const CaptureTable = () => {
     captures,
     capture,
     captureCount,
+    isLoading,
     setPage,
     setRowsPerPage,
     setOrder,
@@ -120,7 +121,7 @@ const CaptureTable = () => {
   useEffect(async () => {
     // Don't do anything if there are no captures
     if (!captures?.length) {
-      return;
+      return isLoading;
     }
 
     // Get the capture tags for all of the displayed captures
