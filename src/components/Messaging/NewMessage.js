@@ -71,11 +71,10 @@ const NewMessage = ({ openModal, handleClose }) => {
   }, [openModal]);
 
   const handleChange = (e) => {
-    setMessageContent(e.target.value);
-  };
-
-  const handleTwo = (e) => {
-    setRecipient(e.target.textContent);
+    const { name, value } = e.target;
+    name === 'body'
+      ? setMessageContent(value)
+      : setRecipient(e.target.textContent);
   };
 
   const handleSubmit = async (e) => {
@@ -93,8 +92,7 @@ const NewMessage = ({ openModal, handleClose }) => {
       user.userName &&
       messagePayload.to !== ''
     ) {
-      console.log(messagePayload);
-      // await postMessageSend(messagePayload);
+      await postMessageSend(messagePayload);
     }
     handleClose();
   };
@@ -116,7 +114,7 @@ const NewMessage = ({ openModal, handleClose }) => {
             <Autocomplete
               name="to"
               defaultValue={messageContent.to}
-              onChange={handleTwo}
+              onChange={handleChange}
               options={authors.map((author) => author.handle)}
               id="controllable-states-demo"
               sx={{ width: 300 }}
