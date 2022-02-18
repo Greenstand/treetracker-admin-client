@@ -103,7 +103,7 @@ function Home(props) {
       <Grid className={classes.rightBox}>
         <Box className={classes.box2}>
           <Grid container spacing={5} className={classes.version}>
-            <Grid item xs={3}>
+            <Grid item>
               <GreenStandSvgLogo />
               <Box display="inline" ml={2}>
                 Version: {`${process.env.REACT_APP_VERSION}`}
@@ -146,12 +146,7 @@ function Home(props) {
                 </Grid>
               )}
           </Grid>
-          <Grid
-            container
-            spacing={5}
-            className={classes.welcomeBox}
-            justify="center"
-          >
+          <div className={classes.dashstatWraper}>
             {hasPermission(appContext.user, [
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_TREE,
@@ -197,7 +192,7 @@ function Home(props) {
                   </Grid>
                 </Grid>
               )}
-          </Grid>
+          </div>
         </Box>
       </Grid>
     </Grid>
