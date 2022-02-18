@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
+import dateFormat from 'dateformat';
 
 import { MessagingContext } from 'context/MessagingContext.js';
 
@@ -244,7 +245,7 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ messageRecipient, subject, id }) => {
+const SenderInformation = ({ message, messageRecipient, subject, id }) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
@@ -256,6 +257,13 @@ const SenderInformation = ({ messageRecipient, subject, id }) => {
         <Typography variant="h5">
           {subject === 'Survey' ? subject : messageRecipient}
         </Typography>
+
+        {(subject === 'Survey' || subject === 'Announce') && (
+          <Typography>
+            DATE: {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
+          </Typography>
+        )}
+
         <Typography align="left" color="primary" variant="h6">
           {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
@@ -317,6 +325,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
     <Paper className={paper}>
       {messageRecipient && messages ? (
         <SenderInformation
+          message={messages[0]}
           messageRecipient={messageRecipient}
           subject={subject}
           id={recipientId}
