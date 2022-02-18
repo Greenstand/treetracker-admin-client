@@ -7,7 +7,6 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
-
 /**
  * @constant
  * @name earningTableMetaData
@@ -68,6 +67,8 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      csv_start_date: row.consolidation_period_start,
+      csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
         'mmm d, yyyy'
@@ -94,7 +95,7 @@ const prepareRows = (rows) =>
 function EarningsTable() {
   // state for earnings table
   const [earnings, setEarnings] = useState([]);
-  const [activeDateRageString, setActiveDateRageString] = useState('');
+  const [activeDateRangeString, setActiveDateRangeString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -136,9 +137,9 @@ function EarningsTable() {
         filter?.start_date,
         filter?.end_date
       );
-      setActiveDateRageString(dateRangeString);
+      setActiveDateRangeString(dateRangeString);
     } else {
-      setActiveDateRageString('');
+      setActiveDateRangeString('');
     }
 
     getEarnings();
@@ -151,7 +152,7 @@ function EarningsTable() {
       sortBy={sortBy}
       rows={earnings}
       isLoading={isLoading}
-      activeDateRage={activeDateRageString}
+      activeDateRange={activeDateRangeString}
       setRowsPerPage={setEarningsPerPage}
       rowsPerPage={earningsPerPage}
       setSortBy={setSortBy}
@@ -181,12 +182,13 @@ function EarningsTable() {
           setIsMainFilterOpen={setIsDateFilterOpen}
         />
       }
-      rowDetails={selectedEarning ? (
-        <CustomTableItemDetails
-          selectedItem={selectedEarning}
-          closeDetails={() => setSelectedEarning(null)}
-          refreshData={getEarnings}
-        />
+      rowDetails={
+        selectedEarning ? (
+          <CustomTableItemDetails
+            selectedItem={selectedEarning}
+            closeDetails={() => setSelectedEarning(null)}
+            refreshData={getEarnings}
+          />
         ) : null
       }
       actionButtonType="export"
