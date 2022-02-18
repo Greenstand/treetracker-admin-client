@@ -109,11 +109,11 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
 
   return (
     <form className={form} onSubmit={handleSubmit}>
-      <GSInputLabel text="Title" />
+      <GSInputLabel text="Announce: Title" />
       <TextField
         // className={input}
         fullWidth
-        label="Survey Title"
+        label="Title"
         name="title"
         value={values.title}
         onChange={handleChange}
