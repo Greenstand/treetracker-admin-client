@@ -1,3 +1,20 @@
+# [1.51.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.50.1...v1.51.0) (2022-02-18)
+
+
+### Bug Fixes
+
+* component rerender ([e216def](https://github.com/Greenstand/treetracker-admin-client/commit/e216def54528909edd5f0c84888df0ee7d1673d4))
+* fix to onChange methods to one ([a51164c](https://github.com/Greenstand/treetracker-admin-client/commit/a51164c32a7df1a7dcbc98ea7f8349a21aa97c5a))
+* responsive and timestamp issues ([fb824b7](https://github.com/Greenstand/treetracker-admin-client/commit/fb824b72636c7d03915a8d94208ce00429f9bec6))
+* responsive problems and survey message size ([f4b01ee](https://github.com/Greenstand/treetracker-admin-client/commit/f4b01eef67bbe752edd5c8b3598c047875404596))
+* searchable components and titles ([ce4397f](https://github.com/Greenstand/treetracker-admin-client/commit/ce4397f791f8ea94d896a18b518c09d112a15c15))
+* survey responses ([65e2e4b](https://github.com/Greenstand/treetracker-admin-client/commit/65e2e4bf34c6c42ab2ddb13467f7ce9e71ac2285))
+
+
+### Features
+
+* add autocomplete component for new message; ([b897b5c](https://github.com/Greenstand/treetracker-admin-client/commit/b897b5c9ff07dfb87ce720a844de40119f3bbc97))
+
 ## [1.50.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.50.0...v1.50.1) (2022-02-13)
 
 
