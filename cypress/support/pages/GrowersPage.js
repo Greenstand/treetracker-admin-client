@@ -73,6 +73,14 @@ class GrowersPage {
     this.growerID_TextField().type(growerID);
     return this;
   }
+  growerID_TextField_ShouldContain(growerID) {
+    this.growerID_TextField().should('have.value', growerID);
+    return this;
+  }
+  growerID_TextField_ShouldBe_Empty() {
+    this.growerID_TextField().should('have.value', '');
+    return this;
+  }
   click_Button_Apply() {
     this.apply_Button().click();
     return this;

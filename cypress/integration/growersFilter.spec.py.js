@@ -52,6 +52,15 @@ describe('Growers Filter', () => {
       .then()
       .filterCount_ShouldNot_Exist();
   });
+  it('clears the filter input field after clicking the Reset button', () => {
+    growers_Page
+      .enterInto_GrowerID_TextField(growerID)
+      .growerID_TextField_ShouldContain(growerID)
+      .when()
+      .click_Button_Reset()
+      .then()
+      .growerID_TextField_ShouldBe_Empty();
+  });
   describe('Grower ID text field', () => {
     it(`displays single grower card with the "${growerID}" when a "${growerID}" is entered into the Grower ID text field`, () => {
       growers_Page
