@@ -36,7 +36,7 @@ export const MessagingProvider = (props) => {
           let key =
             message.to[0].recipient !== user.userName
               ? message[`to`][0].recipient
-              : message['from'];
+              : message['from'].author;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];

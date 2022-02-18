@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
+import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 
 import { MessagingContext } from 'context/MessagingContext.js';
@@ -88,12 +88,32 @@ const useStyles = makeStyles((theme) => ({
       width: '2em',
       height: '2em',
     },
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   textInput: {
     borderTop: '2px solid black',
   },
   surveyContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: 'auto',
+    backgroundColor: theme.palette.primary.main,
     color: '#fff',
+    width: '65%',
+    borderRadius: '10px',
+    padding: '10px',
+  },
+  dataContainer: {
+    marginLeft: 'auto',
+    alignSelf: 'center',
+  },
+  button: {
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: '50px',
+    color: 'white',
+    margin: '5px',
   },
 }));
 
@@ -111,6 +131,14 @@ export const AnnounceMessage = ({ message }) => {
         <div>
           <Typography className={messageContent}>{message.body}</Typography>
         </div>
+        {message.video_link && (
+          <div>
+            <br />
+            <Typography className={messageContent} variant="body1">
+              {message.video_link}
+            </Typography>
+          </div>
+        )}
       </div>
       <Grid item className={messageTimeStampRight}>
         <Typography>{message.composed_at.slice(0, 10)}</Typography>
@@ -120,33 +148,48 @@ export const AnnounceMessage = ({ message }) => {
 };
 
 export const SurveyMessage = ({ message }) => {
-  const { messageRowRight, sentMessage, surveyContent } = useStyles();
+  const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
 
-  const { questions } = message.survey;
   return (
-    <div className={messageRowRight}>
-      <Grid item className={sentMessage}>
-        <Typography variant={'h5'} className={surveyContent}>
+    <div className={messageRow}>
+      <Grid item className={messageTimeStampLeft}>
+        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+      </Grid>
+      <Grid item className={surveyContent}>
+        <Typography variant={'h4'}>
           {message.body ? message.body : ''}
         </Typography>
-        {questions.map((question, i) => (
-          <div key={question + `:${i + 1}`} className={surveyContent}>
-            <Typography variant={'h6'}>
-              Question {i + 1}:{' '}
-              <Typography variant={'body1'}>{question.prompt}</Typography>
-            </Typography>
-            <Typography variant={'h6'}>
-              Choices:
-              <ol type="A">
-                {question.choices.map((choice, i) => (
-                  <li key={choice ? `choice ${i + 1}:${choice}` : i}>
-                    {choice}
-                  </li>
-                ))}
-              </ol>
-            </Typography>
-          </div>
-        ))}
+        {message.survey.response ? (
+          <>
+            {message.survey?.answers &&
+              message.survey.answers.map((answer, i) => (
+                <div key={`answer - ${i}`}>
+                  <Typography variant={'h6'}>{answer}</Typography>
+                </div>
+              ))}
+          </>
+        ) : (
+          <>
+            {message.survey.questions.map((question, i) => (
+              <div key={question + `:${i + 1}`}>
+                <Typography variant={'h6'}>
+                  Question {i + 1}:{' '}
+                  <Typography variant={'body1'}>{question.prompt}</Typography>
+                </Typography>
+                <Typography variant={'h6'}>
+                  Choices:
+                  <ol type="A">
+                    {question.choices.map((choice, i) => (
+                      <li key={choice ? `choice ${i + 1}:${choice}` : i}>
+                        {choice}
+                      </li>
+                    ))}
+                  </ol>
+                </Typography>
+              </div>
+            ))}
+          </>
+        )}
       </Grid>
     </div>
   );
@@ -202,7 +245,7 @@ export const SentMessage = ({ message }) => {
 };
 
 const SenderInformation = ({ messageRecipient, subject, id }) => {
-  const { senderInfo, senderItem, avatar } = useStyles();
+  const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
     <Grid container className={senderInfo}>
@@ -217,6 +260,11 @@ const SenderInformation = ({ messageRecipient, subject, id }) => {
           {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
       </Grid>
+      {subject === 'Survey' && (
+        <Grid item className={dataContainer}>
+          <Button className={button}>Survey Data</Button>
+        </Grid>
+      )}
     </Grid>
   );
 };
@@ -237,11 +285,12 @@ const MessageBody = ({ messages, messageRecipient }) => {
   useEffect(() => {
     if (authors && messageRecipient) {
       let res = authors.find((author) => author.handle === messageRecipient);
+
       if (res) {
         setRecipientId(res.id);
       }
     }
-  }, [messageRecipient]);
+  }, [authors, messageRecipient]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -279,7 +328,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
         {messages ? (
           messages.map((message, i) => {
             if (message.subject === 'Message') {
-              return message.from === user.userName ? (
+              return message.from.author === user.userName ? (
                 <SentMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
@@ -312,13 +361,15 @@ const MessageBody = ({ messages, messageRecipient }) => {
           <div>Loading ...</div>
         )}
       </div>
-      <TextInput
-        messageRecipient={messageRecipient}
-        handleSubmit={handleSubmit}
-        messageContent={messageContent}
-        setMessageContent={setMessageContent}
-        className={textInput}
-      />
+      {subject !== 'Survey' && (
+        <TextInput
+          messageRecipient={messageRecipient}
+          handleSubmit={handleSubmit}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          className={textInput}
+        />
+      )}
     </Paper>
   );
 };
