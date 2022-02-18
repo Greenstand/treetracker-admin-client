@@ -83,7 +83,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       subject: 'Announce Message',
       title: values.title,
       body: values.message,
-      video_link: values.videoLink,
     };
 
     if (!region?.id && !organization?.id) {
@@ -100,6 +99,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       (payload.body && payload.organization_id) ||
       (payload.body && payload.region_id)
     ) {
+      console.log(payload);
       await postMessageSend(payload);
     }
 
