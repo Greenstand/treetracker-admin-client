@@ -62,7 +62,7 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
     let recipient =
       message.messages[0].to[0].recipient !== user.userName
         ? message.messages[0].to[0].recipient
-        : message.messages[0].from;
+        : message.messages[0].from.author;
     handleListItemClick(e, i, recipient);
   };
 

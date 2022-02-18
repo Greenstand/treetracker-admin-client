@@ -150,7 +150,6 @@ export const AnnounceMessage = ({ message }) => {
 export const SurveyMessage = ({ message }) => {
   const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
 
-  const { questions } = message.survey;
   return (
     <div className={messageRow}>
       <Grid item className={messageTimeStampLeft}>
@@ -160,24 +159,37 @@ export const SurveyMessage = ({ message }) => {
         <Typography variant={'h4'}>
           {message.body ? message.body : ''}
         </Typography>
-        {questions.map((question, i) => (
-          <div key={question + `:${i + 1}`}>
-            <Typography variant={'h6'}>
-              Question {i + 1}:{' '}
-              <Typography variant={'body1'}>{question.prompt}</Typography>
-            </Typography>
-            <Typography variant={'h6'}>
-              Choices:
-              <ol type="A">
-                {question.choices.map((choice, i) => (
-                  <li key={choice ? `choice ${i + 1}:${choice}` : i}>
-                    {choice}
-                  </li>
-                ))}
-              </ol>
-            </Typography>
-          </div>
-        ))}
+        {message.survey.response ? (
+          <>
+            {message.survey?.answers &&
+              message.survey.answers.map((answer, i) => (
+                <div key={`answer - ${i}`}>
+                  <Typography variant={'h6'}>{answer}</Typography>
+                </div>
+              ))}
+          </>
+        ) : (
+          <>
+            {message.survey.questions.map((question, i) => (
+              <div key={question + `:${i + 1}`}>
+                <Typography variant={'h6'}>
+                  Question {i + 1}:{' '}
+                  <Typography variant={'body1'}>{question.prompt}</Typography>
+                </Typography>
+                <Typography variant={'h6'}>
+                  Choices:
+                  <ol type="A">
+                    {question.choices.map((choice, i) => (
+                      <li key={choice ? `choice ${i + 1}:${choice}` : i}>
+                        {choice}
+                      </li>
+                    ))}
+                  </ol>
+                </Typography>
+              </div>
+            ))}
+          </>
+        )}
       </Grid>
     </div>
   );
