@@ -1,3 +1,10 @@
+## [1.51.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.0...v1.51.1) (2022-02-18)
+
+
+### Bug Fixes
+
+* edit dash width ([#329](https://github.com/Greenstand/treetracker-admin-client/issues/329)) ([eea14a3](https://github.com/Greenstand/treetracker-admin-client/commit/eea14a3c0f0d541877638408a607008ebce0fa92))
+
 # [1.51.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.50.1...v1.51.0) (2022-02-18)
 
 
