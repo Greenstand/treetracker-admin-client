@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 const Messaging = () => {
   // styles
   const { headerGrid, button, container, inbox, body } = useStyles();
-
   const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
     MessagingContext
   );

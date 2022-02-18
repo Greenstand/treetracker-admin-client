@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
+import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 
 import { MessagingContext } from 'context/MessagingContext.js';
@@ -105,6 +105,16 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     padding: '10px',
   },
+  dataContainer: {
+    marginLeft: 'auto',
+    alignSelf: 'center',
+  },
+  button: {
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: '50px',
+    color: 'white',
+    margin: '5px',
+  },
 }));
 
 export const AnnounceMessage = ({ message }) => {
@@ -121,6 +131,14 @@ export const AnnounceMessage = ({ message }) => {
         <div>
           <Typography className={messageContent}>{message.body}</Typography>
         </div>
+        {message.video_link && (
+          <div>
+            <br />
+            <Typography className={messageContent} variant="body1">
+              {message.video_link}
+            </Typography>
+          </div>
+        )}
       </div>
       <Grid item className={messageTimeStampRight}>
         <Typography>{message.composed_at.slice(0, 10)}</Typography>
@@ -215,7 +233,7 @@ export const SentMessage = ({ message }) => {
 };
 
 const SenderInformation = ({ messageRecipient, subject, id }) => {
-  const { senderInfo, senderItem, avatar } = useStyles();
+  const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
     <Grid container className={senderInfo}>
@@ -230,6 +248,11 @@ const SenderInformation = ({ messageRecipient, subject, id }) => {
           {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
       </Grid>
+      {subject === 'Survey' && (
+        <Grid item className={dataContainer}>
+          <Button className={button}>Survey Data</Button>
+        </Grid>
+      )}
     </Grid>
   );
 };
@@ -250,11 +273,12 @@ const MessageBody = ({ messages, messageRecipient }) => {
   useEffect(() => {
     if (authors && messageRecipient) {
       let res = authors.find((author) => author.handle === messageRecipient);
+
       if (res) {
         setRecipientId(res.id);
       }
     }
-  }, [messageRecipient]);
+  }, [authors, messageRecipient]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -325,13 +349,15 @@ const MessageBody = ({ messages, messageRecipient }) => {
           <div>Loading ...</div>
         )}
       </div>
-      <TextInput
-        messageRecipient={messageRecipient}
-        handleSubmit={handleSubmit}
-        messageContent={messageContent}
-        setMessageContent={setMessageContent}
-        className={textInput}
-      />
+      {subject !== 'Survey' && (
+        <TextInput
+          messageRecipient={messageRecipient}
+          handleSubmit={handleSubmit}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          className={textInput}
+        />
+      )}
     </Paper>
   );
 };

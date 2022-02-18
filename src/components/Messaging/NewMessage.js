@@ -61,12 +61,13 @@ const NewMessage = ({ openModal, handleClose }) => {
   const { box, formContent, header, button } = useStyles();
   const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [recipient, setRecipient] = useState(null);
+  const [recipient, setRecipient] = useState('');
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (openModal === false) {
       setMessageContent('');
-      setRecipient(null);
+      setRecipient('');
     }
   }, [openModal]);
 
@@ -113,10 +114,17 @@ const NewMessage = ({ openModal, handleClose }) => {
             <GSInputLabel text="Choose the Message Recipient" />
             <Autocomplete
               name="to"
-              defaultValue={messageContent.to}
+              selectOnFocus
+              clearOnBlur
+              handleHomeEndKeys
+              value={recipient}
               onChange={handleChange}
-              options={authors.map((author) => author.handle)}
+              options={authors.map((author) => author.handle || '')}
+              inputValue={inputValue}
+              getOptionSelected={(option, value) => option === value}
+              onInputChange={(e, val) => setInputValue(val)}
               id="controllable-states-demo"
+              freeSolo
               sx={{ width: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Message Recipient" />
