@@ -86,11 +86,11 @@ function SidePanel(props) {
 
   function setAllSelectedCaptures(value) {
     if (value) {
-      let captureSelected = {};
+      let capturesSelectionMap = {};
       verifyContext.captureImages.forEach((capture) => {
-        captureSelected[capture.id] = value;
+        capturesSelectionMap[capture.id] = value;
       });
-      verifyContext.setCaptureImagesSelected(captureSelected);
+      verifyContext.setCaptureImagesSelected(capturesSelectionMap);
     } else {
       verifyContext.setCaptureImagesSelected({});
     }
