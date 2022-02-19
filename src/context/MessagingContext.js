@@ -44,14 +44,8 @@ export const MessagingProvider = (props) => {
             grouped[key].push(message);
           }
         } else if (message.subject === 'Survey') {
-          let key = message.survey.title;
-          if (grouped[key]) {
-            if (grouped[key][0].survey.id === message.survey.id) {
-              return grouped;
-            } else {
-              grouped[key] = [];
-            }
-          } else {
+          let key = message.survey.id;
+          if (!grouped[key]) {
             grouped[key] = [];
           }
           grouped[key].push(message);
