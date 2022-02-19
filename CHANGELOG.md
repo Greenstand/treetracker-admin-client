@@ -1,3 +1,12 @@
+## [1.51.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.1...v1.51.2) (2022-02-19)
+
+
+### Bug Fixes
+
+* group by survey id ([4df52b0](https://github.com/Greenstand/treetracker-admin-client/commit/4df52b0049427dd5242ce6752111fb4a0c40f731))
+* initialize the grouped array var ([b868332](https://github.com/Greenstand/treetracker-admin-client/commit/b868332770102bfab3ab79a1207849aa52cc5458))
+* return grouped ([2c4989f](https://github.com/Greenstand/treetracker-admin-client/commit/2c4989fc538956606843e0cf5a3b402840a07581))
+
 ## [1.51.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.0...v1.51.1) (2022-02-18)
 
 
