@@ -197,6 +197,7 @@ export function VerifyProvider(props) {
         });
       setCaptureImagesSelected(captureShiftSelected);
     } else {
+      setCaptureImageAnchor(captureId);
       setCaptureImagesSelected({
         ...captureImagesSelected,
         [captureId]: !captureImagesSelected[captureId],
