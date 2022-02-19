@@ -1,3 +1,15 @@
+# [1.52.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.2...v1.52.0) (2022-02-19)
+
+
+### Bug Fixes
+
+* Remove react app reporting ([#294](https://github.com/Greenstand/treetracker-admin-client/issues/294)) ([ced3546](https://github.com/Greenstand/treetracker-admin-client/commit/ced3546566eb8784390d62e67ffb6908555d4349))
+
+
+### Features
+
+* improve capture multi-selection UX in for batch verification ([#273](https://github.com/Greenstand/treetracker-admin-client/issues/273)) ([a6a4bd1](https://github.com/Greenstand/treetracker-admin-client/commit/a6a4bd1c5e243c43ec6b01cc107022af5ef0bd17))
+
 ## [1.51.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.1...v1.51.2) (2022-02-19)
 
 
