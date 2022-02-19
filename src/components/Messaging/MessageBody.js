@@ -141,6 +141,15 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     margin: '5px',
   },
+  surveyResponse: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'lightGrey',
+    borderRadius: '10px',
+    padding: '1em',
+    margin: '5px',
+    width: '35%',
+  },
 }));
 
 export const AnnounceMessage = ({ message }) => {
@@ -176,31 +185,43 @@ export const AnnounceMessage = ({ message }) => {
   );
 };
 
+export const SurveyResponseMessage = ({ message }) => {
+  const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
+
+  return (
+    <div className={messageRow}>
+      <Grid className={surveyResponse}>
+        {message.survey?.answers &&
+          message.survey.answers.map((answer, i) => (
+            <div key={`answer - ${i}`}>
+              <Typography variant={'h6'}>Question {i + 1}:</Typography>
+              <Typography variant={'body1'}>{answer}</Typography>
+            </div>
+          ))}
+      </Grid>
+      <Grid item className={messageTimeStampRight}>
+        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+      </Grid>
+    </div>
+  );
+};
+
 export const SurveyMessage = ({ message }) => {
   const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
 
   return (
-    <div className={messageRow}>
-      <Grid item className={messageTimeStampLeft}>
-        <Typography>
-          {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
-        </Typography>
-      </Grid>
-      <Grid item className={surveyContent}>
-        {/* <Typography variant={'h6'}>
-          {message.from.author ? message.from.author : ''}
-        </Typography> */}
-        {message.survey.response ? (
-          <>
-            {message.survey?.answers &&
-              message.survey.answers.map((answer, i) => (
-                <div key={`answer - ${i}`}>
-                  <Typography>{answer}</Typography>
-                </div>
-              ))}
-          </>
-        ) : (
-          <>
+    <>
+      {message.survey.response ? (
+        <SurveyResponseMessage message={message} />
+      ) : (
+        <div className={messageRow}>
+          <Grid item className={messageTimeStampLeft}>
+            <Typography>{dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}</Typography>
+          </Grid>
+          <Grid item className={surveyContent}>
+            <Typography variant={'h4'}>
+              {message.body ? message.body : ''}
+            </Typography>
             {message.survey.questions.map((question, i) => (
               <div key={question + `:${i + 1}`}>
                 <Typography variant={'h6'}>
@@ -219,10 +240,10 @@ export const SurveyMessage = ({ message }) => {
                 </Typography>
               </div>
             ))}
-          </>
-        )}
-      </Grid>
-    </div>
+          </Grid>
+        </div>
+      )}
+    </>
   );
 };
 

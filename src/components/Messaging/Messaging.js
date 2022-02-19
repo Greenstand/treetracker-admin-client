@@ -77,9 +77,11 @@ const Messaging = () => {
   }, []);
 
   useEffect(() => {
+    console.log(messages);
     if (messages.length && messageRecipient === null) {
       findMessageRecipient(messages);
     }
+    // loadMessages()
   }, [messages]);
 
   const handleListItemClick = (e, i, userName) => {

@@ -95,12 +95,17 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     if (organization?.id) {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
-    if (
-      (payload.body && payload.organization_id) ||
-      (payload.body && payload.region_id)
-    ) {
-      console.log(payload);
-      await postMessageSend(payload);
+
+    try {
+      if (
+        (payload.body && payload.organization_id) ||
+        (payload.body && payload.region_id)
+      ) {
+        console.log(payload);
+        await postMessageSend(payload);
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     setValues({

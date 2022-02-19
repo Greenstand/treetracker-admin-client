@@ -108,7 +108,7 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
-
+    console.log(res.messages);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
