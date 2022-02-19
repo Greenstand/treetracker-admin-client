@@ -88,7 +88,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       payload['region_id'] = region.id;
     }
     if (organization?.id) {
-      payload['organization_id'] = organization.id;
+      payload['organization_id'] = organization.stakeholder_uuid;
     }
     if (
       (payload.body && payload.organization_id) ||
