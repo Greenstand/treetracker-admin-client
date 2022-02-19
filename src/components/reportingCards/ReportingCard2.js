@@ -12,7 +12,7 @@ export default function ReportingCard2(props) {
     'captures',
     'captures',
     undefined,
-    rows,
+    rows
   );
 
   return (

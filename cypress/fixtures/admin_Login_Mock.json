@@ -1,0 +1,30 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImZpcnN0TmFtZSI6IkFkbWluIiwibGFzdE5hbWUiOiJQYW5lbCIsInBhc3N3b3JkSGFzaCI6IjQ0ZDE0MmNkMjBhMWQxZTE1YzQxOWZhOThkZTc5Y2U5OTc0MWNjNDY4NjZhYzI2MjY4N2ViNDQ2MGM0Y2NiNDIzZTdjMzU2ZDlmYzQwYjMxYWVjZmU2ODYyMzYyNjMzOWNmZmQ4YTg5YzYxYjMyOTdlY2I1YzRiZTYzZDFkMDY5Iiwic2FsdCI6IkQ4OFdDcCIsImVtYWlsIjoiYWRtaW5AZ3JlZW5zdGFuZC5vcmciLCJhY3RpdmUiOnRydWUsImNyZWF0ZWRBdCI6IjIwMjAtMDgtMDNUMTg6NDc6NDcuMjU4WiIsImVuYWJsZWQiOnRydWUsInJvbGUiOls0NiwxLDJdLCJyb2xlTmFtZXMiOlsiRWFybmluZ3MgTWFuYWdlciIsIkFkbWluIiwiVHJlZSBNYW5hZ2VyIl0sInBvbGljeSI6eyJwb2xpY2llcyI6W3sibmFtZSI6Imxpc3RfZWFybmluZ3MiLCJkZXNjcmlwdGlvbiI6IkNhbiB2aWV3IGVhcm5pbmdzIn0seyJuYW1lIjoibWFuYWdlX2Vhcm5pbmdzIiwiZGVzY3JpcHRpb24iOiJDYW4gbW9kaWZ5L2V4cG9ydCBlYXJuaW5ncyJ9LHsibmFtZSI6InN1cGVyX3Blcm1pc3Npb24iLCJkZXNjcmlwdGlvbiI6IkNhbiBkbyBhbnl0aGluZyJ9LHsibmFtZSI6Imxpc3RfdXNlciIsImRlc2NyaXB0aW9uIjoiQ2FuIHZpZXcgYWRtaW4gdXNlcnMifSx7Im5hbWUiOiJtYW5hZ2VyX3VzZXIiLCJkZXNjcmlwdGlvbiI6IkNhbiBjcmVhdGUvbW9kaWZ5IGFkbWluIHVzZXIifSx7Im5hbWUiOiJsaXN0X3RyZWUiLCJkZXNjcmlwdGlvbiI6IkNhbiB2aWV3IHRyZWVzIn0seyJuYW1lIjoiYXBwcm92ZV90cmVlIiwiZGVzY3JpcHRpb24iOiJDYW4gYXBwcm92ZS9yZWplY3QgdHJlZXMifV19LCJpYXQiOjE2NDMxMTE0MjF9.X9pDmAVSgZ6RD-583cWV-WBif6noPFke3bvpBDc58To",
+  "user": {
+    "id": 1,
+    "userName": "admin",
+    "firstName": "Admin",
+    "lastName": "Panel",
+    "email": "admin@greenstand.org",
+    "role": [46, 1, 2],
+    "policy": {
+      "policies": [
+        { "name": "list_earnings", "description": "Can view earnings" },
+        {
+          "name": "manage_earnings",
+          "description": "Can modify/export earnings"
+        },
+        { "name": "super_permission", "description": "Can do anything" },
+        { "name": "list_user", "description": "Can view admin users" },
+        {
+          "name": "manager_user",
+          "description": "Can create/modify admin user"
+        },
+        { "name": "list_tree", "description": "Can view trees" },
+        { "name": "approve_tree", "description": "Can approve/reject trees" }
+      ]
+    },
+    "roleNames": ["Earnings Manager", "Admin", "Tree Manager"],
+    "createdAt": "2020-08-03T18:57:47.258Z"
+  }
+}

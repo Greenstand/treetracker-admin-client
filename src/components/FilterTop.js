@@ -86,19 +86,22 @@ function Filter(props) {
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || '',
+    filter?.planterIdentifier || ''
   );
   const [approved, setApproved] = useState(filter?.approved);
   const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault
   );
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS,
+    filter.organizationId || ALL_ORGANIZATIONS
+  );
+  const [stakeholderUUID, setStakeholderUUID] = useState(
+    filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
@@ -130,6 +133,7 @@ function Filter(props) {
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
+    filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -147,6 +151,7 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
+    setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -159,6 +164,7 @@ function Filter(props) {
     ? [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
           value: 'All',
         },
@@ -166,11 +172,13 @@ function Filter(props) {
     : [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
           value: 'All',
         },
         {
           id: ORGANIZATION_NOT_SET,
+          stakeholder_uuid: ORGANIZATION_NOT_SET,
           name: 'Not set',
           value: null,
         },
@@ -199,7 +207,7 @@ function Filter(props) {
                       : e.target.value === verificationStates.AWAITING ||
                         e.target.value === verificationStates.REJECTED
                       ? false
-                      : true,
+                      : true
                   );
                   setActive(
                     e.target.value === filterOptionAll
@@ -207,7 +215,7 @@ function Filter(props) {
                       : e.target.value === verificationStates.AWAITING ||
                         e.target.value === verificationStates.APPROVED
                       ? true
-                      : false,
+                      : false
                   );
                 }}
               >
@@ -364,7 +372,7 @@ function Filter(props) {
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
-                      .startsWith(tagSearchString.toLowerCase()),
+                      .startsWith(tagSearchString.toLowerCase())
                   ),
                 ]}
                 value={tag}
@@ -400,7 +408,13 @@ function Filter(props) {
                   htmlFor="organization"
                   id="organization"
                   value={organizationId}
-                  onChange={(e) => setOrganizationId(e.target.value)}
+                  onChange={(e) => {
+                    const org = orgList.find((o) => o.id === e.target.value);
+                    setStakeholderUUID(
+                      org ? org.stakeholder_uuid : e.target.value
+                    );
+                    setOrganizationId(e.target.value);
+                  }}
                 >
                   {[...defaultOrgList, ...orgList].map((org) => (
                     <MenuItem

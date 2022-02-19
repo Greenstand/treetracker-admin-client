@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Typography,
   Paper,
   Button,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import SearchInbox from './SearchInbox';
-
+import { MessagingContext } from 'context/MessagingContext';
+import { timeAgoFormatDate } from 'common/locale';
 const useStyles = makeStyles((theme) => ({
   paper: {
     height: '100%',
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     border: '1px solid lightGrey',
-    height: '5em',
     '&.Mui-selected': {
       background: '#FFF',
       borderRight: `5px solid ${theme.palette.primary.main}`,
@@ -41,10 +40,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
     },
-  },
-  primaryText: {
-    fontSize: '16',
-    fontWeight: 'bold',
   },
   messageText: {
     [theme.breakpoints.down('sm')]: {
@@ -59,17 +54,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
-  const {
-    paper,
-    searchInbox,
-    list,
-    listItem,
-    listText,
-    primaryText,
-    avatar,
-  } = useStyles();
-
+  const { paper, searchInbox, list, listItem, listText, avatar } = useStyles();
+  const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
+
+  const onClickHelper = (e, i, message) => {
+    let recipient =
+      message.messages[0].to[0].recipient !== user.userName
+        ? message.messages[0].to[0].recipient
+        : message.messages[0].from.author;
+    handleListItemClick(e, i, recipient);
+  };
 
   return (
     <Paper className={paper}>
@@ -91,24 +86,27 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
               className={listItem}
               component={Button}
               selected={selectedIndex === i}
-              onClick={(e) => handleListItemClick(e, i, message.userName)}
+              onClick={(e) => onClickHelper(e, i, message)}
             >
-              {
-                <>
-                  <ListItemAvatar className={avatar}>
-                    <Avatar alt={''} src={''} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography className={primaryText}>
-                        {' '}
-                        {message.userName}
-                      </Typography>
-                    }
-                    className={listText}
-                  />
-                </>
-              }
+              <ListItemAvatar className={avatar}>
+                <Avatar alt={''} src={''} />
+              </ListItemAvatar>
+              {message.messages[0].subject === 'Survey' ? (
+                <ListItemText
+                  primary={message.messages[0].subject}
+                  secondary={message.userName}
+                  className={listText}
+                />
+              ) : (
+                <ListItemText primary={message.userName} className={listText} />
+              )}
+              <i>
+                {timeAgoFormatDate(
+                  new Date(
+                    message.messages[message.messages.length - 1].composed_at
+                  )
+                )}
+              </i>
             </ListItem>
           ))}
       </List>

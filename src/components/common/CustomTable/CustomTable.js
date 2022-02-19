@@ -95,6 +95,28 @@ function CustomTableHeader(props) {
   } = props;
   const classes = useStyles();
 
+  const dataToExport = data.map(
+    ({
+      id: earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    }) => ({
+      earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    })
+  );
+
   return (
     <Grid container className={classes.customTableTopBar}>
       <Grid item xs={4}>
@@ -112,8 +134,8 @@ function CustomTableHeader(props) {
               <Grid container direction="row" justify="flex-end">
                 <Button color="primary" variant="text">
                   <CSVLink
-                    data={data}
-                    filename={'earnings.csv'}
+                    data={dataToExport}
+                    filename={`${headerTitle.toLowerCase()}_${new Date().toLocaleDateString()}.csv`}
                     className={classes.csvLink}
                     target="_blank"
                   >
@@ -162,7 +184,7 @@ function CustomTableHeader(props) {
           {/* end Date Range button */}
 
           {/* start Filter button */}
-          <Grid item lg={3} xs={4}>
+          <Grid item lg={3}>
             <Grid container direction="row" justify="flex-end">
               <Button
                 onClick={openMainFilter}
@@ -183,7 +205,7 @@ function CustomTableHeader(props) {
   );
 }
 CustomTableHeader.propTypes = {
-  setIsFilterOpen: PropTypes.func.isRequired,
+  // setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
   openMainFilter: PropTypes.func,
   onSelectFile: PropTypes.func,
@@ -287,6 +309,21 @@ function CustomTable(props) {
 
   const isRowSelected = (id) => id === selectedRow?.id;
 
+  const tablePagination = () => {
+    return (
+      <TablePagination
+        rowsPerPageOptions={[20, 50, 100]}
+        component="div"
+        count={totalCount || 0}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        aria-label="rows per page"
+      />
+    );
+  };
+
   return (
     <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
@@ -298,6 +335,7 @@ function CustomTable(props) {
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
       />
+      {tablePagination()}
       <TableContainer>
         <Table>
           <TableHead>
@@ -337,52 +375,54 @@ function CustomTable(props) {
             </TableRow>
           </TableHead>
 
-          {isLoading ? (
-            <Grid item container className={classes.progressContainer}>
-              <CircularProgress />
-            </Grid>
-          ) : rows.length > 0 ? (
-            <TableBody>
-              {rows.map((row, i) => (
-                <TableRow
-                  key={`${i}-${row.id}`}
-                  onClick={() => handleOpenRowDetails(row)}
-                  className={isRowSelected(row.id) ? classes.selectedRow : ''}
-                >
-                  {tableMetaData.map((column, j) => (
-                    <TableCell key={`${i}-${j}-${column.name}`}>
-                      <Typography variant="body1">
-                        {row[column.name]}
-                      </Typography>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          ) : (
-            <Typography variant="body1" className={classes.noDataToDisplay}>
-              No data to display
-            </Typography>
-          )}
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell>
+                  <Grid item container className={classes.progressContainer}>
+                    <CircularProgress />
+                  </Grid>
+                </TableCell>
+              </TableRow>
+            ) : rows.length > 0 ? (
+              <>
+                {rows.map((row, i) => (
+                  <TableRow
+                    key={`${i}-${row.id}`}
+                    onClick={() => handleOpenRowDetails(row)}
+                    className={
+                      isRowSelected(row.id) ? classes.selectedRow : null
+                    }
+                  >
+                    {tableMetaData.map((column, j) => (
+                      <TableCell key={`${i}-${j}-${column.name}`}>
+                        <Typography
+                          variant="body1"
+                          style={{ textTransform: 'capitalize' }}
+                        >
+                          {row[column.name]}
+                        </Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <Typography
+                    variant="body1"
+                    className={classes.noDataToDisplay}
+                  >
+                    No data to display
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        count={totalCount}
-        classes={{
-          selectRoot: classes.selectRoot,
-          root: classes.customTablePagination,
-        }}
-        component="div"
-        rowsPerPageOptions={[20, 50, 100]}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-        SelectProps={{
-          inputProps: { 'aria-label': 'rows per page' },
-          native: true,
-        }}
-      />
+      {tablePagination()}
 
       {/* start table main filter */}
       {mainFilterComponent}
@@ -416,14 +456,14 @@ CustomTable.propTypes = {
       description: PropTypes.string.isRequired,
       sortable: PropTypes.bool.isRequired,
       showInfoIcon: PropTypes.bool.isRequired,
-    }),
+    })
   ),
   dateFilterComponent: PropTypes.element.isRequired,
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRage: PropTypes.string.isRequired,
-  rowDetails: PropTypes.element.isRequired,
-  actionButtonType: PropTypes.element.isRequired,
+  rowDetails: PropTypes.element,
+  actionButtonType: PropTypes.string.isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   totalCount: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,

@@ -1,15 +1,28 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core';
 
 const style = (theme) => ({
-  dashstatContainer: {
-    height: '95px',
-    backgroundColor: 'white',
+  dashstatCard: {
     borderRadius: '10px',
+    display: 'flex',
+    backgroundColor: '#FFF',
+    flexDirection: 'row',
+    gap: '1rem',
+    width: '245px',
+
+    '@media (max-width: 900px)': {
+      flexDirection: 'column',
+      gap: 0,
+      height: '175px',
+      alignItems: 'center',
+      width: '200px',
+      textAlign: 'center',
+    },
   },
   dashstatIconContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
     width: '58px',
     height: '58px',
     marginTop: '20px',
@@ -17,6 +30,11 @@ const style = (theme) => ({
     marginBottom: '20px',
     float: 'left',
     position: 'relative',
+
+    '@media (max-width: 900px)': {
+      height: '150px',
+      marginLeft: 0,
+    },
   },
   dashstatCircleIcon: {
     borderRadius: '29px',
@@ -27,6 +45,7 @@ const style = (theme) => ({
     top: '0',
     position: 'absolute',
   },
+
   dashstatIcon: {
     margin: '0 auto',
     left: '11px',
@@ -34,31 +53,19 @@ const style = (theme) => ({
     width: '35px',
     height: '35px',
     position: 'absolute',
+
+    '@media (max-width: 900px)': {
+      top: '10px',
+    },
   },
+
   dashstatText: {
-    float: 'left',
-    marginLeft: '22px',
-    height: '100%',
-    width: '110px',
-    boxSizing: 'border-box',
-    position: 'relative',
+    display: 'block',
     fontFamily: theme.typography.fontFamily,
   },
-  dashstatData: {
-    display: 'inline-block',
-    position: 'absolute',
-    top: '18px',
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
-  },
+
   dashstatLabel: {
-    display: 'inline-block',
     fontSize: '12px',
-    bottom: '20px',
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
-    width: '110px',
-    position: 'absolute',
   },
 });
 
@@ -75,27 +82,19 @@ function DashStat(props) {
   const { data, Icon, label, color = '#000000', classes } = props;
 
   return (
-    <Grid item xs={3}>
-      <div className={classes.dashstatContainer}>
-        <div className={classes.dashstatIconContainer}>
-          <div
-            className={classes.dashstatCircleIcon}
-            style={{ backgroundColor: color }}
-          ></div>
-          <Icon
-            className={classes.dashstatIcon}
-            style={{ color: color }}
-          ></Icon>
-        </div>
-        <div className={classes.dashstatText}>
-          <h3 className={classes.dashstatData}>
-            {data || <CircularProgress size={'32px'} style={{ color }} />}
-          </h3>
-          <br />
-          <p className={classes.dashstatLabel}>{label}</p>
-        </div>
+    <div className={classes.dashstatCard}>
+      <div className={classes.dashstatIconContainer}>
+        <div
+          className={classes.dashstatCircleIcon}
+          style={{ backgroundColor: color }}
+        ></div>
+        <Icon className={classes.dashstatIcon} style={{ color: color }}></Icon>
       </div>
-    </Grid>
+      <div className={classes.dashstatText}>
+        <h3>{data || <CircularProgress size={'32px'} style={{ color }} />}</h3>
+        <p className={classes.dashstatLabel}>{label}</p>
+      </div>
+    </div>
   );
 }
 

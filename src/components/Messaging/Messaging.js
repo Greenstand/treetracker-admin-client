@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import Navbar from 'components/Navbar';
 import Inbox from './Inbox';
 import MessageBody from './MessageBody';
 import Survey from './Survey';
 import AnnounceMessage from './AnnounceMessage';
-
+import NewMessage from './NewMessage';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { MessagingContext } from '../../context/MessagingContext';
 
 const useStyles = makeStyles((theme) => ({
-  rootContainer: {
-    paddingBottom: '1em',
-    marginBottom: '2em',
-  },
-  title: {
-    marginLeft: theme.spacing(7),
-    fontSize: '24px',
+  headerGrid: {
+    width: '90%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 'auto',
   },
   button: {
     backgroundColor: theme.palette.primary.main,
@@ -26,17 +24,13 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     margin: '5px',
   },
-  buttonContainer: {
-    margin: '2em',
-    marginLeft: 'auto',
-  },
   messagesContainer: {
     margin: '2em',
     padding: '2em',
   },
   container: {
     width: '90vw',
-    height: '85vh',
+    height: '75vh',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: '6em',
@@ -57,31 +51,34 @@ const useStyles = makeStyles((theme) => ({
 
 const Messaging = () => {
   // styles
-  const {
-    rootContainer,
-    title,
-    button,
-    buttonContainer,
-    container,
-    inbox,
-    body,
-  } = useStyles();
+  const { headerGrid, button, container, inbox, body } = useStyles();
+  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
+    MessagingContext
+  );
 
-  const { messages, loadMessages, loadRegions } = useContext(MessagingContext);
+  const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
+  const [toggleSurvey, setToggleSurvey] = useState(false);
+  const [messageRecipient, setMessageRecipient] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
+
+  const findMessageRecipient = (messagesArray) => {
+    return messagesArray[0].messages[0].to[0].recipient !== user.userName
+      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
+      : setMessageRecipient(messagesArray[0].messages[0].from.author);
+  };
 
   useEffect(() => {
     loadMessages();
     loadRegions();
+    loadAuthors();
   }, []);
 
-  const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
-  const [toggleSurvey, setToggleSurvey] = useState(false);
-  const [messageRecipient, setMessageRecipient] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   useEffect(() => {
-    if (messages.length && messageRecipient === '') {
-      setMessageRecipient(messages[0].userName);
+    if (messages.length && messageRecipient === null) {
+      findMessageRecipient(messages);
     }
   }, [messages]);
 
@@ -92,12 +89,15 @@ const Messaging = () => {
 
   return (
     <>
-      <Navbar />
-      <Grid container direction="row" className={rootContainer}>
-        <Grid item className={title}>
+      <Grid container id="Messaging" className={headerGrid}>
+        <Grid item>
           <h1>Inbox</h1>
         </Grid>
-        <Grid item className={buttonContainer}>
+        <Grid item>
+          <Button className={button} onClick={handleOpen}>
+            New Message
+          </Button>
+          <NewMessage openModal={openModal} handleClose={handleClose} />
           <Button
             className={button}
             onClick={() => setToggleAnnounceMessage(!toggleAnnounceMessage)}
@@ -110,21 +110,17 @@ const Messaging = () => {
           >
             Quick Survey
           </Button>
-          {toggleAnnounceMessage ? (
+          {toggleAnnounceMessage && (
             <AnnounceMessage
               toggleAnnounceMessage={toggleAnnounceMessage}
               setToggleAnnounceMessage={setToggleAnnounceMessage}
             />
-          ) : (
-            <></>
           )}
-          {toggleSurvey ? (
+          {toggleSurvey && (
             <Survey
               toggleSurvey={toggleSurvey}
               setToggleSurvey={setToggleSurvey}
             />
-          ) : (
-            <></>
           )}
         </Grid>
       </Grid>
@@ -133,7 +129,6 @@ const Messaging = () => {
           <Inbox
             messages={messages}
             selectedIndex={selectedIndex}
-            messageRecipient={messageRecipient}
             handleListItemClick={handleListItemClick}
           />
         </Grid>

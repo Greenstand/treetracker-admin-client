@@ -4,12 +4,12 @@ export default function OptimizedImage(props) {
   const {
     src,
     width = 320,
-    height,
     quality,
     screenWidths = [1600, 1280, 960, 0],
     imageSizes = [400, 300, 250, 200],
     fixed,
     rotation,
+    objectFit = 'cover',
     ...rest
   } = props;
 
@@ -23,10 +23,7 @@ export default function OptimizedImage(props) {
   if (matches?.length > 1) {
     const domain = matches[1];
     const imagePath = matches[2];
-    const params =
-      `f=auto,w=${width}` +
-      (height ? `,h=${height}` : '') +
-      (quality ? `,q=${quality}` : '');
+    const params = `f=auto,w=${width}` + (quality ? `,q=${quality}` : '');
 
     cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
@@ -51,7 +48,7 @@ export default function OptimizedImage(props) {
         style={{
           position: 'absolute',
           inset: 0,
-          objectFit: 'cover',
+          objectFit,
           width: 'calc(100% + 2px)', // width for image rotation
           height: 'calc(100% + 2px)', // height for image rotation
           transform: `rotate(${rotation}deg)`,

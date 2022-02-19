@@ -14,19 +14,25 @@ import { Typography } from '@material-ui/core';
 export const MENU_WIDTH = 232;
 
 const useStyles = makeStyles((theme) => ({
-  drawer: {},
   drawerPaper: {
     width: MENU_WIDTH,
     position: 'inherit',
     height: '100vh',
   },
+  menuContainer: {
+    width: MENU_WIDTH,
+  },
   menuTitle: {
-    textTransform: 'uppercase',
+    letterSpacing: '.05em',
+    fontVariantCaps: 'all-small-caps',
+    fontSize: '16px',
+    fontWeight: '500',
   },
   menuItemWithChildren: {
     padding: theme.spacing(0, 0, 0, 4),
   },
   menuItem: {
+    minHeight: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.lightVery,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
@@ -38,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
-    marginRight: 35,
+    marginRight: theme.spacing(4),
     '&.Mui-selected': {
       color: theme.palette.primary.main,
       fontWeight: 400,
@@ -98,7 +104,7 @@ export default function GSMenu(props) {
                           className={classes.menuItem}
                           selected={props.active === item.name}
                         >
-                          <Grid container>
+                          <Grid container direction="row" alignItems="flex-end">
                             <Grid item>
                               <ListItemIcon className={classes.listItemIcon}>
                                 {child.icon && <child.icon />}
@@ -124,7 +130,7 @@ export default function GSMenu(props) {
                     className={classes.menuItem}
                     selected={props.active === item.name}
                   >
-                    <Grid container>
+                    <Grid container direction="row" alignItems="flex-end">
                       <Grid item>
                         <ListItemIcon className={classes.listItemIcon}>
                           {item.icon && <item.icon />}
@@ -146,7 +152,7 @@ export default function GSMenu(props) {
   );
 
   return props.variant === 'plain' ? (
-    <>{menu}</>
+    <div className={classes.menuContainer}>{menu}</div>
   ) : (
     <Drawer
       PaperProps={{
