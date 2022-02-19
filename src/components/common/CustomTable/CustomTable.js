@@ -20,6 +20,8 @@ import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTable.styles';
+import { AppContext } from '../../../context/AppContext';
+
 import dateFormat from 'dateformat';
 
 /**
@@ -96,8 +98,24 @@ function CustomTableHeader(props) {
   } = props;
   const classes = useStyles();
   const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
+  const [csvFileNamePrefix, setCsvFileNamePrefix] = useState('');
+
+  const { orgList, selectedFilters } = React.useContext(AppContext);
 
   useEffect(() => {
+    // If organisation is used to filter data, use that as prefix for the csv filename
+    if (selectedFilters.organisation_id) {
+      const selectedOrg = orgList.filter(
+        (org) => org.id == selectedFilters.organisation_id
+      )[0];
+      setCsvFileNamePrefix(`${selectedOrg.name}_`);
+    }
+    //if activeDateRange is set then use that for csv filename suffix
+    if (activeDateRange.trim().length > 1) {
+      setCsvFileNameSuffix(activeDateRange);
+      return;
+    }
+
     if (!data || data.length == 0) return;
     const consolidationPeriodStarts = data.map(
       (row) => new Date(row.csv_start_date)
@@ -158,7 +176,7 @@ function CustomTableHeader(props) {
                 <Button color="primary" variant="text">
                   <CSVLink
                     data={dataToExport}
-                    filename={`${headerTitle.toLowerCase()}_${csvFileNameSuffix}.csv`}
+                    filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
                     className={classes.csvLink}
                     target="_blank"
                   >
