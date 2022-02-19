@@ -157,15 +157,15 @@ export const SurveyMessage = ({ message }) => {
         <Typography>{message.composed_at.slice(0, 10)}</Typography>
       </Grid>
       <Grid item className={surveyContent}>
-        <Typography variant={'h4'}>
-          {message.body ? message.body : ''}
+        <Typography variant={'h6'}>
+          {message.from.author ? message.from.author : ''}
         </Typography>
         {message.survey.response ? (
           <>
             {message.survey?.answers &&
               message.survey.answers.map((answer, i) => (
                 <div key={`answer - ${i}`}>
-                  <Typography variant={'h6'}>{answer}</Typography>
+                  <Typography>{answer}</Typography>
                 </div>
               ))}
           </>
