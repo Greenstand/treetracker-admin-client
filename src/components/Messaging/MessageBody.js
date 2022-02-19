@@ -9,6 +9,7 @@ import { MessagingContext } from 'context/MessagingContext.js';
 const useStyles = makeStyles((theme) => ({
   messageRow: {
     display: 'flex',
+    padding: '3px',
   },
   messageRowRight: {
     display: 'flex',
@@ -28,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '20px',
     marginBottom: '10px',
     padding: '10px',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.lightMed,
+    // backgroundColor: theme.palette.primary.main,
     textAlign: 'left',
     borderRadius: '10px',
   },
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   messageTimeStampLeft: {
     display: 'flex',
     marginRight: 'auto',
-    alignItems: 'center',
+    alignItems: 'top',
     color: 'grey',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
@@ -100,8 +102,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginLeft: 'auto',
-    backgroundColor: theme.palette.primary.main,
-    color: '#fff',
+    backgroundColor: theme.palette.primary.lightMed,
+    // backgroundColor: theme.palette.primary.main,
+    // color: '#fff',
     width: '65%',
     borderRadius: '10px',
     padding: '10px',
@@ -154,12 +157,14 @@ export const SurveyMessage = ({ message }) => {
   return (
     <div className={messageRow}>
       <Grid item className={messageTimeStampLeft}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+        <Typography>
+          {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
+        </Typography>
       </Grid>
       <Grid item className={surveyContent}>
-        <Typography variant={'h6'}>
+        {/* <Typography variant={'h6'}>
           {message.from.author ? message.from.author : ''}
-        </Typography>
+        </Typography> */}
         {message.survey.response ? (
           <>
             {message.survey?.answers &&
@@ -264,7 +269,7 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
           </Typography>
         )}
 
-        <Typography align="left" color="primary" variant="h6">
+        <Typography align="left" color="primary">
           {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
         </Typography>
       </Grid>
