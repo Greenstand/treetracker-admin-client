@@ -29,9 +29,6 @@ export const MessagingProvider = (props) => {
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (!grouped) {
-          grouped = [];
-        }
         if (
           message.subject === 'Message' ||
           message.subject === 'Announce Message'
@@ -50,7 +47,7 @@ export const MessagingProvider = (props) => {
           let key = message.survey.title;
           if (grouped[key]) {
             if (grouped[key][0].survey.id === message.survey.id) {
-              return;
+              return grouped;
             } else {
               grouped[key] = [];
             }
