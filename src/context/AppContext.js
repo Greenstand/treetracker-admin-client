@@ -22,7 +22,8 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-import PaymentsIcon from '../components/images/PaymentsIcon';
+// import PaymentsIcon from '../components/images/PaymentsIcon';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
@@ -81,7 +82,7 @@ function getRoutes(user) {
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
-          POLICIES.APPROVE_TREE,
+          POLICIES.MATCH_CAPTURES,
         ]),
     },
     {
@@ -91,20 +92,39 @@ function getRoutes(user) {
           name: 'Earnings',
           linkTo: '/earnings',
           component: EarningsView,
-          icon: CreditCardIcon,
-          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+          icon: AccountBalanceIcon,
+          disabled:
+            process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+            !hasPermission(user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.MANAGE_EARNINGS,
+              POLICIES.LIST_EARNINGS,
+            ]),
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
-          icon: PaymentsIcon,
-          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+          icon: CreditCardIcon,
+          disabled:
+            process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+            !hasPermission(user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.MANAGE_PAYMENTS,
+              POLICIES.LIST_PAYMENTS,
+            ]),
         },
       ],
       disabled:
-        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
-        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.MANAGE_EARNINGS,
+          POLICIES.MANAGE_PAYMENTS,
+          POLICIES.LIST_EARNINGS,
+          POLICIES.LIST_PAYMENTS,
+        ]),
     },
     {
       name: 'Growers',
@@ -253,7 +273,6 @@ export const AppProvider = (props) => {
 
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
-    console.log('load organizations from api:', orgs.length);
     setOrgList(orgs);
   }
 

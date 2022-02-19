@@ -297,6 +297,7 @@ export function VerifyProvider(props) {
     setInvalidateCaptureCount(false);
   };
 
+
   const value = {
     captureImages,
     captureImagesSelected,

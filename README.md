@@ -196,6 +196,10 @@ To run tests:
 
 `npm test`
 
+### Cypress
+
+Make your own `/cypress/fixtures/login.json` file containing the actual credentials in order to run the cypress tests.
+
 ## How to log
 
 We use [loglevel](<(https://github.com/pimterry/loglevel)>) for logging, with some conventions. Using loglevel, we will be able to open/close a single file's log by chaining the level of log on the fly, even in production env.

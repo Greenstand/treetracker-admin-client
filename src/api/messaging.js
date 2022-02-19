@@ -15,6 +15,19 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  getAuthors() {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/author`;
+
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   postRegion(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
     const { id, name, description, created_at } = payload;

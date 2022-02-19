@@ -2,20 +2,20 @@ import React, { useState, useContext, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
-  Checkbox,
   FormControl,
   FormGroup,
   FormControlLabel,
-  DialogContentText,
+  LinearProgress,
 } from '@material-ui/core';
 import { CapturesContext } from '../context/CapturesContext';
 import { CSVLink } from 'react-csv';
 import { formatCell } from './Captures/CaptureTable';
-import { LinearProgress } from '@material-ui/core';
 
 const useStyle = makeStyles((theme) => ({
   container: {

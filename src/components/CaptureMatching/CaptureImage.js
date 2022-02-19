@@ -1,37 +1,98 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
-import theme from '../common/theme';
 
-import { Typography, Box, Button, Grid } from '@material-ui/core';
+import { Tooltip, Typography, Box, Button, Paper } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { makeStyles } from '@material-ui/core/styles';
+import { getDateTimeStringLocale } from 'common/locale';
 
-const useStyles = makeStyles({
+function Country({ lat, lon }) {
+  const [content, setContent] = useState('');
+  if (lat === 'undefined' || lon === 'undefined') {
+    setContent('No data');
+  }
+
+  useEffect(() => {
+    setContent('loading...');
+    fetch(
+      `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status === 404) {
+          setContent(`Can not find country at lat:${lat}, lon:${lon}`);
+          return Promise.reject();
+        } else {
+          setContent('Unknown error');
+          return Promise.reject();
+        }
+      })
+      .then((data) => {
+        setContent(data.countries[0].name);
+      });
+  }, []);
+
+  return <span>{content}</span>;
+}
+
+const useStyles = makeStyles((theme) => ({
   containerBox: {
-    margin: theme.spacing(5),
     background: '#fff',
     borderRadius: '4px',
+    flexGrow: '1',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '1px',
   },
 
   headerBox: {
     display: 'flex',
-    flexDirection: 'spaceBetween',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+    alignItems: 'center',
   },
 
   imgBox: {
-    height: '52vh',
-    marginTop: '20px',
-    overflow: 'scroll',
+    flexGrow: 1,
+    overflow: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
   },
 
   imgContainer: {
-    width: '100%',
+    objectFit: 'contain',
   },
-});
+  captureInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
+  },
+  box1: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  box3: {
+    display: 'flex',
+    gap: '4px',
+    justifyContent: 'start',
+    alignItems: 'center',
+    marginTop: '4px',
+    '& svg': {
+      width: '16px',
+      height: '16px',
+    },
+  },
+  button: {
+    height: '100%',
+  },
+}));
 
 function CaptureImage(props) {
   const {
@@ -39,7 +100,6 @@ function CaptureImage(props) {
     currentPage,
     noOfPages,
     handleChange,
-    imgPerPage,
     imgCount,
     handleSkip,
   } = props;
@@ -47,7 +107,7 @@ function CaptureImage(props) {
   const classes = useStyles();
 
   return (
-    <Box style={{ width: '50%' }}>
+    <Box className={classes.box1}>
       <CaptureHeader
         currentPage={currentPage}
         handleChange={handleChange}
@@ -57,78 +117,67 @@ function CaptureImage(props) {
         captureImages={captureImages}
       />
 
+      <Box height={16} />
+
       {captureImages &&
-        captureImages
-          .slice((currentPage - 1) * imgPerPage, currentPage * imgPerPage)
-          .map((capture) => {
-            return (
-              <Box
-                key={`capture_${capture.id}`}
-                className={classes.containerBox}
-              >
-                <Box className={classes.headerBox}>
-                  <Grid
-                    container
-                    direction="row"
-                    justify="space-around"
-                    // alignItems="baseline"
-                  >
-                    <Box style={{ marginTop: '15px' }}>
-                      <Typography
-                        variant="h5"
-                        style={{ width: '150px', wordWrap: 'break-word' }}
-                      >
-                        Capture {capture.id}
+        captureImages.map((capture) => {
+          return (
+            <Paper
+              elevation={4}
+              key={`capture_${capture.id}`}
+              className={classes.containerBox}
+            >
+              <Box className={classes.headerBox}>
+                <Box className={classes.box2}>
+                  <Tooltip title={capture.id}>
+                    <Typography variant="h5">
+                      Capture {(capture.id + '').substring(0, 10) + '...'}
+                    </Typography>
+                  </Tooltip>
+                  <Box className={classes.captureInfo}>
+                    <Box className={classes.box3}>
+                      <AccessTimeIcon />
+                      <Typography variant="body1">
+                        {getDateTimeStringLocale(capture.created_at)}
                       </Typography>
-                      <Box display="flex">
-                        <AccessTimeIcon />
-                        <Typography variant="body1">
-                          {capture.created_at}
-                        </Typography>
-                      </Box>
-
-                      <Box display="flex">
-                        <LocationOnOutlinedIcon />
-                        <Typography variant="body1">USA</Typography>
-                      </Box>
-                      {/* <UseLocation/> */}
                     </Box>
-
-                    <Grower
-                      planter_photo_url={capture.planter_photo_url}
-                      planter_username={capture.planter_username}
-                      status={capture.status}
-                    />
-
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      style={{
-                        height: '50px',
-                        width: '100px',
-                        marginTop: '10px',
-                      }}
-                      onClick={handleSkip}
-                    >
-                      Skip
-                      <SkipNextIcon />
-                    </Button>
-                  </Grid>
+                    <Box className={classes.box3}>
+                      <LocationOnOutlinedIcon />
+                      <Typography variant="body1">
+                        <Country lat={capture.lat} lon={capture.lon} />
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
 
-                <Box className={classes.imgBox}>
-                  {/* {treeList.slice(0, 1).map( img => { */}
+                <Grower
+                  grower_photo_url={capture.grower_photo_url}
+                  grower_username={capture.grower_username}
+                  planting_organization_id={capture.planting_organization_id}
+                />
 
-                  <img
-                    key={capture.id}
-                    className={classes.imgContainer}
-                    src={capture.image_url}
-                    alt={`Capture ${capture.id}`}
-                  />
-                </Box>
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={handleSkip}
+                  className={classes.button}
+                >
+                  Skip
+                  <SkipNextIcon />
+                </Button>
               </Box>
-            );
-          })}
+
+              <Box className={classes.imgBox}>
+                <img
+                  key={capture.id}
+                  className={classes.imgContainer}
+                  src={capture.image_url}
+                  alt={`Capture ${capture.id}`}
+                />
+              </Box>
+            </Paper>
+          );
+        })}
     </Box>
   );
 }
