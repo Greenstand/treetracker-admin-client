@@ -1,3 +1,20 @@
+# [1.54.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.53.0...v1.54.0) (2022-02-20)
+
+
+### Bug Fixes
+
+* announce title label for announements ([c02af75](https://github.com/Greenstand/treetracker-admin-client/commit/c02af75e4afcd600b4bbad6ced6289727e131e94))
+* instead of repeating Survey display the user idd ([145d483](https://github.com/Greenstand/treetracker-admin-client/commit/145d483d4bd1a9ac3b8d4d29c3410505be409ec6))
+* organization_id needs to be a string should point to stakeholderr_uuid ([7b2e201](https://github.com/Greenstand/treetracker-admin-client/commit/7b2e2015e3567ec47aaaa282e6abd2d333cd2231))
+* useEffect can't take a function defined with async/await ([01a26b9](https://github.com/Greenstand/treetracker-admin-client/commit/01a26b90cce0e901429dd5947310f58a6f50d364))
+
+
+### Features
+
+* add date to Survey and Announcement headers ([02190d6](https://github.com/Greenstand/treetracker-admin-client/commit/02190d6d75bd17fdd0525a993358638af7a44c3f))
+* adjust some styles ([98cf3b5](https://github.com/Greenstand/treetracker-admin-client/commit/98cf3b5d0eb457b9ad1a9955be1ce5b6915567f1))
+* submit and display announcments ([5b217f6](https://github.com/Greenstand/treetracker-admin-client/commit/5b217f6fa3682b40205d5daeea860f7deaaac511))
+
 # [1.53.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.52.1...v1.53.0) (2022-02-20)
 
 
