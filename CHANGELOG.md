@@ -1,3 +1,10 @@
+# [1.53.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.52.1...v1.53.0) (2022-02-20)
+
+
+### Features
+
+* fixed user manager operations column wrap ([#377](https://github.com/Greenstand/treetracker-admin-client/issues/377)) ([8a6b152](https://github.com/Greenstand/treetracker-admin-client/commit/8a6b152074bd32eabb11a699dd2521e1c782d2f1))
+
 ## [1.52.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.52.0...v1.52.1) (2022-02-20)
 
 
