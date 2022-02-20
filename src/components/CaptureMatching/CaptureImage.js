@@ -144,7 +144,10 @@ function CaptureImage(props) {
                     <Box className={classes.box3}>
                       <LocationOnOutlinedIcon />
                       <Typography variant="body1">
-                        <Country lat={capture.lat} lon={capture.lon} />
+                        <Country
+                          lat={capture.latitude}
+                          lon={capture.longitude}
+                        />
                       </Typography>
                     </Box>
                   </Box>
