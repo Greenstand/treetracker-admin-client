@@ -12,7 +12,7 @@ import { getDateTimeStringLocale } from 'common/locale';
 
 function Country({ lat, lon }) {
   const [content, setContent] = useState('');
-  if (lat === 'undefined' || lon === 'undefined') {
+  if (lat === undefined || lon === undefined) {
     setContent('No data');
   }
 
@@ -144,7 +144,10 @@ function CaptureImage(props) {
                     <Box className={classes.box3}>
                       <LocationOnOutlinedIcon />
                       <Typography variant="body1">
-                        <Country lat={capture.lat} lon={capture.lon} />
+                        <Country
+                          lat={capture.latitude}
+                          lon={capture.longitude}
+                        />
                       </Typography>
                     </Box>
                   </Box>
