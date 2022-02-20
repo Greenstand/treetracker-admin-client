@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Announcement } from '@material-ui/icons';
 import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
@@ -18,14 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
   messageHeader: {
     display: 'flex',
-    justifyContent: 'space-between',
+    borderBottom: '.3px solid #fff',
+    marginBottom: '5px',
   },
   announceMessage: {
     position: 'relative',
     marginLeft: '20px',
     marginBottom: '10px',
     padding: '10px',
-    // backgroundColor: 'lightGrey',
     background: theme.palette.primary.main,
     color: 'white',
     textAlign: 'left',
@@ -46,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '10px',
     padding: '10px',
     backgroundColor: theme.palette.primary.lightMed,
-    // backgroundColor: theme.palette.primary.main,
     textAlign: 'left',
     borderRadius: '10px',
   },
@@ -156,8 +156,8 @@ export const AnnounceMessage = ({ message }) => {
   const {
     messageRow,
     messageHeader,
-    announceMessage,
     messageTitle,
+    announceMessage,
     messageContent,
     messageTimeStampRight,
   } = useStyles();
@@ -166,16 +166,14 @@ export const AnnounceMessage = ({ message }) => {
     <div className={messageRow}>
       <div className={announceMessage}>
         <div className={messageHeader}>
-          <Announcement color="white" style={{ padding: '2px' }} />
-          <Typography className={messageTitle}>{message.body}</Typography>
+          <Announcement color="inherit" style={{ padding: '2px' }} />
+          <Typography className={messageTitle}>{message.title}</Typography>
         </div>
+        <Typography className={messageContent}>{message.body}</Typography>
         {message.video_link && (
-          <div>
-            <br />
-            <Typography className={messageContent} variant="body1">
-              {message.video_link}
-            </Typography>
-          </div>
+          <Typography className={messageContent} variant="body1">
+            {message.video_link}
+          </Typography>
         )}
       </div>
       <Grid item className={messageTimeStampRight}>
@@ -216,7 +214,9 @@ export const SurveyMessage = ({ message }) => {
       ) : (
         <div className={messageRow}>
           <Grid item className={messageTimeStampLeft}>
-            <Typography>{dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}</Typography>
+            <Typography>
+              {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
+            </Typography>
           </Grid>
           <Grid item className={surveyContent}>
             <Typography variant={'h4'}>
@@ -329,6 +329,7 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
 };
 
 const MessageBody = ({ messages, messageRecipient }) => {
+  const history = useHistory();
   const { paper, messagesBody, textInput } = useStyles();
   const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
@@ -351,7 +352,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
     }
   }, [authors, messageRecipient]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let lastMessage = messages[messages.length - 1];
@@ -366,7 +367,8 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        postMessageSend(messagePayload);
+        await postMessageSend(messagePayload);
+        history.go(0);
       }
     }
     setMessageContent('');

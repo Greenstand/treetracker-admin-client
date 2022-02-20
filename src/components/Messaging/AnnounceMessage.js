@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   SwipeableDrawer,
   Grid,
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
+  const history = useHistory();
   const { orgList } = useContext(AppContext);
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
@@ -108,6 +110,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.region_id)
       ) {
         await postMessageSend(payload);
+        history.go(0);
       }
     } catch (err) {
       console.log(err);

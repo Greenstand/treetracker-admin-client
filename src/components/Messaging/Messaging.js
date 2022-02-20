@@ -71,6 +71,7 @@ const Messaging = () => {
   };
 
   useEffect(() => {
+    console.log('Messaging.js: useEffect: loadMessages');
     loadMessages();
     loadRegions();
     loadAuthors();

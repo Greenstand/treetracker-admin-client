@@ -94,6 +94,7 @@ const NewMessage = ({ openModal, handleClose }) => {
       messagePayload.to !== ''
     ) {
       await postMessageSend(messagePayload);
+      history.go(0);
     }
     handleClose();
   };
