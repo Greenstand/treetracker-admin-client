@@ -9,8 +9,10 @@ class GrowersPage {
   nextPage_Button = () => cy.get('button[title="Next page"]');
   growersPerPage = () => cy.get('.MuiTablePagination-root div[role="button"]');
   apply_Button = () => cy.get('#submit');
+  reset_Button = () => cy.get('button').contains('Reset');
   filter_Button = () => cy.get('button').contains('Filter');
   filter_Form = () => cy.get('div>form');
+  filter_Count = () => cy.get('Button>span>div');
   growerID_TextField = () => cy.get('input[id="Grower ID"]');
   firstName_TextField = () => cy.get('input[id="First Name"]');
   lastName_TextField = () => cy.get('input[id="Last Name"]');
@@ -47,6 +49,18 @@ class GrowersPage {
     this.filter_Button().click();
     return this;
   }
+  click_Button_Reset() {
+    this.reset_Button().click();
+    return this;
+  }
+  filterCount_ShouldNot_Exist() {
+    this.filter_Count().should('not.exist');
+    return this;
+  }
+  filterCount_ShouldBe(count) {
+    this.filter_Count().should('have.text', count);
+    return this;
+  }
   filterForm_ShouldBe_Visible() {
     this.filter_Form().should('be.visible');
     return this;
@@ -57,6 +71,14 @@ class GrowersPage {
   }
   enterInto_GrowerID_TextField(growerID) {
     this.growerID_TextField().type(growerID);
+    return this;
+  }
+  growerID_TextField_ShouldContain(growerID) {
+    this.growerID_TextField().should('have.value', growerID);
+    return this;
+  }
+  growerID_TextField_ShouldBe_Empty() {
+    this.growerID_TextField().should('have.value', '');
     return this;
   }
   click_Button_Apply() {
@@ -108,6 +130,39 @@ class GrowersPage {
   }
   enterInto_FirstName_TextField(firstName) {
     this.firstName_TextField().type(firstName);
+    return this;
+  }
+  growerCards_OrganizationName_ShouldBeEmpty() {
+    let name = true;
+    this.grower_OrganizationName();
+    this.grower_Card()
+      .each((e) => {
+        if (e.find('p:nth-child(3)').length == 0) {
+          cy.log(
+            `✔️ _'${e
+              .find('p:nth-child(2)')
+              .text()}' has empty organization name '${
+              e.find('p:nth-child(3)').length
+            }'_`
+          );
+        } else {
+          name = false;
+          cy.log(
+            `❌ **'${e
+              .find('p:nth-child(2)')
+              .text()}' should not contain '${e
+              .find('p:nth-child(3)')
+              .text()}' as its organization name**`
+          );
+        }
+      })
+      .then(() => {
+        if (name === false) {
+          this.grower_Card().each((e) => {
+            expect(e.find('p:nth-child(3)')).not.exist;
+          });
+        }
+      });
     return this;
   }
   growerCards_FirstName_ShouldContain(firstName) {
