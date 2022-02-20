@@ -83,24 +83,34 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       subject: 'Announce Message',
       title: values.title,
       body: values.message,
-      video_link: values.videoLink,
     };
 
     if (!region?.id && !organization?.id) {
       setError(true);
       return;
     }
+
+    if (values?.videoLink) {
+      payload['video_link'] = values.videoLink;
+    }
+
     if (region?.id) {
       payload['region_id'] = region.id;
     }
+
     if (organization?.id) {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
-    if (
-      (payload.body && payload.organization_id) ||
-      (payload.body && payload.region_id)
-    ) {
-      await postMessageSend(payload);
+
+    try {
+      if (
+        (payload.body && payload.organization_id) ||
+        (payload.body && payload.region_id)
+      ) {
+        await postMessageSend(payload);
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     setValues({

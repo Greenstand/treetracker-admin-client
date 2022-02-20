@@ -69,7 +69,10 @@ export const MessagingProvider = (props) => {
     const res = await api.getAuthors();
 
     if (res) {
-      setAuthors(res.authors);
+      let result = res.authors.filter(
+        (author) => author.handle !== user.userName
+      );
+      setAuthors(result);
     }
   };
 
@@ -108,7 +111,7 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     const res = await api.getMessage(user.userName);
-
+    console.log(res.messages);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
