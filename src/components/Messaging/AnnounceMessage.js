@@ -60,6 +60,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const [inputValueOrg, setInputValueOrg] = useState('');
   const [region, setRegion] = useState({});
   const [inputValueRegion, setInputValueRegion] = useState('');
+  const [error, setError] = useState(false);
 
   const [values, setValues] = useState({
     title: '',
@@ -84,6 +85,11 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       body: values.message,
       video_link: values.videoLink,
     };
+
+    if (!region?.id && !organization?.id) {
+      setError(true);
+      return;
+    }
     if (region?.id) {
       payload['region_id'] = region.id;
     }
@@ -111,7 +117,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     <form className={form} onSubmit={handleSubmit}>
       <GSInputLabel text="Announce: Title" />
       <TextField
-        // className={input}
         fullWidth
         label="Title"
         name="title"
@@ -134,6 +139,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         onChange={handleChange}
         label="Add a video link e.g. youtube url"
       />
+      {error ? (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          Please select a region or an organization!
+        </Typography>
+      ) : null}
       <GSInputLabel
         id="select-label"
         text={'Target Audience by Organization'}
@@ -148,7 +160,10 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         onChange={(e, val) => setOrganization(val)}
         inputValue={inputValueOrg}
         getOptionSelected={(option, value) => option.id === value.id}
-        onInputChange={(e, val) => setInputValueOrg(val)}
+        onInputChange={(e, val) => {
+          setError(false);
+          setInputValueOrg(val);
+        }}
         id="controllable-states-demo"
         freeSolo
         sx={{ width: 300 }}
@@ -167,15 +182,18 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         getOptionLabel={(option) => option.name || ''}
         inputValue={inputValueRegion}
         getOptionSelected={(option, value) => option.id === value.id}
-        onInputChange={(e, val) => setInputValueRegion(val)}
+        onInputChange={(e, val) => {
+          setError(false);
+          setInputValueRegion(val);
+        }}
         id="controllable-states-demo"
         freeSolo
         sx={{ width: 300 }}
         renderInput={(params) => (
-          <TextField {...params} label="Select Organization" />
+          <TextField {...params} label="Select Region" />
         )}
       />
-      <Button className={sendButton} type="submit">
+      <Button disabled={error} className={sendButton} type="submit">
         Send Message
       </Button>
     </form>

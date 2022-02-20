@@ -33,9 +33,8 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid lightGrey',
     '&.Mui-selected': {
       background: theme.palette.primary.lightVery,
-      borderBottom: `3px solid ${theme.palette.primary.main}`,
-      // borderRight: `5px solid ${theme.palette.primary.main}`,
-      // borderLeft: `5px solid ${theme.palette.primary.main}`,
+      borderLeft: `5px solid ${theme.palette.primary.main}`,
+      borderBottom: `1px solid ${theme.palette.primary.main}`,
     },
   },
   listText: {
@@ -73,7 +72,6 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
       <List className={list}>
         {messages
           .filter((message) => {
-            console.log('message', message);
             if (search === '') {
               return message;
             } else if (

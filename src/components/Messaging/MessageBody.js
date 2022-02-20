@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Announcement } from '@material-ui/icons';
 import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 import dateFormat from 'dateformat';
@@ -14,6 +15,21 @@ const useStyles = makeStyles((theme) => ({
   messageRowRight: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  messageHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  announceMessage: {
+    position: 'relative',
+    marginLeft: '20px',
+    marginBottom: '10px',
+    padding: '10px',
+    // backgroundColor: 'lightGrey',
+    background: theme.palette.primary.main,
+    color: 'white',
+    textAlign: 'left',
+    borderRadius: '10px',
   },
   recievedMessage: {
     position: 'relative',
@@ -33,6 +49,12 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: theme.palette.primary.main,
     textAlign: 'left',
     borderRadius: '10px',
+  },
+  messageTitle: {
+    padding: 0,
+    margin: 0,
+    wordWrap: 'break-word',
+    fontWeight: 'bold',
   },
   messageContent: {
     padding: 0,
@@ -124,16 +146,19 @@ const useStyles = makeStyles((theme) => ({
 export const AnnounceMessage = ({ message }) => {
   const {
     messageRow,
-    recievedMessage,
+    messageHeader,
+    announceMessage,
+    messageTitle,
     messageContent,
     messageTimeStampRight,
   } = useStyles();
 
   return (
     <div className={messageRow}>
-      <div className={recievedMessage}>
-        <div>
-          <Typography className={messageContent}>{message.body}</Typography>
+      <div className={announceMessage}>
+        <div className={messageHeader}>
+          <Announcement color="white" style={{ padding: '2px' }} />
+          <Typography className={messageTitle}>{message.body}</Typography>
         </div>
         {message.video_link && (
           <div>
