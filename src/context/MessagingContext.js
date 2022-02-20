@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import api from '../api/messaging';
 
 export const MessagingContext = createContext({
