@@ -116,12 +116,11 @@ const CaptureTable = () => {
     populateTagLookup();
   }, [tagsContext.tagList]);
 
-  useEffect(async () => {
+  const getCaptureTags = async () => {
     // Don't do anything if there are no captures
     if (!captures?.length) {
       return;
     }
-
     // Get the capture tags for all of the displayed captures
     const captureTags = await api.getCaptureTags({
       captureIds: captures.map((c) => c.id),
@@ -136,6 +135,10 @@ const CaptureTable = () => {
       lookup[captureTag.treeId].push(tagLookup[captureTag.tagId]);
     });
     setCaptureTagLookup(lookup);
+  };
+
+  useEffect(() => {
+    getCaptureTags();
   }, [captures, tagLookup]);
 
   const populateSpeciesLookup = async () => {
