@@ -86,6 +86,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
     choiceTwo: '',
     choiceThree: '',
   });
+  const [error, setError] = useState(false);
 
   // * Both values needed for organization/region autocompletes
   const [organization, setOrganization] = useState({});
@@ -128,6 +129,11 @@ const SurveyForm = ({ setToggleSurvey }) => {
       },
     };
 
+    if (!region?.id && !organization?.id) {
+      setError(true);
+      return;
+    }
+
     if (region?.id) {
       payload['region_id'] = region.id;
     }
@@ -151,7 +157,10 @@ const SurveyForm = ({ setToggleSurvey }) => {
         payload.survey.title.length > 1 &&
         (payload['region_id'] || payload['organization_id'])
       ) {
-        await postMessageSend(payload);
+        console.log('survey handleSubmit', payload);
+        const res = await postMessageSend(payload);
+        console.log('survey message created', res);
+        history.go(0);
       }
     } catch (err) {
       console.log(err);
@@ -229,6 +238,17 @@ const SurveyForm = ({ setToggleSurvey }) => {
         </div>
       ))}
       <div>
+        {error ? (
+          <Typography
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              margin: '20px 10px 0px',
+            }}
+          >
+            Please select a region or an organization!
+          </Typography>
+        ) : null}
         <FormControl fullWidth>
           <GSInputLabel
             id="select-label"
@@ -244,7 +264,10 @@ const SurveyForm = ({ setToggleSurvey }) => {
             onChange={(e, val) => setOrganization(val)}
             inputValue={inputValueOrg}
             getOptionSelected={(option, value) => option.id === value.id}
-            onInputChange={(e, val) => setInputValueOrg(val)}
+            onInputChange={(e, val) => {
+              setError(false);
+              setInputValueOrg(val);
+            }}
             id="controllable-states-demo"
             freeSolo
             sx={{ width: 300 }}
@@ -268,17 +291,25 @@ const SurveyForm = ({ setToggleSurvey }) => {
             getOptionLabel={(option) => option.name || ''}
             inputValue={inputValueRegion}
             getOptionSelected={(option, value) => option.id === value.id}
-            onInputChange={(e, val) => setInputValueRegion(val)}
+            onInputChange={(e, val) => {
+              setError(false);
+              setInputValueRegion(val);
+            }}
             id="controllable-states-demo"
             freeSolo
             sx={{ width: 300 }}
             renderInput={(params) => (
-              <TextField {...params} label="Select Organization" />
+              <TextField {...params} label="Select Region" />
             )}
           />
         </FormControl>
       </div>
-      <Button type="submit" size="large" className={submitButton}>
+      <Button
+        disabled={error}
+        type="submit"
+        size="large"
+        className={submitButton}
+      >
         Submit
       </Button>
     </form>
