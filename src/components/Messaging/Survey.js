@@ -138,7 +138,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
       payload['region_id'] = region.id;
     }
     if (organization?.id) {
-      payload['organization_id'] = organization.id;
+      payload['organization_id'] = organization.stakeholder_uuid;
     }
 
     Object.values(allQuestions).map((question) => {
@@ -157,9 +157,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
         payload.survey.title.length > 1 &&
         (payload['region_id'] || payload['organization_id'])
       ) {
-        console.log('survey handleSubmit', payload);
-        const res = await postMessageSend(payload);
-        console.log('survey message created', res);
+        await postMessageSend(payload);
         history.go(0);
       }
     } catch (err) {

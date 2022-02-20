@@ -214,7 +214,9 @@ export const SurveyMessage = ({ message }) => {
       ) : (
         <div className={messageRow}>
           <Grid item className={messageTimeStampLeft}>
-            <Typography>{dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}</Typography>
+            <Typography>
+              {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
+            </Typography>
           </Grid>
           <Grid item className={surveyContent}>
             <Typography variant={'h4'}>
@@ -365,9 +367,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        console.log('messageBody handleSubmit', messagePayload);
-        const res = await postMessageSend(messagePayload);
-        console.log('messageBody message created', res);
+        await postMessageSend(messagePayload);
         history.go(0);
       }
     }

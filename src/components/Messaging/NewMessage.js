@@ -93,9 +93,7 @@ const NewMessage = ({ openModal, handleClose }) => {
       user.userName &&
       messagePayload.to !== ''
     ) {
-      console.log('newMessage handleSubmit', messagePayload);
-      const res = await postMessageSend(messagePayload);
-      console.log('newMessage message created', res);
+      await postMessageSend(messagePayload);
       history.go(0);
     }
     handleClose();
