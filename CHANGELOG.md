@@ -1,3 +1,16 @@
+# [1.55.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.54.1...v1.55.0) (2022-02-20)
+
+
+### Bug Fixes
+
+* remove logs and make org id the stakeholder_uuid ([35983eb](https://github.com/Greenstand/treetracker-admin-client/commit/35983ebf2581c04c87e6a62179b406f9e0c5b175))
+* remove unused useEffect from messagecontext ([35e4b5a](https://github.com/Greenstand/treetracker-admin-client/commit/35e4b5a8efb18f804e31c2ea826800afee8da02c))
+
+
+### Features
+
+* refresh after message sent & add form validation to survey ([3df2f7f](https://github.com/Greenstand/treetracker-admin-client/commit/3df2f7f7aa4e271bfcf1c2228c48b210d05775a1))
+
 ## [1.54.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.54.0...v1.54.1) (2022-02-20)
 
 
