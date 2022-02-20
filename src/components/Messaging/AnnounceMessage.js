@@ -89,9 +89,15 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       setError(true);
       return;
     }
+
+    if (values?.videoLink) {
+      payload['video_link'] = values.videoLink;
+    }
+
     if (region?.id) {
       payload['region_id'] = region.id;
     }
+
     if (organization?.id) {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
