@@ -1,3 +1,13 @@
+## [1.54.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.54.0...v1.54.1) (2022-02-20)
+
+
+### Bug Fixes
+
+* filter username out of author select ([f412b77](https://github.com/Greenstand/treetracker-admin-client/commit/f412b77910a6b0f4750fb13d5400aa5d754e58c0))
+* survey response ([debce52](https://github.com/Greenstand/treetracker-admin-client/commit/debce52ec62e22ccf6619565dd5a0c61443f3894))
+* survey response and author filter ([3d6aa34](https://github.com/Greenstand/treetracker-admin-client/commit/3d6aa34becc835761fa1bb9a95342533e3c11a12))
+* video link to payload ([940d51e](https://github.com/Greenstand/treetracker-admin-client/commit/940d51e1e63b7a30fb4b920301a88ec3b30f5046))
+
 # [1.54.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.53.0...v1.54.0) (2022-02-20)
 
 
