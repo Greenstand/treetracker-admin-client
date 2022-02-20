@@ -101,7 +101,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.organization_id) ||
         (payload.body && payload.region_id)
       ) {
-        console.log(payload);
         await postMessageSend(payload);
       }
     } catch (err) {

@@ -69,7 +69,10 @@ export const MessagingProvider = (props) => {
     const res = await api.getAuthors();
 
     if (res) {
-      setAuthors(res.authors);
+      let result = res.authors.filter(
+        (author) => author.handle !== user.userName
+      );
+      setAuthors(result);
     }
   };
 
