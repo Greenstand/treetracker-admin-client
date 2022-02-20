@@ -1,3 +1,10 @@
+## [1.52.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.52.0...v1.52.1) (2022-02-20)
+
+
+### Bug Fixes
+
+* Updated capture properties on country lookup  ([#427](https://github.com/Greenstand/treetracker-admin-client/issues/427)) ([de68427](https://github.com/Greenstand/treetracker-admin-client/commit/de68427159d1784254597d3c9128e55d67efd493))
+
 # [1.52.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.51.2...v1.52.0) (2022-02-19)
 
 
