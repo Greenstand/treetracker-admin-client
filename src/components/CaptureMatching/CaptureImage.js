@@ -12,7 +12,7 @@ import { getDateTimeStringLocale } from 'common/locale';
 
 function Country({ lat, lon }) {
   const [content, setContent] = useState('');
-  if (lat === 'undefined' || lon === 'undefined') {
+  if (lat === undefined || lon === undefined) {
     setContent('No data');
   }
 
