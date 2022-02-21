@@ -16,4 +16,11 @@ describe('Messaging', () => {
       messaging_Page.renderPage();
     });
   });
+  it.only('opens the Send New Message window after clicking the New Message button', () => {
+    messaging_Page
+      .when()
+      .click_NewMessage_Button()
+      .then()
+      .sendNewMessage_Header_ShouldBe_Displayed();
+  });
 });
