@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Inbox from './Inbox';
 import MessageBody from './MessageBody';
@@ -8,7 +8,7 @@ import NewMessage from './NewMessage';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
-import { MessagingContext } from '../../context/MessagingContext';
+// import { MessagingContext } from '../../context/MessagingContext';
 
 const useStyles = makeStyles((theme) => ({
   headerGrid: {
@@ -49,12 +49,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Messaging = () => {
+const Messaging = ({ user, messages }) => {
   // styles
   const { headerGrid, button, container, inbox, body } = useStyles();
-  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
-    MessagingContext
-  );
+  // const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
+  //   MessagingContext
+  // );
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
@@ -70,12 +70,11 @@ const Messaging = () => {
       : setMessageRecipient(messagesArray[0].messages[0].from.author);
   };
 
-  useEffect(() => {
-    console.log('Messaging.js: useEffect: loadMessages');
-    loadMessages();
-    loadRegions();
-    loadAuthors();
-  }, []);
+  // useEffect(() => {
+  //   loadMessages();
+  //   loadRegions();
+  //   loadAuthors();
+  // }, []);
 
   useEffect(() => {
     if (messages.length && messageRecipient === null) {

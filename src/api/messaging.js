@@ -56,7 +56,7 @@ export default {
   },
   getMessage(author_handle) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?author_handle=${author_handle}`;
-
+    console.log(query);
     return fetch(query).then(handleResponse).catch(handleError);
   },
   postMessage(payload) {
