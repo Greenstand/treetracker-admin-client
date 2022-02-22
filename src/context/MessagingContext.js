@@ -21,7 +21,7 @@ export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [messages, setMessages] = useState([]);
   const [authors, setAuthors] = useState([]);
-  const [growerMessage, setGrowerMessage] = useState({});
+  // const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
 
   // useEffect(() => {
@@ -110,7 +110,7 @@ export const MessagingProvider = (props) => {
     };
 
     if (payload.to) {
-      setGrowerMessage(payload);
+      // setGrowerMessage(payload);
     }
   };
 
