@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     width: '90vw',
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginBottom: '6em',
+    marginBottom: '5vw',
     border: '1px solid black',
     borderRadius: '5px',
     display: 'flex',
