@@ -30,12 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '90vw',
-    height: '75vh',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: '6em',
     border: '1px solid black',
     borderRadius: '5px',
+    display: 'flex',
+    flexGrow: 1,
   },
   inbox: {
     width: '30%',

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Grid } from '@material-ui/core';
 import { documentTitle } from '../common/variables';
 import Messaging from 'components/Messaging/Messaging';
 import Navbar from 'components/Navbar';
@@ -10,10 +11,10 @@ const MessagingView = () => {
   }, []);
 
   return (
-    <>
+    <Grid container direction="column">
       <Navbar />
       <Messaging />
-    </>
+    </Grid>
   );
 };
 
