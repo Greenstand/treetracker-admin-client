@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Announcement } from '@material-ui/icons';
 import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
+import SurveyCharts from './SurveyCharts.js';
 import dateFormat from 'dateformat';
-
 import { MessagingContext } from 'context/MessagingContext.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -198,7 +198,9 @@ export const SurveyResponseMessage = ({ message }) => {
           ))}
       </Grid>
       <Grid item className={messageTimeStampRight}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+        <Typography>
+          {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
+        </Typography>
       </Grid>
     </div>
   );
@@ -296,7 +298,14 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ message, messageRecipient, subject, id }) => {
+const SenderInformation = ({
+  message,
+  messageRecipient,
+  subject,
+  id,
+  toggleSurveyCharts,
+  setToggleSurveyCharts,
+}) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
@@ -321,7 +330,12 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
       </Grid>
       {subject === 'Survey' && (
         <Grid item className={dataContainer}>
-          <Button className={button}>Survey Data</Button>
+          <Button
+            className={button}
+            onClick={() => setToggleSurveyCharts(!toggleSurveyCharts)}
+          >
+            Survey Data
+          </Button>
         </Grid>
       )}
     </Grid>
@@ -335,6 +349,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const [messageContent, setMessageContent] = useState('');
   const [subject, setSubject] = useState('');
   const [recipientId, setRecipientId] = useState('');
+  const [toggleSurveyCharts, setToggleSurveyCharts] = useState(false);
 
   useEffect(() => {
     if (messages) {
@@ -375,64 +390,78 @@ const MessageBody = ({ messages, messageRecipient }) => {
   };
 
   return (
-    <Paper className={paper}>
-      {messageRecipient && messages ? (
-        <SenderInformation
-          message={messages[0]}
-          messageRecipient={messageRecipient}
-          subject={subject}
-          id={recipientId}
-        />
-      ) : (
-        <SenderInformation />
-      )}
-      <div id="style-1" className={messagesBody}>
-        {messages ? (
-          messages.map((message, i) => {
-            if (message.subject === 'Message') {
-              return message.from.author === user.userName ? (
-                <SentMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
-                />
-              ) : message.body.length > 1 ? (
-                <RecievedMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
-                />
-              ) : (
-                <div key={i}></div>
-              );
-            } else if (message.subject.includes('Survey')) {
-              return (
-                <SurveyMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            } else if (message.subject.includes('Announce')) {
-              return (
-                <AnnounceMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            }
-          })
+    <>
+      <Paper className={paper}>
+        {messageRecipient && messages ? (
+          <SenderInformation
+            message={messages[0]}
+            messageRecipient={messageRecipient}
+            subject={subject}
+            id={recipientId}
+            toggleSurveyCharts={toggleSurveyCharts}
+            setToggleSurveyCharts={setToggleSurveyCharts}
+          />
         ) : (
-          <div>Loading ...</div>
+          <SenderInformation />
         )}
-      </div>
-      {subject !== 'Survey' && (
-        <TextInput
-          messageRecipient={messageRecipient}
-          handleSubmit={handleSubmit}
-          messageContent={messageContent}
-          setMessageContent={setMessageContent}
-          className={textInput}
+        <div id="style-1" className={messagesBody}>
+          {messages ? (
+            messages.map((message, i) => {
+              if (message.subject === 'Message') {
+                return message.from.author === user.userName ? (
+                  <SentMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    message={message}
+                  />
+                ) : message.body.length > 1 ? (
+                  <RecievedMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    message={message}
+                  />
+                ) : (
+                  <div key={i}></div>
+                );
+              } else if (message.subject.includes('Survey')) {
+                return (
+                  <SurveyMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    message={message}
+                    toggleSurveyCharts={toggleSurveyCharts}
+                    setToggleSurveyCharts={setToggleSurveyCharts}
+                  />
+                );
+              } else if (message.subject.includes('Announce')) {
+                return (
+                  <AnnounceMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    message={message}
+                  />
+                );
+              }
+            })
+          ) : (
+            <div>Loading ...</div>
+          )}
+        </div>
+        {subject !== 'Survey' && (
+          <TextInput
+            messageRecipient={messageRecipient}
+            handleSubmit={handleSubmit}
+            messageContent={messageContent}
+            setMessageContent={setMessageContent}
+            className={textInput}
+          />
+        )}
+      </Paper>
+
+      {messages && toggleSurveyCharts && (
+        <SurveyCharts
+          messages={messages}
+          toggleSurveyCharts={toggleSurveyCharts}
+          setToggleSurveyCharts={setToggleSurveyCharts}
         />
       )}
-    </Paper>
+    </>
   );
 };
 
