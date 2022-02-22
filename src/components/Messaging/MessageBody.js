@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '2px solid black',
   },
   messagesBody: {
-    height: '80%',
+    flexGrow: 1,
     width: '95%',
     padding: '7.5px',
     overflowY: 'auto',
