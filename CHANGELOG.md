@@ -1,3 +1,11 @@
+# [1.56.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.55.0...v1.56.0) (2022-02-22)
+
+
+### Features
+
+* add start and end date as suffix for the csv download ([4adde97](https://github.com/Greenstand/treetracker-admin-client/commit/4adde97aeb986dd0b89376f34cde0f8f883d9062))
+* use organisation name as csv filename prefix for earningswhen selected ([d3fcaa1](https://github.com/Greenstand/treetracker-admin-client/commit/d3fcaa191958081fae90e1acc87b95a8b1c197c5))
+
 # [1.55.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.54.1...v1.55.0) (2022-02-20)
 
 
