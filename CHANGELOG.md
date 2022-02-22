@@ -1,3 +1,10 @@
+## [1.56.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.0...v1.56.1) (2022-02-22)
+
+
+### Bug Fixes
+
+* inbox layout and wording ([#434](https://github.com/Greenstand/treetracker-admin-client/issues/434)) ([f62d5f4](https://github.com/Greenstand/treetracker-admin-client/commit/f62d5f4d1f00b8fc825d05bd185f468c8fdc64a4))
+
 # [1.56.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.55.0...v1.56.0) (2022-02-22)
 
 
