@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
 import useStyles from './CustomTableFilter.styles';
+import { AppContext } from '../../../context/AppContext';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -41,6 +42,7 @@ function CustomTableFilter(props) {
   } = props;
 
   const classes = useStyles();
+  const { updateSelectedFilter } = React.useContext(AppContext);
 
   const handleOnFormControlChange = (e) => {
     e.preventDefault();
@@ -60,6 +62,7 @@ function CustomTableFilter(props) {
     ); // filter out keys we don't want to submit
     setFilter(filtersToSubmit);
     setIsMainFilterOpen(false);
+    updateSelectedFilter(filtersToSubmit);
   };
 
   const handleOnFilterFormReset = (e) => {

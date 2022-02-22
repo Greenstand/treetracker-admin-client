@@ -195,6 +195,12 @@ export const AppProvider = (props) => {
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
 
+  // TODO: The below `selectedFilters` state would be better placed under a
+  // separate FilterContext in the future iterations when the need to share
+  // filter state across components increases. For now this is used only in
+  // CustomTableFilter under components/common.
+  const [selectedFilters, setSelectedFilters] = useState('');
+
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
     if (user && token) {
@@ -276,6 +282,10 @@ export const AppProvider = (props) => {
     setOrgList(orgs);
   }
 
+  async function updateSelectedFilter(filters) {
+    setSelectedFilters(filters);
+  }
+
   const value = {
     login,
     logout,
@@ -284,6 +294,8 @@ export const AppProvider = (props) => {
     routes,
     orgList,
     userHasOrg,
+    selectedFilters,
+    updateSelectedFilter,
   };
 
   if (!user || !token) {
