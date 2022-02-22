@@ -170,7 +170,7 @@ function CustomTableHeader(props) {
                       </Typography>
                     ) : (
                       <Typography className={classes.dateFiterButonSmallText}>
-                        select date range
+                        All
                       </Typography>
                     )}
                   </div>
