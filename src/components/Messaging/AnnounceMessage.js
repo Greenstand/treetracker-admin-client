@@ -150,7 +150,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         name="videoLink"
         value={values.videoLink}
         onChange={handleChange}
-        label="Add a video link e.g. youtube url"
+        label="Add a video link, e.g., YouTube URL"
       />
       {error ? (
         <Typography
@@ -251,7 +251,7 @@ const AnnounceMessage = ({
         <Grid item>
           <Typography variant="body1" className={directions}>
             Write a group message or notification below. Then select the target
-            audience for your message. All replies will be available in you
+            audience for your message. All replies will be available in your
             Messaging Inbox.
           </Typography>
         </Grid>

@@ -343,7 +343,7 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
         <Grid container spacing={2}>
           <Grid item className={title}>
             <Typography variant="h3" className={formTitle}>
-              Quick Surveys
+              Quick Survey
             </Typography>
             <IconButton
               color="primary"
@@ -355,9 +355,9 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
           </Grid>
           <Grid item>
             <Typography variant="body1" className={directions}>
-              Write a survey question and up to 3 answering options. Then select
-              the target audience for the survey. All replies will be available
-              in your Messaging Ibox.
+              Write a survey question and up to three answer options. Then
+              select the target audience for the survey. All replies will be
+              available in your Messaging Inbox.
             </Typography>
           </Grid>
           <Grid item>
