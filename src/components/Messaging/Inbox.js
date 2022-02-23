@@ -54,60 +54,62 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
+const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
   const { paper, searchInbox, list, listItem, listText, avatar } = useStyles();
   const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
 
-  const onClickHelper = (e, i, message) => {
+  const onClickHelper = (e, i, thread) => {
     let recipient =
-      message.messages[0].to[0].recipient !== user.userName
-        ? message.messages[0].to[0].recipient
-        : message.messages[0].from.author;
+      thread.messages[0].subject !== 'Survey' &&
+      thread.messages[0].to[0].recipient !== user.userName
+        ? thread.messages[0].to[0].recipient
+        : thread.messages[0].to[1].type;
+    console.log('-----> onClickHelper', user.userName, i, thread);
     handleListItemClick(e, i, recipient);
   };
 
   return (
     <Paper className={paper}>
       <List className={list}>
-        {messages
-          .filter((message) => {
+        {threads
+          .filter((thread) => {
             if (search === '') {
-              return message;
+              return thread;
             } else if (
-              message.userName.toLowerCase().includes(search.toLowerCase())
+              thread.userName.toLowerCase().includes(search.toLowerCase())
             ) {
-              return message;
+              return thread;
             }
           })
-          .map((message, i) => (
+          .map((thread, i) => (
             <ListItem
               key={i}
               alignItems="flex-start"
               className={listItem}
               selected={selectedIndex === i}
-              onClick={(e) => onClickHelper(e, i, message)}
+              onClick={(e) => onClickHelper(e, i, thread)}
             >
               <ListItemAvatar className={avatar}>
                 <Avatar alt={''} src={''} />
               </ListItemAvatar>
-              {message.messages[0].subject === 'Survey' ? (
+              {thread.messages[0].subject === 'Survey' ? (
                 <ListItemText
-                  primary={message.messages[0].subject}
+                  primary={thread.messages[0].subject}
                   secondary={
-                    message.messages[0].subject
-                      ? message.messages[0].survey.title
-                      : message.userName
+                    thread.messages[0].subject
+                      ? thread.messages[0].survey.title
+                      : thread.userName
                   }
                   className={listText}
                 />
               ) : (
-                <ListItemText primary={message.userName} className={listText} />
+                <ListItemText primary={thread.userName} className={listText} />
               )}
               <Typography>
                 {timeAgoFormatDate(
                   new Date(
-                    message.messages[message.messages.length - 1].composed_at
+                    thread.messages[thread.messages.length - 1].composed_at
                   )
                 )}
               </Typography>

@@ -125,8 +125,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     marginLeft: 'auto',
     backgroundColor: theme.palette.primary.lightMed,
-    // backgroundColor: theme.palette.primary.main,
-    // color: '#fff',
     width: '65%',
     borderRadius: '10px',
     padding: '10px',
@@ -140,6 +138,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      textDecoration: ' none',
+      color: 'black',
+    },
   },
   surveyResponse: {
     display: 'flex',
@@ -183,12 +187,20 @@ export const AnnounceMessage = ({ message }) => {
   );
 };
 
-export const SurveyResponseMessage = ({ message }) => {
+export const SurveyResponseMessage = ({ message, user }) => {
   const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
 
   return (
     <div className={messageRow}>
       <Grid className={surveyResponse}>
+        <Typography variant={'h5'}>
+          {message.from.author === user.userName
+            ? message.to[0].recipient
+              ? `${message.body}: ${message.to[0].recipient}`
+              : `${message.body}`
+            : message.body}
+        </Typography>
+        <hr style={{ border: '0.1px solid black', width: '100%' }} />
         {message.survey?.answers &&
           message.survey.answers.map((answer, i) => (
             <div key={`answer - ${i}`}>
@@ -219,25 +231,27 @@ export const SurveyMessage = ({ message }) => {
             </Typography>
           </Grid>
           <Grid item className={surveyContent}>
-            <Typography variant={'h4'}>
+            <Typography variant={'h5'}>
               {message.body ? message.body : ''}
             </Typography>
+            <hr style={{ border: '0.1px solid black', width: '100%' }} />
             {message.survey.questions.map((question, i) => (
               <div key={question + `:${i + 1}`}>
-                <Typography variant={'h6'}>
-                  Question {i + 1}:{' '}
-                  <Typography variant={'body1'}>{question.prompt}</Typography>
-                </Typography>
-                <Typography variant={'h6'}>
-                  Choices:
-                  <ol type="A">
-                    {question.choices.map((choice, i) => (
-                      <li key={choice ? `choice ${i + 1}:${choice}` : i}>
-                        {choice}
+                <Typography variant={'h6'}>Question {i + 1}:</Typography>
+                <Typography variant={'body1'}>{question.prompt}</Typography>
+                <Typography variant={'h6'}>Choices:</Typography>
+                <ol type="A">
+                  {question.choices.map((choice, i) => (
+                    <Typography
+                      variant={'h6'}
+                      key={choice ? `choice ${i + 1}:${choice}` : i}
+                    >
+                      <li>
+                        <Typography variant={'body1'}>{choice}</Typography>
                       </li>
-                    ))}
-                  </ol>
-                </Typography>
+                    </Typography>
+                  ))}
+                </ol>
               </div>
             ))}
           </Grid>
@@ -306,17 +320,19 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
-          {subject === 'Survey' ? subject : messageRecipient}
+          {subject === 'Survey'
+            ? `${subject}: ${message?.survey?.title}`
+            : messageRecipient}
         </Typography>
 
-        {(subject === 'Survey' || subject === 'Announce') && (
+        {subject === 'Survey' && (
           <Typography>
             DATE: {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
           </Typography>
         )}
 
-        <Typography align="left" color="primary">
-          {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
+        <Typography align="left" color="primary" variant="caption">
+          {id}
         </Typography>
       </Grid>
       {subject === 'Survey' && (
@@ -333,22 +349,25 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const { paper, messagesBody, textInput } = useStyles();
   const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
+
+  console.log('MessageBody', messageRecipient, subject);
 
   useEffect(() => {
     if (messages) {
+      // messages are either Surveys or Messages/Announce Messages
       setSubject(messages[0].subject);
     }
-  }, [messages]);
+  }, [messages, messageRecipient]);
 
   useEffect(() => {
-    if (authors && messageRecipient) {
-      let res = authors.find((author) => author.handle === messageRecipient);
-
-      if (res) {
-        setRecipientId(res.id);
-      }
+    const res = authors.find((author) => author.handle === messageRecipient);
+    if (res?.id) {
+      setRecipientId(res.id);
+    } else {
+      // if not an author it must be an org or a region and the id is the handle
+      setRecipientId(messageRecipient);
     }
   }, [authors, messageRecipient]);
 
@@ -376,7 +395,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
   return (
     <Paper className={paper}>
-      {messageRecipient && messages ? (
+      {messageRecipient && messages && subject && recipientId ? (
         <SenderInformation
           message={messages[0]}
           messageRecipient={messageRecipient}
@@ -408,6 +427,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
                 <SurveyMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : i}
                   message={message}
+                  user={user}
                 />
               );
             } else if (message.subject.includes('Announce')) {
