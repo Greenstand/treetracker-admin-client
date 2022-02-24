@@ -112,6 +112,7 @@ const useStyles = makeStyles({
 });
 
 function DistanceTo({ lat1, lon1, lat2, lon2 }) {
+  console.log('DistanceTo', lat1, lon1, lat2, lon2);
   const [content, setContent] = useState('');
   if (
     lat1 === 'undefined' ||
@@ -125,12 +126,12 @@ function DistanceTo({ lat1, lon1, lat2, lon2 }) {
   useEffect(() => {
     const distance = getDistance(
       {
-        latitude: lat1,
-        longitude: lon1,
+        latitude: Number(lat1),
+        longitude: Number(lon1),
       },
       {
-        latitude: lat2,
-        longitude: lon2,
+        latitude: Number(lat2),
+        longitude: Number(lon2),
       }
     );
     setContent(`${distance}m away`);
@@ -246,10 +247,10 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               <Typography variant="body1">
                                 {capture && (
                                   <DistanceTo
-                                    lat1={capture.lat}
-                                    lon1={capture.lon}
-                                    lat2={candidateCapture.lat}
-                                    lon2={candidateCapture.lon}
+                                    lat1={capture.latitude}
+                                    lon1={capture.longitude}
+                                    lat2={candidateCapture.latitude}
+                                    lon2={candidateCapture.longitude}
                                   />
                                 )}
                               </Typography>
