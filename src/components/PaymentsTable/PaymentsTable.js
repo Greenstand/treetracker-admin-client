@@ -83,6 +83,8 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      csv_start_date: row.consolidation_period_start,
+      csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
         'mmm d, yyyy'
@@ -191,7 +193,7 @@ function PaymentsTable() {
         rows={payments}
         isLoading={isLoading}
         onSelectFile={uploadCsvFile}
-        activeDateRage={activeDateRageString}
+        activeDateRange={activeDateRageString}
         setRowsPerPage={setPaymentsPerPage}
         rowsPerPage={paymentsPerPage}
         setSortBy={setSortBy}
