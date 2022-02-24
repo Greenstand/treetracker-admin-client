@@ -1,3 +1,10 @@
+## [1.56.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.2...v1.56.3) (2022-02-24)
+
+
+### Bug Fixes
+
+* **payments table:** remove errors that hinder rendering payments table ([#442](https://github.com/Greenstand/treetracker-admin-client/issues/442)) ([484ee58](https://github.com/Greenstand/treetracker-admin-client/commit/484ee5839e1e2fcbedbd8da2530680c8933ed6f3))
+
 ## [1.56.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.1...v1.56.2) (2022-02-22)
 
 
