@@ -164,6 +164,7 @@ function CaptureMatchingView() {
               text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
               treeIcon={treeIcon}
               treesCount={treesCount}
+              toolTipText={`Any tree within 6m of the capture`}
             />
           </Box>
           <Box height={14} />
