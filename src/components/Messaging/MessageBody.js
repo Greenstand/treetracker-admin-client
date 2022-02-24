@@ -4,6 +4,7 @@ import { Avatar, Grid, Typography, Paper } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 
 import { MessagingContext } from 'context/MessagingContext.js';
+import SurveyCharts from './SurveyCharts.js';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -116,9 +117,16 @@ export const AnnounceMessage = ({ message }) => {
 };
 
 export const SurveyMessage = ({ message }) => {
-  const { messageRowRight, sentMessage, surveyContent } = useStyles();
+  const {
+    messageRow,
+    messageRowRight,
+    sentMessage,
+    surveyContent,
+  } = useStyles();
 
   const { questions } = message.survey;
+  if (1 === Math.round(1.1))
+    return <div className={messageRow}>[Hidden Survey Message]</div>;
   return (
     <div className={messageRowRight}>
       <Grid item className={sentMessage}>
@@ -213,6 +221,13 @@ const SenderInformation = ({ messageRecipient, id }) => {
   );
 };
 
+function getSurveyId(messages) {
+  return messages.reduce(
+    (a, c) => (c.subject.includes('Survey') ? c.id : a),
+    undefined
+  );
+}
+
 const MessageBody = ({ messages, messageRecipient }) => {
   const { paper, messagesBody, textInput } = useStyles();
   const { user, postMessageSend } = useContext(MessagingContext);
@@ -240,57 +255,62 @@ const MessageBody = ({ messages, messageRecipient }) => {
   };
 
   return (
-    <Paper className={paper}>
-      {messageRecipient && messages ? (
-        <SenderInformation messageRecipient={messageRecipient} id={''} />
-      ) : (
-        <SenderInformation></SenderInformation>
-      )}
-      <div id="style-1" className={messagesBody}>
-        {messages ? (
-          messages.map((message, i) => {
-            if (message.subject === 'Message') {
-              return message.from === user.userName ? (
-                <SentMessage
-                  key={message.id ? message.id : i}
-                  message={message}
-                />
-              ) : message.body.length > 1 ? (
-                <RecievedMessage
-                  key={message.id ? message.id : i}
-                  message={message}
-                />
-              ) : (
-                <div key={i}></div>
-              );
-            } else if (message.subject.includes('Survey')) {
-              return (
-                <SurveyMessage
-                  key={message.id ? message.id : i}
-                  message={message}
-                />
-              );
-            } else if (message.subject.includes('Announce')) {
-              return (
-                <AnnounceMessage
-                  key={message.id ? message.id : i}
-                  message={message}
-                />
-              );
-            }
-          })
+    <>
+      <Paper className={paper}>
+        {messageRecipient && messages ? (
+          <SenderInformation messageRecipient={messageRecipient} id={''} />
         ) : (
-          <div>Loading ...</div>
+          <SenderInformation></SenderInformation>
         )}
-      </div>
-      <TextInput
-        messageRecipient={messageRecipient}
-        handleSubmit={handleSubmit}
-        messageContent={messageContent}
-        setMessageContent={setMessageContent}
-        className={textInput}
-      />
-    </Paper>
+        <div id="style-1" className={messagesBody}>
+          {messages ? (
+            messages.map((message, i) => {
+              if (message.subject === 'Message') {
+                return message.from === user.userName ? (
+                  <SentMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                ) : message.body.length > 1 ? (
+                  <RecievedMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                ) : (
+                  <div key={i}></div>
+                );
+              } else if (message.subject.includes('Survey')) {
+                return (
+                  <SurveyMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                );
+              } else if (message.subject.includes('Announce')) {
+                return (
+                  <AnnounceMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                );
+              }
+            })
+          ) : (
+            <div>Loading ...</div>
+          )}
+        </div>
+        <TextInput
+          messageRecipient={messageRecipient}
+          handleSubmit={handleSubmit}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          className={textInput}
+        />
+      </Paper>
+      {messages && getSurveyId(messages) && (
+        <SurveyCharts surveyId={getSurveyId(messages)} />
+      )}
+    </>
   );
 };
 

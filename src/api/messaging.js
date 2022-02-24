@@ -74,4 +74,8 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  getSurvey(surveyId) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/survey/${surveyId}`;
+    return fetch(query).then(handleResponse).catch(handleError);
+  },
 };

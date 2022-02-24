@@ -37,14 +37,8 @@ export const MessagingProvider = (props) => {
             grouped[key].push(message);
           }
         } else if (message.subject === 'Survey') {
-          let key = message.survey.title;
-          if (grouped[key]) {
-            if (grouped[key].survey.id === message.survey.id) {
-              return;
-            } else {
-              grouped[key] = [];
-            }
-          } else {
+          let key = message.survey.id;
+          if (!grouped[key]) {
             grouped[key] = [];
           }
           grouped[key].push(message);
@@ -60,6 +54,7 @@ export const MessagingProvider = (props) => {
         }
         return grouped;
       }, {});
+    console.log('get msg: ', newMessages);
     setMessages([
       ...Object.entries(newMessages).map(([key, val]) => {
         if (key && val) {
