@@ -114,10 +114,10 @@ const useStyles = makeStyles({
 function DistanceTo({ lat1, lon1, lat2, lon2 }) {
   const [content, setContent] = useState('');
   if (
-    lat1 === 'undefined' ||
-    lon1 === 'undefined' ||
-    lat2 === 'undefined' ||
-    lon2 === 'undefined'
+    lat1 === undefined ||
+    lon1 === undefined ||
+    lat2 === undefined ||
+    lon2 === undefined
   ) {
     setContent('');
   }
@@ -248,8 +248,14 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                                   <DistanceTo
                                     lat1={capture.latitude}
                                     lon1={capture.longitude}
-                                    lat2={candidateCapture.latitude}
-                                    lon2={candidateCapture.longitude}
+                                    lat2={
+                                      candidateCapture.latitude ||
+                                      candidateCapture.lat
+                                    }
+                                    lon2={
+                                      candidateCapture.longitude ||
+                                      candidateCapture.lon
+                                    }
                                   />
                                 )}
                               </Typography>
