@@ -19,8 +19,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const SurveyCharts = ({
   surveyId,
-  messages,
-  toggleSurveyCharts,
+  // messages,
+  // toggleSurveyCharts,
   setToggleSurveyCharts,
 }) => {
   const iOS =

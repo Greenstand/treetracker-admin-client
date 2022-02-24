@@ -208,13 +208,13 @@ export const SurveyResponseMessage = ({ message }) => {
 export const SurveyMessage = ({ message }) => {
   const {
     messageRow,
-    messageRowRight,
-    sentMessage,
+    // messageRowRight,
+    // sentMessage,
     surveyContent,
     messageTimeStampLeft,
   } = useStyles();
 
-  const { questions } = message.survey;
+  // const { questions } = message.survey;
   if (1 === Math.round(1.1))
     return <div className={messageRow}>[Hidden Survey Message]</div>;
   return (
