@@ -27,6 +27,40 @@ describe('Growers Filter', () => {
       .then()
       .filterForm_Should_Not_Exist();
   });
+  it('It displays number 6  as a filter count inside the Filter button when 6 filter choices are used', () => {
+    growers_Page
+      .when()
+      .enterInto_GrowerID_TextField(growerID)
+      .from_Organization_DropdownMenu_Select(organizationName)
+      .enterInto_FirstName_TextField(firstName)
+      .enterInto_LastName_TextField(lastName)
+      .enterInto_Email_TextField(email)
+      .enterInto_PhoneNumber_TextField(phoneNumber)
+      .and()
+      .click_Button_Apply()
+      .then()
+      .filterCount_ShouldBe(6);
+  });
+  it('clears the filter count after clicking the Reset button', () => {
+    growers_Page
+      .enterInto_FirstName_TextField(firstName)
+      .enterInto_LastName_TextField(lastName)
+      .click_Button_Apply()
+      .filterCount_ShouldBe(2)
+      .when()
+      .click_Button_Reset()
+      .then()
+      .filterCount_ShouldNot_Exist();
+  });
+  it('clears the filter input field after clicking the Reset button', () => {
+    growers_Page
+      .enterInto_GrowerID_TextField(growerID)
+      .growerID_TextField_ShouldContain(growerID)
+      .when()
+      .click_Button_Reset()
+      .then()
+      .growerID_TextField_ShouldBe_Empty();
+  });
   describe('Grower ID text field', () => {
     it(`displays single grower card with the "${growerID}" when a "${growerID}" is entered into the Grower ID text field`, () => {
       growers_Page
@@ -49,6 +83,15 @@ describe('Growers Filter', () => {
         .click_Button_Apply()
         .then()
         .growerCards_OrganizationName_ShouldContain(organizationName);
+    });
+    it(`displays only grower cards that have empty organization name when the "Not set" option in the "Organization" dropdown menu is selected`, () => {
+      growers_Page
+        .when()
+        .from_Organization_DropdownMenu_Select('Not set')
+        .and()
+        .click_Button_Apply()
+        .then()
+        .growerCards_OrganizationName_ShouldBeEmpty();
     });
   });
   describe('First Name text field', () => {

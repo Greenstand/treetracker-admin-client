@@ -1,6 +1,6 @@
 import enLocale from 'date-fns/locale/en-US';
 import dateformat from 'dateformat';
-
+import { formatDistanceToNow } from 'date-fns';
 // Per default set to EN
 var localeLanguage = 'en';
 // default date pattern when converting dates
@@ -36,7 +36,7 @@ const getDateTimeFormatString = (includeTime, forMuiDatepicker) => {
     : dateOptions;
   const intlDateTimeFormat = new Intl.DateTimeFormat(
     localeLanguage,
-    intlOptions,
+    intlOptions
   );
   const formatDateTimeObj = intlDateTimeFormat.formatToParts(new Date());
   const is12HourTimeZone = intlDateTimeFormat.resolvedOptions().hour12;
@@ -95,6 +95,11 @@ const convertDateToDefaultSqlDate = (date) => {
   return dateformat(date, defaultSqlDatePattern);
 };
 
+const timeAgoFormatDate = (date) => {
+  let timeStr = formatDistanceToNow(date).replace(/about/, '');
+  return timeStr;
+};
+
 export {
   setLocaleLanguage,
   getDatePickerLocale,
@@ -103,4 +108,5 @@ export {
   getDateStringLocale,
   getDateTimeStringLocale,
   convertDateToDefaultSqlDate,
+  timeAgoFormatDate,
 };

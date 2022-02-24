@@ -14,6 +14,7 @@ const styles = (theme) => ({
   },
   version: {
     justifyContent: 'space-between',
+    paddingBlockEnd: '0.5rem',
   },
   timeBox: {
     display: 'flex',
@@ -63,6 +64,12 @@ const styles = (theme) => ({
     '&>div': {
       minWidth: '336px',
     },
+  },
+  dashstatWraper: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '20px',
+    flexWrap: 'wrap',
   },
 });
 

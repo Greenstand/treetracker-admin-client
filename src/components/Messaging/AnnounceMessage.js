@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   SwipeableDrawer,
   Grid,
@@ -6,10 +7,8 @@ import {
   IconButton,
   TextField,
   Button,
-  Select,
-  MenuItem,
-  OutlinedInput,
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import GSInputLabel from 'components/common/InputLabel';
@@ -54,24 +53,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: 48 * 4.5 + 8,
-      width: 250,
-    },
-  },
-};
-
-const AnnounceMessageForm = () => {
+const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
+  const history = useHistory();
   const { orgList } = useContext(AppContext);
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
+  const [organization, setOrganization] = useState({});
+  const [inputValueOrg, setInputValueOrg] = useState('');
+  const [region, setRegion] = useState({});
+  const [inputValueRegion, setInputValueRegion] = useState('');
+  const [error, setError] = useState(false);
+
   const [values, setValues] = useState({
+    title: '',
     message: '',
     videoLink: '',
-    organization: '',
-    region: '',
   });
 
   const handleChange = (e) => {
@@ -81,82 +77,136 @@ const AnnounceMessageForm = () => {
       [name]: value,
     });
   };
-  const { message, videoLink, organization, region } = values;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const payload = {
       author_handle: user.userName,
       subject: 'Announce Message',
+      title: values.title,
       body: values.message,
     };
-    if (region) {
-      payload['region_id'] = region;
+
+    if (!region?.id && !organization?.id) {
+      setError(true);
+      return;
     }
-    if (organization) {
-      payload['organization_id'] = organization;
+
+    if (values?.videoLink) {
+      payload['video_link'] = values.videoLink;
     }
-    if (payload.organization_id || payload.region_id) {
-      await postMessageSend(payload);
+
+    if (region?.id) {
+      payload['region_id'] = region.id;
     }
+
+    if (organization?.id) {
+      payload['organization_id'] = organization.stakeholder_uuid;
+    }
+
+    try {
+      if (
+        (payload.body && payload.organization_id) ||
+        (payload.body && payload.region_id)
+      ) {
+        await postMessageSend(payload);
+        history.go(0);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    setValues({
+      title: '',
+      message: '',
+      videoLink: '',
+    });
+    setOrganization('');
+    setRegion('');
+    setToggleAnnounceMessage(false);
   };
 
   return (
     <form className={form} onSubmit={handleSubmit}>
+      <GSInputLabel text="Announce: Title" />
+      <TextField
+        fullWidth
+        label="Title"
+        name="title"
+        value={values.title}
+        onChange={handleChange}
+      />
       <GSInputLabel text={'Message'} />
       <TextField
         multiline
         rows={5}
         name="message"
-        value={message}
+        value={values.message}
         onChange={handleChange}
         label="Write your message here ..."
       />
       <GSInputLabel text={'Add a Video Link'} />
       <TextField
         name="videoLink"
-        value={videoLink}
+        value={values.videoLink}
         onChange={handleChange}
-        label="Add a video link e.g. youtube url"
+        label="Add a video link, e.g., YouTube URL"
       />
+      {error ? (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          Please select a region or an organization!
+        </Typography>
+      ) : null}
       <GSInputLabel
         id="select-label"
         text={'Target Audience by Organization'}
       />
-      <Select
-        labelId="select-label"
-        id="select"
-        label="Select Organization"
+      <Autocomplete
         name="organization"
+        selectOnFocus
+        handleHomeEndKeys
+        options={orgList}
+        getOptionLabel={(option) => option.name || ''}
         value={organization}
-        onChange={handleChange}
-        input={<OutlinedInput />}
-        MenuProps={MenuProps}
-      >
-        {orgList.map((org, i) => (
-          <MenuItem key={org.id ? org.id : i} value={org.id}>
-            {org.name}
-          </MenuItem>
-        ))}
-      </Select>
+        onChange={(e, val) => setOrganization(val)}
+        inputValue={inputValueOrg}
+        getOptionSelected={(option, value) => option.id === value.id}
+        onInputChange={(e, val) => {
+          setError(false);
+          setInputValueOrg(val);
+        }}
+        id="controllable-states-demo"
+        freeSolo
+        sx={{ width: 300 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Select Organization" />
+        )}
+      />
       <GSInputLabel id="select-reg-label" text={'Target Audience by Region'} />
-      <Select
-        labelId="select-reg-label"
-        label="Regions"
+      <Autocomplete
         name="region"
+        selectOnFocus
+        handleHomeEndKeys
         value={region}
-        onChange={handleChange}
-        input={<OutlinedInput />}
-        id="select-reg"
-      >
-        {regions.map((region, i) => (
-          <MenuItem key={region.id ? region.id : i} value={region.id}>
-            {region.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <Button className={sendButton} type="submit">
+        onChange={(e, value) => setRegion(value)}
+        options={regions}
+        getOptionLabel={(option) => option.name || ''}
+        inputValue={inputValueRegion}
+        getOptionSelected={(option, value) => option.id === value.id}
+        onInputChange={(e, val) => {
+          setError(false);
+          setInputValueRegion(val);
+        }}
+        id="controllable-states-demo"
+        freeSolo
+        sx={{ width: 300 }}
+        renderInput={(params) => (
+          <TextField {...params} label="Select Region" />
+        )}
+      />
+      <Button disabled={error} className={sendButton} type="submit">
         Send Message
       </Button>
     </form>
@@ -201,12 +251,14 @@ const AnnounceMessage = ({
         <Grid item>
           <Typography variant="body1" className={directions}>
             Write a group message or notification below. Then select the target
-            audience for your message. All replies will be available in you
+            audience for your message. All replies will be available in your
             Messaging Inbox.
           </Typography>
         </Grid>
         <Grid item>
-          <AnnounceMessageForm />
+          <AnnounceMessageForm
+            setToggleAnnounceMessage={setToggleAnnounceMessage}
+          />
         </Grid>
       </Grid>
     </SwipeableDrawer>

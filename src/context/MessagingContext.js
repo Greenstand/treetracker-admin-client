@@ -24,6 +24,11 @@ export const MessagingProvider = (props) => {
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
 
+  // useEffect(() => {
+  //   loadRegions();
+  //   loadAuthors();
+  // }, []);
+
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
     let newMessages = rawMessages
@@ -36,7 +41,7 @@ export const MessagingProvider = (props) => {
           let key =
             message.to[0].recipient !== user.userName
               ? message[`to`][0].recipient
-              : message['from'];
+              : message['from'].author;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
@@ -44,14 +49,8 @@ export const MessagingProvider = (props) => {
             grouped[key].push(message);
           }
         } else if (message.subject === 'Survey') {
-          let key = message.survey.title;
-          if (grouped[key]) {
-            if (grouped[key][0].survey.id === message.survey.id) {
-              return;
-            } else {
-              grouped[key] = [];
-            }
-          } else {
+          let key = message.survey.id;
+          if (!grouped[key]) {
             grouped[key] = [];
           }
           grouped[key].push(message);
@@ -75,7 +74,10 @@ export const MessagingProvider = (props) => {
     const res = await api.getAuthors();
 
     if (res) {
-      setAuthors(res.authors);
+      let result = res.authors.filter(
+        (author) => author.handle !== user.userName
+      );
+      setAuthors(result);
     }
   };
 
@@ -88,12 +90,12 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessage = async (payload) => {
-    await api.postMessage(payload);
+    return api.postMessage(payload);
   };
 
   const postMessageSend = (payload) => {
     if (payload) {
-      api.postMessageSend(payload);
+      return api.postMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }
@@ -113,8 +115,9 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
+    console.log('loadMessages');
     const res = await api.getMessage(user.userName);
-
+    console.log(res.messages);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {

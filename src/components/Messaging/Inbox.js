@@ -6,11 +6,12 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
-  Button,
+  Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import SearchInbox from './SearchInbox';
 import { MessagingContext } from 'context/MessagingContext';
+import { timeAgoFormatDate } from 'common/locale';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,12 +30,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
   },
   listItem: {
-    border: '1px solid lightGrey',
-    height: '5em',
+    borderBottom: '1px solid lightGrey',
     '&.Mui-selected': {
-      background: '#FFF',
-      borderRight: `5px solid ${theme.palette.primary.main}`,
+      background: theme.palette.primary.lightVery,
       borderLeft: `5px solid ${theme.palette.primary.main}`,
+      borderBottom: `1px solid ${theme.palette.primary.main}`,
     },
   },
   listText: {
@@ -63,9 +63,10 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
     let recipient =
       message.messages[0].to[0].recipient !== user.userName
         ? message.messages[0].to[0].recipient
-        : message.messages[0].from;
+        : message.messages[0].from.author;
     handleListItemClick(e, i, recipient);
   };
+
   return (
     <Paper className={paper}>
       <List className={list}>
@@ -84,7 +85,6 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
               key={i}
               alignItems="flex-start"
               className={listItem}
-              component={Button}
               selected={selectedIndex === i}
               onClick={(e) => onClickHelper(e, i, message)}
             >
@@ -94,12 +94,23 @@ const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
               {message.messages[0].subject === 'Survey' ? (
                 <ListItemText
                   primary={message.messages[0].subject}
-                  secondary={message.userName}
+                  secondary={
+                    message.messages[0].subject
+                      ? message.messages[0].survey.title
+                      : message.userName
+                  }
                   className={listText}
                 />
               ) : (
                 <ListItemText primary={message.userName} className={listText} />
               )}
+              <Typography>
+                {timeAgoFormatDate(
+                  new Date(
+                    message.messages[message.messages.length - 1].composed_at
+                  )
+                )}
+              </Typography>
             </ListItem>
           ))}
       </List>
