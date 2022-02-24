@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -20,6 +20,9 @@ import Avatar from '@material-ui/core/Avatar';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTable.styles';
+import { AppContext } from '../../../context/AppContext';
+
+import dateFormat from 'dateformat';
 
 /**
  * @function
@@ -78,7 +81,7 @@ ImportAction.defaultProps = {
  * @param {function} props.openMainFilter - opens main filter when called
  * @param {function} props.onSelectFile - callback function to be called when file is selected
  * @param {string} props.headerTitle - title of the table
- * @param {string} props.activeDateRage - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
+ * @param {string} props.activeDateRange - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @param {Array} props.data - data to be exported
  *
  * @returns {React.Component}
@@ -90,10 +93,70 @@ function CustomTableHeader(props) {
     data,
     openDateFilter,
     openMainFilter,
-    activeDateRage,
+    activeDateRange,
     onSelectFile,
   } = props;
   const classes = useStyles();
+  const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
+  const [csvFileNamePrefix, setCsvFileNamePrefix] = useState('');
+
+  const { orgList, selectedFilters } = React.useContext(AppContext);
+
+  useEffect(() => {
+    // If organisation is used to filter data, use that as prefix for the csv filename
+    if (selectedFilters.organisation_id) {
+      const selectedOrg = orgList.filter(
+        (org) => org.id == selectedFilters.organisation_id
+      )[0];
+      setCsvFileNamePrefix(`${selectedOrg.name}_`);
+    }
+    //if activeDateRange is set then use that for csv filename suffix
+    if (activeDateRange.trim().length > 1) {
+      setCsvFileNameSuffix(activeDateRange);
+      return;
+    }
+
+    if (!data || data.length == 0) return;
+    const consolidationPeriodStarts = data.map(
+      (row) => new Date(row.csv_start_date)
+    );
+    const consolidationPeriodEnds = data.map(
+      (row) => new Date(row.csv_end_date)
+    );
+    const minPeriodStart = consolidationPeriodStarts.reduce(
+      (pStart1, pStart2) => {
+        return pStart1 > pStart2 ? pStart2 : pStart1;
+      }
+    );
+    const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
+      return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
+    });
+    const minCsvStartDate = dateFormat(new Date(minPeriodStart), 'yyyy-mm-dd');
+    const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
+    setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
+  }, [data]);
+
+  const dataToExport = data.map(
+    ({
+      id: earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    }) => ({
+      earnings_id,
+      worker_id,
+      phone,
+      currency,
+      amount,
+      payment_confirmation_id,
+      payment_system,
+      paid_at,
+    })
+  );
 
   return (
     <Grid container className={classes.customTableTopBar}>
@@ -112,8 +175,8 @@ function CustomTableHeader(props) {
               <Grid container direction="row" justify="flex-end">
                 <Button color="primary" variant="text">
                   <CSVLink
-                    data={data}
-                    filename={'earnings.csv'}
+                    data={dataToExport}
+                    filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
                     className={classes.csvLink}
                     target="_blank"
                   >
@@ -141,9 +204,9 @@ function CustomTableHeader(props) {
                     <Typography className={classes.dateFiterButonSmallText}>
                       Date Range
                     </Typography>
-                    {activeDateRage ? (
+                    {activeDateRange ? (
                       <Typography className={classes.dateFiterButonMediumText}>
-                        {activeDateRage}
+                        {activeDateRange}
                       </Typography>
                     ) : (
                       <Typography className={classes.dateFiterButonSmallText}>
@@ -162,7 +225,7 @@ function CustomTableHeader(props) {
           {/* end Date Range button */}
 
           {/* start Filter button */}
-          <Grid item lg={3} xs={4}>
+          <Grid item lg={3}>
             <Grid container direction="row" justify="flex-end">
               <Button
                 onClick={openMainFilter}
@@ -183,13 +246,13 @@ function CustomTableHeader(props) {
   );
 }
 CustomTableHeader.propTypes = {
-  setIsFilterOpen: PropTypes.func.isRequired,
+  // setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
   openMainFilter: PropTypes.func,
   onSelectFile: PropTypes.func,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
-  activeDateRage: PropTypes.string.isRequired,
+  activeDateRange: PropTypes.string.isRequired,
   actionButtonType: PropTypes.string.isRequired,
 };
 
@@ -250,7 +313,7 @@ function CustomTable(props) {
     rowsPerPage,
     setSortBy,
     isLoading,
-    activeDateRage,
+    activeDateRange,
     onSelectFile,
     page,
   } = props;
@@ -287,6 +350,21 @@ function CustomTable(props) {
 
   const isRowSelected = (id) => id === selectedRow?.id;
 
+  const tablePagination = () => {
+    return (
+      <TablePagination
+        rowsPerPageOptions={[20, 50, 100]}
+        component="div"
+        count={totalCount || 0}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+        aria-label="rows per page"
+      />
+    );
+  };
+
   return (
     <Grid container direction="column" className={classes.customTable}>
       <CustomTableHeader
@@ -294,10 +372,11 @@ function CustomTable(props) {
         openMainFilter={openMainFilter}
         data={rows}
         headerTitle={headerTitle}
-        activeDateRage={activeDateRage}
+        activeDateRange={activeDateRange}
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
       />
+      {tablePagination()}
       <TableContainer>
         <Table>
           <TableHead>
@@ -337,52 +416,54 @@ function CustomTable(props) {
             </TableRow>
           </TableHead>
 
-          {isLoading ? (
-            <Grid item container className={classes.progressContainer}>
-              <CircularProgress />
-            </Grid>
-          ) : rows.length > 0 ? (
-            <TableBody>
-              {rows.map((row, i) => (
-                <TableRow
-                  key={`${i}-${row.id}`}
-                  onClick={() => handleOpenRowDetails(row)}
-                  className={isRowSelected(row.id) ? classes.selectedRow : ''}
-                >
-                  {tableMetaData.map((column, j) => (
-                    <TableCell key={`${i}-${j}-${column.name}`}>
-                      <Typography variant="body1">
-                        {row[column.name]}
-                      </Typography>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          ) : (
-            <Typography variant="body1" className={classes.noDataToDisplay}>
-              No data to display
-            </Typography>
-          )}
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell>
+                  <Grid item container className={classes.progressContainer}>
+                    <CircularProgress />
+                  </Grid>
+                </TableCell>
+              </TableRow>
+            ) : rows.length > 0 ? (
+              <>
+                {rows.map((row, i) => (
+                  <TableRow
+                    key={`${i}-${row.id}`}
+                    onClick={() => handleOpenRowDetails(row)}
+                    className={
+                      isRowSelected(row.id) ? classes.selectedRow : null
+                    }
+                  >
+                    {tableMetaData.map((column, j) => (
+                      <TableCell key={`${i}-${j}-${column.name}`}>
+                        <Typography
+                          variant="body1"
+                          style={{ textTransform: 'capitalize' }}
+                        >
+                          {row[column.name]}
+                        </Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <Typography
+                    variant="body1"
+                    className={classes.noDataToDisplay}
+                  >
+                    No data to display
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        count={totalCount}
-        classes={{
-          selectRoot: classes.selectRoot,
-          root: classes.customTablePagination,
-        }}
-        component="div"
-        rowsPerPageOptions={[20, 50, 100]}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-        SelectProps={{
-          inputProps: { 'aria-label': 'rows per page' },
-          native: true,
-        }}
-      />
+      {tablePagination()}
 
       {/* start table main filter */}
       {mainFilterComponent}
@@ -421,9 +502,9 @@ CustomTable.propTypes = {
   dateFilterComponent: PropTypes.element.isRequired,
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
-  activeDateRage: PropTypes.string.isRequired,
-  rowDetails: PropTypes.element.isRequired,
-  actionButtonType: PropTypes.element.isRequired,
+  activeDateRange: PropTypes.string.isRequired,
+  rowDetails: PropTypes.element,
+  actionButtonType: PropTypes.string.isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   totalCount: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,

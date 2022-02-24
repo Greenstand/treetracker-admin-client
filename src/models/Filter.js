@@ -95,6 +95,12 @@ export default class Filter {
       where.organizationId = this.organizationId;
     }
 
+    if (this.stakeholderUUID === ORGANIZATION_NOT_SET) {
+      where.stakeholderUUID = null;
+    } else if (this.stakeholderUUID !== ALL_ORGANIZATIONS) {
+      where.stakeholderUUID = this.stakeholderUUID;
+    }
+
     if (this.tokenId === tokenizationStates.TOKENIZED) {
       where.tokenId = { neq: null };
     } else if (this.tokenId === tokenizationStates.NOT_TOKENIZED) {
@@ -105,7 +111,26 @@ export default class Filter {
       where.verifyStatus = this.verifyStatus;
     }
 
-    return where;
+    let orCondition = false;
+    const { verifyStatus, ...restFilter } = where;
+
+    if (verifyStatus) {
+      if (verifyStatus.length === 1) {
+        where.active = verifyStatus[0].active;
+        where.approved = verifyStatus[0].approved;
+      } else {
+        orCondition = true;
+        where = [];
+        verifyStatus.forEach((status) => {
+          where.push({
+            active: status.active,
+            approved: status.approved,
+          });
+        });
+      }
+    }
+
+    return orCondition ? { ...restFilter, or: where } : { ...where };
   }
 
   /*
@@ -171,6 +196,7 @@ export default class Filter {
       numFilters += 1;
     }
 
+    // organizationId and stakeholderUUID count as one filter
     if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
@@ -181,6 +207,10 @@ export default class Filter {
 
     if (this.tokenId && this.tokenId !== 'All') {
       numFilters += 1;
+    }
+
+    if (this.verifyStatus) {
+      numFilters += this.verifyStatus.length;
     }
 
     return numFilters;

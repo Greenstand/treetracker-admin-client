@@ -5,10 +5,8 @@ import {
   covertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
-import EarningsTableDateFilter from './EarningsTableDateFilter/EarningsTableDateFilter';
-import EarningsTableMainFilter from './EarningsTableMainFilter/EarningsTableMainFilter';
-import EarningDetails from './EarningDetails/EarningDetails';
-
+import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
+import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
 /**
  * @constant
  * @name earningTableMetaData
@@ -41,14 +39,19 @@ const earningTableMetaData = [
   {
     description: 'Effective Date',
     name: 'calculated_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: true,
   },
-
+  {
+    description: 'Status',
+    name: 'status',
+    sortable: true,
+    showInfoIcon: false,
+  },
   {
     description: 'Payment Date',
     name: 'paid_at',
-    sortable: false,
+    sortable: true,
     showInfoIcon: false,
   },
 ];
@@ -64,6 +67,8 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      csv_start_date: row.consolidation_period_start,
+      csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
         'mmm d, yyyy'
@@ -73,6 +78,10 @@ const prepareRows = (rows) =>
         'mmm d, yyyy'
       ),
       calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      payment_confirmed_at: covertDateStringToHumanReadableFormat(
+        row.payment_confirmed_at
+      ),
+      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
     };
   });
 
@@ -86,12 +95,15 @@ const prepareRows = (rows) =>
 function EarningsTable() {
   // state for earnings table
   const [earnings, setEarnings] = useState([]);
-  const [activeDateRageString, setActiveDateRageString] = useState('');
+  const [activeDateRangeString, setActiveDateRangeString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [earningsPerPage, setEarningsPerPage] = useState(20);
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState({
+    field: 'paid_at',
+    order: 'desc',
+  });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
@@ -109,8 +121,8 @@ function EarningsTable() {
     };
 
     const response = await earningsAPI.getEarnings(queryParams);
-    const result = prepareRows(response.earnings);
-    setEarnings(result);
+    const results = prepareRows(response.earnings);
+    setEarnings(results);
     setTotalEarnings(response.totalCount);
 
     setIsLoading(false); // hide loading indicator when data is fetched
@@ -125,9 +137,9 @@ function EarningsTable() {
         filter?.start_date,
         filter?.end_date
       );
-      setActiveDateRageString(dateRangeString);
+      setActiveDateRangeString(dateRangeString);
     } else {
-      setActiveDateRageString('');
+      setActiveDateRangeString('');
     }
 
     getEarnings();
@@ -140,7 +152,7 @@ function EarningsTable() {
       sortBy={sortBy}
       rows={earnings}
       isLoading={isLoading}
-      activeDateRage={activeDateRageString}
+      activeDateRange={activeDateRangeString}
       setRowsPerPage={setEarningsPerPage}
       rowsPerPage={earningsPerPage}
       setSortBy={setSortBy}
@@ -153,27 +165,31 @@ function EarningsTable() {
       tableMetaData={earningTableMetaData}
       headerTitle="Earnings"
       mainFilterComponent={
-        <EarningsTableMainFilter
+        <CustomTableFilter
           isMainFilterOpen={isMainFilterOpen}
           filter={filter}
+          filterType="main"
           setFilter={setFilter}
           setIsMainFilterOpen={setIsMainFilterOpen}
         />
       }
       dateFilterComponent={
-        <EarningsTableDateFilter
-          isDateFilterOpen={isDateFilterOpen}
+        <CustomTableFilter
+          isMainFilterOpen={isDateFilterOpen}
           filter={filter}
+          filterType="date"
           setFilter={setFilter}
-          setIsDateFilterOpen={setIsDateFilterOpen}
+          setIsMainFilterOpen={setIsDateFilterOpen}
         />
       }
       rowDetails={
-        <EarningDetails
-          selectedEarning={selectedEarning}
-          showLogPaymentForm={true}
-          closeDetails={() => setSelectedEarning(null)}
-        />
+        selectedEarning ? (
+          <CustomTableItemDetails
+            selectedItem={selectedEarning}
+            closeDetails={() => setSelectedEarning(null)}
+            refreshData={getEarnings}
+          />
+        ) : null
       }
       actionButtonType="export"
     />

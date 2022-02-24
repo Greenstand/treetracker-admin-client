@@ -22,7 +22,8 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-import PaymentsIcon from '../components/images/PaymentsIcon';
+// import PaymentsIcon from '../components/images/PaymentsIcon';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
@@ -91,20 +92,39 @@ function getRoutes(user) {
           name: 'Earnings',
           linkTo: '/earnings',
           component: EarningsView,
-          icon: CreditCardIcon,
-          disabled: process.env.REACT_APP_ENABLE_EARNINGS !== 'true',
+          icon: AccountBalanceIcon,
+          disabled:
+            process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+            !hasPermission(user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.MANAGE_EARNINGS,
+              POLICIES.LIST_EARNINGS,
+            ]),
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
-          icon: PaymentsIcon,
-          disabled: process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+          icon: CreditCardIcon,
+          disabled:
+            process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+            !hasPermission(user, [
+              POLICIES.SUPER_PERMISSION,
+              POLICIES.MANAGE_PAYMENTS,
+              POLICIES.LIST_PAYMENTS,
+            ]),
         },
       ],
       disabled:
-        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
-        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true',
+        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
+        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.MANAGE_EARNINGS,
+          POLICIES.MANAGE_PAYMENTS,
+          POLICIES.LIST_EARNINGS,
+          POLICIES.LIST_PAYMENTS,
+        ]),
     },
     {
       name: 'Growers',
@@ -174,6 +194,12 @@ export const AppProvider = (props) => {
   const [routes, setRoutes] = useState(getRoutes(localUser));
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
+
+  // TODO: The below `selectedFilters` state would be better placed under a
+  // separate FilterContext in the future iterations when the need to share
+  // filter state across components increases. For now this is used only in
+  // CustomTableFilter under components/common.
+  const [selectedFilters, setSelectedFilters] = useState('');
 
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
@@ -253,8 +279,11 @@ export const AppProvider = (props) => {
 
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
-    console.log('load organizations from api:', orgs.length);
     setOrgList(orgs);
+  }
+
+  async function updateSelectedFilter(filters) {
+    setSelectedFilters(filters);
   }
 
   const value = {
@@ -265,6 +294,8 @@ export const AppProvider = (props) => {
     routes,
     orgList,
     userHasOrg,
+    selectedFilters,
+    updateSelectedFilter,
   };
 
   if (!user || !token) {

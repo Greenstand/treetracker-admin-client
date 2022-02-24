@@ -53,12 +53,15 @@ function FilterTopGrower(props) {
   const [firstName, setFirstName] = useState(filter?.firstName || '');
   const [lastName, setLastName] = useState(filter?.lastName || '');
   const [organizationId, setOrganizationId] = useState(
-    filter?.organizationId || ALL_ORGANIZATIONS,
+    filter?.organizationId || ALL_ORGANIZATIONS
+  );
+  const [stakeholderUUID, setStakeholderUUID] = useState(
+    filter?.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.deviceIdentifier || '',
+    filter?.deviceIdentifier || ''
   );
 
   function handleSubmit(e) {
@@ -69,6 +72,7 @@ function FilterTopGrower(props) {
       firstName,
       lastName,
       organizationId,
+      stakeholderUUID,
       email,
       phone,
       deviceIdentifier,
@@ -82,6 +86,7 @@ function FilterTopGrower(props) {
     setFirstName('');
     setLastName('');
     setOrganizationId(ALL_ORGANIZATIONS);
+    setStakeholderUUID(ALL_ORGANIZATIONS);
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
@@ -98,17 +103,23 @@ function FilterTopGrower(props) {
     ? [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
       ]
     : [
         {
           id: ALL_ORGANIZATIONS,
+          stakeholder_uuid: ALL_ORGANIZATIONS,
           name: 'All',
+          value: 'All',
         },
         {
           id: ORGANIZATION_NOT_SET,
+          stakeholder_uuid: ORGANIZATION_NOT_SET,
           name: 'Not set',
+          value: null,
         },
       ];
 
@@ -159,7 +170,13 @@ function FilterTopGrower(props) {
                   id="Organization"
                   placeholder="Organization"
                   value={organizationId}
-                  onChange={(e) => setOrganizationId(e.target.value)}
+                  onChange={(e) => {
+                    const org = orgList.find((o) => o.id === e.target.value);
+                    setStakeholderUUID(
+                      org ? org.stakeholder_uuid : e.target.value
+                    );
+                    setOrganizationId(e.target.value);
+                  }}
                   onKeyDown={handleEnterPress}
                 >
                   {[...defaultOrgList, ...orgList].map((org) => (
