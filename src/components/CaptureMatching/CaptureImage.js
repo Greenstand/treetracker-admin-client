@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import OptimizedImage from 'components/OptimizedImage';
 import CaptureHeader from './CaptureHeader';
 import Grower from './Grower';
 
@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     padding: theme.spacing(2),
+    position: 'relative',
   },
 
   imgContainer: {
@@ -171,11 +172,13 @@ function CaptureImage(props) {
               </Box>
 
               <Box className={classes.imgBox}>
-                <img
+                <OptimizedImage
                   key={capture.id}
                   className={classes.imgContainer}
                   src={capture.image_url}
                   alt={`Capture ${capture.id}`}
+                  objectFit="contain"
+                  fixed
                 />
               </Box>
             </Paper>

@@ -18,6 +18,7 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
 import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
+import OptimizedImage from 'components/OptimizedImage';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -42,11 +43,6 @@ const useStyles = makeStyles({
   headerBox: {
     display: 'flex',
     cursor: 'pointer',
-  },
-
-  imgContainer: {
-    height: '100%',
-    objectFit: 'cover',
   },
   gridList: {
     padding: theme.spacing(0, 4),
@@ -88,7 +84,8 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    height: '300px',
+    width: '253px',
+    height: '340px',
     position: 'relative',
   },
   captureInfo: {
@@ -228,10 +225,10 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           key={`${tree.id}_${candidateCapture.id}`}
                           className={classes.candidateCaptureContainer}
                         >
-                          <img
-                            className={classes.imgContainer}
+                          <OptimizedImage
                             src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
+                            objectFit="cover"
                           />
                           <Box className={classes.captureInfo}>
                             <Box className={classes.captureInfoDetail}>

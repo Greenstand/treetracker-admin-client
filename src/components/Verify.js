@@ -322,7 +322,6 @@ const Verify = (props) => {
                 </Paper>
                 <OptimizedImage
                   src={capture.imageUrl}
-                  width={400}
                   className={classes.cardMedia}
                 />
               </CardContent>
