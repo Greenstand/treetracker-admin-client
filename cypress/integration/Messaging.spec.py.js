@@ -24,7 +24,14 @@ describe('Messaging', () => {
         .then()
         .sendNewMessage_Header_ShouldBe_Displayed();
     });
-    it.only('opens the Announce Message window after clicking the Announce Message button', () => {
+    it('opens the Announce Message window after clicking the Announce Message button', () => {
+      messaging_Page
+        .when()
+        .click_AnnounceMessage_Button()
+        .then()
+        .announceMessage_Header_ShouldBe_Displayed();
+    });
+    it('opens the Quick Surveys window after clicking the Quick Survey button', () => {
       messaging_Page
         .when()
         .click_AnnounceMessage_Button()
