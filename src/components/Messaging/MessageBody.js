@@ -20,6 +20,7 @@ import dateFormat from 'dateformat';
 import { CircularProgress } from '@material-ui/core';
 
 import { MessagingContext } from 'context/MessagingContext.js';
+import SurveyCharts from './SurveyCharts.js';
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {
@@ -250,14 +251,16 @@ export const SurveyResponseMessage = ({ message, user }) => {
 export const SurveyMessage = ({ message }) => {
   const { messageRow, surveyContent } = useStyles();
 
+  const { questions, response } = message.survey;
+
   return (
     <>
-      {message.survey.response ? (
+      {response ? (
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
           <Grid item className={surveyContent}>
-            {message.survey.questions.map((question, i) => {
+            {questions.map((question, i) => {
               return (
                 <div key={question + `:${i + 1}`}>
                   <Typography variant={'h6'}>Question {i + 1}:</Typography>
@@ -398,6 +401,13 @@ const SenderInformation = ({
   );
 };
 
+function getSurveyId(messages) {
+  return messages.reduce(
+    (a, c) => (c.subject.includes('Survey') ? c.id : a),
+    undefined
+  );
+}
+
 const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const history = useHistory();
   const {
@@ -500,12 +510,12 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               if (message.type === 'message') {
                 return message.from === user.userName ? (
                   <SentMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 ) : message.body.length > 1 ? (
                   <RecievedMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 ) : (
@@ -514,7 +524,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               } else if (message.type === 'survey') {
                 return (
                   <SurveyMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    key={message.id ? message.id : i}
                     message={message}
                     user={user}
                   />
@@ -522,7 +532,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               } else if (message.type === 'announce') {
                 return (
                   <AnnounceMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 );
@@ -569,6 +579,9 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           </Typography>
         </Box>
       </Modal>
+      {messages && getSurveyId(messages) && (
+        <SurveyCharts surveyId={getSurveyId(messages)} />
+      )}
     </>
   );
 };
