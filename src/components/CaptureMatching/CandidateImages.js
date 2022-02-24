@@ -112,7 +112,6 @@ const useStyles = makeStyles({
 });
 
 function DistanceTo({ lat1, lon1, lat2, lon2 }) {
-  console.log('DistanceTo', lat1, lon1, lat2, lon2);
   const [content, setContent] = useState('');
   if (
     lat1 === 'undefined' ||
