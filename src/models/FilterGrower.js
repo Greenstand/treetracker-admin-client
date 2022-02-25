@@ -22,6 +22,10 @@ export default class Filter {
       where.id = this.id;
     }
 
+    if (this.grower_account_uuid) {
+      where.grower_account_uuid = this.grower_account_uuid;
+    }
+
     if (this.firstName) {
       where.firstName = {
         regexp: stringToSearchRegExp(this.firstName),

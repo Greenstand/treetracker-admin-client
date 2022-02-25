@@ -2,6 +2,38 @@ import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
 export default {
+  getGrowerAccount(filter) {
+    const where = filter.getWhereObj ? filter.getWhereObj() : {};
+    const growerFilter = {
+      where: { ...where, active: true },
+      fields: {
+        firstName: true,
+        lastName: true,
+        imageUrl: true,
+        email: true,
+        phone: true,
+        personId: true,
+        organization: true,
+        organizationId: true,
+        imageRotation: true,
+        id: true,
+        grower_account_uuid: true,
+      },
+    };
+    const query = `${
+      process.env.REACT_APP_API_ROOT
+    }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
+
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   getGrower(id) {
     const growerQuery = `${
       process.env.REACT_APP_API_ROOT
@@ -36,6 +68,7 @@ export default {
         organizationId: true,
         imageRotation: true,
         id: true,
+        grower_account_uuid: true,
       },
     };
     const query = `${
@@ -92,7 +125,7 @@ export default {
     const growerSelfiesQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${growerId}/selfies/?filter=${JSON.stringify(
-      filter,
+      filter
     )}`;
 
     return fetch(growerSelfiesQuery, {
@@ -109,7 +142,7 @@ export default {
           ...new Set(
             items
               .map((tree) => tree.planterPhotoUrl)
-              .filter((img) => img !== ''),
+              .filter((img) => img !== '')
           ),
         ];
       })

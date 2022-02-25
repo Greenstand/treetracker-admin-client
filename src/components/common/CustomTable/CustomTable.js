@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSVLink } from 'react-csv';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -25,6 +25,9 @@ import {
 import PropTypes from 'prop-types';
 import useStyles from './CustomTable.styles';
 import GrowerDetail from '../../GrowerDetail';
+import { AppContext } from '../../../context/AppContext';
+import { GrowerProvider } from '../../../context/GrowerContext';
+import dateFormat from 'dateformat';
 
 /**
  * @function
@@ -360,7 +363,7 @@ function CustomTable(props) {
     e.stopPropagation();
     setGrowerDetail({
       isOpen: true,
-      growerId: grower.id,
+      growerId: grower.worker_id,
     });
   };
 
@@ -508,11 +511,13 @@ function CustomTable(props) {
       </TableContainer>
       {tablePagination()}
 
-      <GrowerDetail
-        open={growerDetail.isOpen}
-        growerId={growerDetail.growerId}
-        onClose={() => handleCloseGrowerDetail()}
-      />
+      <GrowerProvider>
+        <GrowerDetail
+          open={growerDetail.isOpen}
+          growerId={growerDetail.growerId}
+          onClose={() => handleCloseGrowerDetail()}
+        />
+      </GrowerProvider>
 
       {/* start table main filter */}
       {mainFilterComponent}

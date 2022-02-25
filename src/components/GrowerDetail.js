@@ -32,6 +32,7 @@ import LinkToWebmap from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
+import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
 
 const GROWER_IMAGE_SIZE = 441;
@@ -109,7 +110,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   // console.log('render: grower detail');
   const classes = useStyle();
   const appContext = useContext(AppContext);
-  const growerContext = useContext(GrowerContext);
+  const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -122,23 +123,38 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   useEffect(() => {
     async function loadGrowerDetail() {
-      if (grower && grower.id !== growerId) {
+      if (grower && grower.grower_account_uuid !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
       if (growerId) {
-        const match = await getGrower({
-          id: growerId,
-        });
+        let match;
+        if (isNaN(Number(growerId))) {
+          match = await getGrower({
+            id: undefined,
+            grower_account_uuid: growerId,
+          });
+        } else {
+          match = await getGrower({
+            id: growerId,
+            grower_account_uuid: undefined,
+          });
+        }
+
+        console.log('match: ', match, growerRegistrations);
+
         setGrower(match);
 
         if (
-          !growerRegistrations ||
-          (growerRegistrations.length > 0 &&
-            growerRegistrations[0].planter_id !== growerId)
+          match.id &&
+          (!growerRegistrations ||
+            (growerRegistrations.length > 0 &&
+              growerRegistrations[0].planter_id !== match.id))
         ) {
+          console.log('get grower registrations');
           setGrowerRegistrations(null);
-          api.getGrowerRegistrations(growerId).then((registrations) => {
+          api.getGrowerRegistrations(match.id).then((registrations) => {
+            console.log('registrations', match.id, registrations);
             if (registrations && registrations.length) {
               const sortedReg = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1
@@ -168,20 +184,20 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     }
     loadGrowerDetail();
     // eslint-disable-next-line
-  }, [growerId, growerContext.growers]);
+  }, [growerId, growers]);
 
   useEffect(() => {
     async function loadCaptures() {
-      if (growerId) {
+      if (grower.id) {
         setLoading(true);
         const [
           approvedCount,
           awaitingCount,
           rejectedCount,
         ] = await Promise.all([
-          getCaptureCountGrower(true, true, growerId),
-          getCaptureCountGrower(true, false, growerId),
-          getCaptureCountGrower(false, false, growerId),
+          getCaptureCountGrower(true, true, grower.id),
+          getCaptureCountGrower(true, false, grower.id),
+          getCaptureCountGrower(false, false, grower.id),
         ]);
         setVerificationStatus({
           approved: approvedCount,
@@ -192,7 +208,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
       }
     }
     loadCaptures();
-  }, [growerId]);
+  }, [grower]);
 
   async function getCaptureCountGrower(active, approved, growerId) {
     let filter = new FilterModel();
@@ -204,11 +220,21 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   }
 
   async function getGrower(payload) {
-    const { id } = payload;
-    let grower = growerContext.growers?.find((p) => p.id === id); // Look for a match in the context first
-    if (!grower) {
-      grower = await api.getGrower(id); // Otherwise query the API
+    const { id, grower_account_uuid } = payload;
+    let grower = growers?.find(
+      (p) => p.grower_account_uuid === grower_account_uuid || p.id === id
+    ); // Look for a match in the context first
+    console.log('growers', id, grower_account_uuid, grower, growers);
+    if (!grower && !id) {
+      const filter = new FilterGrower();
+      filter.grower_account_uuid = grower_account_uuid;
+      [grower] = await api.getGrowerAccount(filter); // Otherwise query the API
+      console.log('getGrowerAccount', grower_account_uuid, grower);
     }
+    if (!grower && !grower_account_uuid) {
+      grower = await api.getGrower(id);
+    }
+    // throw error if no match at all
     return grower;
   }
 
