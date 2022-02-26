@@ -168,11 +168,13 @@ function CaptureMatchingView() {
             />
           </Box>
           <Box height={14} />
-          <CandidateImages
-            capture={captureImages && captureImages[0]}
-            candidateImgData={candidateImgData}
-            sameTreeHandler={sameTreeHandler}
-          />
+          {loading ? null : (
+            <CandidateImages
+              capture={captureImages && captureImages[0]}
+              candidateImgData={candidateImgData}
+              sameTreeHandler={sameTreeHandler}
+            />
+          )}
         </Box>
       </Box>
       {loading && (
