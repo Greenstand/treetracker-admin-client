@@ -1,3 +1,10 @@
+# [1.57.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.3...v1.57.0) (2022-02-24)
+
+
+### Features
+
+* Added tooltip in candidateMatches card ([#444](https://github.com/Greenstand/treetracker-admin-client/issues/444)) ([aac47f9](https://github.com/Greenstand/treetracker-admin-client/commit/aac47f984acddd7579d4aa67577862ee211c7e30))
+
 ## [1.56.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.2...v1.56.3) (2022-02-24)
 
 
