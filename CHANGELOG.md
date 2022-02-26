@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.57.0...v1.58.0) (2022-02-26)
+
+
+### Features
+
+* hide candidate images when changing captureImage ([#441](https://github.com/Greenstand/treetracker-admin-client/issues/441)) ([8138ea8](https://github.com/Greenstand/treetracker-admin-client/commit/8138ea8844c90c0be3e7e950c38f9df3d1e360a9))
+
 # [1.57.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.3...v1.57.0) (2022-02-24)
 
 
