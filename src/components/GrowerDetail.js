@@ -230,7 +230,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     if (!grower && !id) {
       const filter = new FilterGrower();
       filter.growerAccountUuid = growerAccountUuid;
-      [grower] = await api.getGrowerAccount(filter); // Otherwise query the API
+      [grower] = await api.getGrowers({ filter }); // Otherwise query the API
     }
 
     if (!grower && !growerAccountUuid) {

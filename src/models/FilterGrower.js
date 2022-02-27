@@ -71,7 +71,7 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
-    if (this.id) {
+    if (this.id || this.growerAccountUuid) {
       numFilters += 1;
     }
 
