@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 import CaptureTags from './CaptureTags';
+import { VerifyContext } from 'context/VerifyContext';
 
 const SIDE_PANEL_WIDTH = 315;
 
