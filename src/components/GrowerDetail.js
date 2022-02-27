@@ -125,7 +125,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      if (grower && grower.grower_account_uuid !== growerId) {
+      if (grower && grower.growerAccountUuid !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
@@ -134,16 +134,14 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         if (isNaN(Number(growerId))) {
           match = await getGrower({
             id: undefined,
-            grower_account_uuid: growerId,
+            growerAccountUuid: growerId,
           });
         } else {
           match = await getGrower({
             id: growerId,
-            grower_account_uuid: undefined,
+            growerAccountUuid: undefined,
           });
         }
-
-        console.log('match: ', match, growerRegistrations);
 
         if (match.error) {
           setErrorMessage(match.message);
@@ -159,7 +157,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         ) {
           setGrowerRegistrations(null);
           api.getGrowerRegistrations(match.id).then((registrations) => {
-            console.log('registrations', match.id, registrations);
             if (registrations && registrations.length) {
               const sortedReg = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1
@@ -225,21 +222,18 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   }
 
   async function getGrower(payload) {
-    const { id, grower_account_uuid } = payload;
+    const { id, growerAccountUuid } = payload;
     let grower = growers?.find(
-      (p) => p.grower_account_uuid === grower_account_uuid || p.id === id
+      (p) => p.growerAccountUuid === growerAccountUuid || p.id === id
     ); // Look for a match in the context first
-
-    console.log('growers', id, grower_account_uuid);
 
     if (!grower && !id) {
       const filter = new FilterGrower();
-      filter.grower_account_uuid = grower_account_uuid;
+      filter.growerAccountUuid = growerAccountUuid;
       [grower] = await api.getGrowerAccount(filter); // Otherwise query the API
-      console.log('getGrowerAccount', grower_account_uuid, grower);
     }
 
-    if (!grower && !grower_account_uuid) {
+    if (!grower && !growerAccountUuid) {
       grower = await api.getGrower(id);
     }
     // throw error if no match at all

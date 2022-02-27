@@ -22,8 +22,8 @@ export default class Filter {
       where.id = this.id;
     }
 
-    if (this.grower_account_uuid) {
-      where.grower_account_uuid = this.grower_account_uuid;
+    if (this.growerAccountUuid) {
+      where.growerAccountUuid = this.growerAccountUuid;
     }
 
     if (this.firstName) {

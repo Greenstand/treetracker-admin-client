@@ -358,7 +358,6 @@ function CustomTable(props) {
   };
 
   const handleShowGrowerDetail = (e, grower) => {
-    console.log('grower', grower);
     e.preventDefault();
     e.stopPropagation();
     setGrowerDetail({
