@@ -22,7 +22,7 @@ const customTableTopBarStyles = (theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(10, 0, 5, 0),
+    padding: theme.spacing(5, 0, 2, 0),
   },
   filterAvatar: {
     backgroundColor: theme.palette.primary.lightVery,
@@ -132,6 +132,10 @@ const customTableStyles = (theme) => ({
   },
   customTable: {
     padding: theme.spacing(0, 10, 0, 10),
+    height: '100%',
+  },
+  tableHeight: {
+    maxHeight: '64vh',
   },
   selectedRow: {
     backgroundColor: theme.palette.primary.lightVery,

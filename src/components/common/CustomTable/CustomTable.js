@@ -12,6 +12,7 @@ import {
   CircularProgress,
   Grid,
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -391,7 +392,7 @@ function CustomTable(props) {
   };
 
   return (
-    <Grid container direction="column" className={classes.customTable}>
+    <Paper className={classes.customTable}>
       <CustomTableHeader
         openDateFilter={openDateFilter}
         openMainFilter={openMainFilter}
@@ -402,8 +403,8 @@ function CustomTable(props) {
         onSelectFile={onSelectFile}
       />
       {tablePagination()}
-      <TableContainer>
-        <Table>
+      <TableContainer className={classes.tableHeight}>
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow className={classes.customTableHeader}>
               {tableMetaData.map((column, i) => (
@@ -529,7 +530,7 @@ function CustomTable(props) {
       {/* start table row details */}
       {rowDetails}
       {/* end table row details */}
-    </Grid>
+    </Paper>
   );
 }
 
