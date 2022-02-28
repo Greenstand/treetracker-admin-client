@@ -1,3 +1,10 @@
+# [1.59.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.58.0...v1.59.0) (2022-02-28)
+
+
+### Features
+
+* make Earnings tool ready for production deployment ([#412](https://github.com/Greenstand/treetracker-admin-client/issues/412)) ([dff89e8](https://github.com/Greenstand/treetracker-admin-client/commit/dff89e81660ff587fa14f99d67639d4d1de632b1)), closes [#354](https://github.com/Greenstand/treetracker-admin-client/issues/354) [#347](https://github.com/Greenstand/treetracker-admin-client/issues/347) [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355) [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355)
+
 # [1.58.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.57.0...v1.58.0) (2022-02-26)
 
 
