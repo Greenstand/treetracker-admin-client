@@ -38,6 +38,7 @@ function ImportAction(props) {
 
   const handleOnSelectFile = (e) => {
     onSelectFile(e.target.files[0]);
+    document.getElementById('file-upload-button').value = '';
   };
 
   const classes = useStyles();
@@ -81,6 +82,7 @@ ImportAction.defaultProps = {
  * @param {function} props.openMainFilter - opens main filter when called
  * @param {function} props.onSelectFile - callback function to be called when file is selected
  * @param {string} props.headerTitle - title of the table
+ * @param {number} props.activeFiltersCount - number of active filters
  * @param {string} props.activeDateRange - string representing the active date range (i.e. 'Oct 1 - Oct 5') in the date filter button
  * @param {Array} props.data - data to be exported
  *
@@ -95,6 +97,7 @@ function CustomTableHeader(props) {
     openMainFilter,
     activeDateRange,
     onSelectFile,
+    activeFiltersCount,
   } = props;
   const classes = useStyles();
   const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
@@ -210,7 +213,7 @@ function CustomTableHeader(props) {
                       </Typography>
                     ) : (
                       <Typography className={classes.dateFiterButonSmallText}>
-                        select date range
+                        All
                       </Typography>
                     )}
                   </div>
@@ -235,7 +238,9 @@ function CustomTableHeader(props) {
                 <Typography className={classes.filterButtonText}>
                   Filter
                 </Typography>
-                <Avatar className={classes.filterAvatar}>3</Avatar>
+                <Avatar className={classes.filterAvatar}>
+                  {activeFiltersCount !== 0 ? activeFiltersCount : ''}
+                </Avatar>
               </Button>
             </Grid>
           </Grid>
@@ -250,6 +255,7 @@ CustomTableHeader.propTypes = {
   openDateFilter: PropTypes.func,
   openMainFilter: PropTypes.func,
   onSelectFile: PropTypes.func,
+  activeFiltersCount: PropTypes.number,
   data: PropTypes.array.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRange: PropTypes.string.isRequired,
@@ -260,6 +266,7 @@ CustomTableHeader.defaultProps = {
   openDateFilter: () => {},
   openMainFilter: () => {},
   onSelectFile: () => {},
+  activeFiltersCount: 0,
 };
 
 /**
@@ -286,6 +293,7 @@ CustomTableHeader.defaultProps = {
  * @param {number} props.page - current page number
  * @param {number} props.rowsPerPage - current number of rows per page
  * @param {number} props.totalCount - total number of rows to be displayed
+ * @param {number} props.activeFiltersCount - number of active filters
  * @param {Array} props.rows - rows to be displayed in table
  * @param {React.Component}  props.rowDetails - row  component to display details of a selected row
  * @param {React.Component} props.mainFilterComponent - renders main filter component
@@ -316,6 +324,7 @@ function CustomTable(props) {
     activeDateRange,
     onSelectFile,
     page,
+    activeFiltersCount,
   } = props;
 
   // managing custom table  state
@@ -375,6 +384,7 @@ function CustomTable(props) {
         activeDateRange={activeDateRange}
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
+        activeFiltersCount={activeFiltersCount}
       />
       {tablePagination()}
       <TableContainer>
@@ -500,6 +510,7 @@ CustomTable.propTypes = {
     })
   ),
   dateFilterComponent: PropTypes.element.isRequired,
+  activeFiltersCount: PropTypes.number,
   mainFilterComponent: PropTypes.element.isRequired,
   headerTitle: PropTypes.string.isRequired,
   activeDateRange: PropTypes.string.isRequired,
@@ -516,4 +527,5 @@ CustomTable.propTypes = {
 CustomTable.defaultProps = {
   onSelectFile: () => {},
   selectedRow: null,
+  activeFiltersCount: 0,
 };

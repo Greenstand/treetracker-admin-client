@@ -181,12 +181,16 @@ function CustomTableItemDetails(props) {
           <Grid container direction="row">
             <Grid item sm={5}>
               <Typography>Amount</Typography>
-              <Typography variant="h6">{selectedItem.amount} </Typography>
+              <Typography variant="h6">
+                {selectedItem.amount} {selectedItem.currency}{' '}
+              </Typography>
             </Grid>
 
             <Grid item>
-              <Typography>Currency</Typography>
-              <Typography variant="h6">{selectedItem.currency}</Typography>
+              <Typography>Captures Count</Typography>
+              <Typography variant="h6">
+                {selectedItem.captures_count}
+              </Typography>
             </Grid>
           </Grid>
 

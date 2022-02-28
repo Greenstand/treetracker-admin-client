@@ -163,23 +163,28 @@ function EarningsTable() {
       setSelectedRow={setSelectedEarning}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
+      activeFiltersCount={
+        Object.keys(filter).filter((key) =>
+          key === 'start_date' || key === 'end_date' ? false : true
+        ).length
+      }
       headerTitle="Earnings"
       mainFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isMainFilterOpen}
+          isFilterOpen={isMainFilterOpen}
           filter={filter}
           filterType="main"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsMainFilterOpen}
+          setIsFilterOpen={setIsMainFilterOpen}
         />
       }
       dateFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isDateFilterOpen}
+          isFilterOpen={isDateFilterOpen}
           filter={filter}
           filterType="date"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsDateFilterOpen}
+          setIsFilterOpen={setIsDateFilterOpen}
         />
       }
       rowDetails={
