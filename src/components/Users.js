@@ -51,6 +51,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
 
 const style = (theme) => ({
+  userContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    width: '100%',
+  },
   box: {
     height: '100%',
   },
@@ -157,7 +163,7 @@ function Users(props) {
       `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
       {
         headers: { Authorization: token },
-      },
+      }
     );
     if (res.status === 200) {
       setPermissions(res.data);
@@ -169,7 +175,7 @@ function Users(props) {
       `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
       {
         headers: { Authorization: token },
-      },
+      }
     );
     if (res.status === 200) {
       setUsers(res.data);
@@ -184,7 +190,6 @@ function Users(props) {
     load();
   }, [load]);
 
-  /* to update html document title */
   useEffect(() => {
     document.title = `User Manager - ${documentTitle}`;
   }, []);
@@ -210,7 +215,7 @@ function Users(props) {
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userDelete.id}`,
         {
           headers: { Authorization: token },
-        },
+        }
       );
       setSaveInProgress(false);
       if (res.status === 204) {
@@ -221,7 +226,7 @@ function Users(props) {
       } else {
         console.error('delete fail:', res);
         setErrorMessage(
-          'An error occured while deleting user. Please contact the system admin.',
+          'An error occured while deleting user. Please contact the system admin.'
         );
         return;
       }
@@ -229,7 +234,7 @@ function Users(props) {
       setSaveInProgress(false);
       console.error(e);
       setErrorMessage(
-        'An error occured while deleting user. Please contact the system admin.',
+        'An error occured while deleting user. Please contact the system admin.'
       );
     }
   }
@@ -263,7 +268,7 @@ function Users(props) {
       }
       return accumulator;
     },
-    [],
+    []
   );
 
   const handleToggle = (value) => () => {
@@ -310,7 +315,7 @@ function Users(props) {
             value.policy?.organization &&
             allowedOrganizationIds.length > 0 &&
             !allowedOrganizationIds.some(
-              (orgId) => orgId === value.policy.organization.id,
+              (orgId) => orgId === value.policy.organization.id
             );
 
           return (
@@ -346,11 +351,9 @@ function Users(props) {
       setErrorMessage('Missing Field');
       return;
     }
-    //upload
 
     setSaveInProgress(true);
     if (userEditing.id === undefined) {
-      //add
       let res = await axios.post(
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/`,
         {
@@ -359,7 +362,7 @@ function Users(props) {
         },
         {
           headers: { Authorization: token },
-        },
+        }
       );
       setSaveInProgress(false);
       if (res.status === 201) {
@@ -380,7 +383,7 @@ function Users(props) {
         },
         {
           headers: { Authorization: token },
-        },
+        }
       );
       setSaveInProgress(false);
       if (res.status === 200) {
@@ -396,17 +399,15 @@ function Users(props) {
   }
 
   function handleChangePassword(user) {
-    //auto generate password before open password Modal
     let pwd = pwdGenerator.generate({
       length: 10,
-      numbers: true /*generated pwd comprised of number, upper/lowercase */,
+      numbers: true,
     });
     setNewPassword(pwd);
     setUserPassword(user);
   }
 
   async function handleSavePassword() {
-    //upload
     setSaveInProgress(true);
     let res = await axios.put(
       `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userPassword.id}/password`,
@@ -415,7 +416,7 @@ function Users(props) {
       },
       {
         headers: { Authorization: token },
-      },
+      }
     );
     setSaveInProgress(false);
     if (res.status === 200) {
@@ -481,7 +482,6 @@ function Users(props) {
   }
 
   const handleCopy = () => {
-    /*get the deep nested <input> tag from <TextField/> */
     passwordRef.current.childNodes[1].childNodes[0].select();
     document.execCommand('copy');
     setCopyMsg('Copied!');
@@ -536,7 +536,7 @@ function Users(props) {
             <Grid key={`role_${idx}`}>
               {permissions.reduce(
                 (a, c) => a || (c.id === r ? c.roleName : undefined),
-                undefined,
+                undefined
               )}
             </Grid>
           ))}
@@ -544,7 +544,7 @@ function Users(props) {
         <TableCell component="th" scope="row">
           {getDateTimeStringLocale(user.createdAt)}
         </TableCell>
-        <TableCell>
+        <TableCell style={{ minWidth: '130px' }}>
           <IconButton title="edit" onClick={() => handleEdit(user)}>
             <Edit />
           </IconButton>
@@ -561,80 +561,68 @@ function Users(props) {
       </TableRow>
     ));
   }
-  // console.log(userNameValid);
+
   return (
-    <>
-      <Grid container className={classes.box}>
-        <Grid item xs={3}>
-          <Paper elevation={3} className={classes.menu}>
-            <Menu variant="plain" />
-          </Paper>
-        </Grid>
-        <Grid item xs={9}>
-          <Grid container className={classes.rightBox}>
-            <Grid item xs={12}>
-              <Grid
-                container
-                justify="space-between"
-                className={classes.titleBox}
-              >
+    <Grid className={classes.userContainer}>
+      <Paper elevation={3}>
+        <Menu variant="plain" />
+      </Paper>
+
+      <Grid item container className={classes.rightBox}>
+        <Grid item xs={12}>
+          <Grid container justify="space-between" className={classes.titleBox}>
+            <Grid item>
+              <Grid container>
                 <Grid item>
-                  <Grid container>
-                    <Grid item>
-                      <Group className={classes.accountIcon} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h2">User Manager</Typography>
-                    </Grid>
-                  </Grid>
+                  <Group className={classes.accountIcon} />
                 </Grid>
-                <Grid item className={classes.addUserBox}>
-                  <Button
-                    onClick={handleAddUser}
-                    variant="contained"
-                    className={classes.addUser}
-                    color="primary"
-                  >
-                    ADD USER
-                  </Button>
+                <Grid item>
+                  <Typography variant="h2">User Manager</Typography>
                 </Grid>
               </Grid>
-              <Grid container direction="column" className={classes.bodyBox}>
-                <TableContainer component={Paper}>
-                  <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Username</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>
-                          <Grid container justfy="center" alignItems="center">
-                            <Grid item>Role</Grid>
-                            <Grid item>
-                              <IconButton
-                                onClick={handlePermission}
-                                size="small"
-                              >
-                                <Help />
-                              </IconButton>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                        <TableCell>Created</TableCell>
-                        <TableCell>Operations</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>{mapSortedUsrs(users)}</TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-              {!usersLoaded && (
-                <Grid item container className={classes.progressContainer}>
-                  <CircularProgress />
-                </Grid>
-              )}
+            </Grid>
+            <Grid item className={classes.addUserBox}>
+              <Button
+                onClick={handleAddUser}
+                variant="contained"
+                className={classes.addUser}
+                color="primary"
+              >
+                ADD USER
+              </Button>
             </Grid>
           </Grid>
+          <Grid container direction="column" className={classes.bodyBox}>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Username</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>
+                      <Grid container justfy="center" alignItems="center">
+                        <Grid item>Role</Grid>
+                        <Grid item>
+                          <IconButton onClick={handlePermission} size="small">
+                            <Help />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell>Created</TableCell>
+                    <TableCell>Operations</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{mapSortedUsrs(users)}</TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+          {!usersLoaded && (
+            <Grid item container className={classes.progressContainer}>
+              <CircularProgress />
+            </Grid>
+          )}
         </Grid>
       </Grid>
       <Dialog
@@ -644,12 +632,6 @@ function Users(props) {
       >
         <DialogTitle id="form-dialog-title">User Detail</DialogTitle>
         <DialogContent>
-          {/*
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates
-          occasionally.
-        </DialogContentText>
-        */}
           <TextField
             autoFocus
             id="userName"
@@ -838,12 +820,6 @@ function Users(props) {
       >
         <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
         <DialogContent>
-          {/*
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates
-          occasionally.
-        </DialogContentText>
-        */}
           <Grid container className={classes.noteBox}>
             <Grid item xs={1}>
               <EmojiObjects />
@@ -984,7 +960,7 @@ function Users(props) {
           </>
         }
       />
-    </>
+    </Grid>
   );
 }
 

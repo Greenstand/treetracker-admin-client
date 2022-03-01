@@ -166,6 +166,7 @@ const Verify = (props) => {
     grower: {},
   });
   const refContainer = useRef();
+  const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
 
   /*
@@ -190,8 +191,6 @@ const Verify = (props) => {
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
-      isCmd: e.metaKey,
-      isCtrl: e.ctrlKey,
     });
   }
 
@@ -219,7 +218,7 @@ const Verify = (props) => {
   async function handleSubmit(approveAction) {
     // log.debug('approveAction:', approveAction);
     //check selection
-    if (verifyContext.captureImagesSelected.length === 0) {
+    if (captureSelected.length === 0) {
       window.alert('Please select one or more captures');
       return;
     }
@@ -282,10 +281,6 @@ const Verify = (props) => {
     verifyContext.setCurrentPage(page);
   }
 
-  function isCaptureSelected(id) {
-    return verifyContext.captureImagesSelected.indexOf(id) >= 0;
-  }
-
   const captureImages = verifyContext.captureImages;
 
   const placeholderImages = verifyContext.isLoading
@@ -307,15 +302,12 @@ const Verify = (props) => {
           <div
             className={clsx(
               classes.cardWrapper,
-              isCaptureSelected(capture.id) ? classes.cardSelected : undefined,
-              capture.placeholder && classes.placeholderCard,
+              verifyContext.captureImagesSelected[capture.id]
+                ? classes.cardSelected
+                : undefined,
+              capture.placeholder && classes.placeholderCard
             )}
           >
-            {isCaptureSelected(capture.id) && (
-              <Paper className={classes.cardCheckbox} elevation={4}>
-                <CheckIcon />
-              </Paper>
-            )}
             <Card
               onClick={(e) => handleCaptureClick(e, capture.id)}
               id={`card_${capture.id}`}
@@ -323,6 +315,11 @@ const Verify = (props) => {
               elevation={capture.placeholder ? 0 : 3}
             >
               <CardContent className={classes.cardContent}>
+                <Paper className={classes.cardCheckbox} elevation={4}>
+                  {verifyContext.captureImagesSelected[capture.id] && (
+                    <CheckIcon />
+                  )}
+                </Paper>
                 <OptimizedImage
                   src={capture.imageUrl}
                   width={400}
@@ -454,7 +451,7 @@ const Verify = (props) => {
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
-                          verifyContext.captureCount,
+                          verifyContext.captureCount
                         )} capture${
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
@@ -481,7 +478,7 @@ const Verify = (props) => {
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
-          submitEnabled={verifyContext.captureImagesSelected.length > 0}
+          submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
       {verifyContext.isApproveAllProcessing && (

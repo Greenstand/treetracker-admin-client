@@ -6,8 +6,9 @@ import { Box, Grid } from '@material-ui/core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((t) => ({
   containerBox: {
     margin: '10px',
     padding: '10px',
@@ -15,11 +16,29 @@ const useStyles = makeStyles({
   captureImgIcon: {
     fontSize: '37px',
   },
-});
+  box1: {
+    display: 'flex',
+    direction: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  box2: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  box3: {
+    marginRight: t.spacing(2),
+    display: 'flex',
+    gap: '4px',
+  },
+  class1: {
+    marginRight: t.spacing(2),
+  },
+}));
 
 function CaptureHeader(props) {
   const classes = useStyles();
-
   const { currentPage, handleChange, imgCount, noOfPages } = props;
 
   const iconImgLogo = (
@@ -27,20 +46,16 @@ function CaptureHeader(props) {
   );
 
   return (
-    <Box style={{ margin: '20px' }}>
+    <Box>
       <Box>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="baseline"
-        >
+        <Grid container className={classes.box1}>
           <CurrentCaptureNumber
-            text={`Unmatched Capture${imgCount !== 1 && 's'}`}
+            text={`Unmatched Capture${(imgCount !== 1 && 's') || ''}`}
             cameraImg={iconImgLogo}
             imgCount={imgCount}
           />
-          <Box style={{ display: 'flex', flexDirection: 'wrap' }}>
+          <Box className={classes.box2}>
+            <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
             <Pagination
               count={noOfPages}
               page={currentPage}

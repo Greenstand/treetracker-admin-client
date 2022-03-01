@@ -30,12 +30,14 @@ export const VerifyContext = createContext({
   clickCapture: () => {},
   setPageSize: () => {},
   setCurrentPage: () => {},
+  setCaptureImagesSelected: () => {},
+  getCaptureSelectedArr: () => {},
 });
 
 export function VerifyProvider(props) {
   const [captureImages, setCaptureImages] = useState([]);
   const [captureImagesUndo, setCaptureImagesUndo] = useState([]);
-  const [captureImagesSelected, setCaptureImagesSelected] = useState([]);
+  const [captureImagesSelected, setCaptureImagesSelected] = useState({});
   const [captureImageAnchor, setCaptureImageAnchor] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [isApproveAllProcessing, setIsApproveAllProcessing] = useState(false);
@@ -94,7 +96,7 @@ export function VerifyProvider(props) {
    * to clear all selection
    */
   const resetSelection = () => {
-    setCaptureImagesSelected([]);
+    setCaptureImagesSelected({});
     setCaptureImageAnchor(undefined);
   };
 
@@ -149,19 +151,68 @@ export function VerifyProvider(props) {
     setIsLoading(false);
   };
 
+  const getCaptureSelectedArr = () => {
+    return Object.keys(captureImagesSelected)
+      .filter((captureId) => {
+        return captureImagesSelected[captureId] === true;
+      })
+      .map((captureId) => parseInt(captureId));
+  };
+
+  const clickCapture = (payload) => {
+    const { captureId, isShift } = payload;
+    if (isShift) {
+      log.debug('press shift, and there is an anchor:', captureImageAnchor);
+      //if no anchor, then, select from beginning
+      let indexAnchor = 0;
+      if (captureImageAnchor !== undefined) {
+        indexAnchor = captureImages.reduce((a, c, i) => {
+          if (c !== undefined && c.id === captureImageAnchor) {
+            return i;
+          } else {
+            return a;
+          }
+        }, -1);
+      }
+      const indexCurrent = captureImages.reduce((a, c, i) => {
+        if (c !== undefined && c.id === captureId) {
+          return i;
+        } else {
+          return a;
+        }
+      }, -1);
+      let captureShiftSelected = {};
+      captureImages
+        .slice(
+          Math.min(indexAnchor, indexCurrent),
+          Math.max(indexAnchor, indexCurrent) + 1
+        )
+        .forEach((capture) => {
+          captureShiftSelected[capture.id] = true;
+        });
+      setCaptureImagesSelected(captureShiftSelected);
+    } else {
+      setCaptureImageAnchor(captureId);
+      setCaptureImagesSelected({
+        ...captureImagesSelected,
+        [captureId]: !captureImagesSelected[captureId],
+      });
+    }
+  };
+
   const approveAll = async (approveAction) => {
     log.debug('approveAll with approveAction:', approveAction);
     setIsLoading(true);
     setIsApproveAllProcessing(true);
-
-    const total = captureImagesSelected.length;
+    const captureSelected = getCaptureSelectedArr();
+    const total = captureSelected.length;
     const undo = captureImages.filter((capture) =>
-      captureImagesSelected.some((id) => id === capture.id)
+      captureSelected.some((id) => id === capture.id)
     );
     log.debug('items:%d', captureImages.length);
     try {
       for (let i = 0; i < total; i++) {
-        const captureId = captureImagesSelected[i];
+        const captureId = captureSelected[i];
         const captureImage = captureImages.reduce((a, c) => {
           if (c && c.id === captureId) {
             return c;
@@ -242,54 +293,6 @@ export function VerifyProvider(props) {
     setInvalidateCaptureCount(false);
   };
 
-  const clickCapture = (payload) => {
-    //{{{
-    const { captureId, isShift, isCmd, isCtrl } = payload;
-    if (!isShift && !isCmd && !isCtrl) {
-      setCaptureImagesSelected([captureId]);
-      setCaptureImageAnchor(captureId);
-    } else if (isShift) {
-      log.debug('press shift, and there is an anchor:', captureImageAnchor);
-      //if no anchor, then, select from beginning
-      let indexAnchor = 0;
-      if (captureImageAnchor !== undefined) {
-        indexAnchor = captureImages.reduce((a, c, i) => {
-          if (c !== undefined && c.id === captureImageAnchor) {
-            return i;
-          } else {
-            return a;
-          }
-        }, -1);
-      }
-      const indexCurrent = captureImages.reduce((a, c, i) => {
-        if (c !== undefined && c.id === captureId) {
-          return i;
-        } else {
-          return a;
-        }
-      }, -1);
-      const captureImagesSelected = captureImages
-        .slice(
-          Math.min(indexAnchor, indexCurrent),
-          Math.max(indexAnchor, indexCurrent) + 1
-        )
-        .map((capture) => capture.id);
-      setCaptureImagesSelected(captureImagesSelected);
-    } else if (isCmd || isCtrl) {
-      // Toggle the selection state
-      let selectedImages;
-      if (captureImagesSelected.find((el) => el === captureId)) {
-        selectedImages = captureImagesSelected.filter(function (capture) {
-          return capture !== captureId;
-        });
-      } else {
-        selectedImages = [...captureImagesSelected, captureId];
-      }
-      setCaptureImagesSelected(selectedImages);
-    }
-    //}}}
-  };
-
   const value = {
     captureImages,
     captureImagesSelected,
@@ -311,6 +314,8 @@ export function VerifyProvider(props) {
     clickCapture,
     setPageSize,
     setCurrentPage,
+    setCaptureImagesSelected,
+    getCaptureSelectedArr,
   };
 
   return (
