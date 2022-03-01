@@ -262,7 +262,7 @@ const CaptureTable = () => {
           </TableRow>
         </TableHead>
         <TableBody data-testid="captures-table-body">
-          {!isLoading ? (
+          {isLoading ? (
             <Grid item container className={classes.loadingIndicator}>
               <CircularProgress />
             </Grid>
