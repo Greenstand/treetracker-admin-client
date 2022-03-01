@@ -54,11 +54,26 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getMessage(author_handle) {
+  getMessages(author_handle) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?author_handle=${author_handle}`;
 
     return fetch(query).then(handleResponse).catch(handleError);
   },
+  // async getMessages(author_handle) {
+  //   const authorQuery = `${process.env.REACT_APP_MESSAGING_ROOT}/author?handle=${author_handle}`;
+  //   const messageQuery = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
+
+  //   const author = await fetch(authorQuery)
+  //     .then(handleResponse)
+  //     .catch(handleError);
+  //   const messages = await fetch(messageQuery)
+  //     .then(handleResponse)
+  //     .catch(handleError);
+
+  //   console.log('getMessages', author, messages);
+
+  //   return messages;
+  // },
   postMessage(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 

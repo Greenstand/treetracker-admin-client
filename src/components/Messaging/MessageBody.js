@@ -310,8 +310,9 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ message, messageRecipient, subject, id }) => {
+const SenderInformation = ({ message, messageRecipient, type, id }) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
+  console.log('SenderInformation', messageRecipient);
 
   return (
     <Grid container className={senderInfo}>
@@ -320,22 +321,22 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
-          {subject === 'Survey'
-            ? `${subject}: ${message?.survey?.title}`
+          {type === 'survey'
+            ? `Survey: ${message?.survey?.title}`
             : messageRecipient}
         </Typography>
 
-        {subject === 'Survey' && (
+        {type === 'survey' && (
           <Typography>
             DATE: {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
           </Typography>
         )}
 
         <Typography align="left" color="primary" variant="caption">
-          {id}
+          ID: {id}
         </Typography>
       </Grid>
-      {subject === 'Survey' && (
+      {type === 'survey' && (
         <Grid item className={dataContainer}>
           <Button className={button}>Survey Data</Button>
         </Grid>
@@ -380,7 +381,8 @@ const MessageBody = ({ messages, messageRecipient }) => {
       parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: 'Message',
+      subject: '',
+      type: 'message',
       body: messageContent,
     };
 
@@ -395,11 +397,11 @@ const MessageBody = ({ messages, messageRecipient }) => {
 
   return (
     <Paper className={paper}>
-      {messageRecipient && messages && subject && recipientId ? (
+      {messageRecipient && messages && recipientId ? (
         <SenderInformation
           message={messages[0]}
           messageRecipient={messageRecipient}
-          subject={subject}
+          type={messages[0].type}
           id={recipientId}
         />
       ) : (
@@ -408,8 +410,8 @@ const MessageBody = ({ messages, messageRecipient }) => {
       <div id="style-1" className={messagesBody}>
         {messages ? (
           messages.map((message, i) => {
-            if (message.subject === 'Message') {
-              return message.from.author === user.userName ? (
+            if (message.type === 'message') {
+              return message.from === user.userName ? (
                 <SentMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : `i`}
                   message={message}
@@ -422,7 +424,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
               ) : (
                 <div key={i}></div>
               );
-            } else if (message.subject.includes('Survey')) {
+            } else if (message.type === 'survey') {
               return (
                 <SurveyMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : i}
@@ -430,7 +432,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
                   user={user}
                 />
               );
-            } else if (message.subject.includes('Announce')) {
+            } else if (message.type === 'announce') {
               return (
                 <AnnounceMessage
                   key={message.id ? `messageId=${message.id}i=${i}` : i}

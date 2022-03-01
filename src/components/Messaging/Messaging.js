@@ -71,11 +71,10 @@ const Messaging = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const findMessageRecipient = (messagesArray) => {
-    console.log('recpient threads ---', messagesArray);
-    messagesArray[0].messages[0].to[0].recipient !== user.userName
-      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
-      : setMessageRecipient(messagesArray[0].messages[0].from.author);
+  const findMessageRecipient = (messages) => {
+    messages.username !== user.userName
+      ? setMessageRecipient(messages.username)
+      : setMessageRecipient(user.userName);
   };
 
   useEffect(() => {
@@ -87,6 +86,7 @@ const Messaging = () => {
 
   useEffect(() => {
     if (messages.length && messageRecipient === null) {
+      console.log('recpient threads ---', messages);
       findMessageRecipient(messages);
     }
   }, [messages]);

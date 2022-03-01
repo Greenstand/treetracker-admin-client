@@ -30,25 +30,20 @@ export const MessagingProvider = (props) => {
   // }, []);
 
   const groupMessageByHandle = (rawMessages) => {
+    console.log('groupMessageByHandle: rawMessages', rawMessages);
     // make key of recipients name and group messages together
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (
-          message.subject === 'Message' ||
-          message.subject === 'Announce Message'
-        ) {
-          let key =
-            message.to[0].recipient !== user.userName
-              ? message[`to`][0].recipient
-              : message['from'].author;
+        if (message.type === 'message' || message.type === 'announce') {
+          let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
             }
             grouped[key].push(message);
           }
-        } else if (message.subject === 'Survey') {
+        } else if (message.type === 'survey') {
           let key = message.survey.id;
           if (!grouped[key]) {
             grouped[key] = [];
@@ -67,6 +62,7 @@ export const MessagingProvider = (props) => {
         }
       }),
     ];
+    console.log('groupMessageByHandle: filteredMessages', filteredMessages);
     setMessages(filteredMessages);
   };
 
@@ -116,8 +112,8 @@ export const MessagingProvider = (props) => {
 
   const loadMessages = async () => {
     console.log('loadMessages');
-    const res = await api.getMessage(user.userName);
-    // console.log(res.messages);
+    const res = await api.getMessages(user.userName);
+    console.log(res.messages, growerMessage);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {

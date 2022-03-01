@@ -61,10 +61,10 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
 
   const onClickHelper = (e, i, thread) => {
     let recipient =
-      thread.messages[0].subject !== 'Survey' &&
-      thread.messages[0].to[0].recipient !== user.userName
-        ? thread.messages[0].to[0].recipient
-        : thread.messages[0].to[1].type;
+      thread.messages[0].type !== 'survey' &&
+      thread.messages[0].to !== user.userName
+        ? thread.messages[0].to
+        : thread.messages[0].type;
     console.log('-----> onClickHelper', user.userName, i, thread);
     handleListItemClick(e, i, recipient);
   };
