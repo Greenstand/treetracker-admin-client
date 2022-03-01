@@ -156,7 +156,9 @@ export function CapturesProvider(props) {
     };
 
     const paramString = `filter=${JSON.stringify(lbFilter)}`;
+    setIsLoading(true);
     const response = await queryCapturesApi({ paramString });
+    setIsLoading(false);
     setCaptures(response.data);
   };
 
@@ -198,11 +200,13 @@ export function CapturesProvider(props) {
     setIsLoading(true);
     queryCapturesApi({ id })
       .then((res) => {
+        setIsLoading(false);
         setCapture(res.data);
       })
-      .catch((err) =>
+      .catch((err) => {
+        setIsLoading(false);
         console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
-      );
+    });
   };
 
   // getLocationName = async (payload, rootState) => {
