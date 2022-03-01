@@ -94,7 +94,6 @@ const CaptureTable = () => {
     capture,
     captureCount,
     isLoading,
-    setIsLoading,
     setPage,
     setRowsPerPage,
     setOrder,
@@ -120,12 +119,6 @@ const CaptureTable = () => {
   }, [tagsContext.tagList]);
 
   useEffect(async () => {
-    if (!captures?.length) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-
     // Get the capture tags for all of the displayed captures
     const captureTags = await api.getCaptureTags({
       captureIds: captures.map((c) => c.id),
@@ -262,7 +255,7 @@ const CaptureTable = () => {
           </TableRow>
         </TableHead>
         <TableBody data-testid="captures-table-body">
-          {isLoading ? (
+          {isLoading && !captures?.length ? (
             <Grid item container className={classes.loadingIndicator}>
               <CircularProgress />
             </Grid>
