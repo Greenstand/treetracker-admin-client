@@ -1,3 +1,10 @@
+## [1.60.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.0...v1.60.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* enable new features in test environment ([12dfbf1](https://github.com/Greenstand/treetracker-admin-client/commit/12dfbf1f3e2bad744643b2a752128ba523efae86))
+
 # [1.60.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.59.0...v1.60.0) (2022-03-01)
 
 
