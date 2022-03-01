@@ -413,7 +413,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const [messageContent, setMessageContent] = useState('');
   const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

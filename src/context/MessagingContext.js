@@ -96,6 +96,7 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
+    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
     } else {
