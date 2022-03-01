@@ -214,7 +214,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
               <Box
                 className={classes.candidateTreeContent}
                 style={{
-                  maxHeight: showBox.includes(tree.id) ? '400px' : '0px',
+                  maxHeight: showBox.includes(tree.id) ? '420px' : '0px',
                 }}
               >
                 <Box className={classes.gridList} cols={3}>
