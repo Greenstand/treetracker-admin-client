@@ -94,6 +94,7 @@ const CaptureTable = () => {
     capture,
     captureCount,
     isLoading,
+    setIsLoading,
     setPage,
     setRowsPerPage,
     setOrder,
@@ -119,9 +120,10 @@ const CaptureTable = () => {
   }, [tagsContext.tagList]);
 
   useEffect(async () => {
-    // Don't do anything if there are no captures
     if (!captures?.length) {
-      return isLoading;
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
     }
 
     // Get the capture tags for all of the displayed captures
@@ -260,12 +262,10 @@ const CaptureTable = () => {
           </TableRow>
         </TableHead>
         <TableBody data-testid="captures-table-body">
-          {captures.length === 0 ? (
-            <div
-              style={{ position: 'relative', left: '300%', bottom: '-179px' }}
-            >
+          {!isLoading ? (
+            <Grid item container className={classes.loadingIndicator}>
               <CircularProgress />
-            </div>
+            </Grid>
           ) : (
             <>
               {captures.map((capture) => (
