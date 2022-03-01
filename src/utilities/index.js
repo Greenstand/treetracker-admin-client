@@ -40,6 +40,7 @@ export const covertDateStringToHumanReadableFormat = (
   dateString,
   format = 'dddd, mmm d, yyyy'
 ) => {
+  if (!dateString) return '';
   const date = new Date(dateString);
 
   return dateFormat(date, format);

@@ -7,7 +7,6 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((t) => ({
   containerBox: {
@@ -40,7 +39,6 @@ const useStyles = makeStyles((t) => ({
 
 function CaptureHeader(props) {
   const classes = useStyles();
-
   const { currentPage, handleChange, imgCount, noOfPages } = props;
 
   const iconImgLogo = (
@@ -57,13 +55,6 @@ function CaptureHeader(props) {
             imgCount={imgCount}
           />
           <Box className={classes.box2}>
-            <Box className={classes.box3}>
-              <Chip
-                onDelete={() => console.warn('delete')}
-                label={'My Organization'}
-              />
-              <Chip onDelete={() => console.warn('delete')} label={'Mongo'} />
-            </Box>
             <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
             <Pagination
               count={noOfPages}

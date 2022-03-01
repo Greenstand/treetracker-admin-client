@@ -4,6 +4,7 @@ import api from '../api/messaging';
 export const MessagingContext = createContext({
   user: {},
   messages: [],
+  authors: [],
   resMessages: [],
   growerMessage: {},
   regions: [],
@@ -19,17 +20,28 @@ export const MessagingContext = createContext({
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
+
+  // useEffect(() => {
+  //   loadRegions();
+  //   loadAuthors();
+  // }, []);
 
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (message.subject === 'Message') {
+        if (
+          message.subject === 'Message' ||
+          message.subject === 'Announce Message'
+        ) {
           let key =
-            message.to !== user.userName ? message[`to`] : message['from'];
+            message.to[0].recipient !== user.userName
+              ? message[`to`][0].recipient
+              : message['from'].author;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
@@ -37,30 +49,15 @@ export const MessagingProvider = (props) => {
             grouped[key].push(message);
           }
         } else if (message.subject === 'Survey') {
-          let key = message.survey.title;
-          if (grouped[key]) {
-            if (grouped[key].survey.id === message.survey.id) {
-              return;
-            } else {
-              grouped[key] = [];
-            }
-          } else {
+          let key = message.survey.id;
+          if (!grouped[key]) {
             grouped[key] = [];
           }
           grouped[key].push(message);
-        } else if (message.subject === 'Announce Message') {
-          let key =
-            message.to !== user.userName ? message[`to`] : message['from'];
-          if (key) {
-            if (!grouped[key] && !messages[key]) {
-              grouped[key] = [];
-            }
-            grouped[key].push(message);
-          }
         }
         return grouped;
       }, {});
-    setMessages([
+    const filteredMessages = [
       ...Object.entries(newMessages).map(([key, val]) => {
         if (key && val) {
           return {
@@ -69,7 +66,19 @@ export const MessagingProvider = (props) => {
           };
         }
       }),
-    ]);
+    ];
+    setMessages(filteredMessages);
+  };
+
+  const loadAuthors = async () => {
+    const res = await api.getAuthors();
+
+    if (res) {
+      let result = res.authors.filter(
+        (author) => author.handle !== user.userName
+      );
+      setAuthors(result);
+    }
   };
 
   const postRegion = async (payload) => {
@@ -81,12 +90,12 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessage = async (payload) => {
-    await api.postMessage(payload);
+    return api.postMessage(payload);
   };
 
-  const postMessageSend = async (payload) => {
+  const postMessageSend = (payload) => {
     if (payload) {
-      await api.postMessageSend(payload);
+      return api.postMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }
@@ -106,8 +115,9 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
+    console.log('loadMessages');
     const res = await api.getMessage(user.userName);
-
+    console.log(res.messages);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -126,10 +136,12 @@ export const MessagingProvider = (props) => {
   const value = {
     user,
     messages,
+    authors,
     regions,
     sendMessageFromGrower,
     loadMessages,
     loadRegions,
+    loadAuthors,
     postRegion,
     getRegionById,
     postMessage,

@@ -1,6 +1,7 @@
 import React from 'react';
+import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Typography, Box } from '@material-ui/core';
+import { Paper, Typography, Box, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles((t) => ({
   test: {
@@ -28,9 +29,19 @@ const useStyles = makeStyles((t) => ({
       fill: 'gray',
     },
   },
-  box4: {},
+  box4: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    '& svg': {
+      width: 18,
+      height: 18,
+      fill: 'gray',
+      left: t.spacing(1),
+      position: 'relative',
+    },
+  },
   text: {
-    fontFamily: 'Roboto',
     fontSize: '12px',
     fontStyle: 'normal',
     fontWeight: '400',
@@ -49,17 +60,26 @@ function CurrentCaptureNumber(props) {
     <Box>
       <Paper elevation={3} className={classes.box1}>
         <Box className={classes.box2}>
-          <Box className={classes.box3}>
-            {props.cameraImg}
-            {props.treeIcon}
+          <Box>
+            <Box className={classes.box3}>
+              {props.cameraImg}
+              {props.treeIcon}
+            </Box>
           </Box>
-          <Box className={classes.box4}>
-            <Typography
-              variant="h6"
-              className={`${classes.text} ${classes.bold}`}
-            >
-              {props.imgCount} {props.treesCount}
-            </Typography>
+          <Box>
+            <Box className={classes.box4}>
+              <Typography
+                variant="h6"
+                className={`${classes.text} ${classes.bold}`}
+              >
+                {props.imgCount} {props.treesCount}
+              </Typography>
+              {props.toolTipText && (
+                <Tooltip placement="right-start" title={props.toolTipText}>
+                  <QuestionMarkIcon className={classes.questionMarkIcon} />
+                </Tooltip>
+              )}
+            </Box>
             <Typography variant="body1" className={classes.text}>
               {props.text}
             </Typography>

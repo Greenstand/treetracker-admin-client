@@ -6,11 +6,9 @@ import {
   Typography,
   Button,
   IconButton,
-  MenuItem,
-  Select,
   FormControl,
-  OutlinedInput,
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 
@@ -65,10 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SurveyForm = () => {
+const SurveyForm = ({ setToggleSurvey }) => {
   const { form, submitButton, input } = useStyles();
   const { user, regions, postMessageSend } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
+  const [title, setTitle] = useState('');
   const [questionOne, setQuestionOne] = useState({
     prompt: '',
     choiceOne: '',
@@ -87,8 +86,13 @@ const SurveyForm = () => {
     choiceTwo: '',
     choiceThree: '',
   });
+  const [error, setError] = useState(false);
 
-  const [values, setValues] = useState({ region: '', organization: '' });
+  // * Both values needed for organization/region autocompletes
+  const [organization, setOrganization] = useState({});
+  const [inputValueOrg, setInputValueOrg] = useState('');
+  const [region, setRegion] = useState({});
+  const [inputValueRegion, setInputValueRegion] = useState('');
 
   const handleQuestionsChange = (e, question) => {
     const { name, value } = e.target;
@@ -107,15 +111,9 @@ const SurveyForm = () => {
         ...questionThree,
         [name]: value,
       });
+    } else if (name === 'title') {
+      setTitle(value);
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
   };
 
   const handleSubmit = async (e) => {
@@ -126,17 +124,21 @@ const SurveyForm = () => {
       subject: 'Survey',
       body: 'Survey',
       survey: {
-        title: questionOne.prompt,
+        title: title,
         questions: [],
       },
     };
 
-    if (values.region.length > 1) {
-      payload['region_id'] = values.region;
+    if (!region?.id && !organization?.id) {
+      setError(true);
+      return;
     }
 
-    if (values.organization.length > 1) {
-      payload['organization_id'] = values.organization;
+    if (region?.id) {
+      payload['region_id'] = region.id;
+    }
+    if (organization?.id) {
+      payload['organization_id'] = organization.stakeholder_uuid;
     }
 
     Object.values(allQuestions).map((question) => {
@@ -150,15 +152,51 @@ const SurveyForm = () => {
     });
 
     try {
-      if (payload.author_handle && payload.survey.title.length > 1) {
+      if (
+        payload.author_handle &&
+        payload.survey.title.length > 1 &&
+        (payload['region_id'] || payload['organization_id'])
+      ) {
         await postMessageSend(payload);
+        history.go(0);
       }
     } catch (err) {
       console.log(err);
     }
+    setQuestionOne({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setQuestionTwo({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setQuestionThree({
+      prompt: '',
+      choiceOne: '',
+      choiceTwo: '',
+      choiceThree: '',
+    });
+    setOrganization('');
+    setRegion('');
+    setTitle('');
+    setToggleSurvey(false);
   };
   return (
     <form className={form} onSubmit={handleSubmit}>
+      <GSInputLabel text="Survey Title" />
+      <TextField
+        className={input}
+        fullWidth
+        label="Survey Title"
+        name="title"
+        value={title}
+        onChange={handleQuestionsChange}
+      />
       {['One', 'Two', 'Three'].map((num) => (
         <div key={num}>
           <GSInputLabel text={`Survey Question ${num}`} />
@@ -198,51 +236,78 @@ const SurveyForm = () => {
         </div>
       ))}
       <div>
+        {error ? (
+          <Typography
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              margin: '20px 10px 0px',
+            }}
+          >
+            Please select a region or an organization!
+          </Typography>
+        ) : null}
         <FormControl fullWidth>
           <GSInputLabel
             id="select-label"
             text={'Target Audience by Organization'}
           />
-          <Select
-            className={input}
-            labelId="select-label"
-            id="select"
-            input={<OutlinedInput label="Organizations" />}
+          <Autocomplete
             name="organization"
-            value={values.organization}
-            onChange={handleChange}
-          >
-            {orgList.map((org, i) => (
-              <MenuItem key={i} value={org.id}>
-                {org.name}
-              </MenuItem>
-            ))}
-          </Select>
+            selectOnFocus
+            handleHomeEndKeys
+            options={orgList}
+            getOptionLabel={(option) => option.name || ''}
+            value={organization}
+            onChange={(e, val) => setOrganization(val)}
+            inputValue={inputValueOrg}
+            getOptionSelected={(option, value) => option.id === value.id}
+            onInputChange={(e, val) => {
+              setError(false);
+              setInputValueOrg(val);
+            }}
+            id="controllable-states-demo"
+            freeSolo
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Select Organization" />
+            )}
+          />
         </FormControl>
         <FormControl fullWidth>
           <GSInputLabel
             id="select-reg-label"
             text={'Target Audience by Region'}
           />
-          <Select
-            className={input}
-            labelId="select-reg-label"
-            label="Regions"
-            input={<OutlinedInput />}
+          <Autocomplete
             name="region"
-            value={values.region}
-            onChange={handleChange}
-            id="select-reg"
-          >
-            {regions.map((region) => (
-              <MenuItem key={region.id} value={region.id}>
-                {region.name}
-              </MenuItem>
-            ))}
-          </Select>
+            selectOnFocus
+            handleHomeEndKeys
+            value={region}
+            onChange={(e, value) => setRegion(value)}
+            options={regions}
+            getOptionLabel={(option) => option.name || ''}
+            inputValue={inputValueRegion}
+            getOptionSelected={(option, value) => option.id === value.id}
+            onInputChange={(e, val) => {
+              setError(false);
+              setInputValueRegion(val);
+            }}
+            id="controllable-states-demo"
+            freeSolo
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Select Region" />
+            )}
+          />
         </FormControl>
       </div>
-      <Button type="submit" size="large" className={submitButton}>
+      <Button
+        disabled={error}
+        type="submit"
+        size="large"
+        className={submitButton}
+      >
         Submit
       </Button>
     </form>
@@ -278,7 +343,7 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
         <Grid container spacing={2}>
           <Grid item className={title}>
             <Typography variant="h3" className={formTitle}>
-              Quick Surveys
+              Quick Survey
             </Typography>
             <IconButton
               color="primary"
@@ -290,13 +355,13 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
           </Grid>
           <Grid item>
             <Typography variant="body1" className={directions}>
-              Write a survey question and up to 3 answering options. Then select
-              the target audience for the survey. All replies will be available
-              in your Messaging Ibox.
+              Write a survey question and up to three answer options. Then
+              select the target audience for the survey. All replies will be
+              available in your Messaging Inbox.
             </Typography>
           </Grid>
           <Grid item>
-            <SurveyForm />
+            <SurveyForm setToggleSurvey={setToggleSurvey} />
           </Grid>
         </Grid>
       </SwipeableDrawer>

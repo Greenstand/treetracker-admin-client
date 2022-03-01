@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
@@ -14,6 +14,7 @@ import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Species from './Species';
 import CaptureTags from './CaptureTags';
+import { VerifyContext } from 'context/VerifyContext';
 
 const SIDE_PANEL_WIDTH = 315;
 
@@ -40,6 +41,17 @@ const useStyles = makeStyles((theme) => ({
   sidePanelSubmitButton: {
     width: '128px',
   },
+  subtitle: {
+    fontSize: '0.8em',
+    color: 'rgba(0,0,0,0.5)',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  selectButton: {
+    color: theme.palette.primary.lightVery,
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 function SidePanel(props) {
@@ -51,14 +63,16 @@ function SidePanel(props) {
   const DEFAULT_REJECTION_REASON = 'not_tree';
 
   const classes = useStyles(props);
+  const verifyContext = useContext(VerifyContext);
+  const captureSelected = verifyContext.getCaptureSelectedArr();
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
   const [captureApprovalTag, setCaptureApprovalTag] = useState(
-    DEFAULT_CAPTURE_APPROVAL_TAG,
+    DEFAULT_CAPTURE_APPROVAL_TAG
   );
   const [rejectionReason, setRejectionReason] = useState(
-    DEFAULT_REJECTION_REASON,
+    DEFAULT_REJECTION_REASON
   );
   const [rememberSelection, setRememberSelection] = useState(false);
 
@@ -68,6 +82,18 @@ function SidePanel(props) {
     setAge(DEFAULT_AGE);
     setCaptureApprovalTag(DEFAULT_CAPTURE_APPROVAL_TAG);
     setRejectionReason(DEFAULT_REJECTION_REASON);
+  }
+
+  function setAllSelectedCaptures(value) {
+    if (value) {
+      let capturesSelectionMap = {};
+      verifyContext.captureImages.forEach((capture) => {
+        capturesSelectionMap[capture.id] = value;
+      });
+      verifyContext.setCaptureImagesSelected(capturesSelectionMap);
+    } else {
+      verifyContext.setCaptureImagesSelected({});
+    }
   }
 
   async function handleSubmit() {
@@ -106,6 +132,32 @@ function SidePanel(props) {
         direction={'column'}
         className={classes.sidePanelContainer}
       >
+        <Grid className={classes.sidePanelItem}>
+          <Typography variant="h6">Selected Captures</Typography>
+          <Typography className={classes.subtitle}>
+            Quantity of selected Captures:{' '}
+            {(captureSelected && captureSelected.length) || 0}/
+            {verifyContext.captureImages.length}
+          </Typography>
+        </Grid>
+        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.selectButton}
+            onClick={() => setAllSelectedCaptures(true)}
+          >
+            Select All
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.selectButton}
+            onClick={() => setAllSelectedCaptures(false)}
+          >
+            Select None
+          </Button>
+        </Grid>
         <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
           <Tabs
             indicatorColor="primary"

@@ -29,7 +29,7 @@ export default createMuiTheme({
     fontSize: 11,
     //htmlFontSize		: 20,
     fontFamily: ['Lato', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'].join(
-      ',',
+      ','
     ),
     h5: {
       fontWeight: 700,
@@ -44,6 +44,7 @@ export default createMuiTheme({
   palette: {
     primary: {
       main: colorPrimary,
+      lightMed: 'rgba(118, 187, 35, 0.4)',
       //very light primary color, for background sometimes
       lightVery: '#F9FCF4',
     },
