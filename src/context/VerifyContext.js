@@ -46,7 +46,7 @@ export function VerifyProvider(props) {
     new FilterModel({
       approved: false,
       active: true,
-    }),
+    })
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
   const [captureCount, setCaptureCount] = useState(null);
@@ -58,10 +58,8 @@ export function VerifyProvider(props) {
   /* load captures when the page or page size changes */
   useEffect(() => {
     const abortController = new AbortController();
-    if (!isLoading) {
-      setCaptureImages([]);
-      loadCaptureImages({ signal: abortController.signal });
-    }
+    setCaptureImages([]);
+    loadCaptureImages({ signal: abortController.signal });
     return () => abortController.abort();
   }, [filter, pageSize, currentPage]);
 
@@ -73,13 +71,13 @@ export function VerifyProvider(props) {
   const undoedCaptureImage = (state, captureId) => {
     //put the capture back, from undo list, sort by id
     const captureUndo = captureImagesUndo.reduce((a, c) =>
-      c.id === captureId ? c : a,
+      c.id === captureId ? c : a
     );
     const undoneImages = captureImagesUndo.filter(
-      (capture) => capture.id !== captureId,
+      (capture) => capture.id !== captureId
     );
     const captures = [...captureImages, captureUndo].sort(
-      (a, b) => a.id - b.id,
+      (a, b) => a.id - b.id
     );
     setCaptureImages(captures);
     setCaptureImagesUndo(undoneImages);
@@ -113,7 +111,7 @@ export function VerifyProvider(props) {
         approveAction.morphology,
         approveAction.age,
         approveAction.captureApprovalTag,
-        approveAction.speciesId,
+        approveAction.speciesId
       );
     } else {
       log.debug('reject');
@@ -136,10 +134,6 @@ export function VerifyProvider(props) {
   const loadCaptureImages = async (abortController) => {
     log.debug('to load images');
 
-    if (isLoading) {
-      log.debug('cancel load - already in progress');
-      return true;
-    }
     //set loading status
     setIsLoading(true);
 
@@ -150,8 +144,7 @@ export function VerifyProvider(props) {
     };
     log.debug('load page with params:', pageParams);
     const result = await api.getCaptureImages(pageParams, abortController);
-    log.debug('loaded captures:', result.length);
-    setCaptureImages(result);
+    setCaptureImages(result || []);
     //restore loading status
     setIsLoading(false);
   };
@@ -163,7 +156,7 @@ export function VerifyProvider(props) {
 
     const total = captureImagesSelected.length;
     const undo = captureImages.filter((capture) =>
-      captureImagesSelected.some((id) => id === capture.id),
+      captureImagesSelected.some((id) => id === capture.id)
     );
     log.debug('items:%d', captureImages.length);
     try {
@@ -278,7 +271,7 @@ export function VerifyProvider(props) {
       const captureImagesSelected = captureImages
         .slice(
           Math.min(indexAnchor, indexCurrent),
-          Math.max(indexAnchor, indexCurrent) + 1,
+          Math.max(indexAnchor, indexCurrent) + 1
         )
         .map((capture) => capture.id);
       setCaptureImagesSelected(captureImagesSelected);
