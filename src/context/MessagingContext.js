@@ -30,12 +30,12 @@ export const MessagingProvider = (props) => {
   // }, []);
 
   const groupMessageByHandle = (rawMessages) => {
-    console.log('groupMessageByHandle: rawMessages', rawMessages);
     // make key of recipients name and group messages together
+    console.log('rawMessages', rawMessages);
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (message.type === 'message' || message.type === 'announce') {
+        if (message.type === 'message') {
           let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
             if (!grouped[key] && !messages[key]) {
@@ -49,6 +49,16 @@ export const MessagingProvider = (props) => {
             grouped[key] = [];
           }
           grouped[key].push(message);
+        } else if (message.type === 'announce') {
+          // assume it's an announcement
+          let key = message.subject;
+          if (grouped[key]) {
+            const date = Date.now();
+            console.log('date', date);
+            grouped[`${key}-${Date.now()}`] = [message];
+          } else {
+            grouped[key] = [message];
+          }
         }
         return grouped;
       }, {});
@@ -62,7 +72,6 @@ export const MessagingProvider = (props) => {
         }
       }),
     ];
-    console.log('groupMessageByHandle: filteredMessages', filteredMessages);
     setMessages(filteredMessages);
   };
 
@@ -90,8 +99,18 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
+    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
+    } else {
+      return 'Were sorry something went wrong. Please try again.';
+    }
+  };
+
+  const postBulkMessageSend = (payload) => {
+    console.log('postBulkMessageSend payload', payload);
+    if (payload) {
+      return api.postBulkMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }
@@ -113,7 +132,6 @@ export const MessagingProvider = (props) => {
   const loadMessages = async () => {
     console.log('loadMessages');
     const res = await api.getMessages(user.userName);
-    console.log(res.messages, growerMessage);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -142,6 +160,7 @@ export const MessagingProvider = (props) => {
     getRegionById,
     postMessage,
     postMessageSend,
+    postBulkMessageSend,
   };
 
   return (

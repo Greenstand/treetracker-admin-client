@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SurveyForm = ({ setToggleSurvey }) => {
   const { form, submitButton, input } = useStyles();
-  const { user, regions, postMessageSend } = useContext(MessagingContext);
+  const { user, regions, postBulkMessageSend } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [questionOne, setQuestionOne] = useState({
@@ -121,7 +121,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
     const allQuestions = { questionOne, questionTwo, questionThree };
     const payload = {
       author_handle: user.userName,
-      subject: 'Survey',
+      subject: title,
       body: 'Survey',
       survey: {
         title: title,
@@ -157,7 +157,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
         payload.survey.title.length > 1 &&
         (payload['region_id'] || payload['organization_id'])
       ) {
-        await postMessageSend(payload);
+        await postBulkMessageSend(payload);
         history.go(0);
       }
     } catch (err) {

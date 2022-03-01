@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { Announcement, Ballot } from '@material-ui/icons';
 import SearchInbox from './SearchInbox';
 import { MessagingContext } from 'context/MessagingContext';
 import { timeAgoFormatDate } from 'common/locale';
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
+    marginTop: '0',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
@@ -65,7 +67,6 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
       thread.messages[0].to !== user.userName
         ? thread.messages[0].to
         : thread.messages[0].type;
-    console.log('-----> onClickHelper', user.userName, i, thread);
     handleListItemClick(e, i, recipient);
   };
 
@@ -90,15 +91,23 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
               selected={selectedIndex === i}
               onClick={(e) => onClickHelper(e, i, thread)}
             >
-              <ListItemAvatar className={avatar}>
-                <Avatar alt={''} src={''} />
+              <ListItemAvatar>
+                {thread.messages[0].type === 'message' ? (
+                  <Avatar src="" className={avatar}></Avatar>
+                ) : thread.messages[0].type === 'announce' ? (
+                  <Announcement color="inherit" />
+                ) : (
+                  <>
+                    <Ballot color="inherit" />
+                  </>
+                )}
               </ListItemAvatar>
-              {thread.messages[0].subject === 'Survey' ? (
+              {thread.messages[0].type === 'survey' ? (
                 <ListItemText
                   primary={thread.messages[0].subject}
                   secondary={
                     thread.messages[0].subject
-                      ? thread.messages[0].survey.title
+                      ? thread.messages[0].composed_at.slice(0, 10)
                       : thread.userName
                   }
                   className={listText}

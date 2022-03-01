@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Announcement } from '@material-ui/icons';
+import { Announcement, Ballot } from '@material-ui/icons';
 import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 import dateFormat from 'dateformat';
@@ -170,8 +170,11 @@ export const AnnounceMessage = ({ message }) => {
     <div className={messageRow}>
       <div className={announceMessage}>
         <div className={messageHeader}>
-          <Announcement color="inherit" style={{ padding: '2px' }} />
-          <Typography className={messageTitle}>{message.title}</Typography>
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px 8px 2px 0px' }}
+          />
+          <Typography className={messageTitle}>{message.subject}</Typography>
         </div>
         <Typography className={messageContent}>{message.body}</Typography>
         {message.video_link && (
@@ -312,12 +315,23 @@ export const SentMessage = ({ message }) => {
 
 const SenderInformation = ({ message, messageRecipient, type, id }) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
-  console.log('SenderInformation', messageRecipient);
 
   return (
     <Grid container className={senderInfo}>
       <Grid item className={senderItem}>
-        <Avatar src="" className={avatar}></Avatar>
+        {type === 'message' ? (
+          <Avatar src="" className={avatar}></Avatar>
+        ) : type === 'announce' ? (
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        ) : (
+          <Ballot
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        )}
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
@@ -353,8 +367,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
   const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
 
-  console.log('MessageBody', messageRecipient, subject);
-
   useEffect(() => {
     if (messages) {
       // messages are either Surveys or Messages/Announce Messages
@@ -381,7 +393,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
       parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: '',
+      subject: 'Message', //temporarily hard-coded until we know what we want
       type: 'message',
       body: messageContent,
     };

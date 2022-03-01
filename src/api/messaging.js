@@ -59,21 +59,6 @@ export default {
 
     return fetch(query).then(handleResponse).catch(handleError);
   },
-  // async getMessages(author_handle) {
-  //   const authorQuery = `${process.env.REACT_APP_MESSAGING_ROOT}/author?handle=${author_handle}`;
-  //   const messageQuery = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
-
-  //   const author = await fetch(authorQuery)
-  //     .then(handleResponse)
-  //     .catch(handleError);
-  //   const messages = await fetch(messageQuery)
-  //     .then(handleResponse)
-  //     .catch(handleError);
-
-  //   console.log('getMessages', author, messages);
-
-  //   return messages;
-  // },
   postMessage(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 
@@ -89,7 +74,21 @@ export default {
       .catch(handleError);
   },
   postMessageSend(payload) {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message/send`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
+
+    return fetch(query, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  postBulkMessageSend(payload) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/bulk_message`;
 
     return fetch(query, {
       method: 'POST',
