@@ -3,7 +3,7 @@ import React from 'react';
 export default function OptimizedImage(props) {
   const {
     src,
-    width = 320,
+    width,
     quality,
     screenWidths = [1600, 1280, 960, 0],
     imageSizes = [400, 300, 250, 200],
@@ -23,7 +23,12 @@ export default function OptimizedImage(props) {
   if (matches?.length > 1) {
     const domain = matches[1];
     const imagePath = matches[2];
-    const params = `f=auto,w=${width}` + (quality ? `,q=${quality}` : '');
+    const params =
+      `f=auto` +
+      (width ? `,w=${width}` : '') +
+      (quality ? `,q=${quality}` : '');
+
+    console.log('params', params);
 
     cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
@@ -49,8 +54,8 @@ export default function OptimizedImage(props) {
           position: 'absolute',
           inset: 0,
           objectFit,
-          width: 'calc(100% + 2px)', // width for image rotation
-          height: 'calc(100% + 2px)', // height for image rotation
+          width: 'calc(100%)', // width for image rotation
+          height: 'calc(100%)', // height for image rotation
           transform: `rotate(${rotation}deg)`,
         }}
         {...rest}
