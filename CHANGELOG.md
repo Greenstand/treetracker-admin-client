@@ -1,3 +1,10 @@
+# [1.60.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.59.0...v1.60.0) (2022-03-01)
+
+
+### Features
+
+* Loading Indicator On Captures Page ([#305](https://github.com/Greenstand/treetracker-admin-client/issues/305)) ([a936045](https://github.com/Greenstand/treetracker-admin-client/commit/a9360456519601b2eb07ed7d504eeebdd2125c74))
+
 # [1.59.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.58.0...v1.59.0) (2022-02-28)
 
 
