@@ -6,6 +6,7 @@ export const MessagingContext = createContext({
   user: {},
   messages: [],
   authors: [],
+  isLoading: false,
   resMessages: [],
   growerMessage: {},
   regions: [],
@@ -23,6 +24,7 @@ export const MessagingProvider = (props) => {
   const [messages, setMessages] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
 
   // useEffect(() => {
@@ -66,6 +68,7 @@ export const MessagingProvider = (props) => {
       }),
     ];
     setMessages(filteredMessages);
+    setIsLoading(false);
   };
 
   const loadAuthors = async () => {
@@ -143,6 +146,8 @@ export const MessagingProvider = (props) => {
     messages,
     authors,
     regions,
+    isLoading,
+    setIsLoading,
     sendMessageFromGrower,
     loadMessages,
     loadRegions,
