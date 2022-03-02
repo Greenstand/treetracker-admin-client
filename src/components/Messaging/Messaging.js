@@ -86,7 +86,6 @@ const Messaging = () => {
 
   useEffect(() => {
     if (messages.length && messageRecipient === null) {
-      console.log('recpient threads ---', messages);
       findMessageRecipient(messages);
     }
   }, [messages]);
