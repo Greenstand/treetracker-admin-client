@@ -356,9 +356,11 @@ const SenderInformation = ({ message, messageRecipient, type, id }) => {
             <Typography>
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
-            <Typography>
-              <b>TO:</b> {message?.bulk_message_recipients[0].recipient}
-            </Typography>
+            {message?.bulk_message_recipients && (
+              <Typography>
+                <b>TO:</b> {message?.bulk_message_recipients[0]?.recipient}
+              </Typography>
+            )}
           </>
         )}
 
