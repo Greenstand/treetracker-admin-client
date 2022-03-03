@@ -93,7 +93,7 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
             >
               <ListItemAvatar>
                 {thread.messages[0].type === 'message' ? (
-                  <Avatar src="" className={avatar}></Avatar>
+                  <Avatar src={thread.avatar} className={avatar}></Avatar>
                 ) : thread.messages[0].type === 'announce' ? (
                   <Announcement color="inherit" />
                 ) : (

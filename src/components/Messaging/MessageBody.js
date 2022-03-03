@@ -335,14 +335,20 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ message, messageRecipient, type, id }) => {
+const SenderInformation = ({
+  message,
+  messageRecipient,
+  type,
+  id,
+  avatar_url,
+}) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
     <Grid container className={senderInfo}>
       <Grid item className={senderItem}>
         {type === 'message' ? (
-          <Avatar src="" className={avatar}></Avatar>
+          <Avatar src={avatar_url} className={avatar}></Avatar>
         ) : type === 'announce' ? (
           <Announcement
             color="inherit"
@@ -392,7 +398,7 @@ const SenderInformation = ({ message, messageRecipient, type, id }) => {
   );
 };
 
-const MessageBody = ({ messages, messageRecipient }) => {
+const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const history = useHistory();
   const {
     paper,
@@ -474,6 +480,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
             messageRecipient={messageRecipient}
             type={messages[0].type}
             id={recipientId || ''}
+            avatar_url={avatar}
           />
         ) : null}
         <div id="style-1" className={messagesBody}>
