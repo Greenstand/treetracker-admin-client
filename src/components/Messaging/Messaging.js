@@ -91,7 +91,6 @@ const Messaging = () => {
   }, [messages]);
 
   const handleListItemClick = (e, i, userName) => {
-    console.log('handleListItemClick', i, userName);
     setMessageRecipient(userName);
     setSelectedIndex(i);
   };

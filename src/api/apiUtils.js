@@ -1,4 +1,5 @@
 import { session } from '../models/auth';
+const log = require('loglevel');
 
 export async function handleResponse(response) {
   if (response.status === 204) return {};
@@ -7,19 +8,17 @@ export async function handleResponse(response) {
   // server-side validation error occurred.
   // Server side validation returns a string error message, so parse as text instead of json.
   const error = await response.text();
-  console.log('handleResponse error ---', error);
+  log.debug('handleResponse error ---', error);
 
   if (response.status === 400) {
     throw new Error(error);
   }
   if (response.status === 500 && error.includes('author')) {
     // server-side error occurred. Author account not found.
-    // throw new Error(
-    //   "The account wasn't found. Please contact the administrator."
-    // );
-    response.json({
-      error: "The account wasn't found. Please contact the administrator.",
-    });
+    return {
+      error: true,
+      message: "The author account wasn't found.",
+    };
   }
   throw new Error('Network response was not ok.');
 }

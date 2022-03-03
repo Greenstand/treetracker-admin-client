@@ -97,12 +97,11 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
                 ) : thread.messages[0].type === 'announce' ? (
                   <Announcement color="inherit" />
                 ) : (
-                  <>
-                    <Ballot color="inherit" />
-                  </>
+                  <Ballot color="inherit" />
                 )}
               </ListItemAvatar>
-              {thread.messages[0].type === 'survey' ? (
+              {thread.messages[0].type === 'survey' ||
+              thread.messages[0].type === 'announce' ? (
                 <ListItemText
                   primary={thread.messages[0].subject}
                   secondary={

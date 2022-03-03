@@ -54,8 +54,8 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getMessages(author_handle) {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?author_handle=${author_handle}`;
+  getMessages(handle) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?handle=${handle}`;
 
     return fetch(query).then(handleResponse).catch(handleError);
   },

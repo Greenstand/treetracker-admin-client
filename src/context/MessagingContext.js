@@ -1,5 +1,6 @@
 import React, { useState, createContext } from 'react';
 import api from '../api/messaging';
+const log = require('loglevel');
 
 export const MessagingContext = createContext({
   user: {},
@@ -45,19 +46,12 @@ export const MessagingProvider = (props) => {
         } else if (message.type === 'survey') {
           let key = message.survey.id;
           if (!grouped[key]) {
-            grouped[key] = [];
-          }
-          grouped[key].push(message);
-        } else if (message.type === 'announce') {
-          // assume it's an announcement
-          let key = message.subject;
-          if (grouped[key]) {
-            const date = Date.now();
-            console.log('date', date);
-            grouped[`${key}-${Date.now()}`] = [message];
-          } else {
             grouped[key] = [message];
           }
+        } else if (message.type === 'announce') {
+          // add date to create unique key for similar announements
+          let key = `${message.subject}-${Date.now()}`;
+          grouped[key] = [message];
         }
         return grouped;
       }, {});
@@ -79,7 +73,7 @@ export const MessagingProvider = (props) => {
 
     if (res) {
       let result = res.authors.filter(
-        (author) => author.handle !== user.userName
+        (author) => author.author_handle !== user.userName
       );
       setAuthors(result);
     }
@@ -98,7 +92,6 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
-    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
     } else {
@@ -107,7 +100,6 @@ export const MessagingProvider = (props) => {
   };
 
   const postBulkMessageSend = (payload) => {
-    console.log('postBulkMessageSend payload', payload);
     if (payload) {
       return api.postBulkMessageSend(payload);
     } else {
@@ -129,7 +121,7 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    console.log('loadMessages');
+    log.debug('loadMessages');
     const res = await api.getMessages(user.userName);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);

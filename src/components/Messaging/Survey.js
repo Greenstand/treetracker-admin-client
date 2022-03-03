@@ -122,6 +122,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
     const payload = {
       author_handle: user.userName,
       subject: title,
+      type: 'survey',
       body: 'Survey',
       survey: {
         title: title,

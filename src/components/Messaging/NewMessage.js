@@ -85,6 +85,7 @@ const NewMessage = ({ openModal, handleClose }) => {
       author_handle: user.userName,
       recipient_handle: recipient,
       subject: 'Message',
+      type: 'message',
       body: messageContent,
     };
 
