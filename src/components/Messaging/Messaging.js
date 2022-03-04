@@ -23,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      textDecoration: ' none',
+      color: 'black',
+    },
   },
   messagesContainer: {
     margin: '2em',
@@ -65,10 +71,10 @@ const Messaging = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const findMessageRecipient = (messagesArray) => {
-    return messagesArray[0].messages[0].to[0].recipient !== user.userName
-      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
-      : setMessageRecipient(messagesArray[0].messages[0].from.author);
+  const findMessageRecipient = (messages) => {
+    messages.username !== user.userName
+      ? setMessageRecipient(messages.username)
+      : setMessageRecipient(user.userName);
   };
 
   useEffect(() => {
@@ -85,8 +91,8 @@ const Messaging = () => {
   }, [messages]);
 
   const handleListItemClick = (e, i, userName) => {
-    setSelectedIndex(i);
     setMessageRecipient(userName);
+    setSelectedIndex(i);
   };
 
   return (
@@ -129,7 +135,7 @@ const Messaging = () => {
       <Grid container className={container}>
         <Grid item className={inbox} xs={5} md={4}>
           <Inbox
-            messages={messages}
+            threads={messages}
             selectedIndex={selectedIndex}
             handleListItemClick={handleListItemClick}
           />
@@ -138,7 +144,7 @@ const Messaging = () => {
           {messages.length ? (
             <MessageBody
               messages={messages[selectedIndex].messages}
-              messageRecipient={messageRecipient}
+              messageRecipient={messages[selectedIndex].userName}
             />
           ) : (
             <MessageBody />

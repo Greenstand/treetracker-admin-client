@@ -1,5 +1,6 @@
 import React, { useState, createContext } from 'react';
 import api from '../api/messaging';
+const log = require('loglevel');
 
 export const MessagingContext = createContext({
   user: {},
@@ -34,26 +35,23 @@ export const MessagingProvider = (props) => {
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (
-          message.subject === 'Message' ||
-          message.subject === 'Announce Message'
-        ) {
-          let key =
-            message.to[0].recipient !== user.userName
-              ? message[`to`][0].recipient
-              : message['from'].author;
+        if (message.type === 'message') {
+          let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
             }
             grouped[key].push(message);
           }
-        } else if (message.subject === 'Survey') {
+        } else if (message.type === 'survey') {
           let key = message.survey.id;
           if (!grouped[key]) {
-            grouped[key] = [];
+            grouped[key] = [message];
           }
-          grouped[key].push(message);
+        } else if (message.type === 'announce') {
+          // add date to create unique key for similar announements
+          let key = `${message.subject}-${Date.now()}`;
+          grouped[key] = [message];
         }
         return grouped;
       }, {});
@@ -75,7 +73,7 @@ export const MessagingProvider = (props) => {
 
     if (res) {
       let result = res.authors.filter(
-        (author) => author.handle !== user.userName
+        (author) => author.author_handle !== user.userName
       );
       setAuthors(result);
     }
@@ -101,6 +99,14 @@ export const MessagingProvider = (props) => {
     }
   };
 
+  const postBulkMessageSend = (payload) => {
+    if (payload) {
+      return api.postBulkMessageSend(payload);
+    } else {
+      return 'Were sorry something went wrong. Please try again.';
+    }
+  };
+
   const sendMessageFromGrower = (grower) => {
     const payload = {
       body: '',
@@ -115,9 +121,8 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    console.log('loadMessages');
-    const res = await api.getMessage(user.userName);
-    console.log(res.messages);
+    log.debug('loadMessages');
+    const res = await api.getMessages(user.userName);
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -146,6 +151,7 @@ export const MessagingProvider = (props) => {
     getRegionById,
     postMessage,
     postMessageSend,
+    postBulkMessageSend,
   };
 
   return (

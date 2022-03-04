@@ -1,8 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Announcement } from '@material-ui/icons';
-import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
+import { Announcement, Ballot } from '@material-ui/icons';
+import {
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  Modal,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 import dateFormat from 'dateformat';
 
@@ -12,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
   messageRow: {
     display: 'flex',
     padding: '3px',
+    flexDirection: 'column',
   },
   messageRowRight: {
     display: 'flex',
@@ -24,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
   announceMessage: {
     position: 'relative',
-    marginLeft: '20px',
     marginBottom: '10px',
     padding: '10px',
     background: theme.palette.primary.main,
@@ -40,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'lightGrey',
     textAlign: 'left',
     borderRadius: '10px',
+    width: 'fit-content',
   },
   sentMessage: {
     position: 'relative',
@@ -123,11 +132,7 @@ const useStyles = makeStyles((theme) => ({
   surveyContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginLeft: 'auto',
     backgroundColor: theme.palette.primary.lightMed,
-    // backgroundColor: theme.palette.primary.main,
-    // color: '#fff',
-    width: '65%',
     borderRadius: '10px',
     padding: '10px',
   },
@@ -140,6 +145,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      textDecoration: ' none',
+      color: 'black',
+    },
   },
   surveyResponse: {
     display: 'flex',
@@ -150,6 +161,16 @@ const useStyles = makeStyles((theme) => ({
     margin: '5px',
     width: '35%',
   },
+  modalContainer: {
+    backgroundColor: 'white',
+    width: '50%',
+    outline: 'none',
+    borderRadius: '4px',
+    padding: '20px',
+    position: 'absolute',
+    top: '30%',
+    left: '22%',
+  },
 }));
 
 export const AnnounceMessage = ({ message }) => {
@@ -159,15 +180,19 @@ export const AnnounceMessage = ({ message }) => {
     messageTitle,
     announceMessage,
     messageContent,
-    messageTimeStampRight,
   } = useStyles();
 
   return (
     <div className={messageRow}>
       <div className={announceMessage}>
         <div className={messageHeader}>
-          <Announcement color="inherit" style={{ padding: '2px' }} />
-          <Typography className={messageTitle}>{message.title}</Typography>
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px 8px 2px 0px' }}
+          />
+          <Typography className={messageTitle} variant="h6">
+            {message.subject}
+          </Typography>
         </div>
         <Typography className={messageContent}>{message.body}</Typography>
         {message.video_link && (
@@ -176,19 +201,24 @@ export const AnnounceMessage = ({ message }) => {
           </Typography>
         )}
       </div>
-      <Grid item className={messageTimeStampRight}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
-      </Grid>
     </div>
   );
 };
 
-export const SurveyResponseMessage = ({ message }) => {
+export const SurveyResponseMessage = ({ message, user }) => {
   const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
 
   return (
     <div className={messageRow}>
       <Grid className={surveyResponse}>
+        <Typography variant={'h5'}>
+          {message.from.author === user.userName
+            ? message.to[0].recipient
+              ? `${message.body}: ${message.to[0].recipient}`
+              : `${message.body}`
+            : message.body}
+        </Typography>
+        <hr style={{ border: '0.1px solid black', width: '100%' }} />
         {message.survey?.answers &&
           message.survey.answers.map((answer, i) => (
             <div key={`answer - ${i}`}>
@@ -205,7 +235,7 @@ export const SurveyResponseMessage = ({ message }) => {
 };
 
 export const SurveyMessage = ({ message }) => {
-  const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
+  const { messageRow, surveyContent } = useStyles();
 
   return (
     <>
@@ -213,33 +243,29 @@ export const SurveyMessage = ({ message }) => {
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
-          <Grid item className={messageTimeStampLeft}>
-            <Typography>
-              {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
-            </Typography>
-          </Grid>
           <Grid item className={surveyContent}>
-            <Typography variant={'h4'}>
-              {message.body ? message.body : ''}
-            </Typography>
-            {message.survey.questions.map((question, i) => (
-              <div key={question + `:${i + 1}`}>
-                <Typography variant={'h6'}>
-                  Question {i + 1}:{' '}
+            {message.survey.questions.map((question, i) => {
+              return (
+                <div key={question + `:${i + 1}`}>
+                  <Typography variant={'h6'}>Question {i + 1}:</Typography>
                   <Typography variant={'body1'}>{question.prompt}</Typography>
-                </Typography>
-                <Typography variant={'h6'}>
-                  Choices:
+                  <Typography variant={'h6'}>Choices:</Typography>
                   <ol type="A">
                     {question.choices.map((choice, i) => (
-                      <li key={choice ? `choice ${i + 1}:${choice}` : i}>
-                        {choice}
-                      </li>
+                      <Typography
+                        variant={'h6'}
+                        key={choice ? `choice ${i + 1}:${choice}` : i}
+                      >
+                        <li>
+                          <Typography variant={'body1'}>{choice}</Typography>
+                        </li>
+                      </Typography>
                     ))}
                   </ol>
-                </Typography>
-              </div>
-            ))}
+                  <hr style={{ border: '0.1px solid black', width: '100%' }} />
+                </div>
+              );
+            })}
           </Grid>
         </div>
       )}
@@ -296,30 +322,55 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ message, messageRecipient, subject, id }) => {
+const SenderInformation = ({ message, messageRecipient, type, id }) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
     <Grid container className={senderInfo}>
       <Grid item className={senderItem}>
-        <Avatar src="" className={avatar}></Avatar>
+        {type === 'message' ? (
+          <Avatar src="" className={avatar}></Avatar>
+        ) : type === 'announce' ? (
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        ) : (
+          <Ballot
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        )}
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
-          {subject === 'Survey' ? subject : messageRecipient}
+          {type === 'survey'
+            ? `Survey: ${message?.survey?.title}`
+            : type === 'announce'
+            ? `Announcement`
+            : messageRecipient}
         </Typography>
 
-        {(subject === 'Survey' || subject === 'Announce') && (
-          <Typography>
-            DATE: {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
-          </Typography>
+        {(type === 'survey' || type === 'announce') && (
+          <>
+            <Typography>
+              <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
+            </Typography>
+            {message?.bulk_message_recipients && (
+              <Typography>
+                <b>TO:</b> {message?.bulk_message_recipients[0]?.recipient}
+              </Typography>
+            )}
+          </>
         )}
 
-        <Typography align="left" color="primary">
-          {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
-        </Typography>
+        {type === 'message' && (
+          <Typography align="left" color="primary" variant="caption">
+            ID: {id}
+          </Typography>
+        )}
       </Grid>
-      {subject === 'Survey' && (
+      {type === 'survey' && (
         <Grid item className={dataContainer}>
           <Button className={button}>Survey Data</Button>
         </Grid>
@@ -330,25 +381,27 @@ const SenderInformation = ({ message, messageRecipient, subject, id }) => {
 
 const MessageBody = ({ messages, messageRecipient }) => {
   const history = useHistory();
-  const { paper, messagesBody, textInput } = useStyles();
+  const { paper, messagesBody, modalContainer, textInput } = useStyles();
   const { user, authors, postMessageSend } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     if (messages) {
+      // messages are either Surveys or Messages/Announce Messages
       setSubject(messages[0].subject);
     }
-  }, [messages]);
+  }, [messages, messageRecipient]);
 
   useEffect(() => {
-    if (authors && messageRecipient) {
-      let res = authors.find((author) => author.handle === messageRecipient);
-
-      if (res) {
-        setRecipientId(res.id);
-      }
+    const res = authors.find((author) => author.handle === messageRecipient);
+    if (res?.id) {
+      setRecipientId(res.id);
     }
   }, [authors, messageRecipient]);
 
@@ -361,78 +414,103 @@ const MessageBody = ({ messages, messageRecipient }) => {
       parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: 'Message',
+      subject: 'Message', //temporarily hard-coded until we know what we want
+      type: 'message',
       body: messageContent,
     };
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        await postMessageSend(messagePayload);
-        history.go(0);
+        const res = await postMessageSend(messagePayload);
+        if (res.error) {
+          setErrorMessage(res.message);
+          handleOpen();
+        } else {
+          history.go(0);
+        }
       }
     }
     setMessageContent('');
   };
 
   return (
-    <Paper className={paper}>
-      {messageRecipient && messages ? (
-        <SenderInformation
-          message={messages[0]}
-          messageRecipient={messageRecipient}
-          subject={subject}
-          id={recipientId}
-        />
-      ) : (
-        <SenderInformation />
-      )}
-      <div id="style-1" className={messagesBody}>
-        {messages ? (
-          messages.map((message, i) => {
-            if (message.subject === 'Message') {
-              return message.from.author === user.userName ? (
-                <SentMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
-                />
-              ) : message.body.length > 1 ? (
-                <RecievedMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
-                />
-              ) : (
-                <div key={i}></div>
-              );
-            } else if (message.subject.includes('Survey')) {
-              return (
-                <SurveyMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            } else if (message.subject.includes('Announce')) {
-              return (
-                <AnnounceMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            }
-          })
+    <>
+      <Paper className={paper}>
+        {messageRecipient && messages ? (
+          <SenderInformation
+            message={messages[0]}
+            messageRecipient={messageRecipient}
+            type={messages[0].type}
+            id={recipientId || ''}
+          />
         ) : (
-          <div>Loading ...</div>
+          <SenderInformation />
         )}
-      </div>
-      {subject !== 'Survey' && (
-        <TextInput
-          messageRecipient={messageRecipient}
-          handleSubmit={handleSubmit}
-          messageContent={messageContent}
-          setMessageContent={setMessageContent}
-          className={textInput}
-        />
-      )}
-    </Paper>
+        <div id="style-1" className={messagesBody}>
+          {messages ? (
+            messages.map((message, i) => {
+              if (message.type === 'message') {
+                return message.from === user.userName ? (
+                  <SentMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    message={message}
+                  />
+                ) : message.body.length > 1 ? (
+                  <RecievedMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    message={message}
+                  />
+                ) : (
+                  <div key={i}></div>
+                );
+              } else if (message.type === 'survey') {
+                return (
+                  <SurveyMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    message={message}
+                    user={user}
+                  />
+                );
+              } else if (message.type === 'announce') {
+                return (
+                  <AnnounceMessage
+                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    message={message}
+                  />
+                );
+              }
+            })
+          ) : (
+            <div>Loading ...</div>
+          )}
+        </div>
+        {subject !== 'Survey' && (
+          <TextInput
+            messageRecipient={messageRecipient}
+            handleSubmit={handleSubmit}
+            messageContent={messageContent}
+            setMessageContent={setMessageContent}
+            className={textInput}
+          />
+        )}
+      </Paper>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className={modalContainer}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Error: {errorMessage}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {`You won't be able to send messages until this is fixed. Please
+            reach out to the administrator.`}
+          </Typography>
+        </Box>
+      </Modal>
+    </>
   );
 };
 
