@@ -332,8 +332,8 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
   return (
     <>
       <SwipeableDrawer
-        disableBackdropTransition={!iOS}
-        disableDiscovery={iOS}
+        disablebackdroptransition={!iOS ? 'true' : 'false'}
+        disablediscovery={iOS ? 'true' : 'false'}
         anchor={'right'}
         open={toggleSurvey}
         onClose={() => setToggleSurvey(false)}

@@ -226,8 +226,8 @@ const AnnounceMessage = ({
 
   return (
     <SwipeableDrawer
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
+      disablebackdroptransition={!iOS ? 'true' : 'false'}
+      disablediscovery={iOS ? 'true' : 'false'}
       anchor={'right'}
       open={toggleAnnounceMessage}
       onOpen={() => setToggleAnnounceMessage(true)}

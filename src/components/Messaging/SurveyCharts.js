@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/messaging';
 
-import { Drawer, Grid, Typography } from '@material-ui/core';
+import { Drawer, Grid, IconButton, Typography } from '@material-ui/core';
+import Close from '@material-ui/icons/Close';
 
 import { makeStyles } from '@material-ui/styles';
 import { Pie } from 'react-chartjs-2';
@@ -17,12 +18,7 @@ const useStyles = makeStyles((theme) => ({
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const SurveyCharts = ({
-  surveyId,
-  // messages,
-  // toggleSurveyCharts,
-  setToggleSurveyCharts,
-}) => {
+const SurveyCharts = ({ surveyId, setShowCharts }) => {
   const iOS =
     typeof navigator !== 'undefined' &&
     typeof navigator.userAgent !== 'undefined' &&
@@ -136,13 +132,15 @@ const SurveyCharts = ({
         for (let i = 0; i < survey.questions.length; i++) {
           const q = survey.questions[i];
           const res = survey.responses[i];
-          chartData.push({
-            title: q.prompt,
-            data: {
-              labels: q.choices,
-              totals: res.datasets[0].data,
-            },
-          });
+          if (res) {
+            chartData.push({
+              title: q.prompt,
+              data: {
+                labels: q.choices,
+                totals: res.datasets[0].data,
+              },
+            });
+          }
         }
         console.warn('loaded chart data:', chartData);
         setEachData(chartData);
@@ -155,20 +153,23 @@ const SurveyCharts = ({
 
   return (
     <Drawer
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
+      disablebackdroptransition={!iOS ? 'true' : 'false'}
+      disablediscovery={iOS ? 'true' : 'false'}
       anchor={'right'}
       open={true}
-      onOpen={() => setToggleSurveyCharts(true)}
-      onClose={() => setToggleSurveyCharts(false)}
+      onClose={() => setShowCharts(false)}
       classes={{ paper: drawer }}
       PaperProps={{ elevation: 6 }}
-      variant="persistent"
     >
       <Typography color="primary" variant="h4">
         Survey Response Data
       </Typography>
       <Typography variant="h5">{survey.title}</Typography>
+      <Grid item style={{ alignSelf: 'flex-end' }}>
+        <IconButton onClick={() => setShowCharts(false)}>
+          <Close />
+        </IconButton>
+      </Grid>
       <Grid container>
         {eachData &&
           eachData.map((item) => (
