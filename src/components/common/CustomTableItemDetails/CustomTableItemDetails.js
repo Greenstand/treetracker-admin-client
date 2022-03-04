@@ -28,7 +28,7 @@ import useStyles from './CustomTableItemDetails.styles';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
-  const [paymentSystem, setPaymentSystem] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -36,7 +36,7 @@ function LogPaymentForm(props) {
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
-    setPaymentSystem(value);
+    setPaymentMethod(value);
   };
 
   const handleOnFormSubmit = () => {
@@ -75,12 +75,12 @@ function LogPaymentForm(props) {
             className={classes.itemLogPaymentFormSelectFormControl}
           >
             <TextField
-              id="payment_system"
-              name="payment_system"
-              label="Payment System"
+              id="payment_method"
+              name="payment_method"
+              label="Payment Method"
               variant="outlined"
               onChange={handleOnInputChange}
-              value={paymentSystem}
+              value={paymentMethod}
             />
           </FormControl>
         </Grid>

@@ -147,7 +147,7 @@ function CustomTableHeader(props) {
       currency,
       amount,
       payment_confirmation_id,
-      payment_system,
+      payment_method,
       paid_at,
     }) => ({
       earnings_id,
@@ -156,7 +156,7 @@ function CustomTableHeader(props) {
       currency,
       amount,
       payment_confirmation_id,
-      payment_system,
+      payment_method,
       paid_at,
     })
   );

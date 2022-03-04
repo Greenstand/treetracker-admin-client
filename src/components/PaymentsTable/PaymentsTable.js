@@ -53,8 +53,8 @@ const paymentTableMetaData = [
     showInfoIcon: true,
   },
   {
-    description: 'Payment System',
-    name: 'payment_system',
+    description: 'Payment Method',
+    name: 'payment_method',
     sortable: true,
     showInfoIcon: false,
   },
