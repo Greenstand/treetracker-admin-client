@@ -1,3 +1,14 @@
+## [1.60.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.2...v1.60.3) (2022-03-04)
+
+
+### Bug Fixes
+
+* don't break if no bulk_recipient info ([0da6d1a](https://github.com/Greenstand/treetracker-admin-client/commit/0da6d1aa3cf232e456009b6a7e02cbc71c9f6fce))
+* explorations and renaming ([94794bc](https://github.com/Greenstand/treetracker-admin-client/commit/94794bcecf90bebc02fc851d5d7f219056a47163))
+* requested revisions, make work with api changes ([2ec1cc0](https://github.com/Greenstand/treetracker-admin-client/commit/2ec1cc06fc61e637bcda8746880afe9be989cfee))
+* update client to display messages from new api ([b12dfd0](https://github.com/Greenstand/treetracker-admin-client/commit/b12dfd0bbdaac7ac6eafa1f5875a888d1c370192))
+* update client to send message, announcement, surveys ([dc945da](https://github.com/Greenstand/treetracker-admin-client/commit/dc945da8ccbe6fa9ab41acb5c96268c8e566a606))
+
 ## [1.60.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.1...v1.60.2) (2022-03-04)
 
 
