@@ -1,3 +1,10 @@
+## [1.60.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.1...v1.60.2) (2022-03-04)
+
+
+### Bug Fixes
+
+* payment method ([3a0a34e](https://github.com/Greenstand/treetracker-admin-client/commit/3a0a34e64f4f13cb76a44f00124b0024c01e5718))
+
 ## [1.60.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.0...v1.60.1) (2022-03-01)
 
 
