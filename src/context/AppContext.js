@@ -174,7 +174,11 @@ function getRoutes(user) {
       icon: MapIcon,
       disabled:
         process.env.REACT_APP_ENABLE_REGIONS !== 'true' ||
-        !hasPermission(user, [POLICIES.SUPER_PERMISSION]),
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.LIST_REGIONS,
+          POLICIES.MANAGE_REGIONS,
+        ]),
     },
     {
       name: 'Account',
