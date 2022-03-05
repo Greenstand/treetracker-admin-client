@@ -30,6 +30,12 @@ import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 
 const styles = (theme) => ({
+  regionsTableContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    width: '100%',
+  },
   box: {
     height: '100%',
   },
@@ -40,6 +46,7 @@ const styles = (theme) => ({
     height: '100%',
     overflow: 'auto',
     padding: theme.spacing(8),
+    flexGrow: 1,
   },
   titleBox: {
     marginBottom: theme.spacing(4),
@@ -209,13 +216,12 @@ const RegionTable = (props) => {
 
   return (
     <>
-      <Grid container className={classes.box}>
-        <Grid item xs={3}>
-          <Paper elevation={3} className={classes.menu}>
-            <Menu variant="plain" />
-          </Paper>
-        </Grid>
-        <Grid item xs={9} container className={classes.rightBox}>
+      <Grid container className={classes.regionsTableContainer}>
+        <Paper elevation={3} className={classes.menu}>
+          <Menu variant="plain" />
+        </Paper>
+
+        <Grid item container className={classes.rightBox}>
           <Grid item xs={12}>
             <Grid
               container

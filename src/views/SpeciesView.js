@@ -16,7 +16,7 @@ const SpeciesView = () => {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%' }}
     >
-      <Grid item container style={{ height: '100%' }}>
+      <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
         <SpeciesProvider>
           <SpeciesTable />
         </SpeciesProvider>

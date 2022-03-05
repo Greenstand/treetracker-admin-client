@@ -168,8 +168,8 @@ function getRoutes(user) {
       ]),
     },
     {
-      name: 'Region Manager',
-      linkTo: '/region-manager',
+      name: 'Regions',
+      linkTo: '/regions',
       component: RegionsView,
       icon: MapIcon,
       disabled:
