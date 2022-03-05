@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/messaging';
 const log = require('loglevel');
 
@@ -32,6 +32,33 @@ export const MessagingProvider = (props) => {
   //   loadRegions();
   //   loadAuthors();
   // }, []);
+
+  useEffect(() => {
+    log.debug('load author avatars');
+    if (authors.length) {
+      Promise.all(
+        authors.map(async (author) => {
+          const { grower_accounts } = await api.getAuthorAvatar(author.handle);
+          return { ...author, avatar: grower_accounts[0]?.image_url || '' };
+        })
+      ).then((data) => {
+        setAuthors(data);
+      });
+    }
+  }, [authors.length]);
+
+  useEffect(() => {
+    console.log('add avatars to threads');
+    const withAvatars = messages.map((message) => {
+      const author = authors.find(
+        (author) => author.handle === message.userName
+      );
+      const avatar = author?.avatar || '';
+
+      return { ...message, avatar };
+    });
+    setMessages(withAvatars);
+  }, [messages.length, authors]);
 
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
@@ -75,7 +102,7 @@ export const MessagingProvider = (props) => {
   const loadAuthors = async () => {
     const res = await api.getAuthors();
 
-    if (res) {
+    if (res.authors) {
       let result = res.authors.filter(
         (author) => author.author_handle !== user.userName
       );
@@ -96,6 +123,7 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
+    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
     } else {

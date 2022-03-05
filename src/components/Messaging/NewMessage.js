@@ -121,7 +121,10 @@ const NewMessage = ({ openModal, handleClose }) => {
               handleHomeEndKeys
               value={recipient}
               onChange={handleChange}
-              options={authors.map((author) => author.handle || '').sort()}
+              options={
+                authors.length &&
+                authors.map((author) => author.handle || '').sort()
+              }
               inputValue={inputValue}
               getOptionSelected={(option, value) => option === value}
               onInputChange={(e, val) => setInputValue(val)}

@@ -62,10 +62,10 @@ const Messaging = () => {
   const {
     user,
     messages,
-    setIsLoading,
     loadMessages,
     loadRegions,
     loadAuthors,
+    setIsLoading,
   } = useContext(MessagingContext);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
@@ -151,6 +151,7 @@ const Messaging = () => {
             <MessageBody
               messages={messages[selectedIndex].messages}
               messageRecipient={messages[selectedIndex].userName}
+              avatar={messages[selectedIndex].avatar}
             />
           ) : (
             <MessageBody />
