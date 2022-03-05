@@ -1,3 +1,15 @@
+# [1.62.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.61.0...v1.62.0) (2022-03-05)
+
+
+### Bug Fixes
+
+* update client to send message, announcement, surveys ([60e0581](https://github.com/Greenstand/treetracker-admin-client/commit/60e05815663c175a7dbbaadabec291ff77fb4181))
+
+
+### Features
+
+* request and display avatars for recipients ([cc578fc](https://github.com/Greenstand/treetracker-admin-client/commit/cc578fc2b46d9eeb0c6ad0334b6f98df7a4e4fa7))
+
 # [1.61.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.3...v1.61.0) (2022-03-05)
 
 
