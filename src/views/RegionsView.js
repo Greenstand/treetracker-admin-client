@@ -16,7 +16,7 @@ const RegionsView = () => {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%' }}
     >
-      <Grid item container style={{ height: '100%', overflow: 'hidden' }}>
+      <Grid item container style={{ height: '100%' }}>
         <RegionProvider>
           <Regions />
         </RegionProvider>
