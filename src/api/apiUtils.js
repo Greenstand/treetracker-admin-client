@@ -13,11 +13,11 @@ export async function handleResponse(response) {
   if (response.status === 400) {
     throw new Error(error);
   }
-  if (response.status === 500 && error.includes('author')) {
+  if (response.status === 500 && error.includes('Author handle not found')) {
     // server-side error occurred. Author account not found.
     return {
       error: true,
-      message: "The author account wasn't found.",
+      message: error,
     };
   }
   throw new Error('Network response was not ok.');
