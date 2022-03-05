@@ -6,19 +6,17 @@ export async function handleResponse(response) {
   if (response.ok) return response.json();
 
   // server-side validation error occurred.
-  // Server side validation returns a string error message, so parse as text instead of json.
-  const error = await response.text();
+  const error = await response.json();
   log.debug('handleResponse error ---', error);
 
-  if (response.status === 400) {
-    throw new Error(error);
-  }
-  if (response.status === 500 && error.includes('Author handle not found')) {
-    // server-side error occurred. Author account not found.
+  if (response.status === 404 && error.message === 'Author handle not found') {
     return {
       error: true,
-      message: error,
+      message: error.message,
     };
+  }
+  if (response.status === 400) {
+    throw new Error(error);
   }
   throw new Error('Network response was not ok.');
 }
@@ -27,9 +25,9 @@ export async function handleResponse(response) {
 export function handleError(error) {
   if (error.name === 'AbortError') {
     // Ignore `AbortError`
-    console.log('Aborted', error);
+    log.debug('Aborted', error);
   } else {
-    console.error('API call failed. ' + error);
+    log.error('API call failed. ' + error);
     throw error;
   }
 }

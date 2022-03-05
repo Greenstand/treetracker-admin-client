@@ -25,6 +25,7 @@ export const MessagingProvider = (props) => {
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
   // useEffect(() => {
@@ -126,6 +127,11 @@ export const MessagingProvider = (props) => {
   const loadMessages = async () => {
     log.debug('loadMessages');
     const res = await api.getMessages(user.userName);
+    if (res.error) {
+      setErrorMessage(res.message);
+      return;
+    }
+
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -147,6 +153,8 @@ export const MessagingProvider = (props) => {
     authors,
     regions,
     isLoading,
+    errorMessage,
+    setErrorMessage,
     setIsLoading,
     sendMessageFromGrower,
     loadMessages,

@@ -168,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
   },
   modalContainer: {
     backgroundColor: 'white',
-    width: '50%',
+    width: '45%',
     outline: 'none',
     borderRadius: '4px',
     padding: '20px',
@@ -401,13 +401,18 @@ const MessageBody = ({ messages, messageRecipient }) => {
     textInput,
     centeredMessage,
   } = useStyles();
-  const { user, authors, isLoading, postMessageSend } = useContext(
-    MessagingContext
-  );
+  const {
+    user,
+    authors,
+    isLoading,
+    errorMessage,
+    setErrorMessage,
+    setIsLoading,
+    postMessageSend,
+  } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
   const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -425,6 +430,13 @@ const MessageBody = ({ messages, messageRecipient }) => {
       setRecipientId(res.id);
     }
   }, [authors, messageRecipient]);
+
+  useEffect(() => {
+    if (errorMessage !== '') {
+      handleOpen();
+      setIsLoading(false);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -445,7 +457,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
         const res = await postMessageSend(messagePayload);
         if (res.error) {
           setErrorMessage(res.message);
-          handleOpen();
         } else {
           history.go(0);
         }
@@ -516,7 +527,12 @@ const MessageBody = ({ messages, messageRecipient }) => {
                 color="primary"
                 style={{ padding: '2px', fontSize: '5rem' }}
               />
-              <Typography variant="h5">You have no messages</Typography>
+
+              {errorMessage !== '' ? (
+                <Typography variant="h5">ERROR: {errorMessage}</Typography>
+              ) : (
+                <Typography variant="h5">You have no messages</Typography>
+              )}
             </Grid>
           )}
         </div>
@@ -541,7 +557,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
             Error: {errorMessage}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`You won't be able to send messages until this is fixed. Please
+            {`You won't be able to send or receive messages until this is fixed. Please
             reach out to the administrator.`}
           </Typography>
         </Box>
