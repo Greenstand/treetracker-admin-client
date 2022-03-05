@@ -59,9 +59,14 @@ const useStyles = makeStyles((theme) => ({
 const Messaging = () => {
   // styles
   const { headerGrid, button, container, inbox, body } = useStyles();
-  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
-    MessagingContext
-  );
+  const {
+    user,
+    messages,
+    setIsLoading,
+    loadMessages,
+    loadRegions,
+    loadAuthors,
+  } = useContext(MessagingContext);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
@@ -79,6 +84,7 @@ const Messaging = () => {
 
   useEffect(() => {
     console.log('Messaging.js: useEffect: loadMessages');
+    setIsLoading(true);
     loadMessages();
     loadRegions();
     loadAuthors();

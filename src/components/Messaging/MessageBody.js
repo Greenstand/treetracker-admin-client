@@ -1,7 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Announcement, Ballot } from '@material-ui/icons';
+import {
+  Announcement,
+  Ballot,
+  QuestionAnswerOutlined,
+} from '@material-ui/icons';
 import {
   Avatar,
   Box,
@@ -13,6 +17,7 @@ import {
 } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 import dateFormat from 'dateformat';
+import { CircularProgress } from '@material-ui/core';
 
 import { MessagingContext } from 'context/MessagingContext.js';
 
@@ -163,13 +168,21 @@ const useStyles = makeStyles((theme) => ({
   },
   modalContainer: {
     backgroundColor: 'white',
-    width: '50%',
+    width: '45%',
     outline: 'none',
     borderRadius: '4px',
     padding: '20px',
     position: 'absolute',
     top: '30%',
     left: '22%',
+  },
+  centeredMessage: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20%',
+    height: '50%',
   },
 }));
 
@@ -381,12 +394,25 @@ const SenderInformation = ({ message, messageRecipient, type, id }) => {
 
 const MessageBody = ({ messages, messageRecipient }) => {
   const history = useHistory();
-  const { paper, messagesBody, modalContainer, textInput } = useStyles();
-  const { user, authors, postMessageSend } = useContext(MessagingContext);
+  const {
+    paper,
+    messagesBody,
+    modalContainer,
+    textInput,
+    centeredMessage,
+  } = useStyles();
+  const {
+    user,
+    authors,
+    isLoading,
+    errorMessage,
+    setErrorMessage,
+    setIsLoading,
+    postMessageSend,
+  } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
   const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -404,6 +430,13 @@ const MessageBody = ({ messages, messageRecipient }) => {
       setRecipientId(res.id);
     }
   }, [authors, messageRecipient]);
+
+  useEffect(() => {
+    if (errorMessage !== '') {
+      handleOpen();
+      setIsLoading(false);
+    }
+  }, [errorMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -424,7 +457,6 @@ const MessageBody = ({ messages, messageRecipient }) => {
         const res = await postMessageSend(messagePayload);
         if (res.error) {
           setErrorMessage(res.message);
-          handleOpen();
         } else {
           history.go(0);
         }
@@ -443,11 +475,20 @@ const MessageBody = ({ messages, messageRecipient }) => {
             type={messages[0].type}
             id={recipientId || ''}
           />
-        ) : (
-          <SenderInformation />
-        )}
+        ) : null}
         <div id="style-1" className={messagesBody}>
-          {messages ? (
+          {isLoading ? (
+            <Grid item xs className={centeredMessage}>
+              <CircularProgress style={{ margin: '30px' }} />
+              <Typography variant="h5">
+                <QuestionAnswerOutlined
+                  color="primary"
+                  style={{ padding: '10px 10px 0 0', fontSize: '1.5rem' }}
+                />
+                Loading...
+              </Typography>
+            </Grid>
+          ) : !isLoading && messages ? (
             messages.map((message, i) => {
               if (message.type === 'message') {
                 return message.from === user.userName ? (
@@ -481,7 +522,18 @@ const MessageBody = ({ messages, messageRecipient }) => {
               }
             })
           ) : (
-            <div>Loading ...</div>
+            <Grid item xs className={centeredMessage}>
+              <QuestionAnswerOutlined
+                color="primary"
+                style={{ padding: '2px', fontSize: '5rem' }}
+              />
+
+              {errorMessage !== '' ? (
+                <Typography variant="h5">ERROR: {errorMessage}</Typography>
+              ) : (
+                <Typography variant="h5">You have no messages</Typography>
+              )}
+            </Grid>
           )}
         </div>
         {subject !== 'Survey' && (
@@ -505,7 +557,7 @@ const MessageBody = ({ messages, messageRecipient }) => {
             Error: {errorMessage}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`You won't be able to send messages until this is fixed. Please
+            {`You won't be able to send or receive messages until this is fixed. Please
             reach out to the administrator.`}
           </Typography>
         </Box>
