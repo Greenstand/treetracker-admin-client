@@ -1,3 +1,16 @@
+# [1.61.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.3...v1.61.0) (2022-03-05)
+
+
+### Bug Fixes
+
+* author error check to be more specific ([f6d6659](https://github.com/Greenstand/treetracker-admin-client/commit/f6d6659b5ac3dfa89613a492303756e61f4851a8))
+* improve handling of author not found error ([904e756](https://github.com/Greenstand/treetracker-admin-client/commit/904e7565aa81736ebf3b9be9909027c61065d910))
+
+
+### Features
+
+* add views for loading and no messages, sort recipients ([63d442f](https://github.com/Greenstand/treetracker-admin-client/commit/63d442fe6c4a9184ca36497e835c87d3791040ea))
+
 ## [1.60.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.2...v1.60.3) (2022-03-04)
 
 
