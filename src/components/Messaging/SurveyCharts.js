@@ -161,14 +161,28 @@ const SurveyCharts = ({ surveyId, setShowCharts }) => {
       classes={{ paper: drawer }}
       PaperProps={{ elevation: 6 }}
     >
-      <Typography color="primary" variant="h4">
-        Survey Response Data
-      </Typography>
-      <Typography variant="h5">{survey.title}</Typography>
-      <Grid item style={{ alignSelf: 'flex-end' }}>
-        <IconButton onClick={() => setShowCharts(false)}>
-          <Close />
-        </IconButton>
+      <Grid
+        container
+        style={{
+          flexDirection: 'column',
+          borderBottom: '1px solid black',
+          marginBottom: '1rem',
+        }}
+      >
+        <Grid item xs={12}>
+          <Typography color="primary" variant="h4">
+            Survey Response Data
+          </Typography>
+          <Typography variant="h5">{survey.title}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <IconButton
+            onClick={() => setShowCharts(false)}
+            style={{ alignSelf: 'flex-end' }}
+          >
+            <Close />
+          </IconButton>
+        </Grid>
       </Grid>
       <Grid container>
         {eachData &&
