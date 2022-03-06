@@ -22,12 +22,15 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
+  MenuItem,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import SortIcon from '@material-ui/icons/Sort';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
+import { AppContext } from '../context/AppContext';
+import { getOrganizationUuid } from '../api/apiUtils';
 
 const styles = (theme) => ({
   regionsTableContainer: {
@@ -66,6 +69,10 @@ const styles = (theme) => ({
   },
   input: {
     margin: theme.spacing(0, 1, 4, 1),
+  },
+  owner: {
+    width: 150,
+    marginRight: theme.spacing(1),
   },
   name: {
     marginRight: theme.spacing(1),
@@ -131,18 +138,18 @@ const RegionTable = (props) => {
 
   useEffect(() => {
     const sortBy = (option) => {
-      let sortedSpecies;
+      let sortedRegion;
       if (option === sortOptions.byId) {
-        sortedSpecies = [...regionContext.regions].sort(
+        sortedRegion = [...regionContext.regions].sort(
           (a, b) => a[option] - b[option]
         );
       }
       if (option === sortOptions.byName) {
-        sortedSpecies = [...regionContext.regions].sort((a, b) =>
+        sortedRegion = [...regionContext.regions].sort((a, b) =>
           a[option].localeCompare(b[option])
         );
       }
-      setSortedRegionList(sortedSpecies);
+      setSortedRegionList(sortedRegion);
     };
     sortBy(option);
   }, [option, sortOptions.byId, sortOptions.byName, regionContext.regions]);
@@ -159,7 +166,7 @@ const RegionTable = (props) => {
     setIsEdit(true);
   };
 
-  const renderSpecies = () => {
+  const renderRegion = () => {
     let rowsPerPage = regionContext.pageSize;
     return (rowsPerPage > 0
       ? sortedRegionList.slice(
@@ -276,7 +283,7 @@ const RegionTable = (props) => {
                       <TableCell>Edit</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>{renderSpecies()}</TableBody>
+                  <TableBody>{renderRegion()}</TableBody>
                   <TableFooter>
                     <TableRow>{tablePagination()}</TableRow>
                   </TableFooter>
@@ -293,10 +300,10 @@ const RegionTable = (props) => {
         regionEdit={regionEdit}
         setRegionEdit={setRegionEdit}
         styles={{ ...classes }}
-        editSpecies={
+        editRegion={
           isAdding ? regionContext.createRegion : regionContext.updateRegion
         }
-        loadSpeciesList={regionContext.load}
+        loadRegionList={regionContext.load}
         data={sortedRegionList}
       />
       <DeleteDialog
@@ -304,8 +311,8 @@ const RegionTable = (props) => {
         setRegionEdit={setRegionEdit}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
-        deleteSpecies={regionContext.deleteSpecies}
-        loadSpeciesList={regionContext.load}
+        deleteRegion={regionContext.deleteRegion}
+        loadRegionList={regionContext.load}
       />
     </>
   );
@@ -317,8 +324,8 @@ const EditModal = ({
   regionEdit,
   setRegionEdit,
   styles,
-  loadSpeciesList,
-  editSpecies,
+  loadRegionList,
+  editRegion,
   isAdding,
 }) => {
   const [error, setError] = useState(undefined);
@@ -327,24 +334,40 @@ const EditModal = ({
     tag: undefined,
   });
   const [id, setId] = useState(undefined);
+  const [ownerId, setOwnerId] = useState(undefined);
   const [name, setName] = useState(undefined);
   const [propTag, setPropTag] = useState(undefined);
   const [show, setShow] = useState(true);
   const [calc, setCalc] = useState(true);
   const [geojson, setGeoJson] = useState(undefined);
   const [shape, setShape] = useState(undefined);
-  // const nameSpecies = data.map((region) => region.name.toLowerCase());
+  // const nameRegion = data.map((region) => region.name.toLowerCase());
+  const { orgList, userHasOrg } = useContext(AppContext);
 
   useEffect(() => {
-    setId(regionEdit?.id);
-    setName(regionEdit?.name);
-    setShow(regionEdit?.showOnOrgMap);
-    setCalc(regionEdit?.calculateStatistics);
+    if (regionEdit) {
+      setId(regionEdit.id);
+      setOwnerId(regionEdit.ownerId);
+      setName(regionEdit.name);
+      setShow(regionEdit.showOnOrgMap);
+      setCalc(regionEdit.calculateStatistics);
+    } else {
+      setId(undefined);
+      setOwnerId(getOrganizationUuid());
+      setName(undefined);
+      setShow(true);
+      setCalc(true);
+    }
   }, [regionEdit]);
   console.log(calc);
   const onNameChange = (e) => {
     setError(undefined);
     setName(e.target.value);
+  };
+
+  const onOwnerChange = (e) => {
+    setError(undefined);
+    setOwnerId(e.target.value);
   };
 
   const onPropChange = (e) => {
@@ -377,6 +400,10 @@ const EditModal = ({
     setRegionEdit(undefined);
   };
 
+  const isEditRegionValid = () => {
+    return ownerId && name && shape;
+  };
+
   const handleSave = async () => {
     if (!name) {
       setErrors((prev) => {
@@ -389,26 +416,27 @@ const EditModal = ({
     } else {
       // console.log('regionEdit -- ', regionEdit);
       // const editName = regionEdit.name.toLowerCase().trim();
-      // const otherSpeciesList = isEdit
+      // const otherRegionList = isEdit
       //   ? data.filter((region) => Number(region.id) !== regionEdit.id)
       //   : data;
-      // const nameSpecies = otherSpeciesList.map((region) =>
+      // const nameRegion = otherRegionList.map((region) =>
       //   region.name.toLowerCase(),
       // );
-      // if (nameSpecies.includes(editName)) {
-      //   setError('Species already exists');
+      // if (nameRegion.includes(editName)) {
+      //   setError('Region already exists');
       // } else {
       setError(undefined);
       setIsEdit(false);
-      await editSpecies({
+      await editRegion({
         id,
+        ownerId,
         name: name || '',
         nameKey: propTag || '',
         shape,
         showOnOrgMap: show,
         calculateStatistics: calc,
       });
-      loadSpeciesList(true);
+      loadRegionList(true);
       setRegionEdit(undefined);
     }
   };
@@ -418,6 +446,30 @@ const EditModal = ({
       <DialogTitle id="form-dialog-title">Region Detail</DialogTitle>
       <DialogContent>
         <Grid container>
+          {!userHasOrg && (
+            <Grid item className={styles.owner}>
+              <TextField
+                select
+                className={styles.input}
+                id="owner"
+                label="Owner"
+                value={ownerId}
+                onChange={onOwnerChange}
+                fullWidth
+              >
+                {orgList.length &&
+                  orgList.map((org) => (
+                    <MenuItem
+                      key={org.stakeholder_uuid}
+                      value={org.stakeholder_uuid}
+                    >
+                      {org.name}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+          )}
+
           <Grid item className={styles.name}>
             <TextField
               error={errors.name ? true : false}
@@ -478,7 +530,12 @@ const EditModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleEditDetailClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          color="primary"
+          disabled={!isEditRegionValid()}
+        >
           Save
         </Button>
       </DialogActions>
@@ -491,12 +548,12 @@ const DeleteDialog = ({
   setRegionEdit,
   openDelete,
   setOpenDelete,
-  deleteSpecies,
-  loadSpeciesList,
+  deleteRegion,
+  loadRegionList,
 }) => {
   const handleDelete = async () => {
-    await deleteSpecies({ id: regionEdit.id });
-    loadSpeciesList(true);
+    await deleteRegion({ id: regionEdit.id });
+    loadRegionList(true);
     setOpenDelete(false);
     setRegionEdit(undefined);
   };

@@ -1,5 +1,22 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
+
+const TEMP_REGIONS_OWNER_ID = '123e4567-e89b-12d3-a456-426614174000';
+
+const convertRegionPayload = (payload) => {
+  return {
+    calculate_statistics: payload.calculateStatistics,
+    collection_id: payload.collectionId,
+    created_at: payload.createdAt,
+    id: payload.id,
+    name: payload.name,
+    properties: payload.properties,
+    shape: payload.shape,
+    show_on_org_map: payload.showOnOrgMap,
+    updated_at: payload.updatedAt,
+    ...payload,
+  };
+};
 
 export default {
   getRegion(id) {
@@ -18,7 +35,7 @@ export default {
 
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     const regionFilter = {
-      filter: { ...filter, owner_id: '123e4567-e89b-12d3-a456-426614174000' },
+      filter: { ...filter, owner_id: TEMP_REGIONS_OWNER_ID },
       order: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
@@ -41,7 +58,7 @@ export default {
   getRegionsCount(filter) {
     const filterObj = {
       ...filter,
-      owner_id: '123e4567-e89b-12d3-a456-426614174000',
+      owner_id: TEMP_REGIONS_OWNER_ID,
     };
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
@@ -56,28 +73,26 @@ export default {
       .catch(handleError);
   },
 
-  createRegion(payload) {
-    // const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?ownerId=${getOrganization()}`;
-    const query = `${
-      process.env.REACT_APP_REGION_API_ROOT
-    }/region?ownerId=${getOrganization()}`;
+  createRegion({ ownerId, ...payload }) {
+    // const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?owner_id=${getOrganization()}`;
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?owner_id=${ownerId}`;
     return fetch(query, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(convertRegionPayload(payload)),
     })
       .then(handleResponse)
       .catch(handleError);
   },
 
-  createCollection(payload) {
+  createCollection({ ownerId, ...payload }) {
     // const query = `${
     //   process.env.REACT_APP_REGION_API_ROOT
-    // }/collection?ownerId=${getOrganization()}`;
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/collection?ownerId=123e4567-e89b-12d3-a456-426614174000`;
+    // }/collection?owner_id=${getOrganization()}`;
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/collection?owner_id=${ownerId}`;
 
     console.log(JSON.stringify(payload));
     return fetch(query, {
@@ -87,7 +102,7 @@ export default {
         'content-type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(convertRegionPayload(payload)),
     })
       .then(handleResponse)
       .catch(handleError);
@@ -101,7 +116,7 @@ export default {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(convertRegionPayload(payload)),
     })
       .then(handleResponse)
       .catch(handleError);
