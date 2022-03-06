@@ -1,3 +1,18 @@
+# [1.63.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.62.0...v1.63.0) (2022-03-06)
+
+
+### Bug Fixes
+
+* run npm install so ci will recognize the lock files ([431d89d](https://github.com/Greenstand/treetracker-admin-client/commit/431d89d7e9b6d2808cd04afff488f80b979d2e6c))
+
+
+### Features
+
+* cleanup survey charts header ([c51ea66](https://github.com/Greenstand/treetracker-admin-client/commit/c51ea663bb5f4f2aab377888f82a916a487989fe))
+* install chart.js ([d826f39](https://github.com/Greenstand/treetracker-admin-client/commit/d826f399b8518c8faafb95cf9e4bd895b0071374))
+* integrate charts with messages & allow open close on button click ([73630b4](https://github.com/Greenstand/treetracker-admin-client/commit/73630b4c543c87006a56978899fa5a1a992bb36c))
+* upgrade cypress ([cfbdeef](https://github.com/Greenstand/treetracker-admin-client/commit/cfbdeef76b2e54789195f023804b26fa04988494))
+
 # [1.62.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.61.0...v1.62.0) (2022-03-05)
 
 
