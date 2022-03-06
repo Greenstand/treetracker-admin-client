@@ -20,6 +20,7 @@ import dateFormat from 'dateformat';
 import { CircularProgress } from '@material-ui/core';
 
 import { MessagingContext } from 'context/MessagingContext.js';
+import SurveyCharts from './SurveyCharts.js';
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {
@@ -250,14 +251,16 @@ export const SurveyResponseMessage = ({ message, user }) => {
 export const SurveyMessage = ({ message }) => {
   const { messageRow, surveyContent } = useStyles();
 
+  const { questions, response } = message.survey;
+
   return (
     <>
-      {message.survey.response ? (
+      {response ? (
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
           <Grid item className={surveyContent}>
-            {message.survey.questions.map((question, i) => {
+            {questions.map((question, i) => {
               return (
                 <div key={question + `:${i + 1}`}>
                   <Typography variant={'h6'}>Question {i + 1}:</Typography>
@@ -341,6 +344,8 @@ const SenderInformation = ({
   type,
   id,
   avatar_url,
+  showCharts,
+  setShowCharts,
 }) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
@@ -391,12 +396,25 @@ const SenderInformation = ({
       </Grid>
       {type === 'survey' && (
         <Grid item className={dataContainer}>
-          <Button className={button}>Survey Data</Button>
+          {showCharts ? (
+            <Button className={button} onClick={() => setShowCharts(false)}>
+              Show Survey
+            </Button>
+          ) : (
+            <Button className={button} onClick={() => setShowCharts(true)}>
+              Show Survey Data
+            </Button>
+          )}
         </Grid>
       )}
     </Grid>
   );
 };
+
+function getSurveyId(messages) {
+  console.log('getSurveyId', messages[0].survey.id);
+  return messages[0].survey.id;
+}
 
 const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const history = useHistory();
@@ -419,9 +437,10 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const [messageContent, setMessageContent] = useState('');
   const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
+  const [showCharts, setShowCharts] = useState(false);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleModalOpen = () => setOpen(true);
+  const handleModalClose = () => setOpen(false);
 
   useEffect(() => {
     if (messages) {
@@ -439,7 +458,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
 
   useEffect(() => {
     if (errorMessage !== '') {
-      handleOpen();
+      handleModalOpen();
       setIsLoading(false);
     }
   }, [errorMessage]);
@@ -463,6 +482,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
         const res = await postMessageSend(messagePayload);
         if (res.error) {
           setErrorMessage(res.message);
+          handleModalOpen();
         } else {
           history.go(0);
         }
@@ -481,6 +501,8 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             type={messages[0].type}
             id={recipientId || ''}
             avatar_url={avatar}
+            showCharts={showCharts}
+            setShowCharts={setShowCharts}
           />
         ) : null}
         <div id="style-1" className={messagesBody}>
@@ -500,12 +522,12 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               if (message.type === 'message') {
                 return message.from === user.userName ? (
                   <SentMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 ) : message.body.length > 1 ? (
                   <RecievedMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : `i`}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 ) : (
@@ -514,7 +536,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               } else if (message.type === 'survey') {
                 return (
                   <SurveyMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    key={message.id ? message.id : i}
                     message={message}
                     user={user}
                   />
@@ -522,7 +544,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               } else if (message.type === 'announce') {
                 return (
                   <AnnounceMessage
-                    key={message.id ? `messageId=${message.id}i=${i}` : i}
+                    key={message.id ? message.id : i}
                     message={message}
                   />
                 );
@@ -553,9 +575,15 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           />
         )}
       </Paper>
+      {showCharts && getSurveyId(messages) && (
+        <SurveyCharts
+          surveyId={getSurveyId(messages)}
+          setShowCharts={setShowCharts}
+        />
+      )}
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
