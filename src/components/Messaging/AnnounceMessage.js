@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const history = useHistory();
   const { orgList } = useContext(AppContext);
-  const { user, regions, postMessageSend } = useContext(MessagingContext);
+  const { user, regions, postBulkMessageSend } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
   const [organization, setOrganization] = useState({});
   const [inputValueOrg, setInputValueOrg] = useState('');
@@ -82,8 +82,8 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     e.preventDefault();
     const payload = {
       author_handle: user.userName,
-      subject: 'Announce Message',
-      title: values.title,
+      subject: values.title,
+      type: 'announce',
       body: values.message,
     };
 
@@ -109,7 +109,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.organization_id) ||
         (payload.body && payload.region_id)
       ) {
-        await postMessageSend(payload);
+        await postBulkMessageSend(payload);
         history.go(0);
       }
     } catch (err) {
@@ -226,8 +226,8 @@ const AnnounceMessage = ({
 
   return (
     <SwipeableDrawer
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
+      disablebackdroptransition={!iOS ? 'true' : 'false'}
+      disablediscovery={iOS ? 'true' : 'false'}
       anchor={'right'}
       open={toggleAnnounceMessage}
       onOpen={() => setToggleAnnounceMessage(true)}

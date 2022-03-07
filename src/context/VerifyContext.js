@@ -136,10 +136,6 @@ export function VerifyProvider(props) {
   const loadCaptureImages = async (abortController) => {
     log.debug('to load images');
 
-    if (isLoading) {
-      log.debug('cancel load - already in progress');
-      return true;
-    }
     //set loading status
     setIsLoading(true);
 
@@ -150,8 +146,7 @@ export function VerifyProvider(props) {
     };
     log.debug('load page with params:', pageParams);
     const result = await api.getCaptureImages(pageParams, abortController);
-    log.debug('loaded captures:', result.length);
-    setCaptureImages(result);
+    setCaptureImages(result || []);
     //restore loading status
     setIsLoading(false);
   };
@@ -297,7 +292,6 @@ export function VerifyProvider(props) {
     setCaptureCount(Number(result.count));
     setInvalidateCaptureCount(false);
   };
-
 
   const value = {
     captureImages,

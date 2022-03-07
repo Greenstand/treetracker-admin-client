@@ -85,6 +85,7 @@ const NewMessage = ({ openModal, handleClose }) => {
       author_handle: user.userName,
       recipient_handle: recipient,
       subject: 'Message',
+      type: 'message',
       body: messageContent,
     };
 
@@ -120,7 +121,10 @@ const NewMessage = ({ openModal, handleClose }) => {
               handleHomeEndKeys
               value={recipient}
               onChange={handleChange}
-              options={authors.map((author) => author.handle || '')}
+              options={
+                authors.length &&
+                authors.map((author) => author.handle || '').sort()
+              }
               inputValue={inputValue}
               getOptionSelected={(option, value) => option === value}
               onInputChange={(e, val) => setInputValue(val)}
@@ -136,7 +140,7 @@ const NewMessage = ({ openModal, handleClose }) => {
             <GSInputLabel text="Message" />
             <TextField
               multiline
-              placeholder="Write you message here ..."
+              placeholder="Write your message here ..."
               name="body"
               value={messageContent}
               onChange={handleChange}

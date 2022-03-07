@@ -1,24 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Drawer from '@material-ui/core/Drawer';
+import {
+  Typography,
+  CardMedia,
+  Grid,
+  IconButton,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Drawer,
+  Divider,
+  LinearProgress,
+} from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
-import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
-import { LinearProgress } from '@material-ui/core';
 import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';

@@ -148,6 +148,7 @@ describe('Captures', () => {
 
   describe.skip('makes api requests correctly', () => {
     const context = {
+      isLoading: true,
       captures: [],
       captureCount: 4,
       selected: [],

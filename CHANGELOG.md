@@ -1,3 +1,103 @@
+# [1.63.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.62.0...v1.63.0) (2022-03-06)
+
+
+### Bug Fixes
+
+* run npm install so ci will recognize the lock files ([431d89d](https://github.com/Greenstand/treetracker-admin-client/commit/431d89d7e9b6d2808cd04afff488f80b979d2e6c))
+
+
+### Features
+
+* cleanup survey charts header ([c51ea66](https://github.com/Greenstand/treetracker-admin-client/commit/c51ea663bb5f4f2aab377888f82a916a487989fe))
+* install chart.js ([d826f39](https://github.com/Greenstand/treetracker-admin-client/commit/d826f399b8518c8faafb95cf9e4bd895b0071374))
+* integrate charts with messages & allow open close on button click ([73630b4](https://github.com/Greenstand/treetracker-admin-client/commit/73630b4c543c87006a56978899fa5a1a992bb36c))
+* upgrade cypress ([cfbdeef](https://github.com/Greenstand/treetracker-admin-client/commit/cfbdeef76b2e54789195f023804b26fa04988494))
+
+# [1.62.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.61.0...v1.62.0) (2022-03-05)
+
+
+### Bug Fixes
+
+* update client to send message, announcement, surveys ([60e0581](https://github.com/Greenstand/treetracker-admin-client/commit/60e05815663c175a7dbbaadabec291ff77fb4181))
+
+
+### Features
+
+* request and display avatars for recipients ([cc578fc](https://github.com/Greenstand/treetracker-admin-client/commit/cc578fc2b46d9eeb0c6ad0334b6f98df7a4e4fa7))
+
+# [1.61.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.3...v1.61.0) (2022-03-05)
+
+
+### Bug Fixes
+
+* author error check to be more specific ([f6d6659](https://github.com/Greenstand/treetracker-admin-client/commit/f6d6659b5ac3dfa89613a492303756e61f4851a8))
+* improve handling of author not found error ([904e756](https://github.com/Greenstand/treetracker-admin-client/commit/904e7565aa81736ebf3b9be9909027c61065d910))
+
+
+### Features
+
+* add views for loading and no messages, sort recipients ([63d442f](https://github.com/Greenstand/treetracker-admin-client/commit/63d442fe6c4a9184ca36497e835c87d3791040ea))
+
+## [1.60.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.2...v1.60.3) (2022-03-04)
+
+
+### Bug Fixes
+
+* don't break if no bulk_recipient info ([0da6d1a](https://github.com/Greenstand/treetracker-admin-client/commit/0da6d1aa3cf232e456009b6a7e02cbc71c9f6fce))
+* explorations and renaming ([94794bc](https://github.com/Greenstand/treetracker-admin-client/commit/94794bcecf90bebc02fc851d5d7f219056a47163))
+* requested revisions, make work with api changes ([2ec1cc0](https://github.com/Greenstand/treetracker-admin-client/commit/2ec1cc06fc61e637bcda8746880afe9be989cfee))
+* update client to display messages from new api ([b12dfd0](https://github.com/Greenstand/treetracker-admin-client/commit/b12dfd0bbdaac7ac6eafa1f5875a888d1c370192))
+* update client to send message, announcement, surveys ([dc945da](https://github.com/Greenstand/treetracker-admin-client/commit/dc945da8ccbe6fa9ab41acb5c96268c8e566a606))
+
+## [1.60.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.1...v1.60.2) (2022-03-04)
+
+
+### Bug Fixes
+
+* payment method ([3a0a34e](https://github.com/Greenstand/treetracker-admin-client/commit/3a0a34e64f4f13cb76a44f00124b0024c01e5718))
+
+## [1.60.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.60.0...v1.60.1) (2022-03-01)
+
+
+### Bug Fixes
+
+* enable new features in test environment ([12dfbf1](https://github.com/Greenstand/treetracker-admin-client/commit/12dfbf1f3e2bad744643b2a752128ba523efae86))
+
+# [1.60.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.59.0...v1.60.0) (2022-03-01)
+
+
+### Features
+
+* Loading Indicator On Captures Page ([#305](https://github.com/Greenstand/treetracker-admin-client/issues/305)) ([a936045](https://github.com/Greenstand/treetracker-admin-client/commit/a9360456519601b2eb07ed7d504eeebdd2125c74))
+
+# [1.59.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.58.0...v1.59.0) (2022-02-28)
+
+
+### Features
+
+* make Earnings tool ready for production deployment ([#412](https://github.com/Greenstand/treetracker-admin-client/issues/412)) ([dff89e8](https://github.com/Greenstand/treetracker-admin-client/commit/dff89e81660ff587fa14f99d67639d4d1de632b1)), closes [#354](https://github.com/Greenstand/treetracker-admin-client/issues/354) [#347](https://github.com/Greenstand/treetracker-admin-client/issues/347) [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355) [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355)
+
+# [1.58.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.57.0...v1.58.0) (2022-02-26)
+
+
+### Features
+
+* hide candidate images when changing captureImage ([#441](https://github.com/Greenstand/treetracker-admin-client/issues/441)) ([8138ea8](https://github.com/Greenstand/treetracker-admin-client/commit/8138ea8844c90c0be3e7e950c38f9df3d1e360a9))
+
+# [1.57.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.3...v1.57.0) (2022-02-24)
+
+
+### Features
+
+* Added tooltip in candidateMatches card ([#444](https://github.com/Greenstand/treetracker-admin-client/issues/444)) ([aac47f9](https://github.com/Greenstand/treetracker-admin-client/commit/aac47f984acddd7579d4aa67577862ee211c7e30))
+
+## [1.56.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.2...v1.56.3) (2022-02-24)
+
+
+### Bug Fixes
+
+* **payments table:** remove errors that hinder rendering payments table ([#442](https://github.com/Greenstand/treetracker-admin-client/issues/442)) ([484ee58](https://github.com/Greenstand/treetracker-admin-client/commit/484ee5839e1e2fcbedbd8da2530680c8933ed6f3))
+
 ## [1.56.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.56.1...v1.56.2) (2022-02-22)
 
 

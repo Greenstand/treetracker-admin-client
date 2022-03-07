@@ -1,10 +1,12 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/messaging';
+const log = require('loglevel');
 
 export const MessagingContext = createContext({
   user: {},
   messages: [],
   authors: [],
+  isLoading: false,
   resMessages: [],
   growerMessage: {},
   regions: [],
@@ -22,6 +24,8 @@ export const MessagingProvider = (props) => {
   const [messages, setMessages] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
   // useEffect(() => {
@@ -29,31 +33,55 @@ export const MessagingProvider = (props) => {
   //   loadAuthors();
   // }, []);
 
+  useEffect(() => {
+    log.debug('load author avatars');
+    if (authors.length) {
+      Promise.all(
+        authors.map(async (author) => {
+          const { grower_accounts } = await api.getAuthorAvatar(author.handle);
+          return { ...author, avatar: grower_accounts[0]?.image_url || '' };
+        })
+      ).then((data) => {
+        setAuthors(data);
+      });
+    }
+  }, [authors.length]);
+
+  useEffect(() => {
+    console.log('add avatars to threads');
+    const withAvatars = messages.map((message) => {
+      const author = authors.find(
+        (author) => author.handle === message.userName
+      );
+      const avatar = author?.avatar || '';
+
+      return { ...message, avatar };
+    });
+    setMessages(withAvatars);
+  }, [messages.length, authors]);
+
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (
-          message.subject === 'Message' ||
-          message.subject === 'Announce Message'
-        ) {
-          let key =
-            message.to[0].recipient !== user.userName
-              ? message[`to`][0].recipient
-              : message['from'].author;
+        if (message.type === 'message') {
+          let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
             if (!grouped[key] && !messages[key]) {
               grouped[key] = [];
             }
             grouped[key].push(message);
           }
-        } else if (message.subject === 'Survey') {
+        } else if (message.type === 'survey') {
           let key = message.survey.id;
           if (!grouped[key]) {
-            grouped[key] = [];
+            grouped[key] = [message];
           }
-          grouped[key].push(message);
+        } else if (message.type === 'announce') {
+          // add date to create unique key for similar announements
+          let key = `${message.subject}-${Date.now()}`;
+          grouped[key] = [message];
         }
         return grouped;
       }, {});
@@ -68,14 +96,15 @@ export const MessagingProvider = (props) => {
       }),
     ];
     setMessages(filteredMessages);
+    setIsLoading(false);
   };
 
   const loadAuthors = async () => {
     const res = await api.getAuthors();
 
-    if (res) {
+    if (res.authors) {
       let result = res.authors.filter(
-        (author) => author.handle !== user.userName
+        (author) => author.author_handle !== user.userName
       );
       setAuthors(result);
     }
@@ -94,8 +123,17 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
+    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
+    } else {
+      return 'Were sorry something went wrong. Please try again.';
+    }
+  };
+
+  const postBulkMessageSend = (payload) => {
+    if (payload) {
+      return api.postBulkMessageSend(payload);
     } else {
       return 'Were sorry something went wrong. Please try again.';
     }
@@ -115,9 +153,13 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    console.log('loadMessages');
-    const res = await api.getMessage(user.userName);
-    console.log(res.messages);
+    log.debug('loadMessages');
+    const res = await api.getMessages(user.userName);
+    if (res.error) {
+      setErrorMessage(res.message);
+      return;
+    }
+
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -138,6 +180,10 @@ export const MessagingProvider = (props) => {
     messages,
     authors,
     regions,
+    isLoading,
+    errorMessage,
+    setErrorMessage,
+    setIsLoading,
     sendMessageFromGrower,
     loadMessages,
     loadRegions,
@@ -146,6 +192,7 @@ export const MessagingProvider = (props) => {
     getRegionById,
     postMessage,
     postMessageSend,
+    postBulkMessageSend,
   };
 
   return (

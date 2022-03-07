@@ -13,17 +13,17 @@ import {
 import { withStyles } from '@material-ui/styles';
 import React from 'react';
 import ArrayIcon from '@material-ui/icons/ArrowForward';
-import theme from '../common/theme';
+// import theme from '../common/theme';
 import log from 'loglevel';
 import * as d3 from 'd3';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { countToLocaleString } from '../../common/numbers';
 
-console.error('color:', theme.palette.stats.green);
-console.error(
-  'color2:',
-  d3.color(theme.palette.stats.green).brighter().toString()
-);
+// console.error('color:', theme.palette.stats.green);
+// console.error(
+//   'color2:',
+//   d3.color(theme.palette.stats.green).brighter().toString()
+// );
 //use material ui withStyles to style the component
 const style = (theme) => ({
   root: {

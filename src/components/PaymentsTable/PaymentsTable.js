@@ -53,8 +53,8 @@ const paymentTableMetaData = [
     showInfoIcon: true,
   },
   {
-    description: 'Payment System',
-    name: 'payment_system',
+    description: 'Payment Method',
+    name: 'payment_method',
     sortable: true,
     showInfoIcon: false,
   },
@@ -83,6 +83,8 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      csv_start_date: row.consolidation_period_start,
+      csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
         'mmm d, yyyy'
@@ -108,7 +110,7 @@ function PaymentsTable() {
   const [payments, setPayments] = useState([]);
   const [paymentsUploadError, setPaymentsUploadError] = useState(null);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
-  const [activeDateRageString, setActiveDateRageString] = useState('');
+  const [activeDateRangeString, setActiveDateRangeString] = useState('');
   const [filter, setFilter] = useState({});
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -174,9 +176,9 @@ function PaymentsTable() {
         filter?.start_date,
         filter?.end_date
       );
-      setActiveDateRageString(dateRangeString);
+      setActiveDateRangeString(dateRangeString);
     } else {
-      setActiveDateRageString('');
+      setActiveDateRangeString('');
     }
 
     getPayments();
@@ -191,7 +193,7 @@ function PaymentsTable() {
         rows={payments}
         isLoading={isLoading}
         onSelectFile={uploadCsvFile}
-        activeDateRage={activeDateRageString}
+        activeDateRange={activeDateRangeString}
         setRowsPerPage={setPaymentsPerPage}
         rowsPerPage={paymentsPerPage}
         setSortBy={setSortBy}
