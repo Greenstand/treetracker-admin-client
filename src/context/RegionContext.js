@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/regions';
 import * as loglevel from 'loglevel';
 import FilterRegion from 'models/FilterRegion';
+import { getOrganizationUuid } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/RegionContext');
 
@@ -57,14 +58,20 @@ export function RegionProvider(props) {
     const regions = await api.getRegions({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
-      filter,
+      filter: {
+        owner_id: getOrganizationUuid() || undefined,
+        ...filter,
+      },
     });
     setRegions(regions);
     setIsLoading(false);
   };
 
   const getCount = async () => {
-    const { count } = await api.getRegionsCount(filter);
+    const { count } = await api.getRegionsCount({
+      owner_id: getOrganizationUuid() || undefined,
+      ...filter,
+    });
     setCount(count);
   };
 
@@ -93,7 +100,6 @@ export function RegionProvider(props) {
     delete payload.shape;
     delete payload.nameKey;
     const updatedRegion = await api.updateRegion(payload, payload.id);
-    // await api.getRegion(payload.id);
     const index = regions.findIndex((p) => p.id === updatedRegion.id);
     if (index >= 0) {
       const regions = Object.assign([], regions, {
@@ -103,9 +109,9 @@ export function RegionProvider(props) {
     }
   };
 
-  const updateFilter = async (filter) => {
+  const updateFilter = async (newFilter) => {
     setCurrentPage(0);
-    setFilter(filter);
+    setFilter(newFilter);
   };
 
   const value = {
@@ -132,13 +138,3 @@ export function RegionProvider(props) {
     </RegionContext.Provider>
   );
 }
-
-// const fileread = new FileReader();
-// fileread.onload = function (e) {
-//   const content = e.target.result;
-//   const json = JSON.parse(content);
-//   setShape(json);
-//   console.log(shape);
-// };
-// fileread.readAsText(event.target.files[0]);
-// setGeoJson(event.target.files[0]);

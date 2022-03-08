@@ -1,8 +1,6 @@
 import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
-const TEMP_REGIONS_OWNER_ID = '123e4567-e89b-12d3-a456-426614174000';
-
 const convertRegionPayload = (payload) => {
   return {
     calculate_statistics: payload.calculateStatistics,
@@ -35,7 +33,7 @@ export default {
 
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     const regionFilter = {
-      filter: { ...filter, owner_id: TEMP_REGIONS_OWNER_ID },
+      filter,
       order: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
@@ -56,13 +54,9 @@ export default {
   },
 
   getRegionsCount(filter) {
-    const filterObj = {
-      ...filter,
-      owner_id: TEMP_REGIONS_OWNER_ID,
-    };
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
-    }/region/count?filter=${JSON.stringify(filterObj)}`;
+    }/region/count?filter=${JSON.stringify(filter)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
