@@ -230,7 +230,9 @@ function GrowerReportingCard(props) {
                   <Icon className={classes.iconTotal} style={{ color }} />
                 </Box>
                 <Box className={classes.box3}>
-                  <Typography className={classes.total}>{data.num1}</Typography>
+                  <Typography className={classes.total}>
+                    {new Intl.NumberFormat().format(data.num1)}
+                  </Typography>
                   <Typography className={classes.totalText}>
                     {text.text1}
                   </Typography>
