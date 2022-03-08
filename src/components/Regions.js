@@ -18,7 +18,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  DialogContentText,
   FormGroup,
   FormControlLabel,
   Switch,
@@ -205,7 +204,7 @@ const RegionTable = (props) => {
 
   const tablePagination = () => (
     <TablePagination
-      count={regionContext.count}
+      count={Number(regionContext.count)}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
       colSpan={3}
       page={regionContext.currentPage}
@@ -218,8 +217,6 @@ const RegionTable = (props) => {
       }}
     />
   );
-
-  // console.log('context', context);
 
   return (
     <>
@@ -328,7 +325,6 @@ const EditModal = ({
   editRegion,
   isAdding,
 }) => {
-  const [error, setError] = useState(undefined);
   const [errors, setErrors] = useState({
     name: undefined,
     tag: undefined,
@@ -345,37 +341,49 @@ const EditModal = ({
   const { orgList, userHasOrg } = useContext(AppContext);
 
   useEffect(() => {
+    setShape(undefined);
+    setGeoJson(undefined);
     if (regionEdit) {
       setId(regionEdit.id);
       setOwnerId(regionEdit.ownerId);
       setName(regionEdit.name);
+      setPropTag(regionEdit.propTag);
       setShow(regionEdit.showOnOrgMap);
       setCalc(regionEdit.calculateStatistics);
     } else {
       setId(undefined);
       setOwnerId(getOrganizationUuid());
       setName(undefined);
+      setPropTag(undefined);
       setShow(true);
       setCalc(true);
     }
   }, [regionEdit]);
-  console.log(calc);
-  const onNameChange = (e) => {
-    setError(undefined);
-    setName(e.target.value);
+  const onOwnerChange = (e) => {
+    setOwnerId(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      owner: undefined,
+    }));
   };
 
-  const onOwnerChange = (e) => {
-    setError(undefined);
-    setOwnerId(e.target.value);
+  const onNameChange = (e) => {
+    setName(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      name: undefined,
+    }));
   };
 
   const onPropChange = (e) => {
     setPropTag(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      propTag: undefined,
+    }));
   };
 
   const onShowChange = (e) => {
-    console.log(e.target.checked);
     setShow(e.target.checked);
   };
 
@@ -383,6 +391,7 @@ const EditModal = ({
     setCalc(e.target.checked);
   };
 
+  // TO DO:
   const onFileChange = (e) => {
     const fileread = new FileReader();
     fileread.onload = function (e) {
@@ -395,26 +404,17 @@ const EditModal = ({
   };
 
   const handleEditDetailClose = () => {
-    setError(undefined);
     setIsEdit(false);
     setRegionEdit(undefined);
   };
 
-  const isEditRegionValid = () => {
-    return ownerId && name && shape;
-  };
-
   const handleSave = async () => {
-    if (!name) {
+    if (!ownerId) {
       setErrors((prev) => {
-        return { ...prev, name: 'Please designate a name for your region.' };
+        return { ...prev, owner: 'Please select an owner for your region.' };
       });
-    } else if (!propTag && shape?.type === 'FeatureCollection') {
-      setErrors((prev) => {
-        return { ...prev, tag: 'Please designate a tag for your subregions.' };
-      });
-    } else {
-      // console.log('regionEdit -- ', regionEdit);
+    }
+    if (name) {
       // const editName = regionEdit.name.toLowerCase().trim();
       // const otherRegionList = isEdit
       //   ? data.filter((region) => Number(region.id) !== regionEdit.id)
@@ -423,9 +423,21 @@ const EditModal = ({
       //   region.name.toLowerCase(),
       // );
       // if (nameRegion.includes(editName)) {
-      //   setError('Region already exists');
-      // } else {
-      setError(undefined);
+      //   setErrors((prev) => {
+      //  return { ...prev, name: 'Name already exists'};
+      ///});
+    } else {
+      setErrors((prev) => {
+        return { ...prev, name: 'Please designate a name for your region.' };
+      });
+    }
+    if (!propTag && shape?.type === 'FeatureCollection') {
+      setErrors((prev) => {
+        return { ...prev, tag: 'Please designate a tag for your subregions.' };
+      });
+    }
+
+    if (errors.name || errors.tag || errors.owner) {
       setIsEdit(false);
       await editRegion({
         id,
@@ -449,11 +461,13 @@ const EditModal = ({
           {!userHasOrg && (
             <Grid item className={styles.owner}>
               <TextField
+                error={errors.owner ? true : false}
+                helperText={errors.owner}
                 select
                 className={styles.input}
                 id="owner"
                 label="Owner"
-                value={ownerId}
+                value={ownerId || ''}
                 onChange={onOwnerChange}
                 fullWidth
               >
@@ -483,7 +497,7 @@ const EditModal = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              value={name}
+              value={name || ''}
               className={styles.input}
               onChange={onNameChange}
             />
@@ -500,22 +514,18 @@ const EditModal = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              value={propTag}
+              value={propTag || ''}
               className={styles.input}
               onChange={onPropChange}
             />
           </Grid>
           <FormGroup row={true}>
             <FormControlLabel
-              control={
-                <Switch defaultChecked checked={show} onChange={onShowChange} />
-              }
+              control={<Switch checked={show} onChange={onShowChange} />}
               label="Show on Organization Map"
             />
             <FormControlLabel
-              control={
-                <Switch defaultChecked checked={calc} onChange={onCalcChange} />
-              }
+              control={<Switch checked={calc} onChange={onCalcChange} />}
               label="Calculate Statistics"
             />
           </FormGroup>
@@ -526,16 +536,10 @@ const EditModal = ({
             onChange={onFileChange}
           ></input>
         </Grid>
-        <DialogContentText>{error}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleEditDetailClose}>Cancel</Button>
-        <Button
-          onClick={handleSave}
-          variant="contained"
-          color="primary"
-          disabled={!isEditRegionValid()}
-        >
+        <Button onClick={handleSave} variant="contained" color="primary">
           Save
         </Button>
       </DialogActions>
