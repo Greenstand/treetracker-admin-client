@@ -1,3 +1,10 @@
+## [1.63.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.63.0...v1.63.1) (2022-03-08)
+
+
+### Bug Fixes
+
+* add a separator between total number in the dialog ([#475](https://github.com/Greenstand/treetracker-admin-client/issues/475)) ([5d23624](https://github.com/Greenstand/treetracker-admin-client/commit/5d23624fb1e6c43d277fff00bced0d61b4cf6696))
+
 # [1.63.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.62.0...v1.63.0) (2022-03-06)
 
 
