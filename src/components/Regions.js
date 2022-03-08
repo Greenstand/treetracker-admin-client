@@ -391,7 +391,7 @@ const EditModal = ({
     setCalc(e.target.checked);
   };
 
-  // TO DO:
+  // TO DO: add try-catch for validation
   const onFileChange = (e) => {
     const fileread = new FileReader();
     fileread.onload = function (e) {
@@ -409,7 +409,9 @@ const EditModal = ({
   };
 
   const handleSave = async () => {
+    let hasError = false;
     if (!ownerId) {
+      hasError = true;
       setErrors((prev) => {
         return { ...prev, owner: 'Please select an owner for your region.' };
       });
@@ -427,17 +429,19 @@ const EditModal = ({
       //  return { ...prev, name: 'Name already exists'};
       ///});
     } else {
+      hasError = true;
       setErrors((prev) => {
         return { ...prev, name: 'Please designate a name for your region.' };
       });
     }
     if (!propTag && shape?.type === 'FeatureCollection') {
+      hasError = true;
       setErrors((prev) => {
         return { ...prev, tag: 'Please designate a tag for your subregions.' };
       });
     }
 
-    if (errors.name || errors.tag || errors.owner) {
+    if (!hasError) {
       setIsEdit(false);
       await editRegion({
         id,
@@ -532,8 +536,9 @@ const EditModal = ({
           <input
             hidden={isEdit}
             type="file"
-            value={geojson}
+            value={geojson || ''}
             onChange={onFileChange}
+            accept=".json,.geojson"
           ></input>
         </Grid>
       </DialogContent>

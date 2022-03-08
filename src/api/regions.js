@@ -74,7 +74,6 @@ export default {
   },
 
   createRegion({ ownerId, ...payload }) {
-    // const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?owner_id=${getOrganization()}`;
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?owner_id=${ownerId}`;
     return fetch(query, {
       method: 'POST',
@@ -89,15 +88,11 @@ export default {
   },
 
   createCollection({ ownerId, ...payload }) {
-    // const query = `${
-    //   process.env.REACT_APP_REGION_API_ROOT
-    // }/collection?owner_id=${getOrganization()}`;
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/collection?owner_id=${ownerId}`;
 
     console.log(JSON.stringify(payload));
     return fetch(query, {
       method: 'POST',
-      //   mode: 'no-cors',
       headers: {
         'content-type': 'application/json',
         Authorization: session.token,
