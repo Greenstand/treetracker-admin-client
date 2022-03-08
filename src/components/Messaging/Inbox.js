@@ -13,6 +13,7 @@ import { Announcement, Ballot } from '@material-ui/icons';
 import SearchInbox from './SearchInbox';
 import { MessagingContext } from 'context/MessagingContext';
 import { timeAgoFormatDate } from 'common/locale';
+import log from 'loglevel';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -61,12 +62,10 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
   const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
 
-  const onClickHelper = (e, i, thread) => {
-    let recipient =
-      thread.messages[0].type !== 'survey' &&
-      thread.messages[0].to !== user.userName
-        ? thread.messages[0].to
-        : thread.messages[0].type;
+  const onClickHelper = (e, i, handle, type) => {
+    // let recipient = type !== 'survey' && handle !== user.userName ? handle : type;
+    let recipient = handle !== user.userName ? handle : type;
+    log.debug('onClickHelper:', i, type, handle, recipient);
     handleListItemClick(e, i, recipient);
   };
 
@@ -90,11 +89,13 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
           )
           .map((thread, i) => (
             <ListItem
-              key={i}
+              key={thread.userName}
               alignItems="flex-start"
               className={listItem}
               selected={selectedIndex === i}
-              onClick={(e) => onClickHelper(e, i, thread)}
+              onClick={(e) =>
+                onClickHelper(e, i, thread.userName, thread.messages[0].type)
+              }
             >
               <ListItemAvatar>
                 {thread.messages[0].type === 'message' ? (

@@ -97,7 +97,7 @@ const Messaging = () => {
 
   const handleListItemClick = (e, i, userName) => {
     setMessageRecipient(userName);
-    setSelectedIndex(i);
+    setSelectedIndex(userName);
   };
 
   return (
@@ -146,6 +146,12 @@ const Messaging = () => {
           />
         </Grid>
         <Grid item className={body} xs={7} md={8}>
+          {console.log(
+            'Messaging.js: selectedIndex messages messageRecipient',
+            selectedIndex,
+            messages,
+            messageRecipient
+          )}
           {messages.length ? (
             <MessageBody
               messages={messages[selectedIndex].messages}
