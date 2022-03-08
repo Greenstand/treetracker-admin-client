@@ -1,4 +1,4 @@
-name: Frontend Staging CI/CD Pipeline
+name: Deploy to Staging Environment
 
 on:
   workflow_dispatch:
