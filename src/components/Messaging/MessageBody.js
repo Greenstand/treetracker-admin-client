@@ -342,6 +342,7 @@ export const SentMessage = ({ message }) => {
 const SenderInformation = ({
   message,
   messageRecipient,
+  responseCount,
   type,
   id,
   avatar_url,
@@ -384,6 +385,11 @@ const SenderInformation = ({
             {message?.bulk_message_recipients && (
               <Typography>
                 <b>TO:</b> {message?.bulk_message_recipients[0]?.recipient}
+              </Typography>
+            )}
+            {type === 'survey' && (
+              <Typography>
+                <b>RESPONSES:</b> {responseCount}
               </Typography>
             )}
           </>
@@ -499,6 +505,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           <SenderInformation
             message={messages[0]}
             messageRecipient={messageRecipient}
+            responseCount={messages.length - 1}
             type={messages[0].type}
             id={recipientId || ''}
             avatar_url={avatar}

@@ -84,7 +84,6 @@ export const MessagingProvider = (props) => {
           }
           if (message.type === 'survey_response') {
             grouped[key].push(message);
-            log.debug('push response', grouped[key]);
           }
         } else if (message.type === 'announce') {
           // add date to create unique key for similar announements
