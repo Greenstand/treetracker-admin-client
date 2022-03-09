@@ -219,25 +219,30 @@ export const AnnounceMessage = ({ message }) => {
   );
 };
 
-export const SurveyResponseMessage = ({ message, user }) => {
+export const SurveyResponseMessage = ({ message }) => {
   const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
+  const {
+    from,
+    survey: { questions },
+    survey_response,
+  } = message;
+
+  console.log('Survey Response Message ---', survey_response, from, questions);
 
   return (
     <div className={messageRow}>
       <Grid className={surveyResponse}>
-        <Typography variant={'h5'}>
-          {message.from.author === user.userName
-            ? message.to[0].recipient
-              ? `${message.body}: ${message.to[0].recipient}`
-              : `${message.body}`
-            : message.body}
-        </Typography>
+        <Typography variant={'h6'}>{message.from}</Typography>
         <hr style={{ border: '0.1px solid black', width: '100%' }} />
-        {message.survey?.answers &&
-          message.survey.answers.map((answer, i) => (
+        {survey_response &&
+          message.survey.questions.map((question, i) => (
             <div key={`answer - ${i}`}>
-              <Typography variant={'h6'}>Question {i + 1}:</Typography>
-              <Typography variant={'body1'}>{answer}</Typography>
+              <Typography variant={'body1'}>
+                <b>Q{i + 1}:</b> {question.prompt}
+              </Typography>
+              <Typography variant={'body1'}>
+                <b>A:</b> {survey_response[i]}
+              </Typography>
             </div>
           ))}
       </Grid>
@@ -248,14 +253,16 @@ export const SurveyResponseMessage = ({ message, user }) => {
   );
 };
 
-export const SurveyMessage = ({ message }) => {
+export const SurveyMessage = ({ message, type, user }) => {
   const { messageRow, surveyContent } = useStyles();
 
-  const { questions, response } = message.survey;
+  const { questions } = message.survey;
+
+  console.log('Survey Message -- ', message, type, user.userName);
 
   return (
     <>
-      {response ? (
+      {type === 'survey_response' ? (
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
@@ -533,12 +540,16 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
                 ) : (
                   <div key={i}></div>
                 );
-              } else if (message.type === 'survey') {
+              } else if (
+                message.type === 'survey' ||
+                message.type === 'survey_response'
+              ) {
                 return (
                   <SurveyMessage
                     key={message.id ? message.id : i}
                     message={message}
                     user={user}
+                    type={message.type}
                   />
                 );
               } else if (message.type === 'announce') {

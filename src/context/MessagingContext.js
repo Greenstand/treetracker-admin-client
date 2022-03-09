@@ -62,6 +62,7 @@ export const MessagingProvider = (props) => {
 
   const groupMessageByHandle = (rawMessages) => {
     // make key of recipients name and group messages together
+    // log.debug('rawMessages', rawMessages);
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
@@ -73,10 +74,17 @@ export const MessagingProvider = (props) => {
             }
             grouped[key].push(message);
           }
-        } else if (message.type === 'survey') {
+        } else if (
+          message.type === 'survey' ||
+          message.type === 'survey_response'
+        ) {
           let key = message.survey.id;
           if (!grouped[key]) {
             grouped[key] = [message];
+          }
+          if (message.type === 'survey_response') {
+            grouped[key].push(message);
+            log.debug('push response', grouped[key]);
           }
         } else if (message.type === 'announce') {
           // add date to create unique key for similar announements
