@@ -83,6 +83,11 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
               return thread;
             }
           })
+          .sort(
+            (a, b) =>
+              new Date(b.messages.at(-1).composed_at) -
+              new Date(a.messages.at(-1).composed_at)
+          )
           .map((thread, i) => (
             <ListItem
               key={i}

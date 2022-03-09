@@ -86,14 +86,20 @@ export const MessagingProvider = (props) => {
         return grouped;
       }, {});
     const filteredMessages = [
-      ...Object.entries(newMessages).map(([key, val]) => {
-        if (key && val) {
-          return {
-            userName: key,
-            messages: val,
-          };
-        }
-      }),
+      ...Object.entries(newMessages)
+        .map(([key, val]) => {
+          if (key && val) {
+            return {
+              userName: key,
+              messages: val,
+            };
+          }
+        })
+        .sort(
+          (a, b) =>
+            new Date(b.messages.at(-1).composed_at) -
+            new Date(a.messages.at(-1).composed_at)
+        ),
     ];
     setMessages(filteredMessages);
     setIsLoading(false);
