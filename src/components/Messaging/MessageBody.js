@@ -219,7 +219,7 @@ export const AnnounceMessage = ({ message }) => {
 };
 
 export const SurveyResponseMessage = ({ message }) => {
-  const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
+  const { messageRow, surveyResponse } = useStyles();
   const {
     survey: { questions },
     survey_response,
