@@ -1,3 +1,19 @@
+# [1.64.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.63.1...v1.64.0) (2022-03-10)
+
+
+### Bug Fixes
+
+* link errors ([87117ec](https://github.com/Greenstand/treetracker-admin-client/commit/87117ec24ecbe380f0a42cd54a675aa9ab2d1638))
+
+
+### Features
+
+* add number of responses to header ([c1376cd](https://github.com/Greenstand/treetracker-admin-client/commit/c1376cdbe32897dd7162c71d4d4f23421d37cbe3))
+* display individual survey responses ([2712a87](https://github.com/Greenstand/treetracker-admin-client/commit/2712a87913d2746a115fe80f1aacd9f995148c82))
+* fit inbox on the page so that you only scroll within the border ([f26655e](https://github.com/Greenstand/treetracker-admin-client/commit/f26655e2a602f684be1b7c9626737273545ff205))
+* format survey responses ([dc0aa63](https://github.com/Greenstand/treetracker-admin-client/commit/dc0aa63e5be4f2086c6cb11b49c1c54f462d2cb1))
+* sort inbox by latest message ([05599d9](https://github.com/Greenstand/treetracker-admin-client/commit/05599d950e64ca92e351993caada6663973d0b3c))
+
 ## [1.63.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.63.0...v1.63.1) (2022-03-08)
 
 
