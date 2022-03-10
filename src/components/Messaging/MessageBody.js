@@ -165,7 +165,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     padding: '1em',
     margin: '5px',
-    width: '35%',
   },
   modalContainer: {
     backgroundColor: 'white',
@@ -219,43 +218,45 @@ export const AnnounceMessage = ({ message }) => {
   );
 };
 
-export const SurveyResponseMessage = ({ message, user }) => {
-  const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
+export const SurveyResponseMessage = ({ message }) => {
+  const { messageRow, surveyResponse } = useStyles();
+  const {
+    survey: { questions },
+    survey_response,
+  } = message;
 
   return (
     <div className={messageRow}>
       <Grid className={surveyResponse}>
-        <Typography variant={'h5'}>
-          {message.from.author === user.userName
-            ? message.to[0].recipient
-              ? `${message.body}: ${message.to[0].recipient}`
-              : `${message.body}`
-            : message.body}
-        </Typography>
+        <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant={'h6'}>{message.from}</Typography>
+          <Typography>{message.composed_at.slice(0, 10)}</Typography>
+        </Grid>
         <hr style={{ border: '0.1px solid black', width: '100%' }} />
-        {message.survey?.answers &&
-          message.survey.answers.map((answer, i) => (
+        {survey_response &&
+          questions.map((question, i) => (
             <div key={`answer - ${i}`}>
-              <Typography variant={'h6'}>Question {i + 1}:</Typography>
-              <Typography variant={'body1'}>{answer}</Typography>
+              <Typography variant={'body1'}>
+                <b>Q{i + 1}:</b> {question.prompt}
+              </Typography>
+              <Typography variant={'body1'}>
+                <b>A:</b> {survey_response[i]}
+              </Typography>
             </div>
           ))}
-      </Grid>
-      <Grid item className={messageTimeStampRight}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
       </Grid>
     </div>
   );
 };
 
-export const SurveyMessage = ({ message }) => {
+export const SurveyMessage = ({ message, type }) => {
   const { messageRow, surveyContent } = useStyles();
 
-  const { questions, response } = message.survey;
+  const { questions } = message.survey;
 
   return (
     <>
-      {response ? (
+      {type === 'survey_response' ? (
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
@@ -341,6 +342,7 @@ export const SentMessage = ({ message }) => {
 const SenderInformation = ({
   message,
   messageRecipient,
+  responseCount,
   type,
   id,
   avatar_url,
@@ -383,6 +385,11 @@ const SenderInformation = ({
             {message?.bulk_message_recipients && (
               <Typography>
                 <b>TO:</b> {message?.bulk_message_recipients[0]?.recipient}
+              </Typography>
+            )}
+            {type === 'survey' && (
+              <Typography>
+                <b>RESPONSES:</b> {responseCount}
               </Typography>
             )}
           </>
@@ -498,6 +505,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           <SenderInformation
             message={messages[0]}
             messageRecipient={messageRecipient}
+            responseCount={messages.length - 1}
             type={messages[0].type}
             id={recipientId || ''}
             avatar_url={avatar}
@@ -533,12 +541,16 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
                 ) : (
                   <div key={i}></div>
                 );
-              } else if (message.type === 'survey') {
+              } else if (
+                message.type === 'survey' ||
+                message.type === 'survey_response'
+              ) {
                 return (
                   <SurveyMessage
                     key={message.id ? message.id : i}
                     message={message}
                     user={user}
+                    type={message.type}
                   />
                 );
               } else if (message.type === 'announce') {

@@ -36,23 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '90vw',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginBottom: '5vw',
-    border: '1px solid black',
+    margin: '0 auto 5vw auto',
+    border: '2px solid black',
     borderRadius: '5px',
     display: 'flex',
     flexGrow: 1,
+    height: '76vh',
+    overflow: 'hidden',
   },
   inbox: {
     width: '30%',
     height: '100%',
-    border: '1px solid black',
+    borderRight: '2px solid black',
   },
   body: {
     height: '100%',
     width: '100%',
-    border: '1px solid black',
   },
 }));
 
