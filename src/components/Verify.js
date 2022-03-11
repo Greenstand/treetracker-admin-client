@@ -95,6 +95,7 @@ const useStyles = makeStyles((theme) => ({
   cardWrapper: {
     position: 'relative',
     padding: theme.spacing(2),
+    flex: '1 0 45%',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -150,6 +151,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'smaller',
     fontWeight: 'bold',
   },
+  showButtonSize: {
+    textTransform: 'lowerCase',
+    border: 'none',
+    color: 'black',
+    fontSize: '0.6875rem',
+  },
 }));
 
 const Verify = (props) => {
@@ -159,7 +166,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
-  const [isToggle, setIsToggle] = useState(false);
+  const [showBigSize, setShowBigSize] = useState(false);
   const [alignment, setAlignment] = useState('left');
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
@@ -206,7 +213,7 @@ const Verify = (props) => {
   }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
 
   function toggleSizes(event, newAlignment) {
-    setIsToggle(!isToggle);
+    setShowBigSize(!showBigSize);
     setAlignment(newAlignment);
   }
 
@@ -337,10 +344,10 @@ const Verify = (props) => {
       return (
         <Grid
           item
-          xs={!isToggle ? 12 : 0}
-          sm={!isToggle ? 6 : 0}
-          md={!isToggle ? 4 : 0}
-          xl={!isToggle ? 2 : 0}
+          xs={showBigSize ? 0 : 'auto'}
+          sm={showBigSize ? 0 : 'auto'}
+          md={showBigSize ? 0 : 3}
+          xl={showBigSize ? 0 : 'auto'}
           key={capture.id}
         >
           <div
@@ -364,7 +371,7 @@ const Verify = (props) => {
               <CardContent className={classes.cardContent}>
                 <OptimizedImage
                   src={capture.imageUrl}
-                  width={400}
+                  // width ={showBigSize ? "250px" :  '400px'}
                   className={classes.cardMedia}
                 />
               </CardContent>
@@ -499,22 +506,41 @@ const Verify = (props) => {
                         }`}
                     </Typography>
                   </Grid>
-                  <Grid>
-                    <ToggleButtonGroup
-                      value={alignment}
-                      exclusive
-                      onChange={toggleSizes}
-                      aria-label="text alignment"
-                    >
-                      <ToggleButton value="left" aria-label="left aligned">
-                        Large size
-                      </ToggleButton>
-                      <ToggleButton value="right" aria-label="right aligned">
-                        Small size
-                      </ToggleButton>
-                    </ToggleButtonGroup>
+
+                  <Grid
+                    item
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <Grid>
+                      <ToggleButtonGroup
+                        value={alignment}
+                        exclusive
+                        onChange={toggleSizes}
+                        aria-label="text alignment"
+                        paddingTop="8px"
+                      >
+                        <ToggleButton
+                          value="left"
+                          aria-label="left aligned"
+                          disabled={!showBigSize ? true : false}
+                          className={classes.showButtonSize}
+                        >
+                          Large size
+                        </ToggleButton>
+                        <ToggleButton
+                          value="right"
+                          aria-label="right aligned"
+                          disabled={showBigSize ? true : false}
+                          className={classes.showButtonSize}
+                        >
+                          Small size
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                    </Grid>
+                    {imagePagination}
                   </Grid>
-                  <Grid item>{imagePagination}</Grid>
                 </Grid>
               </Grid>
               <Grid
@@ -523,11 +549,46 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid container className={classes.wrapper} spacing={1}>
+                <Grid
+                  container
+                  className={classes.wrapper}
+                  spacing={2}
+                  style={{
+                    maxHeight: '100vh',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                  }}
+                >
                   {captureImageItems}
                 </Grid>
               </Grid>
               <Grid item container justify="flex-end" className={classes.title}>
+                <Grid>
+                  <ToggleButtonGroup
+                    value={alignment}
+                    exclusive
+                    onChange={toggleSizes}
+                    aria-label="text alignment"
+                    paddingTop="8px"
+                  >
+                    <ToggleButton
+                      value="left"
+                      aria-label="left aligned"
+                      disabled={!showBigSize ? true : false}
+                      className={classes.showButtonSize}
+                    >
+                      Large size
+                    </ToggleButton>
+                    <ToggleButton
+                      value="right"
+                      aria-label="right aligned"
+                      disabled={showBigSize ? true : false}
+                      className={classes.showButtonSize}
+                    >
+                      Small size
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
                 {imagePagination}
               </Grid>
             </Grid>

@@ -32,7 +32,7 @@ export default function OptimizedImage(props) {
 
     if (!fixed && screenWidths.length === imageSizes.length) {
       sizes = screenWidths
-        .map((size, i) => `(min-width: ${size}px) ${imageSizes[i]}px`)
+        .map((size, i) => `(width: ${size}px) ${imageSizes[i]}px`)
         .join(', ');
       srcSet = imageSizes
         .map((size) => `${cdnPath}/${domain}/${params}/${imagePath} ${size}w`)
