@@ -16,7 +16,7 @@ export default {
       .catch(handleError);
   },
   getAuthors() {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/author`;
+    const query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts`;
 
     return fetch(query, {
       method: 'GET',
