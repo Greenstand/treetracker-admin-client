@@ -344,10 +344,10 @@ const Verify = (props) => {
       return (
         <Grid
           item
-          xs={showBigSize ? 0 : 'auto'}
-          sm={showBigSize ? 0 : 'auto'}
-          md={showBigSize ? 0 : 3}
-          xl={showBigSize ? 0 : 'auto'}
+          xs={showBigSize ? 0 : 12}
+          sm={showBigSize ? 0 : 6}
+          md={showBigSize ? 0 : 'auto'}
+          xl={showBigSize ? 0 : 2}
           key={capture.id}
         >
           <div
