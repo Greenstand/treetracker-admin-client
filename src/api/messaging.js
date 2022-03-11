@@ -15,8 +15,11 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getAuthors() {
-    const query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts`;
+  getAuthors(organizationId) {
+    let query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts`;
+    if (organizationId) {
+      query = `${query}?organization_id=${organizationId}`;
+    }
 
     return fetch(query, {
       method: 'GET',

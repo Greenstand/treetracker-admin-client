@@ -112,8 +112,8 @@ export const MessagingProvider = (props) => {
     setIsLoading(false);
   };
 
-  const loadAuthors = async () => {
-    const res = await api.getAuthors();
+  const loadAuthors = async (organizationId) => {
+    const res = await api.getAuthors(organizationId);
 
     if (res.authors) {
       let result = res.authors.filter(

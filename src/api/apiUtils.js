@@ -41,3 +41,7 @@ export function getOrganization() {
 export function getOrganizationId() {
   return session.user?.policy?.organization?.id || null;
 }
+
+export function getOrganizationUUID() {
+  return session.user?.policy?.organization?.uuid || null;
+}
