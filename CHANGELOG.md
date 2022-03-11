@@ -1,3 +1,10 @@
+## [1.64.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.0...v1.64.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* remove subject from normal message ([3099215](https://github.com/Greenstand/treetracker-admin-client/commit/309921523cbdf9b1a4f3c58e0e6aea12a5b5111c))
+
 # [1.64.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.63.1...v1.64.0) (2022-03-10)
 
 
