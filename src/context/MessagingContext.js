@@ -156,7 +156,6 @@ export const MessagingProvider = (props) => {
     const payload = {
       body: '',
       from: user.userName,
-      subject: 'Message',
       to: grower.phone ? grower.phone : grower.email,
     };
 

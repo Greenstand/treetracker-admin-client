@@ -479,7 +479,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: 'Message', //temporarily hard-coded until we know what we want
       type: 'message',
       body: messageContent,
     };
