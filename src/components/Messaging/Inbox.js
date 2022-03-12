@@ -72,9 +72,9 @@ const Inbox = ({ threads, selected, handleListItemClick }) => {
               return thread;
             }
           })
-          .map((thread) => (
+          .map((thread, i) => (
             <ListItem
-              key={thread.userName}
+              key={`${thread.userName}-${i}`}
               alignItems="flex-start"
               className={listItem}
               selected={thread.userName === selected}

@@ -72,6 +72,7 @@ const NewMessage = ({ openModal, handleClose }) => {
   const [messageContent, setMessageContent] = useState('');
   const [recipient, setRecipient] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (openModal === false) {
@@ -81,6 +82,7 @@ const NewMessage = ({ openModal, handleClose }) => {
   }, [openModal]);
 
   const handleChange = (e) => {
+    setError(false);
     const { name, value } = e.target;
     name === 'body'
       ? setMessageContent(value)
@@ -96,6 +98,16 @@ const NewMessage = ({ openModal, handleClose }) => {
       type: 'message',
       body: messageContent,
     };
+
+    if (
+      !recipient ||
+      recipient === '' ||
+      !messageContent ||
+      messageContent === ''
+    ) {
+      setError(true);
+      return;
+    }
 
     if (
       messagePayload.body !== '' &&
@@ -159,6 +171,17 @@ const NewMessage = ({ openModal, handleClose }) => {
           <Box className={header} my={1}>
             <Typography variant="h3">Send New Message</Typography>
           </Box>
+          {error ? (
+            <Typography
+              style={{
+                color: 'red',
+                fontWeight: 'bold',
+                margin: '20px 10px 0px',
+              }}
+            >
+              Please select a recipient and enter a message!
+            </Typography>
+          ) : null}
           <FormControl>
             <GSInputLabel text="Choose the Message Recipient" />
             <Autocomplete
