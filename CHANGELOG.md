@@ -1,3 +1,20 @@
+# [1.65.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.2...v1.65.0) (2022-03-12)
+
+
+### Bug Fixes
+
+* cleanup comments etc ([5747048](https://github.com/Greenstand/treetracker-admin-client/commit/57470485df4cdb5a2ef87b7991fb24bdb47c9b8d))
+* handle no device in registration ([#495](https://github.com/Greenstand/treetracker-admin-client/issues/495)) ([0f69a03](https://github.com/Greenstand/treetracker-admin-client/commit/0f69a03a1734004ddd4209005dd5c7e8f2a80e01))
+* incorporate requested changes ([a37e3ae](https://github.com/Greenstand/treetracker-admin-client/commit/a37e3ae16e3ea955df6bed3f1ae1f62359639825))
+* remove currentThread experiment ([ae00dd2](https://github.com/Greenstand/treetracker-admin-client/commit/ae00dd2cac6e9dd314f373426e1f9d6e47644612))
+* stop using indexes as keys ([3ae5959](https://github.com/Greenstand/treetracker-admin-client/commit/3ae5959a9721d943d290095e3c0308aef558b685))
+
+
+### Features
+
+* error messages for NewMessage ([9942e79](https://github.com/Greenstand/treetracker-admin-client/commit/9942e79725a31d58dec27ae771606f4df00942c8))
+* sort inbox by latest message when new message, survey, announcement ([0d8b419](https://github.com/Greenstand/treetracker-admin-client/commit/0d8b4197392ca25f8fee0e5462c6017ef0ba49e6))
+
 ## [1.64.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.1...v1.64.2) (2022-03-12)
 
 
