@@ -22,7 +22,6 @@ export const MessagingContext = createContext({
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
   const [threads, setThreads] = useState([]);
-  const [currentThread, setCurrentThread] = useState(threads ? threads[0] : {});
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +93,6 @@ export const MessagingProvider = (props) => {
         ),
     ];
     setThreads(filteredMessages);
-    setCurrentThread(filteredMessages[0]);
     setIsLoading(false);
   };
 
@@ -192,13 +190,11 @@ export const MessagingProvider = (props) => {
   const value = {
     user,
     threads,
-    currentThread,
     authors,
     regions,
     isLoading,
     errorMessage,
     setThreads,
-    setCurrentThread,
     setErrorMessage,
     setIsLoading,
     sendMessageFromGrower,
