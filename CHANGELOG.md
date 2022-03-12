@@ -1,3 +1,10 @@
+## [1.64.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.1...v1.64.2) (2022-03-12)
+
+
+### Bug Fixes
+
+* increase default message limit ([6f3ed45](https://github.com/Greenstand/treetracker-admin-client/commit/6f3ed4595ce9db8ae67542f81691e5eb4c147b6f))
+
 ## [1.64.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.0...v1.64.1) (2022-03-11)
 
 
