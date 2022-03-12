@@ -99,7 +99,7 @@ export const MessagingProvider = (props) => {
   };
 
   const loadAuthors = async () => {
-    log.debug('...load authors', user);
+    log.debug('...load authors');
     const res = await api.getAuthors();
 
     if (res.authors) {

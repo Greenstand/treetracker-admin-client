@@ -61,7 +61,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     user,
     regions,
     postBulkMessageSend,
-    threads,
     setThreads,
   } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
@@ -117,26 +116,10 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.region_id)
       ) {
         const res = await postBulkMessageSend(payload);
-        log.debug('Announce submit', threads, res);
 
         if (res.error) {
           setErrorMessage(res.message);
-          // handleModalOpen();
         } else {
-          // id: null;
-          // type: 'announce';
-          // parent_message_id: null;
-          // from: 'admin';
-          // to: null;
-          // recipient_organization_id: '8b2628b3-733b-4962-943d-95ebea918c9d';
-          // recipient_region_id: null;
-          // subject: 'asdf2';
-          // body: 'asdf';
-          // composed_at: '2022-03-11T21:55:37.782Z';
-          // video_link: null;
-          // survey_response: null;
-          // survey: null;
-
           const newAnnouncement = {
             id: null,
             type: 'announce',
@@ -164,7 +147,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
               },
               ...prev,
             ];
-            log.debug('updated threads', updated);
             return updated;
           });
         }

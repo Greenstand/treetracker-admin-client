@@ -172,27 +172,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
 
         if (res.error) {
           setErrorMessage(res.message);
-          // handleModalOpen();
         } else {
-          // id: null;
-          // type: 'survey';
-          // parent_message_id: null;
-          // from: 'admin';
-          // to: null;
-          // recipient_organization_id: null;
-          // recipient_region_id: null;
-          // subject: 'Number of trees planted today';
-          // body: null;
-          // composed_at: '2022-01-22T00:00:00.000Z';
-          // video_link: null;
-          // survey_response: null;
-
-          // survey
-          // id:"99e61995-666c-48c8-9d4e-ca3cff1bfbeb"
-          // title:"Number of trees planted today"
-          // questions: [{…}]
-          // response: false
-
           const newSurvey = {
             id: uuid(),
             type: 'survey',
@@ -219,7 +199,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
               },
               ...prev,
             ];
-            log.debug('updated threads', updated);
             return updated;
           });
         }

@@ -497,7 +497,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
         const res = await postMessageSend(messagePayload);
         if (res.error) {
           setErrorMessage(res.message);
-          // handleModalOpen();
         } else {
           const newMessage = {
             parent_message_id: lastMessage.id ? lastMessage.id : null,
@@ -531,7 +530,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
                   new Date(b?.messages?.at(-1).composed_at) -
                   new Date(a?.messages?.at(-1).composed_at)
               );
-            // log.debug('updated threads', updated);
             return updated;
           });
         }
