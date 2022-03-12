@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   List,
   ListItem,
@@ -11,9 +11,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { Announcement, Ballot } from '@material-ui/icons';
 import SearchInbox from './SearchInbox';
-import { MessagingContext } from 'context/MessagingContext';
 import { timeAgoFormatDate } from 'common/locale';
-import log from 'loglevel';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,17 +55,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
+const Inbox = ({ threads, selected, handleListItemClick }) => {
   const { paper, searchInbox, list, listItem, listText, avatar } = useStyles();
-  const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
-
-  const onClickHelper = (e, i, handle, type) => {
-    // let recipient = type !== 'survey' && handle !== user.userName ? handle : type;
-    let recipient = handle !== user.userName ? handle : type;
-    log.debug('onClickHelper:', i, type, handle, recipient);
-    handleListItemClick(e, i, recipient);
-  };
 
   return (
     <Paper className={paper}>
@@ -82,20 +72,13 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
               return thread;
             }
           })
-          .sort(
-            (a, b) =>
-              new Date(b.messages.at(-1).composed_at) -
-              new Date(a.messages.at(-1).composed_at)
-          )
-          .map((thread, i) => (
+          .map((thread) => (
             <ListItem
               key={thread.userName}
               alignItems="flex-start"
               className={listItem}
-              selected={selectedIndex === i}
-              onClick={(e) =>
-                onClickHelper(e, i, thread.userName, thread.messages[0].type)
-              }
+              selected={thread.userName === selected}
+              onClick={() => handleListItemClick(thread.userName)}
             >
               <ListItemAvatar>
                 {thread.messages[0].type === 'message' ? (

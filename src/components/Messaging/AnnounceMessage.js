@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   SwipeableDrawer,
   Grid,
@@ -14,6 +13,8 @@ import { makeStyles } from '@material-ui/styles';
 import GSInputLabel from 'components/common/InputLabel';
 import { AppContext } from 'context/AppContext';
 import { MessagingContext } from 'context/MessagingContext';
+
+const log = require('loglevel');
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -54,9 +55,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
-  const history = useHistory();
   const { orgList } = useContext(AppContext);
-  const { user, regions, postBulkMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    regions,
+    postBulkMessageSend,
+    threads,
+    setThreads,
+  } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
   const [organization, setOrganization] = useState({});
   const [inputValueOrg, setInputValueOrg] = useState('');
@@ -109,8 +116,58 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.organization_id) ||
         (payload.body && payload.region_id)
       ) {
-        await postBulkMessageSend(payload);
-        history.go(0);
+        const res = await postBulkMessageSend(payload);
+        log.debug('Announce submit', threads, res);
+
+        if (res.error) {
+          setErrorMessage(res.message);
+          // handleModalOpen();
+        } else {
+          // id: null;
+          // type: 'announce';
+          // parent_message_id: null;
+          // from: 'admin';
+          // to: null;
+          // recipient_organization_id: '8b2628b3-733b-4962-943d-95ebea918c9d';
+          // recipient_region_id: null;
+          // subject: 'asdf2';
+          // body: 'asdf';
+          // composed_at: '2022-03-11T21:55:37.782Z';
+          // video_link: null;
+          // survey_response: null;
+          // survey: null;
+
+          const newAnnouncement = {
+            id: null,
+            type: 'announce',
+            parent_message_id: null,
+            from: payload.author_handle,
+            to: null,
+            recipient_organization_id: payload.organization_id || null,
+            recipient_region_id: payload.region_id || null,
+            subject: payload.subject,
+            body: payload.body,
+            composed_at: new Date().toISOString(),
+            video_link: null,
+            survey_response: null,
+            survey: null,
+            bulk_message_recipients: [],
+          };
+          log.debug('...update threads w/ new announcement');
+          // update the full set of threads
+          setThreads((prev) => {
+            const updated = [
+              {
+                username: `${newAnnouncement.id}`,
+                messages: [newAnnouncement],
+                avatar: '',
+              },
+              ...prev,
+            ];
+            log.debug('updated threads', updated);
+            return updated;
+          });
+        }
       }
     } catch (err) {
       console.log(err);

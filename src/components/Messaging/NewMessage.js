@@ -12,7 +12,7 @@ import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 
 import GSInputLabel from 'components/common/InputLabel';
-
+const log = require('loglevel');
 const useStyles = makeStyles((theme) => ({
   box: {
     position: 'absolute',
@@ -59,7 +59,13 @@ const useStyles = makeStyles((theme) => ({
 
 const NewMessage = ({ openModal, handleClose }) => {
   const { box, formContent, header, button } = useStyles();
-  const { user, authors, postMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    authors,
+    postMessageSend,
+    threads,
+  } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
   const [recipient, setRecipient] = useState('');
   const [inputValue, setInputValue] = useState('');
@@ -93,8 +99,54 @@ const NewMessage = ({ openModal, handleClose }) => {
       user.userName &&
       messagePayload.to !== ''
     ) {
-      await postMessageSend(messagePayload);
-      history.go(0);
+      const res = await postMessageSend(messagePayload);
+      log.debug('NewMessage submit', threads, res);
+
+      if (res.error) {
+        setErrorMessage(res.message);
+        // handleModalOpen();
+      } else {
+        // author_handle: 'admin';
+        // body: 'Do your thang\nDo what you gotta do...';
+        // organization_id: '8b2628b3-733b-4962-943d-95ebea918c9d';
+        // subject: 'I have something to say';
+        // type: 'announce';
+        // const newAnnouncement = {
+        //   parent_message_id: lastMessage.id ? lastMessage.id : null,
+        //   body: messageContent,
+        //   composed_at: new Date().toISOString(),
+        //   from: user.userName,
+        //   id: uuid(),
+        //   recipient_organization_id: null,
+        //   recipient_region_id: null,
+        //   subject: 'Message',
+        //   survey: null,
+        //   to: messageRecipient,
+        //   type: 'message',
+        //   video_link: null,
+        // };
+        // log.debug('...update threads w/ new announcement');
+        // // update the full set of threads
+        // setThreads((prev) => {
+        //   const updated = prev
+        //     .reduce(
+        //       (threads, thread) => {
+        //         if (thread.userName === messageRecipient) {
+        //           thread.messages.push(newMessage);
+        //         }
+        //         return threads;
+        //       },
+        //       [...prev]
+        //     )
+        //     .sort(
+        //       (a, b) =>
+        //         new Date(b?.messages?.at(-1).composed_at) -
+        //         new Date(a?.messages?.at(-1).composed_at)
+        //     );
+        //   // log.debug('updated threads', updated);
+        //   return updated;
+        // });
+      }
     }
     handleClose();
   };

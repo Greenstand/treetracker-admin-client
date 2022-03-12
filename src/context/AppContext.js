@@ -32,6 +32,7 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import log from 'loglevel';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({});
@@ -194,6 +195,8 @@ export const AppProvider = (props) => {
   const [routes, setRoutes] = useState(getRoutes(localUser));
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
+
+  log.debug('AppProvider', !!user, !!token, !!routes, !!userHasOrg, !!orgList);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share

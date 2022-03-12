@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import uuid from 'uuid/v4';
 import {
   SwipeableDrawer,
   TextField,
@@ -16,6 +17,7 @@ import GSInputLabel from 'components/common/InputLabel';
 import { MessagingContext } from 'context/MessagingContext';
 import { AppContext } from 'context/AppContext';
 
+const log = require('loglevel');
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +67,14 @@ const useStyles = makeStyles((theme) => ({
 
 const SurveyForm = ({ setToggleSurvey }) => {
   const { form, submitButton, input } = useStyles();
-  const { user, regions, postBulkMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    regions,
+    postBulkMessageSend,
+    threads,
+    setThreads,
+  } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [questionOne, setQuestionOne] = useState({
@@ -158,8 +167,62 @@ const SurveyForm = ({ setToggleSurvey }) => {
         payload.survey.title.length > 1 &&
         (payload['region_id'] || payload['organization_id'])
       ) {
-        await postBulkMessageSend(payload);
-        history.go(0);
+        const res = await postBulkMessageSend(payload);
+        log.debug('Survey submit', threads, res);
+
+        if (res.error) {
+          setErrorMessage(res.message);
+          // handleModalOpen();
+        } else {
+          // id: null;
+          // type: 'survey';
+          // parent_message_id: null;
+          // from: 'admin';
+          // to: null;
+          // recipient_organization_id: null;
+          // recipient_region_id: null;
+          // subject: 'Number of trees planted today';
+          // body: null;
+          // composed_at: '2022-01-22T00:00:00.000Z';
+          // video_link: null;
+          // survey_response: null;
+
+          // survey
+          // id:"99e61995-666c-48c8-9d4e-ca3cff1bfbeb"
+          // title:"Number of trees planted today"
+          // questions: [{…}]
+          // response: false
+
+          const newSurvey = {
+            id: uuid(),
+            type: 'survey',
+            parent_message_id: null,
+            from: payload.author_handle,
+            to: null,
+            recipient_organization_id: payload.organization_id || null,
+            recipient_region_id: payload.region_id || null,
+            subject: payload.subject,
+            body: null,
+            composed_at: new Date().toISOString(),
+            video_link: null,
+            survey_response: null,
+            survey: payload.survey,
+          };
+          log.debug('...update threads w/ new survey');
+          // update the full set of threads
+          setThreads((prev) => {
+            const updated = [
+              {
+                username: `${newSurvey.id}`,
+                messages: [newSurvey],
+                avatar: '',
+              },
+              ...prev,
+            ];
+            log.debug('updated threads', updated);
+            return updated;
+          });
+        }
       }
     } catch (err) {
       console.log(err);
