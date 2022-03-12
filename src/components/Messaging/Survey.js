@@ -190,17 +190,14 @@ const SurveyForm = ({ setToggleSurvey }) => {
           };
           log.debug('...update threads w/ new survey');
           // update the full set of threads
-          setThreads((prev) => {
-            const updated = [
-              {
-                username: `${newSurvey.id}`,
-                messages: [newSurvey],
-                avatar: '',
-              },
-              ...prev,
-            ];
-            return updated;
-          });
+          setThreads((prev) => [
+            {
+              username: `${newSurvey.id}`,
+              messages: [newSurvey],
+              avatar: '',
+            },
+            ...prev,
+          ]);
         }
       }
     } catch (err) {

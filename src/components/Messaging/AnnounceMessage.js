@@ -138,17 +138,14 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
           };
           log.debug('...update threads w/ new announcement');
           // update the full set of threads
-          setThreads((prev) => {
-            const updated = [
-              {
-                username: `${newAnnouncement.id}`,
-                messages: [newAnnouncement],
-                avatar: '',
-              },
-              ...prev,
-            ];
-            return updated;
-          });
+          setThreads((prev) => [
+            {
+              username: `${newAnnouncement.id}`,
+              messages: [newAnnouncement],
+              avatar: '',
+            },
+            ...prev,
+          ]);
         }
       }
     } catch (err) {

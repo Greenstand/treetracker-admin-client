@@ -499,7 +499,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           setErrorMessage(res.message);
         } else {
           const newMessage = {
-            parent_message_id: lastMessage.id ? lastMessage.id : null,
+            parent_message_id: lastMessage.id,
             body: messageContent,
             composed_at: new Date().toISOString(),
             from: user.userName,

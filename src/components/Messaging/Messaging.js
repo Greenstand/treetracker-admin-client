@@ -61,12 +61,10 @@ const Messaging = () => {
   const {
     user,
     threads,
-    // currentThread,
     loadMessages,
     loadRegions,
     loadAuthors,
     setErrorMessage,
-    setCurrentThread,
     setIsLoading,
   } = useContext(MessagingContext);
 
@@ -98,7 +96,6 @@ const Messaging = () => {
       (message) => message.userName === messageRecipient
     );
     setSelectedIndex(index >= 0 ? index : 0);
-    setCurrentThread(threads[index]);
   }, [messageRecipient, threads]);
 
   const handleListItemClick = (threadHandle) => {
@@ -155,18 +152,11 @@ const Messaging = () => {
           />
         </Grid>
         <Grid item className={body} xs={7} md={8}>
-          {/* {console.log(
-            'selectedIndex currentThread --- ',
-            selectedIndex,
-            currentThread
-          )} */}
           {threads.length ? (
             <MessageBody
-              messages={threads.length && threads[selectedIndex].messages}
-              messageRecipient={
-                threads.length && threads[selectedIndex].userName
-              }
-              avatar={threads.length && threads[selectedIndex].avatar}
+              messages={threads[selectedIndex].messages}
+              messageRecipient={threads[selectedIndex].userName}
+              avatar={threads[selectedIndex].avatar}
             />
           ) : (
             <MessageBody />
