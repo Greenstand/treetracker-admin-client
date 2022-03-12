@@ -147,13 +147,16 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               );
               const uniqueDevices = {};
               const devices = sortedReg.reduce((result, reg) => {
+                if (!reg.device_identifier) {
+                  return result;
+                }
                 if (!uniqueDevices[reg.device_identifier]) {
                   uniqueDevices[reg.device_identifier] = true;
                   // if manufacturer isn't 'apple' it's an android phone
                   result.push({
                     id: reg.device_identifier,
                     os:
-                      reg.manufacturer.toLowerCase() === 'apple'
+                      reg.manufacturer?.toLowerCase() === 'apple'
                         ? 'iOS'
                         : 'Android',
                   });
