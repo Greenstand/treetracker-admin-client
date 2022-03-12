@@ -45,6 +45,7 @@ const log = require('loglevel').getLogger('../components/Verify');
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8, 4, 8),
+    flex: 'nowrap',
   },
   cardImg: {
     width: '100%',
@@ -330,6 +331,7 @@ const Verify = (props) => {
     : [];
 
   const captureImageItems = captureImages
+
     .concat(placeholderImages)
     .map((capture) => {
       return (
@@ -337,7 +339,7 @@ const Verify = (props) => {
           item
           xs={showBigSize ? 0 : 12}
           sm={showBigSize ? 0 : 6}
-          md={showBigSize ? 0 : 4}
+          md={showBigSize ? 0 : 3}
           xl={showBigSize ? 0 : 2}
           key={capture.id}
         >
@@ -544,6 +546,9 @@ const Verify = (props) => {
                         exclusive
                         onChange={toggleSizes}
                         aria-label="text alignment"
+                        style={{
+                          marginTop: '4px',
+                        }}
                       >
                         <ToggleButton
                           value="left"
