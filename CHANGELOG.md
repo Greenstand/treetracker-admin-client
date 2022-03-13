@@ -1,3 +1,10 @@
+## [1.65.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.0...v1.65.1) (2022-03-13)
+
+
+### Bug Fixes
+
+* enable payments in staging and fix test deployment ([#501](https://github.com/Greenstand/treetracker-admin-client/issues/501)) ([0f649a2](https://github.com/Greenstand/treetracker-admin-client/commit/0f649a2b8cbaaf77d28cfca7ed6414b23931dae3))
+
 # [1.65.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.2...v1.65.0) (2022-03-12)
 
 
