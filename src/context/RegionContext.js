@@ -8,15 +8,16 @@ const log = loglevel.getLogger('../context/RegionContext');
 
 export const RegionContext = createContext({
   regions: [],
-  pageSize: 24,
-  count: null,
+  pageSize: 25,
+  regionCount: null,
   currentPage: 0,
   filter: new FilterRegion(),
   isLoading: false,
   changePageSize: () => {},
   changeCurrentPage: () => {},
+  changeSort: () => {},
   updateRegions: () => {},
-  load: () => {},
+  loadRegions: () => {},
   getCount: () => {},
   getRegion: () => {},
   createRegion: () => {},
@@ -27,15 +28,16 @@ export const RegionContext = createContext({
 export function RegionProvider(props) {
   const [regions, setRegions] = useState([]);
   const [pageSize, setPageSize] = useState(25);
-  const [count, setCount] = useState(null);
+  const [regionCount, setRegionCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [orderBy, setOrderBy] = useState('id');
   const [filter, setFilter] = useState(new FilterRegion());
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    load();
-    getCount();
-  }, [filter, pageSize, currentPage]); //
+    loadRegions();
+    getRegionCount();
+  }, [filter, pageSize, currentPage, orderBy]); //
 
   // EVENT HANDLERS
 
@@ -43,21 +45,27 @@ export function RegionProvider(props) {
     setPageSize(pageSize);
   };
 
-  const changeCurrentPage = async (event, currentPage) => {
-    setCurrentPage(currentPage);
+  const changeCurrentPage = async (_event, val) => {
+    setCurrentPage(currentPage, val);
+  };
+
+  const changeSort = async (_event, val) => {
+    setOrderBy(val);
   };
 
   const updateRegions = (regions) => {
     setRegions(regions);
   };
 
-  const load = async () => {
+  const loadRegions = async () => {
     log.debug('load regions');
     setIsLoading(true);
     const pageNumber = currentPage;
     const regions = await api.getRegions({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
+      orderBy,
+      order: 'asc',
       filter: {
         owner_id: getOrganizationUuid() || undefined,
         ...filter,
@@ -67,12 +75,12 @@ export function RegionProvider(props) {
     setIsLoading(false);
   };
 
-  const getCount = async () => {
+  const getRegionCount = async () => {
     const { count } = await api.getRegionsCount({
       owner_id: getOrganizationUuid() || undefined,
       ...filter,
     });
-    setCount(count);
+    setRegionCount(count);
   };
 
   const getRegion = async (payload) => {
@@ -117,15 +125,17 @@ export function RegionProvider(props) {
   const value = {
     regions,
     pageSize,
-    count,
+    regionCount,
     currentPage,
+    orderBy,
     filter,
     isLoading,
     changePageSize,
     changeCurrentPage,
+    changeSort,
     updateRegions,
-    load,
-    getCount,
+    loadRegions,
+    getRegionCount,
     getRegion,
     createRegion,
     updateRegion,

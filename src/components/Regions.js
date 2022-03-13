@@ -124,40 +124,34 @@ const styles = (theme) => ({
 const RegionTable = (props) => {
   const { classes } = props;
   const sortOptions = { byId: 'id', byName: 'name' };
-  const regionContext = useContext(RegionContext);
-  const [page, setPage] = useState(0);
+  const {
+    regions,
+    currentPage,
+    pageSize,
+    changeCurrentPage,
+    changePageSize,
+    changeSort,
+    regionCount,
+    loadRegions,
+    createRegion,
+    updateRegion,
+    deleteRegion,
+  } = useContext(RegionContext);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [regionEdit, setRegionEdit] = useState(undefined);
   const [openDelete, setOpenDelete] = useState(false);
-  const [sortedRegionList, setSortedRegionList] = useState([]);
-  const [option, setOption] = useState(sortOptions.byName);
 
   const tableRef = useRef(null);
 
-  useEffect(() => {
-    const sortBy = (option) => {
-      let sortedRegion;
-      if (option === sortOptions.byId) {
-        sortedRegion = [...regionContext.regions].sort(
-          (a, b) => a[option] - b[option]
-        );
-      }
-      if (option === sortOptions.byName) {
-        sortedRegion = [...regionContext.regions].sort((a, b) =>
-          a[option].localeCompare(b[option])
-        );
-      }
-      setSortedRegionList(sortedRegion);
-    };
-    sortBy(option);
-  }, [option, sortOptions.byId, sortOptions.byName, regionContext.regions]);
+  const handleChangeCurrentPage = (event) => {
+    tableRef.current && tableRef.current.scrollIntoView();
+    changeCurrentPage(Number(event.target.value));
+  };
 
   const handleChangeRowsPerPage = (event) => {
-    tableRef.current && tableRef.current.scrollIntoView();
-
-    regionContext.changePageSize(parseInt(event.target.value, 10));
-    setPage(0);
+    changePageSize(Number(event.target.value));
+    handleChangeCurrentPage(0);
   };
 
   const handleEdit = (region) => {
@@ -166,14 +160,7 @@ const RegionTable = (props) => {
   };
 
   const renderRegion = () => {
-    let rowsPerPage = regionContext.pageSize;
-    return (rowsPerPage > 0
-      ? sortedRegionList.slice(
-          page * rowsPerPage,
-          page * rowsPerPage + rowsPerPage
-        )
-      : sortedRegionList
-    ).map((region) => (
+    return regions.map((region) => (
       <TableRow key={region.id} role="listitem">
         {/* <TableCell>
           <Checkbox
@@ -204,12 +191,12 @@ const RegionTable = (props) => {
 
   const tablePagination = () => (
     <TablePagination
-      count={Number(regionContext.count)}
+      count={Number(regionCount)}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
       colSpan={3}
-      page={regionContext.currentPage}
-      rowsPerPage={regionContext.pageSize}
-      onChangePage={regionContext.changeCurrentPage}
+      page={currentPage}
+      rowsPerPage={pageSize}
+      onChangePage={handleChangeCurrentPage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
       SelectProps={{
         inputProps: { 'aria-label': 'rows per page' },
@@ -260,7 +247,7 @@ const RegionTable = (props) => {
                         ID
                         <IconButton
                           title="sortbyId"
-                          onClick={() => setOption(sortOptions.byId)}
+                          onClick={() => changeSort(sortOptions.byId)}
                         >
                           <SortIcon />
                         </IconButton>
@@ -269,7 +256,7 @@ const RegionTable = (props) => {
                         name
                         <IconButton
                           title="sortbyName"
-                          onClick={() => setOption(sortOptions.byName)}
+                          onClick={() => changeSort(sortOptions.byName)}
                         >
                           <SortIcon />
                         </IconButton>
@@ -297,19 +284,17 @@ const RegionTable = (props) => {
         regionEdit={regionEdit}
         setRegionEdit={setRegionEdit}
         styles={{ ...classes }}
-        editRegion={
-          isAdding ? regionContext.createRegion : regionContext.updateRegion
-        }
-        loadRegionList={regionContext.load}
-        data={sortedRegionList}
+        editRegion={isAdding ? createRegion : updateRegion}
+        loadRegionList={loadRegions}
+        data={regions}
       />
       <DeleteDialog
         regionEdit={regionEdit}
         setRegionEdit={setRegionEdit}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
-        deleteRegion={regionContext.deleteRegion}
-        loadRegionList={regionContext.load}
+        deleteRegion={deleteRegion}
+        loadRegionList={loadRegions}
       />
     </>
   );
