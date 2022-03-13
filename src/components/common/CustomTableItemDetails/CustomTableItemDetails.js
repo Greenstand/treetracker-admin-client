@@ -36,7 +36,6 @@ function LogPaymentForm(props) {
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
-    setPaymentMethod(value);
   };
 
   const handleOnFormSubmit = () => {
@@ -80,7 +79,6 @@ function LogPaymentForm(props) {
               label="Payment Method"
               variant="outlined"
               onChange={handleOnInputChange}
-              value={paymentMethod}
             />
           </FormControl>
         </Grid>
