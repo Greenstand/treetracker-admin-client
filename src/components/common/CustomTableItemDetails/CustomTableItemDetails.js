@@ -28,7 +28,6 @@ import useStyles from './CustomTableItemDetails.styles';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
-  const [paymentMethod, setPaymentMethod] = useState('');
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
