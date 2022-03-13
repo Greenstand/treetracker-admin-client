@@ -18,7 +18,7 @@ export const RegionContext = createContext({
   changeSort: () => {},
   updateRegions: () => {},
   loadRegions: () => {},
-  getCount: () => {},
+  getRegionCount: () => {},
   getRegion: () => {},
   createRegion: () => {},
   updateRegion: () => {},
@@ -36,7 +36,6 @@ export function RegionProvider(props) {
 
   useEffect(() => {
     loadRegions();
-    getRegionCount();
   }, [filter, pageSize, currentPage, orderBy]); //
 
   // EVENT HANDLERS
@@ -61,7 +60,7 @@ export function RegionProvider(props) {
     log.debug('load regions');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const regions = await api.getRegions({
+    const { regions, count } = await api.getRegions({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
       orderBy,
@@ -72,6 +71,7 @@ export function RegionProvider(props) {
       },
     });
     setRegions(regions);
+    setRegionCount(count);
     setIsLoading(false);
   };
 
