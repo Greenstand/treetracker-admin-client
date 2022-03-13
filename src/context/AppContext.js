@@ -116,8 +116,8 @@ function getRoutes(user) {
         },
       ],
       disabled:
-        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
-        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+        (process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
+          process.env.REACT_APP_ENABLE_PAYMENTS !== 'true') ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
           POLICIES.MANAGE_EARNINGS,

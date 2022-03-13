@@ -58,6 +58,7 @@
     "start:local": "env-cmd -f .env.local cross-env PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.development npm run build && mv build build-dev",
+    "build:test": "env-cmd -f .env.test npm run build",
     "build:staging": "env-cmd -f .env.staging npm run build",
     "test": "react-scripts test --env=jsdom --setupTestFrameworkScriptFile=./src/testSetup.js",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
