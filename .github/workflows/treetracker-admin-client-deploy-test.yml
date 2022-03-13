@@ -1,4 +1,4 @@
-name: Deploy Admin Panel Client to Test Env
+name: Deploy to Test Environment
 
 on:
   workflow_dispatch:
@@ -62,4 +62,3 @@ jobs:
       - name: Invalidate cloudfront caches
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.TEST_CDN_DISTRIBUTION_ID }} --paths "/*"
-

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   List,
   ListItem,
@@ -11,7 +11,6 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import { Announcement, Ballot } from '@material-ui/icons';
 import SearchInbox from './SearchInbox';
-import { MessagingContext } from 'context/MessagingContext';
 import { timeAgoFormatDate } from 'common/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -56,19 +55,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
+const Inbox = ({ threads, selected, handleListItemClick }) => {
   const { paper, searchInbox, list, listItem, listText, avatar } = useStyles();
-  const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
-
-  const onClickHelper = (e, i, thread) => {
-    let recipient =
-      thread.messages[0].type !== 'survey' &&
-      thread.messages[0].to !== user.userName
-        ? thread.messages[0].to
-        : thread.messages[0].type;
-    handleListItemClick(e, i, recipient);
-  };
 
   return (
     <Paper className={paper}>
@@ -85,11 +74,11 @@ const Inbox = ({ threads, selectedIndex, handleListItemClick }) => {
           })
           .map((thread, i) => (
             <ListItem
-              key={i}
+              key={`${thread.userName}-${i}`}
               alignItems="flex-start"
               className={listItem}
-              selected={selectedIndex === i}
-              onClick={(e) => onClickHelper(e, i, thread)}
+              selected={thread.userName === selected}
+              onClick={() => handleListItemClick(thread.userName)}
             >
               <ListItemAvatar>
                 {thread.messages[0].type === 'message' ? (

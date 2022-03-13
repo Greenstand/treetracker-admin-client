@@ -68,7 +68,7 @@ export default {
       .catch(handleError);
   },
   getMessages(handle) {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?handle=${handle}`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?handle=${handle}&limit=500`;
 
     return fetch(query).then(handleResponse).catch(handleError);
   },

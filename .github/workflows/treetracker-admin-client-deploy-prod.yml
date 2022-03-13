@@ -1,4 +1,4 @@
-name: Deploy Admin Panel Client to Prod Env
+name: Deploy to Production Environment
 
 on:
   workflow_dispatch:

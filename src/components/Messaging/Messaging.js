@@ -36,23 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '90vw',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginBottom: '5vw',
-    border: '1px solid black',
+    margin: '0 auto 5vw auto',
+    border: '2px solid black',
     borderRadius: '5px',
     display: 'flex',
     flexGrow: 1,
+    height: '76vh',
+    overflow: 'hidden',
   },
   inbox: {
     width: '30%',
     height: '100%',
-    border: '1px solid black',
+    borderRight: '2px solid black',
   },
   body: {
     height: '100%',
     width: '100%',
-    border: '1px solid black',
   },
 }));
 
@@ -61,10 +60,11 @@ const Messaging = () => {
   const { headerGrid, button, container, inbox, body } = useStyles();
   const {
     user,
-    messages,
+    threads,
     loadMessages,
     loadRegions,
     loadAuthors,
+    setErrorMessage,
     setIsLoading,
   } = useContext(MessagingContext);
 
@@ -76,14 +76,7 @@ const Messaging = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const findMessageRecipient = (messages) => {
-    messages.username !== user.userName
-      ? setMessageRecipient(messages.username)
-      : setMessageRecipient(user.userName);
-  };
-
   useEffect(() => {
-    console.log('Messaging.js: useEffect: loadMessages');
     setIsLoading(true);
     loadMessages();
     loadRegions();
@@ -91,14 +84,22 @@ const Messaging = () => {
   }, []);
 
   useEffect(() => {
-    if (messages.length && messageRecipient === null) {
-      findMessageRecipient(messages);
+    if (threads.length && !messageRecipient) {
+      threads[0].userName !== user.userName
+        ? setMessageRecipient(threads[0].userName)
+        : setMessageRecipient(user.userName);
     }
-  }, [messages]);
+  }, [threads]);
 
-  const handleListItemClick = (e, i, userName) => {
-    setMessageRecipient(userName);
-    setSelectedIndex(i);
+  useEffect(() => {
+    const index = threads.findIndex(
+      (message) => message.userName === messageRecipient
+    );
+    setSelectedIndex(index >= 0 ? index : 0);
+  }, [messageRecipient, threads]);
+
+  const handleListItemClick = (threadHandle) => {
+    setMessageRecipient(threadHandle);
   };
 
   return (
@@ -111,7 +112,11 @@ const Messaging = () => {
           <Button className={button} onClick={handleOpen}>
             New Message
           </Button>
-          <NewMessage openModal={openModal} handleClose={handleClose} />
+          <NewMessage
+            openModal={openModal}
+            handleClose={handleClose}
+            setErrorMessage={setErrorMessage}
+          />
           <Button
             className={button}
             onClick={() => setToggleAnnounceMessage(!toggleAnnounceMessage)}
@@ -141,17 +146,17 @@ const Messaging = () => {
       <Grid container className={container}>
         <Grid item className={inbox} xs={5} md={4}>
           <Inbox
-            threads={messages}
-            selectedIndex={selectedIndex}
+            threads={threads}
+            selected={messageRecipient}
             handleListItemClick={handleListItemClick}
           />
         </Grid>
         <Grid item className={body} xs={7} md={8}>
-          {messages.length ? (
+          {threads.length ? (
             <MessageBody
-              messages={messages[selectedIndex].messages}
-              messageRecipient={messages[selectedIndex].userName}
-              avatar={messages[selectedIndex].avatar}
+              messages={threads[selectedIndex].messages}
+              messageRecipient={threads[selectedIndex].userName}
+              avatar={threads[selectedIndex].avatar}
             />
           ) : (
             <MessageBody />
