@@ -48,7 +48,7 @@ function LogPaymentForm(props) {
   };
 
   return (
-    <>
+    <form onSubmit={handleOnFormSubmit}>
       <Grid container direction="column" justify="space-around">
         <Grid item className={classes.itemGrowerDetail}>
           <Typography variant="h6">Payment</Typography>
@@ -64,6 +64,7 @@ function LogPaymentForm(props) {
               name="payment_confirmation_id"
               label="Payment Confirmation Id"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
             />
           </FormControl>
@@ -77,6 +78,7 @@ function LogPaymentForm(props) {
               name="payment_method"
               label="Payment Method"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
             />
           </FormControl>
@@ -94,7 +96,7 @@ function LogPaymentForm(props) {
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleOnFormSubmit}
+          type="submit"
           className={classes.itemTableFilterSubmitButton}
         >
           LOG PAYMENT
@@ -108,7 +110,7 @@ function LogPaymentForm(props) {
           CANCEL
         </Button>
       </Grid>
-    </>
+    </form>
   );
 }
 
