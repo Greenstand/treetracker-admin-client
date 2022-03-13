@@ -174,9 +174,11 @@ const RegionTable = (props) => {
         <TableCell component="th" scope="row" data-testid="region">
           {region.name}
         </TableCell>
-        <TableCell>{JSON.stringify(region.properties)}</TableCell>
-        <TableCell>{`${region.showOnOrgMap}`}</TableCell>
-        <TableCell>{`${region.calculateStatistics}`}</TableCell>
+        <TableCell>
+          {region.properties ? JSON.stringify(region.properties) : ''}
+        </TableCell>
+        <TableCell>{region.show_on_org_map ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{region.calculate_statistics ? 'Yes' : 'No'}</TableCell>
         <TableCell>
           <IconButton title="edit" onClick={() => handleEdit(region)}>
             <Edit />
@@ -330,11 +332,11 @@ const EditModal = ({
     setGeoJson(undefined);
     if (regionEdit) {
       setId(regionEdit.id);
-      setOwnerId(regionEdit.ownerId);
+      setOwnerId(regionEdit.owner_id);
       setName(regionEdit.name);
-      setPropTag(regionEdit.propTag);
-      setShow(regionEdit.showOnOrgMap);
-      setCalc(regionEdit.calculateStatistics);
+      setPropTag(regionEdit.prop_tag);
+      setShow(regionEdit.show_on_org_map);
+      setCalc(regionEdit.calculate_statistics);
     } else {
       setId(undefined);
       setOwnerId(getOrganizationUuid());

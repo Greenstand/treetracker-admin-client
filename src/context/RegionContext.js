@@ -66,7 +66,7 @@ export function RegionProvider(props) {
       orderBy,
       order: 'asc',
       filter: {
-        owner_id: getOrganizationUuid() || undefined,
+        ownerId: getOrganizationUuid() || undefined,
         ...filter,
       },
     });
@@ -77,7 +77,7 @@ export function RegionProvider(props) {
 
   const getRegionCount = async () => {
     const { count } = await api.getRegionsCount({
-      owner_id: getOrganizationUuid() || undefined,
+      ownerId: getOrganizationUuid() || undefined,
       ...filter,
     });
     setRegionCount(count);
@@ -96,10 +96,16 @@ export function RegionProvider(props) {
 
   const createRegion = async (payload) => {
     if (payload.shape.type.endsWith('Collection')) {
-      const createdCollection = await api.createCollection(payload);
+      const createdCollection = await api.createCollection({
+        ownerId: getOrganizationUuid() || undefined,
+        ...payload,
+      });
       setRegions((regions) => [...regions, ...createdCollection.regions]);
     } else {
-      const createdRegion = await api.createRegion(payload);
+      const createdRegion = await api.createRegion({
+        ownerId: getOrganizationUuid() || undefined,
+        ...payload,
+      });
       setRegions((regions) => [...regions, createdRegion]);
     }
   };

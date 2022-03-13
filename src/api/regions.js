@@ -3,16 +3,17 @@ import { session } from '../models/auth';
 
 const convertRegionPayload = (payload) => {
   return {
-    calculate_statistics: payload.calculateStatistics,
-    collection_id: payload.collectionId,
-    created_at: payload.createdAt,
+    calculate_statistics:
+      payload.calculateStatistics || payload.calculate_statistics,
+    collection_id: payload.collectionId || payload.collection_id,
+    created_at: payload.createdAt || payload.created_at,
     id: payload.id,
     name: payload.name,
     properties: payload.properties,
     shape: payload.shape,
-    show_on_org_map: payload.showOnOrgMap,
-    updated_at: payload.updatedAt,
-    ...payload,
+    show_on_org_map: payload.showOnOrgMap || payload.show_on_org_map,
+    updated_at: payload.updatedAt || payload.updated_at,
+    owner_id: payload.ownerId || payload.owner_id,
   };
 };
 
@@ -67,8 +68,8 @@ export default {
       .catch(handleError);
   },
 
-  createRegion({ ownerId, ...payload }) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region?owner_id=${ownerId}`;
+  createRegion(payload) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
     return fetch(query, {
       method: 'POST',
       headers: {
@@ -81,8 +82,8 @@ export default {
       .catch(handleError);
   },
 
-  createCollection({ ownerId, ...payload }) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/collection?owner_id=${ownerId}`;
+  createCollection(payload) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
 
     console.log(JSON.stringify(payload));
     return fetch(query, {
@@ -105,7 +106,12 @@ export default {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(convertRegionPayload(payload)),
+      body: JSON.stringify(
+        convertRegionPayload({
+          ...payload,
+          id: undefined,
+        })
+      ),
     })
       .then(handleResponse)
       .catch(handleError);
