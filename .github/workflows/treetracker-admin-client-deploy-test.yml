@@ -28,7 +28,7 @@ jobs:
         run: npm ci
         working-directory: ${{ env.project-directory }}
       - name: build client project
-        run: CI= REACT_APP_WEBMAP_DOMAIN=http://test.treetracker.org REACT_APP_API_ROOT=https://test-k8s.treetracker.org/api/admin npm run build
+        run: CI= npm run build:test
         working-directory: ${{ env.project-directory }}
       - uses: actions/upload-artifact@v2
         with:
@@ -62,4 +62,3 @@ jobs:
       - name: Invalidate cloudfront caches
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.TEST_CDN_DISTRIBUTION_ID }} --paths "/*"
-
