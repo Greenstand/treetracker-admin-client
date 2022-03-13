@@ -1,3 +1,10 @@
+# [1.66.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.1...v1.66.0) (2022-03-13)
+
+
+### Features
+
+* region management tool ([#399](https://github.com/Greenstand/treetracker-admin-client/issues/399)) ([9be2e57](https://github.com/Greenstand/treetracker-admin-client/commit/9be2e57c8728edae2b5a0f9143cb4d75cca72e1c))
+
 ## [1.65.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.0...v1.65.1) (2022-03-13)
 
 
