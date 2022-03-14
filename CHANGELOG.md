@@ -1,3 +1,10 @@
+## [1.66.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.0...v1.66.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* **earnings tool:** make log single payment form submit successfully ([#499](https://github.com/Greenstand/treetracker-admin-client/issues/499)) ([d18414c](https://github.com/Greenstand/treetracker-admin-client/commit/d18414c7ea1cea8f870046b15f9db09239667f58))
+
 # [1.66.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.1...v1.66.0) (2022-03-13)
 
 
