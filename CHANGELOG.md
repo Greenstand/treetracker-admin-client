@@ -1,3 +1,10 @@
+# [1.67.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.1...v1.67.0) (2022-03-14)
+
+
+### Features
+
+* earnings grower details ([#382](https://github.com/Greenstand/treetracker-admin-client/issues/382)) ([1505169](https://github.com/Greenstand/treetracker-admin-client/commit/1505169046aface4b861c940ac38bcee4e8a3eb2))
+
 ## [1.66.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.0...v1.66.1) (2022-03-14)
 
 
