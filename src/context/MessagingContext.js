@@ -157,6 +157,7 @@ export const MessagingProvider = (props) => {
       return;
     }
 
+    // check if grower sent a message and add it to top of messages
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {

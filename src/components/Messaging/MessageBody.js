@@ -395,12 +395,11 @@ const SenderInformation = ({
                   : message?.recipient_region_id}
               </Typography>
             )}
-            {type === 'survey' ||
-              (type === 'survey_response' && (
-                <Typography>
-                  <b>RESPONSES:</b> {responseCount}
-                </Typography>
-              ))}
+            {(type === 'survey' || type === 'survey_response') && (
+              <Typography>
+                <b>RESPONSES:</b> {responseCount}
+              </Typography>
+            )}
           </>
         )}
 
@@ -410,20 +409,19 @@ const SenderInformation = ({
           </Typography>
         )}
       </Grid>
-      {type === 'survey' ||
-        (type === 'survey_response' && (
-          <Grid item className={dataContainer}>
-            {showCharts ? (
-              <Button className={button} onClick={() => setShowCharts(false)}>
-                Show Survey
-              </Button>
-            ) : (
-              <Button className={button} onClick={() => setShowCharts(true)}>
-                Show Survey Data
-              </Button>
-            )}
-          </Grid>
-        ))}
+      {type.includes('survey') && responseCount > 0 && (
+        <Grid item className={dataContainer}>
+          {showCharts ? (
+            <Button className={button} onClick={() => setShowCharts(false)}>
+              Show Survey
+            </Button>
+          ) : (
+            <Button className={button} onClick={() => setShowCharts(true)}>
+              Show Survey Data
+            </Button>
+          )}
+        </Grid>
+      )}
     </Grid>
   );
 };
@@ -452,18 +450,11 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
     postMessageSend,
   } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
   const [showCharts, setShowCharts] = useState(false);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
-
-  useEffect(() => {
-    if (messages) {
-      setSubject(messages[0].subject);
-    }
-  }, [messages, messageRecipient]);
 
   useEffect(() => {
     const res = authors.find((author) => author.handle === messageRecipient);
@@ -617,7 +608,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             </Grid>
           )}
         </div>
-        {subject !== 'Survey' && (
+        {messages && messages[0]?.type === 'message' && (
           <TextInput
             messageRecipient={messageRecipient}
             handleSubmit={handleSubmit}

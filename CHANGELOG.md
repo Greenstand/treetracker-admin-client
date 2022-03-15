@@ -1,3 +1,39 @@
+## [1.68.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.2...v1.68.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* display an error if there are no authors ([cf67fe0](https://github.com/Greenstand/treetracker-admin-client/commit/cf67fe06d987cf63f4ee7600363102cb4be0be41))
+* hide message input when it's a survey or announcement ([0d65273](https://github.com/Greenstand/treetracker-admin-client/commit/0d65273db38131735f82e2691a5b81fe593e4210))
+* show survey button when it's a survey and there are responses ([791eba9](https://github.com/Greenstand/treetracker-admin-client/commit/791eba9f22efbfb86bb328f95dcdb835174f7741))
+
+## [1.68.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.1...v1.68.2) (2022-03-15)
+
+
+### Bug Fixes
+
+* add capture count ([dd066c0](https://github.com/Greenstand/treetracker-admin-client/commit/dd066c05822e8796502df284582f77f0282a74ae))
+
+## [1.68.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.0...v1.68.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* consolidation type ([996d774](https://github.com/Greenstand/treetracker-admin-client/commit/996d7743bce35d8647e4e7dde37831fed88dda16))
+
+# [1.68.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.67.0...v1.68.0) (2022-03-15)
+
+
+### Bug Fixes
+
+* correctly load authors, and improve ([4e3a25f](https://github.com/Greenstand/treetracker-admin-client/commit/4e3a25f1d9a80be6e333ea446f2f06a6f4fca331))
+* remove unused code ([c7480c7](https://github.com/Greenstand/treetracker-admin-client/commit/c7480c7bcd8d43d9902d0bd2927e6b34a7af8441))
+
+
+### Features
+
+* use grower account query service to get authors ([970d9f6](https://github.com/Greenstand/treetracker-admin-client/commit/970d9f61051e13bd937bea3a2cfff4811d7d85c5))
+
 # [1.67.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.1...v1.67.0) (2022-03-14)
 
 ### Features

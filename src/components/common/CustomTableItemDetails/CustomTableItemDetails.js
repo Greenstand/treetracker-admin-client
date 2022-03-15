@@ -240,7 +240,7 @@ function CustomTableItemDetails(props) {
 
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
-              <Typography variant="h6">Default</Typography>
+              <Typography variant="h6">FCC Tiered</Typography>
             </Grid>
 
             <Grid item className={classes.itemGrowerDetail}>
