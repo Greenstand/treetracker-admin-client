@@ -473,8 +473,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let lastMessage = messages[messages.length - 1];
-
     const messagePayload = {
       parent_message_id: null,
       author_handle: user.userName,
