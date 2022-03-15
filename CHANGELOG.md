@@ -1,3 +1,10 @@
+## [1.68.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.1...v1.68.2) (2022-03-15)
+
+
+### Bug Fixes
+
+* add capture count ([dd066c0](https://github.com/Greenstand/treetracker-admin-client/commit/dd066c05822e8796502df284582f77f0282a74ae))
+
 ## [1.68.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.0...v1.68.1) (2022-03-15)
 
 
