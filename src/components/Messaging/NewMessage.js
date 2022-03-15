@@ -81,8 +81,18 @@ const NewMessage = ({ openModal, handleClose }) => {
     }
   }, [openModal]);
 
+  useEffect(() => {
+    // set an error message right away if there are no authors
+    if (authors.length === 0) {
+      setError('Sorry, no accounts were found.');
+    }
+  }, [authors]);
+
   const handleChange = (e) => {
-    setError(false);
+    // don't remove the error if it's not a user mistake, like there aren't any authors
+    if (authors.length > 0) {
+      setError(false);
+    }
     const { name, value } = e.target;
     name === 'body'
       ? setMessageContent(value)
@@ -99,13 +109,15 @@ const NewMessage = ({ openModal, handleClose }) => {
       body: messageContent,
     };
 
-    if (
+    if (authors.length === 0) {
+      setError('Sorry, no accounts were found.');
+    } else if (
       !recipient ||
       recipient === '' ||
       !messageContent ||
       messageContent === ''
     ) {
-      setError(true);
+      setError('Please select a recipient and enter a message!');
       return;
     }
 
@@ -179,7 +191,7 @@ const NewMessage = ({ openModal, handleClose }) => {
                 margin: '20px 10px 0px',
               }}
             >
-              Please select a recipient and enter a message!
+              {error}
             </Typography>
           ) : null}
           <FormControl>
@@ -192,8 +204,9 @@ const NewMessage = ({ openModal, handleClose }) => {
               value={recipient}
               onChange={handleChange}
               options={
-                authors.length &&
-                authors.map((author) => author.handle || '').sort()
+                authors.length
+                  ? authors.map((author) => author.handle || '').sort()
+                  : []
               }
               inputValue={inputValue}
               getOptionSelected={(option, value) => option === value}
@@ -216,7 +229,12 @@ const NewMessage = ({ openModal, handleClose }) => {
               onChange={handleChange}
             />
           </FormControl>
-          <Button type="submit" size="large" className={button}>
+          <Button
+            type="submit"
+            size="large"
+            className={button}
+            disabled={!!error}
+          >
             Send Message
           </Button>
         </form>
