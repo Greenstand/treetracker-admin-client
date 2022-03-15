@@ -31,11 +31,15 @@ export default {
       .then(handleResponse)
       .catch(handleError);
 
-    const mappedRes = await res.growerAccounts.map((author) => {
+    // interim solution until using try/catch exception for all error messages
+    if (res.error) {
+      throw res.error;
+    }
+
+    const authors = await res.growerAccounts.map((author) => {
       return { ...author, avatar: author.image_url };
     });
-    console.log(mappedRes);
-    return mappedRes;
+    return authors;
   },
 
   postRegion(payload) {
