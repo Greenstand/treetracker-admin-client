@@ -37,19 +37,7 @@ export default {
     console.log(mappedRes);
     return mappedRes;
   },
-  // getAuthorAvatar(handle) {
-  //   const query = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/grower_accounts?wallet=${handle}`;
 
-  //   return fetch(query, {
-  //     method: 'GET',
-  //     headers: {
-  //       'content-type': 'application/json',
-  //       Authorization: session.token,
-  //     },
-  //   })
-  //     .then(handleResponse)
-  //     .catch(handleError);
-  // },
   postRegion(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
     const { id, name, description, created_at } = payload;
