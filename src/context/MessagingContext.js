@@ -96,31 +96,10 @@ export const MessagingProvider = (props) => {
     setIsLoading(false);
   };
 
-  const loadAuthors = async () => {
+  const loadAuthors = async (organizationId) => {
     log.debug('...load authors');
-    const res = await api.getAuthors();
-
-    if (res.authors) {
-      let result = res.authors.filter(
-        (author) => author.author_handle !== user.userName
-      );
-
-      log.debug('...load author avatars');
-      if (result.length) {
-        Promise.all(
-          result.map(async (author) => {
-            const { grower_accounts } = await api.getAuthorAvatar(
-              author.handle
-            );
-            // log.debug('grower_accounts', grower_accounts[0]?.image_url);
-            return { ...author, avatar: grower_accounts[0]?.image_url || '' };
-          })
-        ).then((data) => {
-          // log.debug('...update authors with avatars', data);
-          setAuthors(data);
-        });
-      }
-    }
+    const authors = await api.getAuthors(organizationId);
+    setAuthors(authors);
   };
 
   const postRegion = async (payload) => {

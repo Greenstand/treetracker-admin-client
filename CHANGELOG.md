@@ -1,30 +1,26 @@
 # [1.67.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.1...v1.67.0) (2022-03-14)
 
-
 ### Features
 
-* earnings grower details ([#382](https://github.com/Greenstand/treetracker-admin-client/issues/382)) ([1505169](https://github.com/Greenstand/treetracker-admin-client/commit/1505169046aface4b861c940ac38bcee4e8a3eb2))
+- earnings grower details ([#382](https://github.com/Greenstand/treetracker-admin-client/issues/382)) ([1505169](https://github.com/Greenstand/treetracker-admin-client/commit/1505169046aface4b861c940ac38bcee4e8a3eb2))
 
 ## [1.66.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.0...v1.66.1) (2022-03-14)
 
-
 ### Bug Fixes
 
-* **earnings tool:** make log single payment form submit successfully ([#499](https://github.com/Greenstand/treetracker-admin-client/issues/499)) ([d18414c](https://github.com/Greenstand/treetracker-admin-client/commit/d18414c7ea1cea8f870046b15f9db09239667f58))
+- **earnings tool:** make log single payment form submit successfully ([#499](https://github.com/Greenstand/treetracker-admin-client/issues/499)) ([d18414c](https://github.com/Greenstand/treetracker-admin-client/commit/d18414c7ea1cea8f870046b15f9db09239667f58))
 
 # [1.66.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.1...v1.66.0) (2022-03-13)
 
-
 ### Features
 
-* region management tool ([#399](https://github.com/Greenstand/treetracker-admin-client/issues/399)) ([9be2e57](https://github.com/Greenstand/treetracker-admin-client/commit/9be2e57c8728edae2b5a0f9143cb4d75cca72e1c))
+- region management tool ([#399](https://github.com/Greenstand/treetracker-admin-client/issues/399)) ([9be2e57](https://github.com/Greenstand/treetracker-admin-client/commit/9be2e57c8728edae2b5a0f9143cb4d75cca72e1c))
 
 ## [1.65.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.65.0...v1.65.1) (2022-03-13)
 
-
 ### Bug Fixes
 
-* enable payments in staging and fix test deployment ([#501](https://github.com/Greenstand/treetracker-admin-client/issues/501)) ([0f649a2](https://github.com/Greenstand/treetracker-admin-client/commit/0f649a2b8cbaaf77d28cfca7ed6414b23931dae3))
+- enable payments in staging and fix test deployment ([#501](https://github.com/Greenstand/treetracker-admin-client/issues/501)) ([0f649a2](https://github.com/Greenstand/treetracker-admin-client/commit/0f649a2b8cbaaf77d28cfca7ed6414b23931dae3))
 
 # [1.65.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.64.2...v1.65.0) (2022-03-12)
 

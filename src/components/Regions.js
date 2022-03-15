@@ -29,7 +29,7 @@ import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 import { AppContext } from '../context/AppContext';
-import { getOrganizationUuid } from '../api/apiUtils';
+import { getOrganizationUUID } from '../api/apiUtils';
 
 const styles = (theme) => ({
   regionsTableContainer: {
@@ -339,7 +339,7 @@ const EditModal = ({
       setCalc(regionEdit.calculate_statistics);
     } else {
       setId(undefined);
-      setOwnerId(getOrganizationUuid());
+      setOwnerId(getOrganizationUUID());
       setName(undefined);
       setPropTag(undefined);
       setShow(true);

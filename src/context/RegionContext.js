@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/regions';
 import * as loglevel from 'loglevel';
 import FilterRegion from 'models/FilterRegion';
-import { getOrganizationUuid } from 'api/apiUtils';
+import { getOrganizationUUID } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/RegionContext');
 
@@ -66,7 +66,7 @@ export function RegionProvider(props) {
       orderBy,
       order: 'asc',
       filter: {
-        ownerId: getOrganizationUuid() || undefined,
+        ownerId: getOrganizationUUID() || undefined,
         ...filter,
       },
     });
@@ -77,7 +77,7 @@ export function RegionProvider(props) {
 
   const getRegionCount = async () => {
     const { count } = await api.getRegionsCount({
-      ownerId: getOrganizationUuid() || undefined,
+      ownerId: getOrganizationUUID() || undefined,
       ...filter,
     });
     setRegionCount(count);
@@ -97,13 +97,13 @@ export function RegionProvider(props) {
   const createRegion = async (payload) => {
     if (payload.shape.type.endsWith('Collection')) {
       const createdCollection = await api.createCollection({
-        ownerId: getOrganizationUuid() || undefined,
+        ownerId: getOrganizationUUID() || undefined,
         ...payload,
       });
       setRegions((regions) => [...regions, ...createdCollection.regions]);
     } else {
       const createdRegion = await api.createRegion({
-        ownerId: getOrganizationUuid() || undefined,
+        ownerId: getOrganizationUUID() || undefined,
         ...payload,
       });
       setRegions((regions) => [...regions, createdRegion]);

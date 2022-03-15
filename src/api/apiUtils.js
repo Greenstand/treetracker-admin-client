@@ -45,6 +45,6 @@ export function getOrganizationId() {
   return session.user?.policy?.organization?.id || null;
 }
 
-export function getOrganizationUuid() {
-  return session.user?.policy?.organization?.stakeholder_uuid || null;
+export function getOrganizationUUID() {
+  return session.user?.policy?.organization?.uuid || null;
 }
