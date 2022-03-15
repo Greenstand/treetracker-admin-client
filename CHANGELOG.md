@@ -1,3 +1,10 @@
+## [1.68.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.3...v1.68.4) (2022-03-15)
+
+
+### Bug Fixes
+
+* interim solution for error handling, some cleanup ([8b8d6f7](https://github.com/Greenstand/treetracker-admin-client/commit/8b8d6f723425c2cd29529d7f2670c199177a0abd))
+
 ## [1.68.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.2...v1.68.3) (2022-03-15)
 
 
