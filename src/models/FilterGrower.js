@@ -22,6 +22,10 @@ export default class Filter {
       where.id = this.id;
     }
 
+    if (this.growerAccountUuid) {
+      where.growerAccountUuid = this.growerAccountUuid;
+    }
+
     if (this.firstName) {
       where.firstName = {
         regexp: stringToSearchRegExp(this.firstName),
@@ -67,7 +71,7 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
-    if (this.id) {
+    if (this.id || this.growerAccountUuid) {
       numFilters += 1;
     }
 

@@ -9,7 +9,10 @@ export async function handleResponse(response) {
   const error = await response.json();
   log.debug('handleResponse error ---', error);
 
-  if (response.status === 404 && error.message === 'Author handle not found') {
+  if (
+    response.status === 422 &&
+    error.message === 'No author handle found in the specified organization'
+  ) {
     return {
       error: true,
       message: error.message,

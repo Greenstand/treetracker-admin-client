@@ -4,7 +4,7 @@ const log = require('loglevel');
 
 export const MessagingContext = createContext({
   user: {},
-  messages: [],
+  threads: [],
   authors: [],
   isLoading: false,
   resMessages: [],
@@ -21,46 +21,30 @@ export const MessagingContext = createContext({
 
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [threads, setThreads] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
-  // useEffect(() => {
-  //   loadRegions();
-  //   loadAuthors();
-  // }, []);
-
   useEffect(() => {
-    log.debug('load author avatars');
-    if (authors.length) {
-      Promise.all(
-        authors.map(async (author) => {
-          const { grower_accounts } = await api.getAuthorAvatar(author.handle);
-          return { ...author, avatar: grower_accounts[0]?.image_url || '' };
-        })
-      ).then((data) => {
-        setAuthors(data);
+    log.debug('...add avatars to threads');
+    if (threads.length) {
+      const withAvatars = threads.map((message) => {
+        const author = authors.find(
+          (author) => author.handle === message.userName
+        );
+        const avatar = author?.avatar || '';
+
+        return { ...message, avatar };
       });
+      setThreads(withAvatars);
     }
-  }, [authors.length]);
-
-  useEffect(() => {
-    console.log('add avatars to threads');
-    const withAvatars = messages.map((message) => {
-      const author = authors.find(
-        (author) => author.handle === message.userName
-      );
-      const avatar = author?.avatar || '';
-
-      return { ...message, avatar };
-    });
-    setMessages(withAvatars);
-  }, [messages.length, authors]);
+  }, [threads.length, authors]);
 
   const groupMessageByHandle = (rawMessages) => {
+    log.debug('...group messages by handle');
     // make key of recipients name and group messages together
     // log.debug('rawMessages', rawMessages);
     let newMessages = rawMessages
@@ -69,7 +53,7 @@ export const MessagingProvider = (props) => {
         if (message.type === 'message') {
           let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
-            if (!grouped[key] && !messages[key]) {
+            if (!grouped[key]) {
               grouped[key] = [];
             }
             grouped[key].push(message);
@@ -104,22 +88,38 @@ export const MessagingProvider = (props) => {
         })
         .sort(
           (a, b) =>
-            new Date(b.messages.at(-1).composed_at) -
-            new Date(a.messages.at(-1).composed_at)
+            new Date(b?.messages?.at(-1).composed_at) -
+            new Date(a?.messages?.at(-1).composed_at)
         ),
     ];
-    setMessages(filteredMessages);
+    setThreads(filteredMessages);
     setIsLoading(false);
   };
 
   const loadAuthors = async (organizationId) => {
+    log.debug('...load authors');
     const res = await api.getAuthors(organizationId);
 
     if (res.authors) {
       let result = res.authors.filter(
         (author) => author.author_handle !== user.userName
       );
-      setAuthors(result);
+
+      log.debug('...load author avatars');
+      if (result.length) {
+        Promise.all(
+          result.map(async (author) => {
+            const { grower_accounts } = await api.getAuthorAvatar(
+              author.handle
+            );
+            // log.debug('grower_accounts', grower_accounts[0]?.image_url);
+            return { ...author, avatar: grower_accounts[0]?.image_url || '' };
+          })
+        ).then((data) => {
+          // log.debug('...update authors with avatars', data);
+          setAuthors(data);
+        });
+      }
     }
   };
 
@@ -136,7 +136,6 @@ export const MessagingProvider = (props) => {
   };
 
   const postMessageSend = (payload) => {
-    console.log('postMessageSend payload', payload);
     if (payload) {
       return api.postMessageSend(payload);
     } else {
@@ -156,7 +155,6 @@ export const MessagingProvider = (props) => {
     const payload = {
       body: '',
       from: user.userName,
-      subject: 'Message',
       to: grower.phone ? grower.phone : grower.email,
     };
 
@@ -166,7 +164,7 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    log.debug('loadMessages');
+    log.debug('...load messages');
     const res = await api.getMessages(user.userName);
     if (res.error) {
       setErrorMessage(res.message);
@@ -181,6 +179,7 @@ export const MessagingProvider = (props) => {
   };
 
   const loadRegions = async () => {
+    log.debug('...load regions');
     const res = await api.getRegion();
 
     if (res) {
@@ -190,11 +189,12 @@ export const MessagingProvider = (props) => {
 
   const value = {
     user,
-    messages,
+    threads,
     authors,
     regions,
     isLoading,
     errorMessage,
+    setThreads,
     setErrorMessage,
     setIsLoading,
     sendMessageFromGrower,

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import uuid from 'uuid/v4';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Announcement,
@@ -21,6 +21,7 @@ import { CircularProgress } from '@material-ui/core';
 
 import { MessagingContext } from 'context/MessagingContext.js';
 import SurveyCharts from './SurveyCharts.js';
+const log = require('loglevel');
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {
@@ -370,61 +371,69 @@ const SenderInformation = ({
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
-          {type === 'survey'
+          {type === 'survey' || type === 'survey_response'
             ? `Survey: ${message?.survey?.title}`
             : type === 'announce'
             ? `Announcement`
             : messageRecipient}
         </Typography>
 
-        {(type === 'survey' || type === 'announce') && (
+        {(type === 'survey' ||
+          type === 'survey_response' ||
+          type === 'announce') && (
           <>
-            <Typography>
+            <Typography align="left" color="primary">
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
             {message?.bulk_message_recipients && (
-              <Typography>
-                <b>TO:</b> {message?.bulk_message_recipients[0]?.recipient}
+              <Typography align="left" color="primary">
+                <b>TO:</b>{' '}
+                {message?.bulk_message_recipients.length
+                  ? message?.bulk_message_recipients[0]?.recipient
+                  : message?.recipient_organization_id
+                  ? message?.recipient_organization_id
+                  : message?.recipient_region_id}
               </Typography>
             )}
-            {type === 'survey' && (
-              <Typography>
-                <b>RESPONSES:</b> {responseCount}
-              </Typography>
-            )}
+            {type === 'survey' ||
+              (type === 'survey_response' && (
+                <Typography>
+                  <b>RESPONSES:</b> {responseCount}
+                </Typography>
+              ))}
           </>
         )}
 
         {type === 'message' && (
-          <Typography align="left" color="primary" variant="caption">
+          <Typography align="left" color="primary">
             ID: {id}
           </Typography>
         )}
       </Grid>
-      {type === 'survey' && (
-        <Grid item className={dataContainer}>
-          {showCharts ? (
-            <Button className={button} onClick={() => setShowCharts(false)}>
-              Show Survey
-            </Button>
-          ) : (
-            <Button className={button} onClick={() => setShowCharts(true)}>
-              Show Survey Data
-            </Button>
-          )}
-        </Grid>
-      )}
+      {type === 'survey' ||
+        (type === 'survey_response' && (
+          <Grid item className={dataContainer}>
+            {showCharts ? (
+              <Button className={button} onClick={() => setShowCharts(false)}>
+                Show Survey
+              </Button>
+            ) : (
+              <Button className={button} onClick={() => setShowCharts(true)}>
+                Show Survey Data
+              </Button>
+            )}
+          </Grid>
+        ))}
     </Grid>
   );
 };
 
 function getSurveyId(messages) {
-  console.log('getSurveyId', messages[0].survey.id);
+  // log.debug('getSurveyId', messages[0].survey.id);
   return messages[0].survey.id;
 }
 
 const MessageBody = ({ messages, messageRecipient, avatar }) => {
-  const history = useHistory();
   const {
     paper,
     messagesBody,
@@ -439,6 +448,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
     errorMessage,
     setErrorMessage,
     setIsLoading,
+    setThreads,
     postMessageSend,
   } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
@@ -451,7 +461,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
 
   useEffect(() => {
     if (messages) {
-      // messages are either Surveys or Messages/Announce Messages
       setSubject(messages[0].subject);
     }
   }, [messages, messageRecipient]);
@@ -479,7 +488,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       parent_message_id: lastMessage.id ? lastMessage.id : null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: 'Message', //temporarily hard-coded until we know what we want
       type: 'message',
       body: messageContent,
     };
@@ -489,9 +497,41 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
         const res = await postMessageSend(messagePayload);
         if (res.error) {
           setErrorMessage(res.message);
-          handleModalOpen();
         } else {
-          history.go(0);
+          const newMessage = {
+            parent_message_id: lastMessage.id,
+            body: messageContent,
+            composed_at: new Date().toISOString(),
+            from: user.userName,
+            id: uuid(),
+            recipient_organization_id: null,
+            recipient_region_id: null,
+            survey: null,
+            to: messageRecipient,
+            type: 'message',
+            video_link: null,
+          };
+
+          log.debug('...update threads after postMessageSend');
+          // update the full set of threads
+          setThreads((prev) => {
+            const updated = prev
+              .reduce(
+                (threads, thread) => {
+                  if (thread.userName === messageRecipient) {
+                    thread.messages.push(newMessage);
+                  }
+                  return threads;
+                },
+                [...prev]
+              )
+              .sort(
+                (a, b) =>
+                  new Date(b?.messages?.at(-1).composed_at) -
+                  new Date(a?.messages?.at(-1).composed_at)
+              );
+            return updated;
+          });
         }
       }
     }
@@ -501,7 +541,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   return (
     <>
       <Paper className={paper}>
-        {messageRecipient && messages ? (
+        {messageRecipient || messages ? (
           <SenderInformation
             message={messages[0]}
             messageRecipient={messageRecipient}
@@ -547,7 +587,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               ) {
                 return (
                   <SurveyMessage
-                    key={message.id ? message.id : i}
+                    key={message.id ? `${message.id}${i}` : i}
                     message={message}
                     user={user}
                     type={message.type}
