@@ -15,13 +15,13 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getAuthors(organizationId) {
-    let query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts`;
+  async getAuthors(organizationId) {
+    let query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts?author=true`;
     if (organizationId) {
-      query = `${query}?organization_id=${organizationId}`;
+      query = `${query}&organization_id=${organizationId}`;
     }
 
-    return fetch(query, {
+    const res = await fetch(query, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -30,20 +30,26 @@ export default {
     })
       .then(handleResponse)
       .catch(handleError);
-  },
-  getAuthorAvatar(handle) {
-    const query = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/grower_accounts?wallet=${handle}`;
 
-    return fetch(query, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    const mappedRes = await res.growerAccounts.map((author) => {
+      return { ...author, avatar: author.image_url };
+    });
+    console.log(mappedRes);
+    return mappedRes;
   },
+  // getAuthorAvatar(handle) {
+  //   const query = `${process.env.REACT_APP_TREETRACKER_API_ROOT}/grower_accounts?wallet=${handle}`;
+
+  //   return fetch(query, {
+  //     method: 'GET',
+  //     headers: {
+  //       'content-type': 'application/json',
+  //       Authorization: session.token,
+  //     },
+  //   })
+  //     .then(handleResponse)
+  //     .catch(handleError);
+  // },
   postRegion(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
     const { id, name, description, created_at } = payload;
