@@ -34,7 +34,6 @@ export default {
     const mappedRes = await res.growerAccounts.map((author) => {
       return { ...author, avatar: author.image_url };
     });
-    console.log(mappedRes);
     return mappedRes;
   },
 

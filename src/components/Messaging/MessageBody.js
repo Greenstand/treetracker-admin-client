@@ -452,18 +452,11 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
     postMessageSend,
   } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState(messages ? messages[0].subject : '');
   const [recipientId, setRecipientId] = useState('');
   const [showCharts, setShowCharts] = useState(false);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
-
-  useEffect(() => {
-    if (messages) {
-      setSubject(messages[0].subject);
-    }
-  }, [messages, messageRecipient]);
 
   useEffect(() => {
     const res = authors.find((author) => author.handle === messageRecipient);
@@ -617,7 +610,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             </Grid>
           )}
         </div>
-        {subject !== 'Survey' && (
+        {messages && messages[0]?.type === 'message' && (
           <TextInput
             messageRecipient={messageRecipient}
             handleSubmit={handleSubmit}
