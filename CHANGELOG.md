@@ -1,3 +1,16 @@
+# [1.68.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.67.0...v1.68.0) (2022-03-15)
+
+
+### Bug Fixes
+
+* correctly load authors, and improve ([4e3a25f](https://github.com/Greenstand/treetracker-admin-client/commit/4e3a25f1d9a80be6e333ea446f2f06a6f4fca331))
+* remove unused code ([c7480c7](https://github.com/Greenstand/treetracker-admin-client/commit/c7480c7bcd8d43d9902d0bd2927e6b34a7af8441))
+
+
+### Features
+
+* use grower account query service to get authors ([970d9f6](https://github.com/Greenstand/treetracker-admin-client/commit/970d9f61051e13bd937bea3a2cfff4811d7d85c5))
+
 # [1.67.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.66.1...v1.67.0) (2022-03-14)
 
 ### Features
