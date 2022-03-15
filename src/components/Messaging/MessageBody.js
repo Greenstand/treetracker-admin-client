@@ -395,12 +395,11 @@ const SenderInformation = ({
                   : message?.recipient_region_id}
               </Typography>
             )}
-            {type === 'survey' ||
-              (type === 'survey_response' && (
-                <Typography>
-                  <b>RESPONSES:</b> {responseCount}
-                </Typography>
-              ))}
+            {(type === 'survey' || type === 'survey_response') && (
+              <Typography>
+                <b>RESPONSES:</b> {responseCount}
+              </Typography>
+            )}
           </>
         )}
 
@@ -410,20 +409,19 @@ const SenderInformation = ({
           </Typography>
         )}
       </Grid>
-      {type === 'survey' ||
-        (type === 'survey_response' && (
-          <Grid item className={dataContainer}>
-            {showCharts ? (
-              <Button className={button} onClick={() => setShowCharts(false)}>
-                Show Survey
-              </Button>
-            ) : (
-              <Button className={button} onClick={() => setShowCharts(true)}>
-                Show Survey Data
-              </Button>
-            )}
-          </Grid>
-        ))}
+      {type.includes('survey') && responseCount > 0 && (
+        <Grid item className={dataContainer}>
+          {showCharts ? (
+            <Button className={button} onClick={() => setShowCharts(false)}>
+              Show Survey
+            </Button>
+          ) : (
+            <Button className={button} onClick={() => setShowCharts(true)}>
+              Show Survey Data
+            </Button>
+          )}
+        </Grid>
+      )}
     </Grid>
   );
 };
