@@ -1,3 +1,12 @@
+## [1.68.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.2...v1.68.3) (2022-03-15)
+
+
+### Bug Fixes
+
+* display an error if there are no authors ([cf67fe0](https://github.com/Greenstand/treetracker-admin-client/commit/cf67fe06d987cf63f4ee7600363102cb4be0be41))
+* hide message input when it's a survey or announcement ([0d65273](https://github.com/Greenstand/treetracker-admin-client/commit/0d65273db38131735f82e2691a5b81fe593e4210))
+* show survey button when it's a survey and there are responses ([791eba9](https://github.com/Greenstand/treetracker-admin-client/commit/791eba9f22efbfb86bb328f95dcdb835174f7741))
+
 ## [1.68.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.1...v1.68.2) (2022-03-15)
 
 
