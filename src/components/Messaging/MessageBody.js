@@ -473,10 +473,8 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let lastMessage = messages[messages.length - 1];
-
     const messagePayload = {
-      parent_message_id: lastMessage.id ? lastMessage.id : null,
+      parent_message_id: null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
       type: 'message',
@@ -490,7 +488,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           setErrorMessage(res.message);
         } else {
           const newMessage = {
-            parent_message_id: lastMessage.id,
+            parent_message_id: null,
             body: messageContent,
             composed_at: new Date().toISOString(),
             from: user.userName,
