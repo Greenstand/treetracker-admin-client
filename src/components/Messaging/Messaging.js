@@ -80,12 +80,13 @@ const Messaging = () => {
   useEffect(() => {
     setIsLoading(true);
     loadMessages();
-    loadRegions();
     const organizationId = getOrganizationUUID();
     if (organizationId) {
       loadAuthors(organizationId);
+      loadRegions(organizationId);
     } else {
       loadAuthors();
+      loadRegions();
     }
   }, []);
 

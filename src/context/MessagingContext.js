@@ -162,12 +162,12 @@ export const MessagingProvider = (props) => {
     }
   };
 
-  const loadRegions = async () => {
+  const loadRegions = async (organizationId) => {
     log.debug('...load regions');
-    const res = await api.getRegion();
+    const res = await api.getRegions(organizationId);
 
     if (res) {
-      setRegions(res);
+      setRegions(res.regions);
     }
   };
 
