@@ -409,4 +409,17 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  getAdminUserById(id) {
+    const query = `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${id}`;
+
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
 };

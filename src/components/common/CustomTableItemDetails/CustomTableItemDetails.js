@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import earningsAPI from 'api/earnings';
 import useStyles from './CustomTableItemDetails.styles';
+import treeTrackerApi from 'api/treeTrackerApi';
 
 /**
  * @function
@@ -134,7 +135,16 @@ LogPaymentForm.propTypes = {
  */
 function CustomTableItemDetails(props) {
   const { selectedItem, closeDetails, refreshData } = props;
+  const [userName, setUserName] = useState('');
   const classes = useStyles();
+
+  React.useEffect(() => {
+    treeTrackerApi
+      .getAdminUserById(selectedItem.payment_confirmed_by)
+      .then((data) => {
+        setUserName(data.userName);
+      });
+  }, [selectedItem]);
 
   return (
     <Drawer
@@ -275,7 +285,7 @@ function CustomTableItemDetails(props) {
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
                 <Typography variant="h6">
-                  {selectedItem.payment_confirmed_by}
+                  {userName || selectedItem.payment_confirmed_by}
                 </Typography>
               </Grid>
 
