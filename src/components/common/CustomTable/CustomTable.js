@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import PublishIcon from '@material-ui/icons/Publish';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -112,7 +112,7 @@ function CustomTableHeader(props) {
 
   const { orgList, selectedFilters } = React.useContext(AppContext);
 
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [dataToExport, setDataToExport] = useState([]);
 
   async function fetchData() {
@@ -178,7 +178,7 @@ function CustomTableHeader(props) {
     );
 
     setDataToExport(dataToExportTemp);
-    setData(dataTemp);
+    // setData(dataTemp);
   }
 
   return (
