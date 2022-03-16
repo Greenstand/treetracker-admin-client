@@ -1,3 +1,10 @@
+## [1.70.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.70.0...v1.70.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* do not loose side panel when error on bulk message send ([7c4c5f8](https://github.com/Greenstand/treetracker-admin-client/commit/7c4c5f88e07ddc447f12f6944d39c3b00b1fadb6))
+
 # [1.70.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.69.1...v1.70.0) (2022-03-16)
 
 
