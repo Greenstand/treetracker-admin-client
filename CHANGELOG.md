@@ -1,3 +1,16 @@
+# [1.70.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.69.1...v1.70.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* effective data info ([e307b25](https://github.com/Greenstand/treetracker-admin-client/commit/e307b25b08b6ea41fc8885fff62210ae1b2d53cd))
+* eslint ([50f0a42](https://github.com/Greenstand/treetracker-admin-client/commit/50f0a42ac7f47222c90651e11e0c9e5c8efeda02))
+
+
+### Features
+
+* display user name rather id ([03e7fe6](https://github.com/Greenstand/treetracker-admin-client/commit/03e7fe635012aa5779fbc70ef9f11cd69157b485))
+
 ## [1.69.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.69.0...v1.69.1) (2022-03-16)
 
 
