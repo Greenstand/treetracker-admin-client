@@ -99,12 +99,12 @@ function CustomTableHeader(props) {
   const {
     actionButtonType,
     headerTitle,
-    data,
     openDateFilter,
     openMainFilter,
     activeDateRange,
     onSelectFile,
     activeFiltersCount,
+    exportDataFetch,
   } = props;
   const classes = useStyles();
   const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
@@ -112,7 +112,10 @@ function CustomTableHeader(props) {
 
   const { orgList, selectedFilters } = React.useContext(AppContext);
 
-  useEffect(() => {
+  const [data, setData] = useState([]);
+  const [dataToExport, setDataToExport] = useState([]);
+
+  async function fetchData() {
     // If organisation is used to filter data, use that as prefix for the csv filename
     if (selectedFilters.organisation_id) {
       const selectedOrg = orgList.filter(
@@ -120,55 +123,63 @@ function CustomTableHeader(props) {
       )[0];
       setCsvFileNamePrefix(`${selectedOrg.name}_`);
     }
+
+    const { results: dataTemp } = await exportDataFetch(true);
+
     //if activeDateRange is set then use that for csv filename suffix
     if (activeDateRange.trim().length > 1) {
       setCsvFileNameSuffix(activeDateRange);
-      return;
+    } else {
+      if (!dataTemp || dataTemp.length == 0) return;
+      const consolidationPeriodStarts = dataTemp.map(
+        (row) => new Date(row.csv_start_date)
+      );
+      const consolidationPeriodEnds = dataTemp.map(
+        (row) => new Date(row.csv_end_date)
+      );
+      const minPeriodStart = consolidationPeriodStarts.reduce(
+        (pStart1, pStart2) => {
+          return pStart1 > pStart2 ? pStart2 : pStart1;
+        }
+      );
+      const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
+        return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
+      });
+      const minCsvStartDate = dateFormat(
+        new Date(minPeriodStart),
+        'yyyy-mm-dd'
+      );
+      const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
+      setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
     }
 
-    if (!data || data.length == 0) return;
-    const consolidationPeriodStarts = data.map(
-      (row) => new Date(row.csv_start_date)
+    const dataToExportTemp = dataTemp.map(
+      ({
+        id: earnings_id,
+        worker_id,
+        phone,
+        currency,
+        captures_count,
+        amount,
+        payment_confirmation_id,
+        payment_method,
+        paid_at,
+      }) => ({
+        earnings_id,
+        worker_id,
+        phone,
+        currency,
+        amount,
+        captures_count,
+        payment_confirmation_id,
+        payment_method,
+        paid_at,
+      })
     );
-    const consolidationPeriodEnds = data.map(
-      (row) => new Date(row.csv_end_date)
-    );
-    const minPeriodStart = consolidationPeriodStarts.reduce(
-      (pStart1, pStart2) => {
-        return pStart1 > pStart2 ? pStart2 : pStart1;
-      }
-    );
-    const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
-      return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
-    });
-    const minCsvStartDate = dateFormat(new Date(minPeriodStart), 'yyyy-mm-dd');
-    const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
-    setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
-  }, [data]);
 
-  const dataToExport = data.map(
-    ({
-      id: earnings_id,
-      worker_id,
-      phone,
-      currency,
-      captures_count,
-      amount,
-      payment_confirmation_id,
-      payment_method,
-      paid_at,
-    }) => ({
-      earnings_id,
-      worker_id,
-      phone,
-      currency,
-      amount,
-      captures_count,
-      payment_confirmation_id,
-      payment_method,
-      paid_at,
-    })
-  );
+    setDataToExport(dataToExportTemp);
+    setData(dataTemp);
+  }
 
   return (
     <Grid container className={classes.customTableTopBar}>
@@ -185,16 +196,27 @@ function CustomTableHeader(props) {
           {actionButtonType === 'export' && (
             <Grid item lg={2}>
               <Grid container direction="row" justify="flex-end">
-                <Button color="primary" variant="text">
-                  <CSVLink
-                    data={dataToExport}
-                    filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
-                    className={classes.csvLink}
-                    target="_blank"
-                  >
-                    <GetAppIcon />
-                    <Typography variant="h6">EXPORT</Typography>
-                  </CSVLink>
+                <CSVLink
+                  data={dataToExport}
+                  filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
+                  className={classes.csvLink}
+                  id="csv-link"
+                  target="_blank"
+                  style={{ display: 'none' }}
+                ></CSVLink>
+                <Button
+                  color="primary"
+                  variant="text"
+                  onClick={async () => {
+                    console.warn('CSV Link Clicked');
+                    console.warn('fetched');
+                    await fetchData();
+                    console.warn('done...');
+                    document.getElementById('csv-link').click();
+                  }}
+                >
+                  <GetAppIcon />
+                  <Typography variant="h6">EXPORT</Typography>
                 </Button>
               </Grid>
             </Grid>
@@ -317,6 +339,7 @@ function CustomTable(props) {
     dateFilterComponent,
     headerTitle,
     actionButtonType,
+    exportDataFetch,
     setSelectedRow,
     selectedRow,
     sortBy,
@@ -414,6 +437,7 @@ function CustomTable(props) {
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
         activeFiltersCount={activeFiltersCount}
+        exportDataFetch={exportDataFetch}
       />
       {tablePagination()}
       <TableContainer className={classes.tableHeight}>

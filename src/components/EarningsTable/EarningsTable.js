@@ -116,23 +116,34 @@ function EarningsTable() {
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
 
-  async function getEarnings() {
+  async function getEarnings(fetchAll = false) {
+    console.warn('getEarnings with fetchAll: ', fetchAll);
     setIsLoading(true); // show loading indicator when fetching data
 
+    const { results, totalCount } = await getEarningsReal();
+    setEarnings(results);
+    setTotalEarnings(totalCount);
+
+    setIsLoading(false); // hide loading indicator when data is fetched
+  }
+
+  async function getEarningsReal(fetchAll = false) {
+    console.warn('fetchAll:', fetchAll);
+
     const queryParams = {
-      offset: page * earningsPerPage,
+      offset: fetchAll ? 0 : page * earningsPerPage,
+      limit: fetchAll ? 90000 : earningsPerPage,
       sort_by: sortBy?.field,
       order: sortBy?.order,
-      limit: earningsPerPage,
       ...filter,
     };
 
     const response = await earningsAPI.getEarnings(queryParams);
     const results = prepareRows(response.earnings);
-    setEarnings(results);
-    setTotalEarnings(response.totalCount);
-
-    setIsLoading(false); // hide loading indicator when data is fetched
+    return {
+      results,
+      totalCount: response.totalCount,
+    };
   }
 
   const handleOpenMainFilter = () => setIsMainFilterOpen(true);
@@ -204,6 +215,7 @@ function EarningsTable() {
         ) : null
       }
       actionButtonType="export"
+      exportDataFetch={getEarningsReal}
     />
   );
 }
