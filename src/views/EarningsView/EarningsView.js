@@ -20,7 +20,7 @@ function EarningsView() {
     <Grid
       container
       direction="column"
-      style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
+      style={{ flexWrap: 'nowrap', height: '100%', overflow: 'scroll' }}
     >
       <Navbar />
       <EarningsTable />
