@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import uuid from 'uuid/v4';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -403,13 +403,13 @@ const SenderInformation = ({
           </>
         )}
 
-        {type === 'message' && (
+        {type === 'message' && id && (
           <Typography align="left" color="primary">
             ID: {id}
           </Typography>
         )}
       </Grid>
-      {type.includes('survey') && responseCount > 0 && (
+      {(type === 'survey' || type === 'survey_response') && responseCount > 0 && (
         <Grid item className={dataContainer}>
           {showCharts ? (
             <Button className={button} onClick={() => setShowCharts(false)}>
@@ -427,7 +427,6 @@ const SenderInformation = ({
 };
 
 function getSurveyId(messages) {
-  // log.debug('getSurveyId', messages[0].survey.id);
   return messages[0].survey.id;
 }
 
@@ -455,6 +454,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const res = authors.find((author) => author.handle === messageRecipient);
@@ -469,6 +469,15 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       setIsLoading(false);
     }
   }, [errorMessage]);
+
+  const scrollToBottom = () => {
+    // without animation
+    messagesEndRef.current.scrollIntoView();
+    // with animation
+    // messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
+
+  useEffect(scrollToBottom);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -503,24 +512,21 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
 
           log.debug('...update threads after postMessageSend');
           // update the full set of threads
-          setThreads((prev) => {
-            const updated = prev
-              .reduce(
-                (threads, thread) => {
-                  if (thread.userName === messageRecipient) {
-                    thread.messages.push(newMessage);
-                  }
-                  return threads;
-                },
-                [...prev]
-              )
+          setThreads((prev) =>
+            prev
+              .reduce((threads, thread) => {
+                if (thread.userName === messageRecipient) {
+                  thread.messages.push(newMessage);
+                }
+                threads.push(thread);
+                return threads;
+              }, [])
               .sort(
                 (a, b) =>
                   new Date(b?.messages?.at(-1).composed_at) -
                   new Date(a?.messages?.at(-1).composed_at)
-              );
-            return updated;
-          });
+              )
+          );
         }
       }
     }
@@ -605,6 +611,10 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
               )}
             </Grid>
           )}
+          <div
+            ref={messagesEndRef}
+            style={{ height: '10px', width: '100%' }}
+          ></div>
         </div>
         {messages && messages[0]?.type === 'message' && (
           <TextInput
