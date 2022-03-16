@@ -1,3 +1,10 @@
+# [1.69.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.5...v1.69.0) (2022-03-16)
+
+
+### Features
+
+* just csv file upload ([784098b](https://github.com/Greenstand/treetracker-admin-client/commit/784098be3f9af07a429af785acb09c60a46e54c9))
+
 ## [1.68.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.4...v1.68.5) (2022-03-15)
 
 
