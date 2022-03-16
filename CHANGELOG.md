@@ -1,3 +1,10 @@
+## [1.69.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.69.0...v1.69.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* page padding & scroll ([765528c](https://github.com/Greenstand/treetracker-admin-client/commit/765528ce7438d66c4c1ad78041835806072cc4af))
+
 # [1.69.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.68.5...v1.69.0) (2022-03-16)
 
 
