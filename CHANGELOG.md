@@ -1,3 +1,11 @@
+## [1.70.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.70.1...v1.70.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* eslint ([0743616](https://github.com/Greenstand/treetracker-admin-client/commit/07436169c311b77c9a4dc73457e0f7143d132876))
+* export all ([01481c7](https://github.com/Greenstand/treetracker-admin-client/commit/01481c73c6e6e343b547743fe55f413eb3e5872b))
+
 ## [1.70.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.70.0...v1.70.1) (2022-03-16)
 
 
