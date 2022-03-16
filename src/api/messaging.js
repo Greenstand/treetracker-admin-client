@@ -2,8 +2,11 @@ import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
 export default {
-  getRegion() {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
+  getRegions(organizationId) {
+    let query = `${process.env.REACT_APP_REGION_API_ROOT}/region`;
+    if (organizationId) {
+      query = `${query}?owner_id=${organizationId}`;
+    }
 
     return fetch(query, {
       method: 'GET',
