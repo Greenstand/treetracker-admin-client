@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { MessagingContext } from '../../context/MessagingContext';
+import { getOrganizationUUID } from './../../api/apiUtils';
 
 const useStyles = makeStyles((theme) => ({
   headerGrid: {
@@ -23,6 +24,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      textDecoration: ' none',
+      color: 'black',
+    },
   },
   messagesContainer: {
     margin: '2em',
@@ -30,32 +37,37 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '90vw',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginBottom: '5vw',
-    border: '1px solid black',
+    margin: '0 auto 5vw auto',
+    border: '2px solid black',
     borderRadius: '5px',
     display: 'flex',
     flexGrow: 1,
+    height: '76vh',
+    overflow: 'hidden',
   },
   inbox: {
     width: '30%',
     height: '100%',
-    border: '1px solid black',
+    borderRight: '2px solid black',
   },
   body: {
     height: '100%',
     width: '100%',
-    border: '1px solid black',
   },
 }));
 
 const Messaging = () => {
   // styles
   const { headerGrid, button, container, inbox, body } = useStyles();
-  const { user, messages, loadMessages, loadRegions, loadAuthors } = useContext(
-    MessagingContext
-  );
+  const {
+    user,
+    threads,
+    loadMessages,
+    loadRegions,
+    loadAuthors,
+    setErrorMessage,
+    setIsLoading,
+  } = useContext(MessagingContext);
 
   const [toggleAnnounceMessage, setToggleAnnounceMessage] = useState(false);
   const [toggleSurvey, setToggleSurvey] = useState(false);
@@ -65,28 +77,35 @@ const Messaging = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const findMessageRecipient = (messagesArray) => {
-    return messagesArray[0].messages[0].to[0].recipient !== user.userName
-      ? setMessageRecipient(messagesArray[0].messages[0].to[0].recipient)
-      : setMessageRecipient(messagesArray[0].messages[0].from.author);
-  };
-
   useEffect(() => {
-    console.log('Messaging.js: useEffect: loadMessages');
+    setIsLoading(true);
     loadMessages();
     loadRegions();
-    loadAuthors();
+    const organizationId = getOrganizationUUID();
+    if (organizationId) {
+      loadAuthors(organizationId);
+    } else {
+      loadAuthors();
+    }
   }, []);
 
   useEffect(() => {
-    if (messages.length && messageRecipient === null) {
-      findMessageRecipient(messages);
+    if (threads.length && !messageRecipient) {
+      threads[0].userName !== user.userName
+        ? setMessageRecipient(threads[0].userName)
+        : setMessageRecipient(user.userName);
     }
-  }, [messages]);
+  }, [threads]);
 
-  const handleListItemClick = (e, i, userName) => {
-    setSelectedIndex(i);
-    setMessageRecipient(userName);
+  useEffect(() => {
+    const index = threads.findIndex(
+      (message) => message.userName === messageRecipient
+    );
+    setSelectedIndex(index >= 0 ? index : 0);
+  }, [messageRecipient, threads]);
+
+  const handleListItemClick = (threadHandle) => {
+    setMessageRecipient(threadHandle);
   };
 
   return (
@@ -99,7 +118,11 @@ const Messaging = () => {
           <Button className={button} onClick={handleOpen}>
             New Message
           </Button>
-          <NewMessage openModal={openModal} handleClose={handleClose} />
+          <NewMessage
+            openModal={openModal}
+            handleClose={handleClose}
+            setErrorMessage={setErrorMessage}
+          />
           <Button
             className={button}
             onClick={() => setToggleAnnounceMessage(!toggleAnnounceMessage)}
@@ -129,16 +152,17 @@ const Messaging = () => {
       <Grid container className={container}>
         <Grid item className={inbox} xs={5} md={4}>
           <Inbox
-            messages={messages}
-            selectedIndex={selectedIndex}
+            threads={threads}
+            selected={messageRecipient}
             handleListItemClick={handleListItemClick}
           />
         </Grid>
         <Grid item className={body} xs={7} md={8}>
-          {messages.length ? (
+          {threads.length ? (
             <MessageBody
-              messages={messages[selectedIndex].messages}
-              messageRecipient={messageRecipient}
+              messages={threads[selectedIndex].messages}
+              messageRecipient={threads[selectedIndex].userName}
+              avatar={threads[selectedIndex].avatar}
             />
           ) : (
             <MessageBody />

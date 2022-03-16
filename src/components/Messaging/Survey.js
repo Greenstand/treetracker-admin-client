@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import uuid from 'uuid/v4';
 import {
   SwipeableDrawer,
   TextField,
@@ -16,6 +17,7 @@ import GSInputLabel from 'components/common/InputLabel';
 import { MessagingContext } from 'context/MessagingContext';
 import { AppContext } from 'context/AppContext';
 
+const log = require('loglevel');
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +67,14 @@ const useStyles = makeStyles((theme) => ({
 
 const SurveyForm = ({ setToggleSurvey }) => {
   const { form, submitButton, input } = useStyles();
-  const { user, regions, postMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    regions,
+    postBulkMessageSend,
+    threads,
+    setThreads,
+  } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
   const [title, setTitle] = useState('');
   const [questionOne, setQuestionOne] = useState({
@@ -121,7 +130,8 @@ const SurveyForm = ({ setToggleSurvey }) => {
     const allQuestions = { questionOne, questionTwo, questionThree };
     const payload = {
       author_handle: user.userName,
-      subject: 'Survey',
+      subject: title,
+      type: 'survey',
       body: 'Survey',
       survey: {
         title: title,
@@ -157,8 +167,38 @@ const SurveyForm = ({ setToggleSurvey }) => {
         payload.survey.title.length > 1 &&
         (payload['region_id'] || payload['organization_id'])
       ) {
-        await postMessageSend(payload);
-        history.go(0);
+        const res = await postBulkMessageSend(payload);
+        log.debug('Survey submit', threads, res);
+
+        if (res.error) {
+          setErrorMessage(res.message);
+        } else {
+          const newSurvey = {
+            id: uuid(),
+            type: 'survey',
+            parent_message_id: null,
+            from: payload.author_handle,
+            to: null,
+            recipient_organization_id: payload.organization_id || null,
+            recipient_region_id: payload.region_id || null,
+            subject: payload.subject,
+            body: null,
+            composed_at: new Date().toISOString(),
+            video_link: null,
+            survey_response: null,
+            survey: payload.survey,
+          };
+          log.debug('...update threads w/ new survey');
+          // update the full set of threads
+          setThreads((prev) => [
+            {
+              username: `${newSurvey.id}`,
+              messages: [newSurvey],
+              avatar: '',
+            },
+            ...prev,
+          ]);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -331,8 +371,8 @@ const Survey = ({ toggleSurvey, setToggleSurvey }) => {
   return (
     <>
       <SwipeableDrawer
-        disableBackdropTransition={!iOS}
-        disableDiscovery={iOS}
+        disablebackdroptransition={!iOS ? 'true' : 'false'}
+        disablediscovery={iOS ? 'true' : 'false'}
         anchor={'right'}
         open={toggleSurvey}
         onClose={() => setToggleSurvey(false)}

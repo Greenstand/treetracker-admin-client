@@ -1,24 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Drawer from '@material-ui/core/Drawer';
+import {
+  Typography,
+  CardMedia,
+  Grid,
+  IconButton,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Drawer,
+  Divider,
+  LinearProgress,
+} from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
-import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
-import { LinearProgress } from '@material-ui/core';
 import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
@@ -32,6 +34,7 @@ import LinkToWebmap from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
+import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
 
 const GROWER_IMAGE_SIZE = 441;
@@ -109,7 +112,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   // console.log('render: grower detail');
   const classes = useStyle();
   const appContext = useContext(AppContext);
-  const growerContext = useContext(GrowerContext);
+  const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -119,39 +122,59 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
+    setErrorMessage(null);
     async function loadGrowerDetail() {
-      if (grower && grower.id !== growerId) {
+      if (grower && grower.growerAccountUuid !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
       if (growerId) {
-        const match = await getGrower({
-          id: growerId,
-        });
+        let match;
+        if (isNaN(Number(growerId))) {
+          match = await getGrower({
+            id: undefined,
+            growerAccountUuid: growerId,
+          });
+        } else {
+          match = await getGrower({
+            id: growerId,
+            growerAccountUuid: undefined,
+          });
+        }
+
+        if (match.error) {
+          setErrorMessage(match.message);
+        }
+
         setGrower(match);
 
         if (
-          !growerRegistrations ||
-          (growerRegistrations.length > 0 &&
-            growerRegistrations[0].planter_id !== growerId)
+          match.id &&
+          (!growerRegistrations ||
+            (growerRegistrations.length > 0 &&
+              growerRegistrations[0].planter_id !== match.id))
         ) {
           setGrowerRegistrations(null);
-          api.getGrowerRegistrations(growerId).then((registrations) => {
+          api.getGrowerRegistrations(match.id).then((registrations) => {
             if (registrations && registrations.length) {
               const sortedReg = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1
               );
               const uniqueDevices = {};
               const devices = sortedReg.reduce((result, reg) => {
+                if (!reg.device_identifier) {
+                  return result;
+                }
                 if (!uniqueDevices[reg.device_identifier]) {
                   uniqueDevices[reg.device_identifier] = true;
                   // if manufacturer isn't 'apple' it's an android phone
                   result.push({
                     id: reg.device_identifier,
                     os:
-                      reg.manufacturer.toLowerCase() === 'apple'
+                      reg.manufacturer?.toLowerCase() === 'apple'
                         ? 'iOS'
                         : 'Android',
                   });
@@ -168,20 +191,20 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     }
     loadGrowerDetail();
     // eslint-disable-next-line
-  }, [growerId, growerContext.growers]);
+  }, [growerId, growers]);
 
   useEffect(() => {
     async function loadCaptures() {
-      if (growerId) {
+      if (grower.id) {
         setLoading(true);
         const [
           approvedCount,
           awaitingCount,
           rejectedCount,
         ] = await Promise.all([
-          getCaptureCountGrower(true, true, growerId),
-          getCaptureCountGrower(true, false, growerId),
-          getCaptureCountGrower(false, false, growerId),
+          getCaptureCountGrower(true, true, grower.id),
+          getCaptureCountGrower(true, false, grower.id),
+          getCaptureCountGrower(false, false, grower.id),
         ]);
         setVerificationStatus({
           approved: approvedCount,
@@ -192,7 +215,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
       }
     }
     loadCaptures();
-  }, [growerId]);
+  }, [grower]);
 
   async function getCaptureCountGrower(active, approved, growerId) {
     let filter = new FilterModel();
@@ -204,12 +227,22 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   }
 
   async function getGrower(payload) {
-    const { id } = payload;
-    let grower = growerContext.growers?.find((p) => p.id === id); // Look for a match in the context first
-    if (!grower) {
-      grower = await api.getGrower(id); // Otherwise query the API
+    const { id, growerAccountUuid } = payload;
+    let grower = growers?.find(
+      (p) => p.growerAccountUuid === growerAccountUuid || p.id === id
+    ); // Look for a match in the context first
+
+    if (!grower && !id) {
+      const filter = new FilterGrower();
+      filter.growerAccountUuid = growerAccountUuid;
+      [grower] = await api.getGrowers({ filter }); // Otherwise query the API
     }
-    return grower;
+
+    if (!grower && !growerAccountUuid) {
+      grower = await api.getGrower(id);
+    }
+    // throw error if no match at all
+    return grower || { error: true, message: 'Sorry! No grower info found' };
   }
 
   function handleEditClick() {
@@ -236,236 +269,274 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
             width: GROWER_IMAGE_SIZE,
           }}
         >
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container justify="space-between" alignItems="center">
-                <Grid item>
-                  <Box m={4}>
-                    <Typography color="primary" variant="h6">
-                      Grower Detail
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <IconButton onClick={() => onClose()}>
-                    <Close />
-                  </IconButton>
+          {errorMessage ? (
+            <Grid container direction="column">
+              <Grid item>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item>
+                    <Box m={4}>
+                      <Typography color="primary" variant="h6">
+                        Grower Detail
+                      </Typography>
+                      <Typography variant="h4">{errorMessage}</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={() => onClose()}>
+                      <Close />
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item className={classes.imageContainer}>
-              {grower.imageUrl && (
-                <OptimizedImage
-                  src={grower.imageUrl}
-                  width={GROWER_IMAGE_SIZE}
-                  height={GROWER_IMAGE_SIZE}
-                  className={classes.cardMedia}
-                  fixed
-                  rotation={grower.imageRotation}
-                />
-              )}
-              {!grower.imageUrl && (
+              <Grid item className={classes.imageContainer}>
                 <CardMedia className={classes.cardMedia}>
                   <Grid container className={classes.personBox}>
                     <Person className={classes.person} />
                   </Grid>
                 </CardMedia>
-              )}
-              {hasPermission(appContext.user, [
-                POLICIES.SUPER_PERMISSION,
-                POLICIES.MANAGE_GROWER,
-              ]) && (
-                <Fab
-                  data-testid="edit-grower"
-                  className={classes.editButton}
-                  onClick={() => handleEditClick()}
-                >
-                  <EditIcon />
-                </Fab>
-              )}
+              </Grid>
             </Grid>
-            <Grid item className={classes.box}>
-              <Typography variant="h5" color="primary" className={classes.name}>
-                {grower.firstName} {grower.lastName}
-              </Typography>
-              <Typography variant="body2">
-                ID: <LinkToWebmap value={grower.id} type="user" />
-              </Typography>
-            </Grid>
-            {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
-              hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
-                <Grid item>
-                  <Button
-                    className={classes.messageButton}
-                    onClick={() => sendMessageFromGrower(grower)}
-                    component={Link}
-                    to={'/messaging'}
-                  >
-                    Send Message
-                  </Button>
+          ) : (
+            <Grid container direction="column">
+              <Grid item>
+                <Grid container justify="space-between" alignItems="center">
+                  <Grid item>
+                    <Box m={4}>
+                      <Typography color="primary" variant="h6">
+                        Grower Detail
+                      </Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <IconButton onClick={() => onClose()}>
+                      <Close />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-              )}
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Captures</Typography>
-              {loading ? (
-                <LinearProgress color="primary" />
-              ) : (
-                <List className={classes.listCaptures}>
-                  <Box
-                    borderColor="grey.300"
-                    borderRadius={10}
-                    border={0.5}
-                    m={0.5}
+              </Grid>
+              <Grid item className={classes.imageContainer}>
+                {grower?.imageUrl && (
+                  <OptimizedImage
+                    src={grower.imageUrl}
+                    width={GROWER_IMAGE_SIZE}
+                    height={GROWER_IMAGE_SIZE}
+                    className={classes.cardMedia}
+                    fixed
+                    rotation={grower.imageRotation}
+                  />
+                )}
+                {!grower.imageUrl && (
+                  <CardMedia className={classes.cardMedia}>
+                    <Grid container className={classes.personBox}>
+                      <Person className={classes.person} />
+                    </Grid>
+                  </CardMedia>
+                )}
+                {hasPermission(appContext.user, [
+                  POLICIES.SUPER_PERMISSION,
+                  POLICIES.MANAGE_GROWER,
+                ]) && (
+                  <Fab
+                    data-testid="edit-grower"
+                    className={classes.editButton}
+                    onClick={() => handleEditClick()}
                   >
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar className={classes.approvedChip}>
-                          <Done />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h5">
-                            {verificationStatus.approved || 0}
-                          </Typography>
-                        }
-                        secondary="Approved"
-                      />
-                    </ListItem>
-                  </Box>
-                  <Box
-                    borderColor="grey.300"
-                    borderRadius={10}
-                    border={0.5}
-                    m={0.5}
-                  >
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar className={classes.awaitingChip}>
-                          <HourglassEmptyOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h5">
-                            {verificationStatus.awaiting || 0}
-                          </Typography>
-                        }
-                        secondary="Awaiting"
-                      />
-                    </ListItem>
-                  </Box>
-                  <Box
-                    borderColor="grey.300"
-                    borderRadius={10}
-                    border={0.5}
-                    m={0.5}
-                  >
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar className={classes.rejectedChip}>
-                          <Clear />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h5">
-                            {verificationStatus.rejected || 0}
-                          </Typography>
-                        }
-                        secondary="Rejected"
-                      />
-                    </ListItem>
-                  </Box>
-                </List>
-              )}
+                    <EditIcon />
+                  </Fab>
+                )}
+              </Grid>
+              <Grid item className={classes.box}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  className={classes.name}
+                >
+                  {grower.firstName} {grower.lastName}
+                </Typography>
+                <Typography variant="body2">
+                  ID: <LinkToWebmap value={grower.id} type="user" />
+                </Typography>
+              </Grid>
+              {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
+                hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
+                  <Grid item>
+                    <Button
+                      className={classes.messageButton}
+                      onClick={() => sendMessageFromGrower(grower)}
+                      component={Link}
+                      to={'/messaging'}
+                    >
+                      Send Message
+                    </Button>
+                  </Grid>
+                )}
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Captures</Typography>
+                {loading ? (
+                  <LinearProgress color="primary" />
+                ) : (
+                  <List className={classes.listCaptures}>
+                    <Box
+                      borderColor="grey.300"
+                      borderRadius={10}
+                      border={0.5}
+                      m={0.5}
+                    >
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.approvedChip}>
+                            <Done />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus.approved || 0}
+                            </Typography>
+                          }
+                          secondary="Approved"
+                        />
+                      </ListItem>
+                    </Box>
+                    <Box
+                      borderColor="grey.300"
+                      borderRadius={10}
+                      border={0.5}
+                      m={0.5}
+                    >
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.awaitingChip}>
+                            <HourglassEmptyOutlined />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus.awaiting || 0}
+                            </Typography>
+                          }
+                          secondary="Awaiting"
+                        />
+                      </ListItem>
+                    </Box>
+                    <Box
+                      borderColor="grey.300"
+                      borderRadius={10}
+                      border={0.5}
+                      m={0.5}
+                    >
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar className={classes.rejectedChip}>
+                            <Clear />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus.rejected || 0}
+                            </Typography>
+                          }
+                          secondary="Rejected"
+                        />
+                      </ListItem>
+                    </Box>
+                  </List>
+                )}
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Email address</Typography>
+                <Typography variant="body1">{grower.email || '---'}</Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Phone number</Typography>
+                <Typography variant="body1">{grower.phone || '---'}</Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Person ID</Typography>
+                <Typography variant="body1">
+                  {grower.personId || '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Organization</Typography>
+                <Typography variant="body1">
+                  {grower.organization || '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Organization ID</Typography>
+                <Typography variant="body1">
+                  {grower.organizationId || '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Country</Typography>
+                <Typography variant="body1">
+                  {(growerRegistrations &&
+                    growerRegistrations
+                      .map((item) => item.country)
+                      .filter(
+                        (country, i, arr) =>
+                          country && arr.indexOf(country) === i
+                      )
+                      .join(', ')) ||
+                    '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Registered</Typography>
+                <Typography variant="body1">
+                  {(growerRegistrations &&
+                    growerRegistrations.length > 0 &&
+                    getDateTimeStringLocale(
+                      growerRegistrations[0].created_at
+                    )) ||
+                    '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">
+                  Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
+                </Typography>
+                {(deviceIdentifiers.length && (
+                  <table>
+                    <tbody>
+                      {deviceIdentifiers.map((device, i) => (
+                        <tr key={i}>
+                          <td>
+                            <Typography variant="body1">
+                              {device.id}
+                              <CopyButton
+                                label={'Device Identifier'}
+                                value={device.id}
+                                confirmCopy={confirmCopy}
+                              />
+                            </Typography>
+                          </td>
+                          <td>
+                            <Typography variant="body1">
+                              ({device.os})
+                            </Typography>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )) || <Typography variant="body1">---</Typography>}
+              </Grid>
             </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Email address</Typography>
-              <Typography variant="body1">{grower.email || '---'}</Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Phone number</Typography>
-              <Typography variant="body1">{grower.phone || '---'}</Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Person ID</Typography>
-              <Typography variant="body1">
-                {grower.personId || '---'}
-              </Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Organization</Typography>
-              <Typography variant="body1">
-                {grower.organization || '---'}
-              </Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Organization ID</Typography>
-              <Typography variant="body1">
-                {grower.organizationId || '---'}
-              </Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Country</Typography>
-              <Typography variant="body1">
-                {(growerRegistrations &&
-                  growerRegistrations
-                    .map((item) => item.country)
-                    .filter(
-                      (country, i, arr) => country && arr.indexOf(country) === i
-                    )
-                    .join(', ')) ||
-                  '---'}
-              </Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">Registered</Typography>
-              <Typography variant="body1">
-                {(growerRegistrations &&
-                  growerRegistrations.length > 0 &&
-                  getDateTimeStringLocale(growerRegistrations[0].created_at)) ||
-                  '---'}
-              </Typography>
-            </Grid>
-            <Divider />
-            <Grid container direction="column" className={classes.box}>
-              <Typography variant="subtitle1">
-                Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
-              </Typography>
-              {(deviceIdentifiers.length && (
-                <table>
-                  <tbody>
-                    {deviceIdentifiers.map((device, i) => (
-                      <tr key={i}>
-                        <td>
-                          <Typography variant="body1">
-                            {device.id}
-                            <CopyButton
-                              label={'Device Identifier'}
-                              value={device.id}
-                              confirmCopy={confirmCopy}
-                            />
-                          </Typography>
-                        </td>
-                        <td>
-                          <Typography variant="body1">({device.os})</Typography>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )) || <Typography variant="body1">---</Typography>}
-            </Grid>
-          </Grid>
+          )}
         </Grid>
       </Drawer>
       <CopyNotification

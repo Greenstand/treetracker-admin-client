@@ -29,7 +29,6 @@ import treeTrackerApi from 'api/treeTrackerApi';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
-  const [paymentMethod, setPaymentMethod] = useState('');
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -37,7 +36,6 @@ function LogPaymentForm(props) {
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
-    setPaymentMethod(value);
   };
 
   const handleOnFormSubmit = () => {
@@ -51,7 +49,7 @@ function LogPaymentForm(props) {
   };
 
   return (
-    <>
+    <form onSubmit={handleOnFormSubmit}>
       <Grid container direction="column" justify="space-around">
         <Grid item className={classes.itemGrowerDetail}>
           <Typography variant="h6">Payment</Typography>
@@ -67,6 +65,7 @@ function LogPaymentForm(props) {
               name="payment_confirmation_id"
               label="Payment Confirmation Id"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
             />
           </FormControl>
@@ -80,8 +79,8 @@ function LogPaymentForm(props) {
               name="payment_method"
               label="Payment Method"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
-              value={paymentMethod}
             />
           </FormControl>
         </Grid>
@@ -98,7 +97,7 @@ function LogPaymentForm(props) {
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleOnFormSubmit}
+          type="submit"
           className={classes.itemTableFilterSubmitButton}
         >
           LOG PAYMENT
@@ -112,7 +111,7 @@ function LogPaymentForm(props) {
           CANCEL
         </Button>
       </Grid>
-    </>
+    </form>
   );
 }
 

@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   SwipeableDrawer,
   Grid,
@@ -14,6 +13,8 @@ import { makeStyles } from '@material-ui/styles';
 import GSInputLabel from 'components/common/InputLabel';
 import { AppContext } from 'context/AppContext';
 import { MessagingContext } from 'context/MessagingContext';
+
+const log = require('loglevel');
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -54,9 +55,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
-  const history = useHistory();
   const { orgList } = useContext(AppContext);
-  const { user, regions, postMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    regions,
+    postBulkMessageSend,
+    setThreads,
+  } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
   const [organization, setOrganization] = useState({});
   const [inputValueOrg, setInputValueOrg] = useState('');
@@ -82,8 +88,8 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     e.preventDefault();
     const payload = {
       author_handle: user.userName,
-      subject: 'Announce Message',
-      title: values.title,
+      subject: values.title,
+      type: 'announce',
       body: values.message,
     };
 
@@ -109,8 +115,38 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         (payload.body && payload.organization_id) ||
         (payload.body && payload.region_id)
       ) {
-        await postMessageSend(payload);
-        history.go(0);
+        const res = await postBulkMessageSend(payload);
+
+        if (res.error) {
+          setErrorMessage(res.message);
+        } else {
+          const newAnnouncement = {
+            id: null,
+            type: 'announce',
+            parent_message_id: null,
+            from: payload.author_handle,
+            to: null,
+            recipient_organization_id: payload.organization_id || null,
+            recipient_region_id: payload.region_id || null,
+            subject: payload.subject,
+            body: payload.body,
+            composed_at: new Date().toISOString(),
+            video_link: null,
+            survey_response: null,
+            survey: null,
+            bulk_message_recipients: [],
+          };
+          log.debug('...update threads w/ new announcement');
+          // update the full set of threads
+          setThreads((prev) => [
+            {
+              username: `${newAnnouncement.id}`,
+              messages: [newAnnouncement],
+              avatar: '',
+            },
+            ...prev,
+          ]);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -226,8 +262,8 @@ const AnnounceMessage = ({
 
   return (
     <SwipeableDrawer
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
+      disablebackdroptransition={!iOS ? 'true' : 'false'}
+      disablediscovery={iOS ? 'true' : 'false'}
       anchor={'right'}
       open={toggleAnnounceMessage}
       onOpen={() => setToggleAnnounceMessage(true)}
