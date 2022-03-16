@@ -36,7 +36,7 @@ export default {
       throw res.error;
     }
 
-    const authors = await res.growerAccounts.map((author) => {
+    const authors = await res.grower_accounts.map((author) => {
       return { ...author, avatar: author.image_url };
     });
     return authors;

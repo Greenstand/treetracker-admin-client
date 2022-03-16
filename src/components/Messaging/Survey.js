@@ -170,9 +170,34 @@ const SurveyForm = ({ setToggleSurvey }) => {
         const res = await postBulkMessageSend(payload);
         log.debug('Survey submit', threads, res);
 
+        setErrorMessage('');
         if (res.error) {
           setErrorMessage(res.message);
         } else {
+          // reset and hide the survey drawer
+          setQuestionOne({
+            prompt: '',
+            choiceOne: '',
+            choiceTwo: '',
+            choiceThree: '',
+          });
+          setQuestionTwo({
+            prompt: '',
+            choiceOne: '',
+            choiceTwo: '',
+            choiceThree: '',
+          });
+          setQuestionThree({
+            prompt: '',
+            choiceOne: '',
+            choiceTwo: '',
+            choiceThree: '',
+          });
+          setOrganization('');
+          setRegion('');
+          setTitle('');
+          setToggleSurvey(false);
+
           const newSurvey = {
             id: uuid(),
             type: 'survey',
@@ -203,28 +228,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
     } catch (err) {
       console.log(err);
     }
-    setQuestionOne({
-      prompt: '',
-      choiceOne: '',
-      choiceTwo: '',
-      choiceThree: '',
-    });
-    setQuestionTwo({
-      prompt: '',
-      choiceOne: '',
-      choiceTwo: '',
-      choiceThree: '',
-    });
-    setQuestionThree({
-      prompt: '',
-      choiceOne: '',
-      choiceTwo: '',
-      choiceThree: '',
-    });
-    setOrganization('');
-    setRegion('');
-    setTitle('');
-    setToggleSurvey(false);
   };
   return (
     <form className={form} onSubmit={handleSubmit}>

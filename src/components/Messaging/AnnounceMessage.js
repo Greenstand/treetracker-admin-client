@@ -117,9 +117,20 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       ) {
         const res = await postBulkMessageSend(payload);
 
+        setErrorMessage('');
         if (res.error) {
           setErrorMessage(res.message);
         } else {
+          // close the drawer
+          setValues({
+            title: '',
+            message: '',
+            videoLink: '',
+          });
+          setOrganization('');
+          setRegion('');
+          setToggleAnnounceMessage(false);
+
           const newAnnouncement = {
             id: null,
             type: 'announce',
@@ -151,15 +162,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     } catch (err) {
       console.log(err);
     }
-
-    setValues({
-      title: '',
-      message: '',
-      videoLink: '',
-    });
-    setOrganization('');
-    setRegion('');
-    setToggleAnnounceMessage(false);
   };
 
   return (
