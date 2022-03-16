@@ -1,3 +1,15 @@
+# [1.73.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.72.0...v1.73.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* populate and submit regions for bulk messages ([6ebd51d](https://github.com/Greenstand/treetracker-admin-client/commit/6ebd51dc8a7c1aea69afa08d90c0e39f83d685ea))
+
+
+### Features
+
+* scroll messages to the bottom and adjust as new added ([e904aa5](https://github.com/Greenstand/treetracker-admin-client/commit/e904aa55d17735302eb078b1f495211eb3530f90))
+
 # [1.72.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.71.0...v1.72.0) (2022-03-16)
 
 
