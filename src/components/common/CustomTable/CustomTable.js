@@ -1,4 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+import TableCell from '@material-ui/core/TableCell';
+import PublishIcon from '@material-ui/icons/Publish';
+import TableBody from '@material-ui/core/TableBody';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import { CSVLink } from 'react-csv';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -437,7 +445,9 @@ function CustomTable(props) {
                       <Typography variant="h6">
                         {column.description}
                         {column?.showInfoIcon && (
-                          <InfoOutlinedIcon className={classes.infoIcon} />
+                          <Tooltip title={column.showInfoIcon + ''}>
+                            <InfoOutlinedIcon className={classes.infoIcon} />
+                          </Tooltip>
                         )}
                       </Typography>
                     </TableSortLabel>
@@ -445,7 +455,9 @@ function CustomTable(props) {
                     <Typography variant="h6">
                       {column.description}
                       {column?.showInfoIcon && (
-                        <InfoOutlinedIcon className={classes.infoIcon} />
+                        <Tooltip title={column.showInfoIcon}>
+                          <InfoOutlinedIcon className={classes.infoIcon} />
+                        </Tooltip>
                       )}
                     </Typography>
                   )}

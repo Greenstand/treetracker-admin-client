@@ -46,7 +46,8 @@ const earningTableMetaData = [
     description: 'Effective Date',
     name: 'calculated_at',
     sortable: true,
-    showInfoIcon: true,
+    showInfoIcon:
+      'The effective data is the date on which captures were consolidated and the earnings record was created',
   },
   {
     description: 'Status',
