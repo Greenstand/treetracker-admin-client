@@ -47,7 +47,7 @@ function ImportAction(props) {
     <Grid item lg={2}>
       <Grid container direction="row" justify="flex-end">
         <input
-          accept="multipart/form-data"
+          accept=".csv,multipart/form-data"
           className={classes.uploadFileInput}
           onChange={handleOnSelectFile}
           id="file-upload-button"
