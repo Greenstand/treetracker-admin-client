@@ -1,6 +1,5 @@
 {
   "baseUrl": "http://localhost:3001",
   "testFiles": "**/*spec.py.{js,jsx,ts,tsx}",
-  "experimentalComponentTesting": true,
   "componentFolder": "cypress/component"
 }

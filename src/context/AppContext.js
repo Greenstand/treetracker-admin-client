@@ -30,8 +30,10 @@ import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
+import MapIcon from '@material-ui/icons/Map';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import RegionsView from 'views/RegionsView';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({});
@@ -116,8 +118,8 @@ function getRoutes(user) {
         },
       ],
       disabled:
-        process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
-        process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
+        (process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
+          process.env.REACT_APP_ENABLE_PAYMENTS !== 'true') ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
           POLICIES.MANAGE_EARNINGS,
@@ -164,6 +166,19 @@ function getRoutes(user) {
         POLICIES.LIST_USER,
         POLICIES.MANAGER_USER,
       ]),
+    },
+    {
+      name: 'Regions',
+      linkTo: '/regions',
+      component: RegionsView,
+      icon: MapIcon,
+      disabled:
+        process.env.REACT_APP_ENABLE_REGIONS !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.LIST_REGIONS,
+          POLICIES.MANAGE_REGIONS,
+        ]),
     },
     {
       name: 'Account',

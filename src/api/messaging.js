@@ -15,10 +15,13 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getAuthors() {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/author`;
+  async getAuthors(organizationId) {
+    let query = `${process.env.REACT_APP_GROWER_QUERY_API_ROOT}/grower_accounts?author=true`;
+    if (organizationId) {
+      query = `${query}&organization_id=${organizationId}`;
+    }
 
-    return fetch(query, {
+    const res = await fetch(query, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -27,7 +30,18 @@ export default {
     })
       .then(handleResponse)
       .catch(handleError);
+
+    // interim solution until using try/catch exception for all error messages
+    if (res.error) {
+      throw res.error;
+    }
+
+    const authors = await res.growerAccounts.map((author) => {
+      return { ...author, avatar: author.image_url };
+    });
+    return authors;
   },
+
   postRegion(payload) {
     const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
     const { id, name, description, created_at } = payload;
@@ -54,8 +68,8 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
-  getMessage(author_handle) {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?author_handle=${author_handle}`;
+  getMessages(handle) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?handle=${handle}&limit=500`;
 
     return fetch(query).then(handleResponse).catch(handleError);
   },
@@ -74,7 +88,7 @@ export default {
       .catch(handleError);
   },
   postMessageSend(payload) {
-    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message/send`;
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 
     return fetch(query, {
       method: 'POST',
@@ -86,5 +100,23 @@ export default {
     })
       .then(handleResponse)
       .catch(handleError);
+  },
+  postBulkMessageSend(payload) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/bulk_message`;
+
+    return fetch(query, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  getSurvey(surveyId) {
+    const query = `${process.env.REACT_APP_MESSAGING_ROOT}/survey/${surveyId}`;
+    return fetch(query).then(handleResponse).catch(handleError);
   },
 };

@@ -18,6 +18,8 @@ const POLICIES = {
   MANAGE_GROWER: 'manage_planter',
   SEND_MESSAGES: 'send_messages',
   MATCH_CAPTURES: 'match_captures',
+  MANAGE_REGIONS: 'manage_regions',
+  LIST_REGIONS: 'list_regions',
 };
 
 function hasPermission(user, p) {

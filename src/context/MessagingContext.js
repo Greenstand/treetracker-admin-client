@@ -1,10 +1,12 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/messaging';
+const log = require('loglevel');
 
 export const MessagingContext = createContext({
   user: {},
-  messages: [],
+  threads: [],
   authors: [],
+  isLoading: false,
   resMessages: [],
   growerMessage: {},
   regions: [],
@@ -19,65 +21,91 @@ export const MessagingContext = createContext({
 
 export const MessagingProvider = (props) => {
   const [regions, setRegions] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [threads, setThreads] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [growerMessage, setGrowerMessage] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
-  // useEffect(() => {
-  //   loadRegions();
-  //   loadAuthors();
-  // }, []);
+  useEffect(() => {
+    log.debug('...add avatars to threads');
+    if (threads.length) {
+      const withAvatars = threads.map((message) => {
+        const author = authors.find(
+          (author) => author.handle === message.userName
+        );
+        const avatar = author?.avatar || '';
+
+        return { ...message, avatar };
+      });
+      setThreads(withAvatars);
+    }
+  }, [threads.length, authors]);
 
   const groupMessageByHandle = (rawMessages) => {
+    log.debug('...group messages by handle');
     // make key of recipients name and group messages together
+    log.debug('rawMessages', rawMessages);
     let newMessages = rawMessages
       .sort((a, b) => (a.composed_at < b.composed_at ? -1 : 1))
       .reduce((grouped, message) => {
-        if (
-          message.subject === 'Message' ||
-          message.subject === 'Announce Message'
-        ) {
-          let key =
-            message.to[0].recipient !== user.userName
-              ? message[`to`][0].recipient
-              : message['from'].author;
+        if (message.type === 'message') {
+          let key = message.to !== user.userName ? message.to : message.from;
           if (key) {
-            if (!grouped[key] && !messages[key]) {
+            if (!grouped[key]) {
               grouped[key] = [];
             }
             grouped[key].push(message);
           }
-        } else if (message.subject === 'Survey') {
+        } else if (
+          message.type === 'survey' ||
+          message.type === 'survey_response'
+        ) {
+          log.debug(message);
           let key = message.survey.id;
+          log.debug(key);
           if (!grouped[key]) {
-            grouped[key] = [];
+            grouped[key] = [message];
           }
-          grouped[key].push(message);
+          if (message.type === 'survey_response') {
+            grouped[key].push(message);
+          }
+          log.debug(grouped);
+        } else if (message.type === 'announce') {
+          // add date to create unique key for similar announements
+          let key = `${message.subject}-${Date.now()}`;
+          grouped[key] = [message];
         }
         return grouped;
       }, {});
     const filteredMessages = [
-      ...Object.entries(newMessages).map(([key, val]) => {
-        if (key && val) {
-          return {
-            userName: key,
-            messages: val,
-          };
-        }
-      }),
+      ...Object.entries(newMessages)
+        .map(([key, val]) => {
+          if (key && val) {
+            return {
+              userName: key,
+              messages: val,
+            };
+          }
+        })
+        .sort(
+          (a, b) =>
+            new Date(b?.messages?.at(-1).composed_at) -
+            new Date(a?.messages?.at(-1).composed_at)
+        ),
     ];
-    setMessages(filteredMessages);
+    setThreads(filteredMessages);
+    setIsLoading(false);
   };
 
-  const loadAuthors = async () => {
-    const res = await api.getAuthors();
-
-    if (res) {
-      let result = res.authors.filter(
-        (author) => author.handle !== user.userName
-      );
-      setAuthors(result);
+  const loadAuthors = async (organizationId) => {
+    try {
+      log.debug('...load authors');
+      const authors = await api.getAuthors(organizationId);
+      setAuthors(authors);
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
 
@@ -101,11 +129,18 @@ export const MessagingProvider = (props) => {
     }
   };
 
+  const postBulkMessageSend = (payload) => {
+    if (payload) {
+      return api.postBulkMessageSend(payload);
+    } else {
+      return 'Were sorry something went wrong. Please try again.';
+    }
+  };
+
   const sendMessageFromGrower = (grower) => {
     const payload = {
       body: '',
       from: user.userName,
-      subject: 'Message',
       to: grower.phone ? grower.phone : grower.email,
     };
 
@@ -115,9 +150,14 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    console.log('loadMessages');
-    const res = await api.getMessage(user.userName);
-    console.log(res.messages);
+    log.debug('...load messages');
+    const res = await api.getMessages(user.userName);
+    if (res.error) {
+      setErrorMessage(res.message);
+      return;
+    }
+
+    // check if grower sent a message and add it to top of messages
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -126,6 +166,7 @@ export const MessagingProvider = (props) => {
   };
 
   const loadRegions = async () => {
+    log.debug('...load regions');
     const res = await api.getRegion();
 
     if (res) {
@@ -135,9 +176,14 @@ export const MessagingProvider = (props) => {
 
   const value = {
     user,
-    messages,
+    threads,
     authors,
     regions,
+    isLoading,
+    errorMessage,
+    setThreads,
+    setErrorMessage,
+    setIsLoading,
     sendMessageFromGrower,
     loadMessages,
     loadRegions,
@@ -146,6 +192,7 @@ export const MessagingProvider = (props) => {
     getRegionById,
     postMessage,
     postMessageSend,
+    postBulkMessageSend,
   };
 
   return (
