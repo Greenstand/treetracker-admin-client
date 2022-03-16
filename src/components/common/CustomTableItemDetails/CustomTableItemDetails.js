@@ -299,6 +299,20 @@ function CustomTableItemDetails(props) {
                   {selectedItem.payment_confirmation_method}
                 </Typography>
               </Grid>
+
+              <Grid item>
+                <Typography>Payment confirmation id</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_confirmation_id}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography>Payment method</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_method}
+                </Typography>
+              </Grid>
             </Grid>
           )}
         </Grid>
