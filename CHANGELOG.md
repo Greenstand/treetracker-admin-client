@@ -1,3 +1,10 @@
+# [1.71.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.70.2...v1.71.0) (2022-03-16)
+
+
+### Features
+
+* add id ([ac65cdf](https://github.com/Greenstand/treetracker-admin-client/commit/ac65cdf6690cf87def024f599d47e2531ad4bfb2))
+
 ## [1.70.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.70.1...v1.70.2) (2022-03-16)
 
 
