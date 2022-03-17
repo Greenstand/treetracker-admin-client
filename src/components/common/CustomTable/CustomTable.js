@@ -269,9 +269,11 @@ function CustomTableHeader(props) {
                 <Typography className={classes.filterButtonText}>
                   Filter
                 </Typography>
-                <Avatar className={classes.filterAvatar}>
-                  {activeFiltersCount !== 0 ? activeFiltersCount : ''}
-                </Avatar>
+                {activeFiltersCount > 0 && (
+                  <Avatar className={classes.filterAvatar}>
+                    {activeFiltersCount}
+                  </Avatar>
+                )}
               </Button>
             </Grid>
           </Grid>

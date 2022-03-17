@@ -227,6 +227,7 @@ function PaymentsTable() {
         rowDetails={
           selectedPayment ? (
             <CustomTableItemDetails
+              showLogPaymentForm={false}
               selectedItem={selectedPayment}
               closeDetails={() => setSelectedPayment(null)}
             />

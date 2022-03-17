@@ -29,6 +29,7 @@ import treeTrackerApi from 'api/treeTrackerApi';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
+  const [logPaymentError, setLogPaymentError] = useState(null);
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -38,7 +39,8 @@ function LogPaymentForm(props) {
     setPayload(updatedPayload);
   };
 
-  const handleOnFormSubmit = () => {
+  const handleOnFormSubmit = (e) => {
+    e.preventDefault();
     const { id, worker_id, amount, currency, captures_count } = selectedItem;
     const paid_at = new Date();
     earningsAPI
@@ -47,18 +49,26 @@ function LogPaymentForm(props) {
         worker_id,
         amount,
         currency,
-        paid_at,
         captures_count,
+        paid_at,
         ...payload,
       })
-      .then(() => refreshData())
-      .catch((e) => console.log('error logging payment', e));
-    closeForm();
+      .then(() => {
+        refreshData();
+        closeForm();
+      })
+      .catch((e) => setLogPaymentError(e?.response?.data?.message));
   };
 
   return (
     <form onSubmit={handleOnFormSubmit}>
       <Grid container direction="column" justify="space-around">
+        {logPaymentError && (
+          <span style={{ color: 'red', fontSize: '0.9em' }}>
+            Log payment failed: {logPaymentError}!
+          </span>
+        )}
+
         <Grid item className={classes.itemGrowerDetail}>
           <Typography variant="h6">Payment</Typography>
         </Grid>
@@ -135,6 +145,7 @@ LogPaymentForm.propTypes = {
  * @description render details of table item
  * @param {object} props - properties  passed to the component
  * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
+ * @param {boolean} props.showLogPaymentForm - flag that decides wheather log payment form should be shown
  * @param {object} props.selectedItem - custom table item
  * @param {Function} props.setSelectedItem - sets/resets selected item
  * @param {Function} props.refreshData - refresh table data after updating an item
@@ -142,7 +153,7 @@ LogPaymentForm.propTypes = {
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, closeDetails, refreshData } = props;
+  const { selectedItem, closeDetails, refreshData, showLogPaymentForm } = props;
   const [userName, setUserName] = useState('');
   const classes = useStyles();
 
@@ -292,7 +303,7 @@ function CustomTableItemDetails(props) {
             </Grid>
           </Grid>
 
-          {selectedItem?.status !== 'paid' && (
+          {showLogPaymentForm && selectedItem?.status !== 'paid' && (
             <LogPaymentForm
               selectedItem={selectedItem}
               closeForm={closeDetails}
@@ -343,8 +354,10 @@ CustomTableItemDetails.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   closeDetails: PropTypes.func.isRequired,
   refreshData: PropTypes.func,
+  showLogPaymentForm: PropTypes.bool,
 };
 
 CustomTableItemDetails.defaultProps = {
   refreshData: () => {},
+  showLogPaymentForm: true,
 };
