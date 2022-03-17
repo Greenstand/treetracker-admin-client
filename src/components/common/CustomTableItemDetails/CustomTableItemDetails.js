@@ -139,11 +139,13 @@ function CustomTableItemDetails(props) {
   const classes = useStyles();
 
   React.useEffect(() => {
-    treeTrackerApi
-      .getAdminUserById(selectedItem.payment_confirmed_by)
-      .then((data) => {
-        setUserName(data.userName);
-      });
+    if (selectedItem?.status === 'paid') {
+      treeTrackerApi
+        .getAdminUserById(selectedItem.payment_confirmed_by)
+        .then((data) => {
+          setUserName(data.userName);
+        });
+    }
   }, [selectedItem]);
 
   return (
