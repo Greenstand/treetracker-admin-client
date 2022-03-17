@@ -151,7 +151,7 @@ function CustomTableFilter(props) {
         <InputLabel id="sub_organization">Organization</InputLabel>
         <Select
           labelId="sub_organization"
-          defaultValue={localFilter?.funder_id}
+          defaultValue={localFilter?.sub_organization}
           id="sub_organization"
           name="sub_organization"
           label="Organization"
