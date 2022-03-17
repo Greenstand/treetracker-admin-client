@@ -1,3 +1,10 @@
+## [1.75.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.75.1...v1.75.2) (2022-03-17)
+
+
+### Bug Fixes
+
+* bug 548 ([ca01fd8](https://github.com/Greenstand/treetracker-admin-client/commit/ca01fd894dfc3623a3f471d1feb3b80cf0d840ce))
+
 ## [1.75.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.75.0...v1.75.1) (2022-03-17)
 
 
