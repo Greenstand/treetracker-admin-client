@@ -1,3 +1,15 @@
+# [1.74.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.73.1...v1.74.0) (2022-03-17)
+
+
+### Bug Fixes
+
+* do not load admin name when no paid ([cf12f66](https://github.com/Greenstand/treetracker-admin-client/commit/cf12f662a6f79864d1f04598a20096fc373cc5cf))
+
+
+### Features
+
+* add sub org ([a0d67cb](https://github.com/Greenstand/treetracker-admin-client/commit/a0d67cb783c5729354b333e1c016ffa1862c9f37))
+
 ## [1.73.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.73.0...v1.73.1) (2022-03-16)
 
 
