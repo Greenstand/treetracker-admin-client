@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import earningsAPI from 'api/earnings';
 import useStyles from './CustomTableItemDetails.styles';
+import treeTrackerApi from 'api/treeTrackerApi';
 
 /**
  * @function
@@ -153,7 +154,18 @@ LogPaymentForm.propTypes = {
  */
 function CustomTableItemDetails(props) {
   const { selectedItem, closeDetails, refreshData, showLogPaymentForm } = props;
+  const [userName, setUserName] = useState('');
   const classes = useStyles();
+
+  React.useEffect(() => {
+    if (selectedItem?.status === 'paid') {
+      treeTrackerApi
+        .getAdminUserById(selectedItem.payment_confirmed_by)
+        .then((data) => {
+          setUserName(data.userName);
+        });
+    }
+  }, [selectedItem]);
 
   return (
     <Drawer
@@ -191,6 +203,16 @@ function CustomTableItemDetails(props) {
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Funder</Typography>
               <Typography variant="h6">{selectedItem.funder}</Typography>
+            </Grid>
+            <Grid item className={classes.itemGrowerDetail}>
+              <Typography>Organization</Typography>
+              <Typography variant="h6">
+                {selectedItem.sub_organization_name || '---'}
+              </Typography>
+            </Grid>
+            <Grid item className={classes.itemGrowerDetail}>
+              <Typography>ID</Typography>
+              <Typography variant="body2">{selectedItem.id}</Typography>
             </Grid>
           </Grid>
 
@@ -259,7 +281,7 @@ function CustomTableItemDetails(props) {
 
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
-              <Typography variant="h6">Default</Typography>
+              <Typography variant="h6">FCC Tiered</Typography>
             </Grid>
 
             <Grid item className={classes.itemGrowerDetail}>
@@ -294,7 +316,7 @@ function CustomTableItemDetails(props) {
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
                 <Typography variant="h6">
-                  {selectedItem.payment_confirmed_by}
+                  {userName || selectedItem.payment_confirmed_by}
                 </Typography>
               </Grid>
 
@@ -302,6 +324,20 @@ function CustomTableItemDetails(props) {
                 <Typography>Payment confirmation method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography>Payment confirmation id</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_confirmation_id}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography>Payment method</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_method}
                 </Typography>
               </Grid>
             </Grid>

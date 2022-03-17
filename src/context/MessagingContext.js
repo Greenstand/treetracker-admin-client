@@ -96,30 +96,13 @@ export const MessagingProvider = (props) => {
     setIsLoading(false);
   };
 
-  const loadAuthors = async () => {
-    log.debug('...load authors');
-    const res = await api.getAuthors();
-
-    if (res.authors) {
-      let result = res.authors.filter(
-        (author) => author.author_handle !== user.userName
-      );
-
-      log.debug('...load author avatars');
-      if (result.length) {
-        Promise.all(
-          result.map(async (author) => {
-            const { grower_accounts } = await api.getAuthorAvatar(
-              author.handle
-            );
-            // log.debug('grower_accounts', grower_accounts[0]?.image_url);
-            return { ...author, avatar: grower_accounts[0]?.image_url || '' };
-          })
-        ).then((data) => {
-          // log.debug('...update authors with avatars', data);
-          setAuthors(data);
-        });
-      }
+  const loadAuthors = async (organizationId) => {
+    try {
+      log.debug('...load authors');
+      const authors = await api.getAuthors(organizationId);
+      setAuthors(authors);
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
 
@@ -171,6 +154,7 @@ export const MessagingProvider = (props) => {
       return;
     }
 
+    // check if grower sent a message and add it to top of messages
     if (res && growerMessage) {
       groupMessageByHandle([growerMessage, ...res.messages]);
     } else {
@@ -178,12 +162,12 @@ export const MessagingProvider = (props) => {
     }
   };
 
-  const loadRegions = async () => {
+  const loadRegions = async (organizationId) => {
     log.debug('...load regions');
-    const res = await api.getRegion();
+    const res = await api.getRegions(organizationId);
 
     if (res) {
-      setRegions(res);
+      setRegions(res.regions);
     }
   };
 

@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import React, { useState } from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
 import PublishIcon from '@material-ui/icons/Publish';
-import TableBody from '@material-ui/core/TableBody';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { CSVLink } from 'react-csv';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Grid from '@material-ui/core/Grid';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import IconFilter from '@material-ui/icons/FilterList';
-import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
+import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import Avatar from '@material-ui/core/Avatar';
-import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
+import IconFilter from '@material-ui/icons/FilterList';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Typography,
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
 import useStyles from './CustomTable.styles';
+import GrowerDetail from '../../GrowerDetail';
 import { AppContext } from '../../../context/AppContext';
-
+import { GrowerProvider } from '../../../context/GrowerContext';
 import dateFormat from 'dateformat';
 
 /**
@@ -47,7 +54,7 @@ function ImportAction(props) {
     <Grid item lg={2}>
       <Grid container direction="row" justify="flex-end">
         <input
-          accept="multipart/form-data"
+          accept=".csv,multipart/form-data"
           className={classes.uploadFileInput}
           onChange={handleOnSelectFile}
           id="file-upload-button"
@@ -92,12 +99,12 @@ function CustomTableHeader(props) {
   const {
     actionButtonType,
     headerTitle,
-    data,
     openDateFilter,
     openMainFilter,
     activeDateRange,
     onSelectFile,
     activeFiltersCount,
+    exportDataFetch,
   } = props;
   const classes = useStyles();
   const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
@@ -105,7 +112,10 @@ function CustomTableHeader(props) {
 
   const { orgList, selectedFilters } = React.useContext(AppContext);
 
-  useEffect(() => {
+  // const [data, setData] = useState([]);
+  const [dataToExport, setDataToExport] = useState([]);
+
+  async function fetchData() {
     // If organisation is used to filter data, use that as prefix for the csv filename
     if (selectedFilters.organisation_id) {
       const selectedOrg = orgList.filter(
@@ -113,53 +123,63 @@ function CustomTableHeader(props) {
       )[0];
       setCsvFileNamePrefix(`${selectedOrg.name}_`);
     }
+
+    const { results: dataTemp } = await exportDataFetch(true);
+
     //if activeDateRange is set then use that for csv filename suffix
     if (activeDateRange.trim().length > 1) {
       setCsvFileNameSuffix(activeDateRange);
-      return;
+    } else {
+      if (!dataTemp || dataTemp.length == 0) return;
+      const consolidationPeriodStarts = dataTemp.map(
+        (row) => new Date(row.csv_start_date)
+      );
+      const consolidationPeriodEnds = dataTemp.map(
+        (row) => new Date(row.csv_end_date)
+      );
+      const minPeriodStart = consolidationPeriodStarts.reduce(
+        (pStart1, pStart2) => {
+          return pStart1 > pStart2 ? pStart2 : pStart1;
+        }
+      );
+      const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
+        return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
+      });
+      const minCsvStartDate = dateFormat(
+        new Date(minPeriodStart),
+        'yyyy-mm-dd'
+      );
+      const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
+      setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
     }
 
-    if (!data || data.length == 0) return;
-    const consolidationPeriodStarts = data.map(
-      (row) => new Date(row.csv_start_date)
+    const dataToExportTemp = dataTemp.map(
+      ({
+        id: earnings_id,
+        worker_id,
+        phone,
+        currency,
+        captures_count,
+        amount,
+        payment_confirmation_id,
+        payment_method,
+        paid_at,
+      }) => ({
+        earnings_id,
+        worker_id,
+        phone,
+        currency,
+        amount,
+        captures_count,
+        payment_confirmation_id,
+        payment_method,
+        paid_at,
+      })
     );
-    const consolidationPeriodEnds = data.map(
-      (row) => new Date(row.csv_end_date)
-    );
-    const minPeriodStart = consolidationPeriodStarts.reduce(
-      (pStart1, pStart2) => {
-        return pStart1 > pStart2 ? pStart2 : pStart1;
-      }
-    );
-    const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
-      return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
-    });
-    const minCsvStartDate = dateFormat(new Date(minPeriodStart), 'yyyy-mm-dd');
-    const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
-    setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
-  }, [data]);
 
-  const dataToExport = data.map(
-    ({
-      id: earnings_id,
-      worker_id,
-      phone,
-      currency,
-      amount,
-      payment_confirmation_id,
-      payment_method,
-      paid_at,
-    }) => ({
-      earnings_id,
-      worker_id,
-      phone,
-      currency,
-      amount,
-      payment_confirmation_id,
-      payment_method,
-      paid_at,
-    })
-  );
+    setDataToExport(dataToExportTemp);
+    // setData(dataTemp);
+  }
 
   return (
     <Grid container className={classes.customTableTopBar}>
@@ -176,16 +196,27 @@ function CustomTableHeader(props) {
           {actionButtonType === 'export' && (
             <Grid item lg={2}>
               <Grid container direction="row" justify="flex-end">
-                <Button color="primary" variant="text">
-                  <CSVLink
-                    data={dataToExport}
-                    filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
-                    className={classes.csvLink}
-                    target="_blank"
-                  >
-                    <GetAppIcon />
-                    <Typography variant="h6">EXPORT</Typography>
-                  </CSVLink>
+                <CSVLink
+                  data={dataToExport}
+                  filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
+                  className={classes.csvLink}
+                  id="csv-link"
+                  target="_blank"
+                  style={{ display: 'none' }}
+                ></CSVLink>
+                <Button
+                  color="primary"
+                  variant="text"
+                  onClick={async () => {
+                    console.warn('CSV Link Clicked');
+                    console.warn('fetched');
+                    await fetchData();
+                    console.warn('done...');
+                    document.getElementById('csv-link').click();
+                  }}
+                >
+                  <GetAppIcon />
+                  <Typography variant="h6">EXPORT</Typography>
                 </Button>
               </Grid>
             </Grid>
@@ -310,6 +341,7 @@ function CustomTable(props) {
     dateFilterComponent,
     headerTitle,
     actionButtonType,
+    exportDataFetch,
     setSelectedRow,
     selectedRow,
     sortBy,
@@ -332,6 +364,10 @@ function CustomTable(props) {
   // managing custom table  state
   const classes = useStyles();
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
+  const [growerDetail, setGrowerDetail] = useState({
+    isOpen: false,
+    grower: {},
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -359,6 +395,22 @@ function CustomTable(props) {
     setSortBy({ field: column.name, order: sortableColumns[column.name] });
   };
 
+  const handleShowGrowerDetail = (e, grower) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setGrowerDetail({
+      isOpen: true,
+      growerId: grower.worker_id,
+    });
+  };
+
+  function handleCloseGrowerDetail() {
+    setGrowerDetail({
+      isOpen: false,
+      growerId: null,
+    });
+  }
+
   const isRowSelected = (id) => id === selectedRow?.id;
 
   const tablePagination = () => {
@@ -377,7 +429,7 @@ function CustomTable(props) {
   };
 
   return (
-    <Grid container direction="column" className={classes.customTable}>
+    <Paper className={classes.customTable}>
       <CustomTableHeader
         openDateFilter={openDateFilter}
         openMainFilter={openMainFilter}
@@ -387,10 +439,11 @@ function CustomTable(props) {
         actionButtonType={actionButtonType}
         onSelectFile={onSelectFile}
         activeFiltersCount={activeFiltersCount}
+        exportDataFetch={exportDataFetch}
       />
       {tablePagination()}
-      <TableContainer>
-        <Table>
+      <TableContainer className={classes.tableHeight}>
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow className={classes.customTableHeader}>
               {tableMetaData.map((column, i) => (
@@ -411,7 +464,9 @@ function CustomTable(props) {
                       <Typography variant="h6">
                         {column.description}
                         {column?.showInfoIcon && (
-                          <InfoOutlinedIcon className={classes.infoIcon} />
+                          <Tooltip title={column.showInfoIcon + ''}>
+                            <InfoOutlinedIcon className={classes.infoIcon} />
+                          </Tooltip>
                         )}
                       </Typography>
                     </TableSortLabel>
@@ -419,7 +474,9 @@ function CustomTable(props) {
                     <Typography variant="h6">
                       {column.description}
                       {column?.showInfoIcon && (
-                        <InfoOutlinedIcon className={classes.infoIcon} />
+                        <Tooltip title={column.showInfoIcon}>
+                          <InfoOutlinedIcon className={classes.infoIcon} />
+                        </Tooltip>
                       )}
                     </Typography>
                   )}
@@ -449,12 +506,32 @@ function CustomTable(props) {
                   >
                     {tableMetaData.map((column, j) => (
                       <TableCell key={`${i}-${j}-${column.name}`}>
-                        <Typography
-                          variant="body1"
-                          style={{ textTransform: 'capitalize' }}
-                        >
-                          {row[column.name]}
-                        </Typography>
+                        {column.name === 'grower' ? (
+                          <Grid item>
+                            <Typography
+                              variant="body1"
+                              style={{ textTransform: 'capitalize' }}
+                            >
+                              {row[column.name]}
+
+                              <IconButton
+                                onClick={(e) => handleShowGrowerDetail(e, row)}
+                                aria-label={`View/Edit Grower details`}
+                                title={`View/Edit Grower details`}
+                                style={{ padding: '0 2px 2px 0' }}
+                              >
+                                <Person color="primary" />
+                              </IconButton>
+                            </Typography>
+                          </Grid>
+                        ) : (
+                          <Typography
+                            variant="body1"
+                            style={{ textTransform: 'capitalize' }}
+                          >
+                            {row[column.name]}
+                          </Typography>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -477,6 +554,14 @@ function CustomTable(props) {
       </TableContainer>
       {tablePagination()}
 
+      <GrowerProvider>
+        <GrowerDetail
+          open={growerDetail.isOpen}
+          growerId={growerDetail.growerId}
+          onClose={() => handleCloseGrowerDetail()}
+        />
+      </GrowerProvider>
+
       {/* start table main filter */}
       {mainFilterComponent}
       {/* end table main filter */}
@@ -488,7 +573,7 @@ function CustomTable(props) {
       {/* start table row details */}
       {rowDetails}
       {/* end table row details */}
-    </Grid>
+    </Paper>
   );
 }
 
