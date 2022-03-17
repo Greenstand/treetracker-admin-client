@@ -184,6 +184,12 @@ function CustomTableItemDetails(props) {
               <Typography variant="h6">{selectedItem.funder}</Typography>
             </Grid>
             <Grid item className={classes.itemGrowerDetail}>
+              <Typography>Organization</Typography>
+              <Typography variant="h6">
+                {selectedItem.sub_organization_name || '---'}
+              </Typography>
+            </Grid>
+            <Grid item className={classes.itemGrowerDetail}>
               <Typography>ID</Typography>
               <Typography variant="body2">{selectedItem.id}</Typography>
             </Grid>
