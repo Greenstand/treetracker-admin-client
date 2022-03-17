@@ -31,8 +31,9 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
+  const { orgList } = React.useContext(AppContext);
+  console.warn('orgList', orgList);
   const [localFilter, setLocalFilter] = useState({});
-  const [organisations, setOrganisations] = useState([]);
   const {
     isFilterOpen,
     setIsFilterOpen,
@@ -80,15 +81,6 @@ function CustomTableFilter(props) {
     }
     setIsFilterOpen(false);
   };
-
-  useEffect(() => {
-    api
-      .getOrganizations()
-      .then((res) => {
-        setOrganisations(res);
-      })
-      .catch((err) => console.log(err));
-  }, [localFilter]);
 
   const renderDateFilter = () => (
     <>
@@ -157,23 +149,18 @@ function CustomTableFilter(props) {
         variant="outlined"
         className={classes.customTableFilterSelectFormControl}
       >
-        <InputLabel id="funder_id">Organisation</InputLabel>
+        <InputLabel id="sub_organization">Organization</InputLabel>
         <Select
-          labelId="funder_id"
+          labelId="sub_organization"
           defaultValue={localFilter?.funder_id}
-          id="funder_id"
-          name="funder_id"
-          label="Organisation"
+          id="sub_organization"
+          name="sub_organization"
+          label="Organization"
           onChange={handleOnFormControlChange}
         >
-          {organisations.map((organisation, i) => (
-            <MenuItem
-              key={`${organisation.id}_${i}`}
-              value={organisation.stakeholder_uuid}
-            >
-              <span style={{ textTransform: 'capitalize' }}>
-                {organisation.name}
-              </span>
+          {orgList.map((org) => (
+            <MenuItem key={org.stakeholder_uuid} value={org.stakeholder_uuid}>
+              {org.name}
             </MenuItem>
           ))}
         </Select>
