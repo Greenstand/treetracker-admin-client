@@ -39,10 +39,18 @@ function LogPaymentForm(props) {
   };
 
   const handleOnFormSubmit = () => {
-    const { id, worker_id, amount, currency } = selectedItem;
+    const { id, worker_id, amount, currency, captures_count } = selectedItem;
     const paid_at = new Date();
     earningsAPI
-      .patchEarning({ id, worker_id, amount, currency, paid_at, ...payload })
+      .patchEarning({
+        id,
+        worker_id,
+        amount,
+        currency,
+        paid_at,
+        captures_count,
+        ...payload,
+      })
       .then(() => refreshData())
       .catch((e) => console.log('error logging payment', e));
     closeForm();
