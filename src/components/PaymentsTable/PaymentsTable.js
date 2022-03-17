@@ -118,7 +118,7 @@ function PaymentsTable() {
   const [isShowUploadSnack, setIsShowUploadSnack] = useState(false);
   const [paymentsPerPage, setPaymentsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState({
-    field: 'effective_payment_date',
+    field: 'calculated_at',
     order: 'desc',
   });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
