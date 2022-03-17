@@ -28,6 +28,7 @@ import useStyles from './CustomTableItemDetails.styles';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
+  const [logPaymentError, setLogPaymentError] = useState(null);
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -37,19 +38,36 @@ function LogPaymentForm(props) {
     setPayload(updatedPayload);
   };
 
-  const handleOnFormSubmit = () => {
-    const { id, worker_id, amount, currency } = selectedItem;
+  const handleOnFormSubmit = (e) => {
+    e.preventDefault();
+    const { id, worker_id, amount, currency, captures_count } = selectedItem;
     const paid_at = new Date();
     earningsAPI
-      .patchEarning({ id, worker_id, amount, currency, paid_at, ...payload })
-      .then(() => refreshData())
-      .catch((e) => console.log('error logging payment', e));
-    closeForm();
+      .patchEarning({
+        id,
+        worker_id,
+        amount,
+        currency,
+        captures_count,
+        paid_at,
+        ...payload,
+      })
+      .then(() => {
+        refreshData();
+        closeForm();
+      })
+      .catch((e) => setLogPaymentError(e?.response?.data?.message));
   };
 
   return (
     <form onSubmit={handleOnFormSubmit}>
       <Grid container direction="column" justify="space-around">
+        {logPaymentError && (
+          <span style={{ color: 'red', fontSize: '0.9em' }}>
+            Log payment failed: {logPaymentError}!
+          </span>
+        )}
+
         <Grid item className={classes.itemGrowerDetail}>
           <Typography variant="h6">Payment</Typography>
         </Grid>
