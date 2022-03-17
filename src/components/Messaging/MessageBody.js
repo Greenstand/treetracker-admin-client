@@ -390,9 +390,9 @@ const SenderInformation = ({
             {message?.bulk_message_recipients &&
               message?.bulk_message_recipients.map((recipient) => (
                 <Chip
-                  key={recipient.recipient}
-                  label={`${recipient.recipient}`}
-                  color={recipient.type === 'region' ? 'secondary' : 'primary'}
+                  key={recipient.organization || recipient.region}
+                  label={`${recipient.organization || recipient.region}`}
+                  color="primary"
                   style={{
                     color: 'white',
                     borderRadius: '6px',
