@@ -126,6 +126,7 @@ LogPaymentForm.propTypes = {
  * @description render details of table item
  * @param {object} props - properties  passed to the component
  * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
+ * @param {boolean} props.showLogPaymentForm - flag that decides wheather log payment form should be shown
  * @param {object} props.selectedItem - custom table item
  * @param {Function} props.setSelectedItem - sets/resets selected item
  * @param {Function} props.refreshData - refresh table data after updating an item
@@ -133,7 +134,7 @@ LogPaymentForm.propTypes = {
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, closeDetails, refreshData } = props;
+  const { selectedItem, closeDetails, refreshData, showLogPaymentForm } = props;
   const classes = useStyles();
 
   return (
@@ -262,7 +263,7 @@ function CustomTableItemDetails(props) {
             </Grid>
           </Grid>
 
-          {selectedItem?.status !== 'paid' && (
+          {showLogPaymentForm && selectedItem?.status !== 'paid' && (
             <LogPaymentForm
               selectedItem={selectedItem}
               closeForm={closeDetails}
@@ -299,8 +300,10 @@ CustomTableItemDetails.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   closeDetails: PropTypes.func.isRequired,
   refreshData: PropTypes.func,
+  showLogPaymentForm: PropTypes.bool,
 };
 
 CustomTableItemDetails.defaultProps = {
   refreshData: () => {},
+  showLogPaymentForm: true,
 };
