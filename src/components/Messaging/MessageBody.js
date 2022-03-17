@@ -8,8 +8,10 @@ import {
 } from '@material-ui/icons';
 import {
   Avatar,
+  Badge,
   Box,
   Button,
+  Chip,
   Grid,
   Modal,
   Paper,
@@ -385,16 +387,20 @@ const SenderInformation = ({
             <Typography align="left" color="primary">
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
-            {message?.bulk_message_recipients && (
-              <Typography align="left" color="primary">
-                <b>TO:</b>{' '}
-                {message?.bulk_message_recipients.length
-                  ? message?.bulk_message_recipients[0]?.recipient
-                  : message?.recipient_organization_id
-                  ? message?.recipient_organization_id
-                  : message?.recipient_region_id}
-              </Typography>
-            )}
+            {message?.bulk_message_recipients &&
+              message?.bulk_message_recipients.map((recipient) => (
+                <Chip
+                  key={recipient.recipient}
+                  label={`${recipient.recipient}`}
+                  color={recipient.type === 'region' ? 'secondary' : 'primary'}
+                  style={{
+                    color: 'white',
+                    borderRadius: '6px',
+                    fontSize: '.8rem',
+                    margin: '0.2rem',
+                  }}
+                />
+              ))}
             {(type === 'survey' || type === 'survey_response') && (
               <Typography>
                 <b>RESPONSES:</b> {responseCount}
@@ -411,15 +417,29 @@ const SenderInformation = ({
       </Grid>
       {(type === 'survey' || type === 'survey_response') && responseCount > 0 && (
         <Grid item className={dataContainer}>
-          {showCharts ? (
-            <Button className={button} onClick={() => setShowCharts(false)}>
-              Show Survey
-            </Button>
-          ) : (
-            <Button className={button} onClick={() => setShowCharts(true)}>
-              Show Survey Data
-            </Button>
-          )}
+          <Badge
+            badgeContent={responseCount}
+            color="secondary"
+            overlap="circle"
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            {showCharts ? (
+              <Button className={button} onClick={() => setShowCharts(false)}>
+                Show Survey
+              </Button>
+            ) : (
+              <Button
+                className={button}
+                onClick={() => setShowCharts(true)}
+                disabled={responseCount === 0}
+              >
+                Show Survey Data
+              </Button>
+            )}
+          </Badge>
         </Grid>
       )}
     </Grid>
