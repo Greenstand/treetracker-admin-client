@@ -1,3 +1,19 @@
+# [1.78.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.77.0...v1.78.0) (2022-03-18)
+
+
+### Bug Fixes
+
+* lint error ([e1b9a06](https://github.com/Greenstand/treetracker-admin-client/commit/e1b9a0625fc8d7841ef8f0bf5031ed1d589e2a46))
+
+
+### Features
+
+* add chips to show bulk recipients and badge to show survey response count ([4714ce8](https://github.com/Greenstand/treetracker-admin-client/commit/4714ce8ec7af5b3ea84979de35dfb20bf9df8474))
+* add error handling to NewMessage and MessageBody ([2190e15](https://github.com/Greenstand/treetracker-admin-client/commit/2190e15d61b483ca031f42fa4716cd474271e6de))
+* add validation to Announcments too ([2a5e19b](https://github.com/Greenstand/treetracker-admin-client/commit/2a5e19ba7abe4f29f11c60ccd8815f8b63b96e12))
+* pass along error when survey doesn't submit ([d73bc27](https://github.com/Greenstand/treetracker-admin-client/commit/d73bc271970d014f20688ff4a471f1d707fc0625))
+* simplify text for display ([5599de4](https://github.com/Greenstand/treetracker-admin-client/commit/5599de47e52c037e0bc840a7b2621e0ac587faac))
+
 # [1.77.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.76.0...v1.77.0) (2022-03-18)
 
 
