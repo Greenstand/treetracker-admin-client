@@ -1,3 +1,15 @@
+# [1.77.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.76.0...v1.77.0) (2022-03-18)
+
+
+### Bug Fixes
+
+* update for new api ([e3ca3ff](https://github.com/Greenstand/treetracker-admin-client/commit/e3ca3ff3d2cf488fd557edbb248fd545214d94ce))
+
+
+### Features
+
+* add chips to show bulk recipients and badge to show survey response count ([ad51e1d](https://github.com/Greenstand/treetracker-admin-client/commit/ad51e1ddca5d166d5fcd0823fab2628454285858))
+
 # [1.76.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.75.2...v1.76.0) (2022-03-18)
 
 
