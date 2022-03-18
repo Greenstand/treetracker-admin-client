@@ -85,13 +85,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     });
   };
 
-  const validateSurvey = (payload) => {
+  const validateAnnouncement = (payload) => {
     const errors = {};
 
     if (!payload.subject) {
       errors.subject = 'Please enter a subject for your announcement';
     }
-    console.log('body', /\w/g.test(payload.body.trim()));
+
     if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
       errors.body = 'Please enter a message';
     }
@@ -126,7 +126,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
 
-    const errs = validateSurvey(payload);
+    const errs = validateAnnouncement(payload);
 
     try {
       const errorsFound = Object.keys(errs).length > 0;

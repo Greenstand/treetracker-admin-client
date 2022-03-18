@@ -471,9 +471,11 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const [messageContent, setMessageContent] = useState('');
   const [recipientId, setRecipientId] = useState('');
   const [showCharts, setShowCharts] = useState(false);
+  const [errors, setErrors] = useState(false);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
+
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -499,6 +501,20 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
 
   useEffect(scrollToBottom);
 
+  const validateMessage = (payload) => {
+    const errors = {};
+
+    console.log('body', /\w/g.test(payload.body.trim()));
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (!payload.recipient_handle) {
+      errors.recipient = 'Please select a recipient';
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -509,6 +525,14 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       type: 'message',
       body: messageContent,
     };
+
+    const errs = validateMessage(messagePayload);
+
+    const errorsFound = Object.keys(errs).length > 0;
+    if (errorsFound) {
+      setErrors(true);
+      console.log('errors', errs);
+    }
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
@@ -636,6 +660,17 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             style={{ height: '10px', width: '100%' }}
           ></div>
         </div>
+        {errors && (
+          <Typography
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              margin: '20px 10px 0px',
+            }}
+          >
+            Please enter a message before sending
+          </Typography>
+        )}
         {messages && messages[0]?.type === 'message' && (
           <TextInput
             messageRecipient={messageRecipient}
@@ -643,6 +678,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             messageContent={messageContent}
             setMessageContent={setMessageContent}
             className={textInput}
+            setErrors={setErrors}
           />
         )}
       </Paper>
