@@ -660,11 +660,10 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       >
         <Box className={modalContainer}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Error: {errorMessage}
+            {errorMessage}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`You won't be able to send or receive messages until this is fixed. Please
-            reach out to the administrator.`}
+            {`Please contact the administrator.`}
           </Typography>
         </Box>
       </Modal>
