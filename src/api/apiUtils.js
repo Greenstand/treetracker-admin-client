@@ -27,7 +27,7 @@ export function handleError(error) {
     // Ignore `AbortError`
     log.debug('Aborted', error);
   } else {
-    log.error('API call failed. ' + error);
+    log.error('API call failed. ' + error.name, error.message, error);
     throw error;
   }
 }

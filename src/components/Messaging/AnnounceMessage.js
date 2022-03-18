@@ -68,7 +68,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const [inputValueOrg, setInputValueOrg] = useState('');
   const [region, setRegion] = useState({});
   const [inputValueRegion, setInputValueRegion] = useState('');
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   const [values, setValues] = useState({
     title: '',
@@ -77,11 +77,32 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   });
 
   const handleChange = (e) => {
+    setErrors(null);
     const { name, value } = e.target;
     setValues({
       ...values,
       [name]: value,
     });
+  };
+
+  const validateSurvey = (payload) => {
+    const errors = {};
+
+    if (!payload.subject) {
+      errors.subject = 'Please enter a subject for your announcement';
+    }
+    console.log('body', /\w/g.test(payload.body.trim()));
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (
+      (!payload.region_id && !payload.organization_id) ||
+      (payload.region_id && payload.organization_id)
+    ) {
+      errors.recipient = 'Please select an organization or region';
+    }
+    return errors;
   };
 
   const handleSubmit = async (e) => {
@@ -92,11 +113,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       type: 'announce',
       body: values.message,
     };
-
-    if (!region?.id && !organization?.id) {
-      setError(true);
-      return;
-    }
 
     if (values?.videoLink) {
       payload['video_link'] = values.videoLink;
@@ -110,16 +126,20 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
 
+    const errs = validateSurvey(payload);
+
     try {
-      if (
-        (payload.body && payload.organization_id) ||
-        (payload.body && payload.region_id)
-      ) {
+      const errorsFound = Object.keys(errs).length > 0;
+      if (errorsFound) {
+        setErrors(errs);
+      } else {
         const res = await postBulkMessageSend(payload);
 
         setErrorMessage('');
         if (res.error) {
-          setErrorMessage(res.message);
+          setErrorMessage(
+            `Sorry, something went wrong and we couldn't create the announcement: ${res.message}`
+          );
         } else {
           // close the drawer
           setValues({
@@ -166,6 +186,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
 
   return (
     <form className={form} onSubmit={handleSubmit}>
+      {errors?.subject && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.subject}
+        </Typography>
+      )}
       <GSInputLabel text="Announce: Title" />
       <TextField
         fullWidth
@@ -173,7 +200,15 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         name="title"
         value={values.title}
         onChange={handleChange}
+        required
       />
+      {errors?.body && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.body}
+        </Typography>
+      )}
       <GSInputLabel text={'Message'} />
       <TextField
         multiline
@@ -182,6 +217,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         value={values.message}
         onChange={handleChange}
         label="Write your message here ..."
+        required
       />
       <GSInputLabel text={'Add a Video Link'} />
       <TextField
@@ -190,13 +226,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         onChange={handleChange}
         label="Add a video link, e.g., YouTube URL"
       />
-      {error ? (
+      {errors?.recipient && (
         <Typography
           style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
         >
-          Please select a region or an organization!
+          {errors.recipient}
         </Typography>
-      ) : null}
+      )}
       <GSInputLabel
         id="select-label"
         text={'Target Audience by Organization'}
@@ -212,7 +248,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         inputValue={inputValueOrg}
         getOptionSelected={(option, value) => option.id === value.id}
         onInputChange={(e, val) => {
-          setError(false);
+          setErrors(null);
           setInputValueOrg(val);
         }}
         id="controllable-states-demo"
@@ -234,7 +270,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         inputValue={inputValueRegion}
         getOptionSelected={(option, value) => option.id === value.id}
         onInputChange={(e, val) => {
-          setError(false);
+          setErrors(null);
           setInputValueRegion(val);
         }}
         id="controllable-states-demo"
@@ -244,7 +280,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
           <TextField {...params} label="Select Region" />
         )}
       />
-      <Button disabled={error} className={sendButton} type="submit">
+      <Button disabled={!!errors} className={sendButton} type="submit">
         Send Message
       </Button>
     </form>

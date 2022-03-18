@@ -128,7 +128,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
   const validateSurvey = (payload) => {
     const errors = {};
 
-    if (!payload.title) {
+    if (!payload.subject && payload.survey.title.length <= 1) {
       errors.title = 'Please enter a title for your survey';
     }
 
@@ -170,9 +170,14 @@ const SurveyForm = ({ setToggleSurvey }) => {
         title: title,
         questions: [],
       },
-      region_id: region ? region.id : null,
-      organization_id: organization ? organization.stakeholder_uuid : null,
     };
+
+    if (region?.id) {
+      payload['region_id'] = region.id;
+    }
+    if (organization?.id) {
+      payload['organization_id'] = organization.stakeholder_uuid;
+    }
 
     Object.values(allQuestions).forEach((question) => {
       const { prompt, choiceOne, choiceTwo, choiceThree } = question;
@@ -187,15 +192,10 @@ const SurveyForm = ({ setToggleSurvey }) => {
     const errs = validateSurvey(payload);
 
     try {
-      if (Object.keys(errs).length > 0) {
+      const errorsFound = Object.keys(errs).length > 0;
+      if (errorsFound) {
         setErrors(errs);
-      }
-
-      if (
-        payload.author_handle &&
-        payload.survey.title.length > 1 &&
-        (payload['region_id'] || payload['organization_id'])
-      ) {
+      } else {
         const res = await postBulkMessageSend(payload);
 
         setErrorMessage('');
