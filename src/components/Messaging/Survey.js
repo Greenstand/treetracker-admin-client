@@ -72,7 +72,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
     user,
     regions,
     postBulkMessageSend,
-    threads,
     setThreads,
   } = useContext(MessagingContext);
   const { orgList } = useContext(AppContext);
@@ -168,7 +167,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
         (payload['region_id'] || payload['organization_id'])
       ) {
         const res = await postBulkMessageSend(payload);
-        log.debug('Survey submit', threads, res);
 
         setErrorMessage('');
         if (res.error) {
