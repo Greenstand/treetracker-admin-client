@@ -65,7 +65,6 @@ const NewMessage = ({ openModal, handleClose }) => {
     setErrorMessage,
     user,
     authors,
-    threads,
     setThreads,
     postMessageSend,
   } = useContext(MessagingContext);
