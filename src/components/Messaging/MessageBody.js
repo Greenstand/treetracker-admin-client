@@ -388,9 +388,9 @@ const SenderInformation = ({
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
-              message?.bulk_message_recipients.map((recipient) => (
+              message?.bulk_message_recipients.map((recipient, i) => (
                 <Chip
-                  key={recipient.recipient}
+                  key={`${recipient.recipient}-${i}`}
                   label={`${recipient.recipient}`}
                   color={recipient.type === 'region' ? 'secondary' : 'primary'}
                   style={{
