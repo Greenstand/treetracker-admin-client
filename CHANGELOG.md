@@ -1,3 +1,23 @@
+# [1.76.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.75.2...v1.76.0) (2022-03-18)
+
+
+### Bug Fixes
+
+* **earning filters:** make sure earnings filter resets all fields ([f374a64](https://github.com/Greenstand/treetracker-admin-client/commit/f374a64983d6286a2fc5a7ddccd6303769d21abc))
+* **earnings tool:** log payment form submits successfully ([fdeb767](https://github.com/Greenstand/treetracker-admin-client/commit/fdeb767a1b21461b3ae7fcde0154f1b8c71ddc42)), closes [#498](https://github.com/Greenstand/treetracker-admin-client/issues/498)
+* **payments upload:** make upload button work all the time it is clicked ([5e5638c](https://github.com/Greenstand/treetracker-admin-client/commit/5e5638cdfb15af4dfed8cfc1dd1757ffeeb7786c)), closes [#354](https://github.com/Greenstand/treetracker-admin-client/issues/354)
+
+
+### Features
+
+* **earning date filter:** use all as default text when no range is selected ([1a40c59](https://github.com/Greenstand/treetracker-admin-client/commit/1a40c594a5656ae0d3bd66b65b07137c5a3d2863)), closes [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355)
+* **earnings details:** display number of captures attached to earnings record ([be0dcf0](https://github.com/Greenstand/treetracker-admin-client/commit/be0dcf09af339ef84abe8978fed708f9a4a5e9ec)), closes [#347](https://github.com/Greenstand/treetracker-admin-client/issues/347)
+* **earnings filter:** show active filters count ([acc75da](https://github.com/Greenstand/treetracker-admin-client/commit/acc75da3531a4adc08b62f7604067e5c398a34ed)), closes [#355](https://github.com/Greenstand/treetracker-admin-client/issues/355)
+* **earnings tool:** display error message when log single payment fails ([92cb762](https://github.com/Greenstand/treetracker-admin-client/commit/92cb762cff8af1a8ba7ce72138b82a5e51598d22)), closes [#497](https://github.com/Greenstand/treetracker-admin-client/issues/497)
+* **earnings tool:** ensure required fields  are fielled before logging payments ([4834706](https://github.com/Greenstand/treetracker-admin-client/commit/483470671d50fd446327476023ba7e30bd07b1d3)), closes [#496](https://github.com/Greenstand/treetracker-admin-client/issues/496)
+* **earnings:** correctly name variable to avaoid confusion and persist filter state ([9c4f91c](https://github.com/Greenstand/treetracker-admin-client/commit/9c4f91c9b92a339fae10d2f506afd23d49282c4d))
+* **payment details:** hide log payment form in paymenys table ([a6eb7d8](https://github.com/Greenstand/treetracker-admin-client/commit/a6eb7d82466d578cd208de6df6fbf137f962eb3f)), closes [#508](https://github.com/Greenstand/treetracker-admin-client/issues/508)
+
 ## [1.75.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.75.1...v1.75.2) (2022-03-17)
 
 ### Bug Fixes
