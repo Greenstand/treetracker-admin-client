@@ -7,12 +7,9 @@ export async function handleResponse(response) {
 
   // server-side validation error occurred.
   const error = await response.json();
-  log.debug('handleResponse error ---', error);
+  log.debug('handleResponse error ---', response.status, error);
 
-  if (
-    response.status === 422 &&
-    error.message === 'No author handle found in the specified organization'
-  ) {
+  if (response.status === 422) {
     return {
       error: true,
       message: error.message,
@@ -30,7 +27,7 @@ export function handleError(error) {
     // Ignore `AbortError`
     log.debug('Aborted', error);
   } else {
-    log.error('API call failed. ' + error);
+    log.error('API call failed. ' + error.name, error.message, error);
     throw error;
   }
 }

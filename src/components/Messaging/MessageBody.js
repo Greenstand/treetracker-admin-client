@@ -388,11 +388,11 @@ const SenderInformation = ({
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
-              message?.bulk_message_recipients.map((recipient) => (
+              message?.bulk_message_recipients.map((recipient, i) => (
                 <Chip
-                  key={recipient.organization || recipient.region}
-                  label={`${recipient.organization || recipient.region}`}
-                  color="primary"
+                  key={`${recipient.recipient}-${i}`}
+                  label={`${recipient.recipient}`}
+                  color={recipient.type === 'region' ? 'secondary' : 'primary'}
                   style={{
                     color: 'white',
                     borderRadius: '6px',
@@ -471,9 +471,11 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const [messageContent, setMessageContent] = useState('');
   const [recipientId, setRecipientId] = useState('');
   const [showCharts, setShowCharts] = useState(false);
+  const [errors, setErrors] = useState(false);
   const [open, setOpen] = useState(false);
   const handleModalOpen = () => setOpen(true);
   const handleModalClose = () => setOpen(false);
+
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -499,6 +501,20 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
 
   useEffect(scrollToBottom);
 
+  const validateMessage = (payload) => {
+    const errors = {};
+
+    console.log('body', /\w/g.test(payload.body.trim()));
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (!payload.recipient_handle) {
+      errors.recipient = 'Please select a recipient';
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -509,6 +525,14 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       type: 'message',
       body: messageContent,
     };
+
+    const errs = validateMessage(messagePayload);
+
+    const errorsFound = Object.keys(errs).length > 0;
+    if (errorsFound) {
+      setErrors(true);
+      console.log('errors', errs);
+    }
 
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
@@ -636,6 +660,17 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             style={{ height: '10px', width: '100%' }}
           ></div>
         </div>
+        {errors && (
+          <Typography
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              margin: '20px 10px 0px',
+            }}
+          >
+            Please enter a message before sending
+          </Typography>
+        )}
         {messages && messages[0]?.type === 'message' && (
           <TextInput
             messageRecipient={messageRecipient}
@@ -643,6 +678,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             messageContent={messageContent}
             setMessageContent={setMessageContent}
             className={textInput}
+            setErrors={setErrors}
           />
         )}
       </Paper>
@@ -660,11 +696,10 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
       >
         <Box className={modalContainer}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Error: {errorMessage}
+            {errorMessage}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`You won't be able to send or receive messages until this is fixed. Please
-            reach out to the administrator.`}
+            {`Please contact the administrator.`}
           </Typography>
         </Box>
       </Modal>

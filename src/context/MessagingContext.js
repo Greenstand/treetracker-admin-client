@@ -107,30 +107,55 @@ export const MessagingProvider = (props) => {
   };
 
   const postRegion = async (payload) => {
-    await api.postRegion(payload);
+    try {
+      return api.postRegion(payload);
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
+    }
   };
 
   const getRegionById = async (id) => {
-    await api.getRegionById(id);
+    try {
+      return api.getRegionById(id);
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
+    }
   };
 
   const postMessage = async (payload) => {
-    return api.postMessage(payload);
+    try {
+      return api.postMessage(payload);
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
+    }
   };
 
   const postMessageSend = (payload) => {
-    if (payload) {
-      return api.postMessageSend(payload);
-    } else {
-      return 'Were sorry something went wrong. Please try again.';
+    try {
+      if (payload) {
+        return api.postMessageSend(payload);
+      } else {
+        throw 'Were sorry something went wrong. Please try again.';
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
   const postBulkMessageSend = (payload) => {
-    if (payload) {
-      return api.postBulkMessageSend(payload);
-    } else {
-      return 'Were sorry something went wrong. Please try again.';
+    try {
+      if (payload) {
+        return api.postBulkMessageSend(payload);
+      } else {
+        throw 'Whoops! There is something missing. Please check your message and try again';
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -147,27 +172,42 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
-    log.debug('...load messages');
-    const res = await api.getMessages(user.userName);
-    if (res.error) {
-      setErrorMessage(res.message);
-      return;
-    }
+    try {
+      log.debug('...load messages');
+      const res = await api.getMessages(user.userName);
+      if (res.error) {
+        console.log(res.error);
+        throw 'Sorry, there was a problem loading your messages.';
+      }
 
-    // check if grower sent a message and add it to top of messages
-    if (res && growerMessage) {
-      groupMessageByHandle([growerMessage, ...res.messages]);
-    } else {
-      groupMessageByHandle(res.messages);
+      // check if grower sent a message and add it to top of messages
+      if (res && growerMessage) {
+        groupMessageByHandle([growerMessage, ...res.messages]);
+      } else {
+        groupMessageByHandle(res.messages);
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
   const loadRegions = async (organizationId) => {
-    log.debug('...load regions');
-    const res = await api.getRegions(organizationId);
+    try {
+      log.debug('...load regions');
+      const res = await api.getRegions(organizationId);
 
-    if (res) {
-      setRegions(res.regions);
+      if (res.error) {
+        console.log(res.error);
+        throw 'Sorry, there was a problem loading your regions.';
+      }
+
+      if (res) {
+        setRegions(res.regions);
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.message);
     }
   };
 

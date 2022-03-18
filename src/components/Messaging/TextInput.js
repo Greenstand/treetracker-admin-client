@@ -24,11 +24,13 @@ export const TextInput = ({
   handleSubmit,
   messageContent,
   setMessageContent,
+  setErrors,
 }) => {
   const { wrapForm, wrapText, button } = useStyles();
 
   const handleChange = (e) => {
     setMessageContent(e.target.value);
+    setErrors(false);
   };
 
   return (

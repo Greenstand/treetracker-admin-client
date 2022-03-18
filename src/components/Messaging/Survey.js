@@ -94,7 +94,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
     choiceTwo: '',
     choiceThree: '',
   });
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   // * Both values needed for organization/region autocompletes
   const [organization, setOrganization] = useState({});
@@ -102,7 +102,8 @@ const SurveyForm = ({ setToggleSurvey }) => {
   const [region, setRegion] = useState({});
   const [inputValueRegion, setInputValueRegion] = useState('');
 
-  const handleQuestionsChange = (e, question) => {
+  const handleChange = (e, question) => {
+    setErrors(null);
     const { name, value } = e.target;
     if (question === 'questionOne') {
       setQuestionOne({
@@ -124,6 +125,39 @@ const SurveyForm = ({ setToggleSurvey }) => {
     }
   };
 
+  const validateSurvey = (payload) => {
+    const errors = {};
+
+    if (!payload.subject && payload.survey.title.length <= 1) {
+      errors.title = 'Please enter a title for your survey';
+    }
+
+    if (payload.survey.questions.length === 0) {
+      errors.questions = 'Please enter at least one question';
+    } else {
+      payload.survey.questions.forEach((question) => {
+        if (!question.prompt) {
+          errors.questions = 'Please enter a prompt for each question';
+        }
+
+        if (
+          question.choices.length < 3 ||
+          question.choices.some((choice) => choice === '')
+        ) {
+          errors.questions = 'Please enter 3 choices for each question';
+        }
+      });
+    }
+
+    if (
+      (!payload.region_id && !payload.organization_id) ||
+      (payload.region_id && payload.organization_id)
+    ) {
+      errors.recipient = 'Please select an organization or region';
+    }
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const allQuestions = { questionOne, questionTwo, questionThree };
@@ -138,11 +172,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
       },
     };
 
-    if (!region?.id && !organization?.id) {
-      setError(true);
-      return;
-    }
-
     if (region?.id) {
       payload['region_id'] = region.id;
     }
@@ -150,9 +179,9 @@ const SurveyForm = ({ setToggleSurvey }) => {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
 
-    Object.values(allQuestions).map((question) => {
+    Object.values(allQuestions).forEach((question) => {
       const { prompt, choiceOne, choiceTwo, choiceThree } = question;
-      if (prompt.length > 1 && choiceOne && choiceTwo && choiceThree) {
+      if (prompt.length > 1) {
         payload.survey.questions.push({
           prompt,
           choices: [choiceOne, choiceTwo, choiceThree],
@@ -160,17 +189,20 @@ const SurveyForm = ({ setToggleSurvey }) => {
       }
     });
 
+    const errs = validateSurvey(payload);
+
     try {
-      if (
-        payload.author_handle &&
-        payload.survey.title.length > 1 &&
-        (payload['region_id'] || payload['organization_id'])
-      ) {
+      const errorsFound = Object.keys(errs).length > 0;
+      if (errorsFound) {
+        setErrors(errs);
+      } else {
         const res = await postBulkMessageSend(payload);
 
         setErrorMessage('');
         if (res.error) {
-          setErrorMessage(res.message);
+          setErrorMessage(
+            `Sorry, something went wrong and we couldn't create the survey: ${res.message}`
+          );
         } else {
           // reset and hide the survey drawer
           setQuestionOne({
@@ -211,8 +243,10 @@ const SurveyForm = ({ setToggleSurvey }) => {
             survey_response: null,
             survey: payload.survey,
           };
+
           log.debug('...update threads w/ new survey');
-          // update the full set of threads
+
+          // update state with with the new survey
           setThreads((prev) => [
             {
               username: `${newSurvey.id}`,
@@ -227,6 +261,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
       console.log(err);
     }
   };
+
   return (
     <form className={form} onSubmit={handleSubmit}>
       <GSInputLabel text="Survey Title" />
@@ -236,8 +271,20 @@ const SurveyForm = ({ setToggleSurvey }) => {
         label="Survey Title"
         name="title"
         value={title}
-        onChange={handleQuestionsChange}
+        onChange={handleChange}
+        required
       />
+      {errors?.questions && (
+        <Typography
+          style={{
+            color: 'red',
+            fontWeight: 'bold',
+            margin: '20px 10px 0px',
+          }}
+        >
+          {errors.questions}
+        </Typography>
+      )}
       {['One', 'Two', 'Three'].map((num) => (
         <div key={num}>
           <GSInputLabel text={`Survey Question ${num}`} />
@@ -247,7 +294,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             label="Write your question: "
             name="prompt"
             value={`question${num}`['prompt']}
-            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+            onChange={(e) => handleChange(e, `question${num}`)}
           />
           <GSInputLabel text={`Question ${num} Answer Options`} />
           <TextField
@@ -256,7 +303,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             label="A: "
             name="choiceOne"
             value={`question${num}`['choiceOne']}
-            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+            onChange={(e) => handleChange(e, `question${num}`)}
           />
           <TextField
             className={input}
@@ -264,7 +311,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             label="B: "
             name="choiceTwo"
             value={`question${num}`['choiceTwo']}
-            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+            onChange={(e) => handleChange(e, `question${num}`)}
           />
           <TextField
             className={input}
@@ -272,12 +319,12 @@ const SurveyForm = ({ setToggleSurvey }) => {
             label="C: "
             name="choiceThree"
             value={`question${num}`['choiceThree']}
-            onChange={(e) => handleQuestionsChange(e, `question${num}`)}
+            onChange={(e) => handleChange(e, `question${num}`)}
           />
         </div>
       ))}
       <div>
-        {error ? (
+        {errors?.recipient && (
           <Typography
             style={{
               color: 'red',
@@ -285,9 +332,9 @@ const SurveyForm = ({ setToggleSurvey }) => {
               margin: '20px 10px 0px',
             }}
           >
-            Please select a region or an organization!
+            {errors.recipient}
           </Typography>
-        ) : null}
+        )}
         <FormControl fullWidth>
           <GSInputLabel
             id="select-label"
@@ -304,7 +351,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             inputValue={inputValueOrg}
             getOptionSelected={(option, value) => option.id === value.id}
             onInputChange={(e, val) => {
-              setError(false);
+              setErrors(null);
               setInputValueOrg(val);
             }}
             id="controllable-states-demo"
@@ -331,7 +378,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             inputValue={inputValueRegion}
             getOptionSelected={(option, value) => option.id === value.id}
             onInputChange={(e, val) => {
-              setError(false);
+              setErrors(null);
               setInputValueRegion(val);
             }}
             id="controllable-states-demo"
@@ -344,7 +391,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
         </FormControl>
       </div>
       <Button
-        disabled={error}
+        disabled={!!errors}
         type="submit"
         size="large"
         className={submitButton}

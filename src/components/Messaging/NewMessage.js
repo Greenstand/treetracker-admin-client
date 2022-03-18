@@ -65,14 +65,13 @@ const NewMessage = ({ openModal, handleClose }) => {
     setErrorMessage,
     user,
     authors,
-    threads,
     setThreads,
     postMessageSend,
   } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
   const [recipient, setRecipient] = useState('');
   const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   useEffect(() => {
     if (openModal === false) {
@@ -84,19 +83,37 @@ const NewMessage = ({ openModal, handleClose }) => {
   useEffect(() => {
     // set an error message right away if there are no authors
     if (authors.length === 0) {
-      setError('Sorry, no accounts were found.');
+      setErrors('Sorry, no accounts were found.');
     }
   }, [authors]);
 
   const handleChange = (e) => {
     // don't remove the error if it's not a user mistake, like there aren't any authors
     if (authors.length > 0) {
-      setError(false);
+      setErrors(null);
     }
     const { name, value } = e.target;
     name === 'body'
       ? setMessageContent(value)
       : setRecipient(e.target.textContent);
+  };
+
+  const validateMessage = (payload) => {
+    const errors = {};
+
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (!payload.recipient_handle) {
+      errors.recipient = 'Please select a recipient';
+    }
+
+    if (authors.length === 0) {
+      errors.accounts = 'Sorry, no accounts were found.';
+    }
+
+    return errors;
   };
 
   const handleSubmit = async (e) => {
@@ -109,25 +126,13 @@ const NewMessage = ({ openModal, handleClose }) => {
       body: messageContent,
     };
 
-    if (authors.length === 0) {
-      setError('Sorry, no accounts were found.');
-    } else if (
-      !recipient ||
-      recipient === '' ||
-      !messageContent ||
-      messageContent === ''
-    ) {
-      setError('Please select a recipient and enter a message!');
-      return;
-    }
+    const errs = validateMessage(messagePayload);
 
-    if (
-      messagePayload.body !== '' &&
-      user.userName &&
-      messagePayload.to !== ''
-    ) {
+    const errorsFound = Object.keys(errs).length > 0;
+    if (errorsFound) {
+      setErrors(errs);
+    } else {
       const res = await postMessageSend(messagePayload);
-      log.debug('NewMessage submit', threads, res);
 
       if (res.error) {
         setErrorMessage(res.message);
@@ -167,8 +172,9 @@ const NewMessage = ({ openModal, handleClose }) => {
           return updated;
         });
       }
+
+      handleClose();
     }
-    handleClose();
   };
 
   return (
@@ -183,7 +189,7 @@ const NewMessage = ({ openModal, handleClose }) => {
           <Box className={header} my={1}>
             <Typography variant="h3">Send New Message</Typography>
           </Box>
-          {error ? (
+          {errors?.accounts && (
             <Typography
               style={{
                 color: 'red',
@@ -191,10 +197,21 @@ const NewMessage = ({ openModal, handleClose }) => {
                 margin: '20px 10px 0px',
               }}
             >
-              {error}
+              {errors.accounts}
             </Typography>
-          ) : null}
+          )}
           <FormControl>
+            {errors?.recipient && (
+              <Typography
+                style={{
+                  color: 'red',
+                  fontWeight: 'bold',
+                  margin: '20px 10px 0px',
+                }}
+              >
+                {errors.recipient}
+              </Typography>
+            )}
             <GSInputLabel text="Choose the Message Recipient" />
             <Autocomplete
               name="to"
@@ -220,6 +237,17 @@ const NewMessage = ({ openModal, handleClose }) => {
             />
           </FormControl>
           <FormControl>
+            {errors?.message && (
+              <Typography
+                style={{
+                  color: 'red',
+                  fontWeight: 'bold',
+                  margin: '20px 10px 0px',
+                }}
+              >
+                {errors.message}
+              </Typography>
+            )}
             <GSInputLabel text="Message" />
             <TextField
               multiline
@@ -233,7 +261,7 @@ const NewMessage = ({ openModal, handleClose }) => {
             type="submit"
             size="large"
             className={button}
-            disabled={!!error}
+            disabled={!!errors}
           >
             Send Message
           </Button>
