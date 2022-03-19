@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/messaging';
 
-import { Drawer, Grid, IconButton, Typography } from '@material-ui/core';
+import { Box, Drawer, Grid, IconButton, Typography } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 
 import { makeStyles } from '@material-ui/styles';
@@ -28,97 +28,6 @@ const SurveyCharts = ({ surveyId, setShowCharts }) => {
   const [eachData, setEachData] = useState([]);
   const [survey, setSurvey] = useState({});
 
-  // !counting the survey responses while changing to react js data structure
-  // const filterData = () => {
-  //   if (!survey) {
-  //     throw new Error('Survey is not defined');
-  //   }
-  //   let questions = [];
-  //   let choices = [];
-  //   // survey.response.map(({ survey }, i) => {
-  //   //   if (i === 0) {
-  //   //     survey.questions.map((q) => {
-  //   //       questions.push(q.prompt);
-  //   //       q.choices.map((choice) => choices.push({ [choice]: 0 }));
-  //   //     });
-  //   //   } else {
-  //   //     choices.map((choice) => {
-  //   //       survey.answers.map((a) => {
-  //   //         if (choice[a] !== undefined) {
-  //   //           choice[a]++;
-  //   //         }
-  //   //       });
-  //   //     });
-  //   //   }
-  //   // });
-  //   let questionOne = {};
-  //   let questionTwo = {};
-  //   let questionThree = {};
-
-  //   choices.map((choice, i) => {
-  //     if (i === 0) {
-  //       const [item] = Object.entries(choice);
-  //       questionOne['title'] = questions[0];
-  //       questionOne['data'] = { labels: [], totals: [] };
-  //       questionOne['data'].labels.push(item[0]);
-  //       questionOne['data'].totals.push(item[1]);
-  //     } else if (i === 1 || i === 2) {
-  //       const [item] = Object.entries(choice);
-  //       questionOne['data'].labels.push(item[0]);
-  //       questionOne['data'].totals.push(item[1]);
-  //     } else if (i === 3) {
-  //       const [item] = Object.entries(choice);
-  //       questionTwo['title'] = questions[1];
-  //       questionTwo['data'] = { labels: [], totals: [] };
-  //       questionTwo['data'].labels.push(item[0]);
-  //       questionTwo['data'].totals.push(item[1]);
-  //     } else if (i === 4 || i === 5) {
-  //       const [item] = Object.entries(choice);
-  //       questionTwo['data'].labels.push(item[0]);
-  //       questionTwo['data'].totals.push(item[1]);
-  //     } else if (i === 6) {
-  //       const [item] = Object.entries(choice);
-  //       questionThree['title'] = questions[2];
-  //       questionThree['data'] = { labels: [], totals: [] };
-  //       questionThree['data'].labels.push(item[0]);
-  //       questionThree['data'].totals.push(item[1]);
-  //     } else if (i === 7 || i === 8) {
-  //       const [item] = Object.entries(choice);
-  //       questionThree['data'].labels.push(item[0]);
-  //       questionThree['data'].totals.push(item[1]);
-  //     }
-  //   });
-  //   // if (
-  //   //   Object.keys(questionOne).length &&
-  //   //   Object.keys(questionTwo).length &&
-  //   //   Object.keys(questionThree).length
-  //   // ) {
-  //   //   setEachData([questionOne, questionTwo, questionThree]);
-  //   // } else if (
-  //   //   Object.keys(questionOne).length &&
-  //   //   Object.keys(questionTwo).length
-  //   // ) {
-  //   //   setEachData([questionOne, questionTwo]);
-  //   // } else if (Object.keys(questionOne).length) {
-  //   //   setEachData([questionOne]);
-  //   // }
-
-  //   // setEachData([questionOne, questionTwo, questionThree]);
-  //   const chartData = [];
-  //   for (let i = 0; i < survey.questions; i++) {
-  //     const q = survey.questions[i];
-  //     const res = survey.responses[i];
-  //     chartData.push({
-  //       title: q.prompt,
-  //       data: {
-  //         labels: q.choices,
-  //         totals: res.datasets[0].data,
-  //       },
-  //     })
-  //     setEachData(chartData);
-  //   }
-  // };
-
   useEffect(() => {
     api
       .getSurvey(surveyId)
@@ -137,7 +46,17 @@ const SurveyCharts = ({ surveyId, setShowCharts }) => {
               title: q.prompt,
               data: {
                 labels: q.choices,
-                totals: res.datasets[0].data,
+                // totals: res.datasets[0].data,
+                totals: Array.from(q.choices)
+                  .fill(0)
+                  .map(
+                    (c, i) =>
+                      (res.labels.indexOf(q.choices[i]) >= 0 &&
+                        res.datasets[0].data[
+                          res.labels.indexOf(q.choices[i])
+                        ]) ||
+                      c
+                  ),
               },
             });
           }
@@ -218,6 +137,7 @@ const SurveyCharts = ({ surveyId, setShowCharts }) => {
             </Grid>
           ))}
       </Grid>
+      <Box mt={5} />
     </Drawer>
   );
 };
