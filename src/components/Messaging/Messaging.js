@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { MessagingContext } from '../../context/MessagingContext';
-import { getOrganizationUUID } from './../../api/apiUtils';
 
 const useStyles = makeStyles((theme) => ({
   headerGrid: {
@@ -80,14 +79,8 @@ const Messaging = () => {
   useEffect(() => {
     setIsLoading(true);
     loadMessages();
-    const organizationId = getOrganizationUUID();
-    if (organizationId) {
-      loadAuthors(organizationId);
-      loadRegions(organizationId);
-    } else {
-      loadAuthors();
-      loadRegions();
-    }
+    loadAuthors();
+    loadRegions();
   }, []);
 
   useEffect(() => {

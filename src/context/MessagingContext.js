@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/messaging';
 const log = require('loglevel');
+import { getOrganizationUUID } from './../api/apiUtils';
 
 export const MessagingContext = createContext({
   user: {},
@@ -96,8 +97,9 @@ export const MessagingProvider = (props) => {
     setIsLoading(false);
   };
 
-  const loadAuthors = async (organizationId) => {
+  const loadAuthors = async () => {
     try {
+      const organizationId = getOrganizationUUID();
       log.debug('...load authors');
       const authors = await api.getAuthors(organizationId);
       setAuthors(authors);
@@ -192,9 +194,11 @@ export const MessagingProvider = (props) => {
     }
   };
 
-  const loadRegions = async (organizationId) => {
+  const loadRegions = async () => {
     try {
       log.debug('...load regions');
+      const organizationId = getOrganizationUUID();
+      log.debug('...load authors');
       const res = await api.getRegions(organizationId);
 
       if (res.error) {
