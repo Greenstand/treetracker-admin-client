@@ -1,3 +1,10 @@
+## [1.78.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.3...v1.78.4) (2022-03-19)
+
+
+### Bug Fixes
+
+* clean up how we filter authors and regions ([1afe075](https://github.com/Greenstand/treetracker-admin-client/commit/1afe075140545a06ef807429afa7344fc62a60a6))
+
 ## [1.78.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.2...v1.78.3) (2022-03-19)
 
 
