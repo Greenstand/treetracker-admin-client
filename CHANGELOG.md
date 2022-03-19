@@ -1,3 +1,11 @@
+## [1.78.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.0...v1.78.1) (2022-03-19)
+
+
+### Bug Fixes
+
+* chips should show organization or region name ([cd4aa48](https://github.com/Greenstand/treetracker-admin-client/commit/cd4aa4817ff13703574d1afe81d4bea3cddf5bfa))
+* show bulk-recipient names for new messages, show \n for announcements ([3a04284](https://github.com/Greenstand/treetracker-admin-client/commit/3a042842e8f5221a28349eff2ea826c97cff7836))
+
 # [1.78.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.77.0...v1.78.0) (2022-03-18)
 
 
