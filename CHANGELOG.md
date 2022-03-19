@@ -1,3 +1,10 @@
+## [1.78.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.1...v1.78.2) (2022-03-19)
+
+
+### Bug Fixes
+
+* survery chart problem ([57339e7](https://github.com/Greenstand/treetracker-admin-client/commit/57339e7b518d3ee78de1bd91725fcfb703c4db5e))
+
 ## [1.78.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.0...v1.78.1) (2022-03-19)
 
 
