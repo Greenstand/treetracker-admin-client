@@ -95,7 +95,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
     if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
       errors.body = 'Please enter a message';
     }
-    const videoUrl = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/;
+    const videoUrl = /^((?:https?:)?\/\/)?.*/;
 
     if (payload.video_link && !videoUrl.test(payload.video_link.trim())) {
       errors.video_link = 'Please enter a valid video link';
