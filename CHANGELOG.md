@@ -1,3 +1,10 @@
+## [1.78.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.2...v1.78.3) (2022-03-19)
+
+
+### Bug Fixes
+
+* do not require youtube link ([8e429b7](https://github.com/Greenstand/treetracker-admin-client/commit/8e429b781653e95dbed18089b293f2176a3fe482))
+
 ## [1.78.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.1...v1.78.2) (2022-03-19)
 
 
