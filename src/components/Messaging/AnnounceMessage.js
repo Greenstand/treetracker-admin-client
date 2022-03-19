@@ -79,7 +79,6 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const handleChange = (e) => {
     setErrors(null);
     const { name, value } = e.target;
-    console.log(name, value, String.toString(value));
     setValues({
       ...values,
       [name]: `${value}`,
@@ -95,6 +94,11 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
 
     if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
       errors.body = 'Please enter a message';
+    }
+    const videoUrl = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|v\/)?)([\w-]+)(\S+)?$/;
+
+    if (payload.video_link && !videoUrl.test(payload.video_link.trim())) {
+      errors.video_link = 'Please enter a valid video link';
     }
 
     if (
@@ -152,6 +156,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
           setRegion('');
           setToggleAnnounceMessage(false);
 
+          const organization = orgList.find(
+            (org) => org.stakeholder_uuid === payload.organization_id
+          );
+          const region = regions.find(
+            (region) => region.id === payload.region_id
+          );
+
           const newAnnouncement = {
             id: null,
             type: 'announce',
@@ -166,7 +177,12 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
             video_link: null,
             survey_response: null,
             survey: null,
-            bulk_message_recipients: [],
+            bulk_message_recipients: [
+              {
+                organization: organization?.name,
+                region: region?.name,
+              },
+            ],
           };
           log.debug('...update threads w/ new announcement');
           // update the full set of threads
@@ -220,6 +236,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         label="Write your message here ..."
         required
       />
+      {errors?.video_link && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.video_link}
+        </Typography>
+      )}
       <GSInputLabel text={'Add a Video Link'} />
       <TextField
         name="videoLink"

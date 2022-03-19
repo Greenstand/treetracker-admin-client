@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     textAlign: 'left',
     borderRadius: '10px',
+    whiteSpace: 'pre-wrap',
   },
   recievedMessage: {
     position: 'relative',
