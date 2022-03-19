@@ -79,9 +79,10 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   const handleChange = (e) => {
     setErrors(null);
     const { name, value } = e.target;
+    console.log(name, value, String.toString(value));
     setValues({
       ...values,
-      [name]: value,
+      [name]: `${value}`,
     });
   };
 
