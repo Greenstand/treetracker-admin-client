@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     textAlign: 'left',
     borderRadius: '10px',
+    whiteSpace: 'pre-wrap',
   },
   recievedMessage: {
     position: 'relative',
@@ -388,11 +389,19 @@ const SenderInformation = ({
               <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
-              message?.bulk_message_recipients.map((recipient, i) => (
+              message.bulk_message_recipients.map((recipient, i) => (
                 <Chip
-                  key={`${recipient.recipient}-${i}`}
-                  label={`${recipient.recipient}`}
-                  color={recipient.type === 'region' ? 'secondary' : 'primary'}
+                  key={`${
+                    recipient.organization
+                      ? recipient.organization
+                      : recipient.region
+                  }-${i}`}
+                  label={`${
+                    recipient.organization
+                      ? recipient.organization
+                      : recipient.region
+                  }`}
+                  color="primary"
                   style={{
                     color: 'white',
                     borderRadius: '6px',
