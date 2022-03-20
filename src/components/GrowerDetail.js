@@ -229,7 +229,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   async function getGrower(payload) {
     const { id, growerAccountUuid } = payload;
     let grower = growers?.find(
-      (p) => p.growerAccountUuid === growerAccountUuid || p.id === id
+      (p) =>
+        (growerAccountUuid && p.growerAccountUuid === growerAccountUuid) ||
+        p.id === id
     ); // Look for a match in the context first
 
     if (!grower && !id) {

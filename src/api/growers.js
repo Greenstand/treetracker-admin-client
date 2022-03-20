@@ -36,7 +36,7 @@ export default {
         organizationId: true,
         imageRotation: true,
         id: true,
-        growerAccountUuid: true,
+        // growerAccountUuid: true,
       },
     };
     const query = `${
