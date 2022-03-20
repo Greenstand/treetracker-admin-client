@@ -1,3 +1,10 @@
+## [1.78.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.5...v1.78.6) (2022-03-20)
+
+
+### Bug Fixes
+
+* enable messaging in production ([4046bf0](https://github.com/Greenstand/treetracker-admin-client/commit/4046bf0d11ea059822a6b98d6b6bf4b9cc8c2447))
+
 ## [1.78.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.4...v1.78.5) (2022-03-20)
 
 
