@@ -18,7 +18,6 @@ export const RegionContext = createContext({
   changeSort: () => {},
   updateRegions: () => {},
   loadRegions: () => {},
-  getRegionCount: () => {},
   getRegion: () => {},
   createRegion: () => {},
   updateRegion: () => {},
@@ -60,27 +59,27 @@ export function RegionProvider(props) {
     log.debug('load regions');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const { regions, count } = await api.getRegions({
+    const ownerId = getOrganizationUUID();
+    const queryFilter = ownerId
+      ? {
+          owner_id: ownerId,
+          ...filter,
+        }
+      : filter;
+
+    const {
+      regions,
+      query: { count },
+    } = await api.getRegions({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
       orderBy,
       order: 'asc',
-      filter: {
-        ownerId: getOrganizationUUID() || undefined,
-        ...filter,
-      },
+      filter: queryFilter,
     });
     setRegions(regions);
     setRegionCount(count);
     setIsLoading(false);
-  };
-
-  const getRegionCount = async () => {
-    const { count } = await api.getRegionsCount({
-      ownerId: getOrganizationUUID() || undefined,
-      ...filter,
-    });
-    setRegionCount(count);
   };
 
   const getRegion = async (payload) => {
@@ -97,13 +96,13 @@ export function RegionProvider(props) {
   const createRegion = async (payload) => {
     if (payload.shape.type.endsWith('Collection')) {
       const createdCollection = await api.createCollection({
-        ownerId: getOrganizationUUID() || undefined,
+        owner_id: getOrganizationUUID() || undefined,
         ...payload,
       });
       setRegions((regions) => [...regions, ...createdCollection.regions]);
     } else {
       const createdRegion = await api.createRegion({
-        ownerId: getOrganizationUUID() || undefined,
+        owner_id: getOrganizationUUID() || undefined,
         ...payload,
       });
       setRegions((regions) => [...regions, createdRegion]);
@@ -141,7 +140,6 @@ export function RegionProvider(props) {
     changeSort,
     updateRegions,
     loadRegions,
-    getRegionCount,
     getRegion,
     createRegion,
     updateRegion,

@@ -33,31 +33,16 @@ export default {
   },
 
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
-    const regionFilter = {
-      filter,
-      order: [`${orderBy}`, `${order}`],
+    const regionQuery = new URLSearchParams({
+      ...filter,
+      // order: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
-    };
-    console.log(process.env);
+    });
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
-    }/region?options=${JSON.stringify(regionFilter)}`;
+    }/region?${regionQuery.toString()}`;
 
-    return fetch(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
-  },
-
-  getRegionsCount(filter) {
-    const query = `${
-      process.env.REACT_APP_REGION_API_ROOT
-    }/region/count?filter=${JSON.stringify(filter)}`;
     return fetch(query, {
       headers: {
         'content-type': 'application/json',
@@ -85,7 +70,6 @@ export default {
   createCollection(payload) {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
 
-    console.log(JSON.stringify(payload));
     return fetch(query, {
       method: 'POST',
       headers: {
