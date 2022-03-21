@@ -45,7 +45,6 @@ const log = require('loglevel').getLogger('../components/Verify');
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8, 4, 8),
-    flex: 'nowrap',
   },
   cardImg: {
     width: '100%',
@@ -164,6 +163,71 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.6875rem',
   },
 }));
+
+const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(0);
+const refCaptureImageContainer = useRef();
+
+useEffect(() => {
+  const handleResize = () => {
+    console.log(refCaptureImageContainer.current);
+    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
+  };
+  window.addEventListener('resize', handleResize);
+  handleResize();
+  return () => {
+    window.removeEventListener('resize', handleResize);
+  };
+}, []);
+
+// Calculate the number of captures per row based on the container width
+// and whether large or small images are toggled
+const containerWidth = captureImageContainerWidth || 100;
+const minCaptureSize = showBigSize ? 350 : 250;
+const breakpoints = Array.from(
+  { length: 10 },
+  (_, idx) => minCaptureSize * (idx + 1),
+);
+// The index of the next breakpoint up from the container width
+// gives the number of captures per row
+const capturesPerRow = breakpoints.findIndex((val, idx) => {
+  if (idx === 0) {
+    return false;
+  }
+  if (
+    (idx === 1 && containerWidth <= val) ||
+    (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
+    (containerWidth > val && idx === breakpoints.length - 1)
+  ) {
+    return true;
+  }
+  return false;
+});
+
+// //...
+
+//   const captureImageItems = captureImages
+//     .concat(placeholderImages)
+//     .map((capture) => {
+//       return (
+//         <Grid
+//           item
+//           key={capture.id}
+//           style={{
+//             width: `calc(100% / ${capturesPerRow})`
+//           }}
+//         >
+// //...
+
+//                 <Grid
+//                   container
+//                   className={classes.wrapper}
+//                   spacing={2}
+//                   ref={refCaptureImageContainer}
+//                 >
+//                   {captureImageItems}
+//                 </Grid>
+
+// //...
 
 const Verify = (props) => {
   const verifyContext = useContext(VerifyContext);
@@ -576,46 +640,9 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid
-                  container
-                  className={classes.wrapper}
-                  spacing={2}
-                  style={{
-                    maxHeight: '100vh',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                  }}
-                >
-                  {captureImageItems}
-                </Grid>
+                <Grid>{captureImageItems}</Grid>
               </Grid>
               <Grid item container justify="flex-end" className={classes.title}>
-                <Grid>
-                  <ToggleButtonGroup
-                    value={alignment}
-                    exclusive
-                    onChange={toggleSizes}
-                    aria-label="text alignment"
-                    paddingTop="8px"
-                  >
-                    <ToggleButton
-                      value="left"
-                      aria-label="left aligned"
-                      disabled={!showBigSize ? true : false}
-                      className={classes.showButtonSize}
-                    >
-                      Large size
-                    </ToggleButton>
-                    <ToggleButton
-                      value="right"
-                      aria-label="right aligned"
-                      disabled={showBigSize ? true : false}
-                      className={classes.showButtonSize}
-                    >
-                      Small size
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Grid>
                 {imagePagination}
               </Grid>
             </Grid>
