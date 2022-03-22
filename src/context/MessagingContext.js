@@ -104,6 +104,7 @@ export const MessagingProvider = (props) => {
       const authors = await api.getAuthors(organizationId);
       setAuthors(authors);
     } catch (error) {
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -177,22 +178,20 @@ export const MessagingProvider = (props) => {
     try {
       log.debug('...load messages');
       const res = await api.getMessages(user.userName);
-      if (res.error) {
-        log.debug('load messages ---', res);
+      if (!res.error) {
+        // check if grower sent a message from GrowerDetail and add it to top of messages
+        if (res && growerMessage) {
+          groupMessageByHandle([growerMessage, ...res.messages]);
+        } else {
+          groupMessageByHandle(res.messages);
+        }
+      } else {
         if (res.status === 404 && res.message === 'Author handle not found') {
           throw 'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.';
         }
         throw 'Sorry, there was a problem loading your messages.';
       }
-
-      // check if grower sent a message and add it to top of messages
-      if (res && growerMessage) {
-        groupMessageByHandle([growerMessage, ...res.messages]);
-      } else {
-        groupMessageByHandle(res.messages);
-      }
     } catch (error) {
-      log.debug('load messages', error);
       setErrorMessage(error);
     }
   };
