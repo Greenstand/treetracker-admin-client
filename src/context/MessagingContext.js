@@ -112,7 +112,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.postRegion(payload);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -121,7 +121,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.getRegionById(id);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -130,7 +130,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.postMessage(payload);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -143,7 +143,7 @@ export const MessagingProvider = (props) => {
         throw 'Were sorry something went wrong. Please try again.';
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -156,7 +156,7 @@ export const MessagingProvider = (props) => {
         throw 'Whoops! There is something missing. Please check your message and try again';
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -178,7 +178,10 @@ export const MessagingProvider = (props) => {
       log.debug('...load messages');
       const res = await api.getMessages(user.userName);
       if (res.error) {
-        console.log(res.error);
+        log.debug('load messages ---', res);
+        if (res.status === 404 && res.message === 'Author handle not found') {
+          throw 'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.';
+        }
         throw 'Sorry, there was a problem loading your messages.';
       }
 
@@ -189,8 +192,8 @@ export const MessagingProvider = (props) => {
         groupMessageByHandle(res.messages);
       }
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      log.debug('load messages', error);
+      setErrorMessage(error);
     }
   };
 
@@ -202,7 +205,7 @@ export const MessagingProvider = (props) => {
       const res = await api.getRegions(organizationId);
 
       if (res.error) {
-        console.log(res.error);
+        log.debug(res.error);
         throw 'Sorry, there was a problem loading your regions.';
       }
 
@@ -210,7 +213,7 @@ export const MessagingProvider = (props) => {
         setRegions(res.regions);
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };

@@ -9,15 +9,15 @@ export async function handleResponse(response) {
   const error = await response.json();
   log.debug('handleResponse error ---', response.status, error);
 
-  if (response.status === 422) {
+  // pass along user errors
+  if (response.status > 399 && response.status < 500) {
     return {
       error: true,
+      status: response.status,
       message: error.message,
     };
   }
-  if (response.status === 400) {
-    throw new Error(error);
-  }
+
   throw new Error('Network response was not ok.');
 }
 
