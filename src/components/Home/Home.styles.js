@@ -63,7 +63,7 @@ const styles = (theme) => ({
     padding: 0,
     flexWrap: 'wrap',
     '&>div': {
-      minWidth: '336px',
+      minWidth: '300px',
     },
   },
 });
