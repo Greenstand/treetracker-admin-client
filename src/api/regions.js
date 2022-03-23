@@ -5,15 +5,14 @@ const convertRegionPayload = (payload) => {
   return {
     calculate_statistics:
       payload.calculateStatistics || payload.calculate_statistics,
-    collection_id: payload.collectionId || payload.collection_id,
-    created_at: payload.createdAt || payload.created_at,
     id: payload.id,
     name: payload.name,
-    properties: payload.properties,
     shape: payload.shape,
     show_on_org_map: payload.showOnOrgMap || payload.show_on_org_map,
     updated_at: payload.updatedAt || payload.updated_at,
     owner_id: payload.ownerId || payload.owner_id,
+    region_name_property:
+      payload.regionNameProperty || payload.region_name_property,
   };
 };
 
@@ -35,7 +34,7 @@ export default {
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     const regionQuery = new URLSearchParams({
       ...filter,
-      // order: [`${orderBy}`, `${order}`],
+      // sort: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
     });
@@ -96,6 +95,19 @@ export default {
           id: undefined,
         })
       ),
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+
+  deleteRegion(id) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+    return fetch(query, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: session.token,
+      },
     })
       .then(handleResponse)
       .catch(handleError);

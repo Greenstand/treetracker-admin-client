@@ -22,6 +22,7 @@ export const RegionContext = createContext({
   createRegion: () => {},
   updateRegion: () => {},
   updateFilter: () => {},
+  deleteRegion: () => {},
 });
 
 export function RegionProvider(props) {
@@ -43,11 +44,11 @@ export function RegionProvider(props) {
     setPageSize(pageSize);
   };
 
-  const changeCurrentPage = async (_event, val) => {
-    setCurrentPage(currentPage, val);
+  const changeCurrentPage = async (val) => {
+    setCurrentPage(val);
   };
 
-  const changeSort = async (_event, val) => {
+  const changeSort = async (val) => {
     setOrderBy(val);
   };
 
@@ -122,6 +123,17 @@ export function RegionProvider(props) {
     }
   };
 
+  const deleteRegion = async (id) => {
+    await api.deleteRegion(id);
+    const index = regions.findIndex((region) => region.id === id);
+    if (index >= 0) {
+      setRegions([
+        ...regions.slice(0, index),
+        ...regions.slice(index + 1, regions.length),
+      ]);
+    }
+  };
+
   const updateFilter = async (newFilter) => {
     setCurrentPage(0);
     setFilter(newFilter);
@@ -144,6 +156,7 @@ export function RegionProvider(props) {
     createRegion,
     updateRegion,
     updateFilter,
+    deleteRegion,
   };
 
   return (

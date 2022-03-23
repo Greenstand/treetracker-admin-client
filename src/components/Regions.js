@@ -22,9 +22,12 @@ import {
   FormControlLabel,
   Switch,
   MenuItem,
+  Tooltip,
+  Input,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import SortIcon from '@material-ui/icons/Sort';
+import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
@@ -68,15 +71,7 @@ const styles = (theme) => ({
   },
   input: {
     margin: theme.spacing(0, 1, 4, 1),
-  },
-  owner: {
-    width: 150,
-    marginRight: theme.spacing(1),
-  },
-  name: {
-    marginRight: theme.spacing(1),
-  },
-  desc: {
+    width: 170,
     marginRight: theme.spacing(1),
   },
   paper: {
@@ -137,6 +132,7 @@ const RegionTable = (props) => {
     updateRegion,
     deleteRegion,
   } = useContext(RegionContext);
+  const { orgList, userHasOrg } = useContext(AppContext);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [regionEdit, setRegionEdit] = useState(undefined);
@@ -144,14 +140,14 @@ const RegionTable = (props) => {
 
   const tableRef = useRef(null);
 
-  const handleChangeCurrentPage = (event) => {
+  const handleChangeCurrentPage = (event, value) => {
     tableRef.current && tableRef.current.scrollIntoView();
-    changeCurrentPage(Number(event.target.value));
+    changeCurrentPage(value);
   };
 
   const handleChangeRowsPerPage = (event) => {
     changePageSize(Number(event.target.value));
-    handleChangeCurrentPage(0);
+    changeCurrentPage(0);
   };
 
   const handleEdit = (region) => {
@@ -159,7 +155,28 @@ const RegionTable = (props) => {
     setIsEdit(true);
   };
 
-  const renderRegion = () => {
+  const handleDelete = (region) => {
+    setRegionEdit(region);
+    setOpenDelete(true);
+  };
+
+  const renderRegionProperties = (region, max = 0) => {
+    return Object.keys(region.properties || {}).map((key, idx) => {
+      if (max === 0 || idx < max)
+        return (
+          <Grid key={`prop_${region.id}_${key}_${max}`}>
+            <span>
+              <b>{key}:</b>
+            </span>
+            &nbsp;
+            <span>{JSON.stringify(region.properties[key])}</span>
+            {max > 0 && idx === max - 1 && <span>&nbsp;&hellip;</span>}
+          </Grid>
+        );
+    });
+  };
+
+  const renderRegions = () => {
     return regions.map((region) => (
       <TableRow key={region.id} role="listitem">
         {/* <TableCell>
@@ -168,24 +185,38 @@ const RegionTable = (props) => {
             checked={selected.includes(region.id)}
           />
         </TableCell> */}
-        <TableCell component="th" scope="row">
-          {region.id}
-        </TableCell>
+        <Tooltip title={region.id}>
+          <TableCell component="th" scope="row">
+            {`${(region.id + '').substring(0, 9)}`}&hellip;
+          </TableCell>
+        </Tooltip>
         <TableCell component="th" scope="row" data-testid="region">
           {region.name}
         </TableCell>
-        <TableCell>
-          {region.properties ? JSON.stringify(region.properties) : ''}
+        {!userHasOrg && (
+          <TableCell>
+            {
+              orgList.find((org) => org.stakeholder_uuid === region.owner_id)
+                ?.name
+            }
+          </TableCell>
+        )}
+        <Tooltip title={renderRegionProperties(region)}>
+          <TableCell>{renderRegionProperties(region, 4)}</TableCell>
+        </Tooltip>
+        <TableCell align="center">
+          {region.show_on_org_map ? 'Yes' : 'No'}
         </TableCell>
-        <TableCell>{region.show_on_org_map ? 'Yes' : 'No'}</TableCell>
-        <TableCell>{region.calculate_statistics ? 'Yes' : 'No'}</TableCell>
-        <TableCell>
+        <TableCell align="center">
+          {region.calculate_statistics ? 'Yes' : 'No'}
+        </TableCell>
+        <TableCell align="center">
           <IconButton title="edit" onClick={() => handleEdit(region)}>
             <Edit />
           </IconButton>
-          {/* <IconButton title="delete" onClick={() => openDeleteDialog(region)}>
+          <IconButton title="delete" onClick={() => handleDelete(region)}>
             <Delete />
-          </IconButton> */}
+          </IconButton>
         </TableCell>
       </TableRow>
     ));
@@ -235,7 +266,7 @@ const RegionTable = (props) => {
                   className={classes.addUser}
                   color="primary"
                 >
-                  ADD NEW REGION
+                  UPLOAD REGION
                 </Button>
               </Grid>
             </Grid>
@@ -244,7 +275,6 @@ const RegionTable = (props) => {
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      {/* <TableCell></TableCell> */}
                       <TableCell>
                         ID
                         <IconButton
@@ -255,7 +285,7 @@ const RegionTable = (props) => {
                         </IconButton>
                       </TableCell>
                       <TableCell>
-                        name
+                        Name
                         <IconButton
                           title="sortbyName"
                           onClick={() => changeSort(sortOptions.byName)}
@@ -263,13 +293,16 @@ const RegionTable = (props) => {
                           <SortIcon />
                         </IconButton>
                       </TableCell>
+                      {!userHasOrg && <TableCell>Owner</TableCell>}
                       <TableCell>Properties</TableCell>
-                      <TableCell>Shown on Org Map</TableCell>
-                      <TableCell>Statistics Calculated</TableCell>
-                      <TableCell>Edit</TableCell>
+                      <TableCell align="center">Shown on Org Map</TableCell>
+                      <TableCell align="center">
+                        Statistics Calculated
+                      </TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>{renderRegion()}</TableBody>
+                  <TableBody>{renderRegions()}</TableBody>
                   <TableFooter>
                     <TableRow>{tablePagination()}</TableRow>
                   </TableFooter>
@@ -319,33 +352,33 @@ const EditModal = ({
   const [id, setId] = useState(undefined);
   const [ownerId, setOwnerId] = useState(undefined);
   const [name, setName] = useState(undefined);
-  const [propTag, setPropTag] = useState(undefined);
+  const [regionNameProperty, setRegionNameProperty] = useState(undefined);
   const [show, setShow] = useState(true);
   const [calc, setCalc] = useState(true);
   const [geojson, setGeoJson] = useState(undefined);
   const [shape, setShape] = useState(undefined);
-  // const nameRegion = data.map((region) => region.name.toLowerCase());
   const { orgList, userHasOrg } = useContext(AppContext);
 
   useEffect(() => {
     setShape(undefined);
     setGeoJson(undefined);
+    setRegionNameProperty(undefined);
     if (regionEdit) {
       setId(regionEdit.id);
       setOwnerId(regionEdit.owner_id);
       setName(regionEdit.name);
-      setPropTag(regionEdit.prop_tag);
       setShow(regionEdit.show_on_org_map);
       setCalc(regionEdit.calculate_statistics);
     } else {
       setId(undefined);
       setOwnerId(getOrganizationUUID());
       setName(undefined);
-      setPropTag(undefined);
+      setRegionNameProperty(undefined);
       setShow(true);
       setCalc(true);
     }
   }, [regionEdit]);
+
   const onOwnerChange = (e) => {
     setOwnerId(e.target.value);
     setErrors((prev) => ({
@@ -362,11 +395,11 @@ const EditModal = ({
     }));
   };
 
-  const onPropChange = (e) => {
-    setPropTag(e.target.value);
+  const onRegionNamePropertyChange = (e) => {
+    setRegionNameProperty(e.target.value);
     setErrors((prev) => ({
       ...prev,
-      propTag: undefined,
+      name: undefined,
     }));
   };
 
@@ -378,14 +411,24 @@ const EditModal = ({
     setCalc(e.target.checked);
   };
 
-  // TO DO: add try-catch for validation
   const onFileChange = (e) => {
+    setErrors((prev) => ({
+      ...prev,
+      shape: undefined,
+    }));
     const fileread = new FileReader();
-    fileread.onload = function (e) {
-      const content = e.target.result;
-      const json = JSON.parse(content);
-      setShape(json);
-    };
+    try {
+      fileread.onload = function (e) {
+        const content = e.target.result;
+        const json = JSON.parse(content);
+        setShape(json);
+      };
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        shape: `Failed to process shape file: ${error}`,
+      }));
+    }
     fileread.readAsText(e.target.files[0]);
     setGeoJson(e.target.value);
   };
@@ -397,57 +440,67 @@ const EditModal = ({
 
   const handleSave = async () => {
     let hasError = false;
-    if (!ownerId) {
-      hasError = true;
-      setErrors((prev) => {
-        return { ...prev, owner: 'Please select an owner for your region.' };
-      });
+    if (isAdding) {
+      if (!shape) {
+        hasError = true;
+        setErrors((prev) => {
+          return { ...prev, shape: 'Please select a shape file.' };
+        });
+      } else if (!regionNameProperty) {
+        hasError = true;
+        setErrors((prev) => {
+          return { ...prev, name: 'Please select a region name property.' };
+        });
+      }
     }
-    if (name) {
-      // const editName = regionEdit.name.toLowerCase().trim();
-      // const otherRegionList = isEdit
-      //   ? data.filter((region) => Number(region.id) !== regionEdit.id)
-      //   : data;
-      // const nameRegion = otherRegionList.map((region) =>
-      //   region.name.toLowerCase(),
-      // );
-      // if (nameRegion.includes(editName)) {
-      //   setErrors((prev) => {
-      //  return { ...prev, name: 'Name already exists'};
-      ///});
-    } else {
+
+    if (isEdit && !name) {
       hasError = true;
       setErrors((prev) => {
-        return { ...prev, name: 'Please designate a name for your region.' };
-      });
-    }
-    if (!propTag && shape?.type === 'FeatureCollection') {
-      hasError = true;
-      setErrors((prev) => {
-        return { ...prev, tag: 'Please designate a tag for your subregions.' };
+        return { ...prev, name: 'Please enter a name for the region.' };
       });
     }
 
     if (!hasError) {
-      setIsEdit(false);
-      await editRegion({
-        id,
-        ownerId,
-        name: name || '',
-        nameKey: propTag || '',
-        shape,
-        showOnOrgMap: show,
-        calculateStatistics: calc,
-      });
-      loadRegionList(true);
-      setRegionEdit(undefined);
+      try {
+        await editRegion({
+          id,
+          ownerId,
+          name,
+          regionNameProperty: regionNameProperty,
+          shape,
+          showOnOrgMap: show,
+          calculateStatistics: calc,
+        });
+        setIsEdit(false);
+        loadRegionList(true);
+        setRegionEdit(undefined);
+      } catch (error) {
+        // TO DO - report the error details
+        alert(`Upload failed`);
+      }
     }
   };
 
   return (
     <Dialog open={isEdit || isAdding} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Region Detail</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {isEdit ? 'Edit Region' : 'Upload Region'}
+      </DialogTitle>
       <DialogContent>
+        {isAdding && (
+          <Grid item className={styles.input}>
+            <Input
+              type="file"
+              value={geojson || ''}
+              onChange={onFileChange}
+              inputProps={{
+                accept: '.json,.geojson',
+              }}
+              error={errors.shape ? true : false}
+            />
+          </Grid>
+        )}
         <Grid container>
           {!userHasOrg && (
             <Grid item className={styles.owner}>
@@ -475,40 +528,42 @@ const EditModal = ({
             </Grid>
           )}
 
-          <Grid item className={styles.name}>
-            <TextField
-              error={errors.name ? true : false}
-              helperText={errors.name}
-              autoFocus
-              id="name"
-              label="Name"
-              type="text"
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={name || ''}
-              className={styles.input}
-              onChange={onNameChange}
-            />
-          </Grid>
-          <Grid item className={styles.desc}>
-            <TextField
-              error={errors.tag ? true : false}
-              helperText={errors.tag}
-              id="desc"
-              label="Properties Tag for Subregion Name"
-              type="text"
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={propTag || ''}
-              className={styles.input}
-              onChange={onPropChange}
-            />
+          <Grid item>
+            {isEdit ? (
+              <TextField
+                error={errors.name ? true : false}
+                helperText={errors.name}
+                id="name"
+                label="Region Name"
+                type="text"
+                variant="outlined"
+                fullWidth
+                value={name || ''}
+                className={styles.input}
+                onChange={onNameChange}
+              />
+            ) : (
+              <TextField
+                select
+                error={errors.name ? true : false}
+                helperText={errors.name}
+                id="prop"
+                label="Region Name Property"
+                type="text"
+                variant="outlined"
+                fullWidth
+                value={regionNameProperty || ''}
+                className={styles.input}
+                onChange={onRegionNamePropertyChange}
+                disabled={!shape?.properties}
+              >
+                {Object.keys(shape?.properties || {}).map((prop) => (
+                  <MenuItem key={prop} value={prop}>
+                    {prop}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
           </Grid>
           <FormGroup row={true}>
             <FormControlLabel
@@ -520,13 +575,6 @@ const EditModal = ({
               label="Calculate Statistics"
             />
           </FormGroup>
-          <input
-            hidden={isEdit}
-            type="file"
-            value={geojson || ''}
-            onChange={onFileChange}
-            accept=".json,.geojson"
-          ></input>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -548,7 +596,11 @@ const DeleteDialog = ({
   loadRegionList,
 }) => {
   const handleDelete = async () => {
-    await deleteRegion({ id: regionEdit.id });
+    try {
+      await deleteRegion({ id: regionEdit.id });
+    } catch (error) {
+      alert(`Delete region failed: ${error}`);
+    }
     loadRegionList(true);
     setOpenDelete(false);
     setRegionEdit(undefined);
