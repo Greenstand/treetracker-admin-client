@@ -1,3 +1,10 @@
+## [1.78.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.6...v1.78.7) (2022-03-23)
+
+
+### Bug Fixes
+
+* changed the width of card ([#570](https://github.com/Greenstand/treetracker-admin-client/issues/570)) ([3138428](https://github.com/Greenstand/treetracker-admin-client/commit/3138428de85624aa88085fe0a0fac52e93f84401))
+
 ## [1.78.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.5...v1.78.6) (2022-03-20)
 
 
