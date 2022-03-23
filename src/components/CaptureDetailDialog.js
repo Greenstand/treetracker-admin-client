@@ -17,6 +17,7 @@ import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
+import Country from './common/Country';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -306,6 +307,7 @@ function CaptureDetailDialog(props) {
           objectFit="contain"
           fixed
         />
+        <Country lat={capture.lat} lon={capture.lon} />
       </Dialog>
       <Drawer
         anchor="right"
