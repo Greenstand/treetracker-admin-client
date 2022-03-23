@@ -1,5 +1,6 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
+import log from 'loglevel';
 
 // Set API as a variable
 const CAPTURE_MATCH_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -129,18 +130,20 @@ export default {
   /**
    * Capture Match Tool
    */
-  fetchCapturesToMatch(currentPage, abortController) {
-    return fetch(
-      `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
-        currentPage - 1
-      }`,
-      {
-        headers: {
-          Authorization: session.token,
-        },
-        signal: abortController?.signal,
-      }
-    )
+  fetchCapturesToMatch(currentPage, abortController, filter) {
+    const where = Object.keys(filter)
+      .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
+      .join('&');
+    const req = `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
+      currentPage - 1
+    }&${where}`;
+    log.warn('fetch capture:', req);
+    return fetch(req, {
+      headers: {
+        Authorization: session.token,
+      },
+      signal: abortController?.signal,
+    })
       .then(handleResponse)
       .catch(handleError);
   },
