@@ -21,6 +21,7 @@ import {
   FormControl,
   TextField,
   InputLabel,
+  MenuItem,
 } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import { documentTitle } from '../../common/variables';
@@ -113,6 +114,7 @@ function CaptureMatchingView(props) {
   const [treesCount, setTreesCount] = useState(0);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
   const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
@@ -132,6 +134,7 @@ function CaptureMatchingView(props) {
     const filter = {
       captured_at_start_date: startDate,
       captured_at_end_date: endDate,
+      'organization_ids[]': organizationId,
     };
     const data = await api.fetchCapturesToMatch(
       currentPage,
@@ -336,20 +339,25 @@ function CaptureMatchingView(props) {
             variant="outlined"
             className={classes.customTableFilterSelectFormControl}
           >
-            <InputLabel id="sub_organization">Organization</InputLabel>
+            <InputLabel id="organization">Organization</InputLabel>
             <Select
-              labelId="sub_organization"
+              labelId="organization"
               defaultValue={''}
-              id="sub_organization"
-              name="sub_organization"
+              id="organization"
+              name="organization"
               label="Organization"
-              onChange={() => {}}
+              onChange={(e) => {
+                setOrganizationId(e.target.value);
+              }}
             >
-              {/* {appContext.orgList.map((org) => (
-                  <MenuItem key={org.stakeholder_uuid} value={org.stakeholder_uuid}>
-                    {org.name}
-                  </MenuItem>
-                ))} */}
+              {appContext.orgList.map((org) => (
+                <MenuItem
+                  key={org.stakeholder_uuid}
+                  value={org.stakeholder_uuid}
+                >
+                  {org.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
