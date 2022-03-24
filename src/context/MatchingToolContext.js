@@ -1,5 +1,4 @@
 import React from 'react';
-import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/MatchingToolContext');
@@ -14,6 +13,7 @@ export function MatchingToolProvider(props) {
 
   // EVENT HANDLERS
   function handleFilterToggle() {
+    log.warn('toggle filter');
     setIsFilterOpen(!isFilterOpen);
   }
 
