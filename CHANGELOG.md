@@ -1,3 +1,17 @@
+# [1.79.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.7...v1.79.0) (2022-03-25)
+
+
+### Bug Fixes
+
+* eslint ([d76a2be](https://github.com/Greenstand/treetracker-admin-client/commit/d76a2be300f9b299a7c17538c3d8a7b1f5a7eec9))
+* some bugs ([f736ba6](https://github.com/Greenstand/treetracker-admin-client/commit/f736ba6a5b12d50754f8a9a557e2e26ec5cb2148))
+
+
+### Features
+
+* can filter by date ([64e387a](https://github.com/Greenstand/treetracker-admin-client/commit/64e387a134837841499452ce7924ce6d89bceaf5))
+* can filter by org ([76d2173](https://github.com/Greenstand/treetracker-admin-client/commit/76d2173f97f3c626d3c34288b531f72828cd20ae))
+
 ## [1.78.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.6...v1.78.7) (2022-03-23)
 
 
