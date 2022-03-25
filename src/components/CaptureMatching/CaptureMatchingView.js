@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/treeTrackerApi';
 
-import CaptureImage from './CaptureImage';
 import CurrentCaptureNumber from './CurrentCaptureNumber';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
@@ -29,6 +28,45 @@ import CloseIcon from '@material-ui/icons/Close';
 import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import log from 'loglevel';
+import OptimizedImage from 'components/OptimizedImage';
+import CaptureHeader from './CaptureHeader';
+import Grower from './Grower';
+
+import { Tooltip } from '@material-ui/core';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import { getDateTimeStringLocale } from 'common/locale';
+
+function Country({ lat, lon }) {
+  const [content, setContent] = useState('');
+  if (lat === undefined || lon === undefined) {
+    setContent('No data');
+  }
+
+  useEffect(() => {
+    setContent('loading...');
+    fetch(
+      `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status === 404) {
+          setContent(`Can not find country at lat:${lat}, lon:${lon}`);
+          return Promise.reject();
+        } else {
+          setContent('Unknown error');
+          return Promise.reject();
+        }
+      })
+      .then((data) => {
+        setContent(data.countries[0].name);
+      });
+  }, []);
+
+  return <span>{content}</span>;
+}
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -92,6 +130,58 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'flex-end',
     textDecoration: 'none',
+  },
+  captureImageContainerBox: {
+    background: '#fff',
+    borderRadius: '4px',
+    flexGrow: '1',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '1px',
+  },
+
+  captureImageHeaderBox: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+    alignItems: 'center',
+  },
+
+  captureImageImgBox: {
+    flexGrow: 1,
+    overflow: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
+    position: 'relative',
+  },
+
+  captureImageImgContainer: {
+    objectFit: 'contain',
+  },
+  captureImageCaptureInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
+  },
+  captureImageBox1: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  captureImageBox3: {
+    display: 'flex',
+    gap: '4px',
+    justifyContent: 'start',
+    alignItems: 'center',
+    marginTop: '4px',
+    '& svg': {
+      width: '16px',
+      height: '16px',
+    },
+  },
+  captureImageButton: {
+    height: '100%',
   },
 }));
 
@@ -225,6 +315,96 @@ function CaptureMatchingView(props) {
 
   function handleFilterReset() {}
 
+  // components
+
+  const CaptureImage = (
+    <Box className={classes.captureImageBox1}>
+      <CaptureHeader
+        currentPage={currentPage}
+        handleChange={handleChange}
+        imgCount={imgCount}
+        handleSkip={handleSkip}
+        noOfPages={noOfPages}
+        captureImages={captureImages}
+      />
+
+      <Box height={16} />
+
+      {captureImages &&
+        captureImages.map((capture) => {
+          return (
+            <Paper
+              elevation={4}
+              key={`capture_${capture.id}`}
+              className={classes.captureImageContainerBox}
+            >
+              <Box className={classes.captureImageHeaderBox}>
+                <Box className={classes.box2}>
+                  <Tooltip title={capture.id} interactive>
+                    <Typography variant="h5">
+                      Capture {(capture.id + '').substring(0, 10) + '...'}
+                    </Typography>
+                  </Tooltip>
+                  <Box className={classes.captureImageCaptureInfo}>
+                    <Box className={classes.captureImageBox3}>
+                      <AccessTimeIcon />
+                      <Typography variant="body1">
+                        {getDateTimeStringLocale(capture.created_at)}
+                      </Typography>
+                    </Box>
+                    <Box className={classes.captureImageBox3}>
+                      <LocationOnOutlinedIcon
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          window.open(
+                            `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                          );
+                        }}
+                      />
+                      <Typography variant="body1">
+                        <Country
+                          lat={capture.latitude}
+                          lon={capture.longitude}
+                        />
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Grower
+                  grower_photo_url={capture.grower_photo_url}
+                  grower_username={capture.grower_username}
+                  planting_organization_id={capture.planting_organization_id}
+                />
+
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={handleSkip}
+                  className={classes.captureImageButton}
+                >
+                  Skip
+                  <SkipNextIcon />
+                </Button>
+              </Box>
+
+              <Box className={classes.captureImageImgBox}>
+                <OptimizedImage
+                  key={capture.id}
+                  className={classes.captureImageImgContainer}
+                  src={capture.image_url}
+                  alt={`Capture ${capture.id}`}
+                  objectFit="contain"
+                  fixed
+                />
+              </Box>
+            </Paper>
+          );
+        })}
+    </Box>
+  );
   return (
     <>
       <Grid
@@ -235,17 +415,7 @@ function CaptureMatchingView(props) {
         <Navbar />
         <Box className={classes.container}>
           <Paper elevation={8} className={classes.box1}>
-            <CaptureImage
-              captureImages={captureImages}
-              currentPage={currentPage}
-              loading={loading}
-              noOfPages={noOfPages}
-              handleChange={handleChange}
-              captureApiFetch={CAPTURE_API}
-              imgPerPage={1}
-              imgCount={imgCount}
-              handleSkip={handleSkip}
-            />
+            {CaptureImage}
           </Paper>
           <Box className={classes.box2}>
             <Box className={classes.candidateIconBox}>
