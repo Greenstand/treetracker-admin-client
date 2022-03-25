@@ -146,6 +146,9 @@ function CaptureMatchingView(props) {
       setCaptureImages(data.captures);
       setNoOfPages(data.count);
       setImgCount(data.count);
+      if (data.count === 0) {
+        setLoading(false);
+      }
     }
   }
 
