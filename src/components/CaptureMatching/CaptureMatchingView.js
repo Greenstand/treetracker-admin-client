@@ -287,7 +287,6 @@ function CaptureMatchingView(props) {
   const [organizationId, setOrganizationId] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
-  const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
   async function fetchCandidateTrees(captureId, abortController) {
     const data = await api.fetchCandidateTrees(captureId, abortController);
