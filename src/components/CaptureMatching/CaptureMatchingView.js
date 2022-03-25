@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/treeTrackerApi';
 
-import CaptureImage from './CaptureImage';
-import CurrentCaptureNumber from './CurrentCaptureNumber';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
@@ -29,6 +27,49 @@ import CloseIcon from '@material-ui/icons/Close';
 import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import log from 'loglevel';
+import OptimizedImage from 'components/OptimizedImage';
+import { Avatar } from '@material-ui/core';
+
+import { Tooltip } from '@material-ui/core';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import { getDateTimeStringLocale } from 'common/locale';
+import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
+import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import Pagination from '@material-ui/lab/Pagination';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
+
+function Country({ lat, lon }) {
+  const [content, setContent] = useState('');
+  if (lat === undefined || lon === undefined) {
+    setContent('No data');
+  }
+
+  useEffect(() => {
+    setContent('loading...');
+    fetch(
+      `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status === 404) {
+          setContent(`Can not find country at lat:${lat}, lon:${lon}`);
+          return Promise.reject();
+        } else {
+          setContent('Unknown error');
+          return Promise.reject();
+        }
+      })
+      .then((data) => {
+        setContent(data.countries[0].name);
+      });
+  }, []);
+
+  return <span>{content}</span>;
+}
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -93,6 +134,135 @@ const useStyle = makeStyles((theme) => ({
     alignItems: 'flex-end',
     textDecoration: 'none',
   },
+  captureImageContainerBox: {
+    background: '#fff',
+    borderRadius: '4px',
+    flexGrow: '1',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '1px',
+  },
+
+  captureImageHeaderBox: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(2),
+    alignItems: 'center',
+  },
+
+  captureImageImgBox: {
+    flexGrow: 1,
+    overflow: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing(2),
+    position: 'relative',
+  },
+
+  captureImageImgContainer: {
+    objectFit: 'contain',
+  },
+  captureImageCaptureInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
+  },
+  captureImageBox1: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  captureImageBox3: {
+    display: 'flex',
+    gap: '4px',
+    justifyContent: 'start',
+    alignItems: 'center',
+    marginTop: '4px',
+    '& svg': {
+      width: '16px',
+      height: '16px',
+    },
+  },
+  captureImageButton: {
+    height: '100%',
+  },
+  currentNumberBox1: {
+    width: 173,
+    height: 50,
+  },
+  currentNumberBox2: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  currentNumberBox3: {
+    //padding: t.spacing(2),
+    width: 48,
+    justifyContent: 'center',
+    display: 'flex',
+    '& svg': {
+      width: 24,
+      height: 24,
+      fill: 'gray',
+    },
+  },
+  currentNumberBox4: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    '& svg': {
+      width: 18,
+      height: 18,
+      fill: 'gray',
+      left: theme.spacing(1),
+      position: 'relative',
+    },
+  },
+  currentNumberText: {
+    fontSize: '12px',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: '14px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+  },
+  currentNumberBold: {
+    fontWeight: '700',
+  },
+  currentHeaderCaptureImgIcon: {
+    fontSize: '37px',
+  },
+  currentHeaderBox1: {
+    display: 'flex',
+    direction: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  currentHeaderBox2: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  currentHeaderBox3: {
+    marginRight: theme.spacing(2),
+    display: 'flex',
+    gap: '4px',
+  },
+  currentHeaderClass1: {
+    marginRight: theme.spacing(2),
+  },
+  growerBox1: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  growerAvatar: {
+    width: 48,
+    height: 48,
+  },
+  growerBox2: {},
 }));
 
 // Set API as a variable
@@ -117,7 +287,6 @@ function CaptureMatchingView(props) {
   const [organizationId, setOrganizationId] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
-  const treeIcon = <NatureOutlinedIcon className={classes.candidateImgIcon} />;
 
   async function fetchCandidateTrees(captureId, abortController) {
     const data = await api.fetchCandidateTrees(captureId, abortController);
@@ -228,6 +397,162 @@ function CaptureMatchingView(props) {
 
   function handleFilterReset() {}
 
+  // components
+  function currentCaptureNumber(text, icon, count, tooltip) {
+    return (
+      <Box>
+        <Paper elevation={3} className={classes.currentNumberBox1}>
+          <Box className={classes.currentNumberBox2}>
+            <Box>
+              <Box className={classes.currentNumberBox3}>{icon}</Box>
+            </Box>
+            <Box>
+              <Box className={classes.currentNumberBox4}>
+                <Typography
+                  variant="h6"
+                  className={`${classes.currentNumberText} ${classes.currentNumberBold}`}
+                >
+                  {count}
+                </Typography>
+                {tooltip && (
+                  <Tooltip placement="right-start" title={tooltip}>
+                    <QuestionMarkIcon />
+                  </Tooltip>
+                )}
+              </Box>
+              <Typography variant="body1" className={classes.currentNumberText}>
+                {text}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    );
+  }
+
+  const CaptureHeader = (
+    <Box>
+      <Box>
+        <Grid container className={classes.currentHeaderBox1}>
+          {currentCaptureNumber(
+            `Unmatched Capture${(imgCount !== 1 && 's') || ''}`,
+            <PhotoCameraOutlinedIcon
+              className={classes.currentHeaderCaptureImgIcon}
+            />,
+            imgCount,
+            ''
+          )}
+          {/* {() => <div>OK</div>} */}
+          <Box className={classes.currentHeaderBox2}>
+            <IconButton
+              onClick={matchingToolContext.handleFilterToggle}
+              className={classes.currentHeaderClass1}
+            >
+              <FilterListIcon htmlColor="#6E6E6E" />
+            </IconButton>
+            <Pagination
+              count={noOfPages}
+              page={currentPage}
+              onChange={handleChange}
+              defaultPage={1}
+              size="small"
+              siblingCount={0}
+            />
+          </Box>
+        </Grid>
+      </Box>
+    </Box>
+  );
+
+  const CaptureImage = (
+    <Box className={classes.captureImageBox1}>
+      {CaptureHeader}
+      <Box height={16} />
+      {captureImages &&
+        captureImages.map((capture) => {
+          return (
+            <Paper
+              elevation={4}
+              key={`capture_${capture.id}`}
+              className={classes.captureImageContainerBox}
+            >
+              <Box className={classes.captureImageHeaderBox}>
+                <Box className={classes.box2}>
+                  <Tooltip title={capture.id} interactive>
+                    <Typography variant="h5">
+                      Capture {(capture.id + '').substring(0, 10) + '...'}
+                    </Typography>
+                  </Tooltip>
+                  <Box className={classes.captureImageCaptureInfo}>
+                    <Box className={classes.captureImageBox3}>
+                      <AccessTimeIcon />
+                      <Typography variant="body1">
+                        {getDateTimeStringLocale(capture.created_at)}
+                      </Typography>
+                    </Box>
+                    <Box className={classes.captureImageBox3}>
+                      <LocationOnOutlinedIcon
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          window.open(
+                            `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                          );
+                        }}
+                      />
+                      <Typography variant="body1">
+                        <Country
+                          lat={capture.latitude}
+                          lon={capture.longitude}
+                        />
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Box className={classes.growerBox1}>
+                  <Avatar
+                    className={classes.growerAvatar}
+                    src={capture.grower_photo_url}
+                  />
+                  <Box className={classes.growerBox2}>
+                    <Typography variant="h5">
+                      {capture.grower_username}
+                    </Typography>
+                    <Typography variant="body1">
+                      {capture.organizationName}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={handleSkip}
+                  className={classes.captureImageButton}
+                >
+                  Skip
+                  <SkipNextIcon />
+                </Button>
+              </Box>
+
+              <Box className={classes.captureImageImgBox}>
+                <OptimizedImage
+                  key={capture.id}
+                  className={classes.captureImageImgContainer}
+                  src={capture.image_url}
+                  alt={`Capture ${capture.id}`}
+                  objectFit="contain"
+                  fixed
+                />
+              </Box>
+            </Paper>
+          );
+        })}
+    </Box>
+  );
+
   return (
     <>
       <Grid
@@ -238,26 +563,16 @@ function CaptureMatchingView(props) {
         <Navbar />
         <Box className={classes.container}>
           <Paper elevation={8} className={classes.box1}>
-            <CaptureImage
-              captureImages={captureImages}
-              currentPage={currentPage}
-              loading={loading}
-              noOfPages={noOfPages}
-              handleChange={handleChange}
-              captureApiFetch={CAPTURE_API}
-              imgPerPage={1}
-              imgCount={imgCount}
-              handleSkip={handleSkip}
-            />
+            {CaptureImage}
           </Paper>
           <Box className={classes.box2}>
             <Box className={classes.candidateIconBox}>
-              <CurrentCaptureNumber
-                text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
-                treeIcon={treeIcon}
-                treesCount={treesCount}
-                toolTipText={`Any tree within 6m of the capture`}
-              />
+              {currentCaptureNumber(
+                `Candidate Match${(treesCount !== 1 && 'es') || ''}`,
+                <NatureOutlinedIcon className={classes.candidateImgIcon} />,
+                treesCount,
+                `Any tree within 6m of the capture`
+              )}
             </Box>
             <Box height={14} />
             {loading ? null : (
