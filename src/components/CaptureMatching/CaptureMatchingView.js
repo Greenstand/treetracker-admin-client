@@ -9,6 +9,7 @@ import {
   Select,
   Button,
   AppBar,
+  Chip,
   Divider,
   Grid,
   Box,
@@ -285,6 +286,7 @@ function CaptureMatchingView(props) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
+  const [filter, setFilter] = useState({});
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
 
@@ -300,24 +302,21 @@ function CaptureMatchingView(props) {
   async function fetchCaptures(currentPage, abortController) {
     log.warn('fetchCaptures:', currentPage);
     setLoading(true);
-    const filter = {
-      captured_at_start_date: startDate,
-      captured_at_end_date: endDate,
-      'organization_ids[]': organizationId,
+    const filterParameters = {
+      captured_at_start_date: filter.startDate,
+      captured_at_end_date: filter.endDate,
+      'organization_ids[]': filter.organizationId,
     };
     const data = await api.fetchCapturesToMatch(
       currentPage,
       abortController,
-      filter
+      filterParameters
     );
     console.log('fetchCaptures', currentPage, data);
     if (data) {
       setCaptureImages(data.captures);
       setNoOfPages(data.count);
       setImgCount(data.count);
-      if (data.count === 0) {
-        setLoading(false);
-      }
     }
   }
 
@@ -326,7 +325,7 @@ function CaptureMatchingView(props) {
     const abortController = new AbortController();
     fetchCaptures(currentPage, abortController);
     return () => abortController.abort();
-  }, [currentPage]);
+  }, [currentPage, filter]);
 
   useEffect(() => {
     if (currentPage <= 0 || currentPage > noOfPages) {
@@ -392,10 +391,18 @@ function CaptureMatchingView(props) {
   }
 
   function handleFilterSubmit() {
-    fetchCaptures(currentPage);
+    setFilter({
+      startDate,
+      endDate,
+      organizationId,
+    });
+    matchingToolContext.handleFilterToggle();
   }
 
-  function handleFilterReset() {}
+  function handleFilterReset() {
+    setFilter({});
+    matchingToolContext.handleFilterToggle();
+  }
 
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
@@ -444,6 +451,36 @@ function CaptureMatchingView(props) {
           )}
           {/* {() => <div>OK</div>} */}
           <Box className={classes.currentHeaderBox2}>
+            <Box>
+              {(filter.startDate || filter.endDate) && (
+                <Chip
+                  label={`${filter.startDate || 'Start Date'} - ${
+                    filter.endDate || 'End Date'
+                  }`}
+                  className={classes.currentHeaderChip}
+                  onDelete={() =>
+                    setFilter({
+                      ...filter,
+                      startDate: undefined,
+                      endDate: undefined,
+                    })
+                  }
+                />
+              )}
+              {filter.organizationId && (
+                <Chip
+                  label={appContext.orgList.reduce(
+                    (a, c) =>
+                      c.stakeholder_uuid === organizationId ? c.name : a,
+                    ''
+                  )}
+                  className={classes.currentHeaderChip}
+                  onDelete={() =>
+                    setFilter({ ...filter, organizationId: undefined })
+                  }
+                />
+              )}
+            </Box>
             <IconButton
               onClick={matchingToolContext.handleFilterToggle}
               className={classes.currentHeaderClass1}
@@ -660,7 +697,7 @@ function CaptureMatchingView(props) {
             <InputLabel id="organization">Organization</InputLabel>
             <Select
               labelId="organization"
-              defaultValue={''}
+              defaultValue={organizationId}
               id="organization"
               name="organization"
               label="Organization"
