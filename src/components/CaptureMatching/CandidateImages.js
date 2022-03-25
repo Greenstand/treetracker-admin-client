@@ -239,7 +239,16 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               </Typography>
                             </Box>
                             <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon />
+                              <LocationOnOutlinedIcon
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  window.open(
+                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                  );
+                                }}
+                              />
                               <Typography variant="body1">
                                 {capture && (
                                   <DistanceTo

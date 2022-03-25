@@ -274,7 +274,7 @@ function CaptureMatchingView(props) {
       </Grid>
       <Drawer
         anchor="right"
-        BackdropProps={{ invisible: true }}
+        BackdropProps={{ invisible: false }}
         open={matchingToolContext.isFilterOpen}
       >
         <Grid
@@ -291,7 +291,7 @@ function CaptureMatchingView(props) {
                 </Grid>
               </Grid>
               <CloseIcon
-                onClick={() => {}}
+                onClick={matchingToolContext.handleFilterToggle}
                 className={classes.customTableFilterCloseIcon}
               />
             </Grid>

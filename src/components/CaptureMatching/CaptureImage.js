@@ -130,7 +130,7 @@ function CaptureImage(props) {
             >
               <Box className={classes.headerBox}>
                 <Box className={classes.box2}>
-                  <Tooltip title={capture.id}>
+                  <Tooltip title={capture.id} interactive>
                     <Typography variant="h5">
                       Capture {(capture.id + '').substring(0, 10) + '...'}
                     </Typography>
@@ -143,7 +143,16 @@ function CaptureImage(props) {
                       </Typography>
                     </Box>
                     <Box className={classes.box3}>
-                      <LocationOnOutlinedIcon />
+                      <LocationOnOutlinedIcon
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          window.open(
+                            `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                          );
+                        }}
+                      />
                       <Typography variant="body1">
                         <Country
                           lat={capture.latitude}
