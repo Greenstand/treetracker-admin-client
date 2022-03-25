@@ -1,3 +1,16 @@
+# [1.80.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.79.1...v1.80.0) (2022-03-25)
+
+
+### Bug Fixes
+
+* eslint ([83bd109](https://github.com/Greenstand/treetracker-admin-client/commit/83bd1095184ff08aeb949160d46e9d5febf24e16))
+
+
+### Features
+
+* refactor the matching tool ([c8673cc](https://github.com/Greenstand/treetracker-admin-client/commit/c8673ccfdcf02443d8b80496a0c9e407d6cc48d2))
+* remove CaptureImage ([4944400](https://github.com/Greenstand/treetracker-admin-client/commit/49444009d0311b4edca265cddc59526c5a67ec43))
+
 ## [1.79.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.79.0...v1.79.1) (2022-03-25)
 
 
