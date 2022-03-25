@@ -7,6 +7,8 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
+import { MatchingToolContext } from '../../context/MatchingToolContext';
 
 const useStyles = makeStyles((t) => ({
   containerBox: {
@@ -40,6 +42,7 @@ const useStyles = makeStyles((t) => ({
 function CaptureHeader(props) {
   const classes = useStyles();
   const { currentPage, handleChange, imgCount, noOfPages } = props;
+  const matchingToolContext = React.useContext(MatchingToolContext);
 
   const iconImgLogo = (
     <PhotoCameraOutlinedIcon className={classes.captureImgIcon} />
@@ -55,7 +58,12 @@ function CaptureHeader(props) {
             imgCount={imgCount}
           />
           <Box className={classes.box2}>
-            <FilterListIcon htmlColor="#6E6E6E" className={classes.class1} />
+            <IconButton
+              onClick={matchingToolContext.handleFilterToggle}
+              className={classes.class1}
+            >
+              <FilterListIcon htmlColor="#6E6E6E" />
+            </IconButton>
             <Pagination
               count={noOfPages}
               page={currentPage}
