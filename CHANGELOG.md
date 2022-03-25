@@ -1,3 +1,10 @@
+## [1.79.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.79.0...v1.79.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* spin running forever ([121c550](https://github.com/Greenstand/treetracker-admin-client/commit/121c5508a97bb22fcabe54a92176d8f69dc86727))
+
 # [1.79.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.78.7...v1.79.0) (2022-03-25)
 
 
