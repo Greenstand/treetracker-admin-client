@@ -4,19 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Typography, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  test: {
-    padding: theme.spacing(1),
-  },
-  box1: {
+  growerBox1: {
     display: 'flex',
     flexDirection: 'row',
     gap: 12,
   },
-  avatar: {
+  growerAvatar: {
     width: 48,
     height: 48,
   },
-  box2: {},
+  growerBox2: {},
 }));
 function Grower({
   grower_photo_url,
@@ -32,9 +29,9 @@ function Grower({
   }, [planting_organization_id]);
 
   return (
-    <Box className={classes.box1}>
-      <Avatar className={classes.avatar} src={grower_photo_url} />
-      <Box className={classes.box2}>
+    <Box className={classes.growerBox1}>
+      <Avatar className={classes.growerAvatar} src={grower_photo_url} />
+      <Box className={classes.growerBox2}>
         <Typography variant="h5">{grower_username}</Typography>
         <Typography variant="body1">{organizationName}</Typography>
       </Box>

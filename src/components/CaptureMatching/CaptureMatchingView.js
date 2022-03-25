@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/treeTrackerApi';
 
-import CurrentCaptureNumber from './CurrentCaptureNumber';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 
@@ -29,14 +28,18 @@ import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import log from 'loglevel';
 import OptimizedImage from 'components/OptimizedImage';
-import CaptureHeader from './CaptureHeader';
-import Grower from './Grower';
+import { Avatar } from '@material-ui/core';
 
 import { Tooltip } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { getDateTimeStringLocale } from 'common/locale';
+import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
+import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import Pagination from '@material-ui/lab/Pagination';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
 
 function Country({ lat, lon }) {
   const [content, setContent] = useState('');
@@ -183,6 +186,83 @@ const useStyle = makeStyles((theme) => ({
   captureImageButton: {
     height: '100%',
   },
+  currentNumberBox1: {
+    width: 173,
+    height: 50,
+  },
+  currentNumberBox2: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  currentNumberBox3: {
+    //padding: t.spacing(2),
+    width: 48,
+    justifyContent: 'center',
+    display: 'flex',
+    '& svg': {
+      width: 24,
+      height: 24,
+      fill: 'gray',
+    },
+  },
+  currentNumberBox4: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    '& svg': {
+      width: 18,
+      height: 18,
+      fill: 'gray',
+      left: theme.spacing(1),
+      position: 'relative',
+    },
+  },
+  currentNumberText: {
+    fontSize: '12px',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: '14px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+  },
+  currentNumberBold: {
+    fontWeight: '700',
+  },
+  currentHeaderCaptureImgIcon: {
+    fontSize: '37px',
+  },
+  currentHeaderBox1: {
+    display: 'flex',
+    direction: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  currentHeaderBox2: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  currentHeaderBox3: {
+    marginRight: theme.spacing(2),
+    display: 'flex',
+    gap: '4px',
+  },
+  currentHeaderClass1: {
+    marginRight: theme.spacing(2),
+  },
+  growerBox1: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  growerAvatar: {
+    width: 48,
+    height: 48,
+  },
+  growerBox2: {},
 }));
 
 // Set API as a variable
@@ -319,20 +399,76 @@ function CaptureMatchingView(props) {
   function handleFilterReset() {}
 
   // components
+  function currentCaptureNumber(text, icon, count, tooltip) {
+    return (
+      <Box>
+        <Paper elevation={3} className={classes.currentNumberBox1}>
+          <Box className={classes.currentNumberBox2}>
+            <Box>
+              <Box className={classes.currentNumberBox3}>{icon}</Box>
+            </Box>
+            <Box>
+              <Box className={classes.currentNumberBox4}>
+                <Typography
+                  variant="h6"
+                  className={`${classes.currentNumberText} ${classes.currentNumberBold}`}
+                >
+                  {count}
+                </Typography>
+                {tooltip && (
+                  <Tooltip placement="right-start" title={tooltip}>
+                    <QuestionMarkIcon />
+                  </Tooltip>
+                )}
+              </Box>
+              <Typography variant="body1" className={classes.currentNumberText}>
+                {text}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    );
+  }
+
+  const CaptureHeader = (
+    <Box>
+      <Box>
+        <Grid container className={classes.currentHeaderBox1}>
+          {currentCaptureNumber(
+            `Unmatched Capture${(imgCount !== 1 && 's') || ''}`,
+            <PhotoCameraOutlinedIcon
+              className={classes.currentHeaderCaptureImgIcon}
+            />,
+            imgCount,
+            ''
+          )}
+          {/* {() => <div>OK</div>} */}
+          <Box className={classes.currentHeaderBox2}>
+            <IconButton
+              onClick={matchingToolContext.handleFilterToggle}
+              className={classes.currentHeaderClass1}
+            >
+              <FilterListIcon htmlColor="#6E6E6E" />
+            </IconButton>
+            <Pagination
+              count={noOfPages}
+              page={currentPage}
+              onChange={handleChange}
+              defaultPage={1}
+              size="small"
+              siblingCount={0}
+            />
+          </Box>
+        </Grid>
+      </Box>
+    </Box>
+  );
 
   const CaptureImage = (
     <Box className={classes.captureImageBox1}>
-      <CaptureHeader
-        currentPage={currentPage}
-        handleChange={handleChange}
-        imgCount={imgCount}
-        handleSkip={handleSkip}
-        noOfPages={noOfPages}
-        captureImages={captureImages}
-      />
-
+      {CaptureHeader}
       <Box height={16} />
-
       {captureImages &&
         captureImages.map((capture) => {
           return (
@@ -376,11 +512,20 @@ function CaptureMatchingView(props) {
                   </Box>
                 </Box>
 
-                <Grower
-                  grower_photo_url={capture.grower_photo_url}
-                  grower_username={capture.grower_username}
-                  planting_organization_id={capture.planting_organization_id}
-                />
+                <Box className={classes.growerBox1}>
+                  <Avatar
+                    className={classes.growerAvatar}
+                    src={capture.grower_photo_url}
+                  />
+                  <Box className={classes.growerBox2}>
+                    <Typography variant="h5">
+                      {capture.grower_username}
+                    </Typography>
+                    <Typography variant="body1">
+                      {capture.organizationName}
+                    </Typography>
+                  </Box>
+                </Box>
 
                 <Button
                   variant="text"
@@ -408,6 +553,7 @@ function CaptureMatchingView(props) {
         })}
     </Box>
   );
+
   return (
     <>
       <Grid
@@ -422,12 +568,12 @@ function CaptureMatchingView(props) {
           </Paper>
           <Box className={classes.box2}>
             <Box className={classes.candidateIconBox}>
-              <CurrentCaptureNumber
-                text={`Candidate Match${(treesCount !== 1 && 'es') || ''}`}
-                treeIcon={treeIcon}
-                treesCount={treesCount}
-                toolTipText={`Any tree within 6m of the capture`}
-              />
+              {currentCaptureNumber(
+                `Candidate Match${(treesCount !== 1 && 'es') || ''}`,
+                <NatureOutlinedIcon className={classes.candidateImgIcon} />,
+                treesCount,
+                `Any tree within 6m of the capture`
+              )}
             </Box>
             <Box height={14} />
             {loading ? null : (
