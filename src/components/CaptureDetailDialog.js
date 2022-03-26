@@ -17,6 +17,7 @@ import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
+import Country from './common/Country';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -220,6 +221,12 @@ function CaptureDetailDialog(props) {
               </Typography>
             </Grid>
           ))}
+          <Grid>
+            <Typography variant="subtitle1">Country</Typography>
+            <Typography variant="body1">
+              <Country lat={capture.lat} lon={capture.lon} />
+            </Typography>
+          </Grid>
         </Grid>
         <Divider />
         <Grid item className={classes.box}>
