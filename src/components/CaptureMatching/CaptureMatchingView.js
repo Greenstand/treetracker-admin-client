@@ -646,14 +646,14 @@ function CaptureMatchingView(props) {
                 sameTreeHandler={sameTreeHandler}
               />
             )}
-            {
+            {!loading && captureImage && candidateImgData && (
               //captureImage && treesCount === 0 && (
               <Box className={classes.noCandidateBox}>
                 <Typography variant="h5">
                   No candidate match found, this capture might be a new tree
                 </Typography>
               </Box>
-            }
+            )}
           </Box>
         </Box>
         {loading && (
