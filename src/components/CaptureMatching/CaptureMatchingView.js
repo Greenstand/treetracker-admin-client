@@ -41,6 +41,7 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 
 function Country({ lat, lon }) {
   const [content, setContent] = useState('');
@@ -287,6 +288,7 @@ function CaptureMatchingView(props) {
   const [endDate, setEndDate] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [filter, setFilter] = useState({});
+  const [growerAccount, setGrowerAccount] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
 
@@ -335,6 +337,20 @@ function CaptureMatchingView(props) {
     }
   }, [noOfPages, currentPage]);
 
+  async function loadGrowerInfo() {
+    if (captureImage) {
+      log.warn('loadGrowerInfo...');
+      if (captureImage.grower_account_id) {
+        const data = await api.getGrowerAccountById(
+          captureImage.grower_account_id
+        );
+        setGrowerAccount(data);
+      } else {
+        log.warn('No grower account id found');
+      }
+    }
+  }
+
   useEffect(() => {
     const abortController = new AbortController();
     if (captureImage) {
@@ -342,7 +358,11 @@ function CaptureMatchingView(props) {
       const captureId = captureImage.id;
       console.log('captureId', captureId);
       fetchCandidateTrees(captureId, abortController);
+
+      // load grower info
+      loadGrowerInfo();
     }
+
     return () => abortController.abort();
   }, [captureImage]);
 
@@ -548,20 +568,28 @@ function CaptureMatchingView(props) {
               </Box>
             </Box>
 
-            <Box className={classes.growerBox1}>
-              <Avatar
-                className={classes.growerAvatar}
-                src={captureImage.grower_photo_url}
-              />
-              <Box className={classes.growerBox2}>
-                <Typography variant="h5">
-                  {captureImage.grower_username}
-                </Typography>
-                <Typography variant="body1">
-                  {captureImage.organizationName}
-                </Typography>
+            {!loading && growerAccount && (
+              <Box className={classes.growerBox1}>
+                <Avatar
+                  className={classes.growerAvatar}
+                  src={growerAccount.image_url}
+                />
+                <Box className={classes.growerBox2}>
+                  <Typography variant="h5">
+                    {growerAccount.first_name}
+                  </Typography>
+                  <Typography variant="body1">
+                    Joined at{' '}
+                    {moment(
+                      growerAccount.first_registration_at ||
+                        growerAccount.created_at
+                    ).format('MM/DD/YYYY')}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+            )}
+            {loading && <Box>...</Box>}
+            {!loading && !growerAccount && <Box>no grower info</Box>}
 
             <Button
               variant="text"
@@ -618,6 +646,14 @@ function CaptureMatchingView(props) {
                 sameTreeHandler={sameTreeHandler}
               />
             )}
+            {
+              //captureImage && treesCount === 0 && (
+              <Box className={classes.noCandidateBox}>
+                <Typography variant="h5">
+                  No candidate match found, this capture might be a new tree
+                </Typography>
+              </Box>
+            }
           </Box>
         </Box>
         {loading && (
