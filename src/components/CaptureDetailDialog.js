@@ -221,6 +221,12 @@ function CaptureDetailDialog(props) {
               </Typography>
             </Grid>
           ))}
+          <Grid>
+            <Typography variant="subtitle1">Country</Typography>
+            <Typography variant="body1">
+              <Country lat={capture.lat} lon={capture.lon} />
+            </Typography>
+          </Grid>
         </Grid>
         <Divider />
         <Grid item className={classes.box}>
@@ -307,7 +313,6 @@ function CaptureDetailDialog(props) {
           objectFit="contain"
           fixed
         />
-        <Country lat={capture.lat} lon={capture.lon} />
       </Dialog>
       <Drawer
         anchor="right"
