@@ -1,3 +1,10 @@
+# [1.82.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.81.0...v1.82.0) (2022-03-26)
+
+
+### Features
+
+* can display grower info ([8c8771b](https://github.com/Greenstand/treetracker-admin-client/commit/8c8771bb9146d7d845c539d0ea83f48f4f409891))
+
 # [1.81.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.80.0...v1.81.0) (2022-03-25)
 
 
