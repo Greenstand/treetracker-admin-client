@@ -1,3 +1,10 @@
+# [1.83.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.82.1...v1.83.0) (2022-03-26)
+
+
+### Features
+
+* include capture location in capture details dialog ([#417](https://github.com/Greenstand/treetracker-admin-client/issues/417)) ([7ca9bbc](https://github.com/Greenstand/treetracker-admin-client/commit/7ca9bbc8d34d4a2c3d6e1bfa0df4835959a11224))
+
 ## [1.82.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.82.0...v1.82.1) (2022-03-26)
 
 
