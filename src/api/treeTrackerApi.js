@@ -158,6 +158,16 @@ export default {
       .then(handleResponse)
       .catch(handleError);
   },
+  getGrowerAccountById(id) {
+    const query = `${CAPTURE_MATCH_API}/grower_accounts/${id}`;
+    return fetch(query, {
+      headers: {
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
   getCaptureById(id) {
     const query = `${
       process.env.REACT_APP_API_ROOT

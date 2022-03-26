@@ -41,6 +41,7 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
 
 function Country({ lat, lon }) {
   const [content, setContent] = useState('');
@@ -276,7 +277,7 @@ function CaptureMatchingView(props) {
   log.warn('appContext', appContext);
   log.warn('props:', props);
   log.warn('matchingToolContext:', matchingToolContext);
-  const [captureImages, setCaptureImages] = useState([]);
+  const [captureImage, setCaptureImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [candidateImgData, setCandidateImgData] = useState([]);
@@ -287,6 +288,7 @@ function CaptureMatchingView(props) {
   const [endDate, setEndDate] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [filter, setFilter] = useState({});
+  const [growerAccount, setGrowerAccount] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
 
@@ -313,10 +315,12 @@ function CaptureMatchingView(props) {
       filterParameters
     );
     console.log('fetchCaptures', currentPage, data);
-    if (data) {
-      setCaptureImages(data.captures);
+    if (data && data.captures && data.captures.length > 0) {
+      setCaptureImage(data.captures[0]);
       setNoOfPages(data.count);
       setImgCount(data.count);
+    } else {
+      log.warn('no data:', data);
     }
   }
 
@@ -333,16 +337,34 @@ function CaptureMatchingView(props) {
     }
   }, [noOfPages, currentPage]);
 
+  async function loadGrowerInfo() {
+    if (captureImage) {
+      log.warn('loadGrowerInfo...');
+      if (captureImage.grower_account_id) {
+        const data = await api.getGrowerAccountById(
+          captureImage.grower_account_id
+        );
+        setGrowerAccount(data);
+      } else {
+        log.warn('No grower account id found');
+      }
+    }
+  }
+
   useEffect(() => {
     const abortController = new AbortController();
-    if (captureImages.length) {
+    if (captureImage) {
       console.log('loading candidate images');
-      const captureId = captureImages[0].id;
+      const captureId = captureImage.id;
       console.log('captureId', captureId);
       fetchCandidateTrees(captureId, abortController);
+
+      // load grower info
+      loadGrowerInfo();
     }
+
     return () => abortController.abort();
-  }, [captureImages]);
+  }, [captureImage]);
 
   // Capture Image Pagination function
   const handleChange = (e, value) => {
@@ -351,7 +373,7 @@ function CaptureMatchingView(props) {
 
   // Same Tree Capture function
   const sameTreeHandler = async (treeId) => {
-    const captureId = captureImages[0].id;
+    const captureId = captureImage.id;
     console.log('captureId treeId', captureId, treeId);
     await fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
@@ -505,88 +527,93 @@ function CaptureMatchingView(props) {
     <Box className={classes.captureImageBox1}>
       {CaptureHeader}
       <Box height={16} />
-      {captureImages &&
-        captureImages.map((capture) => {
-          return (
-            <Paper
-              elevation={4}
-              key={`capture_${capture.id}`}
-              className={classes.captureImageContainerBox}
-            >
-              <Box className={classes.captureImageHeaderBox}>
-                <Box className={classes.box2}>
-                  <Tooltip title={capture.id} interactive>
-                    <Typography variant="h5">
-                      Capture {(capture.id + '').substring(0, 10) + '...'}
-                    </Typography>
-                  </Tooltip>
-                  <Box className={classes.captureImageCaptureInfo}>
-                    <Box className={classes.captureImageBox3}>
-                      <AccessTimeIcon />
-                      <Typography variant="body1">
-                        {getDateTimeStringLocale(capture.created_at)}
-                      </Typography>
-                    </Box>
-                    <Box className={classes.captureImageBox3}>
-                      <LocationOnOutlinedIcon
-                        style={{
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => {
-                          window.open(
-                            `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
-                          );
-                        }}
-                      />
-                      <Typography variant="body1">
-                        <Country
-                          lat={capture.latitude}
-                          lon={capture.longitude}
-                        />
-                      </Typography>
-                    </Box>
-                  </Box>
+      {captureImage && (
+        <Paper
+          elevation={4}
+          key={`capture_${captureImage.id}`}
+          className={classes.captureImageContainerBox}
+        >
+          <Box className={classes.captureImageHeaderBox}>
+            <Box className={classes.box2}>
+              <Tooltip title={captureImage.id} interactive>
+                <Typography variant="h5">
+                  Capture {(captureImage.id + '').substring(0, 10) + '...'}
+                </Typography>
+              </Tooltip>
+              <Box className={classes.captureImageCaptureInfo}>
+                <Box className={classes.captureImageBox3}>
+                  <AccessTimeIcon />
+                  <Typography variant="body1">
+                    {getDateTimeStringLocale(captureImage.created_at)}
+                  </Typography>
                 </Box>
-
-                <Box className={classes.growerBox1}>
-                  <Avatar
-                    className={classes.growerAvatar}
-                    src={capture.grower_photo_url}
+                <Box className={classes.captureImageBox3}>
+                  <LocationOnOutlinedIcon
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      window.open(
+                        `https://www.google.com/maps/search/?api=1&query=${captureImage.latitude},${captureImage.longitude}`
+                      );
+                    }}
                   />
-                  <Box className={classes.growerBox2}>
-                    <Typography variant="h5">
-                      {capture.grower_username}
-                    </Typography>
-                    <Typography variant="body1">
-                      {capture.organizationName}
-                    </Typography>
-                  </Box>
+                  <Typography variant="body1">
+                    <Country
+                      lat={captureImage.latitude}
+                      lon={captureImage.longitude}
+                    />
+                  </Typography>
                 </Box>
-
-                <Button
-                  variant="text"
-                  color="primary"
-                  onClick={handleSkip}
-                  className={classes.captureImageButton}
-                >
-                  Skip
-                  <SkipNextIcon />
-                </Button>
               </Box>
+            </Box>
 
-              <Box className={classes.captureImageImgBox}>
-                <OptimizedImage
-                  key={capture.id}
-                  className={classes.captureImageImgContainer}
-                  src={capture.image_url}
-                  alt={`Capture ${capture.id}`}
-                  objectFit="contain"
-                  fixed
+            {!loading && growerAccount && (
+              <Box className={classes.growerBox1}>
+                <Avatar
+                  className={classes.growerAvatar}
+                  src={growerAccount.image_url}
                 />
+                <Box className={classes.growerBox2}>
+                  <Typography variant="h5">
+                    {growerAccount.first_name}
+                  </Typography>
+                  <Typography variant="body1">
+                    Joined at{' '}
+                    {moment(
+                      growerAccount.first_registration_at ||
+                        growerAccount.created_at
+                    ).format('MM/DD/YYYY')}
+                  </Typography>
+                </Box>
               </Box>
-            </Paper>
-          );
-        })}
+            )}
+            {loading && <Box>...</Box>}
+            {!loading && !growerAccount && <Box>no grower info</Box>}
+
+            <Button
+              variant="text"
+              color="primary"
+              onClick={handleSkip}
+              className={classes.captureImageButton}
+            >
+              Skip
+              <SkipNextIcon />
+            </Button>
+          </Box>
+
+          <Box className={classes.captureImageImgBox}>
+            <OptimizedImage
+              key={captureImage.id}
+              className={classes.captureImageImgContainer}
+              src={captureImage.image_url}
+              alt={`Capture ${captureImage.id}`}
+              objectFit="contain"
+              fixed
+            />
+          </Box>
+        </Paper>
+      )}
     </Box>
   );
 
@@ -614,11 +641,19 @@ function CaptureMatchingView(props) {
             <Box height={14} />
             {loading ? null : (
               <CandidateImages
-                capture={captureImages && captureImages[0]}
+                capture={captureImage}
                 candidateImgData={candidateImgData}
                 sameTreeHandler={sameTreeHandler}
               />
             )}
+            {
+              //captureImage && treesCount === 0 && (
+              <Box className={classes.noCandidateBox}>
+                <Typography variant="h5">
+                  No candidate match found, this capture might be a new tree
+                </Typography>
+              </Box>
+            }
           </Box>
         </Box>
         {loading && (
