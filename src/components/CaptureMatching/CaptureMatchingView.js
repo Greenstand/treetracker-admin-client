@@ -278,8 +278,8 @@ function CaptureMatchingView(props) {
     setCaptureImage(null);
     setTreesCount(0);
     setImgCount(null);
-    setCurrentPage(1);
-    setNoOfPages(null);
+    // setCurrentPage(1);
+    // setNoOfPages(null);
   }
 
   async function fetchCaptures(currentPage, abortController) {
@@ -303,6 +303,8 @@ function CaptureMatchingView(props) {
       setImgCount(data.count);
     } else {
       setLoading(false);
+      setNoOfPages(0);
+      setImgCount(0);
       log.warn('no data:', data);
     }
   }
@@ -732,6 +734,9 @@ function CaptureMatchingView(props) {
                 setOrganizationId(e.target.value);
               }}
             >
+              <MenuItem key={''} value={''}>
+                All
+              </MenuItem>
               {appContext.orgList.map((org) => (
                 <MenuItem
                   key={org.stakeholder_uuid}
