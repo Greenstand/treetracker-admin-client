@@ -278,8 +278,8 @@ function CaptureMatchingView(props) {
     setCaptureImage(null);
     setTreesCount(0);
     setImgCount(null);
-    setCurrentPage(1);
-    setNoOfPages(null);
+    // setCurrentPage(1);
+    // setNoOfPages(null);
   }
 
   async function fetchCaptures(currentPage, abortController) {
@@ -303,6 +303,8 @@ function CaptureMatchingView(props) {
       setImgCount(data.count);
     } else {
       setLoading(false);
+      setNoOfPages(0);
+      setImgCount(0);
       log.warn('no data:', data);
     }
   }
@@ -635,14 +637,17 @@ function CaptureMatchingView(props) {
                 sameTreeHandler={sameTreeHandler}
               />
             )}
-            {!loading && captureImage && candidateImgData && (
-              //captureImage && treesCount === 0 && (
-              <Box className={classes.noCandidateBox}>
-                <Typography variant="h5">
-                  No candidate match found, this capture might be a new tree
-                </Typography>
-              </Box>
-            )}
+            {!loading &&
+              captureImage &&
+              candidateImgData &&
+              candidateImgData.length === 0 && (
+                //captureImage && treesCount === 0 && (
+                <Box className={classes.noCandidateBox}>
+                  <Typography variant="h5">
+                    No candidate match found, this capture might be a new tree
+                  </Typography>
+                </Box>
+              )}
           </Box>
         </Box>
         {loading && (
@@ -729,6 +734,9 @@ function CaptureMatchingView(props) {
                 setOrganizationId(e.target.value);
               }}
             >
+              <MenuItem key={''} value={''}>
+                All
+              </MenuItem>
               {appContext.orgList.map((org) => (
                 <MenuItem
                   key={org.stakeholder_uuid}
