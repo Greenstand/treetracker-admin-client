@@ -26,7 +26,7 @@ import {
   Input,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import SortIcon from '@material-ui/icons/Sort';
+// import SortIcon from '@material-ui/icons/Sort';
 import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
@@ -118,14 +118,14 @@ const styles = (theme) => ({
 
 const RegionTable = (props) => {
   const { classes } = props;
-  const sortOptions = { byId: 'id', byName: 'name' };
+  // const sortOptions = { byId: 'id', byName: 'name' };
   const {
     regions,
     currentPage,
     pageSize,
     changeCurrentPage,
     changePageSize,
-    changeSort,
+    // changeSort,
     regionCount,
     loadRegions,
     createRegion,
@@ -277,21 +277,21 @@ const RegionTable = (props) => {
                     <TableRow>
                       <TableCell>
                         ID
-                        <IconButton
+                        {/* <IconButton
                           title="sortbyId"
                           onClick={() => changeSort(sortOptions.byId)}
                         >
                           <SortIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </TableCell>
                       <TableCell>
                         Name
-                        <IconButton
+                        {/* <IconButton
                           title="sortbyName"
                           onClick={() => changeSort(sortOptions.byName)}
                         >
                           <SortIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </TableCell>
                       {!userHasOrg && <TableCell>Owner</TableCell>}
                       <TableCell>Properties</TableCell>

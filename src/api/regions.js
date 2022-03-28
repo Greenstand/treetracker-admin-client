@@ -31,12 +31,18 @@ export default {
       .catch(handleError);
   },
 
-  getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
+  getRegions({
+    skip,
+    rowsPerPage,
+    filter,
+    // orderBy = 'id',
+    // order = 'desc',
+  }) {
     const regionQuery = new URLSearchParams({
       ...filter,
-      // sort: [`${orderBy}`, `${order}`],
       limit: rowsPerPage,
       offset: skip,
+      // sort: [`${orderBy}`, `${order}`],
     });
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
