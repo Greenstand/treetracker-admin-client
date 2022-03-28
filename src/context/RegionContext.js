@@ -8,35 +8,50 @@ const log = loglevel.getLogger('../context/RegionContext');
 
 export const RegionContext = createContext({
   regions: [],
+  collections: [],
   pageSize: 25,
   regionCount: null,
+  collectionCount: null,
   currentPage: 0,
   filter: new FilterRegion(),
   isLoading: false,
+  showCollections: false,
   changePageSize: () => {},
   changeCurrentPage: () => {},
   changeSort: () => {},
-  updateRegions: () => {},
+  setShowCollections: () => {},
   loadRegions: () => {},
+  loadCollections: () => {},
   getRegion: () => {},
-  createRegion: () => {},
+  upload: () => {},
   updateRegion: () => {},
+  updateCollection: () => {},
   updateFilter: () => {},
   deleteRegion: () => {},
+  deleteCollection: () => {},
 });
 
 export function RegionProvider(props) {
   const [regions, setRegions] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [pageSize, setPageSize] = useState(25);
   const [regionCount, setRegionCount] = useState(null);
+  const [collectionCount, setCollectionCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [orderBy, setOrderBy] = useState('id');
   const [filter, setFilter] = useState(new FilterRegion());
   const [isLoading, setIsLoading] = useState(false);
+  const [showCollections, setShowCollections] = useState(false);
 
   useEffect(() => {
-    loadRegions();
-  }, [filter, pageSize, currentPage, orderBy]); //
+    if (showCollections) {
+      setRegions([]);
+      loadCollections();
+    } else {
+      setCollections([]);
+      loadRegions();
+    }
+  }, [filter, pageSize, currentPage, orderBy, showCollections]); //
 
   // EVENT HANDLERS
 
@@ -50,10 +65,6 @@ export function RegionProvider(props) {
 
   const changeSort = async (val) => {
     setOrderBy(val);
-  };
-
-  const updateRegions = (regions) => {
-    setRegions(regions);
   };
 
   const loadRegions = async () => {
@@ -80,6 +91,54 @@ export function RegionProvider(props) {
     });
     setRegions(regions);
     setRegionCount(count);
+
+    const collectionIds = [
+      ...new Set(
+        regions.map((region) => region.collectionIds).filter((id) => id)
+      ),
+    ];
+    const collectionLookup = await Promise.all(
+      collectionIds.map((id) => api.getCollection(id))
+    );
+    setRegions(
+      regions.map((region) => {
+        const collection =
+          region.collection_id &&
+          collectionLookup.find((collection) => collection.id === region);
+        return {
+          ...region,
+          collectionName: collection?.name || undefined,
+        };
+      })
+    );
+
+    setIsLoading(false);
+  };
+
+  const loadCollections = async () => {
+    log.debug('load collections');
+    setIsLoading(true);
+    const pageNumber = currentPage;
+    const ownerId = getOrganizationUUID();
+    const queryFilter = ownerId
+      ? {
+          owner_id: ownerId,
+          ...filter,
+        }
+      : filter;
+
+    const {
+      collections,
+      query: { count },
+    } = await api.getCollections({
+      skip: pageNumber * pageSize,
+      rowsPerPage: pageSize,
+      orderBy,
+      order: 'asc',
+      filter: queryFilter,
+    });
+    setCollections(collections);
+    setCollectionCount(count);
     setIsLoading(false);
   };
 
@@ -94,44 +153,33 @@ export function RegionProvider(props) {
     return region;
   };
 
-  const createRegion = async (payload) => {
-    if (payload.shape.type.endsWith('Collection')) {
-      const createdCollection = await api.createCollection({
-        owner_id: getOrganizationUUID() || undefined,
-        ...payload,
-      });
-      setRegions((regions) => [...regions, ...createdCollection.regions]);
-    } else {
-      const createdRegion = await api.createRegion({
-        owner_id: getOrganizationUUID() || undefined,
-        ...payload,
-      });
-      setRegions((regions) => [...regions, createdRegion]);
-    }
+  const upload = async (payload) => {
+    await api.upload({
+      owner_id: getOrganizationUUID() || undefined,
+      ...payload,
+    });
+    loadRegions();
+    loadCollections();
   };
 
   const updateRegion = async (payload) => {
-    delete payload.shape;
-    delete payload.nameKey;
-    const updatedRegion = await api.updateRegion(payload, payload.id);
-    const index = regions.findIndex((p) => p.id === updatedRegion.id);
-    if (index >= 0) {
-      const regions = Object.assign([], regions, {
-        [index]: updatedRegion,
-      });
-      setRegions(regions);
-    }
+    await api.updateRegion(payload, payload.id);
+    await loadRegions();
+  };
+
+  const updateCollection = async (payload) => {
+    await api.updateCollection(payload, payload.id);
+    await loadCollections();
   };
 
   const deleteRegion = async (id) => {
     await api.deleteRegion(id);
-    const index = regions.findIndex((region) => region.id === id);
-    if (index >= 0) {
-      setRegions([
-        ...regions.slice(0, index),
-        ...regions.slice(index + 1, regions.length),
-      ]);
-    }
+    await loadRegions();
+  };
+
+  const deleteCollection = async (id) => {
+    await api.deleteCollection(id);
+    await loadCollections();
   };
 
   const updateFilter = async (newFilter) => {
@@ -141,22 +189,28 @@ export function RegionProvider(props) {
 
   const value = {
     regions,
+    collections,
     pageSize,
     regionCount,
+    collectionCount,
     currentPage,
     orderBy,
     filter,
     isLoading,
+    showCollections,
     changePageSize,
     changeCurrentPage,
     changeSort,
-    updateRegions,
+    setShowCollections,
     loadRegions,
+    loadCollections,
     getRegion,
-    createRegion,
+    upload,
     updateRegion,
+    updateCollection,
     updateFilter,
     deleteRegion,
+    deleteCollection,
   };
 
   return (

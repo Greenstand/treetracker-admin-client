@@ -1,7 +1,7 @@
 import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
-const convertRegionPayload = (payload) => {
+const convertPayload = (payload) => {
   return {
     calculate_statistics:
       payload.calculateStatistics || payload.calculate_statistics,
@@ -13,14 +13,15 @@ const convertRegionPayload = (payload) => {
     owner_id: payload.ownerId || payload.owner_id,
     region_name_property:
       payload.regionNameProperty || payload.region_name_property,
+    collection_name: payload.collectionName || payload.collection_name,
   };
 };
 
 export default {
-  getRegion(id) {
-    const regionQuery = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+  getItem(type, id) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
 
-    return fetch(regionQuery, {
+    return fetch(query, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -31,14 +32,25 @@ export default {
       .catch(handleError);
   },
 
-  getRegions({
-    skip,
-    rowsPerPage,
-    filter,
-    // orderBy = 'id',
-    // order = 'desc',
-  }) {
-    const regionQuery = new URLSearchParams({
+  getRegion(id) {
+    return this.getItem('region', id);
+  },
+
+  getCollection(id) {
+    return this.getItem('collection', id);
+  },
+
+  getItems(
+    type,
+    {
+      skip,
+      rowsPerPage,
+      filter,
+      // orderBy = 'id',
+      // order = 'desc',
+    }
+  ) {
+    const params = new URLSearchParams({
       ...filter,
       limit: rowsPerPage,
       offset: skip,
@@ -46,7 +58,7 @@ export default {
     });
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
-    }/region?${regionQuery.toString()}`;
+    }/${type}?${params.toString()}`;
 
     return fetch(query, {
       headers: {
@@ -58,7 +70,15 @@ export default {
       .catch(handleError);
   },
 
-  createRegion(payload) {
+  getRegions(params) {
+    return this.getItems('region', params);
+  },
+
+  getCollections(params) {
+    return this.getItems('collection', params);
+  },
+
+  upload(payload) {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
     return fetch(query, {
       method: 'POST',
@@ -66,29 +86,14 @@ export default {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(convertRegionPayload(payload)),
+      body: JSON.stringify(convertPayload(payload)),
     })
       .then(handleResponse)
       .catch(handleError);
   },
 
-  createCollection(payload) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
-
-    return fetch(query, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(convertRegionPayload(payload)),
-    })
-      .then(handleResponse)
-      .catch(handleError);
-  },
-
-  updateRegion(payload, id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+  updateitem(type, id, payload) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
     return fetch(query, {
       method: 'PATCH',
       headers: {
@@ -96,7 +101,7 @@ export default {
         Authorization: session.token,
       },
       body: JSON.stringify(
-        convertRegionPayload({
+        convertPayload({
           ...payload,
           id: undefined,
         })
@@ -106,8 +111,16 @@ export default {
       .catch(handleError);
   },
 
-  deleteRegion(id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+  updateRegion(id, payload) {
+    return this.updateitem('region', id, payload);
+  },
+
+  updateCollection(id, payload) {
+    return this.updateitem('collection', id, payload);
+  },
+
+  deleteItem(type, id) {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
     return fetch(query, {
       method: 'DELETE',
       headers: {
@@ -117,5 +130,13 @@ export default {
     })
       .then(handleResponse)
       .catch(handleError);
+  },
+
+  deleteRegion(id) {
+    return this.deleteItem('region', id);
+  },
+
+  deleteCollection(id) {
+    return this.deleteItem('collection', id);
   },
 };
