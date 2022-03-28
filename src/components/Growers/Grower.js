@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import clsx from 'clsx';
 
 import Grid from '@material-ui/core/Grid';
@@ -11,8 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Person from '@material-ui/icons/Person';
 import LinkToWebmap from '../common/LinkToWebmap';
 import OptimizedImage from '../OptimizedImage';
-import { AppContext } from '../../context/AppContext.js';
-import { getOrganizationById } from 'utilities/index.js';
+import GrowerOrganization from 'components/GrowerOrganization';
 import { useStyle, GROWER_IMAGE_SIZE } from './Growers.styles.js';
 
 export const Grower = (props) => {
@@ -28,7 +26,7 @@ export const Grower = (props) => {
         id={`card_${grower.id}`}
         className={clsx(
           classes.card,
-          props.placeholder && classes.placeholderCard,
+          props.placeholder && classes.placeholderCard
         )}
         classes={{
           root: classes.growerCard,
@@ -65,6 +63,7 @@ export const Grower = (props) => {
               <GrowerOrganization
                 organizationName={grower?.organization}
                 assignedOrganizationId={grower?.organizationId}
+                compact={true}
               />
             </Grid>
           </Grid>
@@ -75,46 +74,3 @@ export const Grower = (props) => {
 };
 
 export default Grower;
-
-/**
- * @function
- * @name GrowerOrganization
- * @description display organision associated with the grower
- *
- * @param {object} props
- * @param {string} props.organizationName name of organization grower belongs to
- * @param {number} props.assignedOrganizationId id of organization assigned to grower
- *
- * @returns {React.Component}
- */
-const GrowerOrganization = (props) => {
-  const appContext = useContext(AppContext);
-  const { organizationName, assignedOrganizationId } = props;
-
-  const renderGrowerOrganization = () => (
-    <Typography style={{ color: '#C0C0C0', fontStyle: 'italic' }}>
-      {organizationName}
-    </Typography>
-  );
-  const renderGrowerAssignedOrganization = (id) => {
-    const assignedOrganization = getOrganizationById(appContext.orgList, id);
-    return (
-      <Typography>
-        {assignedOrganization?.name} ({id})
-      </Typography>
-    );
-  };
-
-  return assignedOrganizationId
-    ? renderGrowerAssignedOrganization(assignedOrganizationId)
-    : organizationName
-    ? renderGrowerOrganization()
-    : '';
-};
-
-GrowerOrganization.propTypes = {
-  organizationName: PropTypes.string,
-};
-GrowerOrganization.defaultProps = {
-  organizationName: null,
-};
