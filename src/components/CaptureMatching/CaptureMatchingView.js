@@ -272,8 +272,19 @@ function CaptureMatchingView(props) {
     }
   }
 
+  async function clean() {
+    setCandidateImgData([]);
+    setTreesCount(0);
+    setCaptureImage(null);
+    setTreesCount(0);
+    setImgCount(null);
+    setCurrentPage(1);
+    setNoOfPages(null);
+  }
+
   async function fetchCaptures(currentPage, abortController) {
     log.warn('fetchCaptures:', currentPage);
+    clean();
     setLoading(true);
     const filterParameters = {
       captured_at_start_date: filter.startDate,
@@ -291,6 +302,7 @@ function CaptureMatchingView(props) {
       setNoOfPages(data.count);
       setImgCount(data.count);
     } else {
+      setLoading(false);
       log.warn('no data:', data);
     }
   }
@@ -498,6 +510,12 @@ function CaptureMatchingView(props) {
     <Box className={classes.captureImageBox1}>
       {CaptureHeader}
       <Box height={16} />
+      {!loading && !captureImage && (
+        //captureImage && treesCount === 0 && (
+        <Box>
+          <Typography variant="h5">No capture found.</Typography>
+        </Box>
+      )}
       {captureImage && (
         <Paper
           elevation={4}
