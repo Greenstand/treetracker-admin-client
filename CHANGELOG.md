@@ -1,3 +1,10 @@
+## [1.83.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.83.0...v1.83.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* deal with no capture ([001d0d1](https://github.com/Greenstand/treetracker-admin-client/commit/001d0d19aace26ae1338a22bc3d466706ff96a72))
+
 # [1.83.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.82.1...v1.83.0) (2022-03-26)
 
 
