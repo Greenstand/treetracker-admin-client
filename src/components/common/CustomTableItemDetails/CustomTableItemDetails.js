@@ -153,7 +153,7 @@ LogPaymentForm.propTypes = {
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, closeDetails, refreshData, showLogPaymentForm } = props;
+  const { selectedItem, refreshData, showLogPaymentForm, onClose, open } = props;
   const [userName, setUserName] = useState('');
   const classes = useStyles();
 
@@ -171,7 +171,8 @@ function CustomTableItemDetails(props) {
     <Drawer
       anchor="right"
       BackdropProps={{ invisible: true }}
-      open={!!selectedItem}
+      open={open}
+      onClose={onClose}
     >
       <Grid container direction="column" className={classes.itemDrawerDetails}>
         {/* start  details header */}
@@ -188,7 +189,7 @@ function CustomTableItemDetails(props) {
               </Grid>
             </Grid>
             <CloseIcon
-              onClick={closeDetails}
+              onClick={onClose}
               className={classes.itemDetailsCloseIcon}
             />
           </Grid>
@@ -306,7 +307,7 @@ function CustomTableItemDetails(props) {
           {showLogPaymentForm && selectedItem?.status !== 'paid' && (
             <LogPaymentForm
               selectedItem={selectedItem}
-              closeForm={closeDetails}
+              closeForm={onClose}
               refreshData={refreshData}
             />
           )}
@@ -352,7 +353,7 @@ export default CustomTableItemDetails;
 
 CustomTableItemDetails.propTypes = {
   selectedItem: PropTypes.object.isRequired,
-  closeDetails: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   refreshData: PropTypes.func,
   showLogPaymentForm: PropTypes.bool,
 };
