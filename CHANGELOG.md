@@ -1,3 +1,10 @@
+## [1.84.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.1...v1.84.2) (2022-03-30)
+
+
+### Bug Fixes
+
+* reset won't work ([501df4e](https://github.com/Greenstand/treetracker-admin-client/commit/501df4e8f01948c6d28774f2da0e06f6ca74be7b))
+
 ## [1.84.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.0...v1.84.1) (2022-03-30)
 
 
