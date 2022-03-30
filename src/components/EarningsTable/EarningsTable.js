@@ -8,6 +8,7 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
+// import log from 'loglevel';
 /**
  * @constant
  * @name earningTableMetaData
@@ -123,10 +124,10 @@ function EarningsTable() {
   const [selectedEarning, setSelectedEarning] = useState(null);
 
   async function getEarnings(fetchAll = false) {
-    console.warn('getEarnings with fetchAll: ', fetchAll);
+    // console.warn('getEarnings with fetchAll: ', fetchAll);
     setIsLoading(true); // show loading indicator when fetching data
 
-    const { results, totalCount } = await getEarningsReal();
+    const { results, totalCount } = await getEarningsReal(fetchAll);
     setEarnings(results);
     setTotalEarnings(totalCount);
 
@@ -134,17 +135,32 @@ function EarningsTable() {
   }
 
   async function getEarningsReal(fetchAll = false) {
-    console.warn('fetchAll:', fetchAll);
+    // console.warn('fetchAll:', fetchAll);
+    const filtersToSubmit = { ...filter };
+    // filter out keys we don't want to submit
+    Object.keys(filtersToSubmit).forEach((k) => {
+      if (
+        filtersToSubmit[k] === 'all' ||
+        filtersToSubmit[k] === '' ||
+        k === 'organization_id'
+      ) {
+        delete filtersToSubmit[k];
+      }
+    });
 
     const queryParams = {
       offset: fetchAll ? 0 : page * earningsPerPage,
       limit: fetchAll ? 90000 : earningsPerPage,
       sort_by: sortBy?.field,
       order: sortBy?.order,
-      ...filter,
+      ...filtersToSubmit,
     };
 
+    // log.debug('queryParams', queryParams);
+
     const response = await earningsAPI.getEarnings(queryParams);
+    // log.debug('getEarnings response: ', response);
+
     const results = prepareRows(response.earnings);
     return {
       results,
@@ -188,9 +204,15 @@ function EarningsTable() {
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       activeFiltersCount={
-        Object.keys(filter).filter((key) =>
-          key === 'start_date' || key === 'end_date' ? false : true
-        ).length
+        Object.keys(filter).filter((key) => {
+          return key === 'start_date' ||
+            key === 'end_date' ||
+            key === 'organization_id' ||
+            filter[key] === 'all' ||
+            filter[key] === ''
+            ? false
+            : true;
+        }).length
       }
       headerTitle="Earnings"
       mainFilterComponent={
