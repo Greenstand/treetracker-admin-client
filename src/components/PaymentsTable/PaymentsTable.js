@@ -16,7 +16,7 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
-import {countToLocaleString} from "../../common/numbers";
+import { countToLocaleString } from '../../common/numbers';
 
 /**
  * @constant
@@ -215,6 +215,7 @@ function PaymentsTable() {
             filterType="main"
             setFilter={setFilter}
             setIsFilterOpen={setIsMainFilterOpen}
+            disablePaymentStatus={true}
           />
         }
         dateFilterComponent={
