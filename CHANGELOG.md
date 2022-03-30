@@ -1,3 +1,10 @@
+## [1.84.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.0...v1.84.1) (2022-03-30)
+
+
+### Bug Fixes
+
+* payment status filter problem ([962ed56](https://github.com/Greenstand/treetracker-admin-client/commit/962ed5681b5a566f8d237f6e91df820238d26287))
+
 # [1.84.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.83.2...v1.84.0) (2022-03-28)
 
 
