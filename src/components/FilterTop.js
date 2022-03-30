@@ -5,11 +5,11 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import SelectOrg from './common/SelectOrg';
 import FilterModel, {
   ALL_SPECIES,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
-  ORGANIZATION_NOT_SET,
   TAG_NOT_SET,
   ANY_TAG_SET,
 } from '../models/Filter';
@@ -29,7 +29,6 @@ import {
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { getVerificationStatus } from '../common/utils';
-import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 
@@ -76,7 +75,6 @@ function Filter(props) {
   // console.log('render: filter top');
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
   const dateStartDefault = null;
@@ -159,30 +157,6 @@ function Filter(props) {
     filter.active = active; // keeps last value set
     props.onSubmit && props.onSubmit(filter);
   }
-
-  const defaultOrgList = userHasOrg
-    ? [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-      ]
-    : [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-        {
-          id: ORGANIZATION_NOT_SET,
-          stakeholder_uuid: ORGANIZATION_NOT_SET,
-          name: 'Not set',
-          value: null,
-        },
-      ];
 
   return (
     <>
@@ -399,35 +373,13 @@ function Filter(props) {
                 // clearOnBlur
                 // handleHomeEndKeys
               />
-              {
-                /* {!userHasOrg && ( }*/
-                <TextField
-                  data-testid="org-dropdown"
-                  select
-                  label="Organization"
-                  htmlFor="organization"
-                  id="organization"
-                  value={organizationId}
-                  onChange={(e) => {
-                    const org = orgList.find((o) => o.id === e.target.value);
-                    setStakeholderUUID(
-                      org ? org.stakeholder_uuid : e.target.value
-                    );
-                    setOrganizationId(e.target.value);
-                  }}
-                >
-                  {[...defaultOrgList, ...orgList].map((org) => (
-                    <MenuItem
-                      data-testid="org-item"
-                      key={org.id}
-                      value={org.id}
-                    >
-                      {org.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                //)
-              }
+              <SelectOrg
+                orgId={organizationId}
+                handleSelection={(org) => {
+                  setStakeholderUUID(org.stakeholder_uuid);
+                  setOrganizationId(org.id);
+                }}
+              />
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button

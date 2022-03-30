@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import api from '../../api/treeTrackerApi';
-
-import CandidateImages from './CandidateImages';
-import Navbar from '../Navbar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Select,
   Button,
   AppBar,
   Chip,
@@ -19,30 +14,33 @@ import {
   Typography,
   FormControl,
   TextField,
-  InputLabel,
-  MenuItem,
   Avatar,
   Tooltip,
 } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import { documentTitle } from '../../common/variables';
 import CloseIcon from '@material-ui/icons/Close';
-import { AppContext } from '../../context/AppContext';
-import { MatchingToolContext } from '../../context/MatchingToolContext';
-import log from 'loglevel';
-import OptimizedImage from 'components/OptimizedImage';
-import Country from '../common/Country';
-
+import FilterListIcon from '@material-ui/icons/FilterList';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import { getDateTimeStringLocale } from 'common/locale';
 import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
+
+import { documentTitle } from '../../common/variables';
+import { getDateTimeStringLocale } from 'common/locale';
+import OptimizedImage from 'components/OptimizedImage';
+import Country from '../common/Country';
+import SelectOrg from '../common/SelectOrg';
+import CandidateImages from './CandidateImages';
+import Navbar from '../Navbar';
+
+import { AppContext } from '../../context/AppContext';
+import { MatchingToolContext } from '../../context/MatchingToolContext';
+import api from '../../api/treeTrackerApi';
 import moment from 'moment';
+import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -51,11 +49,9 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     height: 'calc(100vh - 43px)',
   },
-
   candidateImgIcon: {
     fontSize: '37px',
   },
-
   candidateIconBox: {},
   box1: {
     backgroundColor: '#F0F0F0',
@@ -100,7 +96,6 @@ const useStyle = makeStyles((theme) => ({
     margin: theme.spacing(2, 0, 2, 0),
     width: '100%',
   },
-
   // styles for export button
   csvLink: {
     color: theme.palette.primary.main,
@@ -123,7 +118,6 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(2),
     alignItems: 'center',
   },
-
   captureImageImgBox: {
     flexGrow: 1,
     overflow: 'auto',
@@ -132,7 +126,6 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(2),
     position: 'relative',
   },
-
   captureImageImgContainer: {
     objectFit: 'contain',
   },
@@ -242,6 +235,12 @@ const useStyle = makeStyles((theme) => ({
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
+  const initialFilter = {
+    startDate: '',
+    endDate: '',
+    stakeholderUUID: null,
+  };
+
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const matchingToolContext = useContext(MatchingToolContext);
@@ -252,11 +251,12 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [organizationId, setOrganizationId] = useState(null);
-  const [filter, setFilter] = useState({});
-  const [growerAccount, setGrowerAccount] = useState(null);
+  const [stakeholderUUID, setStakeholderUUID] = useState(null);
+  const [filter, setFilter] = useState(initialFilter);
+  const [growerAccount, setGrowerAccount] = useState({});
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -293,17 +293,20 @@ function CaptureMatchingView() {
   async function fetchCaptures(currentPage, abortController) {
     clean();
     setLoading(true);
+    // log.debug('fetchCaptures filter', filter);
     const filterParameters = {
       captured_at_start_date: filter.startDate,
       captured_at_end_date: filter.endDate,
-      'organization_ids[]': filter.organizationId,
+      'organization_ids[]': filter.stakeholderUUID && [filter.stakeholderUUID],
     };
+    // log.debug('fetchCaptures filterParameters', filterParameters);
     const data = await api.fetchCapturesToMatch(
       currentPage,
       abortController,
       filterParameters
     );
-    if (data && data.captures && data.captures.length > 0) {
+    // log.debug('fetchCptures data', currentPage, data);
+    if (data?.captures?.length > 0) {
       setCaptureImage(data.captures[0]);
       setNoOfPages(data.count);
       setImgCount(data.count);
@@ -315,22 +318,9 @@ function CaptureMatchingView() {
     }
   }
 
-  useEffect(() => {
-    log.debug('loading captures', currentPage);
-    const abortController = new AbortController();
-    fetchCaptures(currentPage, abortController);
-    return () => abortController.abort();
-  }, [currentPage, filter]);
-
-  useEffect(() => {
-    if (currentPage <= 0 || currentPage > noOfPages) {
-      setCurrentPage(1);
-    }
-  }, [noOfPages, currentPage]);
-
   async function loadGrowerInfo() {
     if (captureImage) {
-      log.debug('loadGrowerInfo...');
+      // log.warn('loadGrowerInfo...');
       if (captureImage.grower_account_id) {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
@@ -343,16 +333,29 @@ function CaptureMatchingView() {
   }
 
   useEffect(() => {
+    document.title = `Capture Matching - ${documentTitle}`;
+  }, []);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    fetchCaptures(currentPage, abortController);
+    return () => abortController.abort();
+  }, [currentPage, filter]);
+
+  useEffect(() => {
+    if (currentPage <= 0 || currentPage > noOfPages) {
+      setCurrentPage(1);
+    }
+  }, [noOfPages, currentPage]);
+
+  useEffect(() => {
     const abortController = new AbortController();
     if (captureImage) {
-      log.debug('loading candidate images');
       const captureId = captureImage.id;
       fetchCandidateTrees(captureId, abortController);
-
       // load grower info
       loadGrowerInfo();
     }
-
     return () => abortController.abort();
   }, [captureImage]);
 
@@ -389,11 +392,6 @@ function CaptureMatchingView() {
     setCurrentPage((page) => page + 1);
   };
 
-  /* to update html document title */
-  useEffect(() => {
-    document.title = `Capture Matching - ${documentTitle}`;
-  }, []);
-
   function handleStartDateChange(e) {
     setStartDate(e.target.value);
   }
@@ -403,16 +401,17 @@ function CaptureMatchingView() {
   }
 
   function handleFilterSubmit() {
+    log.debug('filter submit -----> ', organizationId, stakeholderUUID);
     setFilter({
       startDate,
       endDate,
-      organizationId,
+      stakeholderUUID,
     });
     matchingToolContext.handleFilterToggle();
   }
 
   function handleFilterReset() {
-    setFilter({});
+    setFilter(initialFilter);
     matchingToolContext.handleFilterToggle();
   }
 
@@ -461,7 +460,6 @@ function CaptureMatchingView() {
             imgCount,
             ''
           )}
-          {/* {() => <div>OK</div>} */}
           <Box className={classes.currentHeaderBox2}>
             <Box>
               {(filter.startDate || filter.endDate) && (
@@ -479,16 +477,19 @@ function CaptureMatchingView() {
                   }
                 />
               )}
-              {filter.organizationId && (
+              {filter.stakeholderUUID && (
                 <Chip
-                  label={appContext.orgList.reduce(
-                    (a, c) =>
-                      c.stakeholder_uuid === organizationId ? c.name : a,
-                    ''
-                  )}
+                  label={appContext.orgList.reduce((a, c) => {
+                    return c.stakeholder_uuid === filter.stakeholderUUID
+                      ? c.name
+                      : a;
+                  }, '')}
                   className={classes.currentHeaderChip}
                   onDelete={() =>
-                    setFilter({ ...filter, organizationId: undefined })
+                    setFilter({
+                      ...filter,
+                      stakeholderUUID: undefined,
+                    })
                   }
                 />
               )}
@@ -624,7 +625,11 @@ function CaptureMatchingView() {
       <Grid
         container
         direction="column"
-        style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
+        style={{
+          flexWrap: 'nowrap',
+          height: '100%',
+          overflow: 'hidden',
+        }}
       >
         <Navbar />
         <Box className={classes.container}>
@@ -734,32 +739,28 @@ function CaptureMatchingView() {
             variant="outlined"
             className={classes.customTableFilterSelectFormControl}
           >
-            <InputLabel id="organization">Organization</InputLabel>
-            <Select
-              labelId="organization"
-              defaultValue={organizationId}
-              id="organization"
-              name="organization"
-              label="Organization"
-              onChange={(e) => {
-                setOrganizationId(e.target.value);
+            <SelectOrg
+              orgId={organizationId || 'ORGANIZATION_NOT_SET'}
+              defaultOrgs={[
+                {
+                  id: 'ORGANIZATION_NOT_SET',
+                  stakeholder_uuid: null,
+                  name: 'Not set',
+                  value: null,
+                },
+              ]}
+              handleSelection={(org) => {
+                setOrganizationId(org.id);
+                setStakeholderUUID(org.stakeholder_uuid);
               }}
-            >
-              <MenuItem key={''} value={''}>
-                All
-              </MenuItem>
-              {appContext.orgList.map((org) => (
-                <MenuItem
-                  key={org.stakeholder_uuid}
-                  value={org.stakeholder_uuid}
-                >
-                  {org.name}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </FormControl>
 
-          <Divider style={{ margin: '50px 0 20px 0' }} />
+          <Divider
+            style={{
+              margin: '50px 0 20px 0',
+            }}
+          />
 
           <Grid
             container

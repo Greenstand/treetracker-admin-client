@@ -1,5 +1,6 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
+import log from 'loglevel';
 
 // Set API as a variable
 const CAPTURE_MATCH_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -71,7 +72,7 @@ export default {
     try {
       const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
 
-      console.log(query);
+      log.debug(query);
 
       return fetch(query, {
         method: 'PATCH',
@@ -141,6 +142,7 @@ export default {
       const where = Object.keys(filter)
         .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
         .join('&');
+
       const req = `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
         currentPage - 1
       }&${where}`;

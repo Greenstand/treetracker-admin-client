@@ -9,12 +9,12 @@ import {
   Grid,
   TextField,
   CircularProgress,
-  MenuItem,
 } from '@material-ui/core';
 import api from '../api/growers';
 import ImageScroller from './ImageScroller';
-import { AppContext } from '../context/AppContext';
+import SelectOrg from './common/SelectOrg';
 import { GrowerContext } from '../context/GrowerContext';
+import { ORGANIZATION_NOT_SET } from '../models/Filter';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -22,7 +22,7 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(0, 4),
   },
   textInput: {
-    margin: theme.spacing(2, 1),
+    margin: theme.spacing(2, 0),
     flexGrow: 1,
   },
 }));
@@ -30,7 +30,6 @@ const useStyle = makeStyles((theme) => ({
 const EditGrower = (props) => {
   const classes = useStyle();
   const { isOpen, grower, onClose } = props;
-  const appContext = useContext(AppContext);
   const growerContext = useContext(GrowerContext);
   const [growerImages, setGrowerImages] = useState([]);
   const [growerUpdate, setGrowerUpdate] = useState(null);
@@ -162,29 +161,20 @@ const EditGrower = (props) => {
               ))}
             </Grid>
           ))}
-          <Grid item container>
-            {!appContext.userHasOrg && (
-              <TextField
-                select
-                className={classes.textInput}
-                label="Organization"
-                value={getValue('organizationId')}
-                onChange={(e) => {
-                  handleChange('organizationId', e.target.value);
-                }}
-              >
-                <MenuItem key={'null'} value={'null'}>
-                  No organization
-                </MenuItem>
-                {appContext.orgList.length &&
-                  appContext.orgList.map((org) => (
-                    <MenuItem key={org.id} value={org.id}>
-                      {org.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            )}
-          </Grid>
+          <SelectOrg
+            orgId={getValue('organizationId')}
+            defaultOrgs={[
+              {
+                id: ORGANIZATION_NOT_SET,
+                stakeholder_uuid: ORGANIZATION_NOT_SET,
+                name: 'Not set',
+                value: null,
+              },
+            ]}
+            handleSelection={(org) => {
+              handleChange('organizationId', org?.id || null);
+            }}
+          />
         </Grid>
       </DialogContent>
       <DialogActions>
