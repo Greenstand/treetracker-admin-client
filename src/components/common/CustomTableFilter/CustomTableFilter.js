@@ -27,6 +27,7 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @param {object} props.filter -  filter object
  * @param {string} props.filterType -  filter type, either 'main' or 'date'
  * @param {boolean} props.isFilterOpen - flag determining if filter is open/closed
+ * @param {boolean} props.disablePaymentStatus -
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
@@ -39,6 +40,7 @@ function CustomTableFilter(props) {
     filter,
     setFilter,
     filterType,
+    disablePaymentStatus,
   } = props;
 
   const classes = useStyles();
@@ -121,28 +123,30 @@ function CustomTableFilter(props) {
 
   const renderMainFilter = () => (
     <>
-      <FormControl
-        variant="outlined"
-        className={classes.customTableFilterSelectFormControl}
-      >
-        <InputLabel id="earnings_status">Payment Status</InputLabel>
-        <Select
-          labelId="earnings_status"
-          defaultValue={localFilter?.earnings_status}
-          id="earnings_status"
-          name="earnings_status"
-          label="Payment Status"
-          onChange={handleOnFormControlChange}
+      {!disablePaymentStatus && (
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
         >
-          {PAYMENT_STATUS.map((paymentStatus, i) => (
-            <MenuItem key={`${paymentStatus}_${i}`} value={paymentStatus}>
-              <span style={{ textTransform: 'capitalize' }}>
-                {paymentStatus}
-              </span>
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          <InputLabel id="earnings_status">Payment Status</InputLabel>
+          <Select
+            labelId="earnings_status"
+            defaultValue={localFilter?.earnings_status}
+            id="earnings_status"
+            name="earnings_status"
+            label="Payment Status"
+            onChange={handleOnFormControlChange}
+          >
+            {PAYMENT_STATUS.map((paymentStatus, i) => (
+              <MenuItem key={`${paymentStatus}_${i}`} value={paymentStatus}>
+                <span style={{ textTransform: 'capitalize' }}>
+                  {paymentStatus}
+                </span>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
 
       <FormControl
         variant="outlined"
