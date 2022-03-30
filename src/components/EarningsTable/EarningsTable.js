@@ -7,6 +7,7 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
+import {countToLocaleString} from "../../common/numbers";
 /**
  * @constant
  * @name earningTableMetaData
@@ -74,6 +75,8 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
+      amount: countToLocaleString(+row.amount),
+      captures_count: countToLocaleString(row.captures_count),
       csv_start_date: row.consolidation_period_start,
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
