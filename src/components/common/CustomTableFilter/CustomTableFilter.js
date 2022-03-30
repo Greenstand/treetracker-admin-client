@@ -77,6 +77,7 @@ function CustomTableFilter(props) {
       delete withoutLocalFilter.phone;
       delete withoutLocalFilter.start_date;
       delete withoutLocalFilter.end_date;
+      delete withoutLocalFilter.sub_organization;
       setFilter(withoutLocalFilter);
       setLocalFilter({});
     }
