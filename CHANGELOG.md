@@ -1,3 +1,10 @@
+## [1.84.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.2...v1.84.3) (2022-03-31)
+
+
+### Bug Fixes
+
+* count of capture in payment page ([8d8d0d2](https://github.com/Greenstand/treetracker-admin-client/commit/8d8d0d2ea4cb0cc92564e36646a257cd1fa8aa03))
+
 ## [1.84.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.1...v1.84.2) (2022-03-30)
 
 
