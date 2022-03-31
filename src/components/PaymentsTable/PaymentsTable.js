@@ -48,6 +48,12 @@ const paymentTableMetaData = [
     showInfoIcon: false,
   },
   {
+    description: 'Capture Count',
+    name: 'captures_count',
+    sortable: false,
+    showInfoIcon: false,
+  },
+  {
     description: 'Effective Date',
     name: 'calculated_at',
     sortable: true,
