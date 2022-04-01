@@ -515,10 +515,8 @@ function CustomTable(props) {
                               {row[column.name]}
 
                               <IconButton
-                                onClick={() => {
-                                  console.warn(
-                                    'disabled grower details'
-                                  ); /*handleShowGrowerDetail(e, row)*/
+                                onClick={(e) => {
+                                  handleShowGrowerDetail(e, row);
                                 }}
                                 aria-label={`View/Edit Grower details`}
                                 title={`View/Edit Grower details`}
