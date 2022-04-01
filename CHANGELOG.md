@@ -1,3 +1,11 @@
+## [1.84.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.3...v1.84.4) (2022-04-01)
+
+
+### Bug Fixes
+
+* brokentest ([10b188e](https://github.com/Greenstand/treetracker-admin-client/commit/10b188e9f4e2755b037122f98519ec4e6399060f))
+* hide grower detail ([9173258](https://github.com/Greenstand/treetracker-admin-client/commit/91732580460e84bc30d9b75ff4b24f4022dcaf44))
+
 ## [1.84.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.2...v1.84.3) (2022-03-31)
 
 
