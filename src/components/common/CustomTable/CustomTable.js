@@ -515,12 +515,15 @@ function CustomTable(props) {
                               {row[column.name]}
 
                               <IconButton
-                                onClick={(e) => handleShowGrowerDetail(e, row)}
+                                onClick={(e) => {
+                                  handleShowGrowerDetail(e, row);
+                                }}
                                 aria-label={`View/Edit Grower details`}
                                 title={`View/Edit Grower details`}
                                 style={{ padding: '0 2px 2px 0' }}
+                                disabled
                               >
-                                <Person color="primary" />
+                                <Person color="disabled" />
                               </IconButton>
                             </Typography>
                           </Grid>
