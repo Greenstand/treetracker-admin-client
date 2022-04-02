@@ -1,3 +1,10 @@
+## [1.84.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.4...v1.84.5) (2022-04-02)
+
+
+### Bug Fixes
+
+* revert ammount format ([d067810](https://github.com/Greenstand/treetracker-admin-client/commit/d06781015389a1e4ba2b17bcb9f6238855c92774))
+
 ## [1.84.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.3...v1.84.4) (2022-04-01)
 
 
