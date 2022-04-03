@@ -72,7 +72,7 @@ function StakeholderTable() {
                     onClick={() => handleSort(col.value, !order)}
                   >
                     <TableSortLabel
-                      active={col.value === !!orderBy}
+                      active={col.value === orderBy}
                       direction={order ? 'asc' : 'desc'}
                     >
                       {col.label}
