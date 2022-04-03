@@ -1,22 +1,6 @@
 import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
-const convertPayload = (payload) => {
-  return {
-    calculate_statistics:
-      payload.calculateStatistics || payload.calculate_statistics,
-    id: payload.id,
-    name: payload.name,
-    shape: payload.shape,
-    show_on_org_map: payload.showOnOrgMap || payload.show_on_org_map,
-    updated_at: payload.updatedAt || payload.updated_at,
-    owner_id: payload.ownerId || payload.owner_id,
-    region_name_property:
-      payload.regionNameProperty || payload.region_name_property,
-    collection_name: payload.collectionName || payload.collection_name,
-  };
-};
-
 export default {
   getItem(type, id) {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
@@ -86,13 +70,13 @@ export default {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(convertPayload(payload)),
+      body: JSON.stringify(payload),
     })
       .then(handleResponse)
       .catch(handleError);
   },
 
-  updateitem(type, id, payload) {
+  updateitem(type, payload, id) {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
     return fetch(query, {
       method: 'PATCH',
@@ -100,12 +84,10 @@ export default {
         'Content-Type': 'application/json',
         Authorization: session.token,
       },
-      body: JSON.stringify(
-        convertPayload({
-          ...payload,
-          id: undefined,
-        })
-      ),
+      body: JSON.stringify({
+        ...payload,
+        id: undefined,
+      }),
     })
       .then(handleResponse)
       .catch(handleError);

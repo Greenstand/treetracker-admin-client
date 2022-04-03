@@ -24,9 +24,11 @@ import {
   MenuItem,
   Tooltip,
   Input,
+  CircularProgress,
+  Snackbar,
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
-import Edit from '@material-ui/icons/Edit';
+import { Edit, Close } from '@material-ui/icons';
 // import SortIcon from '@material-ui/icons/Sort';
 import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
@@ -142,10 +144,22 @@ const RegionTable = (props) => {
     deleteCollection,
   } = useContext(RegionContext);
   const { orgList, userHasOrg } = useContext(AppContext);
-  const [isEdit, setIsEdit] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [isUpload, setIsUpload] = useState(false);
   const [selectedItem, setSelectedItem] = useState(undefined);
   const [openDelete, setOpenDelete] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMesssage] = useState('');
+
+  useEffect(() => {
+    if (!openDelete && !openEdit) {
+      // Wait for the dialog to disappear before clearing the selected item.
+      setTimeout(() => {
+        setSelectedItem(undefined);
+        setIsUpload(false);
+      }, 300);
+    }
+  }, [openDelete, openEdit]);
 
   const tableRef = useRef(null);
 
@@ -164,7 +178,7 @@ const RegionTable = (props) => {
       ...item,
       isCollection,
     });
-    setIsEdit(true);
+    setOpenEdit(true);
   };
 
   const handleDelete = (item, isCollection) => {
@@ -177,6 +191,24 @@ const RegionTable = (props) => {
 
   const handleChangeShowCollections = (event, val) => {
     setShowCollections(val);
+  };
+
+  const handleUploadClick = () => {
+    setIsUpload(true);
+    setOpenEdit(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setSnackbarMesssage('');
+  };
+
+  const showSnackbar = (message) => {
+    setSnackbarMesssage(message);
+    setSnackbarOpen(true);
   };
 
   const RegionProperties = ({ region, max = 0 }) => {
@@ -223,7 +255,7 @@ const RegionTable = (props) => {
             <TableCell>{item.collectionName || '---'}</TableCell>
             <Tooltip title={<RegionProperties region={item} />}>
               <TableCell>
-                <RegionProperties region={item} max={4} />
+                <RegionProperties region={item} max={3} />
               </TableCell>
             </Tooltip>
             <TableCell align="center">
@@ -302,7 +334,7 @@ const RegionTable = (props) => {
               </Grid>
               <Grid item className={classes.headerButtonBox}>
                 <Button
-                  onClick={() => setIsUpload(true)}
+                  onClick={handleUploadClick}
                   variant="contained"
                   className={classes.upload}
                   color="primary"
@@ -363,38 +395,56 @@ const RegionTable = (props) => {
         </Grid>
       </Grid>
       <EditModal
-        isEdit={isEdit}
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
         isUpload={isUpload}
-        setIsEdit={isUpload ? setIsUpload : setIsEdit}
         selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
         styles={{ ...classes }}
         upload={upload}
         updateRegion={updateRegion}
         updateCollection={updateCollection}
+        showSnackbar={showSnackbar}
       />
       <DeleteDialog
         selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         deleteRegion={deleteRegion}
         deleteCollection={deleteCollection}
+        showSnackbar={showSnackbar}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </>
+        }
       />
     </>
   );
 };
 
 const EditModal = ({
-  isEdit,
-  setIsEdit,
+  openEdit,
+  setOpenEdit,
   isUpload,
   selectedItem,
-  setSelectedItem,
   styles,
   upload,
   updateRegion,
   updateCollection,
+  showSnackbar,
 }) => {
   const [errors, setErrors] = useState({
     name: undefined,
@@ -409,6 +459,8 @@ const EditModal = ({
   const [geojson, setGeoJson] = useState(undefined);
   const [shape, setShape] = useState(undefined);
   const [isCollection, setIsCollection] = useState(false);
+  const [saveInProgress, setSaveInProgress] = useState(false);
+  const [shapeProperties, setShapeProperties] = useState([]);
   const { orgList, userHasOrg } = useContext(AppContext);
 
   const reset = () => {
@@ -444,8 +496,27 @@ const EditModal = ({
   useEffect(() => {
     if (shape?.type?.endsWith('Collection')) {
       setIsCollection(true);
+      setShapeProperties(
+        (shape?.features || []).reduce((props, feature) => {
+          return [
+            ...new Set([...props, ...Object.keys(feature.properties || {})]),
+          ];
+        }, [])
+      );
+    } else {
+      setShapeProperties(shape?.properties || []);
     }
   }, [shape]);
+
+  useEffect(() => {
+    // Auto-set to "name" if present
+    const nameProp = shapeProperties?.find(
+      (prop) => prop.toLowerCase() === 'name'
+    );
+    if (nameProp) {
+      setRegionNameProperty(nameProp);
+    }
+  }, [shapeProperties]);
 
   const onOwnerChange = (e) => {
     setOwnerId(e.target.value);
@@ -502,8 +573,7 @@ const EditModal = ({
   };
 
   const handleEditDetailClose = () => {
-    setIsEdit(false);
-    setSelectedItem(undefined);
+    setOpenEdit(false);
   };
 
   const handleSave = async () => {
@@ -522,7 +592,7 @@ const EditModal = ({
       }
     }
 
-    if ((isEdit || isCollection) && !name) {
+    if ((!isUpload || isCollection) && !name) {
       hasError = true;
       setErrors((prev) => {
         return {
@@ -535,49 +605,61 @@ const EditModal = ({
     }
 
     if (!hasError) {
+      setSaveInProgress(true);
+      let res;
       try {
         if (isUpload) {
-          await upload({
+          res = await upload({
             id,
-            ownerId,
-            collectionName: isCollection ? name : undefined,
-            regionNameProperty,
+            owner_id: ownerId,
+            collection_name: isCollection ? name : undefined,
+            region_name_property: regionNameProperty,
             shape,
-            showOnOrgMap: show,
-            calculateStatistics: calc,
+            show_on_org_map: show,
+            calculate_statistics: calc,
           });
         } else {
           if (isCollection) {
-            await updateCollection({
+            res = await updateCollection({
               id,
-              ownerId,
+              owner_id: ownerId,
               name,
             });
           } else {
-            await updateRegion({
+            res = await updateRegion({
               id,
-              ownerId,
+              owner_id: ownerId,
               name,
-              showOnOrgMap: show,
-              calculateStatistics: calc,
+              show_on_org_map: show,
+              calculate_statistics: calc,
             });
           }
         }
-        setIsEdit(false);
-        setSelectedItem(undefined);
+
+        if (res?.error) {
+          throw res.error;
+        } else {
+          showSnackbar(
+            `${isCollection ? res?.collection?.name : res?.region?.name} ${
+              isUpload ? 'uploaded' : 'updated'
+            }`
+          );
+          setOpenEdit(false);
+        }
       } catch (error) {
         // TO DO - report the error details
-        alert(`Upload failed`);
+        alert(`Upload failed: ${error?.message || error}`);
       }
+      setSaveInProgress(false);
     }
   };
 
   return (
-    <Dialog open={isEdit || isUpload} aria-labelledby="form-dialog-title">
+    <Dialog open={openEdit} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">
-        {isEdit
-          ? `Edit ${isCollection ? 'Collection' : 'Region'}`
-          : 'Upload New Region or Collection'}
+        {isUpload
+          ? 'Upload New Region or Collection'
+          : `Edit ${isCollection ? 'Collection' : 'Region'}`}
       </DialogTitle>
       <DialogContent>
         {isUpload && (
@@ -620,6 +702,9 @@ const EditModal = ({
                 onChange={onOwnerChange}
                 fullWidth
               >
+                <MenuItem key={'null'} value={null}>
+                  No owner
+                </MenuItem>
                 {orgList.length &&
                   orgList.map((org) => (
                     <MenuItem
@@ -634,7 +719,7 @@ const EditModal = ({
           )}
 
           <Grid item>
-            {(isEdit || isCollection) && (
+            {(!isUpload || isCollection) && (
               <TextField
                 error={errors.name ? true : false}
                 helperText={errors.name}
@@ -661,13 +746,18 @@ const EditModal = ({
                 value={regionNameProperty || ''}
                 className={styles.input}
                 onChange={onRegionNamePropertyChange}
-                disabled={!shape?.properties}
               >
-                {Object.keys(shape?.properties || {}).map((prop) => (
-                  <MenuItem key={prop} value={prop}>
-                    {prop}
+                {shapeProperties.length ? (
+                  shapeProperties.map((prop) => (
+                    <MenuItem key={prop} value={prop}>
+                      {prop}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem key={'null'} value={null}>
+                    No properties found
                   </MenuItem>
-                ))}
+                )}
               </TextField>
             )}
           </Grid>
@@ -686,9 +776,22 @@ const EditModal = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleEditDetailClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
-          {isUpload ? 'Upload' : 'Save'}
+        <Button onClick={handleEditDetailClose} disabled={saveInProgress}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          color="primary"
+          disabled={saveInProgress}
+        >
+          {saveInProgress ? (
+            <CircularProgress size={21} />
+          ) : isUpload ? (
+            'Upload'
+          ) : (
+            'Save'
+          )}
         </Button>
       </DialogActions>
     </Dialog>
@@ -697,29 +800,39 @@ const EditModal = ({
 
 const DeleteDialog = ({
   selectedItem,
-  setSelectedItem,
   openDelete,
   setOpenDelete,
   deleteRegion,
   deleteCollection,
+  showSnackbar,
 }) => {
   const handleDelete = async () => {
     try {
+      let res;
       if (selectedItem.isCollection) {
-        await deleteCollection({ id: selectedItem.id });
+        res = await deleteCollection({ id: selectedItem.id });
       } else {
-        await deleteRegion({ id: selectedItem.id });
+        res = await deleteRegion({ id: selectedItem.id });
+      }
+      if (res?.error) {
+        throw res.error;
+      } else {
+        showSnackbar(
+          `${
+            selectedItem.isCollection
+              ? res?.collection?.name
+              : res?.region?.name
+          } deleted`
+        );
+        setOpenDelete(false);
       }
     } catch (error) {
-      alert(`Failed to delete item: ${error}`);
+      alert(`Failed to delete item: ${error?.message || error}`);
     }
-    setOpenDelete(false);
-    setSelectedItem(undefined);
   };
 
   const closeDelete = () => {
     setOpenDelete(false);
-    setSelectedItem(undefined);
   };
 
   return (
@@ -728,7 +841,7 @@ const DeleteDialog = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{`Please confirm you want to delete`}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{`Please confirm you want to delete ${selectedItem?.name}`}</DialogTitle>
       <DialogActions>
         <Button onClick={handleDelete} color="primary">
           Delete

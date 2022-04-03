@@ -154,32 +154,37 @@ export function RegionProvider(props) {
   };
 
   const upload = async (payload) => {
-    await api.upload({
+    const res = await api.upload({
       owner_id: getOrganizationUUID() || undefined,
       ...payload,
     });
-    loadRegions();
-    loadCollections();
+    await loadRegions();
+    await loadCollections();
+    return res;
   };
 
   const updateRegion = async (payload) => {
-    await api.updateRegion(payload, payload.id);
+    const res = await api.updateRegion(payload, payload.id);
     await loadRegions();
+    return res;
   };
 
   const updateCollection = async (payload) => {
-    await api.updateCollection(payload, payload.id);
+    const res = await api.updateCollection(payload, payload.id);
     await loadCollections();
+    return res;
   };
 
   const deleteRegion = async (id) => {
-    await api.deleteRegion(id);
+    const res = await api.deleteRegion(id);
     await loadRegions();
+    return res;
   };
 
   const deleteCollection = async (id) => {
-    await api.deleteCollection(id);
+    const res = await api.deleteCollection(id);
     await loadCollections();
+    return res;
   };
 
   const updateFilter = async (newFilter) => {

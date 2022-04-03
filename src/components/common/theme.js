@@ -118,6 +118,15 @@ export default createMuiTheme({
         },
       },
     },
+    MuiToggleButton: {
+      root: {
+        border: `1px solid ${colorPrimarySelected}`,
+        color: 'rgba(0,0,0,0.3)',
+        '&.Mui-selected': {
+          color: colorPrimary,
+        },
+      },
+    },
     MuiTableRow: {
       root: {
         '&.MuiTableRow-hover': {
