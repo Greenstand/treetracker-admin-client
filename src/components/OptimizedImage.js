@@ -28,7 +28,7 @@ export default function OptimizedImage(props) {
       (width ? `,w=${width}` : '') +
       (quality ? `,q=${quality}` : '');
 
-    console.log('params', params);
+    //console.log('params', params);
 
     cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
