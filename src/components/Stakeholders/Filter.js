@@ -257,10 +257,10 @@ function StakeholderFilter() {
           </FormControl>
         </DialogContent>
         <DialogActions>
+          <Button onClick={close}>Cancel</Button>
           <Button color="primary" onClick={applyFilters}>
             Apply
           </Button>
-          <Button onClick={close}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

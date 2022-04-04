@@ -11,23 +11,33 @@ import {
   MenuItem,
   FormControl,
   FormControlLabel,
-  FormGroup,
+  FormLabel,
+  Radio,
+  RadioGroup,
   TextField,
 } from '@material-ui/core';
-import GSInputLabel from '../common/InputLabel';
 import { StakeholdersContext } from 'context/StakeholdersContext';
 
 const useStyles = makeStyles({
   root: {
-    '& .MuiTextField-root': {
-      margin: '0 5px',
+    flexGrow: '1',
+    margin: '5px',
+    '& .MuiFormControl-fullWidth': {
+      width: '100%',
+      margin: '5px',
     },
-    width: '50%',
+    '& .MuiOutlinedInput-root': {
+      position: 'relative',
+      borderRadius: '4px',
+    },
+  },
+  radioGroup: {
+    flexDirection: 'row',
   },
 });
 
 const initialState = {
-  type: 'Not set',
+  type: 'Organization',
   org_name: '',
   first_name: '',
   last_name: '',
@@ -39,6 +49,7 @@ const initialState = {
   website: '',
   logo_url: '',
   map: '',
+  relation: 'child',
 };
 
 function AddStakeholder() {
@@ -46,12 +57,9 @@ function AddStakeholder() {
   const { createStakeholder } = useContext(StakeholdersContext);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(initialState);
+  const [errors, setErrors] = useState({});
 
   const defaultTypeList = [
-    {
-      name: 'Not set',
-      value: 'Not set', // undefined works
-    },
     {
       name: 'Organization',
       value: 'Organization',
@@ -68,19 +76,67 @@ function AddStakeholder() {
 
   const closeModal = () => {
     setData(initialState);
+    setErrors({});
     setOpen(false);
   };
 
   const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    setErrors({});
+    const value =
+      e.target.name === 'offering_pay_to_plant'
+        ? !data.offering_pay_to_plant
+        : e.target.value;
+    setData({ ...data, [e.target.name]: value });
   };
 
-  const submit = () => {
+  const validateData = () => {
+    let errors = {};
+    if (!data.type) {
+      errors = { ...errors, type: 'Please select a type' };
+    } else if (data.type === 'Organization' && !data.org_name) {
+      errors = { ...errors, org_name: 'Please enter an organization name' };
+    } else if (data.type === 'Person') {
+      if (!data.first_name)
+        errors = { ...errors, first_name: 'Please enter a first name' };
+      if (!data.last_name)
+        errors = { ...errors, last_name: 'Please enter a last name' };
+    }
+
+    if (!data.email || /^[\w\d]@[\w\d]/.test(data.email)) {
+      errors = { ...errors, email: 'Please enter an email' };
+    }
+    console.log('test phone', data.phone, /^[\d]/.test(Number(data.phone)));
+    if (!data.phone) {
+      errors = { ...errors, phone: 'Please enter a phone number' };
+    }
+
+    if (!data.relation) {
+      errors = {
+        ...errors,
+        relation: 'Please enter the relationship: parent or child',
+      };
+    }
+
+    setErrors(errors);
+    return errors;
+  };
+
+  const handleSubmit = () => {
     console.log('submitted', data);
+
     // valildate data then post request
-    createStakeholder(data)
-      .then(() => closeModal())
-      .catch((e) => console.error(e));
+    const errors = validateData(data);
+    console.log('errors', errors, Object.keys(errors));
+
+    if (Object.keys(errors).length === 0) {
+      createStakeholder(data)
+        .then(() => closeModal())
+        .catch((e) => console.error(e));
+    }
+  };
+
+  const handleEnterPress = (e) => {
+    e.key === 'Enter' && handleSubmit(e);
   };
 
   return (
@@ -92,10 +148,16 @@ function AddStakeholder() {
         <DialogTitle>Add Stakeholder</DialogTitle>
         <DialogContent>
           <Grid container justify-content="space-between">
-            <FormControl xs={12} sm={6} fullWidth={true}>
-              <GSInputLabel text="Type" />
+            <FormControl
+              xs={12}
+              sm={6}
+              fullWidth={true}
+              style={{ margin: '5px' }}
+            >
               <TextField
-                required
+                error={!!errors?.type}
+                helperText={errors.type}
+                className={classes.textField}
                 data-testid="type-dropdown"
                 select
                 label="type"
@@ -105,6 +167,7 @@ function AddStakeholder() {
                 placeholder="Stakeholder Type"
                 value={data.type}
                 onChange={(e) => handleChange(e)}
+                onKeyDown={handleEnterPress}
               >
                 {defaultTypeList.map((type) => (
                   <MenuItem
@@ -120,42 +183,52 @@ function AddStakeholder() {
             {data.type === 'Person' ? (
               <>
                 <FormControl xs={12} sm={6} className={classes.root}>
-                  <GSInputLabel text="Grower First Name" />
                   <TextField
+                    error={!!errors?.first_name}
+                    helperText={errors.first_name}
+                    className={classes.textField}
                     label="First Name"
                     variant="outlined"
                     name="first_name"
                     onChange={handleChange}
                     value={data.first_name}
+                    onKeyDown={handleEnterPress}
                   />
                 </FormControl>
                 <FormControl xs={12} sm={6} className={classes.root}>
-                  <GSInputLabel text="Grower Last Name" />
                   <TextField
+                    error={!!errors?.last_name}
+                    helperText={errors.last_name}
+                    className={classes.textField}
                     label="Last Name"
                     variant="outlined"
                     name="last_name"
                     onChange={handleChange}
                     value={data.last_name}
+                    onKeyDown={handleEnterPress}
                   />
                 </FormControl>
               </>
             ) : (
               <FormControl xs={12} sm={6} className={classes.root}>
-                <GSInputLabel text="Organization Name" />
                 <TextField
+                  error={!!errors?.org_name}
+                  helperText={errors.org_name}
+                  className={classes.textField}
                   label="Organization Name"
                   variant="outlined"
                   name="org_name"
                   onChange={handleChange}
                   value={data.org_name}
+                  onKeyDown={handleEnterPress}
                 />
               </FormControl>
             )}
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Email" />
               <TextField
-                required
+                error={!!errors?.email}
+                helperText={errors.email}
+                className={classes.textField}
                 label="Email"
                 variant="outlined"
                 name="email"
@@ -164,91 +237,133 @@ function AddStakeholder() {
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Phone" />
               <TextField
-                required
+                error={!!errors?.phone}
+                helperText={errors.phone}
+                className={classes.textField}
                 label="Phone"
                 variant="outlined"
                 name="phone"
+                type="number"
                 onChange={handleChange}
                 value={data.phone}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Password" />
               <TextField
+                className={classes.textField}
                 label="Password"
                 variant="outlined"
                 name="password"
                 onChange={handleChange}
                 value={data.password}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Secret Phrase (salt)" />
               <TextField
+                className={classes.textField}
                 label="Secret Phrase (salt)"
                 variant="outlined"
                 name="salt"
                 onChange={handleChange}
                 value={data.salt}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Website" />
               <TextField
+                className={classes.textField}
                 label="Website"
                 variant="outlined"
                 name="website"
                 onChange={handleChange}
                 value={data.website}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Logo Url" />
               <TextField
+                className={classes.textField}
                 label="Logo Url"
                 variant="outlined"
                 name="logo_url"
                 onChange={handleChange}
                 value={data.logo_url}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Map Address" />
               <TextField
+                className={classes.textField}
                 label="Map"
                 variant="outlined"
                 name="map"
                 placeholder="map_address"
                 onChange={handleChange}
                 value={data.map}
+                onKeyDown={handleEnterPress}
               />
             </FormControl>
+          </Grid>
+          <Grid container justify-content="space-between">
             <FormControl xs={12} sm={6} className={classes.root}>
-              <GSInputLabel text="Pay-to-Plant" />
-              <FormGroup>
+              <FormLabel id="relation">Relationship</FormLabel>
+              <RadioGroup
+                aria-labelledby="radio-buttons-group-label"
+                name="relation"
+                value={data.relation}
+                className={classes.radioGroup}
+                onKeyDown={handleEnterPress}
+              >
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      label="Pay-to-Plant"
-                      variant="outlined"
-                      name="offering_pay_to_plant"
+                    <Radio
+                      label="Parent"
+                      value="parent"
                       onChange={handleChange}
-                      value={data.offering_pay_to_plant}
                     />
                   }
-                  label="Offers Pay-to-Plant"
+                  label="Parent"
                 />
-              </FormGroup>
+                <FormControlLabel
+                  label="Child"
+                  value="child"
+                  control={<Radio />}
+                  onChange={handleChange}
+                />
+              </RadioGroup>
+            </FormControl>
+            <FormControl
+              xs={12}
+              sm={6}
+              className={classes.root}
+              onKeyDown={handleEnterPress}
+            >
+              <FormLabel id="offering_pay_to_plant">Pay-to-Plant</FormLabel>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="offering_pay_to_plant"
+                    onChange={handleChange}
+                    value={data.offering_pay_to_plant}
+                  />
+                }
+                label="Offers Pay-to-Plant"
+              />
             </FormControl>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={submit}>
+          <Button onClick={closeModal}>Cancel</Button>
+          <Button
+            color="primary"
+            onClick={handleSubmit}
+            disabled={Object.keys(errors).length > 0}
+          >
             Add
           </Button>
-          <Button onClick={closeModal}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>
