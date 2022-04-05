@@ -288,7 +288,6 @@ const RegionTable = (props) => {
     <TablePagination
       count={Number(showCollections ? collectionCount : regionCount)}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-      colSpan={3}
       page={currentPage}
       rowsPerPage={pageSize}
       onChangePage={handleChangeCurrentPage}
