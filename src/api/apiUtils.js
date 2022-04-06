@@ -23,7 +23,7 @@ export async function handleResponse(response) {
 
 // we should call an error logging service, but
 export function handleError(error) {
-  console.log('handleError', error);
+  log.debug('handleError', error);
   if (error.name === 'AbortError') {
     // Ignore `AbortError`
     log.debug('Aborted', error);

@@ -23,7 +23,6 @@ import IconThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import IconNature from '@material-ui/icons/Nature';
 import IconNaturePeople from '@material-ui/icons/NaturePeople';
 import IconGroup from '@material-ui/icons/Group';
-// import PaymentsIcon from '../components/images/PaymentsIcon';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
@@ -160,7 +159,6 @@ function getRoutes(user) {
         process.env.REACT_APP_ENABLE_STAKEHOLDERS !== 'true' ||
         !hasPermission(user, [
           POLICIES.SUPER_PERMISSION,
-          POLICIES.APPROVE_TREE,
           POLICIES.LIST_STAKEHOLDERS,
           POLICIES.MANAGE_STAKEHOLDERS,
         ]),

@@ -44,9 +44,9 @@ export default {
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query += `/${id}?isRelation=${false}&owner_id=${orgId}`;
+      query += `/${id}?is_relation=${false}&owner_id=${orgId}`;
     } else if (id || orgId) {
-      query += `/${id || orgId}?isRelation=${false}&owner_id=${orgId}`;
+      query += `/${id || orgId}?is_relation=${false}&owner_id=${orgId}`;
     }
 
     log.debug('getUnlinkedStakeholders', query);
