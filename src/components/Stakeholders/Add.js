@@ -57,7 +57,7 @@ function AddStakeholder() {
       value: 'Organization',
     },
     {
-      name: 'Grower',
+      name: 'Person',
       value: 'Person',
     },
   ];
@@ -120,7 +120,7 @@ function AddStakeholder() {
             {data.type === 'Person' ? (
               <>
                 <FormControl xs={12} sm={6} className={classes.root}>
-                  <GSInputLabel text="Grower First Name" />
+                  <GSInputLabel text="First Name" />
                   <TextField
                     label="First Name"
                     variant="outlined"
@@ -130,7 +130,7 @@ function AddStakeholder() {
                   />
                 </FormControl>
                 <FormControl xs={12} sm={6} className={classes.root}>
-                  <GSInputLabel text="Grower Last Name" />
+                  <GSInputLabel text="Last Name" />
                   <TextField
                     label="Last Name"
                     variant="outlined"
@@ -245,10 +245,10 @@ function AddStakeholder() {
           </Grid>
         </DialogContent>
         <DialogActions>
+          <Button onClick={closeModal}>Cancel</Button>
           <Button color="primary" onClick={submit}>
             Add
           </Button>
-          <Button onClick={closeModal}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

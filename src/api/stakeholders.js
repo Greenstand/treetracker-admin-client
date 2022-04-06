@@ -18,10 +18,12 @@ export default {
       offset,
     };
 
-    let query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
+    let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
+      query += `/${orgId}?filter=${JSON.stringify(filterObj)}`;
+    } else {
+      query += `?filter=${JSON.stringify(filterObj)}`;
     }
 
     log.debug('getStakeholders', query);
@@ -42,14 +44,12 @@ export default {
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
+      query += `/${id}?isRelation=${false}&owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${
-        id || orgId
-      }?isRelation=${false}&owner_id=${orgId}`;
+      query += `/${id || orgId}?isRelation=${false}&owner_id=${orgId}`;
     }
 
-    // log.debug('getUnlinkedStakeholders', query);
+    log.debug('getUnlinkedStakeholders', query);
 
     const options = {
       method: 'GET',
@@ -68,9 +68,9 @@ export default {
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
+      query += `/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query += `/${id || orgId}?owner_id=${orgId}`;
     }
 
     log.debug('updateLinks', query);
@@ -92,9 +92,9 @@ export default {
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
+      query += `/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query += `/${id || orgId}?owner_id=${orgId}`;
     }
 
     log.debug('updateLinks', query);
@@ -113,13 +113,13 @@ export default {
 
   updateLinks(id, stakeholdersData) {
     const orgId = id || getOrganizationId();
-    const { type, linked, data } = stakeholdersData;
+    const { linked } = stakeholdersData;
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
+      query += `/${id}/${orgId}?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?owner_id=${orgId}`;
+      query += `/${id || orgId}?owner_id=${orgId}`;
     }
 
     log.debug('updateLinks', query);
@@ -155,7 +155,7 @@ export default {
     let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
+      query += `/${orgId}`;
     }
 
     log.debug('updateStakeholder', query);
@@ -177,7 +177,7 @@ export default {
     let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
+      query += `/${orgId}`;
     }
 
     log.debug('createStakeholders', query);
