@@ -530,7 +530,12 @@ function CustomTable(props) {
                         ) : (
                           <Typography
                             variant="body1"
-                            style={{ textTransform: 'capitalize' }}
+                            style={{
+                              textTransform: 'capitalize',
+                              textAlign: isNaN(row[column.name])
+                                ? 'inherit'
+                                : 'right',
+                            }}
                           >
                             {row[column.name]}
                           </Typography>
