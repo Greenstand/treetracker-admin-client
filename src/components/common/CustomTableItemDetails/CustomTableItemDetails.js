@@ -70,7 +70,7 @@ function LogPaymentForm(props) {
         )}
 
         <Grid item className={classes.itemGrowerDetail}>
-          <Typography variant="h6">Payment</Typography>
+          <Typography>Payment</Typography>
         </Grid>
 
         <Grid container direction="column" justify="space-between">
@@ -276,10 +276,6 @@ function CustomTableItemDetails(props) {
 
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.itemGrowerDetail}>
-              <Typography variant="h6">Consolidation</Typography>
-            </Grid>
-
-            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
               <Typography variant="h6">FCC Tiered</Typography>
             </Grid>
@@ -321,21 +317,21 @@ function CustomTableItemDetails(props) {
               </Grid>
 
               <Grid item className={classes.itemGrowerDetail}>
-                <Typography>Payment confirmation method</Typography>
+                <Typography>Payment Confirmation Method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
                 </Typography>
               </Grid>
 
               <Grid item>
-                <Typography>Payment confirmation id</Typography>
+                <Typography>Payment Confirmation ID</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_id}
                 </Typography>
               </Grid>
 
               <Grid item>
-                <Typography>Payment method</Typography>
+                <Typography>Payment Method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_method}
                 </Typography>
