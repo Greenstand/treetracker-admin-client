@@ -19,7 +19,6 @@ import theme from '../common/theme';
 import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
-import { display } from '@material-ui/system';
 
 const useStyles = makeStyles({
   containerBox: {
