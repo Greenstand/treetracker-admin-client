@@ -49,12 +49,15 @@ const initialState = {
   website: '',
   logo_url: '',
   map: '',
-  relation: 'child',
+  relation: 'children',
+  relation_id: '',
 };
 
 function AddStakeholder() {
   const classes = useStyles();
-  const { createStakeholder } = useContext(StakeholdersContext);
+  const { createStakeholder, setStakeholders } = useContext(
+    StakeholdersContext
+  );
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(initialState);
   const [errors, setErrors] = useState({});
@@ -105,16 +108,8 @@ function AddStakeholder() {
     if (!data.email || /^[\w\d]@[\w\d]/.test(data.email)) {
       errors = { ...errors, email: 'Please enter an email' };
     }
-    console.log('test phone', data.phone, /^[\d]/.test(Number(data.phone)));
     if (!data.phone) {
       errors = { ...errors, phone: 'Please enter a phone number' };
-    }
-
-    if (!data.relation) {
-      errors = {
-        ...errors,
-        relation: 'Please enter the relationship: parent or child',
-      };
     }
 
     setErrors(errors);
@@ -123,14 +118,15 @@ function AddStakeholder() {
 
   const handleSubmit = () => {
     console.log('submitted', data);
-
     // valildate data then post request
     const errors = validateData(data);
-    console.log('errors', errors, Object.keys(errors));
 
     if (Object.keys(errors).length === 0) {
       createStakeholder(data)
-        .then(() => closeModal())
+        .then((data) => {
+          setStakeholders(data.stakeholders);
+          closeModal();
+        })
         .catch((e) => console.error(e));
     }
   };
@@ -321,7 +317,7 @@ function AddStakeholder() {
                   control={
                     <Radio
                       label="Parent"
-                      value="parent"
+                      value="parents"
                       onChange={handleChange}
                     />
                   }
@@ -329,11 +325,20 @@ function AddStakeholder() {
                 />
                 <FormControlLabel
                   label="Child"
-                  value="child"
+                  value="children"
                   control={<Radio />}
                   onChange={handleChange}
                 />
               </RadioGroup>
+              <TextField
+                className={classes.textField}
+                label="Relation ID"
+                variant="outlined"
+                name="relation_id"
+                onChange={handleChange}
+                value={data.relation_id}
+                onKeyDown={handleEnterPress}
+              />
             </FormControl>
             <FormControl
               xs={12}

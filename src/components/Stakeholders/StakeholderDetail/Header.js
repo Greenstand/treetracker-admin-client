@@ -67,7 +67,7 @@ export default function StakeholderDialogHeader({ data }) {
   return (
     <Grid container direction="row">
       <Grid item xs={1}>
-        {data.logo_url ? (
+        {data.type === 'Organization' ? (
           <img src={data.logo_url} alt="" className={classes.logoLg} />
         ) : (
           <PersonIcon className={classes.logoLg} />

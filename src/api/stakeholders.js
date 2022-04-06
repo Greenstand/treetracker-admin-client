@@ -9,13 +9,18 @@ async function fetchJSON(query, options) {
 }
 
 export default {
-  getStakeholders(id, { offset, rowsPerPage, orderBy, order, filter }) {
+  getStakeholders(id, { filter }) {
     const orgId = id || getOrganizationId();
+    const where = Object.keys(filter).reduce((acc, key) => {
+      if (filter[key] !== '') {
+        acc[key] = filter[key];
+      }
+    });
     const filterObj = {
-      where: filter,
-      order: [`${orderBy} ${order}`],
-      limit: rowsPerPage,
-      offset,
+      where,
+      // order: [`${orderBy} ${order}`],
+      // limit: rowsPerPage,
+      // offset,
     };
 
     let query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
@@ -37,61 +42,61 @@ export default {
     return fetchJSON(query, options);
   },
 
-  async getUnlinkedStakeholders(id, abortController) {
-    const orgId = getOrganizationId();
-    let query = `${STAKEHOLDER_API}/relations`;
+  // async getUnlinkedStakeholders(id, abortController) {
+  //   const orgId = getOrganizationId();
+  //   let query = `${STAKEHOLDER_API}/relations`;
 
-    if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
-    } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}?isRelation=${false}`;
-    }
+  //   if (id && orgId && orgId !== id) {
+  //     query = `${STAKEHOLDER_API}/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
+  //   } else if (id || orgId) {
+  //     query = `${STAKEHOLDER_API}/relations/${id || orgId}?isRelation=${false}`;
+  //   }
 
-    const options = {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      signal: abortController?.signal,
-    };
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       'content-type': 'application/json',
+  //       Authorization: session.token,
+  //     },
+  //     signal: abortController?.signal,
+  //   };
 
-    // return fetchJSON(query, options);
-    const data = await fetchJSON(query, options);
-    console.log('data', data);
-    return data;
-  },
+  //   // return fetchJSON(query, options);
+  //   const data = await fetchJSON(query, options);
+  //   console.log('data', data);
+  //   return data;
+  // },
 
-  createLink(id, stakeholdersData) {
+  // createLink(id, stakeholdersData) {
+  //   const orgId = id || getOrganizationId();
+  //   let query = `${STAKEHOLDER_API}/relations`;
+
+  //   if (id && orgId && orgId !== id) {
+  //     query += `/${id}/${orgId}`; //?owner_id=${orgId}`;
+  //   } else if (id || orgId) {
+  //     query += `/${id || orgId}`;
+  //   }
+
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {
+  //       'content-type': 'application/json',
+  //       Authorization: session.token,
+  //     },
+  //     body: JSON.stringify(stakeholdersData),
+  //   };
+
+  //   return fetchJSON(query, options);
+  // },
+
+  deleteStakeholder(id, stakeholdersData) {
     const orgId = id || getOrganizationId();
     let query = `${STAKEHOLDER_API}/relations`;
 
     if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
+      query += `/${id}/${orgId}`; //?owner_id=${orgId}`;
     } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
-    }
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(stakeholdersData),
-    };
-
-    return fetchJSON(query, options);
-  },
-
-  deleteLink(id, stakeholdersData) {
-    const orgId = id || getOrganizationId();
-    let query = `${STAKEHOLDER_API}/relations`;
-
-    if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
-    } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
+      query += `/${id || orgId}`;
     }
 
     const options = {
@@ -106,41 +111,41 @@ export default {
     return fetchJSON(query, options);
   },
 
-  updateLinks(id, stakeholdersData) {
-    const orgId = id || getOrganizationId();
-    const { linked } = stakeholdersData;
-    let query = `${STAKEHOLDER_API}/relations`;
+  // updateLinks(id, stakeholdersData) {
+  //   const orgId = id || getOrganizationId();
+  //   const { linked } = stakeholdersData;
+  //   let query = `${STAKEHOLDER_API}/relations`;
 
-    if (id && orgId && orgId !== id) {
-      query = `${STAKEHOLDER_API}/relations/${id}/${orgId}?owner_id=${orgId}`;
-    } else if (id || orgId) {
-      query = `${STAKEHOLDER_API}/relations/${id || orgId}`;
-    }
+  //   if (id && orgId && orgId !== id) {
+  //     query += `/${id}/${orgId}?owner_id=${orgId}`;
+  //   } else if (id || orgId) {
+  //     query += `/${id || orgId}`;
+  //   }
 
-    let options;
+  //   let options;
 
-    if (linked) {
-      options = {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(stakeholdersData),
-      };
-    } else {
-      options = {
-        method: 'DELETE',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(stakeholdersData),
-      };
-    }
+  //   if (linked) {
+  //     options = {
+  //       method: 'POST',
+  //       headers: {
+  //         'content-type': 'application/json',
+  //         Authorization: session.token,
+  //       },
+  //       body: JSON.stringify(stakeholdersData),
+  //     };
+  //   } else {
+  //     options = {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'content-type': 'application/json',
+  //         Authorization: session.token,
+  //       },
+  //       body: JSON.stringify(stakeholdersData),
+  //     };
+  //   }
 
-    return fetchJSON(query, options);
-  },
+  //   return fetchJSON(query, options);
+  // },
 
   // only need the orgId, the id of the stakeholder is in the stakeholderUpdate
   updateStakeholder(stakeholderUpdate) {
@@ -173,7 +178,7 @@ export default {
       query = `${STAKEHOLDER_API}/${orgId}`;
     }
 
-    log.debug('createStakeholders', query);
+    log.debug('createStakeholders', query, stakeholderData);
 
     const options = {
       method: 'POST',

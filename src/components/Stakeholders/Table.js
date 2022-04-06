@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
@@ -10,9 +10,9 @@ import {
   TableCell,
   TableBody,
   TableSortLabel,
-  TablePagination,
+  // TablePagination,
 } from '@material-ui/core';
-import StakeholderDetail from './StakeholderDetail';
+import StakeholderDetail from './StakeholderDetail/StakeholderDetail';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -30,29 +30,66 @@ function StakeholderTable() {
   const classes = useStyles();
   const {
     stakeholders,
-    count,
+    // count,
     columns,
     isLoading,
-    page,
-    orderBy,
-    order,
-    rowsPerPage,
-    setPage,
-    setRowsPerPage,
-    sort,
+    // page,
+    // orderBy,
+    // order,
+    // setOrderBy,
+    // setOrder,
+    // rowsPerPage,
+    // setPage,
+    // setRowsPerPage,
   } = useContext(StakeholdersContext);
+  const [sortedStakeholders, setSortedStakeholders] = useState([]);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState(undefined);
 
-  const handleRowsPerPageChange = (e) => {
-    setRowsPerPage(e.target.value);
-  };
+  useEffect(() => {
+    setSortedStakeholders(stakeholders);
+  }, [stakeholders]);
 
-  const handlePageChange = (e, page) => {
-    setPage(page);
-  };
+  // const handleRowsPerPageChange = (e) => {
+  //   setRowsPerPage(e.target.value);
+  // };
+
+  // const handlePageChange = (e, page) => {
+  //   setPage(page);
+  // };
 
   const handleSort = (col, order) => {
-    console.log('sort col', { col, order });
-    sort({ col, order });
+    setOrder(order);
+    setOrderBy(col);
+    const sorted = sort({ col, order: order });
+    setSortedStakeholders(sorted);
+  };
+
+  const sort = ({ col, order }) => {
+    let sorted;
+    if (col) {
+      sorted = stakeholders.sort((a, b) => {
+        let first = a[col];
+        let second = b[col];
+        if (col === 'name') {
+          first = `${a.org_name} ${a.first_name} ${a.lastname}`;
+          second = `${b.org_name} ${b.first_name} ${b.lastname}`;
+        }
+        return (
+          (first.trim() > second.trim() ? 1 : -1) * (order === 'desc' ? -1 : 1)
+        );
+      });
+    } else {
+      sorted = stakeholders;
+    }
+    // log.debug(
+    //   'sorted',
+    //   sorted.map((s) => {
+    //     const { org_name, first_name, last_name, email, phone, map } = s;
+    //     return { org_name, first_name, last_name, email, phone, map };
+    //   })
+    // );
+    return sorted;
   };
 
   return (
@@ -69,11 +106,13 @@ function StakeholderTable() {
                 {columns.map((col) => (
                   <TableCell
                     key={col.value}
-                    onClick={() => handleSort(col.value, !order)}
+                    onClick={() =>
+                      handleSort(col.value, order === 'desc' ? 'asc' : 'desc')
+                    }
                   >
                     <TableSortLabel
                       active={col.value === orderBy}
-                      direction={order ? 'asc' : 'desc'}
+                      direction={order}
                     >
                       {col.label}
                     </TableSortLabel>
@@ -83,8 +122,8 @@ function StakeholderTable() {
             </TableHead>
 
             <TableBody>
-              {stakeholders &&
-                stakeholders.map((stakeholder) => (
+              {sortedStakeholders &&
+                sortedStakeholders.map((stakeholder) => (
                   <React.Fragment key={stakeholder.id}>
                     {/* Main stakeholder */}
                     <StakeholderDetail row={stakeholder} columns={columns} />
@@ -101,7 +140,7 @@ function StakeholderTable() {
                 ))}
             </TableBody>
           </Table>
-          <TablePagination
+          {/* <TablePagination
             component="div"
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[5, 10, 15]}
@@ -109,7 +148,7 @@ function StakeholderTable() {
             count={count}
             page={page}
             onChangePage={handlePageChange}
-          />
+          /> */}
         </TableContainer>
       )}
     </>

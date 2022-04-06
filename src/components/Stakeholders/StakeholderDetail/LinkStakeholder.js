@@ -47,7 +47,7 @@ function LinkStakeholder({ id, type }) {
   } = useContext(StakeholdersContext);
   const [open, setOpen] = useState(false);
   const [filteredStakeholders, setFilteredStakeholders] = useState(
-    unlinkedStakeholders,
+    unlinkedStakeholders
   );
 
   useEffect(() => {
@@ -67,7 +67,7 @@ function LinkStakeholder({ id, type }) {
     });
 
     setFilteredStakeholders(filtered);
-    // setFilteredStakeholders(unlinkedStakeholders);
+    setFilteredStakeholders(unlinkedStakeholders);
   }, [unlinkedStakeholders]);
 
   const openModal = () => {
