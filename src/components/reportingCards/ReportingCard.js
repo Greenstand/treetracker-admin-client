@@ -145,7 +145,7 @@ function GrowerReportingCard(props) {
     setOpen(true);
   }
 
-  log.warn('icon', icon);
+  // log.warn('icon', icon);
 
   return (
     <>
