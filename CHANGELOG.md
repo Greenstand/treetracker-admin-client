@@ -1,3 +1,10 @@
+# [1.85.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.5...v1.85.0) (2022-04-06)
+
+
+### Features
+
+* text align for numbers ([e5e429a](https://github.com/Greenstand/treetracker-admin-client/commit/e5e429a242134eb05783141fe0b69345a54f7048))
+
 ## [1.84.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.84.4...v1.84.5) (2022-04-02)
 
 
