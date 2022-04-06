@@ -211,7 +211,7 @@ function CustomTableItemDetails(props) {
               </Typography>
             </Grid>
             <Grid item className={classes.itemGrowerDetail}>
-              <Typography>ID</Typography>
+              <Typography>Record ID</Typography>
               <Typography variant="body2">{selectedItem.id}</Typography>
             </Grid>
           </Grid>
