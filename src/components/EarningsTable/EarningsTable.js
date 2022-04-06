@@ -78,17 +78,20 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      paid_at: covertDateStringToHumanReadableFormat(row.paid_at, 'yyyy-mm-dd'),
     };
   });
 
