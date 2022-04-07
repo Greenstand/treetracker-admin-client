@@ -1,3 +1,10 @@
+## [1.87.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.2...v1.87.3) (2022-04-07)
+
+
+### Bug Fixes
+
+* align ([ad1e8a1](https://github.com/Greenstand/treetracker-admin-client/commit/ad1e8a1f4d86d96d0c1b2251fdefec5751b3353c))
+
 ## [1.87.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.1...v1.87.2) (2022-04-07)
 
 
