@@ -1,3 +1,10 @@
+## [1.87.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.3...v1.87.4) (2022-04-07)
+
+
+### Bug Fixes
+
+* pagination ([3837ad1](https://github.com/Greenstand/treetracker-admin-client/commit/3837ad19b035466768b6ec40164e319144c7427b))
+
 ## [1.87.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.2...v1.87.3) (2022-04-07)
 
 
