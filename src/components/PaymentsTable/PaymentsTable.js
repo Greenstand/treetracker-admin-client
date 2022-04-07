@@ -150,7 +150,7 @@ function PaymentsTable() {
     const response = await paymentsAPI.getEarnings(queryParams);
     const result = prepareRows(response.earnings);
     setPayments(result);
-    setTotalPayments(response.totalCount);
+    setTotalPayments(response.query.count);
 
     setIsLoading(false); // hide loading indicator when data is fetched
   }
