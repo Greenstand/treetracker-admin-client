@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import moment from 'moment';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -106,7 +107,7 @@ const prepareRows = (rows) =>
         row.calculated_at,
         'yyyy-mm-dd'
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at, 'yyyy-mm-dd'),
+      paid_at: moment.utc(row.paid_at).format('yyyy-MM-DD'),
     };
   });
 
