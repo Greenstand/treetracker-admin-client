@@ -81,7 +81,7 @@ function LogPaymentForm(props) {
             <TextField
               id="payment_confirmation_id"
               name="payment_confirmation_id"
-              label="Payment Confirmation Id"
+              label="Payment Confirmation ID"
               variant="outlined"
               required={true}
               onChange={handleOnInputChange}
