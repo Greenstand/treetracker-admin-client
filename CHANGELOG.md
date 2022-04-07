@@ -1,3 +1,10 @@
+## [1.87.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.6...v1.87.7) (2022-04-07)
+
+
+### Bug Fixes
+
+* timezone problem ([e618f75](https://github.com/Greenstand/treetracker-admin-client/commit/e618f75921012cbfaf67e1ca5799daad0922e4b1))
+
 ## [1.87.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.5...v1.87.6) (2022-04-07)
 
 
