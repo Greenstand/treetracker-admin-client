@@ -452,6 +452,9 @@ function CustomTable(props) {
                   sortDirection={
                     sortableColumnsObject[column.name] || column.sortDirection
                   }
+                  style={{
+                    textAlign: column.align === 'right' ? 'right' : 'inherit',
+                  }}
                 >
                   {column?.sortable ? (
                     <TableSortLabel
@@ -461,7 +464,10 @@ function CustomTable(props) {
                       classes={{ icon: classes.customTableHeadSortIcon }}
                       IconComponent={ArrowDropDownIcon}
                     >
-                      <Typography variant="h6">
+                      <Typography
+                        variant="h6"
+                        align={column.align === 'right' ? 'right' : 'inherit'}
+                      >
                         {column.description}
                         {column?.showInfoIcon && (
                           <Tooltip title={column.showInfoIcon + ''}>
@@ -471,7 +477,10 @@ function CustomTable(props) {
                       </Typography>
                     </TableSortLabel>
                   ) : (
-                    <Typography variant="h6">
+                    <Typography
+                      variant="h6"
+                      align={column.align === 'right' ? 'right' : 'inherit'}
+                    >
                       {column.description}
                       {column?.showInfoIcon && (
                         <Tooltip title={column.showInfoIcon}>
@@ -532,9 +541,8 @@ function CustomTable(props) {
                             variant="body1"
                             style={{
                               textTransform: 'capitalize',
-                              textAlign: isNaN(row[column.name])
-                                ? 'inherit'
-                                : 'right',
+                              textAlign:
+                                column.align === 'right' ? 'right' : 'inherit',
                             }}
                           >
                             {row[column.name]}
