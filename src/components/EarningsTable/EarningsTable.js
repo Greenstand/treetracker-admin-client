@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import earningsAPI from '../../api/earnings';
+import moment from 'moment';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
   covertDateStringToHumanReadableFormat,
@@ -93,7 +94,7 @@ const prepareRows = (rows) =>
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at, 'yyyy-mm-dd'),
+      paid_at: moment.utc(row.paid_at).format('yyyy-MM-DDt '),
     };
   });
 
