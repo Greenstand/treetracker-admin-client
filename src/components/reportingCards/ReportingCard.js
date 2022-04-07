@@ -145,8 +145,6 @@ function GrowerReportingCard(props) {
     setOpen(true);
   }
 
-  // log.warn('icon', icon);
-
   return (
     <>
       <Box className={classes.root}>
