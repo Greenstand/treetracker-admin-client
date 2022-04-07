@@ -107,7 +107,7 @@ const prepareRows = (rows) =>
         row.calculated_at,
         'yyyy-mm-dd'
       ),
-      paid_at: moment.utc(row.paid_at).format('yyyy-MM-DD'),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
