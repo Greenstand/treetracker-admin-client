@@ -35,12 +35,14 @@ const earningTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Capture Count',
     name: 'captures_count',
     sortable: false,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
