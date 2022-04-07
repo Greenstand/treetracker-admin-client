@@ -94,7 +94,7 @@ const prepareRows = (rows) =>
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: moment.utc(row.paid_at).format('yyyy-MM-DDt '),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
