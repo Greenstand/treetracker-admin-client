@@ -147,7 +147,7 @@ function EarningsTable() {
     const results = prepareRows(response.earnings);
     return {
       results,
-      totalCount: response.totalCount,
+      totalCount: response.query.count,
     };
   }
 
