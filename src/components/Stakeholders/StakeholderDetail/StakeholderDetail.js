@@ -136,16 +136,6 @@ export default function StakeholderDetail({ row, columns, child }) {
               render={['parents', 'children']}
             />
           </Grid>
-
-          {/* <Divider className={classes.my} />
-
-          <Grid item container xs={12} spacing={6}>
-            <StakeholderGroups
-              data={rowData}
-              render={['users', 'growers']}
-              tall
-            />
-          </Grid> */}
         </DialogContent>
       </Dialog>
     </>

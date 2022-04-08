@@ -1,10 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, List, Typography } from '@material-ui/core';
-// import AdminIcon from '@material-ui/icons/SupervisorAccount';
-// import GrowerIcon from '@material-ui/icons/NaturePeople';
 import StakeholderList from './List';
-// import LinkStakeholder from './LinkStakeholder';
 import { StakeholdersContext } from 'context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -18,15 +15,6 @@ const useStyles = makeStyles({
   textWhite: {
     color: 'white',
   },
-  // listBox: {
-  //   marginTop: 12,
-  //   borderRadius: 4,
-  //   height: 112,
-  //   overflow: 'auto',
-  //   backgroundColor: 'rgba(0,0,0,0.1)',
-  //   padding: 8,
-  //   border: '1px solid rgba(0,0,0,0.1)',
-  // },
   listBox: {
     marginTop: 12,
     borderRadius: 4,
@@ -43,18 +31,11 @@ const useStyles = makeStyles({
 
 function StakeholderGroups({ data, render, tall }) {
   const classes = useStyles();
-  const {
-    stakeholders,
-    setStakeholders,
-    // unlinkedStakeholders,
-    // setUnlinkedStakeholders,
-  } = useContext(StakeholdersContext);
+  const { stakeholders, setStakeholders } = useContext(StakeholdersContext);
 
   const stakeholder = {
     children: { label: 'Children', icon: '' },
     parents: { label: 'Parents', icon: '' },
-    // users: { label: 'Admin Users', icon: <AdminIcon className={classes.pr} /> },
-    // growers: { label: 'Growers', icon: <GrowerIcon className={classes.pr} /> },
   };
 
   const onUnlink = (stakeholder, data, type) => {
@@ -67,8 +48,6 @@ function StakeholderGroups({ data, render, tall }) {
       return s;
     });
     setStakeholders(linked);
-    // const unlinked = [...unlinkedStakeholders, stakeholder];
-    // setUnlinkedStakeholders(unlinked);
   };
 
   return (
@@ -82,7 +61,6 @@ function StakeholderGroups({ data, render, tall }) {
                 {stakeholder[type]?.label} ({data[type]?.length || 0})
               </Typography>
             </div>
-            {/* <LinkStakeholder id={data.id} type={type} /> */}
           </Grid>
 
           <List

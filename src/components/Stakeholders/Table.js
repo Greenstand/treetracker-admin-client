@@ -10,7 +10,6 @@ import {
   TableCell,
   TableBody,
   TableSortLabel,
-  // TablePagination,
 } from '@material-ui/core';
 import StakeholderDetail from './StakeholderDetail/StakeholderDetail';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
@@ -28,20 +27,7 @@ const useStyles = makeStyles({
 
 function StakeholderTable() {
   const classes = useStyles();
-  const {
-    stakeholders,
-    // count,
-    columns,
-    isLoading,
-    // page,
-    // orderBy,
-    // order,
-    // setOrderBy,
-    // setOrder,
-    // rowsPerPage,
-    // setPage,
-    // setRowsPerPage,
-  } = useContext(StakeholdersContext);
+  const { stakeholders, columns, isLoading } = useContext(StakeholdersContext);
   const [sortedStakeholders, setSortedStakeholders] = useState([]);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(undefined);
@@ -49,14 +35,6 @@ function StakeholderTable() {
   useEffect(() => {
     setSortedStakeholders(stakeholders);
   }, [stakeholders]);
-
-  // const handleRowsPerPageChange = (e) => {
-  //   setRowsPerPage(e.target.value);
-  // };
-
-  // const handlePageChange = (e, page) => {
-  //   setPage(page);
-  // };
 
   const handleSort = (col, order) => {
     setOrder(order);
@@ -140,15 +118,6 @@ function StakeholderTable() {
                 ))}
             </TableBody>
           </Table>
-          {/* <TablePagination
-            component="div"
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[5, 10, 15]}
-            onChangeRowsPerPage={handleRowsPerPageChange}
-            count={count}
-            page={page}
-            onChangePage={handlePageChange}
-          /> */}
         </TableContainer>
       )}
     </>

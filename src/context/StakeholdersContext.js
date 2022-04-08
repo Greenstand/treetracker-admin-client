@@ -9,8 +9,6 @@ const log = loglevel.getLogger('../context/StakeholderContext');
 export const StakeholdersContext = createContext({
   stakeholders: [],
   count: 0,
-  // unlinkedStakeholders: [],
-  // display: [],
   columns: [],
   page: 0,
   rowsPerPage: 5,
@@ -20,14 +18,12 @@ export const StakeholdersContext = createContext({
   orderBy: undefined,
   order: 'asc',
   setStakeholders: () => {},
-  // setUnlinkedStakeholders: () => {},
   setPage: () => {},
   setRowsPerPage: () => {},
   setOrder: () => {},
   setOrderBy: () => {},
   setFilter: () => {},
   setIsLoading: () => {},
-  // setDisplay: () => {},
   sort: () => {},
   updateFilter: () => {},
   getStakeholder: () => {},
@@ -35,8 +31,6 @@ export const StakeholdersContext = createContext({
   deleteStakeholder: () => {},
   createStakeholder: () => {},
   updateStakeholder: () => {},
-  // getUnlinkedStakeholders: () => {},
-  // updateLinks: () => {},
 });
 
 const initialFilterState = {
@@ -51,19 +45,14 @@ const initialFilterState = {
   website: '',
   logo_url: '',
   map: '',
-  // organization_id: '',
-  // owner_id: '',
 };
 
 export function StakeholdersProvider(props) {
   const [stakeholders, setStakeholders] = useState([]);
   const [count, setCount] = useState(0);
-  // const [unlinkedStakeholders, setUnlinkedStakeholders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  // const [order, setOrder] = useState('asc');
-  // const [orderBy, setOrderBy] = useState(undefined);
   const [filter, setFilter] = useState(
     new FilterStakeholder(initialFilterState)
   );
@@ -88,10 +77,6 @@ export function StakeholdersProvider(props) {
   const getStakeholders = async (id) => {
     log.debug('load stakeholders', id);
     const { stakeholders, totalCount } = await api.getStakeholders(id, {
-      // offset: page * rowsPerPage,
-      // rowsPerPage,
-      // orderBy,
-      // order,
       filter,
     });
     setStakeholders(stakeholders);
@@ -119,12 +104,8 @@ export function StakeholdersProvider(props) {
         }
         return s.id === updated.id ? updated : s;
       });
-      // const updatedUnlinked = unlinkedStakeholders.map((s) => {
-      //   return s.id === updated.id ? updated : s;
-      // });
 
       setStakeholders(updatedStakeholders);
-      // setUnlinkedStakeholders(updatedUnlinked);
     }
   };
 
@@ -132,30 +113,14 @@ export function StakeholdersProvider(props) {
     const created = await api.createStakeholder(payload);
     if (created.id) {
       setStakeholders([...stakeholders, created]);
-      // setUnlinkedStakeholders([...unlinkedStakeholders, created]);
     }
     return created;
   };
-
-  // const getUnlinkedStakeholders = async (id) => {
-  //   log.debug('get unlinked', id);
-  //   const unlinked = await api.getUnlinkedStakeholders(id);
-  //   setUnlinkedStakeholders(unlinked.stakeholders);
-  // };
-
-  // const updateLinks = async (id, payload) => {
-  //   log.debug('update links', id, payload);
-  //   await api.updateLinks(id, payload);
-  //   // getUnlinkedStakeholders(id);
-  //   setIsLoading(true);
-  //   getStakeholders(getOrganizationId()).then(() => setIsLoading(false));
-  // };
 
   const deleteStakeholder = async (id, payload) => {
     log.debug('delete stakeholder', id, payload);
     const result = await api.deleteStakeholder(id, payload);
     console.log('deleted', result);
-    // getUnlinkedStakeholders(id);
     setIsLoading(true);
     getStakeholders(getOrganizationId()).then(() => setIsLoading(false));
   };
@@ -163,32 +128,22 @@ export function StakeholdersProvider(props) {
   const value = {
     stakeholders,
     count,
-    // unlinkedStakeholders,
     columns,
     page,
     rowsPerPage,
     filter,
     initialFilterState,
     isLoading,
-    // orderBy,
-    // order,
     setStakeholders,
-    // setUnlinkedStakeholders,
     setPage,
     setRowsPerPage,
-    // setOrder,
-    // setOrderBy,
     setFilter,
     setIsLoading,
-    // setDisplay,
-    // sort,
     updateFilter,
     getStakeholders,
     createStakeholder,
     deleteStakeholder,
     updateStakeholder,
-    // getUnlinkedStakeholders,
-    // updateLinks,
   };
 
   return (

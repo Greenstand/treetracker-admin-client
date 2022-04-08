@@ -280,7 +280,6 @@ export default function StakeholderDialogHeader({ data }) {
             item
             container
             xs={3}
-            // justify="flex-end"
             alignItems="flex-start"
             direction="column"
             alignContent="flex-end"
