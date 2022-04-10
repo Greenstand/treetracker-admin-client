@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -12,11 +12,8 @@ import {
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import FilterModel from '../../models/FilterStakeholder';
-// import FilterModel, {
-//   ALL_ORGANIZATIONS,
-//   ORGANIZATION_NOT_SET,
-// } from '../../models/FilterStakeholder';
-//import { AppContext } from '../../context/AppContext';
+import { ALL_ORGANIZATIONS } from '../../models/FilterStakeholder';
+import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -37,17 +34,42 @@ const useStyles = makeStyles({
 
 function StakeholderFilter() {
   const classes = useStyles();
-  // const { orgList, userHasOrg } = useContext(AppContext);
-
-  const { filter, updateFilter, initialFilterState } = useContext(
+  const { orgList } = useContext(AppContext);
+  const { stakeholders, filter, updateFilter, initialFilterState } = useContext(
     StakeholdersContext
   );
-  // const [organizationId, setOrganizationId] = useState(
-  //   filter.id || ALL_ORGANIZATIONS
-  // );
-  const [search, setSearch] = useState('');
   const [formData, setFormData] = useState(initialFilterState);
   const [open, setOpen] = useState(false);
+  const [filters, setFilters] = useState({});
+  const orgNames = new Set(['']);
+  const firstNames = new Set(['']);
+  const lastNames = new Set(['']);
+  const emails = new Set(['']);
+  const phones = new Set(['']);
+  const websites = new Set(['']);
+  const maps = new Set(['']);
+
+  // create filter lists
+  useEffect(() => {
+    stakeholders.forEach((org) => {
+      org.org_name && orgNames.add(org.org_name);
+      org.first_name && firstNames.add(org.first_name);
+      org.last_name && lastNames.add(org.last_name);
+      org.email && emails.add(org.email);
+      org.phone && phones.add(org.phone);
+      org.website && websites.add(org.website);
+      org.map && maps.add(org.map);
+    });
+    setFilters({
+      orgNames: Array.from(orgNames).sort(),
+      firstNames: Array.from(firstNames).sort(),
+      lastNames: Array.from(lastNames).sort(),
+      emails: Array.from(emails).sort(),
+      phones: Array.from(phones).sort(),
+      websites: Array.from(websites).sort(),
+      maps: Array.from(maps).sort(),
+    });
+  }, [stakeholders.length]);
 
   const close = () => {
     setFormData(filter);
@@ -55,7 +77,19 @@ function StakeholderFilter() {
   };
 
   const handleChanges = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const key = e.target.name === 'organization_id' ? 'id' : e.target.name;
+    const value =
+      e.target.name === 'organization_id'
+        ? orgList.find((o) => o.stakeholder_uuid === e.target.value)
+            ?.stakeholder_uuid || null
+        : e.target.value !== 'Not Set'
+        ? e.target.value
+        : '';
+    setFormData({ ...formData, [key]: value });
+  };
+
+  const handleEnterPress = (e) => {
+    e.key === 'Enter' && applyFilters(e);
   };
 
   const resetFilters = () => {
@@ -68,38 +102,18 @@ function StakeholderFilter() {
     const newFilter = new FilterModel({
       ...filter,
       ...formData,
-      // organization_id: organizationId,
     });
     updateFilter(newFilter);
     setOpen(false);
   };
 
-  const applySearch = (e) => {
-    setSearch(e.target.value);
-    const newFilter = new FilterModel({ ...filter, search: e.target.value });
-    updateFilter(newFilter);
-  };
-
-  // const defaultOrgList = userHasOrg
-  //   ? [
-  //       {
-  //         id: ALL_ORGANIZATIONS,
-  //         name: 'All',
-  //         value: 'All',
-  //       },
-  //     ]
-  //   : [
-  //       {
-  //         id: ALL_ORGANIZATIONS,
-  //         name: 'All',
-  //         value: 'All',
-  //       },
-  //       {
-  //         id: ORGANIZATION_NOT_SET,
-  //         name: 'Not set',
-  //         value: null,
-  //       },
-  //     ];
+  const defaultOrgList = [
+    {
+      id: ALL_ORGANIZATIONS,
+      name: 'All',
+      value: '',
+    },
+  ];
 
   const defaultTypeList = [
     {
@@ -123,9 +137,10 @@ function StakeholderFilter() {
         name="search"
         label="Search"
         variant="outlined"
-        value={search}
-        onChange={applySearch}
+        value={formData.search}
+        onChange={handleChanges}
         autoComplete="off"
+        onKeyDown={handleEnterPress}
       />
       <Button
         variant="text"
@@ -144,18 +159,9 @@ function StakeholderFilter() {
         <DialogContent>
           <FormControl className={classes.root}>
             <TextField
-              label="ID"
-              variant="outlined"
-              name="id"
-              onChange={handleChanges}
-              value={formData.id}
-            />
-          </FormControl>
-          <FormControl className={classes.root}>
-            <TextField
               data-testid="type-dropdown"
               select
-              label="type"
+              label="Type"
               htmlFor="type"
               id="type"
               name="type"
@@ -173,7 +179,7 @@ function StakeholderFilter() {
               ))}
             </TextField>
           </FormControl>
-          {/* <FormControl className={classes.root}>
+          <FormControl className={classes.root}>
             <TextField
               data-testid="org-dropdown"
               select
@@ -181,17 +187,29 @@ function StakeholderFilter() {
               htmlFor="organization"
               id="organizationId"
               name="organization_id"
-              value={organizationId}
-              onChange={(e) => setOrganizationId(e.target.value)}
+              value={formData.id}
+              onChange={handleChanges}
             >
               {[...defaultOrgList, ...orgList].map((org) => (
-                <MenuItem data-testid="org-item" key={org.id} value={org.id}>
+                <MenuItem
+                  data-testid="org-item"
+                  key={org.id}
+                  value={org.stakeholder_uuid}
+                >
                   {org.name}
                 </MenuItem>
               ))}
             </TextField>
-          </FormControl> */}
-
+          </FormControl>
+          <FormControl className={classes.root}>
+            <TextField
+              label="Organization ID"
+              variant="outlined"
+              name="id"
+              onChange={handleChanges}
+              value={formData.id}
+            />
+          </FormControl>
           <FormControl className={classes.root}>
             <TextField
               label="Org Name"
@@ -203,57 +221,111 @@ function StakeholderFilter() {
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="firstName-dropdown"
+              select
               label="First Name"
-              variant="outlined"
+              htmlFor="first_name"
+              id="first_name"
               name="first_name"
-              onChange={handleChanges}
               value={formData.first_name}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.firstNames?.map((option) => (
+                <MenuItem data-testid="first_name" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="lastName-dropdown"
+              select
               label="Last Name"
-              variant="outlined"
+              htmlFor="last_name"
+              id="last_name"
               name="last_name"
-              onChange={handleChanges}
               value={formData.last_name}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.lastNames?.map((option) => (
+                <MenuItem data-testid="last_name" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="map-dropdown"
+              select
               label="Map"
-              variant="outlined"
+              htmlFor="map"
+              id="map"
               name="map"
-              onChange={handleChanges}
               value={formData.map}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.maps?.map((option) => (
+                <MenuItem data-testid="map" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="email-dropdown"
+              select
               label="Email"
-              variant="outlined"
+              htmlFor="email"
+              id="email"
               name="email"
-              onChange={handleChanges}
               value={formData.email}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.emails?.map((option) => (
+                <MenuItem data-testid="email" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="phone-dropdown"
+              select
               label="Phone"
-              variant="outlined"
+              htmlFor="phone"
+              id="phone"
               name="phone"
-              onChange={handleChanges}
               value={formData.phone}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.phones?.map((option) => (
+                <MenuItem data-testid="phone" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
+              data-testid="website-dropdown"
+              select
               label="Website"
-              variant="outlined"
+              htmlFor="website"
+              id="website"
               name="website"
-              onChange={handleChanges}
               value={formData.website}
-            />
+              onChange={handleChanges}
+            >
+              {filters?.websites?.map((option) => (
+                <MenuItem data-testid="website" key={option} value={option}>
+                  {option || 'Not set'}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
         </DialogContent>
         <DialogActions>

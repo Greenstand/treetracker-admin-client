@@ -45,6 +45,7 @@ const initialFilterState = {
   website: '',
   logo_url: '',
   map: '',
+  search: '',
 };
 
 export function StakeholdersProvider(props) {
@@ -75,7 +76,7 @@ export function StakeholdersProvider(props) {
 
   // call w/ or w/o an id, it will default to the organization id or be null
   const getStakeholders = async (id) => {
-    log.debug('load stakeholders', id);
+    log.debug('load stakeholders - id:', id);
     const { stakeholders, totalCount } = await api.getStakeholders(id, {
       filter,
     });
@@ -84,7 +85,6 @@ export function StakeholdersProvider(props) {
   };
 
   const updateFilter = async (filter) => {
-    log.debug('update filter', filter);
     setPage(0);
     setFilter(filter);
   };

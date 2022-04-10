@@ -11,11 +11,13 @@ async function fetchJSON(query, options) {
 export default {
   getStakeholders(id, { filter }) {
     const orgId = id || getOrganizationId();
+
     const where = Object.keys(filter).reduce((acc, key) => {
       if (filter[key] !== '') {
         acc[key] = filter[key];
       }
-    });
+      return acc;
+    }, {});
     const filterObj = {
       where,
       // order: [`${orderBy} ${order}`],
@@ -28,8 +30,6 @@ export default {
     if (orgId) {
       query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
     }
-
-    log.debug('getStakeholders', query);
 
     const options = {
       method: 'GET',
@@ -91,10 +91,10 @@ export default {
 
   deleteStakeholder(id, stakeholdersData) {
     const orgId = id || getOrganizationId();
-    let query = `${STAKEHOLDER_API}/relations`;
+    let query = `${STAKEHOLDER_API}`;
 
     if (id && orgId && orgId !== id) {
-      query += `/${id}/${orgId}`; //?owner_id=${orgId}`;
+      query += `/${id}/${orgId}`;
     } else if (id || orgId) {
       query += `/${id || orgId}`;
     }
@@ -177,8 +177,6 @@ export default {
     if (orgId) {
       query = `${STAKEHOLDER_API}/${orgId}`;
     }
-
-    log.debug('createStakeholders', query, stakeholderData);
 
     const options = {
       method: 'POST',
