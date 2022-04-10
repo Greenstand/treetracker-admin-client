@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewMessage = ({ openModal, handleClose }) => {
+const NewMessage = ({ openModal, handleClose, setMessageRecipient }) => {
   const { box, formContent, header, button } = useStyles();
   const {
     setErrorMessage,
@@ -153,25 +153,16 @@ const NewMessage = ({ openModal, handleClose }) => {
 
         log.debug('...update threads after postMessageSend');
         // update the full set of threads
-        setThreads((prev) => {
-          const updated = prev
-            .reduce(
-              (threads, thread) => {
-                if (thread.userName === recipient) {
-                  thread.messages.push(newMessage);
-                }
-                return threads;
-              },
-              [...prev]
-            )
-            .sort(
-              (a, b) =>
-                new Date(b?.messages?.at(-1).composed_at) -
-                new Date(a?.messages?.at(-1).composed_at)
-            );
-          return updated;
-        });
+        setThreads((prev) =>
+          [...prev, { userName: recipient, messages: [newMessage] }].sort(
+            (a, b) =>
+              new Date(b?.messages?.at(-1).composed_at) -
+              new Date(a?.messages?.at(-1).composed_at)
+          )
+        );
       }
+
+      setMessageRecipient(recipient);
 
       handleClose();
     }
