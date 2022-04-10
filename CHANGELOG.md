@@ -1,3 +1,10 @@
+## [1.87.9](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.8...v1.87.9) (2022-04-10)
+
+
+### Bug Fixes
+
+* add new thread as a newMessage and select it ([#565](https://github.com/Greenstand/treetracker-admin-client/issues/565)) ([c98c63d](https://github.com/Greenstand/treetracker-admin-client/commit/c98c63dbdd5256867b0c52f8b43c5057c71409cf))
+
 ## [1.87.8](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.7...v1.87.8) (2022-04-07)
 
 
