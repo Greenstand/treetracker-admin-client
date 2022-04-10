@@ -50,7 +50,7 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     overflowX: 'auto',
     overflowY: 'hidden',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
   },
 
   candidateImgBtn: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    width: '253px',
+    width: '300px',
     height: '340px',
     position: 'relative',
   },
@@ -228,6 +228,10 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
                             objectFit="cover"
+                            style={{
+                              width: '300px',
+                              height: '100%',
+                            }}
                           />
                           <Box className={classes.captureInfo}>
                             <Box className={classes.captureInfoDetail}>
