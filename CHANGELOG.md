@@ -1,3 +1,10 @@
+## [1.87.10](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.9...v1.87.10) (2022-04-10)
+
+
+### Bug Fixes
+
+* matching trees' layout horizontal scrolling bug ([#636](https://github.com/Greenstand/treetracker-admin-client/issues/636)) ([172ce09](https://github.com/Greenstand/treetracker-admin-client/commit/172ce0957e69ea4ae393657102d12cec6a40fd3b))
+
 ## [1.87.9](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.8...v1.87.9) (2022-04-10)
 
 
