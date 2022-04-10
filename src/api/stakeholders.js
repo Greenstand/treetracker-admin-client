@@ -18,12 +18,7 @@ export default {
       }
       return acc;
     }, {});
-    const filterObj = {
-      where,
-      // order: [`${orderBy} ${order}`],
-      // limit: rowsPerPage,
-      // offset,
-    };
+    const filterObj = { where };
 
     let query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
 
@@ -41,6 +36,73 @@ export default {
 
     return fetchJSON(query, options);
   },
+
+  deleteStakeholder(id, stakeholdersData) {
+    const orgId = id || getOrganizationId();
+    let query = `${STAKEHOLDER_API}`;
+
+    if (id && orgId && orgId !== id) {
+      query += `/${id}/${orgId}`;
+    } else if (id || orgId) {
+      query += `/${id || orgId}`;
+    }
+
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify(stakeholdersData),
+    };
+
+    return fetchJSON(query, options);
+  },
+
+  // only need the orgId, the id of the stakeholder is in the stakeholderUpdate
+  updateStakeholder(stakeholderUpdate) {
+    const orgId = getOrganizationId();
+    let query = `${STAKEHOLDER_API}`;
+
+    if (orgId) {
+      query = `${STAKEHOLDER_API}/${orgId}`;
+    }
+
+    log.debug('updateStakeholder', query);
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify(stakeholderUpdate),
+    };
+
+    return fetchJSON(query, options);
+  },
+
+  createStakeholder(stakeholderData) {
+    const orgId = getOrganizationId();
+    let query = `${STAKEHOLDER_API}`;
+
+    if (orgId) {
+      query = `${STAKEHOLDER_API}/${orgId}`;
+    }
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+      body: JSON.stringify(stakeholderData),
+    };
+
+    return fetchJSON(query, options);
+  },
+
+  // KEEP FOR FUTURE USE
 
   // async getUnlinkedStakeholders(id, abortController) {
   //   const orgId = getOrganizationId();
@@ -89,28 +151,6 @@ export default {
   //   return fetchJSON(query, options);
   // },
 
-  deleteStakeholder(id, stakeholdersData) {
-    const orgId = id || getOrganizationId();
-    let query = `${STAKEHOLDER_API}`;
-
-    if (id && orgId && orgId !== id) {
-      query += `/${id}/${orgId}`;
-    } else if (id || orgId) {
-      query += `/${id || orgId}`;
-    }
-
-    const options = {
-      method: 'DELETE',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(stakeholdersData),
-    };
-
-    return fetchJSON(query, options);
-  },
-
   // updateLinks(id, stakeholdersData) {
   //   const orgId = id || getOrganizationId();
   //   const { linked } = stakeholdersData;
@@ -146,47 +186,4 @@ export default {
 
   //   return fetchJSON(query, options);
   // },
-
-  // only need the orgId, the id of the stakeholder is in the stakeholderUpdate
-  updateStakeholder(stakeholderUpdate) {
-    const orgId = getOrganizationId();
-    let query = `${STAKEHOLDER_API}`;
-
-    if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
-    }
-
-    log.debug('updateStakeholder', query);
-
-    const options = {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(stakeholderUpdate),
-    };
-
-    return fetchJSON(query, options);
-  },
-
-  createStakeholder(stakeholderData) {
-    const orgId = getOrganizationId();
-    let query = `${STAKEHOLDER_API}`;
-
-    if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
-    }
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(stakeholderData),
-    };
-
-    return fetchJSON(query, options);
-  },
 };
