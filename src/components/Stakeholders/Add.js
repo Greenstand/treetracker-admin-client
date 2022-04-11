@@ -20,7 +20,7 @@ import { StakeholdersContext } from 'context/StakeholdersContext';
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: '1',
+    width: '48%',
     margin: '5px',
     '& .MuiFormControl-fullWidth': {
       width: '100%',
@@ -68,7 +68,7 @@ function AddStakeholder() {
       value: 'Organization',
     },
     {
-      name: 'Grower',
+      name: 'Person',
       value: 'Person',
     },
   ];
@@ -243,28 +243,6 @@ function AddStakeholder() {
                 type="number"
                 onChange={handleChange}
                 value={data.phone}
-                onKeyDown={handleEnterPress}
-              />
-            </FormControl>
-            <FormControl xs={12} sm={6} className={classes.root}>
-              <TextField
-                className={classes.textField}
-                label="Password"
-                variant="outlined"
-                name="password"
-                onChange={handleChange}
-                value={data.password}
-                onKeyDown={handleEnterPress}
-              />
-            </FormControl>
-            <FormControl xs={12} sm={6} className={classes.root}>
-              <TextField
-                className={classes.textField}
-                label="Secret Phrase (salt)"
-                variant="outlined"
-                name="salt"
-                onChange={handleChange}
-                value={data.salt}
                 onKeyDown={handleEnterPress}
               />
             </FormControl>
