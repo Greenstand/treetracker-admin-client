@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import FilterModel from '../../models/FilterStakeholder';
-import { ALL_ORGANIZATIONS } from '../../models/FilterStakeholder';
+import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 
@@ -81,7 +81,7 @@ function StakeholderFilter() {
     const value =
       e.target.name === 'organization_id'
         ? orgList.find((o) => o.stakeholder_uuid === e.target.value)
-            ?.stakeholder_uuid || null
+            ?.stakeholder_uuid || ''
         : e.target.value !== 'Not Set'
         ? e.target.value
         : '';
@@ -109,8 +109,8 @@ function StakeholderFilter() {
 
   const defaultOrgList = [
     {
-      id: ALL_ORGANIZATIONS,
-      name: 'All',
+      id: ORGANIZATION_NOT_SET,
+      name: 'Not Set',
       value: '',
     },
   ];
