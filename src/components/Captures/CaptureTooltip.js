@@ -1,11 +1,11 @@
 import React from 'react';
 import OptimizedImage from '../OptimizedImage';
 
-const CaptureTooltip = ({ capture, toogleDrawer }) => {
+const CaptureTooltip = ({ capture, toggleDrawer }) => {
   return (
     <>
       <OptimizedImage
-        onClick={toogleDrawer(capture.id)}
+        onClick={toggleDrawer(capture.id)}
         src={capture.imageUrl}
         style={{
           height: '160px',
