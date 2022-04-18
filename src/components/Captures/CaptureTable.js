@@ -294,7 +294,7 @@ const CaptureTable = () => {
                     arrow: capturesTooltipStyle.arrow,
                   }}
                   title={
-                    <CaptureTooltip capture={capture} toogleDrawer={createToggleDrawerHandler} />
+                    <CaptureTooltip capture={capture} toggleDrawer={createToggleDrawerHandler} />
                   }
                 >
                   <TableRow
