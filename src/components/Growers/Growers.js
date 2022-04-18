@@ -8,8 +8,11 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Grower from './Grower';
 import GrowerDetail from '../GrowerDetail';
+import GrowerTooltip from './GrowerTooltip';
 import { GrowerContext } from '../../context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
+import { Tooltip, Box } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -33,6 +36,17 @@ const Growers = (props) => {
     setGrowerDetail(grower);
   }
 
+  const useStyles = makeStyles(() => ({
+    tooltipTop: {
+      top: '16px',
+    },
+    tooltipBottom: {
+      top: '-16px',
+    },
+  }));
+
+  const growerTooltipStyle = useStyles();
+
   const placeholderGrowers = Array(growerContext.pageSize)
     .fill()
     .map((_, index) => {
@@ -48,12 +62,28 @@ const Growers = (props) => {
   ).map((grower, i) => {
     //combine i + grower.id to create unique keys even when there are duplicate grower.ids
     return (
-      <Grower
-        onClick={() => handleGrowerClick(grower)}
+      <Tooltip
         key={`${i} + ${grower.id}`}
-        grower={grower}
-        placeholder={grower.placeholder}
-      />
+        placement="top"
+        classes={{
+          tooltipPlacementTop: growerTooltipStyle.tooltipTop,
+          tooltipPlacementBottom: growerTooltipStyle.tooltipBottom,
+        }}
+        arrow={true}
+        interactive
+        title={
+          <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
+        }
+      >
+        <Box>
+          <Grower
+            onClick={() => handleGrowerClick(grower)}
+            key={`${i} + ${grower.id}`}
+            grower={grower}
+            placeholder={grower.placeholder}
+          />
+        </Box>
+      </Tooltip>
     );
   });
 
