@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
+  Button,
   Grid,
   Table,
-  Button,
   TableHead,
   TableBody,
   TableRow,
@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableSortLabel,
   Typography,
+  Tooltip,
 } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 import { getDateTimeStringLocale } from '../../common/locale';
@@ -24,6 +25,8 @@ import ExportCaptures from 'components/ExportCaptures';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
+import { makeStyles } from '@material-ui/core/styles';
+import CaptureTooltip from './CaptureTooltip';
 
 const columns = [
   {
@@ -208,6 +211,17 @@ const CaptureTable = () => {
     );
   };
 
+  const useStyles = makeStyles(() => ({
+    tooltipTop: {
+      top: '8px',
+    },
+    arrow: {
+      fontSize: '12px',
+    },
+  }));
+
+  const capturesTooltipStyle = useStyles();
+
   return (
     <Grid style={{ height: '100%', overflow: 'auto' }}>
       <Grid
@@ -263,23 +277,37 @@ const CaptureTable = () => {
         <TableBody data-testid="captures-table-body">
           {captures &&
             captures.map((capture) => (
-              <TableRow
+              <Tooltip
                 key={capture.id}
-                onClick={createToggleDrawerHandler(capture.id)}
-                className={classes.tableRow}
+                placement="top"
+                arrow={true}
+                interactive
+                classes={{
+                  tooltipPlacementTop: capturesTooltipStyle.tooltipTop,
+                  arrow: capturesTooltipStyle.arrow,
+                }}
+                title={
+                  <CaptureTooltip capture={capture} toogleDrawer={createToggleDrawerHandler} />
+                }
               >
-                {columns.map(({ attr, renderer }) => (
-                  <TableCell key={attr}>
-                    {formatCell(
-                      capture,
-                      speciesLookup,
-                      captureTagLookup[capture.id] || [],
-                      attr,
-                      renderer
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
+                <TableRow
+                  key={capture.id}
+                  onClick={createToggleDrawerHandler(capture.id)}
+                  className={classes.tableRow}
+                >
+                  {columns.map(({ attr, renderer }) => (
+                    <TableCell key={attr}>
+                      {formatCell(
+                        capture,
+                        speciesLookup,
+                        captureTagLookup[capture.id] || [],
+                        attr,
+                        renderer
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </Tooltip>
             ))}
         </TableBody>
       </Table>
