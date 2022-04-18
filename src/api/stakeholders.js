@@ -9,21 +9,27 @@ async function fetchJSON(query, options) {
 }
 
 export default {
-  getStakeholders(id, { filter }) {
+  getStakeholders(id, filter) {
     const orgId = id || getOrganizationId();
 
     const where = Object.keys(filter).reduce((acc, key) => {
       if (filter[key] !== '') {
-        acc[key] = filter[key];
+        acc += `&${key}=${filter[key]}`;
       }
       return acc;
     }, {});
     const filterObj = { where };
 
-    let query = `${STAKEHOLDER_API}?filter=${JSON.stringify(filterObj)}`;
+    log.debug('getStakeholders', orgId, where);
 
-    if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}?filter=${JSON.stringify(filterObj)}`;
+    let query = `${STAKEHOLDER_API}`;
+
+    if (orgId && where) {
+      query += `/${orgId}?${where}`;
+    } else if (!orgId && where) {
+      query += `/?${where}`;
+    } else if (orgId && !where) {
+      query += `/${orgId}`;
     }
 
     const options = {
