@@ -18,9 +18,6 @@ export default {
       }
       return acc;
     }, {});
-    const filterObj = { where };
-
-    log.debug('getStakeholders', orgId, where);
 
     let query = `${STAKEHOLDER_API}`;
 
@@ -71,10 +68,10 @@ export default {
     let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
+      query += `/${orgId}`;
     }
 
-    log.debug('updateStakeholder', query);
+    log.debug('updateStakeholder', query, stakeholderUpdate);
 
     const options = {
       method: 'PATCH',
@@ -93,8 +90,10 @@ export default {
     let query = `${STAKEHOLDER_API}`;
 
     if (orgId) {
-      query = `${STAKEHOLDER_API}/${orgId}`;
+      query += `/${orgId}`;
     }
+
+    log.debug('createStakeholders', query, stakeholderData);
 
     const options = {
       method: 'POST',
