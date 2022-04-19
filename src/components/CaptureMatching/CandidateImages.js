@@ -84,8 +84,6 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    width: '300px',
-    height: '340px',
     position: 'relative',
   },
   captureInfo: {
@@ -228,8 +226,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
                             objectFit="cover"
+                            width={250}
                             style={{
-                              width: '300px',
+                              width: '250px',
                               height: '100%',
                             }}
                           />
