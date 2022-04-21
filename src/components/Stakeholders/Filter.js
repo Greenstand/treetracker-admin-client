@@ -51,7 +51,7 @@ function StakeholderFilter() {
 
   // create filter lists
   useEffect(() => {
-    stakeholders.forEach((org) => {
+    stakeholders?.forEach((org) => {
       org.org_name && orgNames.add(org.org_name);
       org.first_name && firstNames.add(org.first_name);
       org.last_name && lastNames.add(org.last_name);
@@ -69,7 +69,7 @@ function StakeholderFilter() {
       websites: Array.from(websites).sort(),
       maps: Array.from(maps).sort(),
     });
-  }, [stakeholders.length]);
+  }, [stakeholders?.length]);
 
   const close = () => {
     setFormData(filter);

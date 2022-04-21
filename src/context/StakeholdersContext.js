@@ -74,12 +74,10 @@ export function StakeholdersProvider(props) {
       .catch((e) => console.error(e));
   }, [filter, page, rowsPerPage]);
 
-  // call w/ or w/o an id, it will default to the organization id or be null
+  // call w/ or w/o an id, it will default to the org id or be null
   const getStakeholders = async (id) => {
     log.debug('load stakeholders - id:', id);
-    const { stakeholders, totalCount } = await api.getStakeholders(id, {
-      filter,
-    });
+    const { stakeholders, totalCount } = await api.getStakeholders(id, filter);
     setStakeholders(stakeholders);
     setCount(totalCount);
   };

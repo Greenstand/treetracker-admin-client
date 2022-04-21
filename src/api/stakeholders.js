@@ -17,7 +17,9 @@ export default {
         acc += `&${key}=${filter[key]}`;
       }
       return acc;
-    }, {});
+    }, '');
+
+    console.log('where ---> ', where);
 
     let query = `${STAKEHOLDER_API}`;
 
