@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import api from '../../api/treeTrackerApi';
 
 import CandidateImages from './CandidateImages';
@@ -63,6 +63,7 @@ const useStyle = makeStyles((theme) => ({
     width: '50%',
     height: '100%',
     boxSizing: 'border-box',
+    borderRadius: '0px',
   },
   box2: {
     padding: theme.spacing(4, 4),
@@ -171,7 +172,6 @@ const useStyle = makeStyles((theme) => ({
     width: '100%',
   },
   currentNumberBox3: {
-    //padding: t.spacing(2),
     width: 48,
     justifyContent: 'center',
     display: 'flex',
@@ -241,13 +241,10 @@ const useStyle = makeStyles((theme) => ({
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
-function CaptureMatchingView(props) {
+function CaptureMatchingView() {
   const classes = useStyle();
-  const appContext = React.useContext(AppContext);
-  const matchingToolContext = React.useContext(MatchingToolContext);
-  log.warn('appContext', appContext);
-  log.warn('props:', props);
-  log.warn('matchingToolContext:', matchingToolContext);
+  const appContext = useContext(AppContext);
+  const matchingToolContext = useContext(MatchingToolContext);
   const [captureImage, setCaptureImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -262,6 +259,17 @@ function CaptureMatchingView(props) {
   const [growerAccount, setGrowerAccount] = useState(null);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const resizeWindow = useCallback(() => {
+    setScreenWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', resizeWindow);
+    return () => {
+      window.removeEventListener('resize', resizeWindow);
+    };
+  }, [resizeWindow]);
 
   async function fetchCandidateTrees(captureId, abortController) {
     const data = await api.fetchCandidateTrees(captureId, abortController);
@@ -283,7 +291,6 @@ function CaptureMatchingView(props) {
   }
 
   async function fetchCaptures(currentPage, abortController) {
-    log.warn('fetchCaptures:', currentPage);
     clean();
     setLoading(true);
     const filterParameters = {
@@ -296,7 +303,6 @@ function CaptureMatchingView(props) {
       abortController,
       filterParameters
     );
-    console.log('fetchCaptures', currentPage, data);
     if (data && data.captures && data.captures.length > 0) {
       setCaptureImage(data.captures[0]);
       setNoOfPages(data.count);
@@ -310,7 +316,7 @@ function CaptureMatchingView(props) {
   }
 
   useEffect(() => {
-    console.log('loading captures', currentPage);
+    log.debug('loading captures', currentPage);
     const abortController = new AbortController();
     fetchCaptures(currentPage, abortController);
     return () => abortController.abort();
@@ -324,7 +330,7 @@ function CaptureMatchingView(props) {
 
   async function loadGrowerInfo() {
     if (captureImage) {
-      log.warn('loadGrowerInfo...');
+      log.debug('loadGrowerInfo...');
       if (captureImage.grower_account_id) {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
@@ -339,9 +345,8 @@ function CaptureMatchingView(props) {
   useEffect(() => {
     const abortController = new AbortController();
     if (captureImage) {
-      console.log('loading candidate images');
+      log.debug('loading candidate images');
       const captureId = captureImage.id;
-      console.log('captureId', captureId);
       fetchCandidateTrees(captureId, abortController);
 
       // load grower info
@@ -359,7 +364,7 @@ function CaptureMatchingView(props) {
   // Same Tree Capture function
   const sameTreeHandler = async (treeId) => {
     const captureId = captureImage.id;
-    console.log('captureId treeId', captureId, treeId);
+    // log.debug('captureId treeId', captureId, treeId);
     await fetch(`${CAPTURE_API}/captures/${captureId}`, {
       method: 'PATCH',
       headers: {
@@ -600,6 +605,7 @@ function CaptureMatchingView(props) {
               src={captureImage.image_url}
               alt={`Capture ${captureImage.id}`}
               objectFit="contain"
+              width={screenWidth * 0.5}
               fixed
             />
           </Box>
