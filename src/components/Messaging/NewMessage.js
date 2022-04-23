@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import uuid from 'uuid/v4';
 import { MessagingContext } from 'context/MessagingContext';
 import {
   FormControl,
@@ -12,6 +13,7 @@ import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 
 import GSInputLabel from 'components/common/InputLabel';
+const log = require('loglevel');
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -57,12 +59,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewMessage = ({ openModal, handleClose }) => {
+const NewMessage = ({ openModal, handleClose, setMessageRecipient }) => {
   const { box, formContent, header, button } = useStyles();
-  const { user, authors, postMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    authors,
+    setThreads,
+    postMessageSend,
+  } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
   const [recipient, setRecipient] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [errors, setErrors] = useState(null);
 
   useEffect(() => {
     if (openModal === false) {
@@ -71,11 +80,40 @@ const NewMessage = ({ openModal, handleClose }) => {
     }
   }, [openModal]);
 
+  useEffect(() => {
+    // set an error message right away if there are no authors
+    if (authors.length === 0) {
+      setErrors('Sorry, no accounts were found.');
+    }
+  }, [authors]);
+
   const handleChange = (e) => {
+    // don't remove the error if it's not a user mistake, like there aren't any authors
+    if (authors.length > 0) {
+      setErrors(null);
+    }
     const { name, value } = e.target;
     name === 'body'
       ? setMessageContent(value)
       : setRecipient(e.target.textContent);
+  };
+
+  const validateMessage = (payload) => {
+    const errors = {};
+
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (!payload.recipient_handle) {
+      errors.recipient = 'Please select a recipient';
+    }
+
+    if (authors.length === 0) {
+      errors.accounts = 'Sorry, no accounts were found.';
+    }
+
+    return errors;
   };
 
   const handleSubmit = async (e) => {
@@ -84,19 +122,50 @@ const NewMessage = ({ openModal, handleClose }) => {
     const messagePayload = {
       author_handle: user.userName,
       recipient_handle: recipient,
-      subject: 'Message',
+      type: 'message',
       body: messageContent,
     };
 
-    if (
-      messagePayload.body !== '' &&
-      user.userName &&
-      messagePayload.to !== ''
-    ) {
-      await postMessageSend(messagePayload);
-      history.go(0);
+    const errs = validateMessage(messagePayload);
+
+    const errorsFound = Object.keys(errs).length > 0;
+    if (errorsFound) {
+      setErrors(errs);
+    } else {
+      const res = await postMessageSend(messagePayload);
+
+      if (res.error) {
+        setErrorMessage(res.message);
+      } else {
+        const newMessage = {
+          parent_message_id: null,
+          body: messageContent,
+          composed_at: new Date().toISOString(),
+          from: user.userName,
+          id: uuid(),
+          recipient_organization_id: null,
+          recipient_region_id: null,
+          survey: null,
+          to: recipient,
+          type: 'message',
+          video_link: null,
+        };
+
+        log.debug('...update threads after postMessageSend');
+        // update the full set of threads
+        setThreads((prev) =>
+          [...prev, { userName: recipient, messages: [newMessage] }].sort(
+            (a, b) =>
+              new Date(b?.messages?.at(-1).composed_at) -
+              new Date(a?.messages?.at(-1).composed_at)
+          )
+        );
+      }
+
+      setMessageRecipient(recipient);
+
+      handleClose();
     }
-    handleClose();
   };
 
   return (
@@ -111,7 +180,29 @@ const NewMessage = ({ openModal, handleClose }) => {
           <Box className={header} my={1}>
             <Typography variant="h3">Send New Message</Typography>
           </Box>
+          {errors?.accounts && (
+            <Typography
+              style={{
+                color: 'red',
+                fontWeight: 'bold',
+                margin: '20px 10px 0px',
+              }}
+            >
+              {errors.accounts}
+            </Typography>
+          )}
           <FormControl>
+            {errors?.recipient && (
+              <Typography
+                style={{
+                  color: 'red',
+                  fontWeight: 'bold',
+                  margin: '20px 10px 0px',
+                }}
+              >
+                {errors.recipient}
+              </Typography>
+            )}
             <GSInputLabel text="Choose the Message Recipient" />
             <Autocomplete
               name="to"
@@ -120,7 +211,11 @@ const NewMessage = ({ openModal, handleClose }) => {
               handleHomeEndKeys
               value={recipient}
               onChange={handleChange}
-              options={authors.map((author) => author.handle || '')}
+              options={
+                authors.length
+                  ? authors.map((author) => author.handle || '').sort()
+                  : []
+              }
               inputValue={inputValue}
               getOptionSelected={(option, value) => option === value}
               onInputChange={(e, val) => setInputValue(val)}
@@ -133,16 +228,32 @@ const NewMessage = ({ openModal, handleClose }) => {
             />
           </FormControl>
           <FormControl>
+            {errors?.message && (
+              <Typography
+                style={{
+                  color: 'red',
+                  fontWeight: 'bold',
+                  margin: '20px 10px 0px',
+                }}
+              >
+                {errors.message}
+              </Typography>
+            )}
             <GSInputLabel text="Message" />
             <TextField
               multiline
-              placeholder="Write you message here ..."
+              placeholder="Write your message here ..."
               name="body"
               value={messageContent}
               onChange={handleChange}
             />
           </FormControl>
-          <Button type="submit" size="large" className={button}>
+          <Button
+            type="submit"
+            size="large"
+            className={button}
+            disabled={!!errors}
+          >
             Send Message
           </Button>
         </form>

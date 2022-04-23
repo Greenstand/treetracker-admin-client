@@ -36,6 +36,7 @@ export default {
         organizationId: true,
         imageRotation: true,
         id: true,
+        // growerAccountUuid: true,
       },
     };
     const query = `${
@@ -92,7 +93,7 @@ export default {
     const growerSelfiesQuery = `${
       process.env.REACT_APP_API_ROOT
     }/api/${getOrganization()}planter/${growerId}/selfies/?filter=${JSON.stringify(
-      filter,
+      filter
     )}`;
 
     return fetch(growerSelfiesQuery, {
@@ -109,7 +110,7 @@ export default {
           ...new Set(
             items
               .map((tree) => tree.planterPhotoUrl)
-              .filter((img) => img !== ''),
+              .filter((img) => img !== '')
           ),
         ];
       })

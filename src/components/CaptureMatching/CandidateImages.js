@@ -18,6 +18,7 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
 import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
+import OptimizedImage from 'components/OptimizedImage';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -43,18 +44,13 @@ const useStyles = makeStyles({
     display: 'flex',
     cursor: 'pointer',
   },
-
-  imgContainer: {
-    height: '100%',
-    objectFit: 'cover',
-  },
   gridList: {
     padding: theme.spacing(0, 4),
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'auto',
     overflowY: 'hidden',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
   },
 
   candidateImgBtn: {
@@ -88,7 +84,8 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    height: '300px',
+    width: '300px',
+    height: '340px',
     position: 'relative',
   },
   captureInfo: {
@@ -114,10 +111,10 @@ const useStyles = makeStyles({
 function DistanceTo({ lat1, lon1, lat2, lon2 }) {
   const [content, setContent] = useState('');
   if (
-    lat1 === 'undefined' ||
-    lon1 === 'undefined' ||
-    lat2 === 'undefined' ||
-    lon2 === 'undefined'
+    lat1 === undefined ||
+    lon1 === undefined ||
+    lat2 === undefined ||
+    lon2 === undefined
   ) {
     setContent('');
   }
@@ -125,12 +122,12 @@ function DistanceTo({ lat1, lon1, lat2, lon2 }) {
   useEffect(() => {
     const distance = getDistance(
       {
-        latitude: lat1,
-        longitude: lon1,
+        latitude: Number(lat1),
+        longitude: Number(lon1),
       },
       {
-        latitude: lat2,
-        longitude: lon2,
+        latitude: Number(lat2),
+        longitude: Number(lon2),
       }
     );
     setContent(`${distance}m away`);
@@ -216,7 +213,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
               <Box
                 className={classes.candidateTreeContent}
                 style={{
-                  maxHeight: showBox.includes(tree.id) ? '400px' : '0px',
+                  maxHeight: showBox.includes(tree.id) ? '420px' : '0px',
                 }}
               >
                 <Box className={classes.gridList} cols={3}>
@@ -227,10 +224,14 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           key={`${tree.id}_${candidateCapture.id}`}
                           className={classes.candidateCaptureContainer}
                         >
-                          <img
-                            className={classes.imgContainer}
+                          <OptimizedImage
                             src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
+                            objectFit="cover"
+                            style={{
+                              width: '300px',
+                              height: '100%',
+                            }}
                           />
                           <Box className={classes.captureInfo}>
                             <Box className={classes.captureInfoDetail}>
@@ -242,14 +243,29 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               </Typography>
                             </Box>
                             <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon />
+                              <LocationOnOutlinedIcon
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  window.open(
+                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                  );
+                                }}
+                              />
                               <Typography variant="body1">
                                 {capture && (
                                   <DistanceTo
-                                    lat1={capture.lat}
-                                    lon1={capture.lon}
-                                    lat2={candidateCapture.lat}
-                                    lon2={candidateCapture.lon}
+                                    lat1={capture.latitude}
+                                    lon1={capture.longitude}
+                                    lat2={
+                                      candidateCapture.latitude ||
+                                      candidateCapture.lat
+                                    }
+                                    lon2={
+                                      candidateCapture.longitude ||
+                                      candidateCapture.lon
+                                    }
                                   />
                                 )}
                               </Typography>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import earningsAPI from '../../api/earnings';
+import moment from 'moment';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
   covertDateStringToHumanReadableFormat,
@@ -35,12 +36,21 @@ const earningTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
+  },
+  {
+    description: 'Capture Count',
+    name: 'captures_count',
+    sortable: false,
+    showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
     name: 'calculated_at',
     sortable: true,
-    showInfoIcon: true,
+    showInfoIcon:
+      'The effective data is the date on which captures were consolidated and the earnings record was created',
   },
   {
     description: 'Status',
@@ -71,17 +81,20 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
@@ -109,23 +122,34 @@ function EarningsTable() {
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
 
-  async function getEarnings() {
+  async function getEarnings(fetchAll = false) {
+    console.warn('getEarnings with fetchAll: ', fetchAll);
     setIsLoading(true); // show loading indicator when fetching data
 
+    const { results, totalCount } = await getEarningsReal();
+    setEarnings(results);
+    setTotalEarnings(totalCount);
+
+    setIsLoading(false); // hide loading indicator when data is fetched
+  }
+
+  async function getEarningsReal(fetchAll = false) {
+    console.warn('fetchAll:', fetchAll);
+
     const queryParams = {
-      offset: page * earningsPerPage,
+      offset: fetchAll ? 0 : page * earningsPerPage,
+      limit: fetchAll ? 90000 : earningsPerPage,
       sort_by: sortBy?.field,
       order: sortBy?.order,
-      limit: earningsPerPage,
       ...filter,
     };
 
     const response = await earningsAPI.getEarnings(queryParams);
     const results = prepareRows(response.earnings);
-    setEarnings(results);
-    setTotalEarnings(response.totalCount);
-
-    setIsLoading(false); // hide loading indicator when data is fetched
+    return {
+      results,
+      totalCount: response.query.count,
+    };
   }
 
   const handleOpenMainFilter = () => setIsMainFilterOpen(true);
@@ -163,23 +187,28 @@ function EarningsTable() {
       setSelectedRow={setSelectedEarning}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
+      activeFiltersCount={
+        Object.keys(filter).filter((key) =>
+          key === 'start_date' || key === 'end_date' ? false : true
+        ).length
+      }
       headerTitle="Earnings"
       mainFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isMainFilterOpen}
+          isFilterOpen={isMainFilterOpen}
           filter={filter}
           filterType="main"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsMainFilterOpen}
+          setIsFilterOpen={setIsMainFilterOpen}
         />
       }
       dateFilterComponent={
         <CustomTableFilter
-          isMainFilterOpen={isDateFilterOpen}
+          isFilterOpen={isDateFilterOpen}
           filter={filter}
           filterType="date"
           setFilter={setFilter}
-          setIsMainFilterOpen={setIsDateFilterOpen}
+          setIsFilterOpen={setIsDateFilterOpen}
         />
       }
       rowDetails={
@@ -192,6 +221,7 @@ function EarningsTable() {
         ) : null
       }
       actionButtonType="export"
+      exportDataFetch={getEarningsReal}
     />
   );
 }

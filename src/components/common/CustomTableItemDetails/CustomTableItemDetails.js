@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import earningsAPI from 'api/earnings';
 import useStyles from './CustomTableItemDetails.styles';
+import treeTrackerApi from 'api/treeTrackerApi';
 
 /**
  * @function
@@ -28,7 +29,7 @@ import useStyles from './CustomTableItemDetails.styles';
 function LogPaymentForm(props) {
   const { selectedItem, closeForm, refreshData } = props;
   const [payload, setPayload] = useState({});
-  const [paymentSystem, setPaymentSystem] = useState('');
+  const [logPaymentError, setLogPaymentError] = useState(null);
   const classes = useStyles();
 
   const handleOnInputChange = (e) => {
@@ -36,24 +37,40 @@ function LogPaymentForm(props) {
     const { value, name } = e.target;
     const updatedPayload = { ...payload, [name]: value };
     setPayload(updatedPayload);
-    setPaymentSystem(value);
   };
 
-  const handleOnFormSubmit = () => {
-    const { id, worker_id, amount, currency } = selectedItem;
+  const handleOnFormSubmit = (e) => {
+    e.preventDefault();
+    const { id, worker_id, amount, currency, captures_count } = selectedItem;
     const paid_at = new Date();
     earningsAPI
-      .patchEarning({ id, worker_id, amount, currency, paid_at, ...payload })
-      .then(() => refreshData())
-      .catch((e) => console.log('error logging payment', e));
-    closeForm();
+      .patchEarning({
+        id,
+        worker_id,
+        amount,
+        currency,
+        captures_count,
+        paid_at,
+        ...payload,
+      })
+      .then(() => {
+        refreshData();
+        closeForm();
+      })
+      .catch((e) => setLogPaymentError(e?.response?.data?.message));
   };
 
   return (
-    <>
+    <form onSubmit={handleOnFormSubmit}>
       <Grid container direction="column" justify="space-around">
+        {logPaymentError && (
+          <span style={{ color: 'red', fontSize: '0.9em' }}>
+            Log payment failed: {logPaymentError}!
+          </span>
+        )}
+
         <Grid item className={classes.itemGrowerDetail}>
-          <Typography variant="h6">Payment</Typography>
+          <Typography>Payment</Typography>
         </Grid>
 
         <Grid container direction="column" justify="space-between">
@@ -64,8 +81,9 @@ function LogPaymentForm(props) {
             <TextField
               id="payment_confirmation_id"
               name="payment_confirmation_id"
-              label="Payment Confirmation Id"
+              label="Payment Confirmation ID"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
             />
           </FormControl>
@@ -75,12 +93,12 @@ function LogPaymentForm(props) {
             className={classes.itemLogPaymentFormSelectFormControl}
           >
             <TextField
-              id="payment_system"
-              name="payment_system"
-              label="Payment System"
+              id="payment_method"
+              name="payment_method"
+              label="Payment Method"
               variant="outlined"
+              required={true}
               onChange={handleOnInputChange}
-              value={paymentSystem}
             />
           </FormControl>
         </Grid>
@@ -97,7 +115,7 @@ function LogPaymentForm(props) {
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleOnFormSubmit}
+          type="submit"
           className={classes.itemTableFilterSubmitButton}
         >
           LOG PAYMENT
@@ -111,7 +129,7 @@ function LogPaymentForm(props) {
           CANCEL
         </Button>
       </Grid>
-    </>
+    </form>
   );
 }
 
@@ -127,6 +145,7 @@ LogPaymentForm.propTypes = {
  * @description render details of table item
  * @param {object} props - properties  passed to the component
  * @param {boolean} props.isDetailsDrawerOpen - flag that decides wheather details drawer should open/close
+ * @param {boolean} props.showLogPaymentForm - flag that decides wheather log payment form should be shown
  * @param {object} props.selectedItem - custom table item
  * @param {Function} props.setSelectedItem - sets/resets selected item
  * @param {Function} props.refreshData - refresh table data after updating an item
@@ -134,8 +153,19 @@ LogPaymentForm.propTypes = {
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, closeDetails, refreshData } = props;
+  const { selectedItem, closeDetails, refreshData, showLogPaymentForm } = props;
+  const [userName, setUserName] = useState('');
   const classes = useStyles();
+
+  React.useEffect(() => {
+    if (selectedItem?.status === 'paid') {
+      treeTrackerApi
+        .getAdminUserById(selectedItem.payment_confirmed_by)
+        .then((data) => {
+          setUserName(data.userName);
+        });
+    }
+  }, [selectedItem]);
 
   return (
     <Drawer
@@ -174,6 +204,16 @@ function CustomTableItemDetails(props) {
               <Typography>Funder</Typography>
               <Typography variant="h6">{selectedItem.funder}</Typography>
             </Grid>
+            <Grid item className={classes.itemGrowerDetail}>
+              <Typography>Organization</Typography>
+              <Typography variant="h6">
+                {selectedItem.sub_organization_name || '---'}
+              </Typography>
+            </Grid>
+            <Grid item className={classes.itemGrowerDetail}>
+              <Typography>Record ID</Typography>
+              <Typography variant="body2">{selectedItem.id}</Typography>
+            </Grid>
           </Grid>
 
           <Divider className={classes.itemDetailsContentsDivider} />
@@ -181,12 +221,16 @@ function CustomTableItemDetails(props) {
           <Grid container direction="row">
             <Grid item sm={5}>
               <Typography>Amount</Typography>
-              <Typography variant="h6">{selectedItem.amount} </Typography>
+              <Typography variant="h6">
+                {selectedItem.amount} {selectedItem.currency}{' '}
+              </Typography>
             </Grid>
 
             <Grid item>
-              <Typography>Currency</Typography>
-              <Typography variant="h6">{selectedItem.currency}</Typography>
+              <Typography>Captures Count</Typography>
+              <Typography variant="h6">
+                {selectedItem.captures_count}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -232,12 +276,8 @@ function CustomTableItemDetails(props) {
 
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.itemGrowerDetail}>
-              <Typography variant="h6">Consolidation</Typography>
-            </Grid>
-
-            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
-              <Typography variant="h6">Default</Typography>
+              <Typography variant="h6">FCC Tiered</Typography>
             </Grid>
 
             <Grid item className={classes.itemGrowerDetail}>
@@ -259,7 +299,7 @@ function CustomTableItemDetails(props) {
             </Grid>
           </Grid>
 
-          {selectedItem?.status !== 'paid' && (
+          {showLogPaymentForm && selectedItem?.status !== 'paid' && (
             <LogPaymentForm
               selectedItem={selectedItem}
               closeForm={closeDetails}
@@ -272,14 +312,28 @@ function CustomTableItemDetails(props) {
               <Grid item>
                 <Typography>Payment Confirmed by</Typography>
                 <Typography variant="h6">
-                  {selectedItem.payment_confirmed_by}
+                  {userName || selectedItem.payment_confirmed_by}
                 </Typography>
               </Grid>
 
               <Grid item className={classes.itemGrowerDetail}>
-                <Typography>Payment confirmation method</Typography>
+                <Typography>Payment Confirmation Method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography>Payment Confirmation ID</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_confirmation_id}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography>Payment Method</Typography>
+                <Typography variant="h6">
+                  {selectedItem.payment_method}
                 </Typography>
               </Grid>
             </Grid>
@@ -296,8 +350,10 @@ CustomTableItemDetails.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   closeDetails: PropTypes.func.isRequired,
   refreshData: PropTypes.func,
+  showLogPaymentForm: PropTypes.bool,
 };
 
 CustomTableItemDetails.defaultProps = {
   refreshData: () => {},
+  showLogPaymentForm: true,
 };

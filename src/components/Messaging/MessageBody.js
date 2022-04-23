@@ -1,17 +1,35 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import uuid from 'uuid/v4';
 import { makeStyles } from '@material-ui/core/styles';
-import { Announcement } from '@material-ui/icons';
-import { Avatar, Grid, Typography, Paper, Button } from '@material-ui/core';
+import {
+  Announcement,
+  Ballot,
+  QuestionAnswerOutlined,
+} from '@material-ui/icons';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Modal,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import { TextInput } from './TextInput.js';
 import dateFormat from 'dateformat';
+import { CircularProgress } from '@material-ui/core';
 
 import { MessagingContext } from 'context/MessagingContext.js';
+import SurveyCharts from './SurveyCharts.js';
+const log = require('loglevel');
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {
     display: 'flex',
     padding: '3px',
+    flexDirection: 'column',
   },
   messageRowRight: {
     display: 'flex',
@@ -24,13 +42,13 @@ const useStyles = makeStyles((theme) => ({
   },
   announceMessage: {
     position: 'relative',
-    marginLeft: '20px',
     marginBottom: '10px',
     padding: '10px',
     background: theme.palette.primary.main,
     color: 'white',
     textAlign: 'left',
     borderRadius: '10px',
+    whiteSpace: 'pre-wrap',
   },
   recievedMessage: {
     position: 'relative',
@@ -40,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'lightGrey',
     textAlign: 'left',
     borderRadius: '10px',
+    width: 'fit-content',
   },
   sentMessage: {
     position: 'relative',
@@ -123,11 +142,7 @@ const useStyles = makeStyles((theme) => ({
   surveyContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginLeft: 'auto',
     backgroundColor: theme.palette.primary.lightMed,
-    // backgroundColor: theme.palette.primary.main,
-    // color: '#fff',
-    width: '65%',
     borderRadius: '10px',
     padding: '10px',
   },
@@ -140,6 +155,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50px',
     color: 'white',
     margin: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      textDecoration: ' none',
+      color: 'black',
+    },
   },
   surveyResponse: {
     display: 'flex',
@@ -148,7 +169,24 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     padding: '1em',
     margin: '5px',
-    width: '35%',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    width: '45%',
+    outline: 'none',
+    borderRadius: '4px',
+    padding: '20px',
+    position: 'absolute',
+    top: '30%',
+    left: '22%',
+  },
+  centeredMessage: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '20%',
+    height: '50%',
   },
 }));
 
@@ -159,15 +197,19 @@ export const AnnounceMessage = ({ message }) => {
     messageTitle,
     announceMessage,
     messageContent,
-    messageTimeStampRight,
   } = useStyles();
 
   return (
     <div className={messageRow}>
       <div className={announceMessage}>
         <div className={messageHeader}>
-          <Announcement color="inherit" style={{ padding: '2px' }} />
-          <Typography className={messageTitle}>{message.title}</Typography>
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px 8px 2px 0px' }}
+          />
+          <Typography className={messageTitle} variant="h6">
+            {message.subject}
+          </Typography>
         </div>
         <Typography className={messageContent}>{message.body}</Typography>
         {message.video_link && (
@@ -176,70 +218,75 @@ export const AnnounceMessage = ({ message }) => {
           </Typography>
         )}
       </div>
-      <Grid item className={messageTimeStampRight}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
-      </Grid>
     </div>
   );
 };
 
 export const SurveyResponseMessage = ({ message }) => {
-  const { messageRow, messageTimeStampRight, surveyResponse } = useStyles();
+  const { messageRow, surveyResponse } = useStyles();
+  const {
+    survey: { questions },
+    survey_response,
+  } = message;
 
   return (
     <div className={messageRow}>
       <Grid className={surveyResponse}>
-        {message.survey?.answers &&
-          message.survey.answers.map((answer, i) => (
+        <Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant={'h6'}>{message.from}</Typography>
+          <Typography>{message.composed_at.slice(0, 10)}</Typography>
+        </Grid>
+        <hr style={{ border: '0.1px solid black', width: '100%' }} />
+        {survey_response &&
+          questions.map((question, i) => (
             <div key={`answer - ${i}`}>
-              <Typography variant={'h6'}>Question {i + 1}:</Typography>
-              <Typography variant={'body1'}>{answer}</Typography>
+              <Typography variant={'body1'}>
+                <b>Q{i + 1}:</b> {question.prompt}
+              </Typography>
+              <Typography variant={'body1'}>
+                <b>A:</b> {survey_response[i]}
+              </Typography>
             </div>
           ))}
-      </Grid>
-      <Grid item className={messageTimeStampRight}>
-        <Typography>{message.composed_at.slice(0, 10)}</Typography>
       </Grid>
     </div>
   );
 };
 
-export const SurveyMessage = ({ message }) => {
-  const { messageRow, surveyContent, messageTimeStampLeft } = useStyles();
+export const SurveyMessage = ({ message, type }) => {
+  const { messageRow, surveyContent } = useStyles();
+
+  const { questions } = message.survey;
 
   return (
     <>
-      {message.survey.response ? (
+      {type === 'survey_response' ? (
         <SurveyResponseMessage message={message} />
       ) : (
         <div className={messageRow}>
-          <Grid item className={messageTimeStampLeft}>
-            <Typography>
-              {dateFormat(message.composed_at, 'yyyy-mm-dd hh:mm')}
-            </Typography>
-          </Grid>
           <Grid item className={surveyContent}>
-            <Typography variant={'h4'}>
-              {message.body ? message.body : ''}
-            </Typography>
-            {message.survey.questions.map((question, i) => (
-              <div key={question + `:${i + 1}`}>
-                <Typography variant={'h6'}>
-                  Question {i + 1}:{' '}
+            {questions.map((question, i) => {
+              return (
+                <div key={question + `:${i + 1}`}>
+                  <Typography variant={'h6'}>Question {i + 1}:</Typography>
                   <Typography variant={'body1'}>{question.prompt}</Typography>
-                </Typography>
-                <Typography variant={'h6'}>
-                  Choices:
+                  <Typography variant={'h6'}>Choices:</Typography>
                   <ol type="A">
                     {question.choices.map((choice, i) => (
-                      <li key={choice ? `choice ${i + 1}:${choice}` : i}>
-                        {choice}
-                      </li>
+                      <Typography
+                        variant={'h6'}
+                        key={choice ? `choice ${i + 1}:${choice}` : i}
+                      >
+                        <li>
+                          <Typography variant={'body1'}>{choice}</Typography>
+                        </li>
+                      </Typography>
                     ))}
                   </ol>
-                </Typography>
-              </div>
-            ))}
+                  <hr style={{ border: '0.1px solid black', width: '100%' }} />
+                </div>
+              );
+            })}
           </Grid>
         </div>
       )}
@@ -296,143 +343,376 @@ export const SentMessage = ({ message }) => {
   );
 };
 
-const SenderInformation = ({ message, messageRecipient, subject, id }) => {
+const SenderInformation = ({
+  message,
+  messageRecipient,
+  responseCount,
+  type,
+  id,
+  avatar_url,
+  showCharts,
+  setShowCharts,
+}) => {
   const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
 
   return (
     <Grid container className={senderInfo}>
       <Grid item className={senderItem}>
-        <Avatar src="" className={avatar}></Avatar>
+        {type === 'message' ? (
+          <Avatar src={avatar_url} className={avatar}></Avatar>
+        ) : type === 'announce' ? (
+          <Announcement
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        ) : (
+          <Ballot
+            color="inherit"
+            style={{ padding: '2px', fontSize: '2rem' }}
+          />
+        )}
       </Grid>
       <Grid item className={senderItem}>
         <Typography variant="h5">
-          {subject === 'Survey' ? subject : messageRecipient}
+          {type === 'survey' || type === 'survey_response'
+            ? `Survey: ${message?.survey?.title}`
+            : type === 'announce'
+            ? `Announcement`
+            : messageRecipient}
         </Typography>
 
-        {(subject === 'Survey' || subject === 'Announce') && (
-          <Typography>
-            DATE: {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
-          </Typography>
+        {(type === 'survey' ||
+          type === 'survey_response' ||
+          type === 'announce') && (
+          <>
+            <Typography align="left" color="primary">
+              <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
+            </Typography>
+            {message?.bulk_message_recipients &&
+              message.bulk_message_recipients.map((recipient, i) => (
+                <Chip
+                  key={`${
+                    recipient.organization
+                      ? recipient.organization
+                      : recipient.region
+                  }-${i}`}
+                  label={`${
+                    recipient.organization
+                      ? recipient.organization
+                      : recipient.region
+                  }`}
+                  color="primary"
+                  style={{
+                    color: 'white',
+                    borderRadius: '6px',
+                    fontSize: '.8rem',
+                    margin: '0.2rem',
+                  }}
+                />
+              ))}
+            {(type === 'survey' || type === 'survey_response') && (
+              <Typography>
+                <b>RESPONSES:</b> {responseCount}
+              </Typography>
+            )}
+          </>
         )}
 
-        <Typography align="left" color="primary">
-          {subject === 'Survey' ? messageRecipient : `ID: ${id}`}
-        </Typography>
+        {type === 'message' && id && (
+          <Typography align="left" color="primary">
+            ID: {id}
+          </Typography>
+        )}
       </Grid>
-      {subject === 'Survey' && (
+      {(type === 'survey' || type === 'survey_response') && responseCount > 0 && (
         <Grid item className={dataContainer}>
-          <Button className={button}>Survey Data</Button>
+          <Badge
+            badgeContent={responseCount}
+            color="secondary"
+            overlap="circle"
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            {showCharts ? (
+              <Button className={button} onClick={() => setShowCharts(false)}>
+                Show Survey
+              </Button>
+            ) : (
+              <Button
+                className={button}
+                onClick={() => setShowCharts(true)}
+                disabled={responseCount === 0}
+              >
+                Show Survey Data
+              </Button>
+            )}
+          </Badge>
         </Grid>
       )}
     </Grid>
   );
 };
 
-const MessageBody = ({ messages, messageRecipient }) => {
-  const history = useHistory();
-  const { paper, messagesBody, textInput } = useStyles();
-  const { user, authors, postMessageSend } = useContext(MessagingContext);
+function getSurveyId(messages) {
+  return messages[0].survey.id;
+}
+
+const MessageBody = ({ messages, messageRecipient, avatar }) => {
+  const {
+    paper,
+    messagesBody,
+    modalContainer,
+    textInput,
+    centeredMessage,
+  } = useStyles();
+  const {
+    user,
+    authors,
+    isLoading,
+    errorMessage,
+    setErrorMessage,
+    setIsLoading,
+    setThreads,
+    postMessageSend,
+  } = useContext(MessagingContext);
   const [messageContent, setMessageContent] = useState('');
-  const [subject, setSubject] = useState('');
   const [recipientId, setRecipientId] = useState('');
+  const [showCharts, setShowCharts] = useState(false);
+  const [errors, setErrors] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleModalOpen = () => setOpen(true);
+  const handleModalClose = () => setOpen(false);
+
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (messages) {
-      setSubject(messages[0].subject);
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    if (authors && messageRecipient) {
-      let res = authors.find((author) => author.handle === messageRecipient);
-
-      if (res) {
-        setRecipientId(res.id);
-      }
+    const res = authors.find((author) => author.handle === messageRecipient);
+    if (res?.id) {
+      setRecipientId(res.id);
     }
   }, [authors, messageRecipient]);
+
+  useEffect(() => {
+    if (errorMessage !== '') {
+      handleModalOpen();
+      setIsLoading(false);
+    }
+  }, [errorMessage]);
+
+  const scrollToBottom = () => {
+    // without animation
+    messagesEndRef.current.scrollIntoView();
+    // with animation
+    // messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  };
+
+  useEffect(scrollToBottom);
+
+  const validateMessage = (payload) => {
+    const errors = {};
+
+    console.log('body', /\w/g.test(payload.body.trim()));
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+
+    if (!payload.recipient_handle) {
+      errors.recipient = 'Please select a recipient';
+    }
+    return errors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let lastMessage = messages[messages.length - 1];
-
     const messagePayload = {
-      parent_message_id: lastMessage.id ? lastMessage.id : null,
+      parent_message_id: null,
       author_handle: user.userName,
       recipient_handle: messageRecipient,
-      subject: 'Message',
+      type: 'message',
       body: messageContent,
     };
 
+    const errs = validateMessage(messagePayload);
+
+    const errorsFound = Object.keys(errs).length > 0;
+    if (errorsFound) {
+      setErrors(true);
+      console.log('errors', errs);
+    }
+
     if (messageContent !== '') {
       if (user.userName && messageRecipient) {
-        await postMessageSend(messagePayload);
-        history.go(0);
+        const res = await postMessageSend(messagePayload);
+        if (res.error) {
+          setErrorMessage(res.message);
+        } else {
+          const newMessage = {
+            parent_message_id: null,
+            body: messageContent,
+            composed_at: new Date().toISOString(),
+            from: user.userName,
+            id: uuid(),
+            recipient_organization_id: null,
+            recipient_region_id: null,
+            survey: null,
+            to: messageRecipient,
+            type: 'message',
+            video_link: null,
+          };
+
+          log.debug('...update threads after postMessageSend');
+          // update the full set of threads
+          setThreads((prev) =>
+            prev
+              .reduce((threads, thread) => {
+                if (thread.userName === messageRecipient) {
+                  thread.messages.push(newMessage);
+                }
+                threads.push(thread);
+                return threads;
+              }, [])
+              .sort(
+                (a, b) =>
+                  new Date(b?.messages?.at(-1).composed_at) -
+                  new Date(a?.messages?.at(-1).composed_at)
+              )
+          );
+        }
       }
     }
     setMessageContent('');
   };
 
   return (
-    <Paper className={paper}>
-      {messageRecipient && messages ? (
-        <SenderInformation
-          message={messages[0]}
-          messageRecipient={messageRecipient}
-          subject={subject}
-          id={recipientId}
-        />
-      ) : (
-        <SenderInformation />
-      )}
-      <div id="style-1" className={messagesBody}>
-        {messages ? (
-          messages.map((message, i) => {
-            if (message.subject === 'Message') {
-              return message.from.author === user.userName ? (
-                <SentMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
+    <>
+      <Paper className={paper}>
+        {messageRecipient || messages ? (
+          <SenderInformation
+            message={messages[0]}
+            messageRecipient={messageRecipient}
+            responseCount={messages.length - 1}
+            type={messages[0].type}
+            id={recipientId || ''}
+            avatar_url={avatar}
+            showCharts={showCharts}
+            setShowCharts={setShowCharts}
+          />
+        ) : null}
+        <div id="style-1" className={messagesBody}>
+          {isLoading ? (
+            <Grid item xs className={centeredMessage}>
+              <CircularProgress style={{ margin: '30px' }} />
+              <Typography variant="h5">
+                <QuestionAnswerOutlined
+                  color="primary"
+                  style={{ padding: '10px 10px 0 0', fontSize: '1.5rem' }}
                 />
-              ) : message.body.length > 1 ? (
-                <RecievedMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : `i`}
-                  message={message}
-                />
+                Loading...
+              </Typography>
+            </Grid>
+          ) : !isLoading && messages ? (
+            messages.map((message, i) => {
+              if (message.type === 'message') {
+                return message.from === user.userName ? (
+                  <SentMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                ) : message.body.length > 1 ? (
+                  <RecievedMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                ) : (
+                  <div key={i}></div>
+                );
+              } else if (
+                message.type === 'survey' ||
+                message.type === 'survey_response'
+              ) {
+                return (
+                  <SurveyMessage
+                    key={message.id ? `${message.id}${i}` : i}
+                    message={message}
+                    user={user}
+                    type={message.type}
+                  />
+                );
+              } else if (message.type === 'announce') {
+                return (
+                  <AnnounceMessage
+                    key={message.id ? message.id : i}
+                    message={message}
+                  />
+                );
+              }
+            })
+          ) : (
+            <Grid item xs className={centeredMessage}>
+              <QuestionAnswerOutlined
+                color="primary"
+                style={{ padding: '2px', fontSize: '5rem' }}
+              />
+
+              {errorMessage !== '' ? (
+                <Typography variant="h5">ERROR: {errorMessage}</Typography>
               ) : (
-                <div key={i}></div>
-              );
-            } else if (message.subject.includes('Survey')) {
-              return (
-                <SurveyMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            } else if (message.subject.includes('Announce')) {
-              return (
-                <AnnounceMessage
-                  key={message.id ? `messageId=${message.id}i=${i}` : i}
-                  message={message}
-                />
-              );
-            }
-          })
-        ) : (
-          <div>Loading ...</div>
+                <Typography variant="h5">You have no messages</Typography>
+              )}
+            </Grid>
+          )}
+          <div
+            ref={messagesEndRef}
+            style={{ height: '10px', width: '100%' }}
+          ></div>
+        </div>
+        {errors && (
+          <Typography
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              margin: '20px 10px 0px',
+            }}
+          >
+            Please enter a message before sending
+          </Typography>
         )}
-      </div>
-      {subject !== 'Survey' && (
-        <TextInput
-          messageRecipient={messageRecipient}
-          handleSubmit={handleSubmit}
-          messageContent={messageContent}
-          setMessageContent={setMessageContent}
-          className={textInput}
+        {messages && messages[0]?.type === 'message' && (
+          <TextInput
+            messageRecipient={messageRecipient}
+            handleSubmit={handleSubmit}
+            messageContent={messageContent}
+            setMessageContent={setMessageContent}
+            className={textInput}
+            setErrors={setErrors}
+          />
+        )}
+      </Paper>
+      {showCharts && getSurveyId(messages) && (
+        <SurveyCharts
+          surveyId={getSurveyId(messages)}
+          setShowCharts={setShowCharts}
         />
       )}
-    </Paper>
+      <Modal
+        open={open}
+        onClose={handleModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className={modalContainer}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {errorMessage}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {`Please contact the administrator.`}
+          </Typography>
+        </Box>
+      </Modal>
+    </>
   );
 };
 

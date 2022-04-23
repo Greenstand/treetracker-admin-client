@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   SwipeableDrawer,
   Grid,
@@ -14,6 +13,8 @@ import { makeStyles } from '@material-ui/styles';
 import GSInputLabel from 'components/common/InputLabel';
 import { AppContext } from 'context/AppContext';
 import { MessagingContext } from 'context/MessagingContext';
+
+const log = require('loglevel');
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -54,15 +55,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
-  const history = useHistory();
   const { orgList } = useContext(AppContext);
-  const { user, regions, postMessageSend } = useContext(MessagingContext);
+  const {
+    setErrorMessage,
+    user,
+    regions,
+    postBulkMessageSend,
+    setThreads,
+  } = useContext(MessagingContext);
   const { form, sendButton } = useStyles();
   const [organization, setOrganization] = useState({});
   const [inputValueOrg, setInputValueOrg] = useState('');
   const [region, setRegion] = useState({});
   const [inputValueRegion, setInputValueRegion] = useState('');
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   const [values, setValues] = useState({
     title: '',
@@ -71,26 +77,47 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
   });
 
   const handleChange = (e) => {
+    setErrors(null);
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value,
+      [name]: `${value}`,
     });
+  };
+
+  const validateAnnouncement = (payload) => {
+    const errors = {};
+
+    if (!payload.subject) {
+      errors.subject = 'Please enter a subject for your announcement';
+    }
+
+    if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
+      errors.body = 'Please enter a message';
+    }
+    const videoUrl = /^((?:https?:)?\/\/)?.*/;
+
+    if (payload.video_link && !videoUrl.test(payload.video_link.trim())) {
+      errors.video_link = 'Please enter a valid video link';
+    }
+
+    if (
+      (!payload.region_id && !payload.organization_id) ||
+      (payload.region_id && payload.organization_id)
+    ) {
+      errors.recipient = 'Please select an organization or region';
+    }
+    return errors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
       author_handle: user.userName,
-      subject: 'Announce Message',
-      title: values.title,
+      subject: values.title,
+      type: 'announce',
       body: values.message,
     };
-
-    if (!region?.id && !organization?.id) {
-      setError(true);
-      return;
-    }
 
     if (values?.videoLink) {
       payload['video_link'] = values.videoLink;
@@ -104,30 +131,85 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
       payload['organization_id'] = organization.stakeholder_uuid;
     }
 
+    const errs = validateAnnouncement(payload);
+
     try {
-      if (
-        (payload.body && payload.organization_id) ||
-        (payload.body && payload.region_id)
-      ) {
-        await postMessageSend(payload);
-        history.go(0);
+      const errorsFound = Object.keys(errs).length > 0;
+      if (errorsFound) {
+        setErrors(errs);
+      } else {
+        const res = await postBulkMessageSend(payload);
+
+        setErrorMessage('');
+        if (res.error) {
+          setErrorMessage(
+            `Sorry, something went wrong and we couldn't create the announcement: ${res.message}`
+          );
+        } else {
+          // close the drawer
+          setValues({
+            title: '',
+            message: '',
+            videoLink: '',
+          });
+          setOrganization('');
+          setRegion('');
+          setToggleAnnounceMessage(false);
+
+          const organization = orgList.find(
+            (org) => org.stakeholder_uuid === payload.organization_id
+          );
+          const region = regions.find(
+            (region) => region.id === payload.region_id
+          );
+
+          const newAnnouncement = {
+            id: null,
+            type: 'announce',
+            parent_message_id: null,
+            from: payload.author_handle,
+            to: null,
+            recipient_organization_id: payload.organization_id || null,
+            recipient_region_id: payload.region_id || null,
+            subject: payload.subject,
+            body: payload.body,
+            composed_at: new Date().toISOString(),
+            video_link: null,
+            survey_response: null,
+            survey: null,
+            bulk_message_recipients: [
+              {
+                organization: organization?.name,
+                region: region?.name,
+              },
+            ],
+          };
+          log.debug('...update threads w/ new announcement');
+          // update the full set of threads
+          setThreads((prev) => [
+            {
+              username: `${newAnnouncement.id}`,
+              messages: [newAnnouncement],
+              avatar: '',
+            },
+            ...prev,
+          ]);
+        }
       }
     } catch (err) {
       console.log(err);
     }
-
-    setValues({
-      title: '',
-      message: '',
-      videoLink: '',
-    });
-    setOrganization('');
-    setRegion('');
-    setToggleAnnounceMessage(false);
   };
 
   return (
     <form className={form} onSubmit={handleSubmit}>
+      {errors?.subject && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.subject}
+        </Typography>
+      )}
       <GSInputLabel text="Announce: Title" />
       <TextField
         fullWidth
@@ -135,7 +217,15 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         name="title"
         value={values.title}
         onChange={handleChange}
+        required
       />
+      {errors?.body && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.body}
+        </Typography>
+      )}
       <GSInputLabel text={'Message'} />
       <TextField
         multiline
@@ -144,7 +234,15 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         value={values.message}
         onChange={handleChange}
         label="Write your message here ..."
+        required
       />
+      {errors?.video_link && (
+        <Typography
+          style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
+        >
+          {errors.video_link}
+        </Typography>
+      )}
       <GSInputLabel text={'Add a Video Link'} />
       <TextField
         name="videoLink"
@@ -152,13 +250,13 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         onChange={handleChange}
         label="Add a video link, e.g., YouTube URL"
       />
-      {error ? (
+      {errors?.recipient && (
         <Typography
           style={{ color: 'red', fontWeight: 'bold', margin: '20px 10px 0px' }}
         >
-          Please select a region or an organization!
+          {errors.recipient}
         </Typography>
-      ) : null}
+      )}
       <GSInputLabel
         id="select-label"
         text={'Target Audience by Organization'}
@@ -174,7 +272,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         inputValue={inputValueOrg}
         getOptionSelected={(option, value) => option.id === value.id}
         onInputChange={(e, val) => {
-          setError(false);
+          setErrors(null);
           setInputValueOrg(val);
         }}
         id="controllable-states-demo"
@@ -196,7 +294,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         inputValue={inputValueRegion}
         getOptionSelected={(option, value) => option.id === value.id}
         onInputChange={(e, val) => {
-          setError(false);
+          setErrors(null);
           setInputValueRegion(val);
         }}
         id="controllable-states-demo"
@@ -206,7 +304,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
           <TextField {...params} label="Select Region" />
         )}
       />
-      <Button disabled={error} className={sendButton} type="submit">
+      <Button disabled={!!errors} className={sendButton} type="submit">
         Send Message
       </Button>
     </form>
@@ -226,8 +324,8 @@ const AnnounceMessage = ({
 
   return (
     <SwipeableDrawer
-      disableBackdropTransition={!iOS}
-      disableDiscovery={iOS}
+      disablebackdroptransition={!iOS ? 'true' : 'false'}
+      disablediscovery={iOS ? 'true' : 'false'}
       anchor={'right'}
       open={toggleAnnounceMessage}
       onOpen={() => setToggleAnnounceMessage(true)}

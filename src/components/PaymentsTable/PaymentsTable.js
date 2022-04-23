@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import moment from 'moment';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -45,16 +46,25 @@ const paymentTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
+  },
+  {
+    description: 'Capture Count',
+    name: 'captures_count',
+    sortable: false,
+    showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
     name: 'calculated_at',
     sortable: true,
-    showInfoIcon: true,
+    showInfoIcon:
+      'The effective data is the date on which captures were consolidated and the earnings record was created',
   },
   {
-    description: 'Payment System',
-    name: 'payment_system',
+    description: 'Payment Method',
+    name: 'payment_method',
     sortable: true,
     showInfoIcon: false,
   },
@@ -87,14 +97,17 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
@@ -117,7 +130,7 @@ function PaymentsTable() {
   const [isShowUploadSnack, setIsShowUploadSnack] = useState(false);
   const [paymentsPerPage, setPaymentsPerPage] = useState(20);
   const [sortBy, setSortBy] = useState({
-    field: 'effective_payment_date',
+    field: 'calculated_at',
     order: 'desc',
   });
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
@@ -141,7 +154,7 @@ function PaymentsTable() {
     const response = await paymentsAPI.getEarnings(queryParams);
     const result = prepareRows(response.earnings);
     setPayments(result);
-    setTotalPayments(response.totalCount);
+    setTotalPayments(response.query.count);
 
     setIsLoading(false); // hide loading indicator when data is fetched
   }
@@ -207,25 +220,27 @@ function PaymentsTable() {
         headerTitle="Payments"
         mainFilterComponent={
           <CustomTableFilter
-            isMainFilterOpen={isMainFilterOpen}
+            isFilterOpen={isMainFilterOpen}
             filter={filter}
             filterType="main"
             setFilter={setFilter}
-            setIsMainFilterOpen={setIsMainFilterOpen}
+            setIsFilterOpen={setIsMainFilterOpen}
+            disablePaymentStatus={true}
           />
         }
         dateFilterComponent={
           <CustomTableFilter
-            isMainFilterOpen={isDateFilterOpen}
+            isFilterOpen={isDateFilterOpen}
             filter={filter}
             filterType="date"
             setFilter={setFilter}
-            setIsMainFilterOpen={setIsDateFilterOpen}
+            setIsFilterOpen={setIsDateFilterOpen}
           />
         }
         rowDetails={
           selectedPayment ? (
             <CustomTableItemDetails
+              showLogPaymentForm={false}
               selectedItem={selectedPayment}
               closeDetails={() => setSelectedPayment(null)}
             />

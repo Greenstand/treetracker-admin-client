@@ -1,5 +1,6 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
+import log from 'loglevel';
 
 // Set API as a variable
 const CAPTURE_MATCH_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
@@ -129,18 +130,20 @@ export default {
   /**
    * Capture Match Tool
    */
-  fetchCapturesToMatch(currentPage, abortController) {
-    return fetch(
-      `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
-        currentPage - 1
-      }`,
-      {
-        headers: {
-          Authorization: session.token,
-        },
-        signal: abortController?.signal,
-      }
-    )
+  fetchCapturesToMatch(currentPage, abortController, filter) {
+    const where = Object.keys(filter)
+      .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
+      .join('&');
+    const req = `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
+      currentPage - 1
+    }&${where}`;
+    log.warn('fetch capture:', req);
+    return fetch(req, {
+      headers: {
+        Authorization: session.token,
+      },
+      signal: abortController?.signal,
+    })
       .then(handleResponse)
       .catch(handleError);
   },
@@ -151,6 +154,16 @@ export default {
         Authorization: session.token,
       },
       signal: abortController?.signal,
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  getGrowerAccountById(id) {
+    const query = `${CAPTURE_MATCH_API}/grower_accounts/${id}`;
+    return fetch(query, {
+      headers: {
+        Authorization: session.token,
+      },
     })
       .then(handleResponse)
       .catch(handleError);
@@ -398,6 +411,19 @@ export default {
     }/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
     console.log('GET ORGANIZATIONS -----', query);
+
+    return fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: session.token,
+      },
+    })
+      .then(handleResponse)
+      .catch(handleError);
+  },
+  getAdminUserById(id) {
+    const query = `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${id}`;
 
     return fetch(query, {
       method: 'GET',

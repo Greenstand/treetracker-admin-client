@@ -2,24 +2,35 @@
 
 The Admin Panel is the part of the Treetracker project for verifying, processing and managing data collected by the Treetracker app.
 
-This is the React web frontend of Admin Panel, built with [create-react-app](https://github.com/facebook/create-react-app), [Rematch](http://rematch.gitbooks.io/), and [Material UI](https://material-ui.com/).
+This is the React web frontend of the Admin Panel, built with [create-react-app](https://github.com/facebook/create-react-app) and [Material UI](https://material-ui.com/).
 
-The Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api). The API specification is (partially) documented in OpenAPI format: [treetracker-admin.v1.yaml](https://github.com/Greenstand/treetracker-admin-api/blob/master/docs/api/spec/treetracker-admin.v1.yaml)
+The legacy Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api). The API specification is (partially) documented in OpenAPI format: [treetracker-admin.v1.yaml](https://github.com/Greenstand/treetracker-admin-api/blob/master/docs/api/spec/treetracker-admin.v1.yaml)
 
-Please add any missing content to this readme.
+The Admin Panel project is in the process of migrating away from a single, dedicated API to use the latest Greenstand microservices, including:
+- [Greenstand/treetracker-api](https://github.com/Greenstand/treetracker-api)
+- [Greenstand/treetracker-earnings-api](https://github.com/Greenstand/treetracker-earnings-api)
+- [Greenstand/treetracker-field-data](https://github.com/Greenstand/treetracker-field-data)
+- [Greenstand/treetracker-query-api](https://github.com/Greenstand/treetracker-query-api)
+- [Greenstand/treetracker-regions-api](https://github.com/Greenstand/treetracker-regions-api)
+- [Greenstand/treetracker-reporting](https://github.com/Greenstand/treetracker-reporting)
+- [Greenstand/treetracker-stakeholder-api](https://github.com/Greenstand/treetracker-stakeholder-api)
+
+The spec for each of these APIs can be found in the docs/api/spec directory of each project.
+
+Please add any missing content to this readme as a pull request.
 
 ## Development Environment Quick Start
 
 There are three main options for development in the Admin Panel:
 
-1. For frontend work only
-   1. Fork and clone this repo as described below
-2. For API work only
-   1. Follow setup instructions in the [treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api) project
-3. As a completely local development environment
-   1. Install postgres and postgis locally, install a database seed, and run database migrations
-   1. Install and run the backend API, configured to use your local database
-   1. Install and run the frontend, configured to user you local backend API
+- For frontend work only (recommended):
+  1. Follow the steps below to fork and clone this repo
+- For API work only:
+  1. Follow setup instructions in the [treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api) project
+- As a completely local development environment (not normally required):
+  1. Install postgres and postgis locally, install a database seed, and run database migrations
+  1. Install and run the backend API, configured to use your local database
+  1. Install and run the frontend, configured to user you local backend API
 
 ### Step 1: Install git
 
@@ -86,7 +97,27 @@ Visit http://localhost:3001
 
 Valid login credentials for the Admin Panel within the development environment can be found pinned to the #admin_panel_chat channel in Slack.
 
-### Step 8: Start developing!
+## Getting an Issue Assigned
+
+1. Look through the [open issues](https://github.com/Greenstand/treetracker-admin-client/issues) for one that looks interesting.
+Use labels to look for [good first issues](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), or to filter by size: you could start [small](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+small%22), or get your teeth into something more substantial ([medium](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+medium%22) or [large](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+large%22)).
+2. If you're not sure what to work on, ask in the #admin_panel_chat channel on Slack and we'll find a good issue for you.
+3. Add a comment to the selected issue to say you'd like to work on it, and ask for any clarification you need. Some of the info you need to solve the problem may be missing from the description of the issue.
+4. One of the Greenstand leads will then assign it to you and try to help with any questions.
+
+There are lots of opportunities to offer ideas and take ownership of larger pieces of work, so don't be afraid to ask!
+
+## Working on an Issue
+
+1. Create a branch for the issue in your local repo
+2. Make your changes and test everything works locally
+3. Push your changes to your fork on GitHub and create a pull request into Greenstand/master
+4. Fill in as much info as you can in the PR, including screenshots or videos of the change to help the reviewer understand what you've done
+5. A member of the review team will review your changes (it can take a little while, since lots of us are volunteers) and may request changes
+6. Make the requested changes, asking for clarification in the PR if necessary, and push the updated code
+7. When the reviewer is happy, they will approve and merge your changes
+
+You can work one more than one issue at a time, while you wait for your PR to be reviewed or questions to be answered, but remember to keep each issue on a separate branch. If two issues are closely related, you can combine them in one branch and PR.
 
 ## Commit Message and PR Title Format
 
@@ -95,7 +126,7 @@ We use automatic semantic versioning, which looks at commit messages to determin
 Your commit messages will need to follow the [Conventional Commits](https://www.conventionalcommits.org/) format, for example:
 
 ```
-feat: add new button
+feat(account): add new button
 ```
 
 Since we squash commits on merging PRs into `master`, this applies to PR titles as well.
@@ -105,15 +136,18 @@ Since we squash commits on merging PRs into `master`, this applies to PR titles 
 Your forked repo won't automatically stay in sync with Greenstand, so you'll need to occassionally sync manually (typically before starting work on a new feature).
 
 ```
+git checkout master
 git pull upstream master --rebase
 git push origin master
 ```
 
-You might also need to sync and merge `master` into your feature branch before submitting a PR to resolve any conflicts.
+If there are merge conflicts in your PR, you may need to rebase your branch.
+Ask a member of the team if you need help with this.
 
 ```
 git checkout <feature_branch>
-git merge master
+git pull upstream master --rebase
+git push origin <feature_branch> --force
 ```
 
 ## Code style guide
@@ -250,12 +284,6 @@ npm run storybook
 Visit this URL in the browser: http://localhost:9009
 
 All the stories are located at `./src/stories/`
-
-## About Redux/Rematch
-
-We use [Rematch](https://github.com/rematch/rematch), it is a simple shell on Redux. In contrast to vanilla Redux, Rematch has less boilerplate code.
-
-If you are not familiar with Redux/Rematch, please check our [simple tutorial](docs/rematchTutorial.md), there is a REAL example about how to convert a original React component to a Redux-connected component, and how to test it.
 
 ## Advanced local development using docker _## Currently broken ##_
 

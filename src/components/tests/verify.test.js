@@ -213,7 +213,7 @@ describe('Verify', () => {
       screen.logTestingPlaygroundURL();
 
       expect(screen.getByText(/country/i)).toBeInTheDocument();
-      expect(screen.getByText(/organization ID/i)).toBeInTheDocument();
+      expect(screen.getByText(/organization/i)).toBeInTheDocument();
       expect(screen.getByText(/person ID/i)).toBeInTheDocument();
       expect(screen.getByText(/ID:/i)).toBeInTheDocument();
       expect(screen.getByText(/email address/i)).toBeInTheDocument();

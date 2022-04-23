@@ -25,6 +25,7 @@ import ExportCaptures from 'components/ExportCaptures';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import CaptureTooltip from './CaptureTooltip';
 
@@ -95,6 +96,7 @@ const CaptureTable = () => {
     captures,
     capture,
     captureCount,
+    isLoading,
     setPage,
     setRowsPerPage,
     setOrder,
@@ -223,7 +225,7 @@ const CaptureTable = () => {
   const capturesTooltipStyle = useStyles();
 
   return (
-    <Grid style={{ height: '100%', overflow: 'auto' }}>
+    <Grid style={{ height: '100%', overflow: 'auto', textAlign: 'center' }}>
       <Grid
         container
         direction="row"
@@ -275,40 +277,51 @@ const CaptureTable = () => {
           </TableRow>
         </TableHead>
         <TableBody data-testid="captures-table-body">
-          {captures &&
-            captures.map((capture) => (
-              <Tooltip
-                key={capture.id}
-                placement="top"
-                arrow={true}
-                interactive
-                classes={{
-                  tooltipPlacementTop: capturesTooltipStyle.tooltipTop,
-                  arrow: capturesTooltipStyle.arrow,
-                }}
-                title={
-                  <CaptureTooltip capture={capture} toogleDrawer={createToggleDrawerHandler} />
-                }
-              >
-                <TableRow
-                  key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.id)}
-                  className={classes.tableRow}
-                >
-                  {columns.map(({ attr, renderer }) => (
-                    <TableCell key={attr}>
-                      {formatCell(
-                        capture,
-                        speciesLookup,
-                        captureTagLookup[capture.id] || [],
-                        attr,
-                        renderer
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </Tooltip>
-            ))}
+          {isLoading && !captures?.length ? (
+            <Grid item container className={classes.loadingIndicator}>
+              <CircularProgress />
+            </Grid>
+          ) : (
+            <>
+              {captures &&
+                captures.map((capture) => (
+                  <Tooltip
+                    key={capture.id}
+                    placement="top"
+                    arrow={true}
+                    interactive
+                    classes={{
+                      tooltipPlacementTop: capturesTooltipStyle.tooltipTop,
+                      arrow: capturesTooltipStyle.arrow,
+                    }}
+                    title={
+                      <CaptureTooltip
+                        capture={capture}
+                        toggleDrawer={createToggleDrawerHandler}
+                      />
+                    }
+                  >
+                    <TableRow
+                      key={capture.id}
+                      onClick={createToggleDrawerHandler(capture.id)}
+                      className={classes.tableRow}
+                    >
+                      {columns.map(({ attr, renderer }) => (
+                        <TableCell key={attr}>
+                          {formatCell(
+                            capture,
+                            speciesLookup,
+                            captureTagLookup[capture.id] || [],
+                            attr,
+                            renderer
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </Tooltip>
+                ))}
+            </>
+          )}
         </TableBody>
       </Table>
       {tablePagination()}

@@ -47,6 +47,10 @@ const useStyle = makeStyles((theme) => ({
   buttonCsv: {
     height: 36,
   },
+  loadingIndicator: {
+    justifyContent: 'space-around',
+    padding: theme.spacing(2),
+  },
 }));
 
 export default useStyle;

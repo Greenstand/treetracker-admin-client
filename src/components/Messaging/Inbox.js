@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   List,
   ListItem,
@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
+import { Announcement, Ballot } from '@material-ui/icons';
 import SearchInbox from './SearchInbox';
-import { MessagingContext } from 'context/MessagingContext';
 import { timeAgoFormatDate } from 'common/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,66 +48,65 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
+    marginTop: '0',
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
   },
 }));
 
-const Inbox = ({ messages, selectedIndex, handleListItemClick }) => {
+const Inbox = ({ threads, selected, handleListItemClick }) => {
   const { paper, searchInbox, list, listItem, listText, avatar } = useStyles();
-  const { user } = useContext(MessagingContext);
   const [search, setSearch] = useState('');
-
-  const onClickHelper = (e, i, message) => {
-    let recipient =
-      message.messages[0].to[0].recipient !== user.userName
-        ? message.messages[0].to[0].recipient
-        : message.messages[0].from.author;
-    handleListItemClick(e, i, recipient);
-  };
 
   return (
     <Paper className={paper}>
       <List className={list}>
-        {messages
-          .filter((message) => {
+        {threads
+          .filter((thread) => {
             if (search === '') {
-              return message;
+              return thread;
             } else if (
-              message.userName.toLowerCase().includes(search.toLowerCase())
+              thread.userName.toLowerCase().includes(search.toLowerCase())
             ) {
-              return message;
+              return thread;
             }
           })
-          .map((message, i) => (
+          .map((thread, i) => (
             <ListItem
-              key={i}
+              key={`${thread.userName}-${i}`}
               alignItems="flex-start"
               className={listItem}
-              selected={selectedIndex === i}
-              onClick={(e) => onClickHelper(e, i, message)}
+              selected={thread.userName === selected}
+              onClick={() => handleListItemClick(thread.userName)}
             >
-              <ListItemAvatar className={avatar}>
-                <Avatar alt={''} src={''} />
+              <ListItemAvatar>
+                {thread.messages[0].type === 'message' ? (
+                  <Avatar src={thread.avatar} className={avatar}></Avatar>
+                ) : thread.messages[0].type === 'announce' ? (
+                  <Announcement color="inherit" />
+                ) : (
+                  <Ballot color="inherit" />
+                )}
               </ListItemAvatar>
-              {message.messages[0].subject === 'Survey' ? (
+              {thread.messages[0].type === 'survey' ||
+              thread.messages[0].type === 'announce' ? (
                 <ListItemText
-                  primary={message.messages[0].subject}
+                  primary={thread.messages[0].subject}
                   secondary={
-                    message.messages[0].subject
-                      ? message.messages[0].survey.title
-                      : message.userName
+                    thread.messages[0].subject
+                      ? thread.messages[0].composed_at.slice(0, 10)
+                      : thread.userName
                   }
                   className={listText}
                 />
               ) : (
-                <ListItemText primary={message.userName} className={listText} />
+                <ListItemText primary={thread.userName} className={listText} />
               )}
               <Typography>
                 {timeAgoFormatDate(
                   new Date(
-                    message.messages[message.messages.length - 1].composed_at
+                    thread.messages[thread.messages.length - 1].composed_at
                   )
                 )}
               </Typography>

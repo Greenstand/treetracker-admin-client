@@ -1,12 +1,21 @@
 import { session } from '../models/auth';
+const log = require('loglevel');
 
 export async function handleResponse(response) {
   if (response.status === 204) return {};
   if (response.ok) return response.json();
+
+  // server-side validation error occurred.
+  const error = await response.json();
+  log.debug('handleResponse error ---', response.status, error);
+
+  if (response.status === 422) {
+    return {
+      error: true,
+      message: error.message,
+    };
+  }
   if (response.status === 400) {
-    // server-side validation error occurred.
-    // Server side validation returns a string error message, so parse as text instead of json.
-    const error = await response.text();
     throw new Error(error);
   }
   throw new Error('Network response was not ok.');
@@ -16,9 +25,9 @@ export async function handleResponse(response) {
 export function handleError(error) {
   if (error.name === 'AbortError') {
     // Ignore `AbortError`
-    console.log('Aborted', error);
+    log.debug('Aborted', error);
   } else {
-    console.error('API call failed. ' + error);
+    log.error('API call failed. ' + error.name, error.message, error);
     throw error;
   }
 }
@@ -31,4 +40,8 @@ export function getOrganization() {
 
 export function getOrganizationId() {
   return session.user?.policy?.organization?.id || null;
+}
+
+export function getOrganizationUUID() {
+  return session.user?.policy?.organization?.uuid || null;
 }

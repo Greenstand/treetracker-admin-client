@@ -8,6 +8,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
 
 export const CapturesContext = createContext({
+  isLoading: false,
   captures: [],
   captureCount: 0,
   capture: {},
@@ -38,6 +39,7 @@ export function CapturesProvider(props) {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('timeCreated');
+  const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(
     new FilterModel({
       verifyStatus: [
@@ -92,7 +94,9 @@ export function CapturesProvider(props) {
       skip: page * rowsPerPage,
     };
     const paramString = `filter=${JSON.stringify(filterData)}`;
+    setIsLoading(true);
     const response = await queryCapturesApi({ paramString });
+    setIsLoading(false);
     setCaptures(response.data);
   };
 
@@ -111,13 +115,16 @@ export function CapturesProvider(props) {
   };
 
   const getCaptureAsync = (id) => {
+    setIsLoading(true);
     queryCapturesApi({ id })
       .then((res) => {
+        setIsLoading(false);
         setCapture(res.data);
       })
-      .catch((err) =>
+      .catch((err) => {
+        setIsLoading(false);
         console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
-      );
+    });
   };
 
   const updateFilter = async (filter) => {
@@ -141,6 +148,8 @@ export function CapturesProvider(props) {
     order,
     orderBy,
     filter,
+    isLoading,
+    setIsLoading,
     setRowsPerPage,
     setPage,
     setOrder,
