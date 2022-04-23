@@ -56,7 +56,7 @@ export default function OptimizedImage(props) {
           inset: 0,
           objectFit,
           width: '100%',
-          height: '98%',
+          height: '100%',
         }}
         {...rest}
       />
