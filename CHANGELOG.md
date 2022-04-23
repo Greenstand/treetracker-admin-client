@@ -1,3 +1,10 @@
+# [1.88.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.10...v1.88.0) (2022-04-23)
+
+
+### Features
+
+* update to use Image-api ([#650](https://github.com/Greenstand/treetracker-admin-client/issues/650)) ([eb23077](https://github.com/Greenstand/treetracker-admin-client/commit/eb23077cbd096414e1587c1e8484395a1ef1ec02))
+
 ## [1.87.10](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.9...v1.87.10) (2022-04-10)
 
 
