@@ -223,7 +223,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           className={classes.candidateCaptureContainer}
                         >
                           <OptimizedImage
-                            src={'candidateCapture.image_url'}
+                            src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
                             objectFit="cover"
                             width={250}

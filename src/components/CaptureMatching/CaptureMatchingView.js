@@ -602,7 +602,7 @@ function CaptureMatchingView() {
             <OptimizedImage
               key={captureImage.id}
               className={classes.captureImageImgContainer}
-              src={'captureImage.image_url'}
+              src={captureImage.image_url}
               alt={`Capture ${captureImage.id}`}
               objectFit="contain"
               width={screenWidth * 0.5}
