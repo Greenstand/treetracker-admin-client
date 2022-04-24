@@ -602,11 +602,16 @@ function CaptureMatchingView() {
             <OptimizedImage
               key={captureImage.id}
               className={classes.captureImageImgContainer}
-              src={captureImage.image_url}
+              src={'captureImage.image_url'}
               alt={`Capture ${captureImage.id}`}
               objectFit="contain"
               width={screenWidth * 0.5}
               fixed
+              alertWidth="100%"
+              alertHeight="30%"
+              alertPadding="2rem"
+              alertTitleSize="1.6rem"
+              alertTextSize="1rem"
             />
           </Box>
         </Paper>
