@@ -326,6 +326,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     className={classes.cardMedia}
                     fixed
                     rotation={grower.imageRotation}
+                    alertTitleSize="1.6rem"
+                    alertTextSize="1rem"
+                    alertHeight="50%"
                   />
                 )}
                 {!grower.imageUrl && (

@@ -607,6 +607,11 @@ function CaptureMatchingView() {
               objectFit="contain"
               width={screenWidth * 0.5}
               fixed
+              alertWidth="100%"
+              alertHeight="30%"
+              alertPadding="2rem"
+              alertTitleSize="1.6rem"
+              alertTextSize="1rem"
             />
           </Box>
         </Paper>

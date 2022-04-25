@@ -231,6 +231,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               width: '250px',
                               height: '100%',
                             }}
+                            alertHeight="300px"
+                            alertTextSize=".9rem"
+                            alertTitleSize="1.2rem"
                           />
                           <Box className={classes.captureInfo}>
                             <Box className={classes.captureInfoDetail}>

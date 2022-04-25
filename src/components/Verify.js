@@ -74,6 +74,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '87% 0 0 0',
     position: 'relative',
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -324,6 +326,12 @@ const Verify = (props) => {
                   src={capture.imageUrl}
                   width={400}
                   className={classes.cardMedia}
+                  alertWidth="100%"
+                  alertHeight="200%"
+                  alertPosition="absolute"
+                  alertPadding="5rem 0 0 1rem"
+                  alertTitleSize="1.6rem"
+                  alertTextSize="1rem"
                 />
               </CardContent>
 
