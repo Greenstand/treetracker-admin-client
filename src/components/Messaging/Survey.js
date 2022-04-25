@@ -8,7 +8,6 @@ import {
   Button,
   IconButton,
   FormControl,
-  FormHelperText,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
@@ -297,10 +296,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
             value={`question${num}`['prompt']}
             onChange={(e) => handleChange(e, `question${num}`)}
             {...(errors?.questions && { error: true })}
-            // {...(errors?.questions && {
-            //   error: true,
-            //   helperText: errors.questions,
-            // })}
           />
           <GSInputLabel text={`Question ${num} Answer Options`} />
           <TextField
@@ -374,9 +369,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
               />
             )}
           />
-          {/* {errors?.recipient && (
-            <FormHelperText>{errors.recipient}</FormHelperText>
-          )} */}
         </FormControl>
         <FormControl fullWidth {...(errors?.recipient && { error: true })}>
           <GSInputLabel
@@ -408,9 +400,6 @@ const SurveyForm = ({ setToggleSurvey }) => {
               />
             )}
           />
-          {/* {errors?.recipient && (
-            <FormHelperText>{errors.recipient}</FormHelperText>
-          )} */}
         </FormControl>
       </div>
       <Button
