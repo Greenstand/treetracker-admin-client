@@ -29,7 +29,7 @@ import {
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { Edit, Close } from '@material-ui/icons';
-// import SortIcon from '@material-ui/icons/Sort';
+import SortIcon from '@material-ui/icons/Sort';
 import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
@@ -99,24 +99,6 @@ const styles = (theme) => ({
     position: 'relative',
     bottom: 5,
   },
-  radioButton: {
-    '&$radioChecked': { color: theme.palette.primary.main },
-  },
-  radioChecked: {},
-  radioGroup: {
-    position: 'relative',
-    bottom: 12,
-    left: 10,
-  },
-  listItem: {
-    padding: '0 16px',
-  },
-  paddingBottom: {
-    paddingBottom: '24px',
-  },
-  minWidth: {
-    minWidth: '320px',
-  },
   operations: {
     whiteSpace: 'nowrap',
   },
@@ -124,7 +106,7 @@ const styles = (theme) => ({
 
 const RegionTable = (props) => {
   const { classes } = props;
-  // const sortOptions = { byId: 'id', byName: 'name' };
+  const sortOptions = { byName: 'name' };
   const {
     regions,
     collections,
@@ -133,7 +115,7 @@ const RegionTable = (props) => {
     showCollections,
     changeCurrentPage,
     changePageSize,
-    // changeSort,
+    changeSort,
     setShowCollections,
     regionCount,
     collectionCount,
@@ -236,11 +218,6 @@ const RegionTable = (props) => {
             checked={selected.includes(region.id)}
           />
         </TableCell> */}
-        <Tooltip title={item.id}>
-          <TableCell component="th" scope="row">
-            {`${(item.id + '').substring(0, 9)}`}&hellip;
-          </TableCell>
-        </Tooltip>
         <TableCell component="th" scope="row" data-testid="region">
           {item.name}
         </TableCell>
@@ -252,7 +229,7 @@ const RegionTable = (props) => {
         )}
         {!showCollections && (
           <>
-            <TableCell>{item.collectionName || '---'}</TableCell>
+            <TableCell>{item.collection_name || '---'}</TableCell>
             <Tooltip title={<RegionProperties region={item} />}>
               <TableCell>
                 <RegionProperties region={item} max={3} />
@@ -348,22 +325,13 @@ const RegionTable = (props) => {
                   <TableHead>
                     <TableRow>
                       <TableCell>
-                        ID
-                        {/* <IconButton
-                          title="sortbyId"
-                          onClick={() => changeSort(sortOptions.byId)}
-                        >
-                          <SortIcon />
-                        </IconButton> */}
-                      </TableCell>
-                      <TableCell>
                         Name
-                        {/* <IconButton
+                        <IconButton
                           title="sortbyName"
                           onClick={() => changeSort(sortOptions.byName)}
                         >
                           <SortIcon />
-                        </IconButton> */}
+                        </IconButton>
                       </TableCell>
                       {!userHasOrg && <TableCell>Owner</TableCell>}
                       {!showCollections && (
@@ -445,10 +413,7 @@ const EditModal = ({
   updateCollection,
   showSnackbar,
 }) => {
-  const [errors, setErrors] = useState({
-    name: undefined,
-    tag: undefined,
-  });
+  const [errors, setErrors] = useState({});
   const [id, setId] = useState(undefined);
   const [ownerId, setOwnerId] = useState(undefined);
   const [name, setName] = useState(undefined);
@@ -473,6 +438,7 @@ const EditModal = ({
     setCalc(true);
     setIsCollection(false);
     setOwnerId(undefined);
+    setErrors({});
   };
 
   useEffect(() => {
@@ -636,7 +602,7 @@ const EditModal = ({
         }
 
         if (res?.error) {
-          throw res.error;
+          throw res.message;
         } else {
           showSnackbar(
             `${isCollection ? res?.collection?.name : res?.region?.name} ${
@@ -647,7 +613,7 @@ const EditModal = ({
         }
       } catch (error) {
         // TO DO - report the error details
-        alert(`Upload failed: ${error?.message || error}`);
+        alert(`Upload failed: ${error}`);
       }
       setSaveInProgress(false);
     }
@@ -814,7 +780,7 @@ const DeleteDialog = ({
         res = await deleteRegion({ id: selectedItem.id });
       }
       if (res?.error) {
-        throw res.error;
+        throw res.message;
       } else {
         showSnackbar(
           `${
@@ -826,7 +792,7 @@ const DeleteDialog = ({
         setOpenDelete(false);
       }
     } catch (error) {
-      alert(`Failed to delete item: ${error?.message || error}`);
+      alert(`Failed to delete item: ${error}`);
     }
   };
 
@@ -840,13 +806,15 @@ const DeleteDialog = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{`Please confirm you want to delete ${selectedItem?.name}`}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {`Are you sure you want to delete ${selectedItem?.name}?`}
+      </DialogTitle>
       <DialogActions>
-        <Button onClick={handleDelete} color="primary">
-          Delete
-        </Button>
         <Button onClick={closeDelete} color="primary" autoFocus>
           Cancel
+        </Button>
+        <Button onClick={handleDelete} variant="contained" color="primary">
+          Delete
         </Button>
       </DialogActions>
     </Dialog>

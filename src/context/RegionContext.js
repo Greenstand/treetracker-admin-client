@@ -38,7 +38,7 @@ export function RegionProvider(props) {
   const [regionCount, setRegionCount] = useState(null);
   const [collectionCount, setCollectionCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('id');
+  const [orderBy, setOrderBy] = useState('name');
   const [filter, setFilter] = useState(new FilterRegion());
   const [isLoading, setIsLoading] = useState(false);
   const [showCollections, setShowCollections] = useState(false);
@@ -94,20 +94,22 @@ export function RegionProvider(props) {
 
     const collectionIds = [
       ...new Set(
-        regions.map((region) => region.collectionIds).filter((id) => id)
+        regions.map((region) => region.collection_id).filter((id) => id)
       ),
     ];
-    const collectionLookup = await Promise.all(
-      collectionIds.map((id) => api.getCollection(id))
-    );
+    const collectionLookup = (
+      await Promise.all(collectionIds.map((id) => api.getCollection(id)))
+    ).map((res) => res.collection);
     setRegions(
       regions.map((region) => {
         const collection =
           region.collection_id &&
-          collectionLookup.find((collection) => collection.id === region);
+          collectionLookup.find(
+            (collection) => collection.id === region.collection_id
+          );
         return {
           ...region,
-          collectionName: collection?.name || undefined,
+          collection_name: collection?.name || undefined,
         };
       })
     );
@@ -154,6 +156,7 @@ export function RegionProvider(props) {
   };
 
   const upload = async (payload) => {
+    // If the user has an organization, that should be applied as the owner
     const res = await api.upload({
       owner_id: getOrganizationUUID() || undefined,
       ...payload,

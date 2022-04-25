@@ -30,7 +30,7 @@ export default {
       skip,
       rowsPerPage,
       filter,
-      // orderBy = 'id',
+      // orderBy = 'name',
       // order = 'desc',
     }
   ) {
@@ -38,7 +38,8 @@ export default {
       ...filter,
       limit: rowsPerPage,
       offset: skip,
-      // sort: [`${orderBy}`, `${order}`],
+      // sort_by: orderBy,
+      // order,
     });
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT

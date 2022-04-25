@@ -162,10 +162,12 @@ const GROWERS = [
 const ORGS = [
   {
     id: 0,
+    stakeholder_uuid: '00000000-0000-0000-0000-000000000000',
     name: 'Dummy Org',
   },
   {
     id: 1,
+    stakeholder_uuid: '11111111-1111-1111-1111-111111111111',
     name: 'Another Org',
   },
 ];
@@ -208,6 +210,82 @@ const SPECIES = [
   {
     id: 30,
     name: 'fig',
+  },
+];
+
+const REGIONS = [
+  {
+    id: '22222222-2222-2222-2222-222222222222',
+    owner_id: '00000000-0000-0000-0000-000000000000',
+    collection_id: '44444444-4444-4444-4444-444444444444',
+    name: 'Regent-Lumley',
+    shape: 'region/22222222-2222-2222-2222-222222222222/shape',
+    properties: {
+      Id: 577,
+      gid: 4,
+      City: null,
+      Name: 'Regent-Lumley',
+      Label: null,
+      Name1: 'C13',
+      Notes: null,
+      Area_m2: 14170348.8219,
+      Area_km2: 14.1703488219,
+      Hectares: 1417.24782491,
+      gridcode: 506,
+      Area_m2_1: 262201550,
+      Name_Code: 13,
+      FID_catchm: 3,
+      FID_sle_st: 0,
+    },
+    show_on_org_map: false,
+    calculate_statistics: true,
+    created_at: '2022-03-19T01:43:28.496Z',
+    updated_at: '2022-04-03T20:34:32.820Z',
+  },
+  {
+    id: '33333333-3333-3333-3333-333333333333',
+    owner_id: '00000000-0000-0000-0000-000000000000',
+    collection_id: '44444444-4444-4444-4444-444444444444',
+    name: 'Aberdeen',
+    shape: 'region/33333333-3333-3333-3333-333333333333/shape',
+    properties: {
+      Id: 240,
+      gid: 3,
+      City: null,
+      Name: 'Aberdeen',
+      Label: null,
+      Name1: 'C1',
+      Notes: null,
+      Area_m2: 9657876.2148,
+      Area_km2: 9.6578762148,
+      Hectares: 967.464585175,
+      gridcode: 227,
+      Area_m2_1: 262201550,
+      Name_Code: 1,
+      FID_catchm: 2,
+      FID_sle_st: 0,
+    },
+    show_on_org_map: true,
+    calculate_statistics: true,
+    created_at: '2022-03-19T01:43:28.461Z',
+    updated_at: '2022-04-03T20:08:49.959Z',
+  },
+];
+
+const REGION_COLLECTIONS = [
+  {
+    id: '44444444-4444-4444-4444-444444444444',
+    owner_id: '00000000-0000-0000-0000-000000000000',
+    name: 'jivdib',
+    created_at: '2022-03-19T01:43:28.347Z',
+    updated_at: '2022-04-03T20:34:06.286Z',
+  },
+  {
+    id: '55555555-5555-5555-5555-555555555555',
+    owner_id: '11111111-1111-1111-1111-111111111111',
+    name: 'agdafd',
+    created_at: '2022-03-19T01:43:28.347Z',
+    updated_at: '2022-04-03T20:34:17.857Z',
   },
 ];
 
@@ -306,6 +384,8 @@ module.exports = {
   TAG,
   TAGS,
   SPECIES,
+  REGIONS,
+  REGION_COLLECTIONS,
   capturesValues,
   growerValues,
   verifyValues,
