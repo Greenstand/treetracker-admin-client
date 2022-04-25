@@ -3,22 +3,16 @@ const log = require('loglevel');
 
 export async function handleResponse(response) {
   if (response.status === 204) return {};
-  if (response.ok) return response.json();
+  const payload = await response.json();
+  if (response.ok) return payload;
 
-  // server-side validation error occurred.
-  const error = await response.json();
-  log.debug('handleResponse error ---', response.status, error);
+  log.debug('handleResponse error ---', response.status, payload);
 
   // pass along user errors
-  if (response.status > 399 && response.status < 500) {
-    return {
-      error: true,
-      status: response.status,
-      message: error.message,
-    };
-  }
-
-  throw new Error('Network response was not ok.');
+  return Promise.reject({
+    status: response.status,
+    message: payload.error,
+  });
 }
 
 // we should call an error logging service, but
