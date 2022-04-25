@@ -1,3 +1,10 @@
+# [1.89.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.88.0...v1.89.0) (2022-04-25)
+
+
+### Features
+
+* Verify, Growers, CaptureMatching tools: Showing an error message when images fail to load ([#652](https://github.com/Greenstand/treetracker-admin-client/issues/652)) ([a1eaa43](https://github.com/Greenstand/treetracker-admin-client/commit/a1eaa4337289af564e46c698adb97d4b23f3a1e4))
+
 # [1.88.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.87.10...v1.88.0) (2022-04-23)
 
 
