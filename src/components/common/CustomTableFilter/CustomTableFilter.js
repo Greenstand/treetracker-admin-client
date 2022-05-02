@@ -83,7 +83,7 @@ function CustomTableFilter(props) {
     updateSelectedFilter(filtersToSubmit);
   };
 
-  const handleOnFilterFormReset = (e, filterType) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
     setFilter(initialFilter);
     setLocalFilter(initialFilter);
@@ -260,7 +260,7 @@ function CustomTableFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={(e) => handleOnFilterFormReset(e, filterType)}
+              onClick={(e) => handleOnFilterFormReset(e)}
               className={classes.customTableFilterResetButton}
             >
               RESET
