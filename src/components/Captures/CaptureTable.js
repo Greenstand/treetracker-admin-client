@@ -59,6 +59,13 @@ const columns = [
     noSort: true,
     renderer: (val) => val,
   },
+
+  {
+    attr: 'tokenId',
+    label: 'Token Id',
+    renderer: (val) => val,
+  },
+
   {
     attr: 'tokenId',
     label: 'Token Status',
@@ -275,8 +282,8 @@ const CaptureTable = () => {
                   onClick={createToggleDrawerHandler(capture.id)}
                   className={classes.tableRow}
                 >
-                  {columns.map(({ attr, renderer }) => (
-                    <TableCell key={attr}>
+                  {columns.map(({ attr, renderer }, i) => (
+                    <TableCell key={`${attr}_${i}`}>
                       {formatCell(
                         capture,
                         speciesLookup,
