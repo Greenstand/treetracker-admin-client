@@ -607,7 +607,7 @@ const EditModal = ({
           throw res.message;
         } else {
           showSnackbar(
-            `${isCollection ? res?.collection?.name : res?.region?.name} ${
+            `${isCollection ? 'Collection' : res?.region?.name} ${
               isUpload ? 'uploaded' : 'updated'
             }`
           );
