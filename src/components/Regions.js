@@ -29,7 +29,7 @@ import {
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { Edit, Close } from '@material-ui/icons';
-import SortIcon from '@material-ui/icons/Sort';
+// import SortIcon from '@material-ui/icons/Sort';
 import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
@@ -106,7 +106,7 @@ const styles = (theme) => ({
 
 const RegionTable = (props) => {
   const { classes } = props;
-  const sortOptions = { byName: 'name' };
+  // const sortOptions = { byName: 'name' };
   const {
     regions,
     collections,
@@ -115,7 +115,7 @@ const RegionTable = (props) => {
     showCollections,
     changeCurrentPage,
     changePageSize,
-    changeSort,
+    // changeSort,
     setShowCollections,
     regionCount,
     collectionCount,
@@ -326,12 +326,12 @@ const RegionTable = (props) => {
                     <TableRow>
                       <TableCell>
                         Name
-                        <IconButton
+                        {/* <IconButton
                           title="sortbyName"
                           onClick={() => changeSort(sortOptions.byName)}
                         >
                           <SortIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </TableCell>
                       {!userHasOrg && <TableCell>Owner</TableCell>}
                       {!showCollections && (
@@ -775,9 +775,9 @@ const DeleteDialog = ({
     try {
       let res;
       if (selectedItem.isCollection) {
-        res = await deleteCollection({ id: selectedItem.id });
+        res = await deleteCollection(selectedItem.id);
       } else {
-        res = await deleteRegion({ id: selectedItem.id });
+        res = await deleteRegion(selectedItem.id);
       }
       if (res?.error) {
         throw res.message;

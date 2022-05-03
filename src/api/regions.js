@@ -26,20 +26,14 @@ export default {
 
   getItems(
     type,
-    {
-      skip,
-      rowsPerPage,
-      filter,
-      // orderBy = 'name',
-      // order = 'desc',
-    }
+    { skip, rowsPerPage, filter, orderBy = 'name', order = 'desc' }
   ) {
     const params = new URLSearchParams({
       ...filter,
       limit: rowsPerPage,
       offset: skip,
-      // sort_by: orderBy,
-      // order,
+      sort_by: orderBy,
+      order,
     });
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
