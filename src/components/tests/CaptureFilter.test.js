@@ -27,7 +27,7 @@ describe('CaptureFilter organizations', () => {
         render(
           <AppProvider>
             <CaptureFilter />
-          </AppProvider>,
+          </AppProvider>
         );
       });
 
@@ -92,7 +92,7 @@ describe('CaptureFilter organizations', () => {
         render(
           <AppProvider value={{ orgList: orgs }}>
             <CaptureFilter />
-          </AppProvider>,
+          </AppProvider>
         );
         await act(() => api.getOrganizations());
       });
@@ -124,7 +124,8 @@ describe('CaptureFilter organizations', () => {
         const listItems = orgs.map((org) => org.textContent);
         console.log('default orgList', listItems);
 
-        expect(orgs).toHaveLength(2);
+        // two default options + two orgs
+        expect(orgs).toHaveLength(4);
       });
     });
 
@@ -135,7 +136,7 @@ describe('CaptureFilter organizations', () => {
             <AppContext.Consumer>
               {(value) => <p>Received: {value.orgList}</p>}
             </AppContext.Consumer>
-          </AppProvider>,
+          </AppProvider>
         );
 
         await act(() => api.getOrganizations());

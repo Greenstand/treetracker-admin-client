@@ -22,7 +22,6 @@ const log = loglevel.getLogger('../tests/regions.test');
 describe('region management', () => {
   let treeTrackerApi;
   let regionsApi;
-  let appValues;
   let regionValues;
 
   beforeEach(() => {
@@ -97,18 +96,6 @@ describe('region management', () => {
       deleteRegion: () => {},
       deleteCollection: () => {},
     };
-
-    appValues = {
-      login: () => {},
-      logout: () => {},
-      user: undefined,
-      token: undefined,
-      routes: [],
-      orgList: ORGS,
-      userHasOrg: () => false,
-      selectedFilters: [],
-      updateSelectedFilter: () => {},
-    };
   });
 
   afterEach(cleanup);
@@ -117,7 +104,7 @@ describe('region management', () => {
     beforeEach(async () => {
       render(
         <BrowserRouter>
-          <AppProvider value={appValues}>
+          <AppProvider value={{ orgList: ORGS }}>
             <RegionProvider value={regionValues}>
               <RegionsView />
             </RegionProvider>
@@ -183,33 +170,12 @@ describe('region management', () => {
       it('shows a region record', () => {
         const table = screen.getByRole(/table/i);
         expect(within(table).getByText(REGIONS[0].name)).toBeTruthy();
-        expect(within(table).getByText(ORGS[0].name)).toBeTruthy();
+        expect(within(table).getAllByText(ORGS[0].name)).toBeTruthy();
         expect(
-          within(table).getByText(REGION_COLLECTIONS[0].name)
+          within(table).getAllByText(REGION_COLLECTIONS[0].name)
         ).toBeTruthy();
-        expect(within(table).getByText(REGIONS[0].properties.id)).toBeTruthy();
+        expect(within(table).getByText(REGIONS[0].properties.Id)).toBeTruthy();
       });
-    });
-
-    describe('when uploading a new region', () => {
-      beforeEach(async () => {
-        userEvent.click(screen.getByText(/Upload/i));
-        const dialog = screen.getByRole(/dialog/i);
-        const inputOwner = screen.getByLabelText(/owner/i);
-        const inputRegionNameProperty = screen.getByLabelText(
-          /region name property/i
-        );
-        const uploadBtn = screen.getByText(/upload/i);
-
-        userEvent.click(uploadBtn);
-
-        // wait for it... to complete & dialog to close
-        waitForElementToBeRemoved(dialog);
-        //---- the last 2 tests work w/o this line but get act() errors in the console.
-        //---- the errors go away w/this line but then tests fail
-      });
-
-      afterEach(cleanup);
     });
   });
 });

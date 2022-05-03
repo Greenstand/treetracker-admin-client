@@ -47,7 +47,7 @@ describe('growers', () => {
               </GrowerProvider>
             </AppProvider>
           </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
       );
 
       await act(() => api.getGrowers());
@@ -101,7 +101,8 @@ describe('growers', () => {
       const listItems = orgs.map((org) => org.textContent);
       console.log('default orgList', listItems);
 
-      expect(orgs).toHaveLength(2);
+      // two default options + two orgs
+      expect(orgs).toHaveLength(4);
     });
   });
 });
