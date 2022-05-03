@@ -35,7 +35,7 @@ import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CaptureDetailProvider } from '../context/CaptureDetailContext';
-import VerifyTooltip from './VerifyTooltip';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -325,11 +325,13 @@ const Verify = (props) => {
               placement="top"
               arrow={true}
               interactive
+              enterDelay={1000}
+              enterNextDelay={1000}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
               }}
               title={
-                <VerifyTooltip
+                <CaptureDetailTooltip
                   capture={capture}
                   showCaptureClick={handleShowCaptureDetail}
                 />

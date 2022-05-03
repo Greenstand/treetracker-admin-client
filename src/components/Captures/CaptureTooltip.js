@@ -1,9 +1,11 @@
 import React from 'react';
 import OptimizedImage from '../OptimizedImage';
-
+import {
+  Box
+} from '@material-ui/core';
 const CaptureTooltip = ({ capture, toggleDrawer }) => {
   return (
-    <>
+    <Box>
       <OptimizedImage
         onClick={toggleDrawer(capture.id)}
         src={capture.imageUrl}
@@ -14,7 +16,7 @@ const CaptureTooltip = ({ capture, toggleDrawer }) => {
           borderRadius: '8px',
         }}
       />
-    </>
+    </Box>
   );
 };
 

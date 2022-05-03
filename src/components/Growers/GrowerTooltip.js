@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/EmailOutlined';
 import PhoneIcon from '@material-ui/icons/PhoneOutlined';
 import OrgIcon from '@material-ui/icons/LanguageOutlined';
+import GrowerOrganization from '../GrowerOrganization';
 
 const GrowerTooltip = ({ grower, growerClick }) => {
   const useStyles = makeStyles(() => ({
@@ -19,7 +20,7 @@ const GrowerTooltip = ({ grower, growerClick }) => {
       marginTop: '2px',
     },
     label: {
-      marginLeft: '4px',
+      marginLeft: '12px',
     },
   }));
 
@@ -57,7 +58,6 @@ const GrowerTooltip = ({ grower, growerClick }) => {
               </Box>
               <Box>
                 <Typography
-                  color="primary"
                   className={growerToolTipStyles.label}
                 >
                   {grower.firstName} {grower.lastName}
@@ -81,32 +81,31 @@ const GrowerTooltip = ({ grower, growerClick }) => {
             >
               {grower.email && (
                 <Box className={growerToolTipStyles.box}>
-                  <EmailIcon />
+                  <EmailIcon color="primary" />
                   <Typography
                     className={growerToolTipStyles.label}
-                    color="primary"
                   >
                     {grower.email}
                   </Typography>
                 </Box>
               )}
-              {grower.organizaton && (
+              {(grower.organizaton || grower.organizationId) && (
                 <Box className={growerToolTipStyles.box}>
-                  <OrgIcon />
-                  <Typography
-                    className={growerToolTipStyles.label}
-                    color="primary"
-                  >
-                    {grower.organizaton}
-                  </Typography>
+                  <OrgIcon color="primary" />
+                    <Box className={growerToolTipStyles.label}>
+                      <GrowerOrganization
+                        organizationName={grower.organization}
+                        assignedOrganizationId={grower.organizationId}
+                        compact={true}
+                      />
+                    </Box>
                 </Box>
               )}
               {grower.phone && (
                 <Box className={growerToolTipStyles.box}>
-                  <PhoneIcon />
+                  <PhoneIcon color="primary"/>
                   <Typography
                     className={growerToolTipStyles.label}
-                    color="primary"
                   >
                     {grower.phone}
                   </Typography>

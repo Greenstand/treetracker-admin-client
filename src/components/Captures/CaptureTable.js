@@ -26,7 +26,6 @@ import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
 import CaptureTooltip from './CaptureTooltip';
 
 const columns = [
@@ -213,17 +212,6 @@ const CaptureTable = () => {
     );
   };
 
-  const useStyles = makeStyles(() => ({
-    tooltipTop: {
-      top: '8px',
-    },
-    arrow: {
-      fontSize: '12px',
-    },
-  }));
-
-  const capturesTooltipStyle = useStyles();
-
   return (
     <Grid style={{ height: '100%', overflow: 'auto', textAlign: 'center' }}>
       <Grid
@@ -291,8 +279,8 @@ const CaptureTable = () => {
                     arrow={true}
                     interactive
                     classes={{
-                      tooltipPlacementTop: capturesTooltipStyle.tooltipTop,
-                      arrow: capturesTooltipStyle.arrow,
+                      tooltipPlacementTop: classes.tooltipTop,
+                      arrow: classes.arrow,
                     }}
                     title={
                       <CaptureTooltip

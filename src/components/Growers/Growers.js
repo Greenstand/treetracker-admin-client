@@ -12,7 +12,6 @@ import GrowerTooltip from './GrowerTooltip';
 import { GrowerContext } from '../../context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
 import { Tooltip, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -36,17 +35,6 @@ const Growers = (props) => {
     setGrowerDetail(grower);
   }
 
-  const useStyles = makeStyles(() => ({
-    tooltipTop: {
-      top: '16px',
-    },
-    tooltipBottom: {
-      top: '-16px',
-    },
-  }));
-
-  const growerTooltipStyle = useStyles();
-
   const placeholderGrowers = Array(growerContext.pageSize)
     .fill()
     .map((_, index) => {
@@ -66,8 +54,8 @@ const Growers = (props) => {
         key={`${i} + ${grower.id}`}
         placement="top"
         classes={{
-          tooltipPlacementTop: growerTooltipStyle.tooltipTop,
-          tooltipPlacementBottom: growerTooltipStyle.tooltipBottom,
+          tooltipPlacementTop: classes.tooltipTop,
+          tooltipPlacementBottom: classes.tooltipBottom,
         }}
         arrow={true}
         interactive

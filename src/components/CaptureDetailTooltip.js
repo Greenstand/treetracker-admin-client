@@ -5,15 +5,15 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
-
+import { getDateTimeStringLocale } from '../common/locale';
 import Badge from '@material-ui/icons/PersonPin';
 import AccessTime from '@material-ui/icons/DateRange';
 import Note from '@material-ui/icons/Note';
 import Person from '@material-ui/icons/Person';
 import Nature from '@material-ui/icons/Nature';
 
-const VerifyTooltip = ({ capture, showCaptureClick }) => {
-  const verifyTooltipUseStyles = makeStyles(() => ({
+const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
+  const CaptureDetailTooltipUseStyles = makeStyles(() => ({
     box: {
       display: 'flex',
     },
@@ -22,7 +22,7 @@ const VerifyTooltip = ({ capture, showCaptureClick }) => {
     },
   }));
 
-  const verifyTooltipStyles = verifyTooltipUseStyles();
+  const CaptureDetailTooltipStyles = CaptureDetailTooltipUseStyles();
 
   return (
     <Box style={{ width: '160px', display: 'block' }}>
@@ -33,41 +33,41 @@ const VerifyTooltip = ({ capture, showCaptureClick }) => {
         <CardActionArea>
           <Container>
             {capture.id && (
-              <Box className={verifyTooltipStyles.box}>
+              <Box className={CaptureDetailTooltipStyles.box}>
                 <Nature color="primary" />
-                <Typography className={verifyTooltipStyles.label}>
+                <Typography className={CaptureDetailTooltipStyles.label}>
                   {capture.id}
                 </Typography>
               </Box>
             )}
             {capture.planterId && (
-              <Box className={verifyTooltipStyles.box}>
+              <Box className={CaptureDetailTooltipStyles.box}>
                 <Person color="primary" />
-                <Typography className={verifyTooltipStyles.label}>
+                <Typography className={CaptureDetailTooltipStyles.label}>
                   {capture.planterId}
                 </Typography>
               </Box>
             )}
             {capture.planterIdentifier && (
-              <Box className={verifyTooltipStyles.box}>
+              <Box className={CaptureDetailTooltipStyles.box}>
                 <Badge color="primary" />
-                <Typography className={verifyTooltipStyles.label}>
+                <Typography className={CaptureDetailTooltipStyles.label}>
                   {capture.planterIdentifier}
                 </Typography>
               </Box>
             )}
             {
-              <Box className={verifyTooltipStyles.box}>
+              <Box className={CaptureDetailTooltipStyles.box}>
                 <AccessTime color="primary" />
-                <Typography className={verifyTooltipStyles.label}>
-                  {new Date(Date.parse(capture.timeCreated)).toDateString()}
+                <Typography className={CaptureDetailTooltipStyles.label}>
+                  {getDateTimeStringLocale(capture.timeCreated)}
                 </Typography>
               </Box>
             }
             {capture.note && (
-              <Box className={verifyTooltipStyles.box}>
+              <Box className={CaptureDetailTooltipStyles.box}>
                 <Note color="primary" />
-                <Typography className={verifyTooltipStyles.label}>
+                <Typography className={CaptureDetailTooltipStyles.label}>
                   {capture.note}
                 </Typography>
               </Box>
@@ -79,4 +79,4 @@ const VerifyTooltip = ({ capture, showCaptureClick }) => {
   );
 };
 
-export default VerifyTooltip;
+export default CaptureDetailTooltip;
