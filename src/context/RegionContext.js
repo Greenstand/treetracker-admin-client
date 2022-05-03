@@ -51,7 +51,11 @@ export function RegionProvider(props) {
       setCollections([]);
       loadRegions();
     }
-  }, [filter, pageSize, currentPage, orderBy, showCollections]); //
+  }, [filter, pageSize, currentPage, orderBy, showCollections]);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [showCollections]);
 
   // EVENT HANDLERS
 

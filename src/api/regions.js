@@ -28,16 +28,20 @@ export default {
     type,
     { skip, rowsPerPage, filter, orderBy = 'name', order = 'desc' }
   ) {
-    const params = new URLSearchParams({
+    let params = {
       ...filter,
-      limit: rowsPerPage,
       offset: skip,
       sort_by: orderBy,
       order,
-    });
+    };
+    if (rowsPerPage > 0) {
+      params.limit = rowsPerPage;
+    }
+
+    const searchParams = new URLSearchParams(params);
     const query = `${
       process.env.REACT_APP_REGION_API_ROOT
-    }/${type}?${params.toString()}`;
+    }/${type}?${searchParams.toString()}`;
 
     return fetch(query, {
       headers: {
