@@ -172,7 +172,9 @@ const RegionTable = (props) => {
   };
 
   const handleChangeShowCollections = (event, val) => {
-    setShowCollections(val);
+    if (val !== null) {
+      setShowCollections(val);
+    }
   };
 
   const handleUploadClick = () => {
