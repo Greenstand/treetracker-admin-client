@@ -21,11 +21,16 @@ function StakeholderList({ id, data, type, linked }) {
 
   const handleChange = (e, data) => {
     setIsLinked(!isLinked);
-    deleteStakeholder(id, {
-      type,
-      linked: !linked,
-      data: data,
-    });
+    const confirmed = window.confirm(
+      'Are you sure? Continuing will delete the stakeholder from the system.'
+    );
+    if (confirmed) {
+      deleteStakeholder(id, {
+        type,
+        linked: !linked,
+        data: data,
+      });
+    }
   };
 
   return (

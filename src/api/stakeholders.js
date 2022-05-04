@@ -12,8 +12,6 @@ export default {
   getStakeholders(id, filter) {
     const orgId = id || getOrganizationId();
 
-    console.log('getStakeholders', orgId, filter);
-
     const where = Object.keys(filter).reduce((acc, key) => {
       if (filter[key] !== '') {
         acc += `&${key}=${filter[key]}`;
