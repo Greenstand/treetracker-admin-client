@@ -1,3 +1,10 @@
+## [1.89.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.1...v1.89.2) (2022-05-10)
+
+
+### Bug Fixes
+
+* temporarily use dev for reporting ([1f8008e](https://github.com/Greenstand/treetracker-admin-client/commit/1f8008e5812d7813ffd6e645df2eb3bfcf430b7e))
+
 ## [1.89.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.0...v1.89.1) (2022-05-10)
 
 
