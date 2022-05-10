@@ -118,7 +118,7 @@ export function StakeholdersProvider(props) {
   const deleteStakeholder = async (id, payload) => {
     log.debug('delete stakeholder', id, payload);
     const result = await api.deleteStakeholder(id, payload);
-    console.log('deleted', result);
+    log.debug('deleted', result);
     setIsLoading(true);
     getStakeholders(getOrganizationId()).then(() => setIsLoading(false));
   };

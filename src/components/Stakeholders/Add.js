@@ -43,8 +43,6 @@ const initialState = {
   last_name: '',
   email: '',
   phone: '',
-  password: '',
-  salt: '',
   offering_pay_to_plant: false,
   website: '',
   logo_url: '',

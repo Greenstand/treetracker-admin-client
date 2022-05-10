@@ -28,7 +28,7 @@ function StakeholderList({ id, data, type, linked }) {
       deleteStakeholder(id, {
         type,
         linked: !linked,
-        data: data,
+        relation_id: data.id,
       });
     }
   };
