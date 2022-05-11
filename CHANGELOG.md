@@ -1,3 +1,10 @@
+## [1.89.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.3...v1.89.4) (2022-05-11)
+
+
+### Bug Fixes
+
+* remove email and phone number from edit grower dialog ([#657](https://github.com/Greenstand/treetracker-admin-client/issues/657)) ([5eb0f4a](https://github.com/Greenstand/treetracker-admin-client/commit/5eb0f4aa49e3a7fb7d7d05d54ba5dbaf9237bdce))
+
 ## [1.89.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.2...v1.89.3) (2022-05-10)
 
 
