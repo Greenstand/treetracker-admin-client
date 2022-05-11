@@ -124,20 +124,6 @@ const EditGrower = (props) => {
         label: 'Last Name',
       },
     ],
-    [
-      {
-        attr: 'email',
-        label: 'Email Address',
-        type: 'email',
-      },
-    ],
-    [
-      {
-        attr: 'phone',
-        label: 'Phone Number',
-        type: 'tel',
-      },
-    ],
   ];
 
   return (
@@ -158,25 +144,21 @@ const EditGrower = (props) => {
           {inputs.map((row, rowIdx) => (
             <Grid item container direction="row" key={rowIdx}>
               {row.map((input, colIdx) => (
-                <>
-                  {!(input.type === 'email') && !(input.type === 'tel') && (
-                    <TextField
-                      key={`${rowIdx}_${colIdx}`}
-                      className={classes.textInput}
-                      id={input.attr}
-                      label={input.label}
-                      type={input.type || 'text'}
-                      variant="outlined"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      onChange={(e) => {
-                        handleChange(input.attr, e.target.value);
-                      }}
-                      value={getValue(input.attr)}
-                    />
-                  )}
-                </>
+                <TextField
+                  key={`${rowIdx}_${colIdx}`}
+                  className={classes.textInput}
+                  id={input.attr}
+                  label={input.label}
+                  type={input.type || 'text'}
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(e) => {
+                    handleChange(input.attr, e.target.value);
+                  }}
+                  value={getValue(input.attr)}
+                />
               ))}
             </Grid>
           ))}
