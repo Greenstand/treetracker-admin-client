@@ -61,7 +61,7 @@ const EditGrower = (props) => {
     // only update context if growers have already been downloaded
     if (growerContext.growers.length) {
       const index = growerContext.growers.findIndex(
-        (p) => p.id === updatedGrower.id,
+        (p) => p.id === updatedGrower.id
       );
       if (index >= 0) {
         const growers = [...growerContext.growers];
@@ -158,21 +158,25 @@ const EditGrower = (props) => {
           {inputs.map((row, rowIdx) => (
             <Grid item container direction="row" key={rowIdx}>
               {row.map((input, colIdx) => (
-                <TextField
-                  key={`${rowIdx}_${colIdx}`}
-                  className={classes.textInput}
-                  id={input.attr}
-                  label={input.label}
-                  type={input.type || 'text'}
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => {
-                    handleChange(input.attr, e.target.value);
-                  }}
-                  value={getValue(input.attr)}
-                />
+                <>
+                  {!(input.type === 'email') && !(input.type === 'tel') && (
+                    <TextField
+                      key={`${rowIdx}_${colIdx}`}
+                      className={classes.textInput}
+                      id={input.attr}
+                      label={input.label}
+                      type={input.type || 'text'}
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      onChange={(e) => {
+                        handleChange(input.attr, e.target.value);
+                      }}
+                      value={getValue(input.attr)}
+                    />
+                  )}
+                </>
               ))}
             </Grid>
           ))}
