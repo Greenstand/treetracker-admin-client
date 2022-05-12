@@ -91,7 +91,6 @@ export default {
       }
 
       const updated = removeEmptyValues(stakeholderUpdate);
-      log.debug('updateStakeholder', query, updated);
 
       const options = {
         method: 'PATCH',
@@ -118,7 +117,6 @@ export default {
       }
 
       const created = removeEmptyValues(stakeholderData);
-      log.debug('createStakeholders', query, created);
 
       const options = {
         method: 'POST',

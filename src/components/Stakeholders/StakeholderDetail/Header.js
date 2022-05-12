@@ -47,10 +47,69 @@ export default function StakeholderDialogHeader({ data }) {
   const { updateStakeholder } = useContext(StakeholdersContext);
   const [isEditing, setIsEditing] = useState(false);
   const [details, setDetails] = useState({ ...data });
+  const [errors, setErrors] = useState({});
 
   const classes = useStyles();
 
+  const validateEntries = (payload) => {
+    const errors = {};
+
+    if (
+      !payload.type ||
+      (payload.type !== 'Person' && payload.type !== 'Organization')
+    ) {
+      errors.type = 'Please enter a valid type: Person or Organization';
+    }
+
+    if (!payload.org_name || payload.type === 'Person') {
+      if (!payload.first_name) {
+        errors.first_name = 'Please enter a first name';
+      }
+
+      if (!payload.last_name) {
+        errors.last_name = 'Please enter a last name';
+      }
+    }
+
+    if (
+      (!payload.first_name && !payload.last_name) ||
+      payload.type === 'Organization'
+    ) {
+      if (!payload.org_name) {
+        errors.org_name = 'Please enter a org name';
+      }
+    }
+
+    if (
+      !payload.phone ||
+      !/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/.test(payload.phone)
+    ) {
+      errors.phone = 'Please enter a phone';
+    }
+
+    if (
+      !payload.email ||
+      !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        payload.email
+      )
+    ) {
+      errors.email = 'Please enter a valid email';
+    }
+
+    if (
+      payload.website.length > 0 &&
+      !/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/.test(
+        payload.website
+      )
+    ) {
+      errors.website = 'Please enter a valid website url: ' + payload.website;
+    }
+
+    return errors;
+  };
+
   const handleEdit = (e) => {
+    setErrors({});
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
 
@@ -60,8 +119,23 @@ export default function StakeholderDialogHeader({ data }) {
   };
 
   const handleSave = () => {
-    setIsEditing(false);
-    updateStakeholder(details);
+    try {
+      setIsEditing(false);
+      const errs = validateEntries(details);
+      const errorsFound = Object.keys(errs).length > 0;
+      if (errorsFound) {
+        setIsEditing(true);
+        setErrors(errs);
+      } else {
+        updateStakeholder(details);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleEnterPress = (e) => {
+    e.key === 'Enter' && handleSave();
   };
 
   return (
@@ -87,6 +161,9 @@ export default function StakeholderDialogHeader({ data }) {
                   classes: { root: classes.inputName },
                 }}
                 autoFocus
+                error={!!errors?.org_name}
+                helperText={errors?.org_name}
+                onKeyDown={handleEnterPress}
               />
             ) : (
               <Typography variant="h4" className={classes.fields}>
@@ -113,6 +190,9 @@ export default function StakeholderDialogHeader({ data }) {
                     classes: { root: classes.inputName },
                   }}
                   autoFocus
+                  error={!!errors?.first_name}
+                  helperText={errors?.first_name}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography variant="h4" className={classes.fields}>
@@ -131,13 +211,12 @@ export default function StakeholderDialogHeader({ data }) {
                     classes: { root: classes.inputName },
                   }}
                   autoFocus
+                  error={!!errors?.last_name}
+                  helperText={errors?.last_name}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
-                <Typography
-                  variant="h4"
-                  className={classes.fields}
-                  // style={{ marginLeft: '0.3em' }}
-                >
+                <Typography variant="h4" className={classes.fields}>
                   {details?.last_name}
                 </Typography>
               )}
@@ -171,6 +250,9 @@ export default function StakeholderDialogHeader({ data }) {
                   InputProps={{
                     classes: { root: classes.input },
                   }}
+                  error={!!errors?.type}
+                  helperText={errors?.type}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography className={classes.fields}>
@@ -197,6 +279,9 @@ export default function StakeholderDialogHeader({ data }) {
                   InputProps={{
                     classes: { root: classes.input },
                   }}
+                  error={!!errors?.email}
+                  helperText={errors?.email}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography className={classes.fields}>
@@ -220,6 +305,9 @@ export default function StakeholderDialogHeader({ data }) {
                   InputProps={{
                     classes: { root: classes.input },
                   }}
+                  error={!!errors?.phone}
+                  helperText={errors?.phone}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography className={classes.fields}>
@@ -245,6 +333,9 @@ export default function StakeholderDialogHeader({ data }) {
                   InputProps={{
                     classes: { root: classes.input },
                   }}
+                  error={!!errors?.website}
+                  helperText={errors?.website}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography className={classes.fields}>
@@ -268,6 +359,9 @@ export default function StakeholderDialogHeader({ data }) {
                   InputProps={{
                     classes: { root: classes.input },
                   }}
+                  error={!!errors?.map}
+                  helperText={errors?.map}
+                  onKeyDown={handleEnterPress}
                 />
               ) : (
                 <Typography className={classes.fields}>
@@ -291,6 +385,7 @@ export default function StakeholderDialogHeader({ data }) {
                   color="primary"
                   className={classes.textWhite}
                   onClick={handleSave}
+                  disabled={Object.keys(errors).length > 0}
                 >
                   Save
                 </Button>
