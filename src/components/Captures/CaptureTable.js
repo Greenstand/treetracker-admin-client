@@ -278,6 +278,8 @@ const CaptureTable = () => {
                     placement="top"
                     arrow={true}
                     interactive
+                    enterDelay={500}
+                    enterNextDelay={500}
                     classes={{
                       tooltipPlacementTop: classes.tooltipTop,
                       arrow: classes.arrow,

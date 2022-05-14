@@ -58,6 +58,8 @@ const Growers = (props) => {
           tooltipPlacementBottom: classes.tooltipBottom,
         }}
         arrow={true}
+        enterDelay={500}
+        enterNextDelay={500}
         interactive
         title={
           <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />

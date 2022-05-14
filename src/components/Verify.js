@@ -325,8 +325,8 @@ const Verify = (props) => {
               placement="top"
               arrow={true}
               interactive
-              enterDelay={1000}
-              enterNextDelay={1000}
+              enterDelay={500}
+              enterNextDelay={500}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
               }}
