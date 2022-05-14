@@ -110,6 +110,7 @@ const CaptureTable = () => {
   const [tagLookup, setTagLookup] = useState({});
   const [captureTagLookup, setCaptureTagLookup] = useState({});
   const [isOpenExport, setOpenExport] = useState(false);
+  const [disableHoverListener, setDisableHoverListener] = useState(false); 
   const classes = useStyle();
 
   useEffect(() => {
@@ -174,6 +175,7 @@ const CaptureTable = () => {
 
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
+    setDisableHoverListener(false);
     setCapture({});
   };
 
@@ -277,9 +279,11 @@ const CaptureTable = () => {
                     key={capture.id}
                     placement="top"
                     arrow={true}
-                    interactive
+                    interactive={!disableHoverListener}
                     enterDelay={500}
                     enterNextDelay={500}
+                    disableFocusListener={true}
+                    disableHoverListener={disableHoverListener}
                     classes={{
                       tooltipPlacementTop: classes.tooltipTop,
                       arrow: classes.arrow,

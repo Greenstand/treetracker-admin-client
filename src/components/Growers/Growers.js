@@ -21,6 +21,7 @@ const Growers = (props) => {
   const growerContext = useContext(GrowerContext);
   const [isDetailShown, setDetailShown] = useState(false);
   const [growerDetail, setGrowerDetail] = useState({});
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
 
   function handlePageChange(e, page) {
     growerContext.changeCurrentPage(page);
@@ -33,6 +34,7 @@ const Growers = (props) => {
   function handleGrowerClick(grower) {
     setDetailShown(true);
     setGrowerDetail(grower);
+    setDisableHoverListener(true);
   }
 
   const placeholderGrowers = Array(growerContext.pageSize)
@@ -61,6 +63,8 @@ const Growers = (props) => {
         enterDelay={500}
         enterNextDelay={500}
         interactive
+        onMouseEnter={() => {setDisableHoverListener(false)}}
+        disableHoverListener={disableHoverListener}
         title={
           <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
         }
@@ -123,7 +127,7 @@ const Growers = (props) => {
       <GrowerDetail
         open={isDetailShown}
         growerId={growerDetail.id}
-        onClose={() => setDetailShown(false)}
+        onClose={() => {setDetailShown(false); setDisableHoverListener(false)}}
       />
     </Grid>
   );

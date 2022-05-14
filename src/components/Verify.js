@@ -158,6 +158,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -260,6 +261,7 @@ const Verify = (props) => {
   function handleShowCaptureDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
+    setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture,
@@ -267,6 +269,7 @@ const Verify = (props) => {
   }
 
   function handleCloseCaptureDetail() {
+    setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
       capture: {},
@@ -327,6 +330,8 @@ const Verify = (props) => {
               interactive
               enterDelay={500}
               enterNextDelay={500}
+              onMouseEnter={() => {setDisableHoverListener(false)}}
+              disableHoverListener={disableHoverListener}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
               }}
