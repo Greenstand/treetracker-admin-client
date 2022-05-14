@@ -66,8 +66,8 @@ const Login = (props) => {
 
   const history = useHistory();
   const location = useLocation();
-  const { from } = location.state || { from: { pathname: '/' } };
-
+  const { from } = { from: { pathname: '/' } };
+  console.log(location);
   useEffect(() => {
     return () => {
       setLoading(false);
@@ -137,7 +137,7 @@ const Login = (props) => {
             {
               userName,
               password,
-            },
+            }
           );
           if (res.status === 200) {
             const token = res.data.token;
@@ -153,7 +153,7 @@ const Login = (props) => {
             setErrorMessage(e.response.data.errorMessage);
           } else {
             setErrorMessage(
-              'Could not log in. Please check your username and password or contact the admin.',
+              'Could not log in. Please check your username and password or contact the admin.'
             );
           }
           setLoading(false);
