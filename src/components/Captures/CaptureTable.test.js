@@ -1,13 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {
-  act,
-  render,
-  screen,
-  within,
-  waitFor,
-  cleanup,
-} from '@testing-library/react';
+import { act, render, screen, within, cleanup } from '@testing-library/react';
 import axios from 'axios';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -52,7 +44,11 @@ describe('Captures', () => {
           <CapturesContext.Provider value={capturesValues}>
             <SpeciesContext.Provider value={speciesValues}>
               <TagsContext.Provider value={tagsValues}>
-                <CaptureTable />
+                <CaptureTable
+                  setShowGallery={false}
+                  handleShowCaptureDetail={() => {}}
+                  handleShowGrowerDetail={() => {}}
+                />
               </TagsContext.Provider>
             </SpeciesContext.Provider>
           </CapturesContext.Provider>
@@ -71,7 +67,7 @@ describe('Captures', () => {
 
     it('should show rows per page at top and bottom', () => {
       const pageNums = screen.getAllByRole('button', {
-        name: /rows per page: 25/i,
+        name: /rows per page: 24/i,
       });
       expect(pageNums).toHaveLength(2);
     });
@@ -122,13 +118,30 @@ describe('Captures', () => {
       expect(rows).toHaveLength(4);
     });
 
-    it('renders links for planter ids (10-12)', () => {
+    it('renders map links for capture and grower ids', () => {
       const table = screen.getByTestId('captures-table-body');
       const links = within(table).getAllByRole('link');
       const arr = links.map((link) => link.textContent);
-      expect(arr.includes('10')).toBeTruthy();
-      expect(arr.includes('11')).toBeTruthy();
-      expect(arr.includes('12')).toBeTruthy();
+      expect(arr.includes('Map')).toBeTruthy();
+      expect(arr).toHaveLength(8); // 2 for each row
+    });
+
+    it('renders capture detail buttons for capture ids', () => {
+      const table = screen.getByTestId('captures-table-body');
+      const captureDetailBtns = within(table).getAllByRole('button', {
+        name: /view\/edit capture details/i,
+      });
+      const arr = captureDetailBtns.map((link) => link.title);
+      expect(arr).toHaveLength(4);
+    });
+
+    it('renders grower detail buttons for grower ids', () => {
+      const table = screen.getByTestId('captures-table-body');
+      const growerDetailBtns = within(table).getAllByRole('button', {
+        name: /view\/edit grower details/i,
+      });
+      const arr = growerDetailBtns.map((link) => link.title);
+      expect(arr).toHaveLength(4);
     });
 
     it('displays captures data', () => {
@@ -155,7 +168,7 @@ describe('Captures', () => {
       capture: {},
       numSelected: 0,
       page: 0,
-      rowsPerPage: 25,
+      rowsPerPage: 24,
       order: 'asc',
       orderBy: 'id',
       allIds: [],
@@ -164,8 +177,8 @@ describe('Captures', () => {
       // queryCapturesApi: jest.fn(),
       queryCapturesApi: () => {},
       getCaptureCount: () => {},
-      getCapturesAsync: () => {},
-      getCaptureAsync: () => {},
+      getCaptures: () => {},
+      getCaptureById: () => {},
     };
 
     // Mock the API
@@ -225,7 +238,7 @@ describe('Captures', () => {
       const filter = JSON.stringify({
         where: { approved: true, active: true },
         order: ['id asc'],
-        limit: 25,
+        limit: 24,
         skip: 0,
         fields: {
           id: true,
@@ -238,6 +251,16 @@ describe('Captures', () => {
           deviceIdentifier: true,
           speciesId: true,
           tokenId: true,
+          age: true,
+          morphology: true,
+          captureApprovalTag: true,
+          rejectionReason: true,
+          uuid: true,
+          imageUrl: true,
+          lat: true,
+          lon: true,
+          timeUpdated: true,
+          note: true,
         },
       });
 

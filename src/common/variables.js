@@ -1,4 +1,5 @@
 export const drawerWidth = 240;
+export const SIDE_PANEL_WIDTH = 315;
 export const selectedHighlightColor = '#0af';
 export const documentTitle = 'Treetracker Admin by Greenstand';
 export const verificationStates = {

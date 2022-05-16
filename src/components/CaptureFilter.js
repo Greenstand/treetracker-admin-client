@@ -194,7 +194,12 @@ function Filter(props) {
       { active: true, approved: true },
       { active: true, approved: false },
     ]);
-    const filter = new FilterModel();
+    const filter = new FilterModel({
+      verifyStatus: [
+        { active: true, approved: true },
+        { active: true, approved: false },
+      ],
+    });
     props.onSubmit && props.onSubmit(filter);
   }
 
