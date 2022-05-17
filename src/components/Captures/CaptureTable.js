@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
+  Button,
   Grid,
   Table,
-  Button,
   TableHead,
   TableBody,
   TableRow,
@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableSortLabel,
   Typography,
+  Tooltip,
 } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 import { getDateTimeStringLocale } from '../../common/locale';
@@ -25,6 +26,7 @@ import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CaptureTooltip from './CaptureTooltip';
 
 const columns = [
   {
@@ -108,6 +110,7 @@ const CaptureTable = () => {
   const [tagLookup, setTagLookup] = useState({});
   const [captureTagLookup, setCaptureTagLookup] = useState({});
   const [isOpenExport, setOpenExport] = useState(false);
+  const [disableHoverListener, setDisableHoverListener] = useState(false); 
   const classes = useStyle();
 
   useEffect(() => {
@@ -172,6 +175,7 @@ const CaptureTable = () => {
 
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
+    setDisableHoverListener(false);
     setCapture({});
   };
 
@@ -269,25 +273,47 @@ const CaptureTable = () => {
             </Grid>
           ) : (
             <>
-              {captures.map((capture) => (
-                <TableRow
-                  key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.id)}
-                  className={classes.tableRow}
-                >
-                  {columns.map(({ attr, renderer }) => (
-                    <TableCell key={attr}>
-                      {formatCell(
-                        capture,
-                        speciesLookup,
-                        captureTagLookup[capture.id] || [],
-                        attr,
-                        renderer
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {captures &&
+                captures.map((capture) => (
+                  <Tooltip
+                    key={capture.id}
+                    placement="top"
+                    arrow={true}
+                    interactive={!disableHoverListener}
+                    enterDelay={500}
+                    enterNextDelay={500}
+                    disableFocusListener={true}
+                    disableHoverListener={disableHoverListener}
+                    classes={{
+                      tooltipPlacementTop: classes.tooltipTop,
+                      arrow: classes.arrow,
+                    }}
+                    title={
+                      <CaptureTooltip
+                        capture={capture}
+                        toggleDrawer={createToggleDrawerHandler}
+                      />
+                    }
+                  >
+                    <TableRow
+                      key={capture.id}
+                      onClick={createToggleDrawerHandler(capture.id)}
+                      className={classes.tableRow}
+                    >
+                      {columns.map(({ attr, renderer }) => (
+                        <TableCell key={attr}>
+                          {formatCell(
+                            capture,
+                            speciesLookup,
+                            captureTagLookup[capture.id] || [],
+                            attr,
+                            renderer
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </Tooltip>
+                ))}
             </>
           )}
         </TableBody>
