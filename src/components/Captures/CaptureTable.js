@@ -62,7 +62,7 @@ const columns = [
 
   {
     attr: 'tokenId',
-    label: 'Token Id',
+    label: 'Token ID',
     renderer: (val) => val,
   },
 

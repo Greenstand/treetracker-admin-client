@@ -88,7 +88,7 @@ describe('Captures', () => {
       const table = screen.getByRole(/table/i);
       const headers = within(table).getAllByRole(/columnheader/i);
       const arr = headers.map((header) => header.textContent);
-      expect(arr).toHaveLength(10);
+      expect(arr).toHaveLength(11);
     });
 
     it('renders headers for captures table', () => {
