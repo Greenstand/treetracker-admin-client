@@ -107,7 +107,7 @@ describe('Captures', () => {
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Species/i);
       expect(item).toBeInTheDocument();
-      item = within(table).getByText(/Token Status/i);
+      item = within(table).getByText(/Token Id/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Capture Tags/i);
       expect(item).toBeInTheDocument();
@@ -133,12 +133,8 @@ describe('Captures', () => {
 
     it('displays captures data', () => {
       const table = screen.getByTestId('captures-table-body');
-      // screen.logTestingPlaygroundURL(table);
-      // screen.debug(table);
       const status = within(table).getAllByText(/approved/i);
       expect(status).toHaveLength(2);
-      const tokens = within(table).getAllByText(/not tokenized/i);
-      expect(tokens).toHaveLength(4);
       const device = within(table).getAllByText(/1-abcdef123456/i);
       expect(device).toHaveLength(1);
       const captureTag = within(table).getAllByText(/tag_c/i);

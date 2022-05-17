@@ -19,7 +19,6 @@ import LinkToWebmap from '../common/LinkToWebmap';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
-import { tokenizationStates } from '../../common/variables';
 import useStyle from './CaptureTable.styles.js';
 import ExportCaptures from 'components/ExportCaptures';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
@@ -61,11 +60,11 @@ const columns = [
     noSort: true,
     renderer: (val) => val,
   },
+
   {
     attr: 'tokenId',
-    label: 'Token Status',
-    renderer: (val) =>
-      val ? tokenizationStates.TOKENIZED : tokenizationStates.NOT_TOKENIZED,
+    label: 'Token ID',
+    renderer: (val) => val,
   },
   {
     attr: 'captureTags',
@@ -295,25 +294,25 @@ const CaptureTable = () => {
                       />
                     }
                   >
-                    <TableRow
-                      key={capture.id}
-                      onClick={createToggleDrawerHandler(capture.id)}
-                      className={classes.tableRow}
-                    >
-                      {columns.map(({ attr, renderer }) => (
-                        <TableCell key={attr}>
-                          {formatCell(
-                            capture,
-                            speciesLookup,
-                            captureTagLookup[capture.id] || [],
-                            attr,
-                            renderer
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </Tooltip>
-                ))}
+                  <TableRow
+                    key={capture.id}
+                    onClick={createToggleDrawerHandler(capture.id)}
+                    className={classes.tableRow}
+                  >
+                    {columns.map(({ attr, renderer }, i) => (
+                      <TableCell key={`${attr}_${i}`}>
+                        {formatCell(
+                          capture,
+                          speciesLookup,
+                          captureTagLookup[capture.id] || [],
+                          attr,
+                          renderer
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </Tooltip>
+              ))}
             </>
           )}
         </TableBody>
