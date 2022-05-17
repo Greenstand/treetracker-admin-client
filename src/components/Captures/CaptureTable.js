@@ -65,13 +65,6 @@ const columns = [
     label: 'Token ID',
     renderer: (val) => val,
   },
-
-  {
-    attr: 'tokenId',
-    label: 'Token Status',
-    renderer: (val) =>
-      val ? tokenizationStates.TOKENIZED : tokenizationStates.NOT_TOKENIZED,
-  },
   {
     attr: 'captureTags',
     label: 'Capture Tags',
