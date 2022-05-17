@@ -1,3 +1,32 @@
+## [1.89.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.3...v1.89.4) (2022-05-11)
+
+
+### Bug Fixes
+
+* remove email and phone number from edit grower dialog ([#657](https://github.com/Greenstand/treetracker-admin-client/issues/657)) ([5eb0f4a](https://github.com/Greenstand/treetracker-admin-client/commit/5eb0f4aa49e3a7fb7d7d05d54ba5dbaf9237bdce))
+
+## [1.89.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.2...v1.89.3) (2022-05-10)
+
+
+### Bug Fixes
+
+* switch back to prod reporting ([d5c83e9](https://github.com/Greenstand/treetracker-admin-client/commit/d5c83e9d8d9d922d5939cbea9af37b8530f4fed7))
+* switch back to prod reporting ([38cb669](https://github.com/Greenstand/treetracker-admin-client/commit/38cb669d8826cdae76bf37e2944c6b9b3f98b5af))
+
+## [1.89.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.1...v1.89.2) (2022-05-10)
+
+
+### Bug Fixes
+
+* temporarily use dev for reporting ([1f8008e](https://github.com/Greenstand/treetracker-admin-client/commit/1f8008e5812d7813ffd6e645df2eb3bfcf430b7e))
+
+## [1.89.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.0...v1.89.1) (2022-05-10)
+
+
+### Bug Fixes
+
+* temporarily change to dev reporting ([12be4f4](https://github.com/Greenstand/treetracker-admin-client/commit/12be4f4e9ea7889427b77e345736b1c9baae7631))
+
 # [1.89.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.88.0...v1.89.0) (2022-04-25)
 
 

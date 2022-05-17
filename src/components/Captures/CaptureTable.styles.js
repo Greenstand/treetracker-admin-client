@@ -51,6 +51,12 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: 'space-around',
     padding: theme.spacing(2),
   },
+  tooltipTop: {
+    top: '8px',
+  },
+  arrow: {
+    fontSize: '12px',
+  },
 }));
 
 export default useStyle;
