@@ -41,6 +41,8 @@ export const Grower = (props) => {
               className={classes.cardMedia}
               fixed
               rotation={grower.imageRotation}
+              alertTextSize=".7rem"
+              alertTitleSize="1rem"
             />
           )}
           {!grower.imageUrl && (

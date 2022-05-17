@@ -303,12 +303,10 @@ function CaptureDetailDialog(props) {
           },
         }}
         maxWidth="md"
-        maxHeight="fit-content"
       >
         <OptimizedImage
           src={renderCapture.imageUrl}
           width={screenHeight * 0.9}
-          maxHeight={screenHeight * 0.9}
           style={{ maxWidth: '100%' }}
           objectFit="contain"
           fixed

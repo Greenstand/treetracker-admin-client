@@ -1,21 +1,31 @@
+require('dotenv').config();
 import React from 'react';
+
+import ImageErrorAlert from './ImageErrorAlert';
 
 export default function OptimizedImage(props) {
   const {
     src,
     width,
+    height,
     quality,
     screenWidths = [1600, 1280, 960, 0],
     imageSizes = [400, 300, 250, 200],
     fixed,
     rotation,
+    alertHeight,
+    alertWidth,
+    alertPadding,
+    alertPosition,
+    alertTextSize,
+    alertTitleSize,
     objectFit = 'cover',
     ...rest
   } = props;
 
-  if (!src) return <></>;
+  if (!src) return null;
 
-  const cdnPath = 'https://cdn.statically.io/img';
+  const cdnPath = `${process.env.REACT_APP_IMAGES_API_ROOT}/img`;
   const matches = src.match(/\/\/(.*?)\/(.*)/);
 
   let cdnUrl, sizes, srcSet;
@@ -24,11 +34,10 @@ export default function OptimizedImage(props) {
     const domain = matches[1];
     const imagePath = matches[2];
     const params =
-      `f=auto` +
-      (width ? `,w=${width}` : '') +
-      (quality ? `,q=${quality}` : '');
-
-    //console.log('params', params);
+      (width ? `w=${Math.floor(width)},` : '') +
+      (height ? `h=${Math.floor(height)},` : '') +
+      (quality ? `q=${quality},` : '') +
+      (rotation ? `r=${rotation}` : '');
 
     cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
@@ -44,22 +53,36 @@ export default function OptimizedImage(props) {
 
   return (
     <>
-      <img
-        src={cdnUrl || src}
-        alt=".."
-        srcSet={srcSet}
-        sizes={sizes}
-        loading="lazy"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          objectFit,
-          width: 'calc(100%)', // width for image rotation
-          height: 'calc(100%)', // height for image rotation
-          transform: `rotate(${rotation}deg)`,
-        }}
-        {...rest}
-      />
+      {!cdnUrl || !src ? (
+        <ImageErrorAlert
+          alertHeight={alertHeight}
+          alertWidth={alertWidth}
+          alertPadding={alertPadding}
+          alertPosition={alertPosition}
+          alertTextSize={alertTextSize}
+          alertTitleSize={alertTitleSize}
+        />
+      ) : (
+        <img
+          src={cdnUrl || src}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = null;
+          }}
+          alt=".."
+          srcSet={srcSet}
+          sizes={sizes}
+          loading="lazy"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            objectFit,
+            width: '100%',
+            height: '100%',
+          }}
+          {...rest}
+        />
+      )}
     </>
   );
 }
