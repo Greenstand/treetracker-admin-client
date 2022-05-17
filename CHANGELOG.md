@@ -1,3 +1,10 @@
+# [1.91.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.90.0...v1.91.0) (2022-05-17)
+
+
+### Features
+
+* **captures:** add token id column in list view ([#655](https://github.com/Greenstand/treetracker-admin-client/issues/655)) ([0f01814](https://github.com/Greenstand/treetracker-admin-client/commit/0f01814d6896ab1708a15ddf6b883a32aca9e716))
+
 # [1.90.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.4...v1.90.0) (2022-05-17)
 
 
