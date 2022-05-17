@@ -18,7 +18,6 @@ import LinkToWebmap from '../common/LinkToWebmap';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
-import { tokenizationStates } from '../../common/variables';
 import useStyle from './CaptureTable.styles.js';
 import ExportCaptures from 'components/ExportCaptures';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
