@@ -1,3 +1,10 @@
+# [1.90.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.4...v1.90.0) (2022-05-17)
+
+
+### Features
+
+* Added tooltip for growers, captures and verify ([#649](https://github.com/Greenstand/treetracker-admin-client/issues/649)) ([44b31e3](https://github.com/Greenstand/treetracker-admin-client/commit/44b31e3e03cd29a269ed33f05bae6fcea4f20130))
+
 ## [1.89.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.89.3...v1.89.4) (2022-05-11)
 
 
