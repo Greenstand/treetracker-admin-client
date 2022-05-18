@@ -95,7 +95,7 @@ function getRoutes(user) {
           linkTo: '/earnings',
           component: EarningsView,
           icon: AccountBalanceIcon,
-          disabled: hasPermission(user, [
+          disabled: !hasPermission(user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.MANAGE_EARNINGS,
             POLICIES.LIST_EARNINGS,
@@ -106,14 +106,14 @@ function getRoutes(user) {
           linkTo: '/payments',
           component: PaymentsView,
           icon: CreditCardIcon,
-          disabled: hasPermission(user, [
+          disabled: !hasPermission(user, [
             POLICIES.SUPER_PERMISSION,
             POLICIES.MANAGE_PAYMENTS,
             POLICIES.LIST_PAYMENTS,
           ]),
         },
       ],
-      disabled: hasPermission(user, [
+      disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
         POLICIES.MANAGE_EARNINGS,
         POLICIES.MANAGE_PAYMENTS,
