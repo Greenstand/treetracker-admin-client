@@ -95,38 +95,31 @@ function getRoutes(user) {
           linkTo: '/earnings',
           component: EarningsView,
           icon: AccountBalanceIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_EARNINGS,
-              POLICIES.LIST_EARNINGS,
-            ]),
+          disabled: hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_EARNINGS,
+            POLICIES.LIST_EARNINGS,
+          ]),
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
           icon: CreditCardIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_PAYMENTS,
-              POLICIES.LIST_PAYMENTS,
-            ]),
+          disabled: hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_PAYMENTS,
+            POLICIES.LIST_PAYMENTS,
+          ]),
         },
       ],
-      disabled:
-        (process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
-          process.env.REACT_APP_ENABLE_PAYMENTS !== 'true') ||
-        !hasPermission(user, [
-          POLICIES.SUPER_PERMISSION,
-          POLICIES.MANAGE_EARNINGS,
-          POLICIES.MANAGE_PAYMENTS,
-          POLICIES.LIST_EARNINGS,
-          POLICIES.LIST_PAYMENTS,
-        ]),
+      disabled: hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.MANAGE_EARNINGS,
+        POLICIES.MANAGE_PAYMENTS,
+        POLICIES.LIST_EARNINGS,
+        POLICIES.LIST_PAYMENTS,
+      ]),
     },
     {
       name: 'Growers',
