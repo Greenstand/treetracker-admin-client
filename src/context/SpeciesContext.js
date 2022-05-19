@@ -7,7 +7,7 @@ const log = loglevel.getLogger('../context/SpeciesContext');
 export const SpeciesContext = createContext({
   speciesList: [],
   speciesInput: '',
-  // isLoading: true,
+  // isLoading: true, set to have something to send down to speciesTable
   setSpeciesInput: () => {},
   loadSpeciesList: () => {},
   onChange: () => {},
@@ -105,7 +105,7 @@ export function SpeciesProvider(props) {
   const value = {
     speciesList,
     speciesInput,
-    // isLoading,
+    // isLoading, if site will not render if I place this here.
     setSpeciesInput,
     loadSpeciesList,
     onChange,
