@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
+  CircularProgress,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -131,6 +132,7 @@ const SpeciesTable = (props) => {
   const [option, setOption] = useState(sortOptions.byName);
   const [selected, setSelected] = useState([]);
   const [showCombine, setShowCombine] = useState(false);
+  const [isLoading, setIsLoading] = useState(speciesContext.isLoading);
 
   const tableRef = useRef(null);
 
@@ -150,6 +152,7 @@ const SpeciesTable = (props) => {
       setSortedSpeciesList(sortedSpecies);
     };
     sortBy(option);
+    console.log(speciesContext);
   }, [
     option,
     sortOptions.byId,
@@ -302,7 +305,15 @@ const SpeciesTable = (props) => {
                     <TableCell>Operations</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>{renderSpecies()}</TableBody>
+                {/* {isLoading && <CircularProgress />} */}
+
+                {/* {!isLoading && <TableBody>{renderSpecies()}</TableBody>} */}
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <TableBody>{renderSpecies()}</TableBody>
+                )}
+                <button onClick={() => console.log(isLoading)}> safds</button>
                 <TableFooter>
                   <TableRow>{tablePagination()}</TableRow>
                 </TableFooter>

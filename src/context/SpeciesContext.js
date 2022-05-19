@@ -7,6 +7,7 @@ const log = loglevel.getLogger('../context/SpeciesContext');
 export const SpeciesContext = createContext({
   speciesList: [],
   speciesInput: '',
+  // isLoading: true,
   setSpeciesInput: () => {},
   loadSpeciesList: () => {},
   onChange: () => {},
@@ -51,10 +52,10 @@ export function SpeciesProvider(props) {
     log.debug(
       'to find species %s in list:%d',
       speciesInput,
-      speciesList.length,
+      speciesList.length
     );
     return speciesList.every(
-      (c) => c.name.toLowerCase() !== speciesInput.toLowerCase(),
+      (c) => c.name.toLowerCase() !== speciesInput.toLowerCase()
     );
   };
 
@@ -63,7 +64,7 @@ export function SpeciesProvider(props) {
       payload || {
         name: speciesInput,
         desc: '',
-      },
+      }
     );
     console.debug('created new species:', species);
     setSpeciesList([species, ...speciesList]);
@@ -104,6 +105,7 @@ export function SpeciesProvider(props) {
   const value = {
     speciesList,
     speciesInput,
+    // isLoading,
     setSpeciesInput,
     loadSpeciesList,
     onChange,
