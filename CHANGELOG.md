@@ -1,3 +1,10 @@
+# [1.92.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.91.0...v1.92.0) (2022-05-18)
+
+
+### Features
+
+* bump version number and trigger release ([0e909e4](https://github.com/Greenstand/treetracker-admin-client/commit/0e909e4263f03d4be67feb9d44d40935839ef32a))
+
 # [1.91.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.90.0...v1.91.0) (2022-05-17)
 
 
