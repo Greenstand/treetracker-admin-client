@@ -164,71 +164,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(0);
-const refCaptureImageContainer = useRef();
-
-useEffect(() => {
-  const handleResize = () => {
-    console.log(refCaptureImageContainer.current);
-    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
-  };
-  window.addEventListener('resize', handleResize);
-  handleResize();
-  return () => {
-    window.removeEventListener('resize', handleResize);
-  };
-}, []);
-
-// Calculate the number of captures per row based on the container width
-// and whether large or small images are toggled
-const containerWidth = captureImageContainerWidth || 100;
-const minCaptureSize = showBigSize ? 350 : 250;
-const breakpoints = Array.from(
-  { length: 10 },
-  (_, idx) => minCaptureSize * (idx + 1),
-);
-// The index of the next breakpoint up from the container width
-// gives the number of captures per row
-const capturesPerRow = breakpoints.findIndex((val, idx) => {
-  if (idx === 0) {
-    return false;
-  }
-  if (
-    (idx === 1 && containerWidth <= val) ||
-    (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
-    (containerWidth > val && idx === breakpoints.length - 1)
-  ) {
-    return true;
-  }
-  return false;
-});
-
-// //...
-
-//   const captureImageItems = captureImages
-//     .concat(placeholderImages)
-//     .map((capture) => {
-//       return (
-//         <Grid
-//           item
-//           key={capture.id}
-//           style={{
-//             width: `calc(100% / ${capturesPerRow})`
-//           }}
-//         >
-// //...
-
-//                 <Grid
-//                   container
-//                   className={classes.wrapper}
-//                   spacing={2}
-//                   ref={refCaptureImageContainer}
-//                 >
-//                   {captureImageItems}
-//                 </Grid>
-
-// //...
-
 const Verify = (props) => {
   const verifyContext = useContext(VerifyContext);
   const speciesContext = useContext(SpeciesContext);
@@ -254,6 +189,7 @@ const Verify = (props) => {
   /*
    * effect to load page when mounted
    */
+
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
@@ -262,7 +198,6 @@ const Verify = (props) => {
 
   /* to display progress */
   useEffect(() => {
-    // console.log('-- approve all complete');
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
 
@@ -312,7 +247,6 @@ const Verify = (props) => {
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
-      console.log('species id:', speciesId);
     }
 
     /*
@@ -394,18 +328,59 @@ const Verify = (props) => {
         })
     : [];
 
-  const captureImageItems = captureImages
+  /*=============================================================*/
 
+  let [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(0);
+  const refCaptureImageContainer = useRef(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCaptureImageContainerWidth(
+        refCaptureImageContainer.current.clientWidth,
+      );
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Calculate the number of captures per row based on the container width
+  // and whether large or small images are toggled
+
+  const containerWidth = captureImageContainerWidth || 100;
+  const minCaptureSize = !showBigSize ? 350 : 250;
+
+  const breakpoints = Array.from({ length: 6 }, (_, idx) => {
+    return minCaptureSize * (idx + 1);
+  });
+  // The index of the next breakpoint up from the container width
+  // gives the number of captures per row
+  const capturesPerRow = breakpoints.findIndex((val, idx) => {
+    if (idx === 0) {
+      return false;
+    }
+    if (
+      (idx === 1 && containerWidth <= val) ||
+      (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
+      (containerWidth > val && idx === breakpoints.length - 1)
+    ) {
+      return true;
+    }
+    return false;
+  });
+
+  const captureImageItems = captureImages
     .concat(placeholderImages)
     .map((capture) => {
       return (
         <Grid
           item
-          xs={showBigSize ? 0 : 12}
-          sm={showBigSize ? 0 : 6}
-          md={showBigSize ? 0 : 3}
-          xl={showBigSize ? 0 : 2}
           key={capture.id}
+          style={{
+            width: `calc(100% / ${capturesPerRow})`,
+          }}
         >
           <div
             className={clsx(
@@ -510,6 +485,8 @@ const Verify = (props) => {
         </Grid>
       );
     });
+
+  /*=============================================================*/
 
   function handleFilterClick() {
     if (isFilterShown) {
@@ -640,7 +617,14 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid>{captureImageItems}</Grid>
+                <Grid
+                  container
+                  className={classes.wrapper}
+                  spacing={2}
+                  ref={refCaptureImageContainer}
+                >
+                  {captureImageItems}
+                </Grid>
               </Grid>
               <Grid item container justify="flex-end" className={classes.title}>
                 {imagePagination}
