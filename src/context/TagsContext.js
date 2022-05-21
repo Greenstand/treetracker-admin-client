@@ -31,12 +31,14 @@ export function TagsProvider(props) {
   /*
    * check for new tags in tagInput and add them to the database
    */
-  const createTags = () => {
-    const savedTags = tagInput.map(async (t) => {
+  const createTags = async () => {
+    const promises = tagInput.map(async (t) => {
       return api.createTag(t);
     });
-
-    return Promise.all(savedTags).then(loadTags);
+    const savedTags = await Promise.all(promises);
+    // Refresh the tag list
+    loadTags();
+    return savedTags;
   };
 
   const value = {
