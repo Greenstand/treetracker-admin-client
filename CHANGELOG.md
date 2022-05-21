@@ -1,3 +1,10 @@
+## [1.92.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.92.0...v1.92.1) (2022-05-21)
+
+
+### Bug Fixes
+
+* return created tags to attach to captures ([#666](https://github.com/Greenstand/treetracker-admin-client/issues/666)) ([83bcfed](https://github.com/Greenstand/treetracker-admin-client/commit/83bcfed04d3e9f6de6e9a79e2148965164037960))
+
 # [1.92.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.91.0...v1.92.0) (2022-05-18)
 
 
