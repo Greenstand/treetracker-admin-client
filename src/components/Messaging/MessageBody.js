@@ -707,9 +707,6 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {errorMessage}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`Please contact the administrator.`}
-          </Typography>
         </Box>
       </Modal>
     </>

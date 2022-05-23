@@ -19,101 +19,113 @@ const convertRegionPayload = (payload) => {
 
 export default {
   getRegion(id) {
-    const regionQuery = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+    try {
+      const regionQuery = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
 
-    return fetch(regionQuery, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+      return fetch(regionQuery, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
-    const regionFilter = {
-      filter,
-      order: [`${orderBy}`, `${order}`],
-      limit: rowsPerPage,
-      offset: skip,
-    };
-    console.log(process.env);
-    const query = `${
-      process.env.REACT_APP_REGION_API_ROOT
-    }/region?options=${JSON.stringify(regionFilter)}`;
+    try {
+      const regionFilter = {
+        filter,
+        order: [`${orderBy}`, `${order}`],
+        limit: rowsPerPage,
+        offset: skip,
+      };
+      console.log(process.env);
+      const query = `${
+        process.env.REACT_APP_REGION_API_ROOT
+      }/region?options=${JSON.stringify(regionFilter)}`;
 
-    return fetch(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   getRegionsCount(filter) {
-    const query = `${
-      process.env.REACT_APP_REGION_API_ROOT
-    }/region/count?filter=${JSON.stringify(filter)}`;
-    return fetch(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${
+        process.env.REACT_APP_REGION_API_ROOT
+      }/region/count?filter=${JSON.stringify(filter)}`;
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   createRegion(payload) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
-    return fetch(query, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(convertRegionPayload(payload)),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(convertRegionPayload(payload)),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   createCollection(payload) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
 
-    console.log(JSON.stringify(payload));
-    return fetch(query, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(convertRegionPayload(payload)),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+      console.log(JSON.stringify(payload));
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(convertRegionPayload(payload)),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   updateRegion(payload, id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
-    return fetch(query, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(
-        convertRegionPayload({
-          ...payload,
-          id: undefined,
-        })
-      ),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+      return fetch(query, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(
+          convertRegionPayload({
+            ...payload,
+            id: undefined,
+          })
+        ),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 };
