@@ -1,3 +1,18 @@
+# [1.93.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.92.1...v1.93.0) (2022-05-23)
+
+
+### Bug Fixes
+
+* clean up for readability ([c4e1bae](https://github.com/Greenstand/treetracker-admin-client/commit/c4e1bae42684ece2a7957bc799839c48533f0a48))
+* improve error message for no admin config ([97aedf0](https://github.com/Greenstand/treetracker-admin-client/commit/97aedf08adadc209a3c089dfdf277d20214a8da3))
+* lint error and remove comments ([d05fb59](https://github.com/Greenstand/treetracker-admin-client/commit/d05fb5905693663768396b45ef32721112c49a86))
+
+
+### Features
+
+* add try/catch to handle errors at each api function ([b7007ba](https://github.com/Greenstand/treetracker-admin-client/commit/b7007ba2ffa2011a60c6c1c2d8e63dc0e7f484a6))
+* survey form error handling w/ mui ([c203944](https://github.com/Greenstand/treetracker-admin-client/commit/c203944c50e8cbd22c658db24445342c6c28308d))
+
 ## [1.92.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.92.0...v1.92.1) (2022-05-21)
 
 
