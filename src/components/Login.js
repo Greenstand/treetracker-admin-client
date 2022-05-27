@@ -66,8 +66,8 @@ const Login = (props) => {
 
   const history = useHistory();
   const location = useLocation();
-  const { from } = { from: { pathname: '/' } };
-  console.log(location);
+  const { from } = location.state || { from: { pathname: '/' } };
+
   useEffect(() => {
     return () => {
       setLoading(false);
