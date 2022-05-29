@@ -726,12 +726,12 @@ const Verify = (props) => {
       <GrowerDetail
         open={growerDetail.isOpen}
         growerId={growerDetail.growerId}
-        onClose={() => handleCloseGrowerDetail()}
+        onClose={handleCloseGrowerDetail}
       />
       <CaptureDetailProvider>
         <CaptureDetailDialog
           open={captureDetail.isOpen}
-          onClose={() => handleCloseCaptureDetail()}
+          onClose={handleCloseCaptureDetail}
           capture={captureDetail.capture}
         />
       </CaptureDetailProvider>

@@ -19,14 +19,13 @@ export const VerifyContext = createContext({
     approved: false,
     active: true,
   }),
-  invalidateCaptureCount: true,
+  // invalidateCaptureCount: true,
   captureCount: null,
   approve: () => {},
   loadCaptureImages: () => {},
   approveAll: () => {},
   undoAll: () => {},
   updateFilter: () => {},
-  getCaptureCount: () => {},
   clickCapture: () => {},
   setPageSize: () => {},
   setCurrentPage: () => {},
@@ -50,12 +49,8 @@ export function VerifyProvider(props) {
       active: true,
     })
   );
-  const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
+  // const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
   const [captureCount, setCaptureCount] = useState(null);
-
-  useEffect(() => {
-    if (invalidateCaptureCount) getCaptureCount();
-  }, [invalidateCaptureCount]);
 
   /* load captures when the page or page size changes */
   useEffect(() => {
@@ -90,7 +85,7 @@ export function VerifyProvider(props) {
     setCaptureImages([]);
     setCurrentPage(0);
     setCaptureCount(null);
-    setInvalidateCaptureCount(true);
+    // setInvalidateCaptureCount(true);
   };
   /*
    * to clear all selection
@@ -134,20 +129,17 @@ export function VerifyProvider(props) {
   };
 
   const loadCaptureImages = async (abortController) => {
-    log.debug('to load images');
-
-    //set loading status
     setIsLoading(true);
 
     const pageParams = {
-      skip: pageSize * currentPage,
+      page: currentPage,
       rowsPerPage: pageSize,
       filter: filter,
     };
-    log.debug('load page with params:', pageParams);
+
     const result = await api.getCaptureImages(pageParams, abortController);
-    setCaptureImages(result || []);
-    //restore loading status
+    setCaptureImages(result.raw_captures || []);
+    setCaptureCount(Number(result.query.count));
     setIsLoading(false);
   };
 
@@ -239,7 +231,7 @@ export function VerifyProvider(props) {
     await loadCaptureImages();
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    setInvalidateCaptureCount(true);
+    // setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -259,7 +251,7 @@ export function VerifyProvider(props) {
         await undoCaptureImage(captureImage.id);
 
         setApproveAllComplete(100 * ((i + 1) / total));
-        setInvalidateCaptureCount(true);
+        // setInvalidateCaptureCount(true);
       }
     } catch (e) {
       log.warn('get error:', e);
@@ -272,7 +264,7 @@ export function VerifyProvider(props) {
     setIsLoading(false);
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    setInvalidateCaptureCount(true);
+    // setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -283,14 +275,6 @@ export function VerifyProvider(props) {
     // each time the filter updates clear the currently loaded captures
     reset();
     resetSelection();
-  };
-
-  const getCaptureCount = async (newfilter = filter) => {
-    // console.log('-- verify getCaptureCount');
-    // setInvalidateCaptureCount(false);
-    const result = await api.getCaptureCount(newfilter);
-    setCaptureCount(Number(result.count));
-    setInvalidateCaptureCount(false);
   };
 
   const value = {
@@ -304,13 +288,12 @@ export function VerifyProvider(props) {
     pageSize,
     currentPage,
     filter,
-    invalidateCaptureCount,
+    // invalidateCaptureCount,
     captureCount,
     loadCaptureImages,
     approveAll,
     undoAll: undoAll,
     updateFilter,
-    getCaptureCount,
     clickCapture,
     setPageSize,
     setCurrentPage,
