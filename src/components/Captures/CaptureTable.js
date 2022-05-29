@@ -33,23 +33,23 @@ const columns = [
     label: 'Capture ID',
   },
   {
-    attr: 'planterId',
+    attr: 'grower_account_id',
     label: 'Grower ID',
   },
   {
-    attr: 'deviceIdentifier',
+    attr: 'device_identifier',
     label: 'Device Identifier',
     noSort: false,
     renderer: (val) => val,
   },
   {
-    attr: 'planterIdentifier',
+    attr: 'wallet',
     label: 'Planter Identifier',
     noSort: false,
     renderer: (val) => val,
   },
   {
-    attr: 'verificationStatus',
+    attr: 'status',
     label: 'Verification Status',
     noSort: true,
     renderer: (val) => val,
@@ -78,7 +78,7 @@ const columns = [
     renderer: (val) => val,
   },
   {
-    attr: 'timeCreated',
+    attr: 'created_at',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),
   },
@@ -100,7 +100,7 @@ const CaptureTable = () => {
     setOrder,
     setOrderBy,
     setCapture,
-    getCaptureAsync,
+    getCapture,
   } = useContext(CapturesContext);
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
@@ -127,7 +127,7 @@ const CaptureTable = () => {
     }
     // Get the capture tags for all of the displayed captures
     const captureTags = await api.getCaptureTags({
-      captureIds: captures.map((c) => c.id),
+      captureIds: captures.map((c) => c.reference_id),
     });
 
     // Populate a lookup for quick access when rendering the table
@@ -162,7 +162,7 @@ const CaptureTable = () => {
   };
 
   const toggleDrawer = (id) => {
-    getCaptureAsync(id);
+    getCapture(id);
     setIsDetailsPaneOpen(!isDetailsPaneOpen);
   };
 
@@ -269,7 +269,7 @@ const CaptureTable = () => {
         </TableHead>
         <TableBody data-testid="captures-table-body">
           {isLoading && !captures?.length ? (
-            <TableRow className={classes.loadingIndicator}>
+            <TableRow className={classes.tableRow}>
               <TableCell className={classes.loadingIndicator}>
                 <CircularProgress />
               </TableCell>
@@ -357,6 +357,8 @@ export const formatCell = (
     return capture['active'] === null || capture['approved'] === null
       ? '--'
       : getVerificationStatus(capture['active'], capture['approved']);
+  } else if (attr === 'status') {
+    return capture['status'];
   } else if (attr === 'captureTags') {
     return [
       capture.age,

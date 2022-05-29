@@ -160,8 +160,8 @@ describe('Captures', () => {
       // queryCapturesApi: jest.fn(),
       queryCapturesApi: () => {},
       getCaptureCount: () => {},
-      getCapturesAsync: () => {},
-      getCaptureAsync: () => {},
+      getCaptures: () => {},
+      getCapture: () => {},
     };
 
     // Mock the API
