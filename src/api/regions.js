@@ -1,28 +1,13 @@
 import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
-const convertRegionPayload = (payload) => {
-  return {
-    calculate_statistics:
-      payload.calculateStatistics || payload.calculate_statistics,
-    collection_id: payload.collectionId || payload.collection_id,
-    created_at: payload.createdAt || payload.created_at,
-    id: payload.id,
-    name: payload.name,
-    properties: payload.properties,
-    shape: payload.shape,
-    show_on_org_map: payload.showOnOrgMap || payload.show_on_org_map,
-    updated_at: payload.updatedAt || payload.updated_at,
-    owner_id: payload.ownerId || payload.owner_id,
-  };
-};
-
 export default {
-  getRegion(id) {
+  getItem(type, id) {
     try {
-      const regionQuery = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+      
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
 
-      return fetch(regionQuery, {
+      return fetch(query, {
         method: 'GET',
         headers: {
           'content-type': 'application/json',
@@ -34,18 +19,33 @@ export default {
     }
   },
 
-  getRegions({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
+  getRegion(id) {
+    return this.getItem('region', id);
+  },
+
+  getCollection(id) {
+    return this.getItem('collection', id);
+  },
+
+  getItems(
+    type,
+    { skip, rowsPerPage, filter, orderBy = 'name', order = 'desc' }
+  ) {
     try {
-      const regionFilter = {
-        filter,
-        order: [`${orderBy}`, `${order}`],
-        limit: rowsPerPage,
+      let params = {
+        ...filter,
         offset: skip,
+        sort_by: orderBy,
+        order,
       };
-      console.log(process.env);
+      if (rowsPerPage > 0) {
+        params.limit = rowsPerPage;
+      }
+
+      const searchParams = new URLSearchParams(params);
       const query = `${
         process.env.REACT_APP_REGION_API_ROOT
-      }/region?options=${JSON.stringify(regionFilter)}`;
+      }/${type}?${searchParams.toString()}`;
 
       return fetch(query, {
         headers: {
@@ -58,23 +58,15 @@ export default {
     }
   },
 
-  getRegionsCount(filter) {
-    try {
-      const query = `${
-        process.env.REACT_APP_REGION_API_ROOT
-      }/region/count?filter=${JSON.stringify(filter)}`;
-      return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
+  getRegions(params) {
+    return this.getItems('region', params);
   },
 
-  createRegion(payload) {
+  getCollections(params) {
+    return this.getItems('collection', params);
+  },
+
+  upload(payload) {
     try {
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
       return fetch(query, {
@@ -83,49 +75,60 @@ export default {
           'Content-Type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify(convertRegionPayload(payload)),
+        body: JSON.stringify(payload),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
   },
 
-  createCollection(payload) {
+  updateitem(type, payload, id) {
     try {
-      const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
-
-      console.log(JSON.stringify(payload));
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(convertRegionPayload(payload)),
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
-
-  updateRegion(payload, id) {
-    try {
-      const query = `${process.env.REACT_APP_REGION_API_ROOT}/region/${id}`;
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
       return fetch(query, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify(
-          convertRegionPayload({
-            ...payload,
-            id: undefined,
-          })
-        ),
+        body: JSON.stringify({
+          ...payload,
+          id: undefined,
+        }),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
+  },
+
+  updateRegion(id, payload) {
+    return this.updateitem('region', id, payload);
+  },
+
+  updateCollection(id, payload) {
+    return this.updateitem('collection', id, payload);
+  },
+
+  deleteItem(type, id) {
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
+      return fetch(query, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+
+  deleteRegion(id) {
+    return this.deleteItem('region', id);
+  },
+
+  deleteCollection(id) {
+    return this.deleteItem('collection', id);
   },
 };

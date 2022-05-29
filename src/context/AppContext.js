@@ -304,6 +304,7 @@ export const AppProvider = (props) => {
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
+    ...props.value,
   };
 
   if (!user || !token) {
