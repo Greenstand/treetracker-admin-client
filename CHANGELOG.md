@@ -1,3 +1,10 @@
+# [1.94.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.2...v1.94.0) (2022-05-29)
+
+
+### Features
+
+* improve Regions UX ([#601](https://github.com/Greenstand/treetracker-admin-client/issues/601)) ([ca3a546](https://github.com/Greenstand/treetracker-admin-client/commit/ca3a54676b428a9917bbdd5b92457614ee6a094d))
+
 ## [1.93.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.1...v1.93.2) (2022-05-29)
 
 
