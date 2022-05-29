@@ -61,7 +61,7 @@ const EditGrower = (props) => {
     // only update context if growers have already been downloaded
     if (growerContext.growers.length) {
       const index = growerContext.growers.findIndex(
-        (p) => p.id === updatedGrower.id,
+        (p) => p.id === updatedGrower.id
       );
       if (index >= 0) {
         const growers = [...growerContext.growers];
@@ -122,20 +122,6 @@ const EditGrower = (props) => {
       {
         attr: 'lastName',
         label: 'Last Name',
-      },
-    ],
-    [
-      {
-        attr: 'email',
-        label: 'Email Address',
-        type: 'email',
-      },
-    ],
-    [
-      {
-        attr: 'phone',
-        label: 'Phone Number',
-        type: 'tel',
       },
     ],
   ];

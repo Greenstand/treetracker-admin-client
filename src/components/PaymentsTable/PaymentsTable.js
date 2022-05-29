@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import moment from 'moment';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -45,12 +46,14 @@ const paymentTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Capture Count',
     name: 'captures_count',
     sortable: false,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
@@ -94,14 +97,17 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
@@ -148,7 +154,7 @@ function PaymentsTable() {
     const response = await paymentsAPI.getEarnings(queryParams);
     const result = prepareRows(response.earnings);
     setPayments(result);
-    setTotalPayments(response.totalCount);
+    setTotalPayments(response.query.count);
 
     setIsLoading(false); // hide loading indicator when data is fetched
   }

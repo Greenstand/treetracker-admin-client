@@ -3,17 +3,20 @@ import { session } from '../models/auth';
 
 export default {
   getItem(type, id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
+    try {
+      
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
 
-    return fetch(query, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+      return fetch(query, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   getRegion(id) {
@@ -28,29 +31,31 @@ export default {
     type,
     { skip, rowsPerPage, filter, orderBy = 'name', order = 'desc' }
   ) {
-    let params = {
-      ...filter,
-      offset: skip,
-      sort_by: orderBy,
-      order,
-    };
-    if (rowsPerPage > 0) {
-      params.limit = rowsPerPage;
+    try {
+      let params = {
+        ...filter,
+        offset: skip,
+        sort_by: orderBy,
+        order,
+      };
+      if (rowsPerPage > 0) {
+        params.limit = rowsPerPage;
+      }
+
+      const searchParams = new URLSearchParams(params);
+      const query = `${
+        process.env.REACT_APP_REGION_API_ROOT
+      }/${type}?${searchParams.toString()}`;
+
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
     }
-
-    const searchParams = new URLSearchParams(params);
-    const query = `${
-      process.env.REACT_APP_REGION_API_ROOT
-    }/${type}?${searchParams.toString()}`;
-
-    return fetch(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
   },
 
   getRegions(params) {
@@ -62,34 +67,38 @@ export default {
   },
 
   upload(payload) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
-    return fetch(query, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(payload),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   updateitem(type, payload, id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
-    return fetch(query, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify({
-        ...payload,
-        id: undefined,
-      }),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
+      return fetch(query, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify({
+          ...payload,
+          id: undefined,
+        }),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   updateRegion(id, payload) {
@@ -101,16 +110,18 @@ export default {
   },
 
   deleteItem(type, id) {
-    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
-    return fetch(query, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: session.token,
-      },
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
+      return fetch(query, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
 
   deleteRegion(id) {

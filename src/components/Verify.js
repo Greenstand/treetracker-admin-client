@@ -15,7 +15,7 @@ import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
-
+import Tooltip from '@material-ui/core/Tooltip';
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
 import Person from '@material-ui/icons/Person';
@@ -35,6 +35,7 @@ import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CaptureDetailProvider } from '../context/CaptureDetailContext';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -74,6 +75,8 @@ const useStyles = makeStyles((theme) => ({
     padding: '87% 0 0 0',
     position: 'relative',
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -157,6 +160,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -259,6 +263,7 @@ const Verify = (props) => {
   function handleShowCaptureDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
+    setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture,
@@ -266,6 +271,7 @@ const Verify = (props) => {
   }
 
   function handleCloseCaptureDetail() {
+    setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
       capture: {},
@@ -282,6 +288,17 @@ const Verify = (props) => {
   }
 
   const captureImages = verifyContext.captureImages;
+
+  const tooltipStyles = makeStyles(() => ({
+    tooltipTop: {
+      top: '12px',
+    },
+    tooltipBottom: {
+      top: '-16px',
+    },
+  }));
+
+  const tooltipPositionStyles = tooltipStyles();
 
   const placeholderImages = verifyContext.isLoading
     ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
@@ -308,64 +325,96 @@ const Verify = (props) => {
               capture.placeholder && classes.placeholderCard
             )}
           >
-            <Card
-              onClick={(e) => handleCaptureClick(e, capture.id)}
-              id={`card_${capture.id}`}
-              className={classes.card}
-              elevation={capture.placeholder ? 0 : 3}
-            >
-              <CardContent className={classes.cardContent}>
-                <Paper className={classes.cardCheckbox} elevation={4}>
-                  {verifyContext.captureImagesSelected[capture.id] && (
-                    <CheckIcon />
-                  )}
-                </Paper>
-                <OptimizedImage
-                  src={capture.imageUrl}
-                  width={400}
-                  className={classes.cardMedia}
+            <Tooltip
+              key={capture.id}
+              placement="top"
+              arrow={true}
+              interactive
+              enterDelay={500}
+              enterNextDelay={500}
+              onMouseEnter={() => {setDisableHoverListener(false)}}
+              disableHoverListener={disableHoverListener}
+              classes={{
+                tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
+              }}
+              title={
+                <CaptureDetailTooltip
+                  capture={capture}
+                  showCaptureClick={handleShowCaptureDetail}
                 />
-              </CardContent>
+              }
+            >
+              <Card
+                onClick={(e) => handleCaptureClick(e, capture.id)}
+                id={`card_${capture.id}`}
+                className={classes.card}
+                elevation={capture.placeholder ? 0 : 3}
+              >
+                <CardContent className={classes.cardContent}>
+                  <Paper className={classes.cardCheckbox} elevation={4}>
+                    {verifyContext.captureImagesSelected[capture.id] && (
+                      <CheckIcon />
+                    )}
+                  </Paper>
+                  <OptimizedImage
+                    src={capture.imageUrl}
+                    width={400}
+                    className={classes.cardMedia}
+                    alertWidth="100%"
+                    alertHeight="200%"
+                    alertPosition="absolute"
+                    alertPadding="5rem 0 0 1rem"
+                    alertTitleSize="1.6rem"
+                    alertTextSize="1rem"
+                  />
+                </CardContent>
 
-              <Grid justify="center" container className={classes.cardActions}>
-                <Grid item>
-                  <IconButton
-                    onClick={(e) => handleShowGrowerDetail(e, capture)}
-                    aria-label={`Grower details`}
-                    title={`Grower details`}
-                  >
-                    <Person color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={(e) => handleShowCaptureDetail(e, capture)}
-                    aria-label={`Capture details`}
-                    title={`Capture details`}
-                  >
-                    <Nature color="primary" />
-                  </IconButton>
-                  <IconButton
-                    variant="link"
-                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
-                    target="_blank"
-                    onClick={(e) => handleCapturePinClick(e, capture.id)}
-                    aria-label={`Capture location`}
-                    title={`Capture location`}
-                  >
-                    <LocationOn color="primary" />
-                  </IconButton>
-                  <IconButton
-                    variant="link"
-                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
-                    target="_blank"
-                    onClick={(e) => handleGrowerMapClick(e, capture.planterId)}
-                    aria-label={`Grower map`}
-                    title={`Grower map`}
-                  >
-                    <Map color="primary" />
-                  </IconButton>
+                <Grid
+                  justify="center"
+                  container
+                  className={classes.cardActions}
+                >
+                  <Grid item>
+                    <IconButton
+                      onClick={(e) => handleShowGrowerDetail(e, capture)}
+                      aria-label={`Grower details`}
+                      title={`Grower details`}
+                    >
+                      <Person color="primary" />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => handleShowCaptureDetail(e, capture)}
+                      aria-label={`Capture details`}
+                      title={`Capture details`}
+                    >
+                      <Nature color="primary" />
+                    </IconButton>
+                    <IconButton
+                      variant="link"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
+                      target="_blank"
+                      onClick={(e) => handleCapturePinClick(e, capture.id)}
+                      aria-label={`Capture location`}
+                      title={`Capture location`}
+                    >
+                      <LocationOn color="primary" />
+                    </IconButton>
+                    <IconButton
+                      variant="link"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
+                      target="_blank"
+                      onClick={(e) =>
+                        handleGrowerMapClick(e, capture.planterId)
+                      }
+                      aria-label={`Grower map`}
+                      title={`Grower map`}
+                    >
+                      <Map color="primary" />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
+              </Card>
+            </Tooltip>
           </div>
         </Grid>
       );

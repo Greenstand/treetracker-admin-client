@@ -8,8 +8,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Grower from './Grower';
 import GrowerDetail from '../GrowerDetail';
+import GrowerTooltip from './GrowerTooltip';
 import { GrowerContext } from '../../context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
+import { Tooltip, Box } from '@material-ui/core';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -19,6 +21,7 @@ const Growers = (props) => {
   const growerContext = useContext(GrowerContext);
   const [isDetailShown, setDetailShown] = useState(false);
   const [growerDetail, setGrowerDetail] = useState({});
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
 
   function handlePageChange(e, page) {
     growerContext.changeCurrentPage(page);
@@ -31,6 +34,7 @@ const Growers = (props) => {
   function handleGrowerClick(grower) {
     setDetailShown(true);
     setGrowerDetail(grower);
+    setDisableHoverListener(true);
   }
 
   const placeholderGrowers = Array(growerContext.pageSize)
@@ -48,12 +52,32 @@ const Growers = (props) => {
   ).map((grower, i) => {
     //combine i + grower.id to create unique keys even when there are duplicate grower.ids
     return (
-      <Grower
-        onClick={() => handleGrowerClick(grower)}
+      <Tooltip
         key={`${i} + ${grower.id}`}
-        grower={grower}
-        placeholder={grower.placeholder}
-      />
+        placement="top"
+        classes={{
+          tooltipPlacementTop: classes.tooltipTop,
+          tooltipPlacementBottom: classes.tooltipBottom,
+        }}
+        arrow={true}
+        enterDelay={500}
+        enterNextDelay={500}
+        interactive
+        onMouseEnter={() => {setDisableHoverListener(false)}}
+        disableHoverListener={disableHoverListener}
+        title={
+          <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
+        }
+      >
+        <Box>
+          <Grower
+            onClick={() => handleGrowerClick(grower)}
+            key={`${i} + ${grower.id}`}
+            grower={grower}
+            placeholder={grower.placeholder}
+          />
+        </Box>
+      </Tooltip>
     );
   });
 
@@ -103,7 +127,7 @@ const Growers = (props) => {
       <GrowerDetail
         open={isDetailShown}
         growerId={growerDetail.id}
-        onClose={() => setDetailShown(false)}
+        onClose={() => {setDetailShown(false); setDisableHoverListener(false)}}
       />
     </Grid>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import earningsAPI from '../../api/earnings';
+import moment from 'moment';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
   covertDateStringToHumanReadableFormat,
@@ -35,12 +36,14 @@ const earningTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Capture Count',
     name: 'captures_count',
     sortable: false,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
@@ -78,17 +81,20 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
@@ -142,7 +148,7 @@ function EarningsTable() {
     const results = prepareRows(response.earnings);
     return {
       results,
-      totalCount: response.totalCount,
+      totalCount: response.query.count,
     };
   }
 

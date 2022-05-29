@@ -19,6 +19,7 @@ import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
+import { useHistory } from 'react-router-dom';
 
 const style = (theme) => ({
   accountContainer: {
@@ -81,8 +82,10 @@ function Account(props) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const history = useHistory();
 
   function handleLogout() {
+    history.push('/');
     appContext.logout();
   }
 

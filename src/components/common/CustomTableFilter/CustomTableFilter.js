@@ -32,7 +32,6 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  */
 function CustomTableFilter(props) {
   const { orgList } = React.useContext(AppContext);
-  console.warn('orgList', orgList);
   const [localFilter, setLocalFilter] = useState({});
   const {
     isFilterOpen,
@@ -67,17 +66,20 @@ function CustomTableFilter(props) {
     updateSelectedFilter(filtersToSubmit);
   };
 
-  const handleOnFilterFormReset = (e) => {
+  const handleOnFilterFormReset = (e, filterType) => {
     e.preventDefault();
     if (Object.keys(localFilter).length !== 0) {
       const withoutLocalFilter = Object.assign({}, filter);
-      delete withoutLocalFilter.earnings_status;
-      delete withoutLocalFilter.funder_id;
-      delete withoutLocalFilter.grower;
-      delete withoutLocalFilter.phone;
-      delete withoutLocalFilter.start_date;
-      delete withoutLocalFilter.end_date;
-      delete withoutLocalFilter.sub_organization;
+      if (filterType === 'main') {
+        delete withoutLocalFilter.earnings_status;
+        delete withoutLocalFilter.funder_id;
+        delete withoutLocalFilter.grower;
+        delete withoutLocalFilter.phone;
+        delete withoutLocalFilter.sub_organization;
+      } else {
+        delete withoutLocalFilter.start_date;
+        delete withoutLocalFilter.end_date;
+      }
       setFilter(withoutLocalFilter);
       setLocalFilter({});
     }
@@ -257,7 +259,7 @@ function CustomTableFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={handleOnFilterFormReset}
+              onClick={(e) => handleOnFilterFormReset(e, filterType)}
               className={classes.customTableFilterResetButton}
             >
               RESET
