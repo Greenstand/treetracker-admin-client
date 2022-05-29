@@ -1,3 +1,10 @@
+## [1.93.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.1...v1.93.2) (2022-05-29)
+
+
+### Bug Fixes
+
+* forget route when a user logs out explicit ([#658](https://github.com/Greenstand/treetracker-admin-client/issues/658)) ([7533e76](https://github.com/Greenstand/treetracker-admin-client/commit/7533e7615bde6465117083d71154d593c1ad8b23))
+
 ## [1.93.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.0...v1.93.1) (2022-05-26)
 
 
