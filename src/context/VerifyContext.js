@@ -19,7 +19,6 @@ export const VerifyContext = createContext({
     approved: false,
     active: true,
   }),
-  // invalidateCaptureCount: true,
   captureCount: null,
   approve: () => {},
   loadCaptureImages: () => {},
@@ -49,7 +48,6 @@ export function VerifyProvider(props) {
       active: true,
     })
   );
-  // const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
   const [captureCount, setCaptureCount] = useState(null);
 
   /* load captures when the page or page size changes */
@@ -85,7 +83,6 @@ export function VerifyProvider(props) {
     setCaptureImages([]);
     setCurrentPage(0);
     setCaptureCount(null);
-    // setInvalidateCaptureCount(true);
   };
   /*
    * to clear all selection
@@ -231,7 +228,6 @@ export function VerifyProvider(props) {
     await loadCaptureImages();
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    // setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -251,7 +247,6 @@ export function VerifyProvider(props) {
         await undoCaptureImage(captureImage.id);
 
         setApproveAllComplete(100 * ((i + 1) / total));
-        // setInvalidateCaptureCount(true);
       }
     } catch (e) {
       log.warn('get error:', e);
@@ -264,7 +259,6 @@ export function VerifyProvider(props) {
     setIsLoading(false);
     setIsApproveAllProcessing(false);
     setApproveAllComplete(0);
-    // setInvalidateCaptureCount(true);
 
     resetSelection();
     return true;
@@ -288,7 +282,6 @@ export function VerifyProvider(props) {
     pageSize,
     currentPage,
     filter,
-    // invalidateCaptureCount,
     captureCount,
     loadCaptureImages,
     approveAll,
