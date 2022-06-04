@@ -46,6 +46,8 @@ const Growers = (props) => {
       };
     });
 
+  const enableTooltips = process.env.REACT_APP_ENABLE_TOOLTIPS === 'true';
+
   let growersItems = (growerContext.isLoading
     ? placeholderGrowers
     : growerContext.growers
@@ -63,10 +65,16 @@ const Growers = (props) => {
         enterDelay={500}
         enterNextDelay={500}
         interactive
-        onMouseEnter={() => {setDisableHoverListener(false)}}
+        onMouseEnter={() => {
+          setDisableHoverListener(false);
+        }}
         disableHoverListener={disableHoverListener}
         title={
-          <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
+          enableTooltips ? (
+            <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
+          ) : (
+            ''
+          )
         }
       >
         <Box>
@@ -127,7 +135,10 @@ const Growers = (props) => {
       <GrowerDetail
         open={isDetailShown}
         growerId={growerDetail.id}
-        onClose={() => {setDetailShown(false); setDisableHoverListener(false)}}
+        onClose={() => {
+          setDetailShown(false);
+          setDisableHoverListener(false);
+        }}
       />
     </Grid>
   );
