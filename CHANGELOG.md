@@ -1,3 +1,10 @@
+## [1.94.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.0...v1.94.1) (2022-06-04)
+
+
+### Bug Fixes
+
+* temporarily disable features not prod-ready ([#677](https://github.com/Greenstand/treetracker-admin-client/issues/677)) ([f3f4cfd](https://github.com/Greenstand/treetracker-admin-client/commit/f3f4cfde766495cb0058875d2103dcdb0fbe5f05))
+
 # [1.94.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.2...v1.94.0) (2022-05-29)
 
 
