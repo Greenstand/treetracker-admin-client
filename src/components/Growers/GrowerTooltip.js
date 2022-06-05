@@ -20,12 +20,6 @@ const GrowerTooltip = ({ grower, growerClick }) => {
     },
     label: {
       marginLeft: '12px',
-    },
-    error: {
-      ".MuiAlert-standardError": {
-        width: '24px',
-        height: '24px'
-      }
     }
   }));
 
