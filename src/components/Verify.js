@@ -467,6 +467,7 @@ const Verify = (props) => {
                     <IconButton
                       onClick={(e) => handleShowGrowerDetail(e, capture)}
                       aria-label={`Grower details`}
+                      name={`Grower details`}
                       title={`Grower details`}
                     >
                       <Person color="primary" />
@@ -474,6 +475,7 @@ const Verify = (props) => {
                     <IconButton
                       onClick={(e) => handleShowCaptureDetail(e, capture)}
                       aria-label={`Capture details`}
+                      name={`Capture details`}
                       title={`Capture details`}
                     >
                       <Nature color="primary" />
@@ -733,6 +735,7 @@ const Verify = (props) => {
           open={captureDetail.isOpen}
           onClose={handleCloseCaptureDetail}
           capture={captureDetail.capture}
+          url={`${process.env.REACT_APP_FIELD_DATA_ROOT}/raw-captures`}
         />
       </CaptureDetailProvider>
     </>

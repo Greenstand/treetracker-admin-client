@@ -44,6 +44,10 @@ jest.setTimeout(7000);
 jest.mock('../../api/growers');
 jest.mock('../../api/treeTrackerApi');
 
+const setState = jest.fn();
+const useStateMock = (initialState) => [initialState, setState];
+jest.spyOn(React, 'useState').mockImplementation(useStateMock);
+
 describe('Verify', () => {
   let growerApi;
   let captureApi;
@@ -70,40 +74,36 @@ describe('Verify', () => {
   // mock the treeTrackerApi
   captureApi = require('../../api/treeTrackerApi').default;
 
-  captureApi.getCaptureImages = () => {
-    log.debug('mock getCaptureImages:');
+  captureApi.getRawCaptures = () => {
+    // log.debug('mock getRawCaptures:');
     return Promise.resolve(CAPTURES);
   };
-  captureApi.getCaptureCount = () => {
-    log.debug('mock getCaptureCount:');
-    return Promise.resolve({ count: 4 });
-  };
   captureApi.getCaptureById = (_id) => {
-    log.debug('mock getCaptureById:');
+    // log.debug('mock getCaptureById:');
     return Promise.resolve(CAPTURE);
   };
   captureApi.getSpecies = () => {
-    log.debug('mock getSpecies:');
+    // log.debug('mock getSpecies:');
     return Promise.resolve(SPECIES);
   };
   captureApi.getSpeciesById = (_id) => {
-    log.debug('mock getSpeciesById:');
+    // log.debug('mock getSpeciesById:');
     return Promise.resolve(SPECIES[0]);
   };
   captureApi.getCaptureCountPerSpecies = () => {
-    log.debug('mock getCaptureCountPerSpecies:');
+    // log.debug('mock getCaptureCountPerSpecies:');
     return Promise.resolve({ count: 7 });
   };
   captureApi.getTags = () => {
-    log.debug('mock getTags:');
+    // log.debug('mock getTags:');
     return Promise.resolve(TAGS);
   };
   captureApi.getTagById = (_id) => {
-    log.debug('mock getTagById:');
+    // log.debug('mock getTagById:');
     return Promise.resolve(TAG);
   };
   captureApi.getOrganizations = () => {
-    log.debug('mock getOrganizations:');
+    // log.debug('mock getOrganizations:');
     return Promise.resolve(ORGS);
   };
 
@@ -127,9 +127,8 @@ describe('Verify', () => {
         </ThemeProvider>
       );
 
-      await act(() => captureApi.getCaptureImages());
-      await act(() => captureApi.getCaptureCount());
-      // await act(() => captureApi.getTags());
+      await act(async () => await captureApi.getRawCaptures());
+      await act(async () => await captureApi.getTags());
     });
 
     afterEach(cleanup);
@@ -241,7 +240,7 @@ describe('Verify', () => {
 //   beforeEach(() => {
 //     //mock the api
 //     api = require('../../api/treeTrackerApi').default;
-//     api.getCaptureImages = jest.fn(() => Promise.resolve([{ id: '1' }]));
+//     api.getRawCaptures = jest.fn(() => Promise.resolve([{ id: '1' }]));
 //     api.approveCaptureImage = jest.fn(() => Promise.resolve(true));
 //     api.rejectCaptureImage = jest.fn(() => Promise.resolve(true));
 //     api.undoCaptureImage = () => Promise.resolve(true);
@@ -275,13 +274,13 @@ describe('Verify', () => {
 //       });
 
 //       it('should call api with param: skip = 0', () => {
-//         expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
+//         expect(api.getRawCaptures.mock.calls[0][0]).toMatchObject({
 //           skip: 0,
 //         });
 //       });
 
 //       it('by default, should call capture api with filter: approve=false, active=true', () => {
-//         expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
+//         expect(api.getRawCaptures.mock.calls[0][0]).toMatchObject({
 //           filter: {
 //             approved: false,
 //             active: true,
@@ -367,12 +366,12 @@ describe('Verify', () => {
 //       describe('loadCaptureImages() load second page', () => {
 //         //{{{
 //         beforeEach(async () => {
-//           api.getCaptureImages.mockClear();
+//           api.getRawCaptures.mockClear();
 //           await store.dispatch.verify.loadCaptureImages();
 //         });
 
 //         it('should call api with param: skip = 1', () => {
-//           expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
+//           expect(api.getRawCaptures.mock.calls[0][0]).toMatchObject({
 //             skip: 1,
 //           });
 //         });
@@ -383,7 +382,7 @@ describe('Verify', () => {
 //         //{{{
 //         beforeEach(async () => {
 //           //clear
-//           api.getCaptureImages.mockClear();
+//           api.getRawCaptures.mockClear();
 //           const filter = new Filter();
 //           filter.approved = false;
 //           filter.active = false;
@@ -391,7 +390,7 @@ describe('Verify', () => {
 //         });
 
 //         it('after updateFilter, should call load captures with filter(approved:false, active:false)', () => {
-//           expect(api.getCaptureImages.mock.calls[0][0]).toMatchObject({
+//           expect(api.getRawCaptures.mock.calls[0][0]).toMatchObject({
 //             filter: {
 //               approved: false,
 //               active: false,
