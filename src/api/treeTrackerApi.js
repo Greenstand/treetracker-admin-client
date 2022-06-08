@@ -26,7 +26,7 @@ export default {
   /**
    * Verify Tool
    */
-  getCaptureImages(
+  getRawCaptures(
     {
       page = 0,
       rowsPerPage,
@@ -47,8 +47,6 @@ export default {
         offset: page * rowsPerPage,
       };
 
-      log.debug('getCaptureImages filter:', id, filterObj);
-
       const query = `${FIELD_DATA_API}/raw-captures${
         id != null ? '/' + id : ''
       }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
@@ -68,7 +66,7 @@ export default {
       const query = `${TREETRACKER_API}/captures/${id}`;
 
       return fetch(query, {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
@@ -91,7 +89,7 @@ export default {
   rejectCaptureImage(id, rejectionReason) {
     try {
       log.debug('reject capture', id, rejectionReason);
-      const query = `${TREETRACKER_API}/captures/${id}`;
+      const query = `${FIELD_DATA_API}/raw_captures/${id}`;
       return fetch(query, {
         method: 'PATCH',
         headers: {
@@ -159,11 +157,13 @@ export default {
     }
   },
   /**
-   * Verify & Captures Tool
+   * Verify & Captures -- Captures Detail Dialog
    */
-  getCaptureById(id, abortController) {
+  getCaptureById(url, id, abortController) {
     try {
-      const query = `${FIELD_DATA_API}/raw-captures/${id}`;
+      // use field data api for Verify and  use query api for Captures
+      const query = `${url}/${id}`;
+      log.debug('getCaptureById ---> ', query);
       return fetch(query, {
         headers: {
           Authorization: session.token,
@@ -320,9 +320,7 @@ export default {
    */
   getCaptureCountPerSpecies(speciesId, abortController) {
     try {
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
+      const query = `${API_ROOT}/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
 
       return fetch(query, {
         headers: {
@@ -370,21 +368,23 @@ export default {
     }
   },
   createTag(tagName) {
-    const query = `${TREETRACKER_API}/tags`;
-    return fetch(query, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-      body: JSON.stringify({
-        tagName,
-        active: true,
-        public: true,
-      }),
-    })
-      .then(handleResponse)
-      .catch(handleError);
+    try {
+      const query = `${TREETRACKER_API}/tags`;
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify({
+          tagName,
+          active: true,
+          public: true,
+        }),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
   /*
    * Capture Tags
@@ -392,7 +392,7 @@ export default {
   createCaptureTags(captureId, tags) {
     try {
       return tags.map((t) => {
-        const query = `${process.env.REACT_APP_API_ROOT}/api/tree_tags`;
+        const query = `${API_ROOT}/api/tree_tags`;
 
         return fetch(query, {
           method: 'POST',
@@ -410,30 +410,21 @@ export default {
       handleError(error);
     }
   },
-  async getCaptureTags({ captureIds, tagIds }) {
+  async getCaptureTags(captureIds = []) {
     try {
-      const useAnd = captureIds && tagIds;
-      const captureIdClauses = (captureIds || []).map(
-        (id, index) =>
-          `filter[where]${useAnd ? '[and][0]' : ''}[or][${index}][treeId]=${id}`
-      );
-      const tagIdClauses = (tagIds || []).map(
-        (id, index) =>
-          `filter[where][and]${
-            useAnd ? '[and][1]' : ''
-          }[or][${index}][tagId]=${id}`
-      );
+      const result = captureIds.map((id) => {
+        const query = `${TREETRACKER_API}/captures/${id}/tags`;
 
-      const filterString = [...captureIdClauses, ...tagIdClauses].join('&');
-      const query = `${API_ROOT}/api/tree_tags?${filterString}`;
+        return fetch(query, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            Authorization: session.token,
+          },
+        }).then(handleResponse);
+      });
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return Promise.all(result);
     } catch (error) {
       handleError(error);
     }
@@ -443,9 +434,7 @@ export default {
    */
   getOrganizations() {
     try {
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
+      const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
       return fetch(query, {
         method: 'GET',
