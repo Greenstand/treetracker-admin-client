@@ -25,7 +25,7 @@ export function TagsProvider(props) {
   // EVENT HANDLERS
   const loadTags = async () => {
     const { tags } = await api.getTags();
-    log.debug('load tags from api:', tags.length);
+    log.debug('load tags from api:', tags?.length);
     setTagList(tags);
   };
   /*
