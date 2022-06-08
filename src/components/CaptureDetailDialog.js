@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, capture } = props;
+  const { open, capture, url } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -94,7 +94,7 @@ function CaptureDetailDialog(props) {
 
   useEffect(() => {
     // if (capture?.id) cdContext.getCaptureDetail(capture?.id);
-    cdContext.getCaptureDetail(capture?.id);
+    cdContext.getCaptureDetail(url, capture?.id);
   }, [capture]);
 
   useEffect(() => {
@@ -233,12 +233,12 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {!capture.approved && capture.active ? (
-            <Chip
-              label={verificationStates.AWAITING}
-              className={classes.awaitingChip}
-            />
-          ) : capture.active && capture.approved ? (
+          {capture.status === 'active' ? (
+            //   <Chip
+            //     label={verificationStates.AWAITING}
+            //     className={classes.awaitingChip}
+            //   />
+            // ) : capture.active && capture.approved ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}

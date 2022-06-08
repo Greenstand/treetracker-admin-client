@@ -36,13 +36,13 @@ export function CaptureDetailProvider(props) {
 
   // EVENT HANDLERS
 
-  const getCaptureDetail = async (id) => {
+  const getCaptureDetail = async (url, id) => {
     if (id == null) {
       log.debug('getCapture called with no id');
       return Promise.resolve(STATE_EMPTY.capture);
     }
 
-    return api.getCaptureById(id).then((capture) => {
+    return api.getCaptureById(url, id).then((capture) => {
       setState({ ...state, capture });
       return capture;
     });
