@@ -52,21 +52,21 @@ export function CapturesProvider(props) {
   }, [filter, rowsPerPage, page, order, orderBy]);
 
   function makeQueryString(filterObj) {
-    let query = '';
+    let arr = [];
     for (const key in filterObj) {
       if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        query += `&${key}=${JSON.stringify(filterObj[key])}`;
+        arr.push(`${key}=${filterObj[key]}`);
       }
-      // console.log('key', key, filterObj[key], query);
     }
-    return query;
+
+    return arr.join('&');
   }
 
   // EVENT HANDLERS
   const queryCapturesApi = ({ id = null, ...params }) => {
     let filterObj = { limit: 25, offset: 0, ...params };
 
-    const query = `${process.env.REACT_APP_FIELD_DATA_ROOT}/raw-captures${
+    const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
       id != null ? '/' + id : ''
     }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
 
@@ -94,7 +94,7 @@ export function CapturesProvider(props) {
 
     const filterData = {
       // TODO:: order and orderBy filters need to be implemented
-      // ...filter.getWhereObj(),
+      ...filter.getWhereObj(),
       // orderBy,
       // order,
       limit: rowsPerPage,
@@ -102,13 +102,14 @@ export function CapturesProvider(props) {
       id: getOrganizationUUID(),
     };
 
-    console.log('filterData -->', filterData);
+    log.debug('getCaptures filter', filterData);
 
     setIsLoading(true);
     const response = await queryCapturesApi(filterData);
+    log.debug('getCaptures -->', response.data);
     setIsLoading(false);
-    setCaptures(response.data.raw_captures);
-    setCaptureCount(Number(response.data.query.count));
+    setCaptures(response?.data?.captures);
+    setCaptureCount(Number(response?.data?.query?.count));
   };
 
   // GET CAPTURES FOR EXPORT
@@ -119,8 +120,8 @@ export function CapturesProvider(props) {
       order: [`${orderBy} ${order}`],
       limit: 20000,
     };
-    const response = await queryCapturesApi(filterData);
-    return response;
+    const { captures } = await queryCapturesApi(filterData);
+    return captures;
   };
 
   const getCapture = (id) => {
