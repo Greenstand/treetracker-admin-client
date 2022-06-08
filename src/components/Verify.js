@@ -151,11 +151,35 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'smaller',
     fontWeight: 'bold',
   },
-  showButtonSize: {
-    textTransform: 'lowerCase',
-    border: 'none',
-    color: 'black',
+  '@media (max-width: 1070px)': {
+    paginationContainer: {
+      '@media (max-width: 1070px)': {
+        display: 'flex',
+        flexGrow: 1,
+      },
+    },
+    pagination: {
+      width: '100%',
+    },
+  },
+  imageSizeLabel: {
+    display: 'flex',
+    alignItems: 'center',
     fontSize: '0.6875rem',
+    paddingRight: '.25rem',
+  },
+  imageSizeToggle: {
+    textTransform: 'none',
+    fontSize: '0.6875rem',
+    border: '1px solid',
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    color: 'black',
+    '&.Mui-selected': {
+      borderColor: theme.palette.action.active,
+    },
+    '&.Mui-selected span': {
+      color: theme.palette.stats.green,
+    },
   },
 }));
 
@@ -166,8 +190,7 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
-  const [showBigSize, setShowBigSize] = useState(false);
-  const [alignment, setAlignment] = useState('left');
+  const [isImagesLarge, setImagesLarge] = useState(false);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -210,11 +233,6 @@ const Verify = (props) => {
     verifyContext.loadCaptureImages({ signal: abortController.signal });
     return () => abortController.abort();
   }, [verifyContext.filter, verifyContext.pageSize, verifyContext.currentPage]);
-
-  function toggleSizes(event, newAlignment) {
-    setShowBigSize(!showBigSize);
-    setAlignment(newAlignment);
-  }
 
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
@@ -358,7 +376,7 @@ const Verify = (props) => {
   // and whether large or small images are toggled
 
   const containerWidth = captureImageContainerWidth || 100;
-  const minCaptureSize = !showBigSize ? 350 : 250;
+  const minCaptureSize = isImagesLarge ? 350 : 250; // Shouldn't this be reversed?
 
   const breakpoints = Array.from({ length: 6 }, (_, idx) => {
     return minCaptureSize * (idx + 1);
@@ -411,7 +429,7 @@ const Verify = (props) => {
               <CardContent className={classes.cardContent}>
                 <OptimizedImage
                   src={capture.imageUrl}
-                  width={showBigSize ? 250 : 400}
+                  width={isImagesLarge ? 400 : 250}
                   className={classes.cardMedia}
                 />
               </CardContent>
@@ -479,7 +497,38 @@ const Verify = (props) => {
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Captures per page:"
+      className={classes.pagination}
     />
+  );
+
+  let imageSizeControl = (
+    <>
+      <Typography className={classes.imageSizeLabel}>Images:</Typography>
+
+      <ToggleButtonGroup
+        value={isImagesLarge === true ? 'large' : 'small'}
+        exclusive
+        aria-label="image size"
+      >
+        <ToggleButton
+          value="small"
+          aria-label="small"
+          onClick={() => setImagesLarge(false)}
+          className={classes.imageSizeToggle}
+        >
+          Small
+        </ToggleButton>
+
+        <ToggleButton
+          value="large"
+          aria-label="large"
+          onClick={() => setImagesLarge(true)}
+          className={classes.imageSizeToggle}
+        >
+          Large
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </>
   );
 
   return (
@@ -537,7 +586,15 @@ const Verify = (props) => {
                   alignItems="center"
                   className={classes.title}
                 >
-                  <Grid item>
+                  <Grid
+                    style={{
+                      display: 'flex',
+                      flexGrow: 1,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                    item
+                  >
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
@@ -546,42 +603,11 @@ const Verify = (props) => {
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
                     </Typography>
+
+                    <div style={{ display: 'flex' }}>{imageSizeControl}</div>
                   </Grid>
 
-                  <Grid
-                    item
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Grid>
-                      <ToggleButtonGroup
-                        value={alignment}
-                        exclusive
-                        onChange={toggleSizes}
-                        aria-label="text alignment"
-                        style={{
-                          marginTop: '4px',
-                        }}
-                      >
-                        <ToggleButton
-                          value="left"
-                          aria-label="left aligned"
-                          disabled={!showBigSize ? true : false}
-                          className={classes.showButtonSize}
-                        >
-                          Large size
-                        </ToggleButton>
-                        <ToggleButton
-                          value="right"
-                          aria-label="right aligned"
-                          disabled={showBigSize ? true : false}
-                          className={classes.showButtonSize}
-                        >
-                          Small size
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </Grid>
+                  <Grid item className={classes.paginationContainer}>
                     {imagePagination}
                   </Grid>
                 </Grid>
