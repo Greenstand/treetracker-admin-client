@@ -4,9 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import Close from '@material-ui/icons/Close';
@@ -18,6 +21,9 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
 import Country from './common/Country';
+import { hasPermission, POLICIES } from '../models/auth';
+import { AppContext } from '../context/AppContext';
+import theme from './common/theme';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -28,6 +34,13 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5),
     fontSize: '0.7rem',
+    '& .MuiChip-deleteIcon': {
+      opacity: '.25',
+      transition: 'opacity .125s',
+    },
+    '&:hover .MuiChip-deleteIcon': {
+      opacity: '1',
+    },
   },
   rejectedChip: {
     backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
@@ -82,11 +95,18 @@ function CaptureDetailDialog(props) {
   // console.log('render: capture detail dialog');
   const { open, capture } = props;
   const cdContext = useContext(CaptureDetailContext);
+  const appContext = useContext(AppContext);
+  const hasApproveTreePermission = hasPermission(appContext.user, [
+    POLICIES.APPROVE_TREE,
+  ]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(capture);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [captureTagDeletionTarget, setCaptureTagDeletionTarget] = useState(
+    undefined
+  );
   const resizeWindow = useCallback(() => {
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
@@ -115,22 +135,34 @@ function CaptureDetailDialog(props) {
     }
   }, [cdContext.capture, capture]);
 
+  function handleCaptureTagDeletion(tagId) {
+    console.log(`TODO: delete tag w/ id: ${tagId}`);
+    setCaptureTagDeletionTarget(undefined);
+  }
+
   function handleClose() {
     setSnackbarOpen(false);
     setSnackbarLabel('');
+    setCaptureTagDeletionTarget(undefined);
     cdContext.reset();
     props.onClose();
   }
 
   function Tags(props) {
     const { capture, species, captureTags } = props;
-    const allTags = [
+    const otherTags = [
       capture.morphology,
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags.map((t) => t.tagName),
     ].filter((tag) => !!tag);
+
+    const mockCaptureTags = [
+      {
+        tagName: 'delete_me',
+        tagId: '',
+      },
+    ];
 
     const dateCreated = new Date(Date.parse(capture.timeCreated));
     function confirmCopy(label) {
@@ -265,14 +297,70 @@ function CaptureDetailDialog(props) {
           )}
 
           <Typography variant="subtitle1">Other</Typography>
-          {allTags.length === 0 ? (
+          {otherTags.length + mockCaptureTags.length === 0 ? (
             <Typography variant="body1">---</Typography>
           ) : (
-            <div className={classes.chipRoot}>
-              {allTags.map((tag) => (
-                <Chip key={tag} label={tag} className={classes.chip} />
-              ))}
-            </div>
+            <>
+              <div className={classes.chipRoot}>
+                {otherTags.map((tag) => (
+                  <Chip key={tag} label={tag} className={classes.chip} />
+                ))}
+
+                {mockCaptureTags.map((tag) => (
+                  <Chip
+                    key={tag.tagName}
+                    label={tag.tagName}
+                    className={classes.chip}
+                    onDelete={
+                      hasApproveTreePermission !== undefined // TODO: delete, for testing purpose only
+                        ? // onDelete={(hasApproveTreePermission
+                          () => {
+                            setCaptureTagDeletionTarget(tag.tagName);
+                          }
+                        : undefined
+                    }
+                  />
+                ))}
+              </div>
+
+              {captureTagDeletionTarget !== undefined && (
+                <Container
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0px',
+                    marginTop: '1em',
+                  }}
+                >
+                  <Typography>
+                    Remove tag <b>{`"${captureTagDeletionTarget}"`}</b> ?
+                  </Typography>
+
+                  <ButtonGroup>
+                    <Button
+                      onClick={() => setCaptureTagDeletionTarget(undefined)}
+                      size="small"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleCaptureTagDeletion(captureTagDeletionTarget)
+                      }
+                      size="small"
+                      style={{
+                        fontWeight: 'bold',
+                        color: theme.palette.stats.white,
+                        backgroundColor: theme.palette.stats.red,
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </ButtonGroup>
+                </Container>
+              )}
+            </>
           )}
         </Grid>
         <Divider />
