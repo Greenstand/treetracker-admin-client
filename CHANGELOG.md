@@ -1,3 +1,10 @@
+## [1.94.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.1...v1.94.2) (2022-06-11)
+
+
+### Bug Fixes
+
+* ignore webpack warnings ([#688](https://github.com/Greenstand/treetracker-admin-client/issues/688)) ([2e73d2c](https://github.com/Greenstand/treetracker-admin-client/commit/2e73d2c663b367ca106e612028cd25ae65d931f4))
+
 ## [1.94.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.0...v1.94.1) (2022-06-04)
 
 
