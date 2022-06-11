@@ -84,8 +84,9 @@ function Filter(props) {
   const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || ''
   );
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
+  const [status, setStatus] = useState(filter?.status);
+  // const [approved, setApproved] = useState(filter?.approved);
+  // const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
     filter?.dateStart || dateStartDefault
   );
@@ -124,13 +125,14 @@ function Filter(props) {
     filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
+    // filter.approved = approved;
+    // filter.active = active;
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
+    filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -150,9 +152,10 @@ function Filter(props) {
     setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
 
-    const filter = new FilterModel();
-    filter.approved = approved; // keeps last value set
-    filter.active = active; // keeps last value set
+    const filter = new FilterModel({
+      status: 'unprocessed',
+    });
+    filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -162,7 +165,7 @@ function Filter(props) {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
-              <TextField
+              {/* <TextField
                 select
                 htmlFor="verification-status"
                 id="verification-status"
@@ -188,6 +191,37 @@ function Filter(props) {
                         e.target.value === verificationStates.APPROVED
                       ? true
                       : false
+                  );
+                }}
+              >
+                {[
+                  filterOptionAll,
+                  verificationStates.APPROVED,
+                  verificationStates.AWAITING,
+                  verificationStates.REJECTED,
+                ].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </TextField> */}
+              <TextField
+                select
+                htmlFor="verification-status"
+                id="verification-status"
+                label="Verification Status"
+                value={
+                  !status ? filterOptionAll : getVerificationStatus(status)
+                }
+                onChange={(e) => {
+                  setStatus(
+                    e.target.value === filterOptionAll
+                      ? undefined
+                      : e.target.value === verificationStates.AWAITING
+                      ? 'unprocessed'
+                      : e.target.value === verificationStates.REJECTED
+                      ? 'rejected'
+                      : 'approved'
                   );
                 }}
               >
@@ -257,7 +291,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower ID"
+                label="Grower Account ID"
                 placeholder="e.g. 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
@@ -265,7 +299,7 @@ function Filter(props) {
               <TextField
                 htmlFor="capture-id"
                 id="capture-id"
-                label="Capture ID"
+                label="Capture Reference ID"
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
@@ -273,7 +307,7 @@ function Filter(props) {
               <TextField
                 htmlFor="uuid"
                 id="uuid"
-                label="Capture UUID"
+                label="Capture ID (uuid)"
                 placeholder=""
                 value={uuid}
                 onChange={(e) => setUUID(e.target.value)}
@@ -289,7 +323,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-identifier"
                 id="grower-identifier"
-                label="Grower Identifier"
+                label="Wallet"
                 placeholder="e.g. grower@example.com"
                 value={growerIdentifier}
                 onChange={(e) => setGrowerIdentifier(e.target.value)}

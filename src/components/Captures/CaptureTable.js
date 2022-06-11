@@ -166,6 +166,7 @@ const CaptureTable = () => {
   };
 
   const toggleDrawer = (id) => {
+    console.log('toggleDrawer', id);
     getCapture(id);
     setIsDetailsPaneOpen(!isDetailsPaneOpen);
   };

@@ -8,7 +8,7 @@ export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
-import { tokenizationStates } from '../common/variables';
+import { tokenizationStates, verificationStates } from '../common/variables';
 
 export default class Filter {
   uuid; //  id
@@ -107,11 +107,15 @@ export default class Filter {
     //   where.stakeholderUUID = this.stakeholderUUID;
     // }
 
-    if (this.tokenId !== 'All') {
+    if (this.tokenId && this.tokenId !== 'All') {
       where.tokenized =
         this.tokenId === tokenizationStates.TOKENIZED ? 'true' : 'false';
     } else {
-      where.tokenized = null;
+      delete where.tokenized;
+    }
+
+    if (this.status) {
+      where.status = this.status;
     }
 
     // if (this.planterId) {

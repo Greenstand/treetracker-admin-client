@@ -360,7 +360,7 @@ const REGION_COLLECTIONS = [
 
 const capturesValues = {
   captures: CAPTURES.captures,
-  captureCount: CAPTURES.query.count,
+  captureCount: CAPTURES.total,
   selected: [],
   capture: {},
   numSelected: 0,

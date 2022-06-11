@@ -92,10 +92,10 @@ function CaptureDetailDialog(props) {
   }, []);
   const classes = useStyles();
 
+  // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
   useEffect(() => {
-    // if (capture?.id) cdContext.getCaptureDetail(capture?.id);
     cdContext.getCaptureDetail(url, capture?.id);
-  }, [capture]);
+  }, [capture.id]);
 
   useEffect(() => {
     window.addEventListener('resize', resizeWindow);
@@ -167,13 +167,13 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Grower ID',
+              label: 'Grower Account ID',
               value: capture.grower_account_id,
               copy: true,
               link: true,
             },
             {
-              label: 'Grower Identifier',
+              label: 'Wallet',
               value: capture.wallet,
               copy: true,
             },
@@ -233,12 +233,12 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {capture.status === 'active' ? (
-            //   <Chip
-            //     label={verificationStates.AWAITING}
-            //     className={classes.awaitingChip}
-            //   />
-            // ) : capture.active && capture.approved ? (
+          {capture.status === 'unprocessed' ? (
+            <Chip
+              label={verificationStates.AWAITING}
+              className={classes.awaitingChip}
+            />
+          ) : capture.status === 'active' || capture.status === 'approved' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}

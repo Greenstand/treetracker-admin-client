@@ -2,7 +2,7 @@ import {
   handleResponse,
   handleError,
   getOrganization,
-  getOrganizationUUID,
+  // getOrganizationUUID,
 } from './apiUtils';
 import { session } from '../models/auth';
 import log from 'loglevel';
@@ -12,17 +12,28 @@ const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 
-function makeQueryString(filterObj) {
-  let query = '';
-  for (const key in filterObj) {
-    if (filterObj[key] && filterObj[key] !== '') {
-      query += `&${key}=${filterObj[key]}`;
-    }
-  }
-  return query;
-}
+// function makeQueryString(filterObj) {
+//   let arr = [];
+//   for (const key in filterObj) {
+//     if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+//       arr.push(`${key}=${filterObj[key]}`);
+//     }
+//   }
+
+//   return arr.join('&');
+// }
 
 export default {
+  makeQueryString(filterObj) {
+    let arr = [];
+    for (const key in filterObj) {
+      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+        arr.push(`${key}=${filterObj[key]}`);
+      }
+    }
+
+    return arr.join('&');
+  },
   /**
    * Verify Tool
    */
@@ -33,23 +44,28 @@ export default {
       // TODO: need to be implemented with field data API
       // orderBy = 'captured_at',
       // order = 'desc',
-      // filter,
+      filter,
     },
     abortController
   ) {
     try {
-      // const where = filter.getWhereObj();
-      const id = getOrganizationUUID();
+      const where = filter.getWhereObj();
+      console.log('loadCaptureImages filter -->', filter);
+      console.log('loadCaptureImages where -->', where);
+      // const id = getOrganizationUUID();
       const filterObj = {
-        // ...where,
-        planting_organization_id: id,
+        ...where,
+        // planting_organization_id: id,
         limit: rowsPerPage,
         offset: page * rowsPerPage,
       };
 
+      // const query = `${FIELD_DATA_API}/raw-captures${
+      //   id != null ? '/' + id : ''
+      // }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
       const query = `${FIELD_DATA_API}/raw-captures${
-        id != null ? '/' + id : ''
-      }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
 
       return fetch(query, {
         headers: {

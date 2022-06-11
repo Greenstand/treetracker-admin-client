@@ -1,8 +1,9 @@
 import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
-import { getOrganizationUUID } from '../api/apiUtils';
+// import { getOrganizationUUID } from '../api/apiUtils';
 import { session } from '../models/auth';
 import FilterModel from '../models/Filter';
+import api from '../api/treeTrackerApi';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
@@ -38,37 +39,33 @@ export function CapturesProvider(props) {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('timeCreated');
   const [isLoading, setIsLoading] = useState(false);
-  const [filter, setFilter] = useState(
-    new FilterModel({
-      verifyStatus: [
-        { active: true, approved: true },
-        { active: true, approved: false },
-      ],
-    })
-  );
+  const [filter, setFilter] = useState(new FilterModel());
 
   useEffect(() => {
     getCaptures();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
-  function makeQueryString(filterObj) {
-    let arr = [];
-    for (const key in filterObj) {
-      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${filterObj[key]}`);
-      }
-    }
+  // function api.makeQueryString(filterObj) {
+  //   let arr = [];
+  //   for (const key in filterObj) {
+  //     if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+  //       arr.push(`${key}=${filterObj[key]}`);
+  //     }
+  //   }
 
-    return arr.join('&');
-  }
+  //   return arr.join('&');
+  // }
 
   // EVENT HANDLERS
-  const queryCapturesApi = ({ id = null, ...params }) => {
+  const queryCapturesApi = ({ ...params }) => {
     let filterObj = { limit: 25, offset: 0, ...params };
 
+    // const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
+    //   id != null ? '/' + id : ''
+    // }${filterObj ? `?${api.makeQueryString(filterObj)}` : ''}`;
     const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
-      id != null ? '/' + id : ''
-    }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
+      filterObj ? `?${api.makeQueryString(filterObj)}` : ''
+    }`;
 
     return axios.get(query, {
       headers: {
@@ -99,7 +96,6 @@ export function CapturesProvider(props) {
       // order,
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      id: getOrganizationUUID(),
     };
 
     log.debug('getCaptures filter', filterData);
@@ -109,7 +105,7 @@ export function CapturesProvider(props) {
     log.debug('getCaptures -->', response.data);
     setIsLoading(false);
     setCaptures(response?.data?.captures);
-    setCaptureCount(Number(response?.data?.query?.count));
+    setCaptureCount(Number(response?.data?.total));
   };
 
   // GET CAPTURES FOR EXPORT
@@ -126,10 +122,13 @@ export function CapturesProvider(props) {
 
   const getCapture = (id) => {
     setIsLoading(true);
-    queryCapturesApi({ id })
+
+    api
+      .getCaptureById(`${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures`, id)
       .then((res) => {
         setIsLoading(false);
-        setCapture(res.data);
+        console.log('getCapture res -->', res);
+        setCapture(res);
       })
       .catch((err) => {
         setIsLoading(false);

@@ -16,8 +16,7 @@ export const VerifyContext = createContext({
   pageSize: 24,
   currentPage: 0,
   filter: new FilterModel({
-    approved: false,
-    active: true,
+    status: 'unprocessed',
   }),
   captureCount: null,
   approve: () => {},
@@ -44,8 +43,7 @@ export function VerifyProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: false,
-      active: true,
+      status: 'unprocessed',
     })
   );
   const [captureCount, setCaptureCount] = useState(null);
