@@ -74,6 +74,18 @@ export function CaptureDetailProvider(props) {
     });
   };
 
+  const deleteCaptureTag = async (captureId, tagId) => {
+    if (captureId == null) {
+      return Promise.reject('deleteTag called with no captureId');
+    }
+
+    if (tagId == null) {
+      return Promise.reject('deleteTag called with no tagId');
+    }
+
+    // return api
+  };
+
   const value = {
     capture: state.capture,
     species: state.species,
