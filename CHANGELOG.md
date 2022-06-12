@@ -1,3 +1,10 @@
+## [1.94.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.2...v1.94.3) (2022-06-12)
+
+
+### Bug Fixes
+
+* showing capturre id with copy icon if available ([#687](https://github.com/Greenstand/treetracker-admin-client/issues/687)) ([0ff42bb](https://github.com/Greenstand/treetracker-admin-client/commit/0ff42bbd975bcac5228e676376979936d599471e))
+
 ## [1.94.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.1...v1.94.2) (2022-06-11)
 
 
