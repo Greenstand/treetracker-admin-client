@@ -1,3 +1,10 @@
+## [1.94.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.3...v1.94.4) (2022-06-12)
+
+
+### Bug Fixes
+
+* grower tooltip jumping for errors ([#678](https://github.com/Greenstand/treetracker-admin-client/issues/678)) ([88403b6](https://github.com/Greenstand/treetracker-admin-client/commit/88403b6ba9ae2afecb5f0fba1dcc82c5dc5692b1))
+
 ## [1.94.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.2...v1.94.3) (2022-06-12)
 
 
