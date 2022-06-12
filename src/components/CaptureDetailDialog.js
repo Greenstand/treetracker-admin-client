@@ -280,6 +280,13 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>Capture Token</Typography>
           <Typography variant="body1">
             {getTokenStatus(capture.tokenId)}
+            {capture && capture.tokenId && (
+              <CopyButton
+                label="Capture Token"
+                value={capture.tokenId}
+                confirmCopy={confirmCopy}
+              />
+            )}
           </Typography>
         </Grid>
         <CopyNotification
@@ -338,7 +345,7 @@ const getTokenStatus = (tokenId) => {
   } else if (tokenId === null) {
     return 'Impact token not issued';
   } else {
-    return 'Impact token issued';
+    return tokenId;
   }
 };
 
