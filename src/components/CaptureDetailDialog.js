@@ -179,6 +179,7 @@ function CaptureDetailDialog(props) {
 
   function handleCaptureTagDeletion(tagId) {
     console.log(`TODO: delete tag w/ id: ${tagId}`);
+    // update capture table context through callback so tags stay in sync
     setCaptureTagDeletionTarget(undefined);
   }
 
@@ -381,23 +382,35 @@ function CaptureDetailDialog(props) {
               </div>
 
               {captureTagDeletionTarget !== undefined && (
-                <Container
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '0px',
-                    marginTop: '1em',
-                  }}
-                >
-                  <Typography>
-                    Remove tag <b>{`"${captureTagDeletionTarget}"`}</b> ?
-                  </Typography>
+                <>
+                  <Container
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '0px',
+                      marginTop: '1em',
+                    }}
+                  >
+                    <Typography>
+                      Remove tag <b>{`"${captureTagDeletionTarget}"`}</b> ?
+                    </Typography>
+                  </Container>
 
-                  <ButtonGroup>
+                  <Container
+                    style={{
+                      padding: '0px',
+                      display: 'flex',
+                      justifyContent: 'end',
+                      alignItems: 'center',
+                    }}
+                  >
                     <Button
                       onClick={() => setCaptureTagDeletionTarget(undefined)}
                       size="small"
+                      style={{
+                        margin: '.5rem',
+                      }}
                     >
                       Cancel
                     </Button>
@@ -407,6 +420,7 @@ function CaptureDetailDialog(props) {
                       }
                       size="small"
                       style={{
+                        margin: '.5em',
                         fontWeight: 'bold',
                         color: theme.palette.stats.white,
                         backgroundColor: theme.palette.stats.red,
@@ -414,8 +428,8 @@ function CaptureDetailDialog(props) {
                     >
                       Remove
                     </Button>
-                  </ButtonGroup>
-                </Container>
+                  </Container>
+                </>
               )}
             </>
           )}
