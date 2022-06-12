@@ -501,6 +501,9 @@ export default {
       handleError(error);
     }
   },
+  deleteCaptureTag({ captureId, tagId }) {
+    // TODO
+  },
   /*
    * get organizations
    */
