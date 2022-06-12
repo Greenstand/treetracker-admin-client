@@ -196,7 +196,7 @@ const Verify = (props) => {
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
   const [disableHoverListener, setDisableHoverListener] = useState(false);
-  const [isImagesLarge, setImagesLarge] = useState(false);
+  const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -348,21 +348,25 @@ const Verify = (props) => {
 
   /*=============================================================*/
 
-  let [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(0);
+  const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(
+    0
+  );
   const refCaptureImageContainer = useRef(0);
 
+  const handleResize = () => {
+    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      setCaptureImageContainerWidth(
-        refCaptureImageContainer.current.clientWidth,
-      );
-    };
-    window.addEventListener('resize', handleResize);
     handleResize();
+  }, [refCaptureImageContainer?.current?.clientWidth]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [window]);
 
   // Calculate the number of captures per row based on the container width
   // and whether large or small images are toggled
@@ -370,9 +374,10 @@ const Verify = (props) => {
   const containerWidth = captureImageContainerWidth || 100;
   const minCaptureSize = isImagesLarge ? 350 : 250; // Shouldn't this be reversed?
 
-  const breakpoints = Array.from({ length: 6 }, (_, idx) => {
+  const breakpoints = Array.from({ length: 16 }, (_, idx) => {
     return minCaptureSize * (idx + 1);
   });
+
   // The index of the next breakpoint up from the container width
   // gives the number of captures per row
   const capturesPerRow = breakpoints.findIndex((val, idx) => {
@@ -416,7 +421,9 @@ const Verify = (props) => {
               interactive
               enterDelay={500}
               enterNextDelay={500}
-              onMouseEnter={() => {setDisableHoverListener(false)}}
+              onMouseEnter={() => {
+                setDisableHoverListener(false);
+              }}
               disableHoverListener={disableHoverListener}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
@@ -634,38 +641,7 @@ const Verify = (props) => {
                     <div style={{ display: 'flex' }}>{imageSizeControl}</div>
                   </Grid>
 
-                  <Grid
-                    item
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
-                    <Grid>
-                      <ToggleButtonGroup
-                        value={alignment}
-                        exclusive
-                        onChange={toggleSizes}
-                        aria-label="text alignment"
-                        style={{
-                          marginTop: '4px',
-                        }}
-                      >
-                        <ToggleButton
-                          value="left"
-                          aria-label="left aligned"
-                          disabled={!showBigSize ? true : false}
-                        >
-                          Large size
-                        </ToggleButton>
-                        <ToggleButton
-                          value="right"
-                          aria-label="right aligned"
-                          disabled={showBigSize ? true : false}
-                        >
-                          Small size
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </Grid>
+                  <Grid item className={classes.paginationContainer}>
                     {imagePagination}
                   </Grid>
                 </Grid>
