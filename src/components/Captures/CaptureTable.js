@@ -269,9 +269,11 @@ const CaptureTable = () => {
         </TableHead>
         <TableBody data-testid="captures-table-body">
           {isLoading && !captures?.length ? (
-            <Grid item container className={classes.loadingIndicator}>
-              <CircularProgress />
-            </Grid>
+            <TableRow className={classes.loadingIndicator}>
+              <TableCell className={classes.loadingIndicator}>
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
           ) : (
             <>
               {captures &&

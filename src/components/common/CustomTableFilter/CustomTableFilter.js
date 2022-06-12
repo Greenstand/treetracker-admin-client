@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -6,14 +6,16 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
 import FormControl from '@material-ui/core/FormControl';
+
+import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
 import { AppContext } from '../../../context/AppContext';
+import { ALL_ORGANIZATIONS } from '../../../models/Filter';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -31,8 +33,15 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
-  const { orgList } = React.useContext(AppContext);
-  const [localFilter, setLocalFilter] = useState({});
+  // console.warn('orgList', orgList);
+  const initialFilter = {
+    organization_id: '',
+    grower: '',
+    payment_status: 'all',
+    earnings_status: 'all',
+    phone: '',
+  };
+  const [localFilter, setLocalFilter] = useState(initialFilter);
   const {
     isFilterOpen,
     setIsFilterOpen,
@@ -43,46 +52,41 @@ function CustomTableFilter(props) {
   } = props;
 
   const classes = useStyles();
-  const { updateSelectedFilter } = React.useContext(AppContext);
+  const { updateSelectedFilter } = useContext(AppContext);
 
   const handleOnFormControlChange = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    const updatedFilter = { ...localFilter, [name]: value };
-    console.log(updatedFilter);
+    let updatedFilter = { ...localFilter };
+    if (e?.target) {
+      e.preventDefault();
+      const { name, value } = e.target;
+      updatedFilter = { ...updatedFilter, [name]: value };
+    } else {
+      updatedFilter = {
+        ...updatedFilter,
+        organization_id: e?.id || ALL_ORGANIZATIONS,
+        sub_organization: e?.stakeholder_uuid || ALL_ORGANIZATIONS,
+      };
+    }
+
     setLocalFilter(updatedFilter);
   };
 
   const handleOnFilterFormSubmit = (e) => {
     e.preventDefault();
-    const filtersToSubmit = { ...filter, ...localFilter };
-    Object.keys(filtersToSubmit).forEach(
-      (k) =>
-        (filtersToSubmit[k] === 'all' || filtersToSubmit[k] === '') &&
-        delete filtersToSubmit[k]
-    ); // filter out keys we don't want to submit
+    const filtersToSubmit = {
+      ...filter,
+      ...localFilter,
+    };
+
     setFilter(filtersToSubmit);
     setIsFilterOpen(false);
     updateSelectedFilter(filtersToSubmit);
   };
 
-  const handleOnFilterFormReset = (e, filterType) => {
+  const handleOnFilterFormReset = (e) => {
     e.preventDefault();
-    if (Object.keys(localFilter).length !== 0) {
-      const withoutLocalFilter = Object.assign({}, filter);
-      if (filterType === 'main') {
-        delete withoutLocalFilter.earnings_status;
-        delete withoutLocalFilter.funder_id;
-        delete withoutLocalFilter.grower;
-        delete withoutLocalFilter.phone;
-        delete withoutLocalFilter.sub_organization;
-      } else {
-        delete withoutLocalFilter.start_date;
-        delete withoutLocalFilter.end_date;
-      }
-      setFilter(withoutLocalFilter);
-      setLocalFilter({});
-    }
+    setFilter(initialFilter);
+    setLocalFilter(initialFilter);
     setIsFilterOpen(false);
   };
 
@@ -155,21 +159,18 @@ function CustomTableFilter(props) {
         variant="outlined"
         className={classes.customTableFilterSelectFormControl}
       >
-        <InputLabel id="sub_organization">Organization</InputLabel>
-        <Select
-          labelId="sub_organization"
-          defaultValue={localFilter?.sub_organization}
-          id="sub_organization"
-          name="sub_organization"
-          label="Organization"
-          onChange={handleOnFormControlChange}
-        >
-          {orgList.map((org) => (
-            <MenuItem key={org.stakeholder_uuid} value={org.stakeholder_uuid}>
-              {org.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <SelectOrg
+          orgId={localFilter?.organization_id}
+          defaultOrgs={[
+            {
+              id: ALL_ORGANIZATIONS,
+              stakeholder_uuid: ALL_ORGANIZATIONS,
+              name: 'All',
+              value: 'All',
+            },
+          ]}
+          handleSelection={handleOnFormControlChange}
+        />
       </FormControl>
 
       <FormControl
@@ -259,7 +260,7 @@ function CustomTableFilter(props) {
             <Button
               color="primary"
               variant="text"
-              onClick={(e) => handleOnFilterFormReset(e, filterType)}
+              onClick={(e) => handleOnFilterFormReset(e)}
               className={classes.customTableFilterResetButton}
             >
               RESET
