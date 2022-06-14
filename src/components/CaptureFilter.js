@@ -34,6 +34,7 @@ import {
 import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
 
@@ -76,6 +77,7 @@ const styles = (theme) => {
 
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
+  const { isLoading } = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter = new FilterModel() } = props;
@@ -367,22 +369,26 @@ function Filter(props) {
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
               >
-                {[
-                  { id: ALL_SPECIES, name: 'All' },
-                  {
-                    id: SPECIES_NOT_SET,
-                    name: 'Not set',
-                  },
-                  ...speciesContext.speciesList,
-                ].map((species) => (
-                  <MenuItem
-                    data-testid="species-item"
-                    key={species.id}
-                    value={species.id}
-                  >
-                    {species.name}
-                  </MenuItem>
-                ))}
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  [
+                    { id: ALL_SPECIES, name: 'All' },
+                    {
+                      id: SPECIES_NOT_SET,
+                      name: 'Not set',
+                    },
+                    ...speciesContext.speciesList,
+                  ].map((species) => (
+                    <MenuItem
+                      data-testid="species-item"
+                      key={species.id}
+                      value={species.id}
+                    >
+                      {species.name}
+                    </MenuItem>
+                  ))
+                )}
               </TextField>
               <Autocomplete
                 data-testid="tag-dropdown"

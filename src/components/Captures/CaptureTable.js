@@ -109,7 +109,7 @@ const CaptureTable = () => {
   const [tagLookup, setTagLookup] = useState({});
   const [captureTagLookup, setCaptureTagLookup] = useState({});
   const [isOpenExport, setOpenExport] = useState(false);
-  const [disableHoverListener, setDisableHoverListener] = useState(false); 
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
   const classes = useStyle();
 
   useEffect(() => {
@@ -294,25 +294,25 @@ const CaptureTable = () => {
                       />
                     }
                   >
-                  <TableRow
-                    key={capture.id}
-                    onClick={createToggleDrawerHandler(capture.id)}
-                    className={classes.tableRow}
-                  >
-                    {columns.map(({ attr, renderer }, i) => (
-                      <TableCell key={`${attr}_${i}`}>
-                        {formatCell(
-                          capture,
-                          speciesLookup,
-                          captureTagLookup[capture.id] || [],
-                          attr,
-                          renderer
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </Tooltip>
-              ))}
+                    <TableRow
+                      key={capture.id}
+                      onClick={createToggleDrawerHandler(capture.id)}
+                      className={classes.tableRow}
+                    >
+                      {columns.map(({ attr, renderer }, i) => (
+                        <TableCell key={`${attr}_${i}`}>
+                          {formatCell(
+                            capture,
+                            speciesLookup,
+                            captureTagLookup[capture.id] || [],
+                            attr,
+                            renderer
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </Tooltip>
+                ))}
             </>
           )}
         </TableBody>
