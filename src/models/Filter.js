@@ -127,21 +127,29 @@ export default class Filter {
     }
 
     if (this.planterId) {
-      const plantersId = this.planterId.trim().split(',');
-      if (plantersId.length === 1) {
-        where.planterId = this.planterId;
+      let planterIds = [];
+      planterIds = this.planterId.split(',').map((item) => item.trim());
+
+      if (planterIds.length === 1) {
+        restFilter.planterId = this.planterId;
       } else {
-        orCondition = true;
-        where = [];
-        plantersId.forEach((planterId) => {
-          where.push({
-            planterId,
-          });
+        if (!orCondition) {
+          orCondition = true;
+          where = [];
+        }
+        planterIds.forEach((planterId) => {
+          if (planterId) {
+            where.push({
+              planterId: planterId,
+            });
+          }
         });
       }
     }
 
-    return orCondition ? { ...restFilter, or: where } : { ...where };
+    return orCondition
+      ? { ...restFilter, or: where }
+      : { ...restFilter, ...where };
   }
 
   /*
