@@ -1,3 +1,10 @@
+# [1.95.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.4...v1.95.0) (2022-06-15)
+
+
+### Features
+
+* remove feature flags for earnings and payments ([#693](https://github.com/Greenstand/treetracker-admin-client/issues/693)) ([33f53cb](https://github.com/Greenstand/treetracker-admin-client/commit/33f53cb2d2f818dadac6e2e4177c05a99c18a5ae))
+
 ## [1.94.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.3...v1.94.4) (2022-06-12)
 
 
