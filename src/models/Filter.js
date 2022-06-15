@@ -63,10 +63,6 @@ export default class Filter {
       where.active = this.active;
     }
 
-    if (this.planterId) {
-      where.planterId = this.planterId;
-    }
-
     if (this.deviceIdentifier) {
       where.deviceIdentifier = this.deviceIdentifier;
     }
@@ -125,6 +121,21 @@ export default class Filter {
           where.push({
             active: status.active,
             approved: status.approved,
+          });
+        });
+      }
+    }
+
+    if (this.planterId) {
+      const plantersId = this.planterId.trim().split(',');
+      if (plantersId.length === 1) {
+        where.planterId = this.planterId;
+      } else {
+        orCondition = true;
+        where = [];
+        plantersId.forEach((planterId) => {
+          where.push({
+            planterId,
           });
         });
       }
