@@ -110,7 +110,6 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
-  // console.log('render: grower detail');
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);

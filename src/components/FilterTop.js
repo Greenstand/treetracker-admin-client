@@ -22,7 +22,6 @@ import {
 } from '../common/locale';
 import {
   verificationStates,
-  // tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { getVerificationStatus } from '../common/utils';
@@ -70,7 +69,7 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  // console.log('render: filter top');
+  // log.debug('render: filter top');
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { classes, filter = new FilterModel() } = props;
@@ -85,8 +84,6 @@ function Filter(props) {
     filter?.planterIdentifier || ''
   );
   const [status, setStatus] = useState(filter?.status);
-  // const [approved, setApproved] = useState(filter?.approved);
-  // const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
     filter?.dateStart || dateStartDefault
   );
@@ -100,7 +97,6 @@ function Filter(props) {
   const [stakeholderUUID, setStakeholderUUID] = useState(
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
-  // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -125,13 +121,10 @@ function Filter(props) {
     filter.planterIdentifier = growerIdentifier;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    // filter.approved = approved;
-    // filter.active = active;
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
-    // filter.tokenId = tokenId;
     filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -150,7 +143,6 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setStakeholderUUID(ALL_ORGANIZATIONS);
-    // setTokenId(filterOptionAll);
 
     const filter = new FilterModel({
       status: 'unprocessed',
@@ -165,46 +157,6 @@ function Filter(props) {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
-              {/* <TextField
-                select
-                htmlFor="verification-status"
-                id="verification-status"
-                label="Verification Status"
-                value={
-                  active === undefined && approved === undefined
-                    ? filterOptionAll
-                    : getVerificationStatus(active, approved)
-                }
-                onChange={(e) => {
-                  setApproved(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.REJECTED
-                      ? false
-                      : true
-                  );
-                  setActive(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.APPROVED
-                      ? true
-                      : false
-                  );
-                }}
-              >
-                {[
-                  filterOptionAll,
-                  verificationStates.APPROVED,
-                  verificationStates.AWAITING,
-                  verificationStates.REJECTED,
-                ].map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
               <TextField
                 select
                 htmlFor="verification-status"
@@ -236,26 +188,7 @@ function Filter(props) {
                   </MenuItem>
                 ))}
               </TextField>
-              {/* <TextField
-                select
-                htmlFor="token-status"
-                id="token-status"
-                label="Token Status"
-                value={tokenId}
-                onChange={(e) => {
-                  setTokenId(e.target.value);
-                }}
-              >
-                {[
-                  filterOptionAll,
-                  tokenizationStates.NOT_TOKENIZED,
-                  tokenizationStates.TOKENIZED,
-                ].map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
+
               <MuiPickersUtilsProvider
                 utils={DateFnsUtils}
                 locale={getDatePickerLocale()}
@@ -395,7 +328,6 @@ function Filter(props) {
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('newVal -- ', newVal);
                   setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {

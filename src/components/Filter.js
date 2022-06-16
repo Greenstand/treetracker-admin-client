@@ -55,7 +55,6 @@ const styles = (theme) => {
 
 function Filter(props) {
   const { classes, filter } = props;
-  // console.log('filter', filter);
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;

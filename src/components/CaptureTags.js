@@ -67,7 +67,7 @@ function getSuggestionValue(suggestion) {
 }
 
 const CaptureTags = (props) => {
-  // console.log('render: capture tags');
+  // log.debug('render: capture tags');
   const classes = useStyles(props);
   const tagsContext = useContext(TagsContext);
   const [textFieldInput, setTextFieldInput] = useState('');
@@ -86,7 +86,9 @@ const CaptureTags = (props) => {
         value={chips}
         variant="outlined"
         fullWidth
-        classes={{ inputRoot: classes.chipInput }}
+        classes={{
+          inputRoot: classes.chipInput,
+        }}
         allowDuplicates={false}
         blurBehavior="add"
         InputProps={{
@@ -122,7 +124,7 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(result);
   };
 
-  // console.log('tagList ----- ', tagsContext.tagList);
+  // log.debug('tagList ----- ', tagsContext.tagList);
 
   return (
     <Autosuggest

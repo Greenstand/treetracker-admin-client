@@ -513,7 +513,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
   const validateMessage = (payload) => {
     const errors = {};
 
-    console.log('body', /\w/g.test(payload.body.trim()));
+    log.debug('body', /\w/g.test(payload.body.trim()));
     if (payload.body.length === 0 || !/\w/g.test(payload.body.trim())) {
       errors.body = 'Please enter a message';
     }
@@ -540,7 +540,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
     const errorsFound = Object.keys(errs).length > 0;
     if (errorsFound) {
       setErrors(true);
-      console.log('errors', errs);
+      log.debug('errors', errs);
     }
 
     if (messageContent !== '') {

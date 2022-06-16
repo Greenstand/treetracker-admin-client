@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SidePanel(props) {
-  // console.log('render: sidepanel');
+  // log.debug('render: sidepanel');
   const DEFAULT_SWITCH_APPROVE = 0;
   const DEFAULT_MORPHOLOGY = 'seedling';
   const DEFAULT_AGE = 'new_tree';

@@ -39,7 +39,7 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
     const org = orgList.find(
       (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
     );
-    // console.log('handleChange', e);
+    // log.debug('handleChange', e);
     setOrganizationId(e.target.value); // set value for UI
     handleSelection(org || e.target.value); // pass on the org if found, or the chosen value to handler for filter
   };

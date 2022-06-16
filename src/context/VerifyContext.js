@@ -74,7 +74,7 @@ export function VerifyProvider(props) {
     const captures = [...captureImages, captureUndo].sort(
       (a, b) => a.id - b.id
     );
-    console.log('undoedCaptureImage', captureUndo, undoneImages);
+    log.debug('undoedCaptureImage', captureUndo, undoneImages);
     setCaptureImages(captures);
     setCaptureImagesUndo(undoneImages);
   };

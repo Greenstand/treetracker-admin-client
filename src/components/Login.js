@@ -79,7 +79,7 @@ const Login = (props) => {
   }, [userName, password]);
 
   useEffect(() => {
-    // console.log("--- EFFECT when user changes", appContext.user, loading);
+    // log.debug("--- EFFECT when user changes", appContext.user, loading);
     if (appContext.user) {
       history.replace(from);
     }
