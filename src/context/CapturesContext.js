@@ -37,7 +37,7 @@ export function CapturesProvider(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('timeCreated');
+  const [orderBy, setOrderBy] = useState('created_at');
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(new FilterModel());
 
@@ -45,24 +45,10 @@ export function CapturesProvider(props) {
     getCaptures();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
-  // function api.makeQueryString(filterObj) {
-  //   let arr = [];
-  //   for (const key in filterObj) {
-  //     if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-  //       arr.push(`${key}=${filterObj[key]}`);
-  //     }
-  //   }
-
-  //   return arr.join('&');
-  // }
-
   // EVENT HANDLERS
   const queryCapturesApi = ({ ...params }) => {
     let filterObj = { limit: 25, offset: 0, ...params };
 
-    // const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
-    //   id != null ? '/' + id : ''
-    // }${filterObj ? `?${api.makeQueryString(filterObj)}` : ''}`;
     const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
       filterObj ? `?${api.makeQueryString(filterObj)}` : ''
     }`;
@@ -78,22 +64,10 @@ export function CapturesProvider(props) {
   const getCaptures = async () => {
     log.debug('4 - load captures');
 
-    // TODO: how to handle verify status?
-    // filter.getWhereObj() contains ...
-    //     or: Array(2)
-    //         0: {active: true, approved: true}
-    //         1: {active: true, approved: false}
-    //     length: 2
-    //     [[Prototype]]: Array(0)
-    //     organizationId: undefined
-    //     speciesId: undefined
-    //     stakeholderUUID: undefined
-
     const filterData = {
-      // TODO:: order and orderBy filters need to be implemented
       ...filter.getWhereObj(),
-      // orderBy,
-      // order,
+      order_by: orderBy,
+      order,
       limit: rowsPerPage,
       offset: page * rowsPerPage,
     };
