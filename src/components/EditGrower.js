@@ -166,7 +166,7 @@ const EditGrower = (props) => {
             label="Grower-entered organization"
             value={getValue('organization')}
             disabled
-          ></TextField>
+          />
           <SelectOrg
             orgId={getValue('organizationId')}
             defaultOrgs={[
