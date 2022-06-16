@@ -70,7 +70,7 @@ function LogPaymentForm(props) {
         )}
 
         <Grid item className={classes.itemGrowerDetail}>
-          <Typography variant="h6">Payment</Typography>
+          <Typography>Payment</Typography>
         </Grid>
 
         <Grid container direction="column" justify="space-between">
@@ -81,7 +81,7 @@ function LogPaymentForm(props) {
             <TextField
               id="payment_confirmation_id"
               name="payment_confirmation_id"
-              label="Payment Confirmation Id"
+              label="Payment Confirmation ID"
               variant="outlined"
               required={true}
               onChange={handleOnInputChange}
@@ -212,7 +212,7 @@ function CustomTableItemDetails(props) {
               </Typography>
             </Grid>
             <Grid item className={classes.itemGrowerDetail}>
-              <Typography>ID</Typography>
+              <Typography>Record ID</Typography>
               <Typography variant="body2">{selectedItem.id}</Typography>
             </Grid>
           </Grid>
@@ -277,10 +277,6 @@ function CustomTableItemDetails(props) {
 
           <Grid container direction="column" justify="space-around">
             <Grid item className={classes.itemGrowerDetail}>
-              <Typography variant="h6">Consolidation</Typography>
-            </Grid>
-
-            <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
               <Typography variant="h6">FCC Tiered</Typography>
             </Grid>
@@ -322,21 +318,21 @@ function CustomTableItemDetails(props) {
               </Grid>
 
               <Grid item className={classes.itemGrowerDetail}>
-                <Typography>Payment confirmation method</Typography>
+                <Typography>Payment Confirmation Method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_method}
                 </Typography>
               </Grid>
 
               <Grid item>
-                <Typography>Payment confirmation id</Typography>
+                <Typography>Payment Confirmation ID</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_confirmation_id}
                 </Typography>
               </Grid>
 
               <Grid item>
-                <Typography>Payment method</Typography>
+                <Typography>Payment Method</Typography>
                 <Typography variant="h6">
                   {selectedItem.payment_method}
                 </Typography>

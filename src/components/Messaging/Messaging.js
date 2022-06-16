@@ -64,7 +64,6 @@ const Messaging = () => {
     loadMessages,
     loadRegions,
     loadAuthors,
-    setErrorMessage,
     setIsLoading,
   } = useContext(MessagingContext);
 
@@ -115,7 +114,7 @@ const Messaging = () => {
           <NewMessage
             openModal={openModal}
             handleClose={handleClose}
-            setErrorMessage={setErrorMessage}
+            setMessageRecipient={setMessageRecipient}
           />
           <Button
             className={button}

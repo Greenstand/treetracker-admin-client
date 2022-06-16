@@ -29,6 +29,7 @@ import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/GrowerContext';
 import { MessagingContext } from 'context/MessagingContext';
 import EditGrower from './EditGrower';
+import GrowerOrganization from './GrowerOrganization';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
@@ -325,6 +326,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     className={classes.cardMedia}
                     fixed
                     rotation={grower.imageRotation}
+                    alertTitleSize="1.6rem"
+                    alertTextSize="1rem"
+                    alertHeight="50%"
                   />
                 )}
                 {!grower.imageUrl && (
@@ -468,16 +472,14 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Organization</Typography>
-                <Typography variant="body1">
-                  {grower.organization || '---'}
-                </Typography>
-              </Grid>
-              <Divider />
-              <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">Organization ID</Typography>
-                <Typography variant="body1">
-                  {grower.organizationId || '---'}
-                </Typography>
+                {grower.organization || grower.organizationId ? (
+                  <GrowerOrganization
+                    organizationName={grower.organization}
+                    assignedOrganizationId={grower.organizationId}
+                  />
+                ) : (
+                  <Typography variant="body1">---</Typography>
+                )}
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>

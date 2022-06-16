@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-import PublishIcon from '@material-ui/icons/Publish';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import { CSVLink } from 'react-csv';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import IconFilter from '@material-ui/icons/FilterList';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import PublishIcon from '@material-ui/icons/Publish';
+import dateFormat from 'dateformat';
+import { CSVLink } from 'react-csv';
 import {
   Avatar,
   Button,
@@ -29,7 +30,6 @@ import useStyles from './CustomTable.styles';
 import GrowerDetail from '../../GrowerDetail';
 import { AppContext } from '../../../context/AppContext';
 import { GrowerProvider } from '../../../context/GrowerContext';
-import dateFormat from 'dateformat';
 
 /**
  * @function
@@ -95,22 +95,21 @@ ImportAction.defaultProps = {
  *
  * @returns {React.Component}
  */
-function CustomTableHeader(props) {
-  const {
-    actionButtonType,
-    headerTitle,
-    openDateFilter,
-    openMainFilter,
-    activeDateRange,
-    onSelectFile,
-    activeFiltersCount,
-    exportDataFetch,
-  } = props;
+function CustomTableHeader({
+  actionButtonType,
+  headerTitle,
+  openDateFilter,
+  openMainFilter,
+  activeDateRange,
+  onSelectFile,
+  activeFiltersCount,
+  exportDataFetch,
+}) {
   const classes = useStyles();
   const [csvFileNameSuffix, setCsvFileNameSuffix] = useState('');
   const [csvFileNamePrefix, setCsvFileNamePrefix] = useState('');
 
-  const { orgList, selectedFilters } = React.useContext(AppContext);
+  const { orgList, selectedFilters } = useContext(AppContext);
 
   // const [data, setData] = useState([]);
   const [dataToExport, setDataToExport] = useState([]);
@@ -283,6 +282,7 @@ function CustomTableHeader(props) {
     </Grid>
   );
 }
+
 CustomTableHeader.propTypes = {
   // setIsFilterOpen: PropTypes.func.isRequired,
   openDateFilter: PropTypes.func,
@@ -334,33 +334,31 @@ CustomTableHeader.defaultProps = {
  *
  * @returns {React.Component} custom table
  */
-function CustomTable(props) {
-  const {
-    tableMetaData,
-    mainFilterComponent,
-    dateFilterComponent,
-    headerTitle,
-    actionButtonType,
-    exportDataFetch,
-    setSelectedRow,
-    selectedRow,
-    sortBy,
-    rows,
-    totalCount,
-    rowDetails,
-    openDateFilter,
-    openMainFilter,
-    setPage,
-    setRowsPerPage,
-    rowsPerPage,
-    setSortBy,
-    isLoading,
-    activeDateRange,
-    onSelectFile,
-    page,
-    activeFiltersCount,
-  } = props;
-
+function CustomTable({
+  tableMetaData,
+  mainFilterComponent,
+  dateFilterComponent,
+  headerTitle,
+  actionButtonType,
+  exportDataFetch,
+  setSelectedRow,
+  selectedRow,
+  sortBy,
+  rows,
+  totalCount,
+  rowDetails,
+  openDateFilter,
+  openMainFilter,
+  setPage,
+  setRowsPerPage,
+  rowsPerPage,
+  setSortBy,
+  isLoading,
+  activeDateRange,
+  onSelectFile,
+  page,
+  activeFiltersCount,
+}) {
   // managing custom table  state
   const classes = useStyles();
   const [sortableColumnsObject, setSortableColumnsObject] = useState({});
@@ -452,6 +450,9 @@ function CustomTable(props) {
                   sortDirection={
                     sortableColumnsObject[column.name] || column.sortDirection
                   }
+                  style={{
+                    textAlign: column.align === 'right' ? 'right' : 'inherit',
+                  }}
                 >
                   {column?.sortable ? (
                     <TableSortLabel
@@ -461,17 +462,23 @@ function CustomTable(props) {
                       classes={{ icon: classes.customTableHeadSortIcon }}
                       IconComponent={ArrowDropDownIcon}
                     >
-                      <Typography variant="h6">
+                      <Typography
+                        variant="h6"
+                        align={column.align === 'right' ? 'right' : 'inherit'}
+                      >
                         {column.description}
                         {column?.showInfoIcon && (
-                          <Tooltip title={column.showInfoIcon + ''}>
+                          <Tooltip title={column.showInfoIcon}>
                             <InfoOutlinedIcon className={classes.infoIcon} />
                           </Tooltip>
                         )}
                       </Typography>
                     </TableSortLabel>
                   ) : (
-                    <Typography variant="h6">
+                    <Typography
+                      variant="h6"
+                      align={column.align === 'right' ? 'right' : 'inherit'}
+                    >
                       {column.description}
                       {column?.showInfoIcon && (
                         <Tooltip title={column.showInfoIcon}>
@@ -515,19 +522,26 @@ function CustomTable(props) {
                               {row[column.name]}
 
                               <IconButton
-                                onClick={(e) => handleShowGrowerDetail(e, row)}
+                                onClick={(e) => {
+                                  handleShowGrowerDetail(e, row);
+                                }}
                                 aria-label={`View/Edit Grower details`}
                                 title={`View/Edit Grower details`}
                                 style={{ padding: '0 2px 2px 0' }}
+                                disabled
                               >
-                                <Person color="primary" />
+                                <Person color="disabled" />
                               </IconButton>
                             </Typography>
                           </Grid>
                         ) : (
                           <Typography
                             variant="body1"
-                            style={{ textTransform: 'capitalize' }}
+                            style={{
+                              textTransform: 'capitalize',
+                              textAlign:
+                                column.align === 'right' ? 'right' : 'inherit',
+                            }}
                           >
                             {row[column.name]}
                           </Typography>
@@ -593,7 +607,8 @@ CustomTable.propTypes = {
       name: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
       sortable: PropTypes.bool.isRequired,
-      showInfoIcon: PropTypes.bool.isRequired,
+      showInfoIcon: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
+        .isRequired,
     })
   ),
   dateFilterComponent: PropTypes.element.isRequired,

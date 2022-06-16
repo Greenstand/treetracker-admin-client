@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import FilterModel from '../models/FilterGrower';
-import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from '../models/Filter';
-import { AppContext } from '../context/AppContext';
+import SelectOrg from './common/SelectOrg';
+import { ALL_ORGANIZATIONS } from '../models/Filter';
 
 export const FILTER_WIDTH = 330;
 
@@ -19,9 +18,6 @@ const styles = (theme) => {
     drawerPaper: {
       width: FILTER_WIDTH,
       padding: theme.spacing(3, 2, 2, 2),
-      /*
-       * boxShadow: '0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12)',
-       * */
     },
     close: {
       color: theme.palette.grey[500],
@@ -46,7 +42,6 @@ const styles = (theme) => {
 };
 
 function FilterTopGrower(props) {
-  const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter } = props;
   const [id, setId] = useState(filter?.id || '');
   const [personId, setPersonId] = useState(filter?.personId || '');
@@ -99,30 +94,6 @@ function FilterTopGrower(props) {
     e.key === 'Enter' && handleSubmit(e);
   };
 
-  const defaultOrgList = userHasOrg
-    ? [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-      ]
-    : [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-        {
-          id: ORGANIZATION_NOT_SET,
-          stakeholder_uuid: ORGANIZATION_NOT_SET,
-          name: 'Not set',
-          value: null,
-        },
-      ];
-
   return (
     <>
       {
@@ -159,38 +130,13 @@ function FilterTopGrower(props) {
                 onChange={(e) => setDeviceIdentifier(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
-              {
-                /* {!userHasOrg && ( }*/
-                <TextField
-                  className={`${classes.textField} ${classes.filterElement}`}
-                  data-testid="org-dropdown"
-                  select
-                  label="Organization"
-                  htmlFor="Organization"
-                  id="Organization"
-                  placeholder="Organization"
-                  value={organizationId}
-                  onChange={(e) => {
-                    const org = orgList.find((o) => o.id === e.target.value);
-                    setStakeholderUUID(
-                      org ? org.stakeholder_uuid : e.target.value
-                    );
-                    setOrganizationId(e.target.value);
-                  }}
-                  onKeyDown={handleEnterPress}
-                >
-                  {[...defaultOrgList, ...orgList].map((org) => (
-                    <MenuItem
-                      data-testid="org-item"
-                      key={org.id}
-                      value={org.id}
-                    >
-                      {org.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                //)
-              }
+              <SelectOrg
+                orgId={organizationId}
+                handleSelection={(org) => {
+                  setStakeholderUUID(org.stakeholder_uuid);
+                  setOrganizationId(org.id);
+                }}
+              />
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
                 label="First Name"

@@ -98,6 +98,12 @@ const useStyle = makeStyles((theme) => ({
   name: {
     textTransform: 'capitalize',
   },
+  tooltipTop: {
+    top: '16px',
+  },
+  tooltipBottom: {
+    top: '-16px',
+  },
 }));
 
 export { useStyle, GROWER_IMAGE_SIZE };

@@ -22,9 +22,15 @@ import {
   FormControlLabel,
   Switch,
   MenuItem,
+  Tooltip,
+  Input,
+  CircularProgress,
+  Snackbar,
 } from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
-import SortIcon from '@material-ui/icons/Sort';
+import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
+import { Edit, Close } from '@material-ui/icons';
+// import SortIcon from '@material-ui/icons/Sort';
+import Delete from '@material-ui/icons/Delete';
 import Menu from './common/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
@@ -57,26 +63,18 @@ const styles = (theme) => ({
     fontSize: 67,
     marginRight: 11,
   },
-  addUserBox: {
+  headerButtonBox: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  addUser: {
+  upload: {
     color: 'white',
     marginLeft: '20px',
   },
   input: {
     margin: theme.spacing(0, 1, 4, 1),
-  },
-  owner: {
-    width: 150,
-    marginRight: theme.spacing(1),
-  },
-  name: {
-    marginRight: theme.spacing(1),
-  },
-  desc: {
+    width: 170,
     marginRight: theme.spacing(1),
   },
   paper: {
@@ -101,101 +99,174 @@ const styles = (theme) => ({
     position: 'relative',
     bottom: 5,
   },
-  radioButton: {
-    '&$radioChecked': { color: theme.palette.primary.main },
-  },
-  radioChecked: {},
-  radioGroup: {
-    position: 'relative',
-    bottom: 12,
-    left: 10,
-  },
-  listItem: {
-    padding: '0 16px',
-  },
-  paddingBottom: {
-    paddingBottom: '24px',
-  },
-  minWidth: {
-    minWidth: '320px',
+  operations: {
+    whiteSpace: 'nowrap',
   },
 });
 
 const RegionTable = (props) => {
   const { classes } = props;
-  const sortOptions = { byId: 'id', byName: 'name' };
+  // const sortOptions = { byName: 'name' };
   const {
     regions,
+    collections,
     currentPage,
     pageSize,
+    showCollections,
     changeCurrentPage,
     changePageSize,
-    changeSort,
+    // changeSort,
+    setShowCollections,
     regionCount,
-    loadRegions,
-    createRegion,
+    collectionCount,
+    upload,
     updateRegion,
+    updateCollection,
     deleteRegion,
+    deleteCollection,
   } = useContext(RegionContext);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
-  const [regionEdit, setRegionEdit] = useState(undefined);
+  const { orgList, userHasOrg } = useContext(AppContext);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [isUpload, setIsUpload] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(undefined);
   const [openDelete, setOpenDelete] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMesssage] = useState('');
+
+  useEffect(() => {
+    if (!openDelete && !openEdit) {
+      // Wait for the dialog to disappear before clearing the selected item.
+      setTimeout(() => {
+        setSelectedItem(undefined);
+        setIsUpload(false);
+      }, 300);
+    }
+  }, [openDelete, openEdit]);
 
   const tableRef = useRef(null);
 
-  const handleChangeCurrentPage = (event) => {
+  const handleChangeCurrentPage = (event, value) => {
     tableRef.current && tableRef.current.scrollIntoView();
-    changeCurrentPage(Number(event.target.value));
+    changeCurrentPage(value);
   };
 
   const handleChangeRowsPerPage = (event) => {
     changePageSize(Number(event.target.value));
-    handleChangeCurrentPage(0);
+    changeCurrentPage(0);
   };
 
-  const handleEdit = (region) => {
-    setRegionEdit(region);
-    setIsEdit(true);
+  const handleEdit = (item, isCollection) => {
+    setSelectedItem({
+      ...item,
+      isCollection,
+    });
+    setOpenEdit(true);
   };
 
-  const renderRegion = () => {
-    return regions.map((region) => (
-      <TableRow key={region.id} role="listitem">
+  const handleDelete = (item, isCollection) => {
+    setSelectedItem({
+      ...item,
+      isCollection,
+    });
+    setOpenDelete(true);
+  };
+
+  const handleChangeShowCollections = (event, val) => {
+    if (val !== null) {
+      setShowCollections(val);
+    }
+  };
+
+  const handleUploadClick = () => {
+    setIsUpload(true);
+    setOpenEdit(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+    setSnackbarMesssage('');
+  };
+
+  const showSnackbar = (message) => {
+    setSnackbarMesssage(message);
+    setSnackbarOpen(true);
+  };
+
+  const RegionProperties = ({ region, max = 0 }) => {
+    return Object.keys(region.properties || {}).map((key, idx) => {
+      if (max === 0 || idx < max)
+        return (
+          <Grid key={`prop_${region.id}_${key}_${max}`}>
+            <span>
+              <b>{key}:</b>
+            </span>
+            &nbsp;
+            <span>{JSON.stringify(region.properties[key])}</span>
+            {max > 0 && idx === max - 1 && <span>&nbsp;&hellip;</span>}
+          </Grid>
+        );
+    });
+  };
+
+  const RegionTableRows = () => {
+    return (showCollections ? collections : regions).map((item) => (
+      <TableRow key={item.id} role="listitem">
         {/* <TableCell>
           <Checkbox
             onChange={(e) => handleSelect(e.target.checked, region.id)}
             checked={selected.includes(region.id)}
           />
         </TableCell> */}
-        <TableCell component="th" scope="row">
-          {region.id}
-        </TableCell>
         <TableCell component="th" scope="row" data-testid="region">
-          {region.name}
+          {item.name}
         </TableCell>
-        <TableCell>
-          {region.properties ? JSON.stringify(region.properties) : ''}
-        </TableCell>
-        <TableCell>{region.show_on_org_map ? 'Yes' : 'No'}</TableCell>
-        <TableCell>{region.calculate_statistics ? 'Yes' : 'No'}</TableCell>
-        <TableCell>
-          <IconButton title="edit" onClick={() => handleEdit(region)}>
+        {!userHasOrg && (
+          <TableCell>
+            {orgList.find((org) => org.stakeholder_uuid === item.owner_id)
+              ?.name || '---'}
+          </TableCell>
+        )}
+        {!showCollections && (
+          <>
+            <TableCell>{item.collection_name || '---'}</TableCell>
+            <Tooltip title={<RegionProperties region={item} />}>
+              <TableCell>
+                <RegionProperties region={item} max={3} />
+              </TableCell>
+            </Tooltip>
+            <TableCell align="center">
+              {item.show_on_org_map ? 'Yes' : 'No'}
+            </TableCell>
+            <TableCell align="center">
+              {item.calculate_statistics ? 'Yes' : 'No'}
+            </TableCell>
+          </>
+        )}
+        <TableCell align="right" className={classes.operations}>
+          <IconButton
+            title="edit"
+            onClick={() => handleEdit(item, showCollections)}
+          >
             <Edit />
           </IconButton>
-          {/* <IconButton title="delete" onClick={() => openDeleteDialog(region)}>
+          <IconButton
+            title="delete"
+            onClick={() => handleDelete(item, showCollections)}
+          >
             <Delete />
-          </IconButton> */}
+          </IconButton>
         </TableCell>
       </TableRow>
     ));
   };
 
-  const tablePagination = () => (
+  const RegionTablePagination = () => (
     <TablePagination
-      count={Number(regionCount)}
+      count={Number(showCollections ? collectionCount : regionCount)}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-      colSpan={3}
       page={currentPage}
       rowsPerPage={pageSize}
       onChangePage={handleChangeCurrentPage}
@@ -228,14 +299,25 @@ const RegionTable = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item className={classes.addUserBox}>
+              <Grid item className={classes.headerButtonBox}>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={showCollections}
+                  exclusive
+                  onChange={handleChangeShowCollections}
+                >
+                  <ToggleButton value={false}>Regions</ToggleButton>
+                  <ToggleButton value={true}>Collections</ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
+              <Grid item className={classes.headerButtonBox}>
                 <Button
-                  onClick={() => setIsAdding(true)}
+                  onClick={handleUploadClick}
                   variant="contained"
-                  className={classes.addUser}
+                  className={classes.upload}
                   color="primary"
                 >
-                  ADD NEW REGION
+                  UPLOAD
                 </Button>
               </Grid>
             </Grid>
@@ -244,34 +326,36 @@ const RegionTable = (props) => {
                 <Table className={classes.table} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      {/* <TableCell></TableCell> */}
                       <TableCell>
-                        ID
-                        <IconButton
-                          title="sortbyId"
-                          onClick={() => changeSort(sortOptions.byId)}
-                        >
-                          <SortIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>
-                        name
-                        <IconButton
+                        Name
+                        {/* <IconButton
                           title="sortbyName"
                           onClick={() => changeSort(sortOptions.byName)}
                         >
                           <SortIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </TableCell>
-                      <TableCell>Properties</TableCell>
-                      <TableCell>Shown on Org Map</TableCell>
-                      <TableCell>Statistics Calculated</TableCell>
-                      <TableCell>Edit</TableCell>
+                      {!userHasOrg && <TableCell>Owner</TableCell>}
+                      {!showCollections && (
+                        <>
+                          <TableCell>Collection</TableCell>
+                          <TableCell>Properties</TableCell>
+                          <TableCell align="center">Shown on Org Map</TableCell>
+                          <TableCell align="center">
+                            Statistics Calculated
+                          </TableCell>
+                        </>
+                      )}
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>{renderRegion()}</TableBody>
+                  <TableBody>
+                    <RegionTableRows />
+                  </TableBody>
                   <TableFooter>
-                    <TableRow>{tablePagination()}</TableRow>
+                    <TableRow>
+                      <RegionTablePagination />
+                    </TableRow>
                   </TableFooter>
                 </Table>
               </TableContainer>
@@ -280,72 +364,127 @@ const RegionTable = (props) => {
         </Grid>
       </Grid>
       <EditModal
-        isEdit={isEdit}
-        isAdding={isAdding}
-        setIsEdit={isAdding ? setIsAdding : setIsEdit}
-        regionEdit={regionEdit}
-        setRegionEdit={setRegionEdit}
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
+        isUpload={isUpload}
+        selectedItem={selectedItem}
         styles={{ ...classes }}
-        editRegion={isAdding ? createRegion : updateRegion}
-        loadRegionList={loadRegions}
-        data={regions}
+        upload={upload}
+        updateRegion={updateRegion}
+        updateCollection={updateCollection}
+        showSnackbar={showSnackbar}
       />
       <DeleteDialog
-        regionEdit={regionEdit}
-        setRegionEdit={setRegionEdit}
+        selectedItem={selectedItem}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         deleteRegion={deleteRegion}
-        loadRegionList={loadRegions}
+        deleteCollection={deleteCollection}
+        showSnackbar={showSnackbar}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </>
+        }
       />
     </>
   );
 };
 
 const EditModal = ({
-  isEdit,
-  setIsEdit,
-  regionEdit,
-  setRegionEdit,
+  openEdit,
+  setOpenEdit,
+  isUpload,
+  selectedItem,
   styles,
-  loadRegionList,
-  editRegion,
-  isAdding,
+  upload,
+  updateRegion,
+  updateCollection,
+  showSnackbar,
 }) => {
-  const [errors, setErrors] = useState({
-    name: undefined,
-    tag: undefined,
-  });
+  const [errors, setErrors] = useState({});
   const [id, setId] = useState(undefined);
   const [ownerId, setOwnerId] = useState(undefined);
   const [name, setName] = useState(undefined);
-  const [propTag, setPropTag] = useState(undefined);
+  const [regionNameProperty, setRegionNameProperty] = useState(undefined);
   const [show, setShow] = useState(true);
   const [calc, setCalc] = useState(true);
   const [geojson, setGeoJson] = useState(undefined);
   const [shape, setShape] = useState(undefined);
-  // const nameRegion = data.map((region) => region.name.toLowerCase());
+  const [isCollection, setIsCollection] = useState(false);
+  const [saveInProgress, setSaveInProgress] = useState(false);
+  const [shapeProperties, setShapeProperties] = useState([]);
   const { orgList, userHasOrg } = useContext(AppContext);
 
-  useEffect(() => {
+  const reset = () => {
     setShape(undefined);
     setGeoJson(undefined);
-    if (regionEdit) {
-      setId(regionEdit.id);
-      setOwnerId(regionEdit.owner_id);
-      setName(regionEdit.name);
-      setPropTag(regionEdit.prop_tag);
-      setShow(regionEdit.show_on_org_map);
-      setCalc(regionEdit.calculate_statistics);
+    setRegionNameProperty(undefined);
+    setId(undefined);
+    setName(undefined);
+    setRegionNameProperty(undefined);
+    setShow(true);
+    setCalc(true);
+    setIsCollection(false);
+    setOwnerId(undefined);
+    setErrors({});
+  };
+
+  useEffect(() => {
+    reset();
+    if (selectedItem) {
+      setId(selectedItem.id);
+      setOwnerId(selectedItem.owner_id);
+      setName(selectedItem.name);
+      if (selectedItem.isCollection) {
+        setIsCollection(true);
+      } else {
+        setShow(selectedItem.show_on_org_map);
+        setCalc(selectedItem.calculate_statistics);
+      }
     } else {
-      setId(undefined);
       setOwnerId(getOrganizationUUID());
-      setName(undefined);
-      setPropTag(undefined);
-      setShow(true);
-      setCalc(true);
     }
-  }, [regionEdit]);
+  }, [selectedItem]);
+
+  useEffect(() => {
+    if (shape?.type?.endsWith('Collection')) {
+      setIsCollection(true);
+      setShapeProperties(
+        (shape?.features || []).reduce((props, feature) => {
+          return [
+            ...new Set([...props, ...Object.keys(feature.properties || {})]),
+          ];
+        }, [])
+      );
+    } else {
+      setShapeProperties(shape?.properties || []);
+    }
+  }, [shape]);
+
+  useEffect(() => {
+    // Auto-set to "name" if present
+    const nameProp = shapeProperties?.find(
+      (prop) => prop.toLowerCase() === 'name'
+    );
+    if (nameProp) {
+      setRegionNameProperty(nameProp);
+    }
+  }, [shapeProperties]);
+
   const onOwnerChange = (e) => {
     setOwnerId(e.target.value);
     setErrors((prev) => ({
@@ -362,11 +501,11 @@ const EditModal = ({
     }));
   };
 
-  const onPropChange = (e) => {
-    setPropTag(e.target.value);
+  const onRegionNamePropertyChange = (e) => {
+    setRegionNameProperty(e.target.value);
     setErrors((prev) => ({
       ...prev,
-      propTag: undefined,
+      name: undefined,
     }));
   };
 
@@ -378,76 +517,144 @@ const EditModal = ({
     setCalc(e.target.checked);
   };
 
-  // TO DO: add try-catch for validation
   const onFileChange = (e) => {
+    setErrors((prev) => ({
+      ...prev,
+      shape: undefined,
+    }));
     const fileread = new FileReader();
-    fileread.onload = function (e) {
-      const content = e.target.result;
-      const json = JSON.parse(content);
-      setShape(json);
-    };
+    try {
+      fileread.onload = function (e) {
+        const content = e.target.result;
+        const json = JSON.parse(content);
+        setShape(json);
+      };
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        shape: `Failed to process shape file: ${error}`,
+      }));
+    }
     fileread.readAsText(e.target.files[0]);
     setGeoJson(e.target.value);
   };
 
   const handleEditDetailClose = () => {
-    setIsEdit(false);
-    setRegionEdit(undefined);
+    setOpenEdit(false);
   };
 
   const handleSave = async () => {
     let hasError = false;
-    if (!ownerId) {
-      hasError = true;
-      setErrors((prev) => {
-        return { ...prev, owner: 'Please select an owner for your region.' };
-      });
+    if (isUpload) {
+      if (!shape) {
+        hasError = true;
+        setErrors((prev) => {
+          return { ...prev, shape: 'Please select a shape file.' };
+        });
+      } else if (!regionNameProperty) {
+        hasError = true;
+        setErrors((prev) => {
+          return { ...prev, name: 'Please select a region name property.' };
+        });
+      }
     }
-    if (name) {
-      // const editName = regionEdit.name.toLowerCase().trim();
-      // const otherRegionList = isEdit
-      //   ? data.filter((region) => Number(region.id) !== regionEdit.id)
-      //   : data;
-      // const nameRegion = otherRegionList.map((region) =>
-      //   region.name.toLowerCase(),
-      // );
-      // if (nameRegion.includes(editName)) {
-      //   setErrors((prev) => {
-      //  return { ...prev, name: 'Name already exists'};
-      ///});
-    } else {
+
+    if ((!isUpload || isCollection) && !name) {
       hasError = true;
       setErrors((prev) => {
-        return { ...prev, name: 'Please designate a name for your region.' };
-      });
-    }
-    if (!propTag && shape?.type === 'FeatureCollection') {
-      hasError = true;
-      setErrors((prev) => {
-        return { ...prev, tag: 'Please designate a tag for your subregions.' };
+        return {
+          ...prev,
+          name: `Please enter a name for the ${
+            isCollection ? 'collection' : 'region'
+          }.`,
+        };
       });
     }
 
     if (!hasError) {
-      setIsEdit(false);
-      await editRegion({
-        id,
-        ownerId,
-        name: name || '',
-        nameKey: propTag || '',
-        shape,
-        showOnOrgMap: show,
-        calculateStatistics: calc,
-      });
-      loadRegionList(true);
-      setRegionEdit(undefined);
+      setSaveInProgress(true);
+      let res;
+      try {
+        if (isUpload) {
+          res = await upload({
+            id,
+            owner_id: ownerId,
+            collection_name: isCollection ? name : undefined,
+            region_name_property: regionNameProperty,
+            shape,
+            show_on_org_map: show,
+            calculate_statistics: calc,
+          });
+        } else {
+          if (isCollection) {
+            res = await updateCollection({
+              id,
+              owner_id: ownerId,
+              name,
+            });
+          } else {
+            res = await updateRegion({
+              id,
+              owner_id: ownerId,
+              name,
+              show_on_org_map: show,
+              calculate_statistics: calc,
+            });
+          }
+        }
+
+        if (res?.error) {
+          throw res.message;
+        } else {
+          showSnackbar(
+            `${isCollection ? 'Collection' : res?.region?.name} ${
+              isUpload ? 'uploaded' : 'updated'
+            }`
+          );
+          setOpenEdit(false);
+        }
+      } catch (error) {
+        // TO DO - report the error details
+        alert(`Upload failed: ${error}`);
+      }
+      setSaveInProgress(false);
     }
   };
 
   return (
-    <Dialog open={isEdit || isAdding} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Region Detail</DialogTitle>
+    <Dialog open={openEdit} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">
+        {isUpload
+          ? 'Upload New Region or Collection'
+          : `Edit ${isCollection ? 'Collection' : 'Region'}`}
+      </DialogTitle>
       <DialogContent>
+        {isUpload && (
+          <>
+            <Grid container>
+              <Grid item className={styles.input}>
+                <Input
+                  type="file"
+                  value={geojson || ''}
+                  onChange={onFileChange}
+                  inputProps={{
+                    accept: '.json,.geojson',
+                  }}
+                  error={errors.shape ? true : false}
+                />
+              </Grid>
+            </Grid>
+            {shape && (
+              <Grid container>
+                <Grid item className={styles.input}>
+                  <Typography>
+                    {isCollection ? 'Collection' : 'Region'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
+          </>
+        )}
         <Grid container>
           {!userHasOrg && (
             <Grid item className={styles.owner}>
@@ -462,6 +669,9 @@ const EditModal = ({
                 onChange={onOwnerChange}
                 fullWidth
               >
+                <MenuItem key={'null'} value={null}>
+                  No owner
+                </MenuItem>
                 {orgList.length &&
                   orgList.map((org) => (
                     <MenuItem
@@ -475,64 +685,80 @@ const EditModal = ({
             </Grid>
           )}
 
-          <Grid item className={styles.name}>
-            <TextField
-              error={errors.name ? true : false}
-              helperText={errors.name}
-              autoFocus
-              id="name"
-              label="Name"
-              type="text"
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={name || ''}
-              className={styles.input}
-              onChange={onNameChange}
-            />
+          <Grid item>
+            {(!isUpload || isCollection) && (
+              <TextField
+                error={errors.name ? true : false}
+                helperText={errors.name}
+                id="name"
+                label={`${isCollection ? 'Collection' : 'Region'} Name`}
+                type="text"
+                variant="outlined"
+                fullWidth
+                value={name || ''}
+                className={styles.input}
+                onChange={onNameChange}
+              />
+            )}
+            {isUpload && (
+              <TextField
+                select
+                error={errors.name ? true : false}
+                helperText={errors.name}
+                id="prop"
+                label="Region Name Property"
+                type="text"
+                variant="outlined"
+                fullWidth
+                value={regionNameProperty || ''}
+                className={styles.input}
+                onChange={onRegionNamePropertyChange}
+              >
+                {shapeProperties.length ? (
+                  shapeProperties.map((prop) => (
+                    <MenuItem key={prop} value={prop}>
+                      {prop}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem key={'null'} value={null}>
+                    No properties found
+                  </MenuItem>
+                )}
+              </TextField>
+            )}
           </Grid>
-          <Grid item className={styles.desc}>
-            <TextField
-              error={errors.tag ? true : false}
-              helperText={errors.tag}
-              id="desc"
-              label="Properties Tag for Subregion Name"
-              type="text"
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={propTag || ''}
-              className={styles.input}
-              onChange={onPropChange}
-            />
-          </Grid>
-          <FormGroup row={true}>
-            <FormControlLabel
-              control={<Switch checked={show} onChange={onShowChange} />}
-              label="Show on Organization Map"
-            />
-            <FormControlLabel
-              control={<Switch checked={calc} onChange={onCalcChange} />}
-              label="Calculate Statistics"
-            />
-          </FormGroup>
-          <input
-            hidden={isEdit}
-            type="file"
-            value={geojson || ''}
-            onChange={onFileChange}
-            accept=".json,.geojson"
-          ></input>
+          {!isCollection && (
+            <FormGroup row={true}>
+              <FormControlLabel
+                control={<Switch checked={show} onChange={onShowChange} />}
+                label="Show on Organization Map"
+              />
+              <FormControlLabel
+                control={<Switch checked={calc} onChange={onCalcChange} />}
+                label="Calculate Statistics"
+              />
+            </FormGroup>
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleEditDetailClose}>Cancel</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
-          Save
+        <Button onClick={handleEditDetailClose} disabled={saveInProgress}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          color="primary"
+          disabled={saveInProgress}
+        >
+          {saveInProgress ? (
+            <CircularProgress size={21} />
+          ) : isUpload ? (
+            'Upload'
+          ) : (
+            'Save'
+          )}
         </Button>
       </DialogActions>
     </Dialog>
@@ -540,23 +766,40 @@ const EditModal = ({
 };
 
 const DeleteDialog = ({
-  regionEdit,
-  setRegionEdit,
+  selectedItem,
   openDelete,
   setOpenDelete,
   deleteRegion,
-  loadRegionList,
+  deleteCollection,
+  showSnackbar,
 }) => {
   const handleDelete = async () => {
-    await deleteRegion({ id: regionEdit.id });
-    loadRegionList(true);
-    setOpenDelete(false);
-    setRegionEdit(undefined);
+    try {
+      let res;
+      if (selectedItem.isCollection) {
+        res = await deleteCollection(selectedItem.id);
+      } else {
+        res = await deleteRegion(selectedItem.id);
+      }
+      if (res?.error) {
+        throw res.message;
+      } else {
+        showSnackbar(
+          `${
+            selectedItem.isCollection
+              ? res?.collection?.name
+              : res?.region?.name
+          } deleted`
+        );
+        setOpenDelete(false);
+      }
+    } catch (error) {
+      alert(`Failed to delete item: ${error}`);
+    }
   };
 
   const closeDelete = () => {
     setOpenDelete(false);
-    setRegionEdit(undefined);
   };
 
   return (
@@ -565,13 +808,15 @@ const DeleteDialog = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{`Please confirm you want to delete`}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {`Are you sure you want to delete ${selectedItem?.name}?`}
+      </DialogTitle>
       <DialogActions>
-        <Button onClick={handleDelete} color="primary">
-          Delete
-        </Button>
         <Button onClick={closeDelete} color="primary" autoFocus>
           Cancel
+        </Button>
+        <Button onClick={handleDelete} variant="contained" color="primary">
+          Delete
         </Button>
       </DialogActions>
     </Dialog>

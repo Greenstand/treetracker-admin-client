@@ -8,11 +8,11 @@ import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
 import MessagingView from 'views/MessagingView';
+import MatchingToolView from '../views/MatchingToolView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
-import CaptureMatchingView from '../components/CaptureMatching/CaptureMatchingView';
 import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
@@ -78,7 +78,7 @@ function getRoutes(user) {
     {
       name: 'Capture Matching',
       linkTo: '/capture-matching',
-      component: CaptureMatchingView,
+      component: MatchingToolView,
       icon: CompareIcon,
       disabled:
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
@@ -95,38 +95,31 @@ function getRoutes(user) {
           linkTo: '/earnings',
           component: EarningsView,
           icon: AccountBalanceIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_EARNINGS !== 'true' ||
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_EARNINGS,
-              POLICIES.LIST_EARNINGS,
-            ]),
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_EARNINGS,
+            POLICIES.LIST_EARNINGS,
+          ]),
         },
         {
           name: 'Payments',
           linkTo: '/payments',
           component: PaymentsView,
           icon: CreditCardIcon,
-          disabled:
-            process.env.REACT_APP_ENABLE_PAYMENTS !== 'true' ||
-            !hasPermission(user, [
-              POLICIES.SUPER_PERMISSION,
-              POLICIES.MANAGE_PAYMENTS,
-              POLICIES.LIST_PAYMENTS,
-            ]),
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_PAYMENTS,
+            POLICIES.LIST_PAYMENTS,
+          ]),
         },
       ],
-      disabled:
-        (process.env.REACT_APP_ENABLE_EARNINGS !== 'true' &&
-          process.env.REACT_APP_ENABLE_PAYMENTS !== 'true') ||
-        !hasPermission(user, [
-          POLICIES.SUPER_PERMISSION,
-          POLICIES.MANAGE_EARNINGS,
-          POLICIES.MANAGE_PAYMENTS,
-          POLICIES.LIST_EARNINGS,
-          POLICIES.LIST_PAYMENTS,
-        ]),
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.MANAGE_EARNINGS,
+        POLICIES.MANAGE_PAYMENTS,
+        POLICIES.LIST_EARNINGS,
+        POLICIES.LIST_PAYMENTS,
+      ]),
     },
     {
       name: 'Growers',
@@ -311,6 +304,7 @@ export const AppProvider = (props) => {
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
+    ...props.value,
   };
 
   if (!user || !token) {

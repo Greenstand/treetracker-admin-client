@@ -4,7 +4,7 @@ _[Add a description of the changes]_
 
 **Issue(s) addressed**
 
-- Resolves #_[insert ID of the issue addressed]_
+- Resolves #issue_number
 
 **What kind of change(s) does this PR introduce?**
 
@@ -12,7 +12,7 @@ _[Add a description of the changes]_
 - [ ] Bug fix
 - [ ] Refactor
 
-**Please check if the PR fulfills these requirements**
+**Please check if the PR fulfils these requirements**
 
 - [ ] The commit message follows our guidelines
 - [ ] Tests for the changes have been added (for bug fixes / features)

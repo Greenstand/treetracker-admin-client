@@ -137,7 +137,7 @@ const Login = (props) => {
             {
               userName,
               password,
-            },
+            }
           );
           if (res.status === 200) {
             const token = res.data.token;
@@ -153,7 +153,7 @@ const Login = (props) => {
             setErrorMessage(e.response.data.errorMessage);
           } else {
             setErrorMessage(
-              'Could not log in. Please check your username and password or contact the admin.',
+              'Could not log in. Please check your username and password or contact the admin.'
             );
           }
           setLoading(false);
