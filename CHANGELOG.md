@@ -1,3 +1,10 @@
+# [1.96.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.1...v1.96.0) (2022-06-16)
+
+
+### Features
+
+* show user-entered organization name in the Edit Grower dialog ([#694](https://github.com/Greenstand/treetracker-admin-client/issues/694)) ([53cc644](https://github.com/Greenstand/treetracker-admin-client/commit/53cc6447e4918694dcd39bb541b41ff3959497e5))
+
 ## [1.95.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.0...v1.95.1) (2022-06-16)
 
 
