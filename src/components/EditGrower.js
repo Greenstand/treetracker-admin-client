@@ -161,6 +161,12 @@ const EditGrower = (props) => {
               ))}
             </Grid>
           ))}
+          <TextField
+            className={classes.textInput}
+            label="Grower-entered organization"
+            value={getValue('organization')}
+            disabled
+          />
           <SelectOrg
             orgId={getValue('organizationId')}
             defaultOrgs={[
