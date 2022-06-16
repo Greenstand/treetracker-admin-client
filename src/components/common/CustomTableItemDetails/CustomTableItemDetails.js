@@ -352,6 +352,7 @@ function CustomTableItemDetails(props) {
 export default CustomTableItemDetails;
 
 CustomTableItemDetails.propTypes = {
+  open: PropTypes.bool,
   selectedItem: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   refreshData: PropTypes.func,
