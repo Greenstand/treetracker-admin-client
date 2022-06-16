@@ -243,25 +243,25 @@ const ORGS = [
 
 const TAG = {
   id: 3,
-  tagName: 'test',
+  name: 'test',
 };
 
 const TAGS = [
   {
     id: 0,
-    tagName: 'tag_a',
+    name: 'tag_a',
     public: true,
     active: true,
   },
   {
     id: 1,
-    tagName: 'tag_b',
+    name: 'tag_b',
     public: true,
     active: true,
   },
   {
     id: 3,
-    tagName: 'tag_c',
+    name: 'tag_c',
     public: true,
     active: true,
   },

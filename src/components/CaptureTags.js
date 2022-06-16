@@ -47,7 +47,7 @@ function renderSuggestion(suggestion, { isHighlighted }) {
       component="div"
       onMouseDown={(e) => e.preventDefault()} // prevent the click causing the input to be blurred
     >
-      <div>{suggestion.tagName}</div>
+      <div>{suggestion.name}</div>
     </MenuItem>
   );
 }
@@ -63,7 +63,7 @@ function renderSuggestionsContainer(options) {
 }
 
 function getSuggestionValue(suggestion) {
-  return suggestion.tagName;
+  return suggestion.name;
 }
 
 const CaptureTags = (props) => {
@@ -122,6 +122,8 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(result);
   };
 
+  // console.log('tagList ----- ', tagsContext.tagList);
+
   return (
     <Autosuggest
       data-testid="tag-autosuggest"
@@ -133,7 +135,7 @@ const CaptureTags = (props) => {
       }}
       renderInputComponent={renderInput}
       suggestions={tagsContext.tagList.filter((t) => {
-        const tagName = t.tagName.toLowerCase();
+        const tagName = t.name.toLowerCase();
         return (
           (textFieldInput.length === 0 ||
             tagName.startsWith(textFieldInput.toLowerCase())) &&

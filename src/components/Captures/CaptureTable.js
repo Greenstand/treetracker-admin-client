@@ -159,7 +159,7 @@ const CaptureTable = () => {
   const populateTagLookup = async () => {
     let tags = {};
     tagsContext.tagList.forEach((t) => {
-      tags[t.id] = t.tagName;
+      tags[t.id] = t.name;
     });
     // log.debug('tags', tags);
     setTagLookup(tags);
@@ -367,13 +367,9 @@ export const formatCell = (
     return capture['status'];
   } else if (attr === 'captureTags') {
     return [
-      capture.age !== null && capture.age >= 0 ? `age: ${capture.age}` : '',
       capture.morphology ? `morphology: ${capture.morphology}` : '',
       capture.captureApprovalTag
         ? `approval tag: ${capture.captureApprovalTag}`
-        : '',
-      capture.rejectionReason
-        ? `rejection tag: ${capture.rejectionReason}`
         : '',
       ...additionalTags,
     ]

@@ -39,7 +39,7 @@ describe('tags', () => {
       log.debug('mock createTag');
       return Promise.resolve({
         id: 2,
-        tagName: 'new_tag',
+        name: 'new_tag',
         public: true,
         active: true,
       });
@@ -262,8 +262,8 @@ describe('tags', () => {
   //     });
 
   //     it('tags are sorted alphabetically', () => {
-  //       const tagNames = TagsContext.tagList.map((el) => el.tagName);
-  //       expect(tagNames).toStrictEqual(['tag_a', 'tag_b']);
+  //       const tagName = TagsContext.tagList.map((el) => el.name);
+  //       expect(tagName).toStrictEqual(['tag_a', 'tag_b']);
   //     });
   //   });
 

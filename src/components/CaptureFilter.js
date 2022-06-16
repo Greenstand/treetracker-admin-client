@@ -372,7 +372,7 @@ function Filter(props) {
                 }}
                 options={[
                   ...tagsContext.tagList.filter((t) =>
-                    t.tagName
+                    t.name
                       .toLowerCase()
                       .startsWith(tagSearchString.toLowerCase())
                   ),
@@ -380,11 +380,11 @@ function Filter(props) {
                 value={tag}
                 defaultValue={'Not set'}
                 getOptionLabel={(tag) => {
-                  return tag.tagName;
+                  return tag.name;
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  if (newVal && newVal.tagName === 'Not set') {
+                  if (newVal && newVal.name === 'Not set') {
                     setTag('Not set');
                   } else {
                     setTag(newVal);

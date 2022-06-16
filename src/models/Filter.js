@@ -8,7 +8,8 @@ export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
-import { tokenizationStates, verificationStates } from '../common/variables';
+// import { tokenizationStates, verificationStates } from '../common/variables';
+import { tokenizationStates } from '../common/variables';
 
 export default class Filter {
   uuid; //  id

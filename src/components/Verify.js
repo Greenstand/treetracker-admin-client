@@ -227,7 +227,7 @@ const Verify = (props) => {
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on capture:%d', captureId);
+    log.debug('click on capture:', captureId);
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
@@ -237,7 +237,7 @@ const Verify = (props) => {
   function handleCapturePinClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on capture pin:%d', captureId);
+    log.debug('click on capture pin:', captureId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -245,7 +245,7 @@ const Verify = (props) => {
   function handleGrowerMapClick(e, growerId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on grower:%d', growerId);
+    log.debug('click on grower:', growerId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -273,7 +273,7 @@ const Verify = (props) => {
     approveAction.tags = await tagsContext.createTags();
     const result = await verifyContext.approveAll(approveAction);
     if (!result) {
-      window.alert('Failed to approve a capture');
+      window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
@@ -446,7 +446,7 @@ const Verify = (props) => {
                     )}
                   </Paper>
                   <OptimizedImage
-                    src={capture.imageUrl}
+                    src={capture.image_url}
                     width={isImagesLarge ? 400 : 250}
                     className={classes.cardMedia}
                     alertWidth="100%"
@@ -672,7 +672,7 @@ const Verify = (props) => {
           submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
-      {verifyContext.isApproveAllProcessing && (
+      {verifyContext.isLoading && (
         <AppBar
           position="fixed"
           style={{
@@ -686,45 +686,47 @@ const Verify = (props) => {
           />
         </AppBar>
       )}
-      {verifyContext.isApproveAllProcessing && (
+      {verifyContext.isLoading && (
         <Modal open={true}>
           <div></div>
         </Modal>
       )}
-      {false /* close undo */ &&
-        !verifyContext.isApproveAllProcessing &&
-        // !context.isRejectAllProcessing &&
-        verifyContext.captureImagesUndo.length > 0 && (
-          <Snackbar
-            open
-            autoHideDuration={15000}
-            ContentProps={{
-              className: classes.snackbarContent,
-              'aria-describedby': 'snackbar-fab-message-id',
-            }}
-            message={
-              <span id="snackbar-fab-message-id">
-                You have{' '}
-                {verifyContext.isBulkApproving ? ' approved ' : ' rejected '}
-                {verifyContext.captureImagesUndo.length} captures
-              </span>
-            }
-            color="primary"
-            action={
-              <Button
-                color="inherit"
-                size="small"
-                onClick={async () => {
-                  await verifyContext.undoAll();
-                  log.log('finished');
-                }}
-              >
-                Undo
-              </Button>
-            }
-            className={classes.snackbar}
-          />
-        )}
+      {
+        // false /* close undo */ &&
+        !verifyContext.isLoading &&
+          verifyContext.isApproveAllProcessing &&
+          verifyContext.captureImagesUndo.length > 0 && (
+            <Snackbar
+              open
+              autoHideDuration={15000}
+              ContentProps={{
+                className: classes.snackbarContent,
+                'aria-describedby': 'snackbar-fab-message-id',
+              }}
+              message={
+                <span id="snackbar-fab-message-id">
+                  You have{' '}
+                  {verifyContext.isBulkApproving ? ' approved ' : ' rejected '}
+                  {verifyContext.captureImagesUndo.length} captures
+                </span>
+              }
+              color="primary"
+              action={
+                <Button
+                  color="inherit"
+                  size="small"
+                  onClick={async () => {
+                    await verifyContext.undoAll();
+                    log.log('finished');
+                  }}
+                >
+                  Undo
+                </Button>
+              }
+              className={classes.snackbar}
+            />
+          )
+      }
       <GrowerDetail
         open={growerDetail.isOpen}
         growerId={growerDetail.growerId}

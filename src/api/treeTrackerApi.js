@@ -77,35 +77,90 @@ export default {
       handleError(error);
     }
   },
-  approveCaptureImage(id, morphology, age, captureApprovalTag, speciesId) {
+  approveCaptureImage(
+    capture,
+    morphology,
+    age
+    // captureApprovalTag,
+    // speciesId
+    // tags
+  ) {
     try {
-      const query = `${TREETRACKER_API}/captures/${id}`;
+      const newCapture = {
+        id: capture.id,
+        session_id: capture.session_id,
+        grower_account_id: capture.grower_account_id,
+        planting_organization_id: capture.organization_id,
+        device_configuration_id: capture.device_configuration_id,
+        image_url: capture.image_url,
+        lat: capture.lat,
+        lon: capture.lon,
+        gps_accuracy: capture.gps_accuracy,
+        captured_at: capture.captured_at,
+        age: age === 'new_tree' ? 0 : 2, // TODO: need a real solution
+        morphology,
+        // species_id: speciesId, // need uuid
+        // captureApprovalTag,  // how does this fit into the new API?
+        // tags, // causing errors right now
+      };
 
-      return fetch(query, {
-        method: 'POST',
+      log.debug('newCapture data', newCapture);
+
+      // update the raw capture
+      fetch(`${FIELD_DATA_API}/raw-captures/${capture.id}`, {
+        method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
         body: JSON.stringify({
-          id: id,
-          approved: true,
-          //revise, if click approved on a rejected pic, then, should set the pic approved, AND restore to ACTIVE = true
-          active: true,
+          id: capture.id,
+          status: 'approved',
+          age: age === 'new_tree' ? 0 : 2, // TODO: need a real solution
           morphology,
-          age,
-          captureApprovalTag,
-          speciesId: speciesId,
+          // species_id: speciesId, // need uuid
+          // captureApprovalTag,  // how does this fit into the new API?
+          // tags, // causing errors right now}),
+        }),
+      }).then(handleResponse);
+
+      // add the new capture
+      fetch(`${TREETRACKER_API}/captures`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(newCapture),
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  rejectCaptureImage(capture, rejection_reason) {
+    try {
+      log.debug('reject capture', capture.id, rejection_reason);
+      const query = `${FIELD_DATA_API}/raw-captures/${capture.id}`;
+      return fetch(query, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify({
+          id: capture.id,
+          status: 'rejected',
+          rejection_reason,
         }),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
   },
-  rejectCaptureImage(id, rejectionReason) {
+  undoCaptureImage(id) {
     try {
-      log.debug('reject capture', id, rejectionReason);
-      const query = `${FIELD_DATA_API}/raw_captures/${id}`;
+      log.debug('undo approve/reject capture', id);
+      const query = `${FIELD_DATA_API}/raw-captures/${id}`;
       return fetch(query, {
         method: 'PATCH',
         headers: {
@@ -114,11 +169,7 @@ export default {
         },
         body: JSON.stringify({
           id: id,
-          active: false,
-          //revise, if click a approved pic, then, should set active = false and
-          //at the same time, should set approved to false
-          approved: false,
-          rejectionReason,
+          status: 'unprocessed',
         }),
       }).then(handleResponse);
     } catch (error) {
@@ -353,7 +404,7 @@ export default {
    */
   getTags(abortController) {
     try {
-      // const filterString = `order=tagName`;
+      // const filterString = `order=name`;
       // const query = `${TREETRACKER_API}/tags?${filterString}`;
       const query = `${TREETRACKER_API}/tags`; // TODO: order is not allowed
 
@@ -383,7 +434,8 @@ export default {
       handleError(error);
     }
   },
-  createTag(tagName) {
+  createTag(tag) {
+    log.debug('createTag ---> ', tag);
     try {
       const query = `${TREETRACKER_API}/tags`;
       return fetch(query, {
@@ -392,11 +444,7 @@ export default {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify({
-          tagName,
-          active: true,
-          public: true,
-        }),
+        body: JSON.stringify(tag),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

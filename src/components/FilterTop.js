@@ -22,7 +22,7 @@ import {
 } from '../common/locale';
 import {
   verificationStates,
-  tokenizationStates,
+  // tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { getVerificationStatus } from '../common/utils';
@@ -100,7 +100,7 @@ function Filter(props) {
   const [stakeholderUUID, setStakeholderUUID] = useState(
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
-  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -131,7 +131,7 @@ function Filter(props) {
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
-    filter.tokenId = tokenId;
+    // filter.tokenId = tokenId;
     filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -150,7 +150,7 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setStakeholderUUID(ALL_ORGANIZATIONS);
-    setTokenId(filterOptionAll);
+    // setTokenId(filterOptionAll);
 
     const filter = new FilterModel({
       status: 'unprocessed',
@@ -236,7 +236,7 @@ function Filter(props) {
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
+              {/* <TextField
                 select
                 htmlFor="token-status"
                 id="token-status"
@@ -255,7 +255,7 @@ function Filter(props) {
                     {name}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
               <MuiPickersUtilsProvider
                 utils={DateFnsUtils}
                 locale={getDatePickerLocale()}
@@ -369,20 +369,20 @@ function Filter(props) {
                 options={[
                   {
                     id: TAG_NOT_SET,
-                    tagName: 'Not set',
+                    name: 'Not set',
                     active: true,
                     public: true,
                   },
                   {
                     id: ANY_TAG_SET,
-                    tagName: 'Any tag set',
+                    name: 'Any tag set',
                     active: true,
                     public: true,
                   },
                   ...tagsContext.tagList.filter((t) =>
-                    t.tagName
+                    t.name
                       .toLowerCase()
-                      .startsWith(tagSearchString.toLowerCase())
+                      .startsWith(tagSearchString?.toLowerCase())
                   ),
                 ]}
                 value={tag}
@@ -391,7 +391,7 @@ function Filter(props) {
                   // if (tag === 'Not set') {
                   //   return 'Not set';
                   // }
-                  return tag.tagName;
+                  return tag.name;
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
