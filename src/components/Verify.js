@@ -691,42 +691,40 @@ const Verify = (props) => {
           <div></div>
         </Modal>
       )}
-      {
-        // false /* close undo */ &&
+      {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
         !verifyContext.isLoading &&
-          verifyContext.isApproveAllProcessing &&
-          verifyContext.captureImagesUndo.length > 0 && (
-            <Snackbar
-              open
-              autoHideDuration={15000}
-              ContentProps={{
-                className: classes.snackbarContent,
-                'aria-describedby': 'snackbar-fab-message-id',
-              }}
-              message={
-                <span id="snackbar-fab-message-id">
-                  You have{' '}
-                  {verifyContext.isBulkApproving ? ' approved ' : ' rejected '}
-                  {verifyContext.captureImagesUndo.length} captures
-                </span>
-              }
-              color="primary"
-              action={
-                <Button
-                  color="inherit"
-                  size="small"
-                  onClick={async () => {
-                    await verifyContext.undoAll();
-                    log.log('finished');
-                  }}
-                >
-                  Undo
-                </Button>
-              }
-              className={classes.snackbar}
-            />
-          )
-      }
+        verifyContext.isApproveAllProcessing &&
+        verifyContext.captureImagesUndo.length > 0 && (
+          <Snackbar
+            open
+            autoHideDuration={15000}
+            ContentProps={{
+              className: classes.snackbarContent,
+              'aria-describedby': 'snackbar-fab-message-id',
+            }}
+            message={
+              <span id="snackbar-fab-message-id">
+                You have{' '}
+                {verifyContext.isBulkApproving ? ' approved ' : ' rejected '}
+                {verifyContext.captureImagesUndo.length} captures
+              </span>
+            }
+            color="primary"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={async () => {
+                  await verifyContext.undoAll();
+                  log.log('finished');
+                }}
+              >
+                Undo
+              </Button>
+            }
+            className={classes.snackbar}
+          />
+        )}
       <GrowerDetail
         open={growerDetail.isOpen}
         growerId={growerDetail.growerId}
