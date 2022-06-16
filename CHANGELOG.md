@@ -1,3 +1,10 @@
+## [1.95.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.0...v1.95.1) (2022-06-16)
+
+
+### Bug Fixes
+
+* Earnings and Payments drawer ([#604](https://github.com/Greenstand/treetracker-admin-client/issues/604)) ([6a8cf62](https://github.com/Greenstand/treetracker-admin-client/commit/6a8cf620ca96ff495a26e26ce8582ecf0b0079b4)), closes [#597](https://github.com/Greenstand/treetracker-admin-client/issues/597) [#597](https://github.com/Greenstand/treetracker-admin-client/issues/597)
+
 # [1.95.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.4...v1.95.0) (2022-06-15)
 
 
