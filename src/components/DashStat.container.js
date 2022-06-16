@@ -12,6 +12,7 @@ import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined'
 import apiPlanters from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
+import log from 'loglevel';
 
 function DashStatTotalCaptures(props) {
   const activeFilter = new FilterModel({
@@ -21,7 +22,7 @@ function DashStatTotalCaptures(props) {
   const [total, setTotal] = useState(null);
 
   const getTotal = async () => {
-    console.log('-- dash getTotal');
+    log.debug('-- dash getTotal');
     const { count } = await api.getCaptureCount(activeFilter);
     setTotal(count);
   };
@@ -50,7 +51,7 @@ function DashStatUnprocessedCaptures(props) {
   const [totalUnprocessed, setTotalUnprocessed] = useState(null);
 
   const getTotalUnprocessed = async () => {
-    console.log('-- dash getTotalUnprocessed');
+    log.debug('-- dash getTotalUnprocessed');
     const { count } = await api.getCaptureCount(unprocessedFilter);
     setTotalUnprocessed(count);
   };
@@ -79,7 +80,7 @@ function DashStatVerifiedCaptures(props) {
   const [totalVerified, setTotalVerified] = useState(null);
 
   const getTotalVerified = async () => {
-    console.log('-- dash getTotalVerified');
+    log.debug('-- dash getTotalVerified');
     const { count } = await api.getCaptureCount(verifiedFilter);
     setTotalVerified(count);
   };
