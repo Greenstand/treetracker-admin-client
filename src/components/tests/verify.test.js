@@ -169,10 +169,9 @@ describe('Verify', () => {
       userEvent.selectOptions(orglist, orgSelected);
 
       userEvent.click(screen.getByText(/apply/i));
-      // screen.logTestingPlaygroundURL();
-      expect(screen.getByRole('button', { name: /filter 2/i })).toBeTruthy();
+      expect(screen.getByRole('button', { name: /filter 1/i })).toBeTruthy();
       //this function is still returning 1
-      // expect(verifyValues.filter.countAppliedFilters()).toBe(2);
+      expect(verifyValues.filter.countAppliedFilters()).toBe(1);
     });
 
     // it('renders side panel', () => {
@@ -181,7 +180,6 @@ describe('Verify', () => {
     // });
 
     it('renders captures gallery', () => {
-      // screen.logTestingPlaygroundURL();
       const pageSize = screen.getAllByText(/captures per page:/i);
       expect(pageSize).toHaveLength(2);
 
@@ -194,7 +192,6 @@ describe('Verify', () => {
       });
       expect(captureDetails).toHaveLength(4);
       userEvent.click(captureDetails[0]);
-      // screen.logTestingPlaygroundURL();
       expect(screen.getByText(/capture data/i)).toBeInTheDocument();
       expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
       expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
@@ -210,10 +207,10 @@ describe('Verify', () => {
       });
       expect(growerDetails).toHaveLength(4);
       userEvent.click(growerDetails[0]);
-      screen.logTestingPlaygroundURL();
+      // screen.logTestingPlaygroundURL();
 
       expect(screen.getByText(/country/i)).toBeInTheDocument();
-      expect(screen.getByText(/organization ID/i)).toBeInTheDocument();
+      expect(screen.getByText(/organization/i)).toBeInTheDocument();
       expect(screen.getByText(/person ID/i)).toBeInTheDocument();
       expect(screen.getByText(/ID:/i)).toBeInTheDocument();
       expect(screen.getByText(/email address/i)).toBeInTheDocument();

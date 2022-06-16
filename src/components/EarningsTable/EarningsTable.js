@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import earningsAPI from '../../api/earnings';
+import moment from 'moment';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
   covertDateStringToHumanReadableFormat,
@@ -35,12 +36,14 @@ const earningTableMetaData = [
     name: 'amount',
     sortable: true,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Capture Count',
     name: 'captures_count',
     sortable: false,
     showInfoIcon: false,
+    align: 'right',
   },
   {
     description: 'Effective Date',
@@ -78,17 +81,20 @@ const prepareRows = (rows) =>
       csv_end_date: row.consolidation_period_end,
       consolidation_period_start: covertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
       consolidation_period_end: covertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'mmm d, yyyy'
+        'yyyy-mm-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(row.calculated_at),
+      calculated_at: covertDateStringToHumanReadableFormat(
+        row.calculated_at,
+        'yyyy-mm-dd'
+      ),
       payment_confirmed_at: covertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: covertDateStringToHumanReadableFormat(row.paid_at),
+      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
     };
   });
 
@@ -118,10 +124,10 @@ function EarningsTable() {
   const [isDetailShown, setDetailShown] = useState(false);
 
   async function getEarnings(fetchAll = false) {
-    console.warn('getEarnings with fetchAll: ', fetchAll);
+    // console.warn('getEarnings with fetchAll: ', fetchAll);
     setIsLoading(true); // show loading indicator when fetching data
 
-    const { results, totalCount } = await getEarningsReal();
+    const { results, totalCount } = await getEarningsReal(fetchAll);
     setEarnings(results);
     setTotalEarnings(totalCount);
 
@@ -129,21 +135,36 @@ function EarningsTable() {
   }
 
   async function getEarningsReal(fetchAll = false) {
-    console.warn('fetchAll:', fetchAll);
+    // console.warn('fetchAll:', fetchAll);
+    const filtersToSubmit = { ...filter };
+    // filter out keys we don't want to submit
+    Object.keys(filtersToSubmit).forEach((k) => {
+      if (
+        filtersToSubmit[k] === 'all' ||
+        filtersToSubmit[k] === '' ||
+        k === 'organization_id'
+      ) {
+        delete filtersToSubmit[k];
+      }
+    });
 
     const queryParams = {
       offset: fetchAll ? 0 : page * earningsPerPage,
       limit: fetchAll ? 90000 : earningsPerPage,
       sort_by: sortBy?.field,
       order: sortBy?.order,
-      ...filter,
+      ...filtersToSubmit,
     };
 
+    // log.debug('queryParams', queryParams);
+
     const response = await earningsAPI.getEarnings(queryParams);
+    // log.debug('getEarnings response: ', response);
+
     const results = prepareRows(response.earnings);
     return {
       results,
-      totalCount: response.totalCount,
+      totalCount: response.query.count,
     };
   }
 
@@ -183,9 +204,15 @@ function EarningsTable() {
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       activeFiltersCount={
-        Object.keys(filter).filter((key) =>
-          key === 'start_date' || key === 'end_date' ? false : true
-        ).length
+        Object.keys(filter).filter((key) => {
+          return key === 'start_date' ||
+            key === 'end_date' ||
+            key === 'organization_id' ||
+            filter[key] === 'all' ||
+            filter[key] === ''
+            ? false
+            : true;
+        }).length
       }
       headerTitle="Earnings"
       mainFilterComponent={

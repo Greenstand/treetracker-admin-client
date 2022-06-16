@@ -50,7 +50,7 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     overflowX: 'auto',
     overflowY: 'hidden',
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
   },
 
   candidateImgBtn: {
@@ -84,8 +84,6 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    width: '253px',
-    height: '340px',
     position: 'relative',
   },
   captureInfo: {
@@ -228,6 +226,14 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             src={candidateCapture.image_url}
                             alt={`Candidate capture ${candidateCapture.id}`}
                             objectFit="cover"
+                            width={250}
+                            style={{
+                              width: '250px',
+                              height: '100%',
+                            }}
+                            alertHeight="300px"
+                            alertTextSize=".9rem"
+                            alertTitleSize="1.2rem"
                           />
                           <Box className={classes.captureInfo}>
                             <Box className={classes.captureInfoDetail}>
@@ -239,7 +245,16 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               </Typography>
                             </Box>
                             <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon />
+                              <LocationOnOutlinedIcon
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                  window.open(
+                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                  );
+                                }}
+                              />
                               <Typography variant="body1">
                                 {capture && (
                                   <DistanceTo

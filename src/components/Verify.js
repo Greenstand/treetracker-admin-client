@@ -15,6 +15,9 @@ import IconFilter from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
@@ -35,6 +38,7 @@ import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CaptureDetailProvider } from '../context/CaptureDetailContext';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
 
 const log = require('loglevel').getLogger('../components/Verify');
 
@@ -74,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '87% 0 0 0',
     position: 'relative',
     overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -93,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   cardWrapper: {
     position: 'relative',
     padding: theme.spacing(2),
+    flex: '1 0 45%',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -148,6 +156,36 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'smaller',
     fontWeight: 'bold',
   },
+  '@media (max-width: 1070px)': {
+    paginationContainer: {
+      '@media (max-width: 1070px)': {
+        display: 'flex',
+        flexGrow: 1,
+      },
+    },
+    pagination: {
+      width: '100%',
+    },
+  },
+  imageSizeLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.6875rem',
+    paddingRight: '.25rem',
+  },
+  imageSizeToggle: {
+    textTransform: 'none',
+    fontSize: '0.6875rem',
+    border: '1px solid',
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    color: 'black',
+    '&.Mui-selected': {
+      borderColor: theme.palette.action.active,
+    },
+    '&.Mui-selected span': {
+      color: theme.palette.stats.green,
+    },
+  },
 }));
 
 const Verify = (props) => {
@@ -157,6 +195,8 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
+  const [disableHoverListener, setDisableHoverListener] = useState(false);
+  const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -172,6 +212,7 @@ const Verify = (props) => {
   /*
    * effect to load page when mounted
    */
+
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
@@ -180,7 +221,6 @@ const Verify = (props) => {
 
   /* to display progress */
   useEffect(() => {
-    // console.log('-- approve all complete');
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
 
@@ -225,7 +265,6 @@ const Verify = (props) => {
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
-      console.log('species id:', speciesId);
     }
 
     /*
@@ -259,6 +298,7 @@ const Verify = (props) => {
   function handleShowCaptureDetail(e, capture) {
     e.preventDefault();
     e.stopPropagation();
+    setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture,
@@ -266,6 +306,7 @@ const Verify = (props) => {
   }
 
   function handleCloseCaptureDetail() {
+    setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
       capture: {},
@@ -283,6 +324,17 @@ const Verify = (props) => {
 
   const captureImages = verifyContext.captureImages;
 
+  const tooltipStyles = makeStyles(() => ({
+    tooltipTop: {
+      top: '12px',
+    },
+    tooltipBottom: {
+      top: '-16px',
+    },
+  }));
+
+  const tooltipPositionStyles = tooltipStyles();
+
   const placeholderImages = verifyContext.isLoading
     ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
         .fill()
@@ -294,11 +346,65 @@ const Verify = (props) => {
         })
     : [];
 
+  /*=============================================================*/
+
+  const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(
+    0
+  );
+  const refCaptureImageContainer = useRef(0);
+
+  const handleResize = () => {
+    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
+  };
+
+  useEffect(() => {
+    handleResize();
+  }, [refCaptureImageContainer?.current?.clientWidth]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [window]);
+
+  // Calculate the number of captures per row based on the container width
+  // and whether large or small images are toggled
+
+  const containerWidth = captureImageContainerWidth || 100;
+  const minCaptureSize = isImagesLarge ? 350 : 250; // Shouldn't this be reversed?
+
+  const breakpoints = Array.from({ length: 16 }, (_, idx) => {
+    return minCaptureSize * (idx + 1);
+  });
+
+  // The index of the next breakpoint up from the container width
+  // gives the number of captures per row
+  const capturesPerRow = breakpoints.findIndex((val, idx) => {
+    if (idx === 0) {
+      return false;
+    }
+    if (
+      (idx === 1 && containerWidth <= val) ||
+      (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
+      (containerWidth > val && idx === breakpoints.length - 1)
+    ) {
+      return true;
+    }
+    return false;
+  });
+
   const captureImageItems = captureImages
     .concat(placeholderImages)
     .map((capture) => {
       return (
-        <Grid item xs={12} sm={6} md={4} xl={3} key={capture.id}>
+        <Grid
+          item
+          key={capture.id}
+          style={{
+            width: `calc(100% / ${capturesPerRow})`,
+          }}
+        >
           <div
             className={clsx(
               classes.cardWrapper,
@@ -308,68 +414,104 @@ const Verify = (props) => {
               capture.placeholder && classes.placeholderCard
             )}
           >
-            <Card
-              onClick={(e) => handleCaptureClick(e, capture.id)}
-              id={`card_${capture.id}`}
-              className={classes.card}
-              elevation={capture.placeholder ? 0 : 3}
-            >
-              <CardContent className={classes.cardContent}>
-                <Paper className={classes.cardCheckbox} elevation={4}>
-                  {verifyContext.captureImagesSelected[capture.id] && (
-                    <CheckIcon />
-                  )}
-                </Paper>
-                <OptimizedImage
-                  src={capture.imageUrl}
-                  width={400}
-                  className={classes.cardMedia}
+            <Tooltip
+              key={capture.id}
+              placement="top"
+              arrow={true}
+              interactive
+              enterDelay={500}
+              enterNextDelay={500}
+              onMouseEnter={() => {
+                setDisableHoverListener(false);
+              }}
+              disableHoverListener={disableHoverListener}
+              classes={{
+                tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
+              }}
+              title={
+                <CaptureDetailTooltip
+                  capture={capture}
+                  showCaptureClick={handleShowCaptureDetail}
                 />
-              </CardContent>
+              }
+            >
+              <Card
+                onClick={(e) => handleCaptureClick(e, capture.id)}
+                id={`card_${capture.id}`}
+                className={classes.card}
+                elevation={capture.placeholder ? 0 : 3}
+              >
+                <CardContent className={classes.cardContent}>
+                  <Paper className={classes.cardCheckbox} elevation={4}>
+                    {verifyContext.captureImagesSelected[capture.id] && (
+                      <CheckIcon />
+                    )}
+                  </Paper>
+                  <OptimizedImage
+                    src={capture.imageUrl}
+                    width={isImagesLarge ? 400 : 250}
+                    className={classes.cardMedia}
+                    alertWidth="100%"
+                    alertHeight="200%"
+                    alertPosition="absolute"
+                    alertPadding="5rem 0 0 1rem"
+                    alertTitleSize="1.6rem"
+                    alertTextSize="1rem"
+                  />
+                </CardContent>
 
-              <Grid justify="center" container className={classes.cardActions}>
-                <Grid item>
-                  <IconButton
-                    onClick={(e) => handleShowGrowerDetail(e, capture)}
-                    aria-label={`Grower details`}
-                    title={`Grower details`}
-                  >
-                    <Person color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={(e) => handleShowCaptureDetail(e, capture)}
-                    aria-label={`Capture details`}
-                    title={`Capture details`}
-                  >
-                    <Nature color="primary" />
-                  </IconButton>
-                  <IconButton
-                    variant="link"
-                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
-                    target="_blank"
-                    onClick={(e) => handleCapturePinClick(e, capture.id)}
-                    aria-label={`Capture location`}
-                    title={`Capture location`}
-                  >
-                    <LocationOn color="primary" />
-                  </IconButton>
-                  <IconButton
-                    variant="link"
-                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
-                    target="_blank"
-                    onClick={(e) => handleGrowerMapClick(e, capture.planterId)}
-                    aria-label={`Grower map`}
-                    title={`Grower map`}
-                  >
-                    <Map color="primary" />
-                  </IconButton>
+                <Grid
+                  justify="center"
+                  container
+                  className={classes.cardActions}
+                >
+                  <Grid item>
+                    <IconButton
+                      onClick={(e) => handleShowGrowerDetail(e, capture)}
+                      aria-label={`Grower details`}
+                      title={`Grower details`}
+                    >
+                      <Person color="primary" />
+                    </IconButton>
+                    <IconButton
+                      onClick={(e) => handleShowCaptureDetail(e, capture)}
+                      aria-label={`Capture details`}
+                      title={`Capture details`}
+                    >
+                      <Nature color="primary" />
+                    </IconButton>
+                    <IconButton
+                      variant="link"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
+                      target="_blank"
+                      onClick={(e) => handleCapturePinClick(e, capture.id)}
+                      aria-label={`Capture location`}
+                      title={`Capture location`}
+                    >
+                      <LocationOn color="primary" />
+                    </IconButton>
+                    <IconButton
+                      variant="link"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
+                      target="_blank"
+                      onClick={(e) =>
+                        handleGrowerMapClick(e, capture.planterId)
+                      }
+                      aria-label={`Grower map`}
+                      title={`Grower map`}
+                    >
+                      <Map color="primary" />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
+              </Card>
+            </Tooltip>
           </div>
         </Grid>
       );
     });
+
+  /*=============================================================*/
 
   function handleFilterClick() {
     if (isFilterShown) {
@@ -389,7 +531,38 @@ const Verify = (props) => {
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Captures per page:"
+      className={classes.pagination}
     />
+  );
+
+  let imageSizeControl = (
+    <>
+      <Typography className={classes.imageSizeLabel}>Images:</Typography>
+
+      <ToggleButtonGroup
+        value={isImagesLarge === true ? 'large' : 'small'}
+        exclusive
+        aria-label="image size"
+      >
+        <ToggleButton
+          value="small"
+          aria-label="small"
+          onClick={() => setImagesLarge(false)}
+          className={classes.imageSizeToggle}
+        >
+          Small
+        </ToggleButton>
+
+        <ToggleButton
+          value="large"
+          aria-label="large"
+          onClick={() => setImagesLarge(true)}
+          className={classes.imageSizeToggle}
+        >
+          Large
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </>
   );
 
   return (
@@ -447,7 +620,15 @@ const Verify = (props) => {
                   alignItems="center"
                   className={classes.title}
                 >
-                  <Grid item>
+                  <Grid
+                    style={{
+                      display: 'flex',
+                      flexGrow: 1,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                    item
+                  >
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
@@ -456,8 +637,13 @@ const Verify = (props) => {
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
                     </Typography>
+
+                    <div style={{ display: 'flex' }}>{imageSizeControl}</div>
                   </Grid>
-                  <Grid item>{imagePagination}</Grid>
+
+                  <Grid item className={classes.paginationContainer}>
+                    {imagePagination}
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid
@@ -466,7 +652,12 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid container className={classes.wrapper} spacing={1}>
+                <Grid
+                  container
+                  className={classes.wrapper}
+                  spacing={2}
+                  ref={refCaptureImageContainer}
+                >
                   {captureImageItems}
                 </Grid>
               </Grid>
