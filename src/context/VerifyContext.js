@@ -115,7 +115,7 @@ export function VerifyProvider(props) {
     }
 
     if (approveAction.tags) {
-      await api.createCaptureTags(capture, approveAction.tags);
+      await api.createCaptureTags(capture.id, approveAction.tags);
     }
 
     return true;

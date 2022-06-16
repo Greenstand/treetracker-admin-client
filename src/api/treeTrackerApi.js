@@ -83,7 +83,6 @@ export default {
     age
     // captureApprovalTag,
     // speciesId
-    // tags
   ) {
     try {
       const newCapture = {
@@ -101,7 +100,6 @@ export default {
         morphology,
         // species_id: speciesId, // need uuid
         // captureApprovalTag,  // how does this fit into the new API?
-        // tags, // causing errors right now
       };
 
       log.debug('newCapture data', newCapture);
@@ -120,7 +118,6 @@ export default {
           morphology,
           // species_id: speciesId, // need uuid
           // captureApprovalTag,  // how does this fit into the new API?
-          // tags, // causing errors right now}),
         }),
       }).then(handleResponse);
 
@@ -453,23 +450,19 @@ export default {
   /*
    * Capture Tags
    */
-  createCaptureTags(captureId, tags) {
+  createCaptureTags(capture_id, tags) {
+    log.debug('createCaptureTags ---> ', capture_id, tags);
     try {
-      return tags.map((t) => {
-        const query = `${API_ROOT}/api/tree_tags`;
+      const query = `${TREETRACKER_API}/captures/${capture_id}/tags`;
 
-        return fetch(query, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            Authorization: session.token,
-          },
-          body: JSON.stringify({
-            treeId: captureId,
-            tagId: t.id,
-          }),
-        }).then(handleResponse);
-      });
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify({ tags }),
+      }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
