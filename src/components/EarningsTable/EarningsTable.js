@@ -8,7 +8,6 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
-// import log from 'loglevel';
 /**
  * @constant
  * @name earningTableMetaData
@@ -122,6 +121,7 @@ function EarningsTable() {
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [selectedEarning, setSelectedEarning] = useState(null);
+  const [isDetailShown, setDetailShown] = useState(false);
 
   async function getEarnings(fetchAll = false) {
     // console.warn('getEarnings with fetchAll: ', fetchAll);
@@ -200,7 +200,7 @@ function EarningsTable() {
       openMainFilter={handleOpenMainFilter}
       openDateFilter={handleOpenDateFilter}
       handleGetData={getEarnings}
-      setSelectedRow={setSelectedEarning}
+      setSelectedRow={(value)=>{setSelectedEarning(value); setDetailShown(true)}}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       activeFiltersCount={
@@ -236,9 +236,10 @@ function EarningsTable() {
       rowDetails={
         selectedEarning ? (
           <CustomTableItemDetails
+              open={isDetailShown}
             selectedItem={selectedEarning}
-            closeDetails={() => setSelectedEarning(null)}
             refreshData={getEarnings}
+            onClose={()=>{setDetailShown(false); setSelectedEarning(null)}}
           />
         ) : null
       }
