@@ -9,7 +9,7 @@ import { TagsContext, TagsProvider } from '../../context/TagsContext';
 import Verify from '../Verify';
 import CaptureTags from '../CaptureTags';
 import CaptureFilter from '../CaptureFilter';
-import { ORGS, TAGS, tagsValues } from './fixtures';
+import { ORGS, TAGS, CAPTURE_TAGS, tagsValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/tags.test');
@@ -26,22 +26,23 @@ describe('tags', () => {
 
     // TAGS CONTEXT
     api.getTags = jest.fn((filter) => {
-      log.debug('mock getTags:');
-      return Promise.resolve(TAGS);
+      // log.debug('mock getTags:');
+      return Promise.resolve({ tags: TAGS });
     });
 
     tagsValues.setTagInput = jest.fn((filter) => {
-      log.debug('mock setTagInput:');
+      // log.debug('mock setTagInput:');
       return Promise.resolve(['newly_created_tag']);
     });
 
     api.createTag = jest.fn((tagName) => {
-      log.debug('mock createTag');
+      // log.debug('mock createTag');
       return Promise.resolve({
         id: 2,
         name: 'new_tag',
-        public: true,
-        active: true,
+        isPublic: true,
+        status: 'active',
+        owner_id: null,
       });
     });
   });
@@ -55,7 +56,7 @@ describe('tags', () => {
           </TagsProvider>
         );
 
-        await act(() => api.getTags());
+        await act(async () => await api.getTags());
       });
 
       afterEach(cleanup);
@@ -117,7 +118,7 @@ describe('tags', () => {
         </ThemeProvider>
       );
 
-      await act(() => api.getTags());
+      await act(async () => await api.getTags());
     });
 
     afterEach(cleanup);
@@ -166,27 +167,20 @@ describe('tags', () => {
         </AppProvider>
       );
 
-      await act(() => api.getTags());
+      await act(async () => await api.getTags());
     });
 
     afterEach(cleanup);
 
     describe('filter top', () => {
       it('renders subcomponents of filter top', () => {
-        // const filter = screen.getByRole('button', { name: /filter/i });
-        // userEvent.click(filter);
-
-        expect(
-          screen.getByLabelText(/verification status/i)
-        ).toBeInTheDocument();
-
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
-        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
+        expect(screen.getByLabelText('Grower Account ID')).toBeInTheDocument();
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/wallet/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/tag/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
@@ -212,7 +206,7 @@ describe('tags', () => {
         // screen.logTestingPlaygroundURL();
         const options = await screen.findAllByRole('option');
         const tags = options.map((option) => option.textContent);
-        console.log('tags', tags);
+        log.debug('tags', tags);
 
         expect(tags[0]).toBe('tag_a');
         expect(tags[1]).toBe('tag_b');
@@ -274,7 +268,7 @@ describe('tags', () => {
   //     });
 
   //     it('api.createTag should be called with newly_created_tag', () => {
-  //       console.log('createTag mock calls 1', api.createTag.mock.calls);
+  //       log.debug('createTag mock calls 1', api.createTag.mock.calls);
   //       // screen.logTestingPlaygroundURL();
   //       expect(api.createTag.mock.calls[0][0]).toBe('newly_created_tag');
   //     });

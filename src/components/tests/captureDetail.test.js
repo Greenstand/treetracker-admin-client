@@ -55,7 +55,7 @@ describe('captureDetail', () => {
                 <CaptureDetailDialog
                   open={true}
                   // TransitionComponent={transition}
-                  capture={{ id: 0 }}
+                  capture={CAPTURE}
                 />
               </CaptureDetailProvider>
             </AppProvider>
@@ -63,20 +63,16 @@ describe('captureDetail', () => {
         </ThemeProvider>
       );
 
-      await act(() => api.getCaptureById());
+      await act(
+        async () => await api.getCaptureById('11942400-6617-4c6c-bf5e')
+      );
     });
 
     afterEach(cleanup);
 
     describe('query captureDetail', () => {
-      beforeEach(async () => {
-        // await CapturesContext.getCaptureDetail(0);
-      });
-
       it('loaded captureDetail', () => {
-        // screen.logTestingPlaygroundURL();
-        expect(screen.getByText(/grower@some.place/i));
-        expect(screen.getByText(/new_tree/i));
+        expect(screen.getByText(/grower1@some.place/i));
         expect(screen.getByText(/simple_leaf/i));
       });
     });
