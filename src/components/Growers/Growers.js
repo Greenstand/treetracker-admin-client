@@ -34,7 +34,7 @@ const Growers = (props) => {
   function handleGrowerClick(grower) {
     setDetailShown(true);
     setGrowerDetail(grower);
-    setDisableHoverListener(true);
+    setDisableHoverListener(false);
   }
 
   const placeholderGrowers = Array(growerContext.pageSize)
