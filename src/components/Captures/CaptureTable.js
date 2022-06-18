@@ -213,6 +213,8 @@ const CaptureTable = () => {
     );
   };
 
+  const enableTooltips = process.env.REACT_APP_ENABLE_TOOLTIPS === 'true';
+
   return (
     <Grid style={{ height: '100%', overflow: 'auto', textAlign: 'center' }}>
       <Grid
@@ -267,9 +269,11 @@ const CaptureTable = () => {
         </TableHead>
         <TableBody data-testid="captures-table-body">
           {isLoading && !captures?.length ? (
-            <Grid item container className={classes.loadingIndicator}>
-              <CircularProgress />
-            </Grid>
+            <TableRow className={classes.loadingIndicator}>
+              <TableCell className={classes.loadingIndicator}>
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
           ) : (
             <>
               {captures &&
@@ -288,10 +292,14 @@ const CaptureTable = () => {
                       arrow: classes.arrow,
                     }}
                     title={
-                      <CaptureTooltip
-                        capture={capture}
-                        toggleDrawer={createToggleDrawerHandler}
-                      />
+                      enableTooltips ? (
+                        <CaptureTooltip
+                          capture={capture}
+                          toggleDrawer={createToggleDrawerHandler}
+                        />
+                      ) : (
+                        ''
+                      )
                     }
                   >
                     <TableRow

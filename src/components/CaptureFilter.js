@@ -8,12 +8,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import SelectOrg from './common/SelectOrg';
 import FilterModel, {
   ALL_SPECIES,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
-  ORGANIZATION_NOT_SET,
-  // TAG_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -31,7 +30,6 @@ import {
   verificationStatesArr,
   datePickerDefaultMinDate,
 } from '../common/variables';
-import { AppContext } from '../context/AppContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';
@@ -78,7 +76,6 @@ const styles = (theme) => {
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
   const dateStartDefault = null;
@@ -198,30 +195,6 @@ function Filter(props) {
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   }
-
-  const defaultOrgList = userHasOrg
-    ? [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-      ]
-    : [
-        {
-          id: ALL_ORGANIZATIONS,
-          stakeholder_uuid: ALL_ORGANIZATIONS,
-          name: 'All',
-          value: 'All',
-        },
-        {
-          id: ORGANIZATION_NOT_SET,
-          stakeholder_uuid: ORGANIZATION_NOT_SET,
-          name: 'Not set',
-          value: null,
-        },
-      ];
 
   return (
     <>
@@ -398,12 +371,6 @@ function Filter(props) {
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
-                  // {
-                  //   id: TAG_NOT_SET,
-                  //   tagName: 'Not set',
-                  //   active: true,
-                  //   public: true,
-                  // },
                   ...tagsContext.tagList.filter((t) =>
                     t.tagName
                       .toLowerCase()
@@ -413,9 +380,6 @@ function Filter(props) {
                 value={tag}
                 defaultValue={'Not set'}
                 getOptionLabel={(tag) => {
-                  // if (tag === 'Not set') {
-                  //   return 'Not set';
-                  // }
                   return tag.tagName;
                 }}
                 onChange={(_oldVal, newVal) => {
@@ -436,35 +400,13 @@ function Filter(props) {
                 // clearOnBlur
                 // handleHomeEndKeys
               />
-              {
-                /* {!userHasOrg && ( }*/
-                <TextField
-                  data-testid="org-dropdown"
-                  select
-                  label="Organization"
-                  htmlFor="organization"
-                  id="organization"
-                  value={organizationId}
-                  onChange={(e) => {
-                    const org = orgList.find((o) => o.id === e.target.value);
-                    setStakeholderUUID(
-                      org ? org.stakeholder_uuid : e.target.value
-                    );
-                    setOrganizationId(e.target.value);
-                  }}
-                >
-                  {[...defaultOrgList, ...orgList].map((org) => (
-                    <MenuItem
-                      data-testid="org-item"
-                      key={org.id}
-                      value={org.id}
-                    >
-                      {org.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                //)
-              }
+              <SelectOrg
+                orgId={organizationId}
+                handleSelection={(org) => {
+                  setStakeholderUUID(org.stakeholder_uuid);
+                  setOrganizationId(org.id);
+                }}
+              />
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button

@@ -66,7 +66,6 @@ const SurveyCharts = ({ surveyId, setShowCharts }) => {
       })
       .catch((err) => {
         console.error('err:', err);
-        throw new Error('xxx');
       });
   }, [surveyId]);
 

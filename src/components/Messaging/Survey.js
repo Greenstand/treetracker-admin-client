@@ -272,7 +272,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
         name="title"
         value={title}
         onChange={handleChange}
-        required
+        {...(errors?.title && { error: true })}
       />
       {errors?.questions && (
         <Typography
@@ -295,6 +295,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             name="prompt"
             value={`question${num}`['prompt']}
             onChange={(e) => handleChange(e, `question${num}`)}
+            {...(errors?.questions && { error: true })}
           />
           <GSInputLabel text={`Question ${num} Answer Options`} />
           <TextField
@@ -304,6 +305,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             name="choiceOne"
             value={`question${num}`['choiceOne']}
             onChange={(e) => handleChange(e, `question${num}`)}
+            {...(errors?.questions && { error: true })}
           />
           <TextField
             className={input}
@@ -312,6 +314,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             name="choiceTwo"
             value={`question${num}`['choiceTwo']}
             onChange={(e) => handleChange(e, `question${num}`)}
+            {...(errors?.questions && { error: true })}
           />
           <TextField
             className={input}
@@ -320,6 +323,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             name="choiceThree"
             value={`question${num}`['choiceThree']}
             onChange={(e) => handleChange(e, `question${num}`)}
+            {...(errors?.questions && { error: true })}
           />
         </div>
       ))}
@@ -335,7 +339,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
             {errors.recipient}
           </Typography>
         )}
-        <FormControl fullWidth>
+        <FormControl fullWidth {...(errors?.recipient && { error: true })}>
           <GSInputLabel
             id="select-label"
             text={'Target Audience by Organization'}
@@ -358,11 +362,15 @@ const SurveyForm = ({ setToggleSurvey }) => {
             freeSolo
             sx={{ width: 300 }}
             renderInput={(params) => (
-              <TextField {...params} label="Select Organization" />
+              <TextField
+                {...params}
+                label="Select Organization"
+                {...(errors?.recipient && { error: true })}
+              />
             )}
           />
         </FormControl>
-        <FormControl fullWidth>
+        <FormControl fullWidth {...(errors?.recipient && { error: true })}>
           <GSInputLabel
             id="select-reg-label"
             text={'Target Audience by Region'}
@@ -385,7 +393,11 @@ const SurveyForm = ({ setToggleSurvey }) => {
             freeSolo
             sx={{ width: 300 }}
             renderInput={(params) => (
-              <TextField {...params} label="Select Region" />
+              <TextField
+                {...params}
+                label="Select Region"
+                {...(errors?.recipient && { error: true })}
+              />
             )}
           />
         </FormControl>

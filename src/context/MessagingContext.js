@@ -104,6 +104,7 @@ export const MessagingProvider = (props) => {
       const authors = await api.getAuthors(organizationId);
       setAuthors(authors);
     } catch (error) {
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -112,7 +113,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.postRegion(payload);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -121,7 +122,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.getRegionById(id);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -130,7 +131,7 @@ export const MessagingProvider = (props) => {
     try {
       return api.postMessage(payload);
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -143,7 +144,7 @@ export const MessagingProvider = (props) => {
         throw 'Were sorry something went wrong. Please try again.';
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -156,7 +157,7 @@ export const MessagingProvider = (props) => {
         throw 'Whoops! There is something missing. Please check your message and try again';
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };
@@ -177,20 +178,21 @@ export const MessagingProvider = (props) => {
     try {
       log.debug('...load messages');
       const res = await api.getMessages(user.userName);
-      if (res.error) {
-        console.log(res.error);
+      if (!res.error) {
+        // check if grower sent a message from GrowerDetail and add it to top of messages
+        if (res && growerMessage) {
+          groupMessageByHandle([growerMessage, ...res.messages]);
+        } else {
+          groupMessageByHandle(res.messages);
+        }
+      } else {
+        if (res.status === 404 && res.message === 'Author handle not found') {
+          throw 'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.';
+        }
         throw 'Sorry, there was a problem loading your messages.';
       }
-
-      // check if grower sent a message and add it to top of messages
-      if (res && growerMessage) {
-        groupMessageByHandle([growerMessage, ...res.messages]);
-      } else {
-        groupMessageByHandle(res.messages);
-      }
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      setErrorMessage(error);
     }
   };
 
@@ -202,7 +204,7 @@ export const MessagingProvider = (props) => {
       const res = await api.getRegions(organizationId);
 
       if (res.error) {
-        console.log(res.error);
+        log.debug(res.error);
         throw 'Sorry, there was a problem loading your regions.';
       }
 
@@ -210,7 +212,7 @@ export const MessagingProvider = (props) => {
         setRegions(res.regions);
       }
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       setErrorMessage(error.message);
     }
   };

@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '16.x'
       - name: npm clean install
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}
       - name: build client project
         run: CI= REACT_APP_WEBMAP_DOMAIN=https://map.treetracker.org REACT_APP_API_ROOT=https://prod-k8s.treetracker.org/api/admin npm run build

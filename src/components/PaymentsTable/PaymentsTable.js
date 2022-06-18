@@ -138,6 +138,7 @@ function PaymentsTable() {
   const [totalPayments, setTotalPayments] = useState(0);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [snackBarMessage, setSnackBarMessage] = useState('');
+  const [isDetailShown, setDetailShown] = useState(false);
 
   async function getPayments() {
     setIsLoading(true); // show loading indicator when fetching data
@@ -214,7 +215,10 @@ function PaymentsTable() {
         openMainFilter={handleOpenMainFilter}
         openDateFilter={handleOpenDateFilter}
         handleGetData={getPayments}
-        setSelectedRow={setSelectedPayment}
+        setSelectedRow={(value) => {
+          setSelectedPayment(value);
+          setDetailShown(true);
+        }}
         selectedRow={selectedPayment}
         tableMetaData={paymentTableMetaData}
         headerTitle="Payments"
@@ -240,9 +244,14 @@ function PaymentsTable() {
         rowDetails={
           selectedPayment ? (
             <CustomTableItemDetails
+              open={isDetailShown}
               showLogPaymentForm={false}
               selectedItem={selectedPayment}
               closeDetails={() => setSelectedPayment(null)}
+              onClose={() => {
+                setDetailShown(false);
+                setSelectedPayment(null);
+              }}
             />
           ) : null
         }
