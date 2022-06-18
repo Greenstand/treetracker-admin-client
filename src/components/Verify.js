@@ -16,6 +16,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
 import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
 import Person from '@material-ui/icons/Person';
@@ -77,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   selected: {
     border: `2px ${selectedHighlightColor} solid`,
@@ -96,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   cardWrapper: {
     position: 'relative',
     padding: theme.spacing(2),
+    flex: '1 0 45%',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -151,6 +156,36 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 'smaller',
     fontWeight: 'bold',
   },
+  '@media (max-width: 1070px)': {
+    paginationContainer: {
+      '@media (max-width: 1070px)': {
+        display: 'flex',
+        flexGrow: 1,
+      },
+    },
+    pagination: {
+      width: '100%',
+    },
+  },
+  imageSizeLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.6875rem',
+    paddingRight: '.25rem',
+  },
+  imageSizeToggle: {
+    textTransform: 'none',
+    fontSize: '0.6875rem',
+    border: '1px solid',
+    borderColor: 'rgba(0, 0, 0, 0.25)',
+    color: 'black',
+    '&.Mui-selected': {
+      borderColor: theme.palette.action.active,
+    },
+    '&.Mui-selected span': {
+      color: theme.palette.stats.green,
+    },
+  },
 }));
 
 const Verify = (props) => {
@@ -161,6 +196,7 @@ const Verify = (props) => {
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
   const [disableHoverListener, setDisableHoverListener] = useState(false);
+  const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
     capture: {},
@@ -176,6 +212,7 @@ const Verify = (props) => {
   /*
    * effect to load page when mounted
    */
+
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
@@ -184,7 +221,6 @@ const Verify = (props) => {
 
   /* to display progress */
   useEffect(() => {
-    // console.log('-- approve all complete');
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
 
@@ -229,7 +265,6 @@ const Verify = (props) => {
     const speciesId = await speciesContext.getSpeciesId();
     if (speciesId) {
       approveAction.speciesId = speciesId;
-      console.log('species id:', speciesId);
     }
 
     /*
@@ -311,11 +346,65 @@ const Verify = (props) => {
         })
     : [];
 
+  /*=============================================================*/
+
+  const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(
+    0
+  );
+  const refCaptureImageContainer = useRef(0);
+
+  const handleResize = () => {
+    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
+  };
+
+  useEffect(() => {
+    handleResize();
+  }, [refCaptureImageContainer?.current?.clientWidth]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [window]);
+
+  // Calculate the number of captures per row based on the container width
+  // and whether large or small images are toggled
+
+  const containerWidth = captureImageContainerWidth || 100;
+  const minCaptureSize = isImagesLarge ? 350 : 250; // Shouldn't this be reversed?
+
+  const breakpoints = Array.from({ length: 16 }, (_, idx) => {
+    return minCaptureSize * (idx + 1);
+  });
+
+  // The index of the next breakpoint up from the container width
+  // gives the number of captures per row
+  const capturesPerRow = breakpoints.findIndex((val, idx) => {
+    if (idx === 0) {
+      return false;
+    }
+    if (
+      (idx === 1 && containerWidth <= val) ||
+      (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
+      (containerWidth > val && idx === breakpoints.length - 1)
+    ) {
+      return true;
+    }
+    return false;
+  });
+
   const captureImageItems = captureImages
     .concat(placeholderImages)
     .map((capture) => {
       return (
-        <Grid item xs={12} sm={6} md={4} xl={3} key={capture.id}>
+        <Grid
+          item
+          key={capture.id}
+          style={{
+            width: `calc(100% / ${capturesPerRow})`,
+          }}
+        >
           <div
             className={clsx(
               classes.cardWrapper,
@@ -332,7 +421,9 @@ const Verify = (props) => {
               interactive
               enterDelay={500}
               enterNextDelay={500}
-              onMouseEnter={() => {setDisableHoverListener(false)}}
+              onMouseEnter={() => {
+                setDisableHoverListener(false);
+              }}
               disableHoverListener={disableHoverListener}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
@@ -358,7 +449,7 @@ const Verify = (props) => {
                   </Paper>
                   <OptimizedImage
                     src={capture.imageUrl}
-                    width={400}
+                    width={isImagesLarge ? 400 : 250}
                     className={classes.cardMedia}
                     alertWidth="100%"
                     alertHeight="200%"
@@ -420,6 +511,8 @@ const Verify = (props) => {
       );
     });
 
+  /*=============================================================*/
+
   function handleFilterClick() {
     if (isFilterShown) {
       setFilterShown(false);
@@ -438,7 +531,38 @@ const Verify = (props) => {
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangePageSize}
       labelRowsPerPage="Captures per page:"
+      className={classes.pagination}
     />
+  );
+
+  let imageSizeControl = (
+    <>
+      <Typography className={classes.imageSizeLabel}>Images:</Typography>
+
+      <ToggleButtonGroup
+        value={isImagesLarge === true ? 'large' : 'small'}
+        exclusive
+        aria-label="image size"
+      >
+        <ToggleButton
+          value="small"
+          aria-label="small"
+          onClick={() => setImagesLarge(false)}
+          className={classes.imageSizeToggle}
+        >
+          Small
+        </ToggleButton>
+
+        <ToggleButton
+          value="large"
+          aria-label="large"
+          onClick={() => setImagesLarge(true)}
+          className={classes.imageSizeToggle}
+        >
+          Large
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </>
   );
 
   return (
@@ -496,7 +620,15 @@ const Verify = (props) => {
                   alignItems="center"
                   className={classes.title}
                 >
-                  <Grid item>
+                  <Grid
+                    style={{
+                      display: 'flex',
+                      flexGrow: 1,
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                    item
+                  >
                     <Typography variant="h5">
                       {verifyContext.captureCount !== null &&
                         `${countToLocaleString(
@@ -505,8 +637,13 @@ const Verify = (props) => {
                           verifyContext.captureCount === 1 ? '' : 's'
                         }`}
                     </Typography>
+
+                    <div style={{ display: 'flex' }}>{imageSizeControl}</div>
                   </Grid>
-                  <Grid item>{imagePagination}</Grid>
+
+                  <Grid item className={classes.paginationContainer}>
+                    {imagePagination}
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid
@@ -515,7 +652,12 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid container className={classes.wrapper} spacing={1}>
+                <Grid
+                  container
+                  className={classes.wrapper}
+                  spacing={2}
+                  ref={refCaptureImageContainer}
+                >
                   {captureImageItems}
                 </Grid>
               </Grid>

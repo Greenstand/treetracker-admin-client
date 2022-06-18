@@ -1,3 +1,88 @@
+# [1.96.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.1...v1.96.0) (2022-06-16)
+
+
+### Features
+
+* show user-entered organization name in the Edit Grower dialog ([#694](https://github.com/Greenstand/treetracker-admin-client/issues/694)) ([53cc644](https://github.com/Greenstand/treetracker-admin-client/commit/53cc6447e4918694dcd39bb541b41ff3959497e5))
+
+## [1.95.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.0...v1.95.1) (2022-06-16)
+
+
+### Bug Fixes
+
+* Earnings and Payments drawer ([#604](https://github.com/Greenstand/treetracker-admin-client/issues/604)) ([6a8cf62](https://github.com/Greenstand/treetracker-admin-client/commit/6a8cf620ca96ff495a26e26ce8582ecf0b0079b4)), closes [#597](https://github.com/Greenstand/treetracker-admin-client/issues/597) [#597](https://github.com/Greenstand/treetracker-admin-client/issues/597)
+
+# [1.95.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.4...v1.95.0) (2022-06-15)
+
+
+### Features
+
+* remove feature flags for earnings and payments ([#693](https://github.com/Greenstand/treetracker-admin-client/issues/693)) ([33f53cb](https://github.com/Greenstand/treetracker-admin-client/commit/33f53cb2d2f818dadac6e2e4177c05a99c18a5ae))
+
+## [1.94.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.3...v1.94.4) (2022-06-12)
+
+
+### Bug Fixes
+
+* grower tooltip jumping for errors ([#678](https://github.com/Greenstand/treetracker-admin-client/issues/678)) ([88403b6](https://github.com/Greenstand/treetracker-admin-client/commit/88403b6ba9ae2afecb5f0fba1dcc82c5dc5692b1))
+
+## [1.94.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.2...v1.94.3) (2022-06-12)
+
+
+### Bug Fixes
+
+* showing capturre id with copy icon if available ([#687](https://github.com/Greenstand/treetracker-admin-client/issues/687)) ([0ff42bb](https://github.com/Greenstand/treetracker-admin-client/commit/0ff42bbd975bcac5228e676376979936d599471e))
+
+## [1.94.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.1...v1.94.2) (2022-06-11)
+
+
+### Bug Fixes
+
+* ignore webpack warnings ([#688](https://github.com/Greenstand/treetracker-admin-client/issues/688)) ([2e73d2c](https://github.com/Greenstand/treetracker-admin-client/commit/2e73d2c663b367ca106e612028cd25ae65d931f4))
+
+## [1.94.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.94.0...v1.94.1) (2022-06-04)
+
+
+### Bug Fixes
+
+* temporarily disable features not prod-ready ([#677](https://github.com/Greenstand/treetracker-admin-client/issues/677)) ([f3f4cfd](https://github.com/Greenstand/treetracker-admin-client/commit/f3f4cfde766495cb0058875d2103dcdb0fbe5f05))
+
+# [1.94.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.2...v1.94.0) (2022-05-29)
+
+
+### Features
+
+* improve Regions UX ([#601](https://github.com/Greenstand/treetracker-admin-client/issues/601)) ([ca3a546](https://github.com/Greenstand/treetracker-admin-client/commit/ca3a54676b428a9917bbdd5b92457614ee6a094d))
+
+## [1.93.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.1...v1.93.2) (2022-05-29)
+
+
+### Bug Fixes
+
+* forget route when a user logs out explicit ([#658](https://github.com/Greenstand/treetracker-admin-client/issues/658)) ([7533e76](https://github.com/Greenstand/treetracker-admin-client/commit/7533e7615bde6465117083d71154d593c1ad8b23))
+
+## [1.93.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.93.0...v1.93.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* correctly attach additional tags to captures ([#671](https://github.com/Greenstand/treetracker-admin-client/issues/671)) ([5c48ffb](https://github.com/Greenstand/treetracker-admin-client/commit/5c48ffb7ac81ad52c742844888d8b676a0022da3))
+
+# [1.93.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.92.1...v1.93.0) (2022-05-23)
+
+
+### Bug Fixes
+
+* clean up for readability ([c4e1bae](https://github.com/Greenstand/treetracker-admin-client/commit/c4e1bae42684ece2a7957bc799839c48533f0a48))
+* improve error message for no admin config ([97aedf0](https://github.com/Greenstand/treetracker-admin-client/commit/97aedf08adadc209a3c089dfdf277d20214a8da3))
+* lint error and remove comments ([d05fb59](https://github.com/Greenstand/treetracker-admin-client/commit/d05fb5905693663768396b45ef32721112c49a86))
+
+
+### Features
+
+* add try/catch to handle errors at each api function ([b7007ba](https://github.com/Greenstand/treetracker-admin-client/commit/b7007ba2ffa2011a60c6c1c2d8e63dc0e7f484a6))
+* survey form error handling w/ mui ([c203944](https://github.com/Greenstand/treetracker-admin-client/commit/c203944c50e8cbd22c658db24445342c6c28308d))
+
 ## [1.92.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.92.0...v1.92.1) (2022-05-21)
 
 
