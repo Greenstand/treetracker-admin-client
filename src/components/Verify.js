@@ -332,9 +332,7 @@ const Verify = (props) => {
               interactive
               enterDelay={500}
               enterNextDelay={500}
-              onMouseEnter={() => {
-                setDisableHoverListener(false);
-              }}
+              onMouseEnter={() => setDisableHoverListener(false)}
               disableHoverListener={disableHoverListener}
               classes={{
                 tooltipPlacementTop: tooltipPositionStyles.tooltipTop,

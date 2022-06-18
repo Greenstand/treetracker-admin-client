@@ -105,7 +105,6 @@ function Filter(props) {
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-  const { isLoading } = useContext(SpeciesContext);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -333,7 +332,7 @@ function Filter(props) {
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
               >
-                {isLoading ? (
+                {speciesContext.isLoading ? (
                   <CircularProgress />
                 ) : (
                   [

@@ -19,11 +19,10 @@ const styles = () => {
 function Species(props) {
   // Verify also uses speciesInput so keep it on context
   const speciesContext = useContext(SpeciesContext);
-  const { isLoading } = useContext(SpeciesContext);
 
   return (
     <>
-      {isLoading ? (
+      {speciesContext.isLoading ? (
         <CircularProgress size={30} />
       ) : (
         <Autocomplete

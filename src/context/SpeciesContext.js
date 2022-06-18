@@ -41,10 +41,8 @@ export function SpeciesProvider(props) {
 
   // only used by Species dropdown
   const onChange = async (text) => {
-    // setIsLoading(true);
     console.log('on change:"', text, '"');
     setSpeciesInput(text);
-    // setIsLoading(false);
   };
 
   // only used by Verify
@@ -109,7 +107,6 @@ export function SpeciesProvider(props) {
 
   const value = {
     isLoading,
-    // setIsLoading,
     speciesList,
     speciesInput,
     setSpeciesInput,

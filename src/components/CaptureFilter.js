@@ -77,7 +77,6 @@ const styles = (theme) => {
 
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
-  const { isLoading } = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { orgList, userHasOrg } = useContext(AppContext);
   const { classes, filter = new FilterModel() } = props;
@@ -369,7 +368,7 @@ function Filter(props) {
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
               >
-                {isLoading ? (
+                {speciesContext.isLoading ? (
                   <CircularProgress />
                 ) : (
                   [
