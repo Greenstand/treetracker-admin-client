@@ -5,6 +5,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/SpeciesContext');
 
 export const SpeciesContext = createContext({
+  isLoading: false,
   speciesList: [],
   speciesInput: '',
   setSpeciesInput: () => {},
@@ -21,6 +22,7 @@ export const SpeciesContext = createContext({
 export function SpeciesProvider(props) {
   const [speciesList, setSpeciesList] = useState([]);
   const [speciesInput, setSpeciesInput] = useState(''); // only used by Species dropdown and Verify
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -31,8 +33,10 @@ export function SpeciesProvider(props) {
   // EVENT HANDLERS
 
   const loadSpeciesList = async (abortController) => {
+    setIsLoading(true);
     const species = await api.getSpecies(abortController);
     setSpeciesList(species);
+    setIsLoading(false);
   };
 
   // only used by Species dropdown
@@ -51,10 +55,10 @@ export function SpeciesProvider(props) {
     log.debug(
       'to find species %s in list:%d',
       speciesInput,
-      speciesList.length,
+      speciesList.length
     );
     return speciesList.every(
-      (c) => c.name.toLowerCase() !== speciesInput.toLowerCase(),
+      (c) => c.name.toLowerCase() !== speciesInput.toLowerCase()
     );
   };
 
@@ -63,7 +67,7 @@ export function SpeciesProvider(props) {
       payload || {
         name: speciesInput,
         desc: '',
-      },
+      }
     );
     console.debug('created new species:', species);
     setSpeciesList([species, ...speciesList]);
@@ -102,6 +106,7 @@ export function SpeciesProvider(props) {
   };
 
   const value = {
+    isLoading,
     speciesList,
     speciesInput,
     setSpeciesInput,

@@ -31,6 +31,7 @@ import {
 import { getVerificationStatus } from '../common/utils';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
 
@@ -305,22 +306,26 @@ function Filter(props) {
                 value={speciesId}
                 onChange={(e) => setSpeciesId(e.target.value)}
               >
-                {[
-                  { id: ALL_SPECIES, name: 'All' },
-                  {
-                    id: SPECIES_NOT_SET,
-                    name: 'Not set',
-                  },
-                  ...speciesContext.speciesList,
-                ].map((species) => (
-                  <MenuItem
-                    data-testid="species-item"
-                    key={species.id}
-                    value={species.id}
-                  >
-                    {species.name}
-                  </MenuItem>
-                ))}
+                {speciesContext.isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  [
+                    { id: ALL_SPECIES, name: 'All' },
+                    {
+                      id: SPECIES_NOT_SET,
+                      name: 'Not set',
+                    },
+                    ...speciesContext.speciesList,
+                  ].map((species) => (
+                    <MenuItem
+                      data-testid="species-item"
+                      key={species.id}
+                      value={species.id}
+                    >
+                      {species.name}
+                    </MenuItem>
+                  ))
+                )}
               </TextField>
               <Autocomplete
                 data-testid="tag-dropdown"

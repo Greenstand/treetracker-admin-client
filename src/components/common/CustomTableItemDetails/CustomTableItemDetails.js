@@ -153,7 +153,13 @@ LogPaymentForm.propTypes = {
  * @returns {React.Component}
  */
 function CustomTableItemDetails(props) {
-  const { selectedItem, refreshData, showLogPaymentForm, onClose, open } = props;
+  const {
+    selectedItem,
+    refreshData,
+    showLogPaymentForm,
+    onClose,
+    open,
+  } = props;
   const [userName, setUserName] = useState('');
   const classes = useStyles();
 

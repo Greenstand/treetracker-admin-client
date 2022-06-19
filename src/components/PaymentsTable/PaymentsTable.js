@@ -215,7 +215,10 @@ function PaymentsTable() {
         openMainFilter={handleOpenMainFilter}
         openDateFilter={handleOpenDateFilter}
         handleGetData={getPayments}
-        setSelectedRow={(value)=>{setSelectedPayment(value); setDetailShown(true)}}
+        setSelectedRow={(value) => {
+          setSelectedPayment(value);
+          setDetailShown(true);
+        }}
         selectedRow={selectedPayment}
         tableMetaData={paymentTableMetaData}
         headerTitle="Payments"
@@ -241,11 +244,14 @@ function PaymentsTable() {
         rowDetails={
           selectedPayment ? (
             <CustomTableItemDetails
-                open={isDetailShown}
+              open={isDetailShown}
               showLogPaymentForm={false}
               selectedItem={selectedPayment}
               closeDetails={() => setSelectedPayment(null)}
-                onClose={()=>{setDetailShown(false); setSelectedPayment(null)}}
+              onClose={() => {
+                setDetailShown(false);
+                setSelectedPayment(null);
+              }}
             />
           ) : null
         }

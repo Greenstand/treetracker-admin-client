@@ -23,6 +23,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
+  CircularProgress,
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -121,6 +122,7 @@ const SpeciesTable = (props) => {
   const { classes } = props;
   const sortOptions = { byId: 'id', byName: 'name' };
   const speciesContext = useContext(SpeciesContext);
+  const { isLoading } = useContext(SpeciesContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [isEdit, setIsEdit] = useState(false);
@@ -302,7 +304,14 @@ const SpeciesTable = (props) => {
                     <TableCell>Operations</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>{renderSpecies()}</TableBody>
+                {isLoading ? (
+                  <Grid item container className={classes.loadingIndicator}>
+                    <CircularProgress />
+                  </Grid>
+                ) : (
+                  <TableBody>{renderSpecies()}</TableBody>
+                )}
+
                 <TableFooter>
                   <TableRow>{tablePagination()}</TableRow>
                 </TableFooter>

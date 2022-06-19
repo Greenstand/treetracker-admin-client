@@ -20,7 +20,7 @@ const GrowerTooltip = ({ grower, growerClick }) => {
     },
     label: {
       marginLeft: '12px',
-    }
+    },
   }));
 
   const growerToolTipStyles = useStyles();
@@ -53,11 +53,10 @@ const GrowerTooltip = ({ grower, growerClick }) => {
                     src={grower.imageUrl}
                     style={{
                       height: '24px',
-                      width: '24px',  
+                      width: '24px',
                     }}
                   />
-                ) : 
-                (
+                ) : (
                   <Person
                     className={classes.person}
                     style={{

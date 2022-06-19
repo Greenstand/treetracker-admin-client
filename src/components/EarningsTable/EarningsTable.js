@@ -200,7 +200,10 @@ function EarningsTable() {
       openMainFilter={handleOpenMainFilter}
       openDateFilter={handleOpenDateFilter}
       handleGetData={getEarnings}
-      setSelectedRow={(value)=>{setSelectedEarning(value); setDetailShown(true)}}
+      setSelectedRow={(value) => {
+        setSelectedEarning(value);
+        setDetailShown(true);
+      }}
       selectedRow={selectedEarning}
       tableMetaData={earningTableMetaData}
       activeFiltersCount={
@@ -236,10 +239,13 @@ function EarningsTable() {
       rowDetails={
         selectedEarning ? (
           <CustomTableItemDetails
-              open={isDetailShown}
+            open={isDetailShown}
             selectedItem={selectedEarning}
             refreshData={getEarnings}
-            onClose={()=>{setDetailShown(false); setSelectedEarning(null)}}
+            onClose={() => {
+              setDetailShown(false);
+              setSelectedEarning(null);
+            }}
           />
         ) : null
       }

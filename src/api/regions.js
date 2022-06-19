@@ -4,7 +4,6 @@ import { session } from '../models/auth';
 export default {
   getItem(type, id) {
     try {
-      
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
 
       return fetch(query, {
