@@ -1,3 +1,10 @@
+# [1.97.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.96.0...v1.97.0) (2022-06-19)
+
+
+### Features
+
+* species loading animation ([#690](https://github.com/Greenstand/treetracker-admin-client/issues/690)) ([a3d8c67](https://github.com/Greenstand/treetracker-admin-client/commit/a3d8c679689656138a9b118b182e64e1b101124a))
+
 # [1.96.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.95.1...v1.96.0) (2022-06-16)
 
 ### Features
