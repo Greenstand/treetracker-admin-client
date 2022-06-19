@@ -1,3 +1,10 @@
+## [1.97.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.0...v1.97.1) (2022-06-19)
+
+
+### Bug Fixes
+
+* opening Grower Details dismisses hovered quick-look details ([#698](https://github.com/Greenstand/treetracker-admin-client/issues/698)) ([ed7b2cb](https://github.com/Greenstand/treetracker-admin-client/commit/ed7b2cb9a00f3fc56bb1e600d16e64b6e3a19145))
+
 # [1.97.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.96.0...v1.97.0) (2022-06-19)
 
 
