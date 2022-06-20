@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import StakeholderDetail from './StakeholderDetail/StakeholderDetail';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
+import log from 'loglevel';
 
 const useStyles = makeStyles({
   placeholder: {
@@ -49,18 +50,29 @@ function StakeholderTable() {
       sorted = stakeholders.sort((a, b) => {
         let first = a[col];
         let second = b[col];
+        log.debug(`sort: ${col} ${first} ${second}`);
+        // prepare to sort if it's any kind of name
         if (col === 'name') {
-          first = `${a.org_name} ${a.first_name} ${a.lastname}`.trim();
-          second = `${b.org_name} ${b.first_name} ${b.lastname}`.trim();
+          first = `${a.org_name || ''} ${a.first_name || ''} ${
+            a.last_name || ''
+          }`.trim();
+          second = `${b.org_name || ''} ${b.first_name || ''} ${
+            b.last_name || ''
+          }`.trim();
         }
         const orderVal = order === 'desc' ? -1 : 1;
-        const sortVal = first.localeCompare(second);
-        return sortVal * orderVal ? sortVal : orderVal;
+        let sortVal = 0;
+        if (first && second) {
+          sortVal = first.localeCompare(second);
+        } else {
+          // if one of them is null, sort it to the end
+          sortVal = (first || '') > (second || '') ? 1 : -1;
+        }
+        return sortVal * orderVal;
       });
     } else {
       sorted = stakeholders;
     }
-
     return sorted;
   };
 
