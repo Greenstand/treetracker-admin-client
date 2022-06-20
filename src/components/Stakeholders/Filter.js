@@ -15,6 +15,7 @@ import FilterModel from '../../models/FilterStakeholder';
 import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
+import { localeSort } from '../../common/utils';
 
 const useStyles = makeStyles({
   root: {
@@ -60,14 +61,23 @@ function StakeholderFilter() {
       org.website && websites.add(org.website);
       org.map && maps.add(org.map);
     });
+    // setFilters({
+    //   orgNames: Array.from(orgNames).sort(),
+    //   firstNames: Array.from(firstNames).sort(),
+    //   lastNames: Array.from(lastNames).sort(),
+    //   emails: Array.from(emails).sort(),
+    //   phones: Array.from(phones).sort(),
+    //   websites: Array.from(websites).sort(),
+    //   maps: Array.from(maps).sort(),
+    // });
     setFilters({
-      orgNames: Array.from(orgNames).sort(),
-      firstNames: Array.from(firstNames).sort(),
-      lastNames: Array.from(lastNames).sort(),
-      emails: Array.from(emails).sort(),
-      phones: Array.from(phones).sort(),
-      websites: Array.from(websites).sort(),
-      maps: Array.from(maps).sort(),
+      orgNames: localeSort(Array.from(orgNames)),
+      firstNames: localeSort(Array.from(firstNames)),
+      lastNames: localeSort(Array.from(lastNames)),
+      emails: localeSort(Array.from(emails)),
+      phones: localeSort(Array.from(phones)),
+      websites: localeSort(Array.from(websites)),
+      maps: localeSort(Array.from(maps)),
     });
   }, [stakeholders?.length]);
 
