@@ -50,23 +50,17 @@ function StakeholderTable() {
         let first = a[col];
         let second = b[col];
         if (col === 'name') {
-          first = `${a.org_name} ${a.first_name} ${a.lastname}`;
-          second = `${b.org_name} ${b.first_name} ${b.lastname}`;
+          first = `${a.org_name} ${a.first_name} ${a.lastname}`.trim();
+          second = `${b.org_name} ${b.first_name} ${b.lastname}`.trim();
         }
-        return (
-          (first.trim() > second.trim() ? 1 : -1) * (order === 'desc' ? -1 : 1)
-        );
+        const orderVal = order === 'desc' ? -1 : 1;
+        const sortVal = first.localeCompare(second);
+        return sortVal * orderVal ? sortVal : orderVal;
       });
     } else {
       sorted = stakeholders;
     }
-    // log.debug(
-    //   'sorted',
-    //   sorted.map((s) => {
-    //     const { org_name, first_name, last_name, email, phone, map } = s;
-    //     return { org_name, first_name, last_name, email, phone, map };
-    //   })
-    // );
+
     return sorted;
   };
 

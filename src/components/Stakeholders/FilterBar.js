@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   spaceBetween: {
     justifyContent: 'space-between',
   },
-  my: {
+  margin: {
     marginTop: '3rem',
     marginBottom: '2rem',
   },
@@ -21,7 +21,9 @@ export default function StakeholderFilterBar() {
   const classes = useStyles();
 
   return (
-    <div className={`${classes.flex} ${classes.spaceBetween} ${classes.my}`}>
+    <div
+      className={`${classes.flex} ${classes.spaceBetween} ${classes.margin}`}
+    >
       <div>
         <StakeholderFilter />
       </div>

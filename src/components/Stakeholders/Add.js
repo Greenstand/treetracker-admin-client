@@ -226,6 +226,7 @@ function AddStakeholder() {
                 label="Email"
                 variant="outlined"
                 name="email"
+                type="email"
                 onChange={handleChange}
                 value={data.email}
               />
@@ -238,7 +239,7 @@ function AddStakeholder() {
                 label="Phone"
                 variant="outlined"
                 name="phone"
-                type="number"
+                type="tel"
                 onChange={handleChange}
                 value={data.phone}
                 onKeyDown={handleEnterPress}
@@ -250,6 +251,7 @@ function AddStakeholder() {
                 label="Website"
                 variant="outlined"
                 name="website"
+                type="url"
                 onChange={handleChange}
                 value={data.website}
                 onKeyDown={handleEnterPress}
@@ -258,9 +260,10 @@ function AddStakeholder() {
             <FormControl xs={12} sm={6} className={classes.root}>
               <TextField
                 className={classes.textField}
-                label="Logo Url"
+                label="Logo URL"
                 variant="outlined"
                 name="logo_url"
+                type="url"
                 onChange={handleChange}
                 value={data.logo_url}
                 onKeyDown={handleEnterPress}
