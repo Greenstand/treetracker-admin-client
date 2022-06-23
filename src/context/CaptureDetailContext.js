@@ -37,15 +37,17 @@ export function CaptureDetailProvider(props) {
   // EVENT HANDLERS
 
   const getCaptureDetail = async (url, id) => {
-    if (id == null) {
-      log.debug('getCapture called with no id');
-      return Promise.resolve(STATE_EMPTY.capture);
-    }
+    // if (id == null) {
+    //   log.debug('getCapture called with no id');
+    //   return Promise.resolve(STATE_EMPTY.capture);
+    // }
 
-    return api.getCaptureById(url, id).then((capture) => {
-      setState({ ...state, capture });
-      return capture;
-    });
+    if (id) {
+      return api.getCaptureById(url, id).then((capture) => {
+        setState({ ...state, capture });
+        return capture;
+      });
+    }
   };
 
   const getSpecies = async (speciesId) => {
