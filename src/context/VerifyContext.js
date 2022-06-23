@@ -105,7 +105,7 @@ export function VerifyProvider(props) {
       await api.approveCaptureImage(
         capture,
         approveAction.morphology,
-        approveAction.age,
+        // approveAction.age,
         approveAction.captureApprovalTag
         // approveAction.speciesId
       );
@@ -191,7 +191,7 @@ export function VerifyProvider(props) {
   };
 
   const approveAll = async (approveAction) => {
-    log.debug('approveAll with approveAction:', approveAction);
+    // log.debug('approveAll with approveAction:', approveAction);
     setIsLoading(true);
     setIsApproveAllProcessing(true);
     setIsBulkApproving(approveAction.isApproved);
@@ -211,8 +211,8 @@ export function VerifyProvider(props) {
             return a;
           }
         }, undefined);
-        log.debug('approveAll:', capture);
-        log.trace('approveAll:', capture.id);
+        // log.debug('approveAll:', capture);
+        // log.trace('approveAll:', capture.id);
         await approve({
           capture,
           approveAction,

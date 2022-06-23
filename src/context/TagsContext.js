@@ -39,8 +39,15 @@ export function TagsProvider(props) {
       owner_id: orgId,
     };
     log.debug('create tags:', tagInput);
+    // const tags = new Set(tagList);
     const promises = tagInput.map(async (t) => {
-      return api.createTag({ ...newTagTemplate, name: t });
+      // check if tag already exists
+      const existingTag = tagList.find((tag) => tag.name === t);
+      log.debug('check if tag already exists:', !!existingTag, t);
+      if (!existingTag) {
+        return api.createTag({ ...newTagTemplate, name: t });
+      }
+      return existingTag;
     });
     const savedTags = await Promise.all(promises);
     log.debug('savedTags:', savedTags);
