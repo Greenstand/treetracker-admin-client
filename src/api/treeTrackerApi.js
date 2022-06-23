@@ -50,8 +50,7 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
-      console.log('loadCaptureImages filter -->', filter);
-      console.log('loadCaptureImages where -->', where);
+      log.debug('loadCaptureImages filter -->', filter);
       // const id = getOrganizationUUID();
       const filterObj = {
         ...where,
@@ -60,9 +59,6 @@ export default {
         offset: page * rowsPerPage,
       };
 
-      // const query = `${FIELD_DATA_API}/raw-captures${
-      //   id != null ? '/' + id : ''
-      // }${filterObj ? `?${makeQueryString(filterObj)}` : ''}`;
       const query = `${FIELD_DATA_API}/raw-captures${
         filterObj ? `?${this.makeQueryString(filterObj)}` : ''
       }`;
@@ -79,8 +75,8 @@ export default {
   },
   approveCaptureImage(
     capture,
-    morphology,
-    age
+    morphology
+    // age
     // captureApprovalTag,
     // speciesId
   ) {
@@ -96,7 +92,7 @@ export default {
         lon: capture.lon,
         gps_accuracy: capture.gps_accuracy,
         captured_at: capture.captured_at,
-        age: age === 'new_tree' ? 0 : 2, // TODO: need a real solution
+        // age,
         morphology,
         // species_id: speciesId, // need uuid
         // captureApprovalTag,  // how does this fit into the new API?
@@ -114,7 +110,7 @@ export default {
         body: JSON.stringify({
           id: capture.id,
           status: 'approved',
-          age: age === 'new_tree' ? 0 : 2, // TODO: need a real solution
+          // age,
           morphology,
           // species_id: speciesId, // need uuid
           // captureApprovalTag,  // how does this fit into the new API?
