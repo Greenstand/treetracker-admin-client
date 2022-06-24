@@ -303,7 +303,7 @@ function Account(props) {
               onChange={onChangeNewPwd}
               value={newPassword}
             />
-            <PasswordStrengthMeter fullWidth password={newPassword} />
+            <PasswordStrengthMeter password={newPassword} />
             <TextField
               variant="outlined"
               margin="normal"
