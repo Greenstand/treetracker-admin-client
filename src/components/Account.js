@@ -1,25 +1,26 @@
-import React, { lazy, Suspense, useState, useEffect, useContext } from 'react';
 import {
-  Grid,
-  Paper,
   Box,
   Button,
-  Typography,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
-  TextField,
   DialogTitle,
-  CircularProgress,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Menu from './common/Menu';
+import React, { Suspense, lazy, useContext, useEffect, useState } from 'react';
+
 import AccountIcon from '@material-ui/icons/Person';
 import { AppContext } from '../context/AppContext';
+import Menu from './common/Menu';
 import axios from 'axios';
-import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
+import { getDateTimeStringLocale } from '../common/locale';
 import { useHistory } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 const style = (theme) => ({
   accountContainer: {
@@ -302,7 +303,7 @@ function Account(props) {
               onChange={onChangeNewPwd}
               value={newPassword}
             />
-            <PasswordStrengthMeter password={newPassword} />
+            <PasswordStrengthMeter fullWidth password={newPassword} />
             <TextField
               variant="outlined"
               margin="normal"
