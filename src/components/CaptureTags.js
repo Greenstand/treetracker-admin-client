@@ -118,13 +118,11 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(tagsContext.tagInput.concat([chip]));
   };
 
-  const handleDeleteChip = (_chip) => {
-    const temp = tagsContext.tagInput;
-    const result = temp.filter((value) => value !== _chip);
-    tagsContext.setTagInput(result);
+  const handleDeleteChip = (_chip, index) => {
+    const temp = [...tagsContext.tagInput];
+    temp.splice(index, 1);
+    tagsContext.setTagInput(temp);
   };
-
-  // log.debug('tagList ----- ', tagsContext.tagList);
 
   return (
     <Autosuggest
