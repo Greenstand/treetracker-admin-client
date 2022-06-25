@@ -39,9 +39,7 @@ export function TagsProvider(props) {
       owner_id: orgId,
     };
     log.debug('create tags:', tagInput);
-    // const tags = new Set(tagList);
     const promises = tagInput.map(async (t) => {
-      // check if tag already exists
       const existingTag = tagList.find((tag) => tag.name === t);
       log.debug('check if tag already exists:', !!existingTag, t);
       if (!existingTag) {
