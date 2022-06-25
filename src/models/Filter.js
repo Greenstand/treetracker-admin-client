@@ -88,13 +88,14 @@ export default class Filter {
       where.tag = this.tag;
     }
 
-    // if (this.tagId === TAG_NOT_SET) {
-    //   where.tagId = null;
-    // } else if (this.tagId === ANY_TAG_SET) {
-    //   where.tagId = '0';
-    // } else if (this.tagId) {
-    //   where.tagId = this.tagId;
-    // }
+    console.log('filter tags', this.tagId, TAG_NOT_SET);
+    if (this.tagId === TAG_NOT_SET) {
+      where.tag = null;
+    } else if (this.tagId === ANY_TAG_SET) {
+      where.tag = '0';
+    } else if (this.tagId) {
+      where.tag = this.tagId;
+    }
 
     if (this.organizationId === ORGANIZATION_NOT_SET) {
       where.organization_id = null;

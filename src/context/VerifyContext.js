@@ -137,7 +137,7 @@ export function VerifyProvider(props) {
 
     const result = await api.getRawCaptures(pageParams, abortController);
     setCaptureImages(result?.raw_captures || []);
-    setCaptureCount(Number(result?.query?.count));
+    setCaptureCount(Number(result?.total));
     setIsLoading(false);
   };
 

@@ -10,18 +10,8 @@ import log from 'loglevel';
 // Set API as a variable
 const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
+const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
-
-// function makeQueryString(filterObj) {
-//   let arr = [];
-//   for (const key in filterObj) {
-//     if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-//       arr.push(`${key}=${filterObj[key]}`);
-//     }
-//   }
-
-//   return arr.join('&');
-// }
 
 export default {
   makeQueryString(filterObj) {
@@ -59,7 +49,7 @@ export default {
         offset: page * rowsPerPage,
       };
 
-      const query = `${FIELD_DATA_API}/raw-captures${
+      const query = `${QUERY_API}/raw-captures${
         filterObj ? `?${this.makeQueryString(filterObj)}` : ''
       }`;
 
