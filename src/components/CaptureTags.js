@@ -116,10 +116,10 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(tagsContext.tagInput.concat([chip]));
   };
 
-  const handleDeleteChip = (_chip, index) => {
+  const handleDeleteChip = (_chip) => {
     const temp = tagsContext.tagInput;
-    temp.splice(index, 1);
-    tagsContext.setTagInput(temp);
+    const result = temp.filter((value) => value !== _chip);
+    tagsContext.setTagInput(result);
   };
 
   return (
@@ -157,7 +157,7 @@ const CaptureTags = (props) => {
         value: textFieldInput,
         onBeforeAdd: (chip) => handleBeforeAddChip(chip),
         onAdd: (chip) => handleAddChip(chip),
-        onDelete: (chip, index) => handleDeleteChip(chip, index),
+        onDelete: (chip) => handleDeleteChip(chip),
         pattern: TAG_PATTERN,
         placeholder: props.placeholder,
       }}
