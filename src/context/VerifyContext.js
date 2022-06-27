@@ -105,7 +105,6 @@ export function VerifyProvider(props) {
       await api.approveCaptureImage(
         capture,
         approveAction.morphology,
-        // approveAction.age,
         approveAction.captureApprovalTag
         // approveAction.speciesId
       );
@@ -114,7 +113,7 @@ export function VerifyProvider(props) {
       await api.rejectCaptureImage(capture, approveAction.rejectionReason);
     }
 
-    if (approveAction.tags) {
+    if (approveAction.tags.length) {
       await api.createCaptureTags(capture.id, approveAction.tags);
     }
 

@@ -325,6 +325,7 @@ function CaptureMatchingView() {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
         );
+        console.log('growerAccount', data);
         setGrowerAccount(data);
       } else {
         log.warn('No grower account id found');

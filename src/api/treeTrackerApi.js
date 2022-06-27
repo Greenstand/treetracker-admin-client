@@ -66,9 +66,8 @@ export default {
   approveCaptureImage(
     capture,
     morphology
-    // age
-    // captureApprovalTag,
     // speciesId
+    // captureApprovalTag,
   ) {
     try {
       const newCapture = {
@@ -82,7 +81,6 @@ export default {
         lon: capture.lon,
         gps_accuracy: capture.gps_accuracy,
         captured_at: capture.captured_at,
-        // age,
         morphology,
         // species_id: speciesId, // need uuid
         // captureApprovalTag,  // how does this fit into the new API?
@@ -98,12 +96,7 @@ export default {
           Authorization: session.token,
         },
         body: JSON.stringify({
-          id: capture.id,
           status: 'approved',
-          // age,
-          morphology,
-          // species_id: speciesId, // need uuid
-          // captureApprovalTag,  // how does this fit into the new API?
         }),
       }).then(handleResponse);
 
@@ -131,7 +124,6 @@ export default {
           Authorization: session.token,
         },
         body: JSON.stringify({
-          id: capture.id,
           status: 'rejected',
           rejection_reason,
         }),

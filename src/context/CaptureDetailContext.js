@@ -24,6 +24,7 @@ export function CaptureDetailProvider(props) {
   const [state, setState] = useState(STATE_EMPTY);
 
   useEffect(() => {
+    log.debug('CaptureDetailProvider: state.capture', state.capture);
     getSpecies(state.capture?.speciesId);
     getTags(state.capture?.treeTags);
   }, [state.capture]);
@@ -37,10 +38,10 @@ export function CaptureDetailProvider(props) {
   // EVENT HANDLERS
 
   const getCaptureDetail = async (url, id) => {
-    // if (id == null) {
-    //   log.debug('getCapture called with no id');
-    //   return Promise.resolve(STATE_EMPTY.capture);
-    // }
+    if (id == null) {
+      log.debug('getCapture called with no id');
+      return Promise.resolve(STATE_EMPTY.capture);
+    }
 
     if (id) {
       return api.getCaptureById(url, id).then((capture) => {
