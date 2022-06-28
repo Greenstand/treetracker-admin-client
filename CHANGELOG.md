@@ -1,3 +1,10 @@
+## [1.97.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.1...v1.97.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* cypress testing bugs ([#704](https://github.com/Greenstand/treetracker-admin-client/issues/704)) ([b9ea08c](https://github.com/Greenstand/treetracker-admin-client/commit/b9ea08cd290c7efa4129ab31f77c4ebe8dfdb927)), closes [#707](https://github.com/Greenstand/treetracker-admin-client/issues/707)
+
 ## [1.97.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.0...v1.97.1) (2022-06-19)
 
 
