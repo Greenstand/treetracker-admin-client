@@ -127,8 +127,7 @@ export default class Filter {
     }
 
     if (this.planterId) {
-      let planterIds = [];
-      planterIds = this.planterId.split(',').map((item) => item.trim());
+      const planterIds = this.planterId.split(',').map((item) => item.trim());
 
       if (planterIds.length === 1) {
         restFilter.planterId = this.planterId;
