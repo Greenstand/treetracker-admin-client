@@ -90,8 +90,8 @@ export function CapturesProvider(props) {
       order: [`${orderBy} ${order}`],
       limit: 20000,
     };
-    const { captures } = await queryCapturesApi(filterData);
-    return captures;
+    const { data } = await queryCapturesApi(filterData);
+    return data;
   };
 
   const getCapture = (id) => {
