@@ -458,7 +458,9 @@ describe('Messaging', () => {
     cy.get('#password').type('8pzPdcZAG6&Q');
     cy.contains(/log/i).click();
     cy.contains(/inbox/i).click();
-    cy.contains('What time do you Water?');
+    cy.contains(
+      'Tuphek fu kicu uvuwu maseftim ev cokelif eziveaze tip sose zojpiz ji teubu.'
+    );
     // cy.contains("290a8323-7ebb-4ca5-934e-5801e2df1190").click();
   });
 });

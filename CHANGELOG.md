@@ -1,3 +1,17 @@
+# [1.98.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.2...v1.98.0) (2022-06-28)
+
+
+### Features
+
+* Verify and Captures filters: Allow user to specify multiple grower IDs ([#692](https://github.com/Greenstand/treetracker-admin-client/issues/692)) ([39c2f11](https://github.com/Greenstand/treetracker-admin-client/commit/39c2f116556c9614dfcf38eea017e26237b2c7b5))
+
+## [1.97.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.1...v1.97.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* cypress testing bugs ([#704](https://github.com/Greenstand/treetracker-admin-client/issues/704)) ([b9ea08c](https://github.com/Greenstand/treetracker-admin-client/commit/b9ea08cd290c7efa4129ab31f77c4ebe8dfdb927)), closes [#707](https://github.com/Greenstand/treetracker-admin-client/issues/707)
+
 ## [1.97.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.0...v1.97.1) (2022-06-19)
 
 
