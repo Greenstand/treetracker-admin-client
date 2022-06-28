@@ -1,3 +1,11 @@
+## [1.98.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.98.0...v1.98.1) (2022-06-28)
+
+
+### Bug Fixes
+
+* keep size of modal when a new password is introduced on the input field ([#706](https://github.com/Greenstand/treetracker-admin-client/issues/706)) ([1f8c84d](https://github.com/Greenstand/treetracker-admin-client/commit/1f8c84d889e4f8431f438e9e16f4e69cf41063e0))
+* remove additional tag on click ([#710](https://github.com/Greenstand/treetracker-admin-client/issues/710)) ([3bb799b](https://github.com/Greenstand/treetracker-admin-client/commit/3bb799b46d2a1542109d825f40e0df88a9967a24))
+
 # [1.98.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.97.2...v1.98.0) (2022-06-28)
 
 
