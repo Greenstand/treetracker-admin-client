@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
+import { Box } from '@material-ui/core';
 
 const styles = (theme) => ({
   alert: {
@@ -34,7 +35,7 @@ const PasswordStrengthMeter = (props) => {
   };
 
   return (
-    <>
+    <Box>
       {password && (
         <>
           <LinearProgress
@@ -47,7 +48,7 @@ const PasswordStrengthMeter = (props) => {
           </Typography>
         </>
       )}
-    </>
+    </Box>
   );
 };
 
