@@ -296,7 +296,7 @@ function Filter(props) {
                 htmlFor="grower-id"
                 id="grower-id"
                 label="Grower ID"
-                placeholder="e.g. 7"
+                placeholder="e.g. 2, 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
               />
