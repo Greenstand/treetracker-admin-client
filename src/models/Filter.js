@@ -88,7 +88,6 @@ export default class Filter {
       where.tag = this.tag;
     }
 
-    console.log('filter tags', this.tagId, TAG_NOT_SET);
     if (this.tagId === TAG_NOT_SET) {
       where.tag = null;
     } else if (this.tagId === ANY_TAG_SET) {
@@ -102,12 +101,6 @@ export default class Filter {
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
       where.organization_id = this.stakeholderUUID;
     }
-
-    // if (this.stakeholderUUID === ORGANIZATION_NOT_SET) {
-    //   where.stakeholderUUID = null;
-    // } else if (this.stakeholderUUID !== ALL_ORGANIZATIONS) {
-    //   where.stakeholderUUID = this.stakeholderUUID;
-    // }
 
     if (this.tokenId && this.tokenId !== 'All') {
       where.tokenized =
