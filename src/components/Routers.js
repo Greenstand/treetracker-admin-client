@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useMemo } from 'react';
 import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
-import { Routes } from 'react-router-dom-v5-compat';
+// import { Routes } from 'react-router-dom-v5-compat';
 // import v6 components and integrate to app. Run v5 and v6 simultaneously
 
 import Grid from '@material-ui/core/Grid';
