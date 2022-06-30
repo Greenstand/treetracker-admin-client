@@ -50,6 +50,7 @@
     "react-redux": "*",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-router-dom-v5-compat": "^6.3.0",
     "react-scripts": "*",
     "recompose": "*",
     "redux": "^4.0.5",
