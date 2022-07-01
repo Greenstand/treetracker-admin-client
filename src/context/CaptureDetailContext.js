@@ -10,7 +10,6 @@ export const CaptureDetailContext = createContext({
   tags: [],
   getCaptureDetail: () => {},
   getSpecies: () => {},
-  getTags: () => {},
   reset: () => {},
 });
 
@@ -24,9 +23,7 @@ export function CaptureDetailProvider(props) {
   const [state, setState] = useState(STATE_EMPTY);
 
   useEffect(() => {
-    log.debug('CaptureDetailProvider: state.capture', state.capture);
-    getSpecies(state.capture?.speciesId);
-    getTags(state.capture?.treeTags);
+    getSpecies(state.capture?.species_id);
   }, [state.capture]);
 
   // STATE HELPER FUNCTIONS
@@ -45,7 +42,7 @@ export function CaptureDetailProvider(props) {
 
     if (id) {
       return api.getCaptureById(url, id).then((capture) => {
-        setState({ ...state, capture });
+        setState({ ...state, capture, tags: capture.tags || [] });
         return capture;
       });
     }
@@ -62,28 +59,12 @@ export function CaptureDetailProvider(props) {
     });
   };
 
-  const getTags = async (captureTags) => {
-    if (captureTags == null) {
-      return Promise.resolve(STATE_EMPTY.tags);
-    }
-
-    return Promise.all(
-      captureTags.map((tag) => {
-        return api.getTagById(tag.tagId);
-      })
-    ).then((tags) => {
-      setState({ ...state, tags });
-      return tags;
-    });
-  };
-
   const value = {
     capture: state.capture,
     species: state.species,
     tags: state.tags,
     getCaptureDetail,
     getSpecies,
-    getTags,
     reset,
   };
 

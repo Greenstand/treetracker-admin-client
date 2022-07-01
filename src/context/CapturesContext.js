@@ -72,11 +72,11 @@ export function CapturesProvider(props) {
       offset: page * rowsPerPage,
     };
 
-    log.debug('getCaptures filter', filterData);
+    // log.debug('getCaptures filter', filterData);
 
     setIsLoading(true);
     const response = await queryCapturesApi(filterData);
-    log.debug('getCaptures -->', response.data);
+    // log.debug('getCaptures -->', response.data);
     setIsLoading(false);
     setCaptures(response?.data?.captures);
     setCaptureCount(Number(response?.data?.total));
@@ -101,7 +101,6 @@ export function CapturesProvider(props) {
       .getCaptureById(`${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures`, id)
       .then((res) => {
         setIsLoading(false);
-        log.debug('getCapture res -->', res);
         setCapture(res);
       })
       .catch((err) => {
