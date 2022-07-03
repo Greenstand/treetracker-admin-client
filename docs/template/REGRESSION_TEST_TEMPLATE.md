@@ -1,7 +1,7 @@
 # Regression test for {Name of Feature}
 
-## In this situation:
+## Precondition
 
-## Click this:
+## Steps
 
-## Expect this to happen:
+## Expected result
