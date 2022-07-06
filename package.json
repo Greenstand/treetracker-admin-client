@@ -50,7 +50,13 @@
     "recompose": "*",
     "redux": "^4.0.5",
     "typeface-roboto": "*",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "assert": "npm:assert",
+    "crypto": "npm:crypto-browserify",
+    "http": "npm:stream-http",
+    "https": "npm:https-browserify",
+    "os": "npm:os-browserify",
+    "stream": "npm:stream-browserify"
   },
   "scripts": {
     "start": "cross-env PORT=3001 react-scripts start",
