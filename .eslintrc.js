@@ -14,17 +14,13 @@ module.exports = {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
   },
-  parser: "@babel/eslint-parser",
+  parser: "babel-eslint",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 2020,
     sourceType: "module",
-    requireConfigFile : false,
-    babelOptions: {
-      "presets": ["@babel/preset-react"]
-    },
   },
   plugins: ["react"],
   rules: {
