@@ -1,6 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, TextField, Grid, Link, Typography } from '@material-ui/core';
+import {
+  Button,
+  FormControl,
+  TextField,
+  Grid,
+  Link,
+  MenuItem,
+  Typography,
+} from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
@@ -109,8 +117,9 @@ export default function StakeholderDialogHeader({ data }) {
   };
 
   const handleEdit = (e) => {
+    const { name, value } = e.target;
     setErrors({});
-    setDetails({ ...details, [e.target.name]: e.target.value });
+    setDetails({ ...details, [name]: value });
   };
 
   const handleCancel = () => {
@@ -122,6 +131,7 @@ export default function StakeholderDialogHeader({ data }) {
     try {
       setIsEditing(false);
       const errs = validateEntries(details);
+      console.log('handleSave', errs);
       const errorsFound = Object.keys(errs).length > 0;
       if (errorsFound) {
         setIsEditing(true);
@@ -137,6 +147,8 @@ export default function StakeholderDialogHeader({ data }) {
   const handleEnterPress = (e) => {
     e.key === 'Enter' && handleSave();
   };
+
+  const defaultTypeList = ['Organization', 'Person'];
 
   return (
     <Grid container direction="row">
@@ -242,18 +254,27 @@ export default function StakeholderDialogHeader({ data }) {
             >
               <TypeIcon className={classes.pr} />
               {isEditing ? (
-                <TextField
-                  name="type"
-                  value={details?.type}
-                  onChange={handleEdit}
-                  variant="standard"
-                  InputProps={{
-                    classes: { root: classes.input },
-                  }}
-                  error={!!errors?.type}
-                  helperText={errors?.type}
-                  onKeyDown={handleEnterPress}
-                />
+                <FormControl className={classes.root}>
+                  <TextField
+                    data-testid="type-dropdown"
+                    select
+                    htmlFor="type"
+                    id="type"
+                    name="type"
+                    value={details?.type}
+                    onChange={handleEdit}
+                    variant="standard"
+                    InputProps={{
+                      classes: { root: classes.input },
+                    }}
+                  >
+                    {defaultTypeList.map((type) => (
+                      <MenuItem data-testid="type-item" key={type} value={type}>
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </FormControl>
               ) : (
                 <Typography className={classes.fields}>
                   {details?.type}

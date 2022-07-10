@@ -12,10 +12,10 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Radio,
-  RadioGroup,
   TextField,
 } from '@material-ui/core';
+import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
+import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from 'context/StakeholdersContext';
 
 const useStyles = makeStyles({
@@ -53,6 +53,7 @@ const initialState = {
 
 function AddStakeholder() {
   const classes = useStyles();
+  const { orgList } = useContext(AppContext);
   const { createStakeholder, setStakeholders } = useContext(
     StakeholdersContext
   );
@@ -132,6 +133,14 @@ function AddStakeholder() {
   const handleEnterPress = (e) => {
     e.key === 'Enter' && handleSubmit(e);
   };
+
+  const defaultOrgList = [
+    {
+      id: ORGANIZATION_NOT_SET,
+      name: 'Not Set',
+      value: '',
+    },
+  ];
 
   return (
     <>
@@ -283,42 +292,29 @@ function AddStakeholder() {
             </FormControl>
           </Grid>
           <Grid container justify-content="space-between">
-            <FormControl xs={12} sm={6} className={classes.root}>
-              <FormLabel id="relation">Relationship</FormLabel>
-              <RadioGroup
-                aria-labelledby="radio-buttons-group-label"
-                name="relation"
-                value={data.relation}
-                className={classes.radioGroup}
-                onKeyDown={handleEnterPress}
-              >
-                <FormControlLabel
-                  control={
-                    <Radio
-                      label="Parent"
-                      value="parents"
-                      onChange={handleChange}
-                    />
-                  }
-                  label="Parent"
-                />
-                <FormControlLabel
-                  label="Child"
-                  value="children"
-                  control={<Radio />}
-                  onChange={handleChange}
-                />
-              </RadioGroup>
+            <FormControl className={classes.root} onKeyDown={handleEnterPress}>
               <TextField
-                className={classes.textField}
-                label="Relation ID"
-                variant="outlined"
+                data-testid="relation-dropdown"
+                select
+                label="Select Parent Stakeholder:"
+                htmlFor="organization"
+                id="relationId"
                 name="relation_id"
-                onChange={handleChange}
                 value={data.relation_id}
-                onKeyDown={handleEnterPress}
-              />
+                onChange={handleChange}
+              >
+                {[...defaultOrgList, ...orgList].map((org) => (
+                  <MenuItem
+                    data-testid="org-item"
+                    key={org.id}
+                    value={org.stakeholder_uuid}
+                  >
+                    {org.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </FormControl>
+
             <FormControl
               xs={12}
               sm={6}
