@@ -1,3 +1,10 @@
+## [1.98.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.98.1...v1.98.2) (2022-07-10)
+
+
+### Bug Fixes
+
+* updated unbreaking changes to npm packages ([#705](https://github.com/Greenstand/treetracker-admin-client/issues/705)) ([40e2a14](https://github.com/Greenstand/treetracker-admin-client/commit/40e2a143f4e838c90585fe101b32b310697450f2))
+
 ## [1.98.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.98.0...v1.98.1) (2022-06-28)
 
 
