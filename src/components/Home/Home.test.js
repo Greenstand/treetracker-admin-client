@@ -23,7 +23,7 @@ describe('Home', () => {
         <BrowserRouter>
           <Home />
         </BrowserRouter>,
-        container,
+        container
       );
     });
   });

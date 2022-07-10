@@ -62,16 +62,16 @@ function Filter(props) {
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.deviceIdentifier || '',
+    filter?.deviceIdentifier || ''
   );
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || '',
+    filter?.planterIdentifier || ''
   );
   const [status, setStatus] = useState(filter?.status);
   const [approved, setApproved] = useState(filter?.approved);
   const [active, setActive] = useState(filter?.active);
   const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault,
+    filter?.dateStart || dateStartDefault
   );
   const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
@@ -217,7 +217,7 @@ function Filter(props) {
               : e.target.value === verificationStates.AWAITING ||
                 e.target.value === verificationStates.REJECTED
               ? false
-              : true,
+              : true
           );
           setActive(
             e.target.value === filterOptionAll
@@ -225,7 +225,7 @@ function Filter(props) {
               : e.target.value === verificationStates.AWAITING ||
                 e.target.value === verificationStates.APPROVED
               ? true
-              : false,
+              : false
           );
         }}
       >
