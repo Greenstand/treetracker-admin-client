@@ -21,6 +21,10 @@ module.exports = {
     },
     ecmaVersion: 2020,
     sourceType: "module",
+    requireConfigFile : false,
+    babelOptions: {
+      "presets": ["@babel/preset-react"]
+    },
   },
   plugins: ["react"],
   rules: {
