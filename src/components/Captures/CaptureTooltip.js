@@ -1,8 +1,6 @@
 import React from 'react';
 import OptimizedImage from '../OptimizedImage';
-import {
-  Box
-} from '@material-ui/core';
+import { Box } from '@material-ui/core';
 const CaptureTooltip = ({ capture, toggleDrawer }) => {
   return (
     <Box>
