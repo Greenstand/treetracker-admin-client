@@ -131,7 +131,6 @@ export default function StakeholderDialogHeader({ data }) {
     try {
       setIsEditing(false);
       const errs = validateEntries(details);
-      console.log('handleSave', errs);
       const errorsFound = Object.keys(errs).length > 0;
       if (errorsFound) {
         setIsEditing(true);
