@@ -86,7 +86,7 @@ export default function GSMenu(props) {
             .map((item, i) =>
               item?.children ? (
                 <div
-                  key={`${item.name}-${i}`}
+                  key={`${item}-${i}`}
                   className={classes.menuItemWithChildren}
                 >
                   <Typography className={classes.menuTitle}>
