@@ -10,8 +10,6 @@ import log from 'loglevel';
 
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
-const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
-
 export default {
   makeQueryString(filterObj) {
     let arr = [];
