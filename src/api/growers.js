@@ -1,5 +1,14 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganization,
+  getOrganizationUUID,
+} from './apiUtils';
 import { session } from '../models/auth';
+import api from './treeTrackerApi';
+import log from 'loglevel';
+
+const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
@@ -16,9 +25,10 @@ export default {
   },
   getGrower(id) {
     try {
-      const growerQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${id}`;
+      const growerQuery = `${QUERY_API}/grower-accounts/${id}`;
+      // const growerQuery = `${
+      //   process.env.REACT_APP_API_ROOT
+      // }/api/${getOrganization()}planter/${id}`;
 
       return fetch(growerQuery, {
         method: 'GET',
@@ -35,28 +45,20 @@ export default {
   getGrowers({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
+      where.organizationId = getOrganizationUUID();
       const growerFilter = {
-        where: { ...where, active: true },
-        order: [`${orderBy} ${order}`],
+        ...where,
+        // orderBy,
+        // order,
         limit: rowsPerPage,
-        skip,
-        fields: {
-          firstName: true,
-          lastName: true,
-          imageUrl: true,
-          email: true,
-          phone: true,
-          personId: true,
-          organization: true,
-          organizationId: true,
-          imageRotation: true,
-          id: true,
-          // growerAccountUuid: true,
-        },
+        // skip,
       };
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
+      const query = `${QUERY_API}/grower-accounts${
+        growerFilter ? `?${api.makeQueryString(growerFilter)}` : ''
+      }`;
+      // const query = `${QUERY_API}/api/${getOrganization()}planter?filter=${JSON.stringify(
+      //   growerFilter
+      // )}`;
 
       return fetch(query, {
         headers: {
@@ -88,6 +90,7 @@ export default {
 
   getGrowerRegistrations(growerId) {
     try {
+      // const registrationQuery = `${QUERY_API}/planter-registration?filter[where][planterId]=${growerId}`;
       const registrationQuery = `${
         process.env.REACT_APP_API_ROOT
       }/api/${getOrganization()}planter-registration?filter[where][planterId]=${growerId}`;

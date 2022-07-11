@@ -40,7 +40,7 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
-      log.debug('loadCaptureImages filter -->', filter);
+      // log.debug('loadCaptureImages filter -->', filter);
       // const id = getOrganizationUUID();
       const filterObj = {
         ...where,
@@ -86,7 +86,7 @@ export default {
         // captureApprovalTag,  // how does this fit into the new API?
       };
 
-      log.debug('newCapture data', newCapture);
+      // log.debug('newCapture data', newCapture);
 
       // update the raw capture
       fetch(`${FIELD_DATA_API}/raw-captures/${capture.id}`, {
@@ -218,14 +218,31 @@ export default {
    */
   getCaptureById(url, id, abortController) {
     try {
-      // use field data api for Verify and  use query api for Captures
+      // use field data api for Verify
+      // use query api for Captures
       const query = `${url}/${id}`;
-      log.debug('getCaptureById ---> ', query);
       return fetch(query, {
         headers: {
           Authorization: session.token,
         },
         signal: abortController?.signal,
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  /**
+   * Grower Detail & Report Cards & Species
+   */
+  getCaptureCount(filter) {
+    try {
+      const query = `${QUERY_API}/raw-captures/count${
+        filter ? `?${this.makeQueryString(filter)}` : ''
+      }`;
+      return fetch(query, {
+        headers: {
+          Authorization: session.token,
+        },
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

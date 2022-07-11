@@ -15,6 +15,7 @@ import ImageScroller from './ImageScroller';
 import SelectOrg from './common/SelectOrg';
 import { GrowerContext } from '../context/GrowerContext';
 import { ORGANIZATION_NOT_SET } from '../models/Filter';
+import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -41,6 +42,7 @@ const EditGrower = (props) => {
       if (grower?.id) {
         setLoadingGrowerImages(true);
         const selfies = await api.getGrowerSelfies(grower.id);
+        log.debug('EditGrower selfies', selfies);
         setLoadingGrowerImages(false);
 
         setGrowerImages([

@@ -14,7 +14,7 @@ export const GrowerContext = createContext({
   isLoading: false,
   totalGrowerCount: null,
   load: () => {},
-  getCount: () => {},
+  // getCount: () => {},
   changePageSize: () => {},
   changeCurrentPage: () => {},
   getGrower: () => {},
@@ -34,8 +34,8 @@ export function GrowerProvider(props) {
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
-    load();
-    getCount();
+    loadGrowers();
+    // getCount();
   }, [filter, pageSize, currentPage]);
 
   // EVENT HANDLERS
@@ -52,7 +52,7 @@ export function GrowerProvider(props) {
     setGrowers(growers);
   };
 
-  const load = async () => {
+  const loadGrowers = async () => {
     log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
@@ -61,13 +61,16 @@ export function GrowerProvider(props) {
       rowsPerPage: pageSize,
       filter,
     });
-    setGrowers(growers);
+    log.debug('growers', growers);
+    setGrowers(growers.grower_accounts);
+    setCount(Number(growers.total));
+    setTotalGrowerCount(Number(growers.total));
     setIsLoading(false);
   };
 
   const getCount = async () => {
     const { count } = await api.getCount(filter);
-    setCount(Number(count));
+    // setCount(Number(count));
   };
 
   const getGrower = async (payload) => {
@@ -111,7 +114,7 @@ export function GrowerProvider(props) {
     filter,
     isLoading,
     totalGrowerCount,
-    load,
+    loadGrowers,
     getCount,
     changePageSize,
     changeCurrentPage,

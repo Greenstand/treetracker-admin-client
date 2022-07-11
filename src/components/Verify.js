@@ -736,7 +736,7 @@ const Verify = (props) => {
           open={captureDetail.isOpen}
           onClose={handleCloseCaptureDetail}
           capture={captureDetail.capture}
-          url={`${process.env.REACT_APP_FIELD_DATA_ROOT}/raw-captures`}
+          url={`${process.env.REACT_APP_QUERY_API_ROOT}/raw-captures`}
         />
       </CaptureDetailProvider>
     </>

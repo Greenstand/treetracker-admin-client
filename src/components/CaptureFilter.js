@@ -291,10 +291,8 @@ function Filter(props) {
                   ),
                 ]}
                 value={tag}
-                defaultValue={'Not set'}
-                getOptionLabel={(tag) => {
-                  return tag.name;
-                }}
+                defaultValue={'All'}
+                getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
                   if (newVal && newVal.name === 'Not set') {

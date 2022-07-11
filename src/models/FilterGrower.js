@@ -22,9 +22,9 @@ export default class Filter {
       where.id = this.id;
     }
 
-    if (this.growerAccountUuid) {
-      where.growerAccountUuid = this.growerAccountUuid;
-    }
+    // if (this.growerAccountUuid) {
+    //   where.id = this.growerAccountUuid;
+    // }
 
     if (this.firstName) {
       where.firstName = {

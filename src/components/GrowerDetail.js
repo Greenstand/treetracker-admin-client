@@ -37,6 +37,7 @@ import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
 import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
+import log from 'loglevel';
 
 const GROWER_IMAGE_SIZE = 441;
 
@@ -127,7 +128,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      if (grower && grower.growerAccountUuid !== growerId) {
+      if (grower && grower.id !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
@@ -135,14 +136,10 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         let match;
         if (isNaN(Number(growerId))) {
           match = await getGrower({
-            id: undefined,
-            growerAccountUuid: growerId,
+            id: growerId,
           });
         } else {
-          match = await getGrower({
-            id: growerId,
-            growerAccountUuid: undefined,
-          });
+          log.error('GrowerDetail: growerId is not a uuid');
         }
 
         if (match.error) {
@@ -159,6 +156,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         ) {
           setGrowerRegistrations(null);
           api.getGrowerRegistrations(match.id).then((registrations) => {
+            log.debug('Grower registrations', registrations);
             if (registrations && registrations.length) {
               const sortedReg = registrations.sort((a, b) =>
                 a.created_at > b.created_at ? 1 : -1
@@ -195,6 +193,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   useEffect(() => {
     async function loadCaptures() {
+      console.log('grower ----> ', grower);
       if (grower.id) {
         setLoading(true);
         const [
@@ -202,10 +201,13 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           awaitingCount,
           rejectedCount,
         ] = await Promise.all([
-          getCaptureCountGrower(true, true, grower.id),
-          getCaptureCountGrower(true, false, grower.id),
-          getCaptureCountGrower(false, false, grower.id),
+          getCaptureCountGrower('approved', grower.id),
+          getCaptureCountGrower('unprocessed', grower.id),
+          getCaptureCountGrower('rejected', grower.id),
         ]);
+        console.log('approvedCount ----> ', approvedCount);
+        console.log('awaitingCount ----> ', awaitingCount);
+        console.log('rejectedCount ----> ', rejectedCount);
         setVerificationStatus({
           approved: approvedCount,
           awaiting: awaitingCount,
@@ -217,11 +219,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     loadCaptures();
   }, [grower]);
 
-  async function getCaptureCountGrower(active, approved, growerId) {
+  async function getCaptureCountGrower(status, growerId) {
     let filter = new FilterModel();
-    filter.planterId = growerId?.toString();
-    filter.active = active;
-    filter.approved = approved;
+    filter.id = growerId?.toString();
+    filter.status = status;
+    log.warn('Need to get capture count for grower', filter);
     const countResponse = await treeTrackerApi.getCaptureCount(filter);
     return countResponse && countResponse.count ? countResponse.count : 0;
   }
@@ -236,7 +238,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
     if (!grower && !id) {
       const filter = new FilterGrower();
-      filter.growerAccountUuid = growerAccountUuid;
+      filter.id = growerAccountUuid;
       [grower] = await api.getGrowers({ filter }); // Otherwise query the API
     }
 
@@ -317,20 +319,20 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.imageContainer}>
-                {grower?.imageUrl && (
+                {grower?.image_url && (
                   <OptimizedImage
-                    src={grower.imageUrl}
+                    src={grower.image_url}
                     width={GROWER_IMAGE_SIZE}
                     height={GROWER_IMAGE_SIZE}
                     className={classes.cardMedia}
                     fixed
-                    rotation={grower.imageRotation}
+                    rotation={grower.image_rotation}
                     alertTitleSize="1.6rem"
                     alertTextSize="1rem"
                     alertHeight="50%"
                   />
                 )}
-                {!grower.imageUrl && (
+                {!grower.image_url && (
                   <CardMedia className={classes.cardMedia}>
                     <Grid container className={classes.personBox}>
                       <Person className={classes.person} />
@@ -356,7 +358,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   color="primary"
                   className={classes.name}
                 >
-                  {grower.firstName} {grower.lastName}
+                  {grower.first_name} {grower.last_name}
                 </Typography>
                 <Typography variant="body2">
                   ID: <LinkToWebmap value={grower.id} type="user" />
@@ -465,16 +467,16 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Person ID</Typography>
                 <Typography variant="body1">
-                  {grower.personId || '---'}
+                  {grower.person_id || '---'}
                 </Typography>
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Organization</Typography>
-                {grower.organization || grower.organizationId ? (
+                {grower.organization || grower.organization_id ? (
                   <GrowerOrganization
                     organizationName={grower.organization}
-                    assignedOrganizationId={grower.organizationId}
+                    assignedOrganizationId={grower.organization_id}
                   />
                 ) : (
                   <Typography variant="body1">---</Typography>
