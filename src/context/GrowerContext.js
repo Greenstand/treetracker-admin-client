@@ -66,7 +66,7 @@ export function GrowerProvider(props) {
   };
 
   const getCount = async () => {
-    const { count } = await api.getCount({ filter });
+    const { count } = await api.getCount(filter);
     setCount(Number(count));
   };
 
@@ -99,7 +99,7 @@ export function GrowerProvider(props) {
   };
 
   const getTotalGrowerCount = async () => {
-    const { count } = await api.getCount({});
+    const { count } = await api.getCount();
     setTotalGrowerCount(count);
   };
 

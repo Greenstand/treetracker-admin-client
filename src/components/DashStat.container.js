@@ -15,9 +15,7 @@ import FilterModel from '../models/Filter';
 import log from 'loglevel';
 
 function DashStatTotalCaptures(props) {
-  const activeFilter = new FilterModel({
-    active: true,
-  });
+  const activeFilter = new FilterModel();
 
   const [total, setTotal] = useState(null);
 
@@ -44,8 +42,7 @@ function DashStatTotalCaptures(props) {
 
 function DashStatUnprocessedCaptures(props) {
   const unprocessedFilter = new FilterModel({
-    approved: false,
-    active: true,
+    status: 'unprocessed',
   });
 
   const [totalUnprocessed, setTotalUnprocessed] = useState(null);
@@ -73,8 +70,7 @@ function DashStatUnprocessedCaptures(props) {
 
 function DashStatVerifiedCaptures(props) {
   const verifiedFilter = new FilterModel({
-    approved: true,
-    active: true,
+    status: 'approved',
   });
 
   const [totalVerified, setTotalVerified] = useState(null);
@@ -101,9 +97,7 @@ function DashStatVerifiedCaptures(props) {
 }
 
 function DashStatGrowerCount(props) {
-  const growerFilter = new FilterModel({
-    active: true,
-  });
+  const growerFilter = new FilterModel();
 
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 

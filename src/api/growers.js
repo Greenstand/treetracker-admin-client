@@ -1,7 +1,19 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
+
 export default {
+  makeQueryString(filterObj) {
+    let arr = [];
+    for (const key in filterObj) {
+      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+        arr.push(`${key}=${filterObj[key]}`);
+      }
+    }
+
+    return arr.join('&');
+  },
   getGrower(id) {
     try {
       const growerQuery = `${
@@ -57,14 +69,12 @@ export default {
     }
   },
 
-  getCount({ filter }) {
+  getCount(filter) {
     try {
-      const filterObj = filter.getWhereObj ? filter.getWhereObj() : {};
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/count?where=${JSON.stringify(
-        filterObj
-      )}`;
+      const filterObj = filter?.getWhereObj ? filter.getWhereObj() : {};
+      const query = `${QUERY_API}/grower-accounts/count${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
       return fetch(query, {
         headers: {
           'content-type': 'application/json',
