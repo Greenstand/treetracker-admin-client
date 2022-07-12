@@ -362,6 +362,7 @@ const CaptureTable = () => {
           captureId={captureDetail.id}
           onClose={closeDrawer}
           page={'LEGACY'}
+          onCaptureTagDelete={getCaptureTags}
         />
       </CaptureDetailProvider>
     </Grid>

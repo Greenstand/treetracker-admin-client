@@ -87,16 +87,24 @@ export function CaptureDetailProvider(props) {
     });
   };
 
-  const deleteCaptureTag = async (captureId, tagId) => {
+  const deleteCaptureTag = async ({ captureId, tagId }) => {
     if (captureId == null) {
-      return Promise.reject('deleteTag called with no captureId');
+      return Promise.reject('deleteCaptureTag called with no captureId');
     }
 
     if (tagId == null) {
-      return Promise.reject('deleteTag called with no tagId');
+      return Promise.reject('deleteCaptureTag called with no tagId');
     }
 
-    // return api
+    try {
+      const response = await api.getSingleCaptureTag({ captureId, tagId }); // unique capture tag id
+      const captureTagId = response[0].id;
+      return api.deleteCaptureTag({ captureTagId }).then(() => {
+        getCaptureDetail(captureId);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const value = {
@@ -105,6 +113,7 @@ export function CaptureDetailProvider(props) {
     tags: state.tags,
     getCaptureDetail,
     getSpecies,
+    deleteCaptureTag,
     reset,
   };
 

@@ -177,9 +177,19 @@ function CaptureDetailDialog(props) {
     setIsLoading(true);
   }, [open]);
 
-  function handleCaptureTagDeletion(tagId) {
-    console.log(`TODO: delete tag w/ id: ${tagId}`);
-    // update capture table context through callback so tags stay in sync
+  async function handleCaptureTagDeletion({ capture, tag }) {
+    try {
+      await cdContext.deleteCaptureTag({
+        captureId: capture?.id,
+        tagId: tag.id,
+      });
+      if (props.onCaptureTagDelete !== undefined) {
+        props.onCaptureTagDelete();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     setCaptureTagDeletionTarget(undefined);
   }
 
@@ -201,13 +211,6 @@ function CaptureDetailDialog(props) {
       ...captureTags,
       // ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
-
-    const mockCaptureTags = [
-      {
-        tagName: 'delete_me',
-        tagId: '',
-      },
-    ];
 
     const dateCreated = new Date(Date.parse(capture.created_at));
     function confirmCopy(label) {
@@ -355,7 +358,7 @@ function CaptureDetailDialog(props) {
           )}
 
           <Typography variant="subtitle1">Other</Typography>
-          {otherTags.length + mockCaptureTags.length === 0 ? (
+          {otherTags.length + captureTags.length === 0 ? (
             <Typography variant="body1">---</Typography>
           ) : (
             <>
@@ -364,7 +367,7 @@ function CaptureDetailDialog(props) {
                   <Chip key={tag} label={tag} className={classes.chip} />
                 ))}
 
-                {mockCaptureTags.map((tag) => (
+                {captureTags.map((tag) => (
                   <Chip
                     key={tag.tagName}
                     label={tag.tagName}
@@ -373,7 +376,10 @@ function CaptureDetailDialog(props) {
                       hasApproveTreePermission !== undefined // TODO: delete, for testing purpose only
                         ? // onDelete={(hasApproveTreePermission
                           () => {
-                            setCaptureTagDeletionTarget(tag.tagName);
+                            setCaptureTagDeletionTarget({
+                              capture: cdContext.capture,
+                              tag,
+                            });
                           }
                         : undefined
                     }
@@ -393,7 +399,8 @@ function CaptureDetailDialog(props) {
                     }}
                   >
                     <Typography>
-                      Remove tag <b>{`"${captureTagDeletionTarget}"`}</b> ?
+                      Remove tag{' '}
+                      <b>{`"${captureTagDeletionTarget.tag.tagName}"`}</b> ?
                     </Typography>
                   </Container>
 

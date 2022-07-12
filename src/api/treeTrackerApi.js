@@ -456,6 +456,22 @@ export default {
       handleError(error);
     }
   },
+  getSingleCaptureTag({ captureId, tagId }) {
+    try {
+      const filterString = `filter[where][treeId]=${captureId}&filter[where][tagId]=${tagId}`;
+      const query = `${API_ROOT}/api/tree_tags?${filterString}`;
+
+      return fetch(query, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
   getLegacyCaptureTags({ captureIds, tagIds }) {
     try {
       const useAnd = captureIds && tagIds;
@@ -484,8 +500,20 @@ export default {
       handleError(error);
     }
   },
-  deleteCaptureTag({ captureId, tagId }) {
-    // TODO
+  deleteCaptureTag({ captureTagId }) {
+    try {
+      const query = `${API_ROOT}/api/tree_tag/${captureTagId}`;
+      console.log(query);
+      return fetch(query, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
   },
   /*
    * get organizations
