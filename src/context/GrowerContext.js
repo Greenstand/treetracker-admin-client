@@ -61,7 +61,6 @@ export function GrowerProvider(props) {
       rowsPerPage: pageSize,
       filter,
     });
-    log.debug('growers', growers);
     setGrowers(growers.grower_accounts);
     setCount(Number(growers.total));
     setTotalGrowerCount(Number(growers.total));
@@ -70,7 +69,6 @@ export function GrowerProvider(props) {
 
   const getCount = async () => {
     const { count } = await api.getCount(filter);
-    // setCount(Number(count));
   };
 
   const getGrower = async (payload) => {

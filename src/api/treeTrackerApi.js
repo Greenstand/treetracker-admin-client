@@ -151,21 +151,6 @@ export default {
       handleError(error);
     }
   },
-  getCaptureCount(filter) {
-    try {
-      const query = `${QUERY_API}/raw-captures/count${
-        filter ? `?${this.makeQueryString(filter)}` : ''
-      }`;
-
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
   /**
    * Capture Match Tool
    */

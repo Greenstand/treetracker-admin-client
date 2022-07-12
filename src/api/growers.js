@@ -43,7 +43,7 @@ export default {
   getGrowers({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
-      where.organizationId = getOrganizationUUID();
+      where.organization_id = getOrganizationUUID();
       const growerFilter = {
         ...where,
         // orderBy,
