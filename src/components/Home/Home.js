@@ -35,6 +35,10 @@ import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
 import axios from 'axios';
 import log from 'loglevel';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRange } from 'react-date-range';
+import { selectionRange } from './dateRange';
 
 /**
  * @function
@@ -50,6 +54,8 @@ function Home(props) {
   const appContext = useContext(AppContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [updateTime, setUpdateTime] = React.useState(undefined);
+  const [dateRange, setDateRange] = React.useState(selectionRange);
+  const [dateRangeBoolean, setDateRangeBoolean] = React.useState(false);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
@@ -74,9 +80,7 @@ function Home(props) {
   ];
   const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
   const [startDate, setStartDate] = React.useState('1970-01-01');
-  const [endDate /*, setEndDate*/] = React.useState(
-    moment().format('YYYY-MM-DD')
-  );
+  const [endDate, setEndDate] = React.useState(moment().format('YYYY-MM-DD'));
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -91,6 +95,17 @@ function Home(props) {
         .add(-1 * timeRange[index].range, 'day')
         .format('YYYY-MM-DD')
     );
+  };
+
+  const handleCalenderClose = () => {
+    setAnchorEl(null);
+  };
+
+  const updateSetDateRange = (range) => {
+    selectionRange.startDate = range.selection.startDate;
+    selectionRange.endDate = range.selection.endDate;
+    setStartDate(moment(selectionRange.startDate).format('YYYY-MM-DD'));
+    setEndDate(moment(selectionRange.endDate).format('YYYY-MM-DD'));
   };
 
   return (
@@ -141,7 +156,37 @@ function Home(props) {
                       {timeRange[index].text}
                     </MenuItem>
                   ))}
+                  <MenuItem
+                    onClick={() => {
+                      setDateRangeBoolean(true);
+                      handleTimeClose('index');
+                    }}
+                  >
+                    Calendar
+                  </MenuItem>
                 </MenuMui>
+                {dateRangeBoolean && (
+                  <>
+                    <DateRange
+                      ranges={[dateRange]}
+                      onChange={updateSetDateRange}
+                    />
+
+                    <Button variant="contained" color="primary">
+                      Apply
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleCalenderClose();
+                        setDateRangeBoolean(false);
+                      }}
+                    >
+                      Close
+                    </Button>
+                  </>
+                )}
               </Grid>
             )}
           </Grid>
