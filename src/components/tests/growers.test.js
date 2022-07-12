@@ -45,7 +45,7 @@ describe('growers', () => {
               </GrowerProvider>
             </AppProvider>
           </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
       );
 
       await act(() => api.getGrowers());
@@ -56,13 +56,13 @@ describe('growers', () => {
 
     it('renders grower page', () => {
       expect(
-        screen.getByText(/testFirstName testLastName/i),
+        screen.getByText(/testFirstName testLastName/i)
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/testFirstName2 testLastName2/i),
+        screen.getByText(/testFirstName2 testLastName2/i)
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/testFirstName3 testLastName3/i),
+        screen.getByText(/testFirstName3 testLastName3/i)
       ).toBeInTheDocument();
 
       const ids = screen.getAllByText(/ID:/i);

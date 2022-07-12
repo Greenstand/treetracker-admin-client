@@ -73,7 +73,7 @@ describe('species management', () => {
               <SpeciesView />
             </SpeciesProvider>
           </AppProvider>
-        </BrowserRouter>,
+        </BrowserRouter>
       );
       await act(() => api.getSpecies());
     });

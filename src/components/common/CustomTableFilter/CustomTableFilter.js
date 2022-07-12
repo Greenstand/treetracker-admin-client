@@ -78,9 +78,22 @@ function CustomTableFilter(props) {
       ...localFilter,
     };
 
-    setFilter(filtersToSubmit);
-    setIsFilterOpen(false);
-    updateSelectedFilter(filtersToSubmit);
+    if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
+      const modifiedFiltersToSubmit = {
+        ...filtersToSubmit,
+        organization_id: '',
+        sub_organization: '',
+      };
+      setFilter(modifiedFiltersToSubmit);
+      setIsFilterOpen(false);
+      updateSelectedFilter({
+        modifiedFiltersToSubmit,
+      });
+    } else {
+      setFilter(filtersToSubmit);
+      setIsFilterOpen(false);
+      updateSelectedFilter(filtersToSubmit);
+    }
   };
 
   const handleOnFilterFormReset = (e) => {

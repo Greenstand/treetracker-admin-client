@@ -123,8 +123,8 @@ export function CapturesProvider(props) {
       })
       .catch((err) => {
         setIsLoading(false);
-        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`)
-    });
+        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`);
+      });
   };
 
   const updateFilter = async (filter) => {

@@ -45,7 +45,7 @@ const EditGrower = (props) => {
 
         setGrowerImages([
           ...(grower.imageUrl ? [grower.imageUrl] : []),
-          ...selfies?.filter((img) => img !== grower.imageUrl),
+          ...(selfies || []).filter((img) => img !== grower.imageUrl),
         ]);
       }
     }
