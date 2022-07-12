@@ -329,6 +329,7 @@ const CaptureTable = () => {
           open={isDetailsPaneOpen}
           capture={capture}
           onClose={closeDrawer}
+          onCaptureTagDelete={getCaptureTags}
         />
       </CaptureDetailProvider>
     </Grid>
