@@ -1,4 +1,3 @@
-require('dotenv').config();
 import React from 'react';
 
 import ImageErrorAlert from './ImageErrorAlert';

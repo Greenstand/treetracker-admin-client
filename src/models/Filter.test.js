@@ -1,3 +1,4 @@
+import { log } from 'loglevel';
 import Filter from './Filter';
 
 describe('Filter, with initial values about this filter object', () => {
@@ -7,77 +8,77 @@ describe('Filter, with initial values about this filter object', () => {
     filter = new Filter();
     filter.uuid = '11942400-6617-4c6c-bf5e';
     filter.captureId = '10';
+    filter.planterId = '1-grower-account';
+    filter.deviceIdentifier = '1-abcdef123456';
+    filter.planterIdentifier = '1-wallet';
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
-    filter.approved = true;
-    filter.active = true;
-    filter.planterId = '1';
-    filter.deviceIdentifier = '1';
-    filter.planterIdentifier = '1';
+    filter.speciesId = '';
+    filter.organizationId = '';
+    filter.stakeholderUUID = '';
+    filter.status = 'unprocessed';
   });
 
   it('getWhereObj() should be: ', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' })
+      expect.objectContaining({ id: '11942400-6617-4c6c-bf5e' })
     );
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: '10' }));
-  });
-
-  it('getWhereObj() should match: timeCreated between', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({
-        timeCreated: {
-          between: ['2019-07-25', '2019-07-30'],
-        },
-      })
+      expect.objectContaining({ reference_id: '10' })
     );
   });
 
-  it('getWhereObj() should match: approved=true', () => {
+  it('getWhereObj() should match: startDate', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ approved: true })
+      expect.objectContaining({ startDate: '2019-07-25' })
     );
   });
 
-  it('getWhereObj() should match: active=true', () => {
+  it('getWhereObj() should match: endDate', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ active: true })
+      expect.objectContaining({ endDate: '2019-07-30' })
     );
   });
 
-  describe('change approved = false', () => {
+  it('getWhereObj() should match: status=unprocessed', () => {
+    expect(filter.getWhereObj()).toEqual(
+      expect.objectContaining({ status: 'unprocessed' })
+    );
+  });
+
+  describe('change status = rejected', () => {
     //{{{
     beforeEach(() => {
-      filter.approved = false;
+      filter.status = 'rejected';
     });
 
-    it('getWhereObj() should be approved=false', () => {
+    it('getWhereObj() should be status=rejected', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ approved: false })
+        expect.objectContaining({ status: 'rejected' })
       );
     });
 
     //}}}
   });
 
-  it('getWhereObj() should match: planterId=1', () => {
+  it('getWhereObj() should match: grower_account_id=1-grower-account', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterId: '1' })
+      expect.objectContaining({ grower_account_id: '1-grower-account' })
     );
   });
 
-  it('getWhereObj() should match: deviceIdentifier=1', () => {
+  it('getWhereObj() should match: device_identifier=1-abcdef123456', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ deviceIdentifier: '1' })
+      expect.objectContaining({ device_identifier: '1-abcdef123456' })
     );
   });
 
-  it('getWhereObj() should match: planterIdentifier=1', () => {
+  it('getWhereObj() should match: wallet=1-wallet', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterIdentifier: '1' })
+      expect.objectContaining({ wallet: '1-wallet' })
     );
   });
 
@@ -88,44 +89,44 @@ describe('Filter, with initial values about this filter object', () => {
     });
 
     it('loopback object should not match any [id]', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('id');
+      expect(filter.getWhereObj()).not.toHaveProperty('reference_id');
     });
     //}}}
   });
 
-  describe('set planterId = ""', () => {
+  describe('set grower_account_id = ""', () => {
     //{{{
     beforeEach(() => {
       filter.planterId = '';
     });
 
-    it('loopback object should not match any [planterId]', () => {
+    it('loopback object should not match any [grower_account_id]', () => {
       // console.error('the where:', filter.getWhereObj());
-      expect(filter.getWhereObj()).not.toHaveProperty('planterId');
+      expect(filter.getWhereObj()).not.toHaveProperty('grower_account_id');
     });
     //}}}
   });
 
-  describe('set deviceIdentifier = ""', () => {
+  describe('set device_identifier = ""', () => {
     //{{{
     beforeEach(() => {
       filter.deviceIdentifier = '';
     });
 
-    it('loopback object should not match any deviceIdentifier', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('deviceIdentifier');
+    it('loopback object should not match any device_identifier', () => {
+      expect(filter.getWhereObj()).not.toHaveProperty('device_identifier');
     });
     //}}}
   });
 
-  describe('set planterIdentifier = ""', () => {
+  describe('set wallet = ""', () => {
     //{{{
     beforeEach(() => {
       filter.planterIdentifier = '';
     });
 
-    it('loopback object should not match any planterIdentifier', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('planterIdentifier');
+    it('loopback object should not match any wallet', () => {
+      expect(filter.getWhereObj()).not.toHaveProperty('wallet');
     });
     //}}}
   });
@@ -136,9 +137,9 @@ describe('Filter, with initial values about this filter object', () => {
       delete filter.dateStart;
     });
 
-    it('should be lte', () => {
+    it('should be less than endDate', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { lte: '2019-07-30' } })
+        expect.objectContaining({ endDate: '2019-07-30' })
       );
     });
     //}}}
@@ -150,9 +151,9 @@ describe('Filter, with initial values about this filter object', () => {
       delete filter.dateEnd;
     });
 
-    it('should be gte', () => {
+    it('should be greater than startDate', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { gte: '2019-07-25' } })
+        expect.objectContaining({ startDate: '2019-07-25' })
       );
     });
     //}}}
@@ -173,68 +174,68 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('a data array', () => {
-    //{{{
-    let data;
+  // describe.skip('a data array', () => {
+  //   //{{{
+  //   let data;
 
-    beforeEach(() => {
-      data = [
-        {
-          id: 'a',
-          active: true,
-          approved: false,
-        },
-        {
-          id: 'b',
-          active: true,
-          approved: true,
-        },
-        {
-          id: 'c',
-          active: false,
-          approved: true,
-        },
-      ];
-    });
+  //   beforeEach(() => {
+  //     data = [
+  //       {
+  //         id: 'a',
+  //         active: true,
+  //         approved: false,
+  //       },
+  //       {
+  //         id: 'b',
+  //         active: true,
+  //         approved: true,
+  //       },
+  //       {
+  //         id: 'c',
+  //         active: false,
+  //         approved: true,
+  //       },
+  //     ];
+  //   });
 
-    describe('new Filter({active: true, approved:false})', () => {
-      //{{{
-      let filter;
+  //   describe('new Filter({active: true, approved:false})', () => {
+  //     //{{{
+  //     let filter;
 
-      beforeEach(() => {
-        filter = new Filter({
-          active: true,
-          approved: false,
-        });
-      });
+  //     beforeEach(() => {
+  //       filter = new Filter({
+  //         active: true,
+  //         approved: false,
+  //       });
+  //     });
 
-      it('filter() should get a ', () => {
-        expect(data.filter(filter.filter)).toHaveLength(1);
-        expect(data.filter(filter.filter)[0].id).toBe('a');
-      });
+  //     it('filter() should get a ', () => {
+  //       expect(data.filter(filter.filter)).toHaveLength(1);
+  //       expect(data.filter(filter.filter)[0].id).toBe('a');
+  //     });
 
-      //}}}
-    });
+  //     //}}}
+  //   });
 
-    describe('new Filter({active: false, approved:true})', () => {
-      //{{{
-      let filter;
+  //   describe('new Filter({active: false, approved:true})', () => {
+  //     //{{{
+  //     let filter;
 
-      beforeEach(() => {
-        filter = new Filter({
-          active: false,
-          approved: true,
-        });
-      });
+  //     beforeEach(() => {
+  //       filter = new Filter({
+  //         active: false,
+  //         approved: true,
+  //       });
+  //     });
 
-      it('filter() should get c ', () => {
-        expect(data.filter(filter.filter)).toHaveLength(1);
-        expect(data.filter(filter.filter)[0].id).toBe('c');
-      });
+  //     it('filter() should get c ', () => {
+  //       expect(data.filter(filter.filter)).toHaveLength(1);
+  //       expect(data.filter(filter.filter)[0].id).toBe('c');
+  //     });
 
-      //}}}
-    });
+  //     //}}}
+  //   });
 
-    //}}}
-  });
+  //   //}}}
+  // });
 });

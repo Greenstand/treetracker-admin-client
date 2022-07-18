@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import Icon from '../Icon';
+import log from 'loglevel';
 
 describe('Icon component', () => {
   test('path class value contains "Icon-active" when <Icon active="not_empty" />', () => {
@@ -13,7 +14,7 @@ describe('Icon component', () => {
     const component = render(<Icon active="" />);
     const path = component.container.querySelector('path');
     const path_class_value = path.attributes.getNamedItem('class').value;
-    console.log(path_class_value);
+    log.debug(path_class_value);
     expect(path_class_value).toMatch('Icon-default');
   });
 });

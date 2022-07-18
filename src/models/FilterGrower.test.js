@@ -23,7 +23,7 @@ describe.skip('FilterGrower, with initial filter values', () => {
         id: 1,
         lastName: { ilike: 'ln' },
         personId: 1,
-      }),
+      })
     );
   });
 });

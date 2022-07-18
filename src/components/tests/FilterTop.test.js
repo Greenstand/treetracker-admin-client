@@ -94,7 +94,7 @@ describe('FilterTop organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         expect(orgs).toHaveLength(2);
       });
@@ -142,7 +142,7 @@ describe('FilterTop organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);

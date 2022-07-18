@@ -6,7 +6,7 @@ class CapturesPage {
   mock_TreesFilter() {
     return cy.route(
       'GET',
-      '/api/admin/api/trees?filter={"where":{"or":[{"active":true,"approved":true},{"active":true,"approved":false}]},"order":["timeCreated desc"],"limit":25,"skip":0,"fields":{"id":true,"timeCreated":true,"status":true,"active":true,"approved":true,"planterId":true,"planterIdentifier":true,"deviceIdentifier":true,"speciesId":true,"tokenId":true,"age":true,"morphology":true,"captureApprovalTag":true,"rejectionReason":true,"note":true}}',
+      '/api/admin/api/trees?orderBy=created_at&order=desc&limit=25&skip=0',
       'fixture:treesFilter_Mock.json'
     );
   }

@@ -12,7 +12,7 @@ export default function component(props) {
     'catchments',
     'catchments',
     (data) => data.average,
-    rows,
+    rows
   );
 
   return (

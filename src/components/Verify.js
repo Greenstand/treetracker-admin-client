@@ -227,7 +227,7 @@ const Verify = (props) => {
   function handleCaptureClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on capture:%d', captureId);
+    log.debug('click on capture:', captureId);
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
@@ -237,7 +237,7 @@ const Verify = (props) => {
   function handleCapturePinClick(e, captureId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on capture pin:%d', captureId);
+    log.debug('click on capture pin:', captureId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -245,7 +245,7 @@ const Verify = (props) => {
   function handleGrowerMapClick(e, growerId) {
     e.stopPropagation();
     e.preventDefault();
-    log.debug('click on grower:%d', growerId);
+    log.debug('click on grower:', growerId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
   }
@@ -268,12 +268,13 @@ const Verify = (props) => {
     }
 
     /*
-     * create/retrieve tags
+     * create new tags and return all the applied tags
      */
-    approveAction.tags = await tagsContext.createTags();
+    const appliedTags = await tagsContext.createTags();
+    approveAction.tags = appliedTags.map((tag) => tag.id);
     const result = await verifyContext.approveAll(approveAction);
     if (!result) {
-      window.alert('Failed to approve a capture');
+      window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
     }
@@ -446,7 +447,7 @@ const Verify = (props) => {
                     )}
                   </Paper>
                   <OptimizedImage
-                    src={capture.imageUrl}
+                    src={capture.image_url}
                     width={isImagesLarge ? 400 : 250}
                     className={classes.cardMedia}
                     alertWidth="100%"
@@ -467,6 +468,7 @@ const Verify = (props) => {
                     <IconButton
                       onClick={(e) => handleShowGrowerDetail(e, capture)}
                       aria-label={`Grower details`}
+                      name={`Grower details`}
                       title={`Grower details`}
                     >
                       <Person color="primary" />
@@ -474,6 +476,7 @@ const Verify = (props) => {
                     <IconButton
                       onClick={(e) => handleShowCaptureDetail(e, capture)}
                       aria-label={`Capture details`}
+                      name={`Capture details`}
                       title={`Capture details`}
                     >
                       <Nature color="primary" />
@@ -670,7 +673,7 @@ const Verify = (props) => {
           submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
-      {verifyContext.isApproveAllProcessing && (
+      {verifyContext.isLoading && (
         <AppBar
           position="fixed"
           style={{
@@ -684,14 +687,14 @@ const Verify = (props) => {
           />
         </AppBar>
       )}
-      {verifyContext.isApproveAllProcessing && (
+      {verifyContext.isLoading && (
         <Modal open={true}>
           <div></div>
         </Modal>
       )}
-      {false /* close undo */ &&
-        !verifyContext.isApproveAllProcessing &&
-        // !context.isRejectAllProcessing &&
+      {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
+        !verifyContext.isLoading &&
+        verifyContext.isApproveAllProcessing &&
         verifyContext.captureImagesUndo.length > 0 && (
           <Snackbar
             open
@@ -726,13 +729,14 @@ const Verify = (props) => {
       <GrowerDetail
         open={growerDetail.isOpen}
         growerId={growerDetail.growerId}
-        onClose={() => handleCloseGrowerDetail()}
+        onClose={handleCloseGrowerDetail}
       />
       <CaptureDetailProvider>
         <CaptureDetailDialog
           open={captureDetail.isOpen}
-          onClose={() => handleCloseCaptureDetail()}
+          onClose={handleCloseCaptureDetail}
           capture={captureDetail.capture}
+          url={`${process.env.REACT_APP_QUERY_API_ROOT}/raw-captures`}
         />
       </CaptureDetailProvider>
     </>

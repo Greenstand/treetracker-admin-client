@@ -4,9 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SelectOrg from './common/SelectOrg';
 import FilterModel, {
@@ -25,9 +22,7 @@ import {
   convertDateToDefaultSqlDate,
 } from '../common/locale';
 import {
-  verificationStates,
   tokenizationStates,
-  verificationStatesArr,
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { SpeciesContext } from '../context/SpeciesContext';
@@ -87,10 +82,6 @@ function Filter(props) {
   const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || ''
   );
-  const [verifyStatus, setVerifyStatus] = useState([
-    { active: true, approved: true },
-    { active: true, approved: false },
-  ]);
   const [dateStart, setDateStart] = useState(
     filter?.dateStart || dateStartDefault
   );
@@ -105,13 +96,6 @@ function Filter(props) {
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-  const [verificationStatus, setVerificationStatus] = useState([
-    verificationStates.APPROVED,
-    verificationStates.AWAITING,
-  ]);
-  const isAllVerification =
-    verificationStatus.length &&
-    verificationStatus.length === verificationStatesArr.length;
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -123,34 +107,6 @@ function Filter(props) {
 
   const formatDate = (date) => {
     return convertDateToDefaultSqlDate(date);
-  };
-
-  const handleVerificationStatusChange = (event) => {
-    let value = event.target.value;
-    let status = [];
-    if (
-      value[value.length - 1] === 'all' ||
-      (value.length === 3 && value[value.length - 1] !== 'all')
-    ) {
-      setVerificationStatus(
-        verificationStatus.length === verificationStatesArr.length
-          ? []
-          : verificationStatesArr
-      );
-      value = verificationStatesArr;
-    } else {
-      setVerificationStatus(value);
-    }
-    value.forEach((val) => {
-      if (val === verificationStates.APPROVED) {
-        status.push({ active: true, approved: true });
-      } else if (val === verificationStates.AWAITING) {
-        status.push({ active: true, approved: false });
-      } else if (val === verificationStates.REJECTED) {
-        status.push({ active: false, approved: false });
-      }
-    });
-    setVerifyStatus(status);
   };
 
   function handleSubmit(e) {
@@ -169,7 +125,6 @@ function Filter(props) {
     filter.organizationId = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
-    filter.verifyStatus = verifyStatus;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -188,10 +143,6 @@ function Filter(props) {
     setOrganizationId(ALL_ORGANIZATIONS);
     setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
-    setVerifyStatus([
-      { active: true, approved: true },
-      { active: true, approved: false },
-    ]);
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   }
@@ -202,44 +153,6 @@ function Filter(props) {
         <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
-              <TextField
-                select
-                htmlFor="verification-status"
-                id="verification-status"
-                label="Verification Status"
-                SelectProps={{
-                  multiple: true,
-                  value: verificationStatus,
-                  onChange: handleVerificationStatusChange,
-                  renderValue: (verificationStatus) =>
-                    verificationStatus.join(', '),
-                }}
-              >
-                <MenuItem value="all">
-                  <ListItemIcon>
-                    <Checkbox
-                      checked={
-                        isAllVerification === 0 ? false : isAllVerification
-                      }
-                      indeterminate={
-                        verificationStatus.length > 0 &&
-                        verificationStatus.length < verificationStatesArr.length
-                      }
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary="Select All" />
-                </MenuItem>
-                {verificationStatesArr.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    <ListItemIcon>
-                      <Checkbox
-                        checked={verificationStatus.indexOf(name) > -1}
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary={name} />
-                  </MenuItem>
-                ))}
-              </TextField>
               <TextField
                 select
                 htmlFor="token-status"
@@ -295,7 +208,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower ID"
+                label="Grower Account ID"
                 placeholder="e.g. 2, 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
@@ -303,7 +216,7 @@ function Filter(props) {
               <TextField
                 htmlFor="capture-id"
                 id="capture-id"
-                label="Capture ID"
+                label="Capture Reference ID"
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
@@ -311,7 +224,7 @@ function Filter(props) {
               <TextField
                 htmlFor="uuid"
                 id="uuid"
-                label="Capture UUID"
+                label="Capture ID (uuid)"
                 placeholder=""
                 value={uuid}
                 onChange={(e) => setUUID(e.target.value)}
@@ -327,7 +240,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-identifier"
                 id="grower-identifier"
-                label="Grower Identifier"
+                label="Wallet"
                 placeholder="e.g. grower@example.com"
                 value={growerIdentifier}
                 onChange={(e) => setGrowerIdentifier(e.target.value)}
@@ -372,19 +285,17 @@ function Filter(props) {
                 }}
                 options={[
                   ...tagsContext.tagList.filter((t) =>
-                    t.tagName
+                    t.name
                       .toLowerCase()
                       .startsWith(tagSearchString.toLowerCase())
                   ),
                 ]}
                 value={tag}
-                defaultValue={'Not set'}
-                getOptionLabel={(tag) => {
-                  return tag.tagName;
-                }}
+                defaultValue={'All'}
+                getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  if (newVal && newVal.tagName === 'Not set') {
+                  if (newVal && newVal.name === 'Not set') {
                     setTag('Not set');
                   } else {
                     setTag(newVal);

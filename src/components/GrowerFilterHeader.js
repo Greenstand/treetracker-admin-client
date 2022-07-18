@@ -18,15 +18,11 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function GrowersFilterHeader(props) {
+function GrowerFilterHeader(props) {
   const classes = useStyle(props);
-  const growerContext = useContext(GrowerContext);
+  const { filter } = useContext(GrowerContext);
   const [isFilterShown, setFilterShown] = useState(true);
-  const numFilters = growerContext.filter.countAppliedFilters();
-
-  const handleFilterSubmit = (filter) => {
-    growerContext.updateFilter(filter);
-  };
+  const numFilters = filter.countAppliedFilters();
 
   const handleFilterClick = () => {
     setFilterShown(!isFilterShown);
@@ -50,17 +46,10 @@ function GrowersFilterHeader(props) {
           </Button>,
         ]}
       >
-        {isFilterShown && (
-          <FilterTopGrower
-            isOpen={isFilterShown}
-            onSubmit={handleFilterSubmit}
-            filter={growerContext.filter}
-            onClick={handleFilterClick}
-          />
-        )}
+        {isFilterShown && <FilterTopGrower onClick={handleFilterClick} />}
       </Navbar>
     </Grid>
   );
 }
 
-export default GrowersFilterHeader;
+export default GrowerFilterHeader;

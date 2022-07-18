@@ -79,8 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  // console.log('render: capture detail dialog');
-  const { open, capture } = props;
+  const { open, capture, url } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -93,9 +92,10 @@ function CaptureDetailDialog(props) {
   }, []);
   const classes = useStyles();
 
+  // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
   useEffect(() => {
-    cdContext.getCaptureDetail(capture?.id);
-  }, [capture]);
+    cdContext.getCaptureDetail(url, capture?.id);
+  }, [capture.id]);
 
   useEffect(() => {
     window.addEventListener('resize', resizeWindow);
@@ -129,10 +129,10 @@ function CaptureDetailDialog(props) {
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags.map((t) => t.tagName),
+      ...captureTags,
     ].filter((tag) => !!tag);
 
-    const dateCreated = new Date(Date.parse(capture.timeCreated));
+    const dateCreated = new Date(Date.parse(capture.created_at));
     function confirmCopy(label) {
       setSnackbarOpen(false);
       setSnackbarLabel(label);
@@ -167,26 +167,26 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Grower ID',
-              value: capture.planterId,
+              label: 'Grower Account ID',
+              value: capture.grower_account_id,
               copy: true,
               link: true,
             },
             {
-              label: 'Grower Identifier',
-              value: capture.planterIdentifier,
+              label: 'Wallet',
+              value: capture.wallet,
               copy: true,
             },
             {
               label: 'Device Identifier',
-              value: capture.deviceIdentifier,
+              value: capture.device_identifier,
               copy: true,
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
             { label: 'Note', value: renderCapture.note },
             {
               label: 'Original Image URL',
-              value: renderCapture.imageUrl,
+              value: renderCapture.image_url,
               copy: true,
               link: true,
               image: true,
@@ -199,7 +199,7 @@ function CaptureDetailDialog(props) {
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
                     <Link
-                      href={renderCapture.imageUrl}
+                      href={renderCapture.image_url}
                       underline="always"
                       target="_blank"
                     >
@@ -233,12 +233,12 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {!capture.approved && capture.active ? (
+          {capture.status === 'unprocessed' ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.active && capture.approved ? (
+          ) : capture.status === 'active' || capture.status === 'approved' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}
@@ -312,7 +312,7 @@ function CaptureDetailDialog(props) {
         maxWidth="md"
       >
         <OptimizedImage
-          src={renderCapture.imageUrl}
+          src={renderCapture.image_url}
           width={screenHeight * 0.9}
           style={{ maxWidth: '100%' }}
           objectFit="contain"

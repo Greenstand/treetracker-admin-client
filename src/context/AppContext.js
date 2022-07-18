@@ -9,6 +9,7 @@ import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
 import MessagingView from 'views/MessagingView';
 import MatchingToolView from '../views/MatchingToolView';
+import Stakeholder from '../views/StakeholdersView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
@@ -31,8 +32,10 @@ import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import stakeholder_api from '../api/stakeholders';
 import RegionsView from 'views/RegionsView';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
@@ -141,6 +144,20 @@ function getRoutes(user) {
         !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
         !user ||
         user.policy.organization !== undefined,
+    },
+    {
+      name: 'Stakeholders',
+      linkTo: '/stakeholders',
+      component: Stakeholder,
+      icon: AccountTreeIcon,
+      disabled:
+        process.env.REACT_APP_ENABLE_STAKEHOLDERS !== 'true' ||
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.APPROVE_TREE,
+          POLICIES.LIST_STAKEHOLDERS,
+          POLICIES.MANAGE_STAKEHOLDERS,
+        ]),
     },
     {
       name: 'Settings',
@@ -287,7 +304,17 @@ export const AppProvider = (props) => {
 
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
-    setOrgList(orgs);
+    const { stakeholders } = await stakeholder_api.getStakeholders();
+    const results = stakeholders.map((s) => {
+      return {
+        id: s.id,
+        stakeholder_uuid: s.id,
+        name: s.org_name || s.first_name + ' ' + s.last_name,
+        type: s.type,
+      };
+    });
+    console.log('org list', [...orgs, ...results]);
+    setOrgList([...orgs, ...results]);
   }
 
   async function updateSelectedFilter(filters) {

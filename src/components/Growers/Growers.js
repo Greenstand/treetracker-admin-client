@@ -90,8 +90,8 @@ const Growers = (props) => {
       count={growerContext.count || 0}
       rowsPerPage={growerContext.pageSize}
       page={growerContext.currentPage}
-      onChangePage={handlePageChange}
-      onChangeRowsPerPage={handleChangePageSize}
+      onPageChange={handlePageChange}
+      onRowsPerPageChange={handleChangePageSize}
       labelRowsPerPage="Growers per page:"
     />
   );
@@ -108,7 +108,7 @@ const Growers = (props) => {
           >
             <Grid
               container
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="center"
               className={classes.title}
             >
@@ -118,11 +118,11 @@ const Growers = (props) => {
               <Grid item>{pagination}</Grid>
             </Grid>
           </Grid>
-          <Grid item container direction="row" justify="center">
+          <Grid item container direction="row" justifyContent="center">
             {growersItems}
           </Grid>
         </Grid>
-        <Grid container className={classes.page} justify="flex-end">
+        <Grid container className={classes.page} justifyContent="flex-end">
           {pagination}
         </Grid>
       </Grid>

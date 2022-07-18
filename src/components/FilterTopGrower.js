@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FilterModel from '../models/FilterGrower';
 import SelectOrg from './common/SelectOrg';
 import { ALL_ORGANIZATIONS } from '../models/Filter';
+import { GrowerContext } from '../context/GrowerContext';
 
 export const FILTER_WIDTH = 330;
 
@@ -42,16 +43,14 @@ const styles = (theme) => {
 };
 
 function FilterTopGrower(props) {
-  const { classes, filter } = props;
+  const { classes } = props;
+  const { filter, updateFilter } = useContext(GrowerContext);
   const [id, setId] = useState(filter?.id || '');
   const [personId, setPersonId] = useState(filter?.personId || '');
   const [firstName, setFirstName] = useState(filter?.firstName || '');
   const [lastName, setLastName] = useState(filter?.lastName || '');
   const [organizationId, setOrganizationId] = useState(
     filter?.organizationId || ALL_ORGANIZATIONS
-  );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter?.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
@@ -67,12 +66,12 @@ function FilterTopGrower(props) {
       firstName,
       lastName,
       organizationId,
-      stakeholderUUID,
       email,
       phone,
       deviceIdentifier,
     });
-    props.onSubmit && props.onSubmit(filter);
+
+    updateFilter(filter);
   }
 
   const handleReset = () => {
@@ -81,13 +80,12 @@ function FilterTopGrower(props) {
     setFirstName('');
     setLastName('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
 
-    const filter = new FilterModel();
-    props.onSubmit && props.onSubmit(filter);
+    const filter = new FilterModel({ organizationId: ALL_ORGANIZATIONS });
+    updateFilter(filter);
   };
 
   const handleEnterPress = (e) => {
@@ -132,10 +130,9 @@ function FilterTopGrower(props) {
               />
               <SelectOrg
                 orgId={organizationId}
-                handleSelection={(org) => {
-                  setStakeholderUUID(org.stakeholder_uuid);
-                  setOrganizationId(org.id);
-                }}
+                handleSelection={(org) =>
+                  setOrganizationId(org.stakeholder_uuid)
+                }
               />
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}

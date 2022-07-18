@@ -197,7 +197,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      log.debug(err);
     }
   };
 

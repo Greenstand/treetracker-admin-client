@@ -258,7 +258,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      log.debug(err);
     }
   };
 

@@ -6,8 +6,6 @@ export async function handleResponse(response) {
   const payload = await response.json();
   if (response.ok) return payload;
 
-  log.debug('handleResponse error ---', response.status, payload);
-
   // pass along user errors
   return Promise.reject({
     status: response.status,
@@ -17,7 +15,7 @@ export async function handleResponse(response) {
 
 // we should call an error logging service, but
 export function handleError(error) {
-  if (error.name === 'AbortError') {
+  if (error?.name === 'AbortError') {
     // Ignore `AbortError`
     log.debug('Aborted', error);
   } else {

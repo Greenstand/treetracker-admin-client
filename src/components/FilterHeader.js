@@ -10,7 +10,7 @@ function FilterHeader() {
   const [isFilterShown, setFilterShown] = useState(true);
 
   const handleFilterSubmit = (filter) => {
-    // console.log('1 - submitted filter', filter);
+    // log.debug('1 - submitted filter', filter);
     capturesContext.updateFilter(filter);
   };
 

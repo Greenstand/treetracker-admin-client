@@ -87,8 +87,9 @@ const ExportCaptures = (props) => {
       (val) => val[1].status === true
     );
     const selectedColumns = Object.fromEntries(filterColumns);
-    await capturesContext.getAllCaptures({ filter }).then((response) => {
-      setDownloadData(processDownloadData(response.data, selectedColumns));
+
+    await capturesContext.getAllCaptures({ filter }).then((data) => {
+      setDownloadData(processDownloadData(data.captures, selectedColumns));
       setLoading(false);
     });
     csvLink.current.link.click();

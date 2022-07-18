@@ -11,18 +11,14 @@ const styles = () => ({
   },
 });
 
-const Icon = (props) => ({
-  render() {
-    return (
-      <svg width="36" height="36" viewBox="0 0 24 24">
-        <path
-          className={
-            props.active ? props.classes.active : props.classes.default
-          }
-          d={iconPaths[props.icon]}
-        />
-      </svg>
-    );
-  },
-});
+function Icon(props) {
+  return (
+    <svg width="36" height="36" viewBox="0 0 24 24">
+      <path
+        className={props.active ? props.classes.active : props.classes.default}
+        d={iconPaths[props.icon]}
+      />
+    </svg>
+  );
+}
 export default withStyles(styles)(Icon);

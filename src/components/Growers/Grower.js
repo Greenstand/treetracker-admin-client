@@ -35,12 +35,12 @@ export const Grower = (props) => {
         <CardContent className={classes.cardContent}>
           {grower.imageUrl && (
             <OptimizedImage
-              src={grower.imageUrl}
+              src={grower.image_url}
               width={GROWER_IMAGE_SIZE}
               height={GROWER_IMAGE_SIZE}
               className={classes.cardMedia}
               fixed
-              rotation={grower.imageRotation}
+              rotation={grower.image_rotation}
               alertTextSize=".7rem"
               alertTitleSize="1rem"
             />
@@ -54,17 +54,18 @@ export const Grower = (props) => {
           )}
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Grid justify="flex-start" container>
+          <Grid justifyContent="flex-start" container>
             <Grid container direction="column">
               <Typography className={classes.name}>
-                {grower.firstName} {grower.lastName}
+                {grower.first_name} {grower.last_name}
               </Typography>
               <Typography>
                 ID: <LinkToWebmap value={grower.id} type="user" />
               </Typography>
+              <Typography>wallet: {grower.wallet}</Typography>
               <GrowerOrganization
                 organizationName={grower?.organization}
-                assignedOrganizationId={grower?.organizationId}
+                assignedOrganizationId={grower?.organization_id}
                 compact={true}
               />
             </Grid>

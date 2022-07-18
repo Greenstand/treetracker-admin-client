@@ -33,8 +33,8 @@ describe('CaptureFilter organizations', () => {
 
       afterEach(cleanup);
 
-      it('renders text "Verification Status" ', () => {
-        expect(screen.getByText('Verification Status')).toBeInTheDocument();
+      it('renders text "Token Status" ', () => {
+        expect(screen.getByText('Token Status')).toBeInTheDocument();
       });
 
       it('renders "Start Date" input ', () => {
@@ -77,7 +77,7 @@ describe('CaptureFilter organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         expect(orgs).toHaveLength(2);
       });
@@ -122,7 +122,7 @@ describe('CaptureFilter organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);
