@@ -7,7 +7,7 @@ export default function useLoadData(
   endDate,
   field1,
   field2,
-  getNum1 = (e) => e.total,
+  getNum1 = (e) => e?.total,
   rows
 ) {
   const [data, setData] = React.useState(undefined);
@@ -31,12 +31,15 @@ export default function useLoadData(
   }
 
   async function load(startDate, endDate) {
+    log.debug('load: ', startDate, endDate, field1, rows);
     const res = await axios({
       method: 'get',
       url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
       params: {
         capture_created_start_date: startDate ? startDate : undefined,
         capture_created_end_date: endDate ? endDate : undefined,
+        // card_title: field1,
+        // limit: rows,
       },
     });
     const { data } = res;
@@ -60,7 +63,7 @@ export default function useLoadData(
 
     setData({
       num1: getNum1(data[field1]),
-      top: (top || data[field1][field2]).map((p) => ({
+      top: (top || data.card_information).map((p) => ({
         name: p.name,
         num: p.number,
       })),
