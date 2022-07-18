@@ -1,13 +1,8 @@
-import {
-  handleResponse,
-  handleError,
-  getOrganization,
-  getOrganizationUUID,
-} from './apiUtils';
+import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 import api from './treeTrackerApi';
-import log from 'loglevel';
 
+const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export default {
@@ -24,9 +19,6 @@ export default {
   getGrower(id) {
     try {
       const growerQuery = `${QUERY_API}/grower-accounts/${id}`;
-      // const growerQuery = `${
-      //   process.env.REACT_APP_API_ROOT
-      // }/api/${getOrganization()}planter/${id}`;
 
       return fetch(growerQuery, {
         method: 'GET',
@@ -40,23 +32,18 @@ export default {
     }
   },
 
-  getGrowers({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
+  getGrowers({ skip, rowsPerPage, filter }) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
-      where.organization_id = getOrganizationUUID();
       const growerFilter = {
         ...where,
-        // orderBy,
-        // order,
         limit: rowsPerPage,
-        // skip,
+        offset: skip,
       };
+
       const query = `${QUERY_API}/grower-accounts${
         growerFilter ? `?${api.makeQueryString(growerFilter)}` : ''
       }`;
-      // const query = `${QUERY_API}/api/${getOrganization()}planter?filter=${JSON.stringify(
-      //   growerFilter
-      // )}`;
 
       return fetch(query, {
         headers: {
@@ -86,37 +73,9 @@ export default {
     }
   },
 
-  getGrowerRegistrations(growerId) {
-    try {
-      // const registrationQuery = `${QUERY_API}/planter-registration?filter[where][planterId]=${growerId}`;
-      const registrationQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter-registration?filter[where][planterId]=${growerId}`;
-      return fetch(registrationQuery, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
-
   getGrowerSelfies(growerId) {
     try {
-      const filter = {
-        order: 'timeUpdated DESC',
-        limit: 100,
-        fields: ['planterPhotoUrl'],
-      };
-
-      const growerSelfiesQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${growerId}/selfies/?filter=${JSON.stringify(
-        filter
-      )}`;
+      const growerSelfiesQuery = `${QUERY_API}/grower-accounts/${growerId}/selfies`;
 
       return fetch(growerSelfiesQuery, {
         method: 'GET',
@@ -126,16 +85,7 @@ export default {
         },
       })
         .then(handleResponse)
-        .then((items) => {
-          // Remove duplicates
-          return [
-            ...new Set(
-              items
-                .map((tree) => tree.planterPhotoUrl)
-                .filter((img) => img !== '')
-            ),
-          ];
-        });
+        .then((items) => items.selfies.filter((img) => img !== ''));
     } catch (error) {
       handleError(error);
     }
@@ -147,9 +97,7 @@ export default {
         growerUpdate = { ...growerUpdate, organizationId: null };
       }
       const { id } = growerUpdate;
-      const growerQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${id}`;
+      const growerQuery = `${FIELD_DATA_API}/grower-accounts/${id}`;
 
       return fetch(growerQuery, {
         method: 'PATCH',

@@ -115,7 +115,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
-  const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
@@ -124,6 +123,25 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  function formatDevices(grower) {
+    const devices = grower?.devices?.reduce((result, device) => {
+      if (!device.device_identifier) return result;
+
+      result.push({
+        id: device.device_identifier,
+        os:
+          device.manufacturer?.toLowerCase() === 'apple'
+            ? `iOS ${device.os_version && device.os_version}`
+            : `Android ${device.os_version && device.os_version}: ${
+                device.brand
+              }`,
+      });
+      return result;
+    }, []);
+
+    return devices;
+  }
 
   useEffect(() => {
     setErrorMessage(null);
@@ -148,48 +166,15 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
         setGrower(match);
 
-        if (
-          match.id &&
-          (!growerRegistrations ||
-            (growerRegistrations.length > 0 &&
-              growerRegistrations[0].planter_id !== match.id))
-        ) {
-          setGrowerRegistrations(null);
-          api.getGrowerRegistrations(match.id).then((registrations) => {
-            log.debug('Grower registrations', registrations);
-            if (registrations && registrations.length) {
-              const sortedReg = registrations.sort((a, b) =>
-                a.created_at > b.created_at ? 1 : -1
-              );
-              const uniqueDevices = {};
-              const devices = sortedReg.reduce((result, reg) => {
-                if (!reg.device_identifier) {
-                  return result;
-                }
-                if (!uniqueDevices[reg.device_identifier]) {
-                  uniqueDevices[reg.device_identifier] = true;
-                  // if manufacturer isn't 'apple' it's an android phone
-                  result.push({
-                    id: reg.device_identifier,
-                    os:
-                      reg.manufacturer?.toLowerCase() === 'apple'
-                        ? 'iOS'
-                        : 'Android',
-                  });
-                }
-                return result;
-              }, []);
-
-              setDeviceIdentifiers(devices);
-              setGrowerRegistrations(sortedReg);
-            }
-          });
+        if (match.devices.length) {
+          const devices = formatDevices(match);
+          setDeviceIdentifiers(devices);
         }
       }
     }
     loadGrowerDetail();
     // eslint-disable-next-line
-  }, [growerId, growers]);
+  }, [growerId]);
 
   useEffect(() => {
     async function loadCaptures() {
@@ -205,9 +190,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           getCaptureCountGrower('unprocessed', grower.id),
           getCaptureCountGrower('rejected', grower.id),
         ]);
-        console.log('approvedCount ----> ', approvedCount);
-        console.log('awaitingCount ----> ', awaitingCount);
-        console.log('rejectedCount ----> ', rejectedCount);
+
         setVerificationStatus({
           approved: approvedCount,
           awaiting: awaitingCount,
@@ -223,7 +206,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     let filter = new FilterModel();
     filter.grower_account_id = growerId?.toString();
     filter.status = status;
-    log.warn('Need to get capture count for grower', filter);
+    log.warn('Need to get capture count for grower:', filter.status);
     const countResponse = await treeTrackerApi.getCaptureCount(filter);
     return countResponse && countResponse.count ? countResponse.count : 0;
   }
@@ -276,7 +259,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           {errorMessage ? (
             <Grid container direction="column">
               <Grid item>
-                <Grid container justify="space-between" alignItems="center">
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item>
                     <Box m={4}>
                       <Typography color="primary" variant="h6">
@@ -303,7 +290,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           ) : (
             <Grid container direction="column">
               <Grid item>
-                <Grid container justify="space-between" alignItems="center">
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item>
                     <Box m={4}>
                       <Typography color="primary" variant="h6">
@@ -484,37 +475,27 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">Country</Typography>
+                <Typography variant="subtitle1">
+                  Region{grower?.regions?.length >= 2 ? 's' : ''}
+                </Typography>
                 <Typography variant="body1">
-                  {(growerRegistrations &&
-                    growerRegistrations
-                      .map((item) => item.country)
-                      .filter(
-                        (country, i, arr) =>
-                          country && arr.indexOf(country) === i
-                      )
-                      .join(', ')) ||
-                    '---'}
+                  {grower?.regions?.length ? grower?.regions.join(', ') : '---'}
                 </Typography>
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Registered</Typography>
                 <Typography variant="body1">
-                  {(growerRegistrations &&
-                    growerRegistrations.length > 0 &&
-                    getDateTimeStringLocale(
-                      growerRegistrations[0].created_at
-                    )) ||
+                  {(grower && getDateTimeStringLocale(grower.created_at)) ||
                     '---'}
                 </Typography>
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">
-                  Device Identifier{deviceIdentifiers.length >= 2 ? 's' : ''}
+                  Device Identifier{deviceIdentifiers?.length >= 2 ? 's' : ''}
                 </Typography>
-                {(deviceIdentifiers.length && (
+                {(deviceIdentifiers?.length && (
                   <table>
                     <tbody>
                       {deviceIdentifiers.map((device, i) => (
