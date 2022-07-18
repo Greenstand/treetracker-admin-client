@@ -38,8 +38,6 @@ export default function useLoadData(
       params: {
         capture_created_start_date: startDate ? startDate : undefined,
         capture_created_end_date: endDate ? endDate : undefined,
-        // card_title: field1,
-        // limit: rows,
       },
     });
     const { data } = res;
