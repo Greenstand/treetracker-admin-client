@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -425,6 +431,12 @@ function CaptureMatchingView() {
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
   };
+  const countryInfo = useMemo(
+    () => (
+      <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
+    ),
+    [captureImage?.latitude, captureImage?.longitude]
+  );
 
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
@@ -573,10 +585,10 @@ function CaptureMatchingView() {
                     }}
                   />
                   <Typography variant="body1">
-                    <Country
-                      lat={captureImage.latitude}
-                      lon={captureImage.longitude}
-                    />
+                    {captureImage?.latitude &&
+                      captureImage?.longitude &&
+                      countryInfo}
+                    ;
                   </Typography>
                 </Box>
               </Box>
