@@ -52,7 +52,7 @@ export function GrowerProvider(props) {
   };
 
   const loadGrowers = async () => {
-    log.debug('load growers', filter);
+    log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
     const growers = await api.getGrowers({

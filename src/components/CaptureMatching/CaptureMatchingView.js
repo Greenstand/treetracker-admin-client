@@ -238,7 +238,7 @@ function CaptureMatchingView() {
   const initialFilter = {
     startDate: '',
     endDate: '',
-    stakeholderUUID: null,
+    organizationId: null,
   };
 
   const classes = useStyle();
@@ -254,7 +254,6 @@ function CaptureMatchingView() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [organizationId, setOrganizationId] = useState(null);
-  const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
   // To get total tree count on candidate capture image icon
@@ -297,7 +296,7 @@ function CaptureMatchingView() {
     const filterParameters = {
       captured_at_start_date: filter.startDate,
       captured_at_end_date: filter.endDate,
-      'organization_ids[]': filter.stakeholderUUID && [filter.stakeholderUUID],
+      'organization_ids[]': filter.organizationId && [filter.organizationId],
     };
     // log.debug('fetchCaptures filterParameters', filterParameters);
     const data = await api.fetchCapturesToMatch(
@@ -402,11 +401,11 @@ function CaptureMatchingView() {
   }
 
   function handleFilterSubmit() {
-    log.debug('filter submit -----> ', organizationId, stakeholderUUID);
+    log.debug('filter submit -----> ', organizationId);
     setFilter({
       startDate,
       endDate,
-      stakeholderUUID,
+      organizationId,
     });
     matchingToolContext.handleFilterToggle();
   }
@@ -478,10 +477,10 @@ function CaptureMatchingView() {
                   }
                 />
               )}
-              {filter.stakeholderUUID && (
+              {filter.organizationId && (
                 <Chip
                   label={appContext.orgList.reduce((a, c) => {
-                    return c.stakeholder_uuid === filter.stakeholderUUID
+                    return c.stakeholder_uuid === filter.organizationId
                       ? c.name
                       : a;
                   }, '')}
@@ -489,7 +488,7 @@ function CaptureMatchingView() {
                   onDelete={() =>
                     setFilter({
                       ...filter,
-                      stakeholderUUID: undefined,
+                      organizationId: undefined,
                     })
                   }
                 />
@@ -750,10 +749,11 @@ function CaptureMatchingView() {
                   value: null,
                 },
               ]}
-              handleSelection={(org) => {
-                setOrganizationId(org.id);
-                setStakeholderUUID(org.stakeholder_uuid);
-              }}
+              handleSelection={(org) =>
+                setOrganizationId(
+                  org?.stakeholder_uuid ? org.stakeholder_uuid : org
+                )
+              }
             />
           </FormControl>
 

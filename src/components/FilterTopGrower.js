@@ -131,7 +131,9 @@ function FilterTopGrower(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) =>
-                  setOrganizationId(org.stakeholder_uuid)
+                  setOrganizationId(
+                    org?.stakeholder_uuid ? org.stakeholder_uuid : org
+                  )
                 }
               />
               <TextField

@@ -305,15 +305,18 @@ export const AppProvider = (props) => {
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
     const { stakeholders } = await stakeholder_api.getStakeholders();
-    const results = stakeholders.map((s) => {
-      return {
-        id: s.id,
-        stakeholder_uuid: s.id,
-        name: s.org_name || s.first_name + ' ' + s.last_name,
-        type: s.type,
-      };
+    const results = [];
+    stakeholders.forEach((s) => {
+      const org = orgs.find((o) => s.id === o.stakeholder_uuid);
+      if (org) {
+        return {
+          id: s.id,
+          stakeholder_uuid: s.id,
+          name: s.org_name || s.first_name + ' ' + s.last_name,
+          type: s.type,
+        };
+      }
     });
-    console.log('org list', [...orgs, ...results]);
     setOrgList([...orgs, ...results]);
   }
 
@@ -338,7 +341,6 @@ export const AppProvider = (props) => {
     checkSession();
   }
 
-  // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
     <AppContext.Provider value={value}>
       <MessagingProvider>{props.children}</MessagingProvider>

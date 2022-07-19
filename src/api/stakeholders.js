@@ -1,4 +1,9 @@
-import { handleResponse, handleError, getOrganizationId } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganizationId,
+  getOrganization,
+} from './apiUtils';
 import { session } from '../models/auth';
 import FilterModel from '../models/FilterStakeholder';
 const log = require('loglevel').getLogger('../api/stakeholders');
@@ -20,7 +25,7 @@ function removeEmptyValues(obj) {
 }
 
 export default {
-  getStakeholders(id = null, filter = new FilterModel()) {
+  getStakeholders(id, filter = new FilterModel()) {
     try {
       const orgId = id || getOrganizationId();
 
@@ -31,7 +36,7 @@ export default {
         return acc;
       }, '');
 
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId && where) {
         query += `/${orgId}?${where}`;
@@ -58,7 +63,7 @@ export default {
   deleteStakeholder(id, stakeholderData) {
     try {
       const orgId = id || getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (id && orgId && orgId !== id) {
         query += `/${id}/${orgId}`;
@@ -85,7 +90,7 @@ export default {
   updateStakeholder(stakeholderUpdate) {
     try {
       const orgId = getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId) {
         query += `/${orgId}`;
@@ -111,7 +116,7 @@ export default {
   createStakeholder(stakeholderData) {
     try {
       const orgId = getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId) {
         query += `/${orgId}`;

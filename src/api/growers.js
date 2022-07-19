@@ -85,7 +85,7 @@ export default {
         },
       })
         .then(handleResponse)
-        .then((items) => items.selfies.filter((img) => img !== ''));
+        .then((items) => items?.selfies?.filter((img) => img !== ''));
     } catch (error) {
       handleError(error);
     }

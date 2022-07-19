@@ -15,7 +15,6 @@ describe('Filter, with initial values about this filter object', () => {
     filter.dateEnd = '2019-07-30';
     filter.speciesId = '';
     filter.organizationId = '';
-    filter.stakeholderUUID = '';
     filter.status = 'unprocessed';
   });
 

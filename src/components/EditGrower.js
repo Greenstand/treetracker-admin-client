@@ -42,7 +42,6 @@ const EditGrower = (props) => {
       if (grower?.id) {
         setLoadingGrowerImages(true);
         const selfies = await api.getGrowerSelfies(grower.id);
-        log.debug('EditGrower selfies', selfies);
         setLoadingGrowerImages(false);
 
         setGrowerImages([

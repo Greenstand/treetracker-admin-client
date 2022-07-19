@@ -56,20 +56,6 @@ export default class Filter {
       where.endDate = this.dateEnd;
     }
 
-    // if (this.dateStart && this.dateEnd) {
-    //   where.timeCreated = {
-    //     between: [this.dateStart, this.dateEnd],
-    //   };
-    // } else if (this.dateStart && !this.dateEnd) {
-    //   where.timeCreated = {
-    //     gte: this.dateStart,
-    //   };
-    // } else if (!this.dateStart && this.dateEnd) {
-    //   where.timeCreated = {
-    //     lte: this.dateEnd,
-    //   };
-    // }
-
     if (this.deviceIdentifier) {
       where.device_identifier = this.deviceIdentifier;
     }
@@ -99,7 +85,7 @@ export default class Filter {
     if (this.organizationId === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organization_id = this.stakeholderUUID;
+      where.organization_id = this.organizationId;
     }
 
     if (this.tokenId && this.tokenId !== 'All') {
@@ -112,12 +98,6 @@ export default class Filter {
     if (this.status) {
       where.status = this.status;
     }
-
-    // if (this.planterId) {
-    //   where.grower_account_id = this.planterId;
-    // }
-
-    // return { ...where };
 
     let orCondition = false;
     const { ...restFilter } = where;
@@ -206,7 +186,6 @@ export default class Filter {
       numFilters += 1;
     }
 
-    // organizationId and stakeholderUUID count as one filter
     if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
