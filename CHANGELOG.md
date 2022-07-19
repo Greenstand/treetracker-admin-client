@@ -1,3 +1,16 @@
+# [1.100.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.99.0...v1.100.0) (2022-07-19)
+
+
+### Bug Fixes
+
+* capture tool tip ([#750](https://github.com/Greenstand/treetracker-admin-client/issues/750)) ([dec0a4c](https://github.com/Greenstand/treetracker-admin-client/commit/dec0a4c240187d3502d323df672b858f15822e9d))
+
+
+### Features
+
+* create dropdowns for Stakeholder Filter by type and Add parent relation_id ([#742](https://github.com/Greenstand/treetracker-admin-client/issues/742)) ([8d4577e](https://github.com/Greenstand/treetracker-admin-client/commit/8d4577e3ac1039ea9e749c62cdad37fa30240a38))
+* open links to map and website in new tabs ([#749](https://github.com/Greenstand/treetracker-admin-client/issues/749)) ([aca93d3](https://github.com/Greenstand/treetracker-admin-client/commit/aca93d381ddd34587fd6f45156b4f3d65fdb6811))
+
 # [1.99.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.98.3...v1.99.0) (2022-07-10)
 
 
