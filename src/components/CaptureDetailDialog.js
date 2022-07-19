@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CaptureDetailDialog(props) {
   // console.log('render: capture detail dialog');
-  const { open, capture } = props;
+  const { open, capture, onClose } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -119,7 +119,7 @@ function CaptureDetailDialog(props) {
     setSnackbarOpen(false);
     setSnackbarLabel('');
     cdContext.reset();
-    props.onClose();
+    onClose();
   }
 
   function Tags(props) {
@@ -132,7 +132,7 @@ function CaptureDetailDialog(props) {
       ...captureTags.map((t) => t.tagName),
     ].filter((tag) => !!tag);
 
-    const dateCreated = new Date(Date.parse(capture.timeCreated));
+    const dateCreated = new Date(Date.parse(capture.created_at));
     function confirmCopy(label) {
       setSnackbarOpen(false);
       setSnackbarLabel(label);
@@ -168,7 +168,7 @@ function CaptureDetailDialog(props) {
           {[
             {
               label: 'Grower ID',
-              value: capture.planterId,
+              value: capture.grower_account_id,
               copy: true,
               link: true,
             },
@@ -179,14 +179,14 @@ function CaptureDetailDialog(props) {
             },
             {
               label: 'Device Identifier',
-              value: capture.deviceIdentifier,
+              value: capture.device_identifier,
               copy: true,
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
-            { label: 'Note', value: renderCapture.note },
+            { label: 'Note', value: renderCapture?.note },
             {
               label: 'Original Image URL',
-              value: renderCapture.imageUrl,
+              value: renderCapture?.image_url,
               copy: true,
               link: true,
               image: true,
@@ -199,7 +199,7 @@ function CaptureDetailDialog(props) {
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
                     <Link
-                      href={renderCapture.imageUrl}
+                      href={renderCapture?.imageUrl}
                       underline="always"
                       target="_blank"
                     >
@@ -312,7 +312,7 @@ function CaptureDetailDialog(props) {
         maxWidth="md"
       >
         <OptimizedImage
-          src={renderCapture.imageUrl}
+          src={renderCapture?.image_url}
           width={screenHeight * 0.9}
           style={{ maxWidth: '100%' }}
           objectFit="contain"

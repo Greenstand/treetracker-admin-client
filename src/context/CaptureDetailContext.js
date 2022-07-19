@@ -40,12 +40,12 @@ export function CaptureDetailProvider(props) {
     if (id == null) {
       log.debug('getCapture called with no id');
       return Promise.resolve(STATE_EMPTY.capture);
+    } else {
+      return api.getCaptureById(id).then((capture) => {
+        setState({ ...state, capture });
+        return capture;
+      });
     }
-
-    return api.getCaptureById(id).then((capture) => {
-      setState({ ...state, capture });
-      return capture;
-    });
   };
 
   const getSpecies = async (speciesId) => {

@@ -186,7 +186,7 @@ export default {
   },
   getCaptureById(id) {
     try {
-      const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
+      const query = `${CAPTURE_MATCH_API}/captures/${id}`;
 
       return fetch(query, {
         headers: {
