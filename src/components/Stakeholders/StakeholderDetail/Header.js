@@ -339,7 +339,9 @@ export default function StakeholderDialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  <Link href={details?.website}>{details?.website}</Link>
+                  <Link href={details?.website} target="_blank">
+                    {details?.website}
+                  </Link>
                 </Typography>
               )}
             </Grid>
@@ -365,7 +367,9 @@ export default function StakeholderDialogHeader({ data }) {
                 />
               ) : (
                 <Typography className={classes.fields}>
-                  <Link href={details?.map}>{details?.map}</Link>
+                  <Link href={details?.map} target="_blank">
+                    {details?.map}
+                  </Link>
                 </Typography>
               )}
             </Grid>
