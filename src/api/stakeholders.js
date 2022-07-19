@@ -30,7 +30,7 @@ export default {
         return acc;
       }, '');
 
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId && where) {
         query += `/${orgId}?${where}`;
@@ -57,7 +57,7 @@ export default {
   deleteStakeholder(id, stakeholderData) {
     try {
       const orgId = id || getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (id && orgId && orgId !== id) {
         query += `/${id}/${orgId}`;
@@ -84,7 +84,7 @@ export default {
   updateStakeholder(stakeholderUpdate) {
     try {
       const orgId = getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId) {
         query += `/${orgId}`;
@@ -110,7 +110,7 @@ export default {
   createStakeholder(stakeholderData) {
     try {
       const orgId = getOrganizationId();
-      let query = `${STAKEHOLDER_API}`;
+      let query = `${STAKEHOLDER_API}/stakeholders`;
 
       if (orgId) {
         query += `/${orgId}`;
@@ -137,12 +137,12 @@ export default {
 
   // async getUnlinkedStakeholders(id, abortController) {
   //   const orgId = getOrganizationId();
-  //   let query = `${STAKEHOLDER_API}/relations`;
+  //   let query = `${STAKEHOLDER_API}/stakeholders/relations`;
 
   //   if (id && orgId && orgId !== id) {
-  //     query = `${STAKEHOLDER_API}/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
+  //     query = `${STAKEHOLDER_API}/stakeholders/relations/${id}?isRelation=${false}&owner_id=${orgId}`;
   //   } else if (id || orgId) {
-  //     query = `${STAKEHOLDER_API}/relations/${id || orgId}?isRelation=${false}`;
+  //     query = `${STAKEHOLDER_API}/stakeholders/relations/${id || orgId}?isRelation=${false}`;
   //   }
 
   //   const options = {
@@ -162,7 +162,7 @@ export default {
 
   // createLink(id, stakeholdersData) {
   //   const orgId = id || getOrganizationId();
-  //   let query = `${STAKEHOLDER_API}/relations`;
+  //   let query = `${STAKEHOLDER_API}/stakeholders/relations`;
 
   //   if (id && orgId && orgId !== id) {
   //     query += `/${id}/${orgId}`; //?owner_id=${orgId}`;
@@ -185,7 +185,7 @@ export default {
   // updateLinks(id, stakeholdersData) {
   //   const orgId = id || getOrganizationId();
   //   const { linked } = stakeholdersData;
-  //   let query = `${STAKEHOLDER_API}/relations`;
+  //   let query = `${STAKEHOLDER_API}/stakeholders/relations`;
 
   //   if (id && orgId && orgId !== id) {
   //     query += `/${id}/${orgId}?owner_id=${orgId}`;
