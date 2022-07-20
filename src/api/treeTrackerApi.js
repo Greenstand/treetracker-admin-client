@@ -502,7 +502,7 @@ export default {
   },
   deleteCaptureTag({ captureTagId }) {
     try {
-      const query = `${API_ROOT}/api/tree_tag/${captureTagId}`;
+      const query = `${API_ROOT}/api/tree_tags/${captureTagId}`;
       console.log(query);
       return fetch(query, {
         method: 'DELETE',

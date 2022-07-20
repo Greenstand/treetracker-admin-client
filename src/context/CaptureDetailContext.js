@@ -100,7 +100,7 @@ export function CaptureDetailProvider(props) {
       const response = await api.getSingleCaptureTag({ captureId, tagId }); // unique capture tag id
       const captureTagId = response[0].id;
       return api.deleteCaptureTag({ captureTagId }).then(() => {
-        getCaptureDetail(captureId);
+        reset();
       });
     } catch (error) {
       console.log(error);
