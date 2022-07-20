@@ -158,6 +158,8 @@ function CustomTableHeader({
         worker_id,
         phone,
         currency,
+        grower,
+        funder: organization_name,
         captures_count,
         amount,
         payment_confirmation_id,
@@ -166,6 +168,8 @@ function CustomTableHeader({
       }) => ({
         earnings_id,
         worker_id,
+        grower,
+        organization_name,
         phone,
         currency,
         amount,
