@@ -82,6 +82,21 @@ const columns = [
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),
   },
+  {
+    attr: 'lon',
+    label: 'Longitude',
+    renderer: (val) => val,
+  },
+  {
+    attr: 'lat',
+    label: 'Latitude',
+    renderer: (val) => val,
+  },
+  {
+    attr: 'imageUrl',
+    label: 'Image URL',
+    renderer: (val) => val,
+  },
 ];
 
 const CaptureTable = () => {
