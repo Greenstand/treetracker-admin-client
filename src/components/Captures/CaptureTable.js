@@ -94,7 +94,7 @@ const columns = [
   },
   {
     attr: 'imageUrl',
-    label: 'image URL',
+    label: 'Image URL',
     renderer: (val) => val,
   },
 ];
