@@ -349,9 +349,8 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
                     label={tag.tagName}
                     className={classes.chip}
                     onDelete={
-                      hasApproveTreePermission !== undefined // TODO: delete, for testing purpose only
-                        ? // onDelete={(hasApproveTreePermission
-                          () => {
+                      hasApproveTreePermission === true
+                        ? () => {
                             setCaptureTagDeletionTarget({
                               capture: cdContext.capture,
                               tag,
