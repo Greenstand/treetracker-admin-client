@@ -84,11 +84,11 @@ describe('Captures', () => {
       expect(arr[1]).toBe('1-4 of 4');
     });
 
-    it('should have 10 headers', () => {
+    it('should have 13 headers', () => {
       const table = screen.getByRole(/table/i);
       const headers = within(table).getAllByRole(/columnheader/i);
       const arr = headers.map((header) => header.textContent);
-      expect(arr).toHaveLength(10);
+      expect(arr).toHaveLength(13);
     });
 
     it('renders headers for captures table', () => {
@@ -112,6 +112,12 @@ describe('Captures', () => {
       item = within(table).getByText(/Capture Tags/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Created/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Latitude/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Longitude/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Image URL/i);
       expect(item).toBeInTheDocument();
     });
 
