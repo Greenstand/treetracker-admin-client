@@ -1,3 +1,11 @@
+# [1.101.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.100.0...v1.101.0) (2022-07-21)
+
+
+### Features
+
+* add lan lat image to capture ([#755](https://github.com/Greenstand/treetracker-admin-client/issues/755)) ([9e0502f](https://github.com/Greenstand/treetracker-admin-client/commit/9e0502f3ed6285a86a7fb019e09229bae6065f99))
+* add organization and grower names to earnings export ([#757](https://github.com/Greenstand/treetracker-admin-client/issues/757)) ([42aa9e5](https://github.com/Greenstand/treetracker-admin-client/commit/42aa9e56320469d3ce12a44e53ef5224e49525cc))
+
 # [1.100.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.99.0...v1.100.0) (2022-07-19)
 
 
