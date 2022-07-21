@@ -233,7 +233,7 @@ function CustomTableFilter(props) {
       >
         {/* start  filter header */}
         <Grid item className={classes.customTableFilterHeader}>
-          <Grid container direction="row" justify="space-between">
+          <Grid container direction="row" justifyContent="space-between">
             <Grid item>
               <Grid container direction="row">
                 <Typography variant="h6">Filter</Typography>

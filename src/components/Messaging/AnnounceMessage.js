@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: DRAWER_WIDTH - 20,
     display: 'flex',
     flexDirection: 'column',
-    justifycontent: 'center',
+    justifyContent: 'center',
     marginBottom: '2em',
   },
   sendButton: {

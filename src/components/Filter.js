@@ -137,7 +137,7 @@ function Filter(props) {
         elevation: props.isOpen ? 6 : 0,
       }}
     >
-      <Grid container justify="space-between">
+      <Grid container justifyContent="space-between">
         <Grid item>
           <Typography variant="h5">Filters</Typography>
         </Grid>
@@ -263,7 +263,7 @@ function Filter(props) {
         utils={DateFnsUtils}
         locale={getDatePickerLocale()}
       >
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <KeyboardDatePicker
             margin="normal"
             id="start-date-picker"

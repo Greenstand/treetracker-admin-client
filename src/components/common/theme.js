@@ -1,7 +1,7 @@
 /*
  * The Material-UI theme for the whole UI
  */
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
 /**
  * @constant
@@ -23,7 +23,7 @@ export const colorPrimary = 'rgba(118, 187, 35, 1)';
 const colorPrimarySelected = 'rgba(118, 187, 35, 0.3)';
 const colorPrimaryHover = 'rgba(118, 187, 35, 0.1)';
 
-export default createMuiTheme({
+export default createTheme({
   spacing: 4,
   typography: {
     fontSize: 11,

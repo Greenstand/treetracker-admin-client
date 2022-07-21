@@ -459,7 +459,7 @@ const Verify = (props) => {
                 </CardContent>
 
                 <Grid
-                  justify="center"
+                  justifyContent="center"
                   container
                   className={classes.cardActions}
                 >
@@ -614,7 +614,7 @@ const Verify = (props) => {
               >
                 <Grid
                   container
-                  justify="space-between"
+                  justifyContent="space-between"
                   alignItems="center"
                   className={classes.title}
                 >
@@ -659,7 +659,12 @@ const Verify = (props) => {
                   {captureImageItems}
                 </Grid>
               </Grid>
-              <Grid item container justify="flex-end" className={classes.title}>
+              <Grid
+                item
+                container
+                justifyContent="flex-end"
+                className={classes.title}
+              >
                 {imagePagination}
               </Grid>
             </Grid>

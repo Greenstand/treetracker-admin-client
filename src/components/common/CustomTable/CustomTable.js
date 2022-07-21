@@ -52,7 +52,7 @@ function ImportAction(props) {
 
   return (
     <Grid item lg={2}>
-      <Grid container direction="row" justify="flex-end">
+      <Grid container direction="row" justifyContent="flex-end">
         <input
           accept=".csv,multipart/form-data"
           className={classes.uploadFileInput}
@@ -194,11 +194,16 @@ function CustomTableHeader({
 
       {/*  start custom table actions */}
       <Grid item xs={8}>
-        <Grid container direction="row" justify="flex-end" alignItems="center">
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+        >
           {/*  show export button if actionButtonType is 'export' */}
           {actionButtonType === 'export' && (
             <Grid item lg={2}>
-              <Grid container direction="row" justify="flex-end">
+              <Grid container direction="row" justifyContent="flex-end">
                 <CSVLink
                   data={dataToExport}
                   filename={`${csvFileNamePrefix}${csvFileNameSuffix}.csv`}
@@ -231,12 +236,12 @@ function CustomTableHeader({
 
           {/* start Date Range button */}
           <Grid item lg={3}>
-            <Grid container direction="row" justify="flex-end">
+            <Grid container direction="row" justifyContent="flex-end">
               <Button
                 className={classes.customTableDateFilterButton}
                 onClick={() => openDateFilter()}
               >
-                <Grid container direction="row" justify="center">
+                <Grid container direction="row" justifyContent="center">
                   <div>
                     <Typography className={classes.dateFiterButonSmallText}>
                       Date Range
@@ -263,7 +268,7 @@ function CustomTableHeader({
 
           {/* start Filter button */}
           <Grid item lg={3}>
-            <Grid container direction="row" justify="flex-end">
+            <Grid container direction="row" justifyContent="flex-end">
               <Button
                 onClick={openMainFilter}
                 className={classes.filterButton}
