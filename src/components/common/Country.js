@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Country({ lat, lon }) {
+  console.log('Country:', lat, lon);
+  console.count();
+
   const [content, setContent] = useState('');
   if (!lat || !lon || lat === 'undefined' || lon === 'undefined') {
     setContent('No data');

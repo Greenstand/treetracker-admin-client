@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -139,6 +145,11 @@ function CaptureDetailDialog(props) {
       setSnackbarOpen(true);
     }
 
+    const countryInfo = useMemo(
+      () => <Country lat={capture?.latitude} lon={capture?.longitude} />,
+      [capture?.latitude, capture?.longitude]
+    );
+
     return (
       <Grid container direction="column">
         <Grid item>
@@ -224,7 +235,7 @@ function CaptureDetailDialog(props) {
           <Grid>
             <Typography variant="subtitle1">Country</Typography>
             <Typography variant="body1">
-              <Country lat={capture.lat} lon={capture.lon} />
+              {capture?.latitude && capture?.longitude && countryInfo}
             </Typography>
           </Grid>
         </Grid>
