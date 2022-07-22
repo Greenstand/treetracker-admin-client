@@ -222,8 +222,8 @@ const CaptureTable = () => {
         count={captureCount || 0}
         page={page}
         rowsPerPage={rowsPerPage}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleRowsPerPageChange}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
       />
     );
   };

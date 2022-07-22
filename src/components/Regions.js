@@ -269,8 +269,8 @@ const RegionTable = (props) => {
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
       page={currentPage}
       rowsPerPage={pageSize}
-      onChangePage={handleChangeCurrentPage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
+      onPageChange={handleChangeCurrentPage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
       SelectProps={{
         inputProps: { 'aria-label': 'rows per page' },
         native: true,

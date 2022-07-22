@@ -428,8 +428,8 @@ function CustomTable({
         count={totalCount || 0}
         page={page}
         rowsPerPage={rowsPerPage}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         aria-label="rows per page"
       />
     );

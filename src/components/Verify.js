@@ -526,8 +526,8 @@ const Verify = (props) => {
       count={verifyContext.captureCount || 0}
       rowsPerPage={verifyContext.pageSize}
       page={verifyContext.currentPage}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangePageSize}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangePageSize}
       labelRowsPerPage="Captures per page:"
       className={classes.pagination}
     />

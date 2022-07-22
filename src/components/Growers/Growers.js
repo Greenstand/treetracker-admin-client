@@ -90,8 +90,8 @@ const Growers = (props) => {
       count={growerContext.count || 0}
       rowsPerPage={growerContext.pageSize}
       page={growerContext.currentPage}
-      onChangePage={handlePageChange}
-      onChangeRowsPerPage={handleChangePageSize}
+      onPageChange={handlePageChange}
+      onRowsPerPageChange={handleChangePageSize}
       labelRowsPerPage="Growers per page:"
     />
   );

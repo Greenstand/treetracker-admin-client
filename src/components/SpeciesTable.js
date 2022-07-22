@@ -232,8 +232,8 @@ const SpeciesTable = (props) => {
       colSpan={3}
       page={page}
       rowsPerPage={rowsPerPage}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
+      onPageChange={handleChangePage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
       SelectProps={{
         inputProps: { 'aria-label': 'rows per page' },
         native: true,
