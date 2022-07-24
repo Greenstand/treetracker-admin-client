@@ -1,3 +1,10 @@
+## [1.101.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.101.0...v1.101.1) (2022-07-24)
+
+
+### Bug Fixes
+
+* update phone regex validation ([#759](https://github.com/Greenstand/treetracker-admin-client/issues/759)) ([ded29eb](https://github.com/Greenstand/treetracker-admin-client/commit/ded29ebc75728416203ea0b560c8367c38848aa9))
+
 # [1.101.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.100.0...v1.101.0) (2022-07-21)
 
 
