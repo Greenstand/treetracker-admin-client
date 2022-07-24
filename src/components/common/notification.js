@@ -70,7 +70,7 @@ export default function notification(message, type = 'info', delay = 3000) {
             <Grid
               container
               spacing={1}
-              justify="flex-start"
+              justifyContent="flex-start"
               alignItems="center"
             >
               <Grid item>

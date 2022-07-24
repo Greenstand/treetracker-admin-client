@@ -54,7 +54,7 @@ export const Grower = (props) => {
           )}
         </CardContent>
         <CardActions className={classes.cardActions}>
-          <Grid justify="flex-start" container>
+          <Grid justifyContent="flex-start" container>
             <Grid container direction="column">
               <Typography className={classes.name}>
                 {grower.firstName} {grower.lastName}

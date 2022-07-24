@@ -222,8 +222,8 @@ const CaptureTable = () => {
         count={captureCount || 0}
         page={page}
         rowsPerPage={rowsPerPage}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleRowsPerPageChange}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
       />
     );
   };
@@ -235,7 +235,7 @@ const CaptureTable = () => {
       <Grid
         container
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="center"
       >
         <Typography variant="h5" className={classes.title}>

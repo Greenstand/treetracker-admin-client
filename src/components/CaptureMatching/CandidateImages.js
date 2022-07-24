@@ -256,7 +256,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                                 }}
                               />
                               <Typography variant="body1">
-                                {capture && (
+                                {capture?.latitude && capture?.longitude && (
                                   <DistanceTo
                                     lat1={capture.latitude}
                                     lon1={capture.longitude}

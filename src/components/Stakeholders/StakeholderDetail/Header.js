@@ -161,7 +161,11 @@ export default function StakeholderDialogHeader({ data }) {
 
       <Grid item container xs={11} className={classes.pl}>
         {data.type === 'Organization' ? (
-          <Grid container justify="space-between" alignItems="flex-start">
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="flex-start"
+          >
             {isEditing ? (
               <TextField
                 name="org_name"
@@ -185,7 +189,7 @@ export default function StakeholderDialogHeader({ data }) {
         ) : (
           <Grid
             container
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-start"
             item
             xs={11}

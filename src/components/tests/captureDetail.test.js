@@ -51,10 +51,10 @@ describe('captureDetail', () => {
         <ThemeProvider theme={theme}>
           <BrowserRouter>
             <AppProvider>
-              <CaptureDetailProvider value={captureValues}>
+              <CaptureDetailProvider>
                 <CaptureDetailDialog
                   open={true}
-                  // TransitionComponent={transition}
+                  onClose={() => {}}
                   capture={{ id: 0 }}
                 />
               </CaptureDetailProvider>

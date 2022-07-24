@@ -3,7 +3,7 @@ import { session } from '../models/auth';
 import log from 'loglevel';
 
 // Set API as a variable
-const CAPTURE_MATCH_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
+const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const CAPTURE_FIELDS = {
@@ -143,7 +143,7 @@ export default {
         .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
         .join('&');
 
-      const req = `${CAPTURE_MATCH_API}/captures?tree_associated=false&limit=${1}&offset=${
+      const req = `${TREETRACKER_API}/captures?tree_associated=false&limit=${1}&offset=${
         currentPage - 1
       }&${where}`;
 
@@ -159,7 +159,7 @@ export default {
   },
   fetchCandidateTrees(captureId, abortController) {
     try {
-      const query = `${CAPTURE_MATCH_API}/trees/potential_matches?capture_id=${captureId}`;
+      const query = `${TREETRACKER_API}/trees/potential_matches?capture_id=${captureId}`;
 
       return fetch(query, {
         headers: {
@@ -173,7 +173,7 @@ export default {
   },
   getGrowerAccountById(id) {
     try {
-      const query = `${CAPTURE_MATCH_API}/grower_accounts/${id}`;
+      const query = `${TREETRACKER_API}/grower_accounts/${id}`;
 
       return fetch(query, {
         headers: {
@@ -186,7 +186,7 @@ export default {
   },
   getCaptureById(id) {
     try {
-      const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
+      const query = `${TREETRACKER_API}/captures/${id}`;
 
       return fetch(query, {
         headers: {

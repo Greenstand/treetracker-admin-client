@@ -204,7 +204,7 @@ const Login = (props) => {
             onChange={handlePasswordChange}
             value={password}
           />
-          <Grid container justify="space-between">
+          <Grid container justifyContent="space-between">
             <Grid item>
               <FormControlLabel
                 control={

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -30,6 +36,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { documentTitle } from '../../common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
+import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import Country from '../common/Country';
 import SelectOrg from '../common/SelectOrg';
@@ -257,6 +265,7 @@ function CaptureMatchingView() {
   const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
+  const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -401,7 +410,7 @@ function CaptureMatchingView() {
   }
 
   function handleFilterSubmit() {
-    log.debug('filter submit -----> ', organizationId, stakeholderUUID);
+    // log.debug('filter submit -----> ', organizationId, stakeholderUUID);
     setFilter({
       startDate,
       endDate,
@@ -414,6 +423,20 @@ function CaptureMatchingView() {
     setFilter(initialFilter);
     matchingToolContext.handleFilterToggle();
   }
+
+  function toggleDrawer() {
+    setIsDetailsPaneOpen(!isDetailsPaneOpen);
+  }
+
+  const closeDrawer = () => {
+    setIsDetailsPaneOpen(false);
+  };
+  const countryInfo = useMemo(
+    () => (
+      <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
+    ),
+    [captureImage?.latitude, captureImage?.longitude]
+  );
 
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
@@ -515,7 +538,10 @@ function CaptureMatchingView() {
   );
 
   const CaptureImage = (
-    <Box className={classes.captureImageBox1}>
+    <Box
+      data-testid="capture-image-container"
+      className={classes.captureImageBox1}
+    >
       {CaptureHeader}
       <Box height={16} />
       {!loading && !captureImage && (
@@ -530,7 +556,10 @@ function CaptureMatchingView() {
           key={`capture_${captureImage.id}`}
           className={classes.captureImageContainerBox}
         >
-          <Box className={classes.captureImageHeaderBox}>
+          <Box
+            data-testid="capture-image-header"
+            className={classes.captureImageHeaderBox}
+          >
             <Box className={classes.box2}>
               <Tooltip title={captureImage.id} interactive>
                 <Typography variant="h5">
@@ -556,10 +585,10 @@ function CaptureMatchingView() {
                     }}
                   />
                   <Typography variant="body1">
-                    <Country
-                      lat={captureImage.latitude}
-                      lon={captureImage.longitude}
-                    />
+                    {captureImage?.latitude &&
+                      captureImage?.longitude &&
+                      countryInfo}
+                    ;
                   </Typography>
                 </Box>
               </Box>
@@ -599,7 +628,11 @@ function CaptureMatchingView() {
             </Button>
           </Box>
 
-          <Box className={classes.captureImageImgBox}>
+          <Box
+            data-testid="capture-image"
+            className={classes.captureImageImgBox}
+            onClick={toggleDrawer}
+          >
             <OptimizedImage
               key={captureImage.id}
               className={classes.captureImageImgContainer}
@@ -684,7 +717,7 @@ function CaptureMatchingView() {
         >
           {/* start  filter header */}
           <Grid item className={classes.customTableFilterHeader}>
-            <Grid container direction="row" justify="space-between">
+            <Grid container direction="row" justifyContent="space-between">
               <Grid item>
                 <Grid container direction="row">
                   <Typography variant="h6">Filter</Typography>
@@ -787,6 +820,13 @@ function CaptureMatchingView() {
           </Grid>
         </Grid>
       </Drawer>
+      <CaptureDetailProvider>
+        <CaptureDetailDialog
+          open={isDetailsPaneOpen}
+          capture={captureImage}
+          onClose={closeDrawer}
+        />
+      </CaptureDetailProvider>
     </>
   );
 }

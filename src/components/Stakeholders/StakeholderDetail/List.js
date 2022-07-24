@@ -38,7 +38,7 @@ function StakeholderList({ id, data, type, linked }) {
       <ListItem className={classes.listItem}>
         <Grid
           container
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center"
           direction="row"
         >

@@ -275,7 +275,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           {errorMessage ? (
             <Grid container direction="column">
               <Grid item>
-                <Grid container justify="space-between" alignItems="center">
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item>
                     <Box m={4}>
                       <Typography color="primary" variant="h6">
@@ -302,7 +306,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           ) : (
             <Grid container direction="column">
               <Grid item>
-                <Grid container justify="space-between" alignItems="center">
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
                   <Grid item>
                     <Box m={4}>
                       <Typography color="primary" variant="h6">

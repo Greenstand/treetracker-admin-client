@@ -237,7 +237,7 @@ function Account(props) {
                 </Typography>
               </Grid>
               <Grid item xs={8}>
-                <Grid container justify="space-between">
+                <Grid container justifyContent="space-between">
                   <Grid item>
                     <Typography className={classes.title}>Password</Typography>
                   </Grid>

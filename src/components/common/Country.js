@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Country({ lat, lon }) {
+  console.log('Country:', lat, lon);
+  console.count();
+
   const [content, setContent] = useState('');
-  if (lat === 'undefined' || lon === 'undefined') {
+  if (!lat || !lon || lat === 'undefined' || lon === 'undefined') {
     setContent('No data');
   }
 
   useEffect(() => {
+    // if (lat && lon) {
     setContent('loading...');
     fetch(
       `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
@@ -25,7 +29,8 @@ export default function Country({ lat, lon }) {
       .then((data) => {
         setContent(data.countries[0].name);
       });
-  }, []);
+    // }
+  }, [lat, lon]);
 
   return <span>{content}</span>;
 }

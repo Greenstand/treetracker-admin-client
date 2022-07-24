@@ -62,7 +62,7 @@ function LogPaymentForm(props) {
 
   return (
     <form onSubmit={handleOnFormSubmit}>
-      <Grid container direction="column" justify="space-around">
+      <Grid container direction="column" justifyContent="space-around">
         {logPaymentError && (
           <span style={{ color: 'red', fontSize: '0.9em' }}>
             Log payment failed: {logPaymentError}!
@@ -73,7 +73,7 @@ function LogPaymentForm(props) {
           <Typography>Payment</Typography>
         </Grid>
 
-        <Grid container direction="column" justify="space-between">
+        <Grid container direction="column" justifyContent="space-between">
           <FormControl
             variant="outlined"
             className={classes.itemLogPaymentFormSelectFormControl}
@@ -183,13 +183,13 @@ function CustomTableItemDetails(props) {
       <Grid container direction="column" className={classes.itemDrawerDetails}>
         {/* start  details header */}
         <Grid item>
-          <Grid container direction="row" justify="space-between">
+          <Grid container direction="row" justifyContent="space-between">
             <Grid item>
               <Grid
                 container
                 direction="row"
                 alignContent="flex-end"
-                justify="flex-start"
+                justifyContent="flex-start"
               >
                 <Typography variant="h4">Details</Typography>
               </Grid>
@@ -202,7 +202,7 @@ function CustomTableItemDetails(props) {
         </Grid>
         {/* end detail header */}
         <Grid item className={classes.itemDetailsContents}>
-          <Grid container direction="column" justify="space-around">
+          <Grid container direction="column" justifyContent="space-around">
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Grower</Typography>
               <Typography variant="h6">{selectedItem.grower}</Typography>
@@ -243,7 +243,7 @@ function CustomTableItemDetails(props) {
 
           <Divider className={classes.itemDetailsContentsDivider} />
 
-          <Grid container direction="column" justify="space-around">
+          <Grid container direction="column" justifyContent="space-around">
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Status</Typography>
               <Typography variant="h6">{selectedItem.status}</Typography>
@@ -281,7 +281,7 @@ function CustomTableItemDetails(props) {
 
           <Divider className={classes.itemDetailsContentsDivider} />
 
-          <Grid container direction="column" justify="space-around">
+          <Grid container direction="column" justifyContent="space-around">
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Consolidation Type</Typography>
               <Typography variant="h6">FCC Tiered</Typography>

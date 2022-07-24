@@ -570,7 +570,11 @@ function Users(props) {
 
       <Grid item container className={classes.rightBox}>
         <Grid item xs={12}>
-          <Grid container justify="space-between" className={classes.titleBox}>
+          <Grid
+            container
+            justifyContent="space-between"
+            className={classes.titleBox}
+          >
             <Grid item>
               <Grid container>
                 <Grid item>
@@ -734,7 +738,7 @@ function Users(props) {
           <Grid
             container
             spacing={2}
-            justify="center"
+            justifyContent="center"
             alignItems="center"
             className={classes.root}
           >
