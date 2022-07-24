@@ -90,7 +90,7 @@ export default function StakeholderDialogHeader({ data }) {
 
     if (
       !payload.phone ||
-      !/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/.test(payload.phone)
+      !/^([0|\\+[0-9]{1,5})?([0-9]{10})$/.test(payload.phone)
     ) {
       errors.phone = 'Please enter a phone';
     }
