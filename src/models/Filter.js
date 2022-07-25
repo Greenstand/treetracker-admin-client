@@ -3,6 +3,7 @@
  */
 
 export const ALL_SPECIES = 'ALL_SPECIES';
+export const SPECIES_ANY_SET = 'SPECIES_ANY_SET';
 export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
@@ -73,6 +74,8 @@ export default class Filter {
 
     if (this.speciesId === SPECIES_NOT_SET) {
       where.speciesId = null;
+    } else if (this.speciesId === SPECIES_ANY_SET) {
+      where.speciesId = { neq: null };
     } else if (this.speciesId !== ALL_SPECIES) {
       where.speciesId = this.speciesId;
     }
