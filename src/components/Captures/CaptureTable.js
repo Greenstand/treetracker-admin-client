@@ -26,6 +26,7 @@ import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CaptureTooltip from './CaptureTooltip';
+import { Link } from '@material-ui/core';
 
 const columns = [
   {
@@ -85,17 +86,21 @@ const columns = [
   {
     attr: 'lon',
     label: 'Longitude',
-    renderer: (val) => val,
+    renderer: (val) => Number(val).toFixed(6),
   },
   {
     attr: 'lat',
     label: 'Latitude',
-    renderer: (val) => val,
+    renderer: (val) => Number(val).toFixed(6),
   },
   {
     attr: 'imageUrl',
     label: 'Image URL',
-    renderer: (val) => val,
+    renderer: (val) => (
+      <Link href={val} underline="always" target="_blank">
+        Open in new tab
+      </Link>
+    ),
   },
 ];
 
