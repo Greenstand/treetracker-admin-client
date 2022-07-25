@@ -11,6 +11,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SelectOrg from './common/SelectOrg';
 import FilterModel, {
   ALL_SPECIES,
+  SPECIES_ANY_SET,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
 } from '../models/Filter';
@@ -346,6 +347,7 @@ function Filter(props) {
                 ) : (
                   [
                     { id: ALL_SPECIES, name: 'All' },
+                    { id: SPECIES_ANY_SET, name: 'Any set' },
                     {
                       id: SPECIES_NOT_SET,
                       name: 'Not set',
