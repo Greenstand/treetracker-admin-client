@@ -10,7 +10,7 @@ async function fetchJSON(query, options) {
 
 function removeEmptyValues(obj) {
   const newObj = Object.entries(obj).reduce((acc, [key, value]) => {
-    if (value !== '' && value !== null) {
+    if (value) {
       acc[key] = value;
     }
     return acc;
@@ -24,7 +24,7 @@ export default {
       const orgId = id || getOrganizationId();
 
       const where = Object.keys(filter).reduce((acc, key) => {
-        if (filter[key] !== '') {
+        if (filter[key]) {
           acc += `&${key}=${filter[key]}`;
         }
         return acc;
