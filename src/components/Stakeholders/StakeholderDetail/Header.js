@@ -51,9 +51,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StakeholderDialogHeader({ data }) {
+export default function StakeholderDialogHeader({ data, isEditing, setIsEditing }) {
   const { updateStakeholder } = useContext(StakeholdersContext);
-  const [isEditing, setIsEditing] = useState(false);
   const [details, setDetails] = useState({ ...data });
   const [errors, setErrors] = useState({});
 
