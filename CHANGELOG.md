@@ -1,3 +1,10 @@
+## [1.102.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.0...v1.102.1) (2022-07-27)
+
+
+### Bug Fixes
+
+* handle filter values properly - api stakeholders ([#764](https://github.com/Greenstand/treetracker-admin-client/issues/764)) ([8bed056](https://github.com/Greenstand/treetracker-admin-client/commit/8bed05600695357cb5ffb566ea955bc4bd5867a4))
+
 # [1.102.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.101.1...v1.102.0) (2022-07-25)
 
 
