@@ -26,7 +26,10 @@ const useStyles = makeStyles({
     paddingRight: 12,
   },
   pl: {
-    paddingLeft: 32,
+    padding: '0 0 0 32px',
+  },
+  px: {
+    padding: '0 16px',
   },
   closeButton: {
     position: 'absolute',
@@ -82,11 +85,16 @@ export default function StakeholderDetail({ row, columns, child }) {
   return (
     <>
       {/* Table row */}
-      <TableRow hover key={rowData.id} onClick={openModal}>
+      <TableRow
+        hover
+        key={rowData.id}
+        onClick={openModal}
+        style={child && { backgroundColor: 'rgb(239,239,239)' }}
+      >
         {columns.map((col, idx) => (
           <TableCell
             key={col.value}
-            className={idx === 0 && child ? classes.pl : ''}
+            className={child && (idx === 0 ? classes.pl : classes.px)}
           >
             <div className={classes.flex}>
               {col.value === 'name' && rowData.type === 'Organization' && (
