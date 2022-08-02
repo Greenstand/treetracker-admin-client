@@ -25,6 +25,9 @@ const useStyles = makeStyles({
     height: 48,
     paddingRight: 12,
   },
+  childRow: {
+    backgroundColor: 'rgb(239, 239, 239)',
+  },
   pl: {
     padding: '0 0 0 32px',
   },
@@ -89,7 +92,7 @@ export default function StakeholderDetail({ row, columns, child }) {
         hover
         key={rowData.id}
         onClick={openModal}
-        style={child && { backgroundColor: 'rgb(239,239,239)' }}
+        className={child && classes.childRow}
       >
         {columns.map((col, idx) => (
           <TableCell
