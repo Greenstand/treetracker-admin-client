@@ -322,7 +322,12 @@ function Account(props) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary">
+            <Button
+              onClick={handleConfirm}
+              variant="contained"
+              color="primary"
+              disabled={!oldPassword || !newPassword || !confirmedPassword}
+            >
               Save
             </Button>
           </DialogActions>
