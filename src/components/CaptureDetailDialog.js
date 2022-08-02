@@ -100,7 +100,10 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    cdContext.getCaptureDetail(capture?.id);
+    if (!capture) {
+      console.log('CaptureDetailDialog: useEffect: capture is null');
+      cdContext.getCaptureDetail(capture?.id);
+    }
   }, [capture]);
 
   useEffect(() => {
@@ -197,7 +200,7 @@ function CaptureDetailDialog(props) {
             { label: 'Note', value: renderCapture?.note },
             {
               label: 'Original Image URL',
-              value: renderCapture?.image_url,
+              value: renderCapture?.image_url || renderCapture?.imageUrl,
               copy: true,
               link: true,
               image: true,
@@ -210,7 +213,7 @@ function CaptureDetailDialog(props) {
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
                     <Link
-                      href={renderCapture?.imageUrl}
+                      href={renderCapture?.image_url || renderCapture?.imageUrl}
                       underline="always"
                       target="_blank"
                     >
@@ -323,7 +326,7 @@ function CaptureDetailDialog(props) {
         maxWidth="md"
       >
         <OptimizedImage
-          src={renderCapture?.image_url}
+          src={renderCapture?.image_url || renderCapture?.imageUrl}
           width={screenHeight * 0.9}
           style={{ maxWidth: '100%' }}
           objectFit="contain"

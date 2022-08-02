@@ -1,8 +1,12 @@
 import React, { useState, createContext, useEffect } from 'react';
+import { handleResponse, handleError } from '../api/apiUtils';
+import { session } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/CaptureDetailContext');
+
+const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 export const CaptureDetailContext = createContext({
   capture: null,
@@ -37,14 +41,26 @@ export function CaptureDetailProvider(props) {
   // EVENT HANDLERS
 
   const getCaptureDetail = async (id) => {
-    if (id == null) {
-      log.debug('getCapture called with no id');
-      return Promise.resolve(STATE_EMPTY.capture);
-    } else {
-      return api.getCaptureById(id).then((capture) => {
-        setState({ ...state, capture });
-        return capture;
-      });
+    try {
+      if (id == null) {
+        log.debug('getCapture called with no id');
+        return Promise.resolve(STATE_EMPTY.capture);
+      } else {
+        const query = `${TREETRACKER_API}/captures/${id}`;
+
+        return fetch(query, {
+          headers: {
+            Authorization: session.token,
+          },
+        })
+          .then(handleResponse)
+          .then((capture) => {
+            setState({ ...state, capture });
+            return capture;
+          });
+      }
+    } catch (error) {
+      handleError(error);
     }
   };
 
