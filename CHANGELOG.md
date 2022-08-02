@@ -1,3 +1,10 @@
+## [1.102.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.2...v1.102.3) (2022-08-02)
+
+
+### Bug Fixes
+
+* **Account:** make "Change password" buttons consistent with other dialogs ([#771](https://github.com/Greenstand/treetracker-admin-client/issues/771)) ([c7a7566](https://github.com/Greenstand/treetracker-admin-client/commit/c7a75669b41d654f149de97307ea06025f3dc04e))
+
 ## [1.102.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.1...v1.102.2) (2022-08-02)
 
 
