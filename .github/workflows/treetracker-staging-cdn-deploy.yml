@@ -3,7 +3,7 @@ name: Deploy to Staging Environment
 on:
   workflow_dispatch:
     inputs:
-      environment:
+      tag:
         description: 'git-tag'
         required: true
 
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.git-tag }}
+          ref: ${{ github.event.inputs.tag }}
       - name: Use Node.js 16.14.x
         uses: actions/setup-node@v1
         with:
@@ -47,6 +47,8 @@ jobs:
       github.repository == "Greenstand/${{ github.event.repository.name }}"
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.tag }}
       - name: Download bundled frontend resources
         uses: actions/download-artifact@v2
         with:
