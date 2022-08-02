@@ -1,3 +1,10 @@
+## [1.102.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.1...v1.102.2) (2022-08-02)
+
+
+### Bug Fixes
+
+* **stakeholders:** make child rows more visually distinct ([#731](https://github.com/Greenstand/treetracker-admin-client/issues/731)) ([#768](https://github.com/Greenstand/treetracker-admin-client/issues/768)) ([e3e1d36](https://github.com/Greenstand/treetracker-admin-client/commit/e3e1d3607b767bfc207822edf16bc7348b4e7dad))
+
 ## [1.102.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.0...v1.102.1) (2022-07-27)
 
 
