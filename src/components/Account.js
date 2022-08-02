@@ -321,11 +321,9 @@ function Account(props) {
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleConfirm} color="primary">
-              Confirm
-            </Button>
-            <Button onClick={handleClose} color="primary">
-              Close
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleConfirm} variant="contained" color="primary">
+              Save
             </Button>
           </DialogActions>
         </Suspense>
