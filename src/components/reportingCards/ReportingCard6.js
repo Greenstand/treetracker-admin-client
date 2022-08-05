@@ -18,7 +18,7 @@ export default function component(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Average captures per grower per organization',
+        title: 'Average Captures per Grower',
         text1: 'Average',
       }}
       icon={Icon}

@@ -18,8 +18,8 @@ export default function ReportingCard1(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Grower',
-        text1: 'total',
+        title: 'Growers',
+        text1: 'Total',
       }}
       icon={PeopleOutlineIcon}
       color="#e95839"

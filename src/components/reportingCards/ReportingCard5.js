@@ -19,7 +19,7 @@ export default function component(props) {
     <ReportingCard
       text={{
         title: 'Species',
-        text1: 'Total',
+        text1: 'Count',
       }}
       icon={Icon}
       color="#76bb23"
