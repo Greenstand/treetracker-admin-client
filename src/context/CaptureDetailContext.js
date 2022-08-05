@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { handleResponse, handleError } from '../api/apiUtils';
+import { handleResponse, handleError, getOrganization } from '../api/apiUtils';
 import { session } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
@@ -7,6 +7,7 @@ import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CaptureDetailContext');
 
 const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
+const API_ROOT = process.env.REACT_APP_API_ROOT;
 
 export const CaptureDetailContext = createContext({
   capture: null,
@@ -40,23 +41,41 @@ export function CaptureDetailProvider(props) {
 
   // EVENT HANDLERS
 
-  const getCaptureDetail = async (id) => {
-    try {
-      if (id == null) {
-        log.debug('getCapture called with no id');
-        return Promise.resolve(STATE_EMPTY.capture);
-      } else {
-        const query = `${TREETRACKER_API}/captures/${id}`;
+  const getCaptureDetail = async (capture) => {
+    log.debug('getCaptureDetail:', {
+      reference_id: capture.reference_id,
+      id: capture.id,
+    });
 
-        return fetch(query, {
+    // getOrganization gets the wrong org when this is in the global context
+    const BASE_URL = {
+      LEGACY: `${API_ROOT}/api/${getOrganization()}trees/`,
+      CAPTURE_MATCH: `${TREETRACKER_API}/captures?reference_id=`,
+    };
+
+    try {
+      if (!capture?.id) {
+        log.debug('getCapture called with no reference_id');
+      } else {
+        // NOTE: The reference_id in the new api === the id in the old api
+        const query = `${
+          BASE_URL[capture.reference_id ? 'CAPTURE_MATCH' : 'LEGACY']
+        }${capture.reference_id || capture.id}`;
+
+        fetch(query, {
           headers: {
             Authorization: session.token,
           },
         })
           .then(handleResponse)
-          .then((capture) => {
-            setState({ ...state, capture });
-            return capture;
+          .then((data) => {
+            if (data.captures) {
+              // new treetracker-api
+              setState({ ...state, capture: data.captures[0] });
+            } else {
+              // legacy api
+              setState({ ...state, data });
+            }
           });
       }
     } catch (error) {

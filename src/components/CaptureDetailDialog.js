@@ -24,6 +24,9 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
 import Country from './common/Country';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../context/CaptureDetailDialog');
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -85,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  // console.log('render: capture detail dialog');
+  log.debug('render: capture detail dialog');
   const { open, capture, onClose } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -100,9 +103,10 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    if (!capture) {
-      console.log('CaptureDetailDialog: useEffect: capture is null');
-      cdContext.getCaptureDetail(capture?.id);
+    // prevent request if capture is empty or undefined because it will fail without a valid id
+    // but if we have capture info, do we need to make the request?
+    if (capture?.id) {
+      cdContext.getCaptureDetail(capture);
     }
   }, [capture]);
 
@@ -117,10 +121,35 @@ function CaptureDetailDialog(props) {
    * Render the most complete capture detail we have
    */
   useEffect(() => {
-    if (cdContext.capture) {
-      setRenderCapture(cdContext.capture);
-    } else {
-      setRenderCapture(capture);
+    const current = capture || cdContext.capture;
+    if (current) {
+      setRenderCapture({
+        status:
+          current.status ||
+          (current.active && current.approved
+            ? 'approved'
+            : current.active && !current.approved
+            ? 'pending'
+            : 'rejected'),
+        id: current.id || current.uuid,
+        reference_id: current.reference_id || current.id,
+        grower_account_id: current.grower_account_id || current.planterId,
+        wallet: current.wallet || current.planterIdentifier,
+        device_identifier:
+          current.device_identifier || current.deviceIdentifier,
+        image_url: current.image_url || current.imageUrl,
+        lat: current.lat || current.latitude,
+        lon: current.lon || current.longitude,
+        age: null,
+        captureApprovalTag: current.captureApprovalTag || null,
+        morphology: current.morphology || null,
+        note: 'My Note',
+        rejectionReason: current.rejectionReason || null,
+        species_id: current.species_id || current.speciesId,
+        token_id: current.token_id || current.tokenId,
+        created_at: current.created_at || current.timeCreated,
+        updated_at: current.updated_at || current.timeUpdated,
+      });
     }
   }, [cdContext.capture, capture]);
 
@@ -149,8 +178,8 @@ function CaptureDetailDialog(props) {
     }
 
     const countryInfo = useMemo(
-      () => <Country lat={capture?.latitude} lon={capture?.longitude} />,
-      [capture?.latitude, capture?.longitude]
+      () => <Country lat={capture?.lat} lon={capture?.lon} />,
+      [capture?.lat, capture?.lon]
     );
 
     return (
@@ -160,10 +189,11 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture <LinkToWebmap value={capture.id} type="tree" />
+                  Capture{' '}
+                  <LinkToWebmap value={capture.reference_id} type="tree" />
                   <CopyButton
                     label="Capture ID"
-                    value={capture.id}
+                    value={capture.reference_id}
                     confirmCopy={confirmCopy}
                   />
                 </Typography>
@@ -187,8 +217,8 @@ function CaptureDetailDialog(props) {
               link: true,
             },
             {
-              label: 'Grower Identifier',
-              value: capture.planterIdentifier,
+              label: 'Wallet',
+              value: capture.wallet,
               copy: true,
             },
             {
@@ -197,10 +227,10 @@ function CaptureDetailDialog(props) {
               copy: true,
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
-            { label: 'Note', value: renderCapture?.note },
+            { label: 'Note', value: capture?.note },
             {
               label: 'Original Image URL',
-              value: renderCapture?.image_url || renderCapture?.imageUrl,
+              value: capture?.image_url,
               copy: true,
               link: true,
               image: true,
@@ -213,7 +243,7 @@ function CaptureDetailDialog(props) {
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
                     <Link
-                      href={renderCapture?.image_url || renderCapture?.imageUrl}
+                      href={capture?.image_url}
                       underline="always"
                       target="_blank"
                     >
@@ -238,7 +268,7 @@ function CaptureDetailDialog(props) {
           <Grid>
             <Typography variant="subtitle1">Country</Typography>
             <Typography variant="body1">
-              {capture?.latitude && capture?.longitude && countryInfo}
+              {capture?.lat && capture?.lon && countryInfo}
             </Typography>
           </Grid>
         </Grid>
@@ -247,12 +277,14 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {!capture.approved && capture.active ? (
+          {capture.status === 'pending' ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.active && capture.approved ? (
+          ) : capture.status === 'approved' ||
+            capture.status === 'planted' ||
+            capture.status === 'active' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}
@@ -293,11 +325,11 @@ function CaptureDetailDialog(props) {
         <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>Capture Token</Typography>
           <Typography variant="body1">
-            {getTokenStatus(capture.tokenId)}
-            {capture && capture.tokenId && (
+            {getTokenStatus(capture.token_id)}
+            {capture && capture.token_id && (
               <CopyButton
                 label="Capture Token"
-                value={capture.tokenId}
+                value={capture.token_id}
                 confirmCopy={confirmCopy}
               />
             )}
@@ -326,7 +358,7 @@ function CaptureDetailDialog(props) {
         maxWidth="md"
       >
         <OptimizedImage
-          src={renderCapture?.image_url || renderCapture?.imageUrl}
+          src={renderCapture?.image_url}
           width={screenHeight * 0.9}
           style={{ maxWidth: '100%' }}
           objectFit="contain"
