@@ -19,7 +19,7 @@ export default function ReportingCard2(props) {
     <ReportingCard
       text={{
         title: 'Captures',
-        text1: 'total',
+        text1: 'Total',
       }}
       icon={PhotoCameraIcon}
       color="#76bb23"
