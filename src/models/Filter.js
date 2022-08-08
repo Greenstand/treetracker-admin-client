@@ -138,6 +138,13 @@ export default class Filter {
         if (!orCondition) {
           orCondition = true;
           where = [];
+          // Incase only 1 verify status selected, then the above statement overwrites the previous "where" status.
+          if (verifyStatus.length === 1) {
+            where.push({
+              active: verifyStatus[0].active,
+              approved: verifyStatus[0].approved,
+            });
+          }
         }
         planterIds.forEach((planterId) => {
           if (planterId) {
@@ -150,7 +157,17 @@ export default class Filter {
     }
 
     return orCondition
-      ? { ...restFilter, or: where }
+      ? where.length > verifyStatus.length
+        ? verifyStatus.length > 0
+          ? {
+              ...restFilter,
+              and: [
+                { or: where.slice(0, verifyStatus.length) },
+                { or: where.slice(verifyStatus.length) },
+              ],
+            }
+          : { ...restFilter, and: [{ or: where.slice(verifyStatus.length) }] }
+        : { ...restFilter, or: where }
       : { ...restFilter, ...where };
   }
 
