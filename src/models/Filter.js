@@ -110,15 +110,16 @@ export default class Filter {
       where.verifyStatus = this.verifyStatus;
     }
 
-    let orCondition = false;
     const { verifyStatus, ...restFilter } = where;
 
     if (verifyStatus) {
       if (verifyStatus.length === 1) {
-        where.active = verifyStatus[0].active;
-        where.approved = verifyStatus[0].approved;
+        where = [];
+        where.push({
+          active: verifyStatus[0].active,
+          approved: verifyStatus[0].approved,
+        });
       } else {
-        orCondition = true;
         where = [];
         verifyStatus.forEach((status) => {
           where.push({
@@ -131,21 +132,9 @@ export default class Filter {
 
     if (this.planterId) {
       const planterIds = this.planterId.split(',').map((item) => item.trim());
-
       if (planterIds.length === 1) {
         restFilter.planterId = this.planterId;
       } else {
-        if (!orCondition) {
-          orCondition = true;
-          where = [];
-          // Incase only 1 verify status selected, then the above statement overwrites the previous "where" status.
-          if (verifyStatus.length === 1) {
-            where.push({
-              active: verifyStatus[0].active,
-              approved: verifyStatus[0].approved,
-            });
-          }
-        }
         planterIds.forEach((planterId) => {
           if (planterId) {
             where.push({
@@ -155,20 +144,17 @@ export default class Filter {
         });
       }
     }
-
-    return orCondition
-      ? where.length > verifyStatus.length
-        ? verifyStatus.length > 0
-          ? {
-              ...restFilter,
-              and: [
-                { or: where.slice(0, verifyStatus.length) },
-                { or: where.slice(verifyStatus.length) },
-              ],
-            }
-          : { ...restFilter, and: [{ or: where.slice(verifyStatus.length) }] }
-        : { ...restFilter, or: where }
-      : { ...restFilter, ...where };
+    return where.length > verifyStatus.length
+      ? verifyStatus.length > 0
+        ? {
+            ...restFilter,
+            and: [
+              { or: where.slice(0, verifyStatus.length) },
+              { or: where.slice(verifyStatus.length) },
+            ],
+          }
+        : { ...restFilter, and: [{ or: where.slice(verifyStatus.length) }] }
+      : { ...restFilter, or: where };
   }
 
   /*
