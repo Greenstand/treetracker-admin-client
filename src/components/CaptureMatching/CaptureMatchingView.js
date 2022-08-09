@@ -314,7 +314,7 @@ function CaptureMatchingView() {
       abortController,
       filterParameters
     );
-    // log.debug('fetchCptures data', currentPage, data);
+    // log.debug('fetchCaptures data', currentPage, data);
     if (data?.captures?.length > 0) {
       setCaptureImage(data.captures[0]);
       setNoOfPages(data.count);
@@ -561,9 +561,10 @@ function CaptureMatchingView() {
             className={classes.captureImageHeaderBox}
           >
             <Box className={classes.box2}>
-              <Tooltip title={captureImage.id} interactive>
+              <Tooltip title={captureImage.reference_id} interactive>
                 <Typography variant="h5">
-                  Capture {(captureImage.id + '').substring(0, 10) + '...'}
+                  Capture{' '}
+                  {(captureImage.reference_id + '').substring(0, 10) + '...'}
                 </Typography>
               </Tooltip>
               <Box className={classes.captureImageCaptureInfo}>
@@ -637,7 +638,7 @@ function CaptureMatchingView() {
               key={captureImage.id}
               className={classes.captureImageImgContainer}
               src={captureImage.image_url}
-              alt={`Capture ${captureImage.id}`}
+              alt={`Capture ${captureImage.reference_id}`}
               objectFit="contain"
               width={screenWidth * 0.5}
               fixed
@@ -821,11 +822,13 @@ function CaptureMatchingView() {
         </Grid>
       </Drawer>
       <CaptureDetailProvider>
-        <CaptureDetailDialog
-          open={isDetailsPaneOpen}
-          capture={captureImage}
-          onClose={closeDrawer}
-        />
+        {isDetailsPaneOpen && (
+          <CaptureDetailDialog
+            open={isDetailsPaneOpen}
+            captureId={captureImage?.reference_id}
+            onClose={closeDrawer}
+          />
+        )}
       </CaptureDetailProvider>
     </>
   );

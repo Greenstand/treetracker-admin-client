@@ -11,7 +11,6 @@ export const CapturesContext = createContext({
   isLoading: false,
   captures: [],
   captureCount: 0,
-  capture: {},
   page: 0,
   rowsPerPage: 25,
   order: 'desc',
@@ -21,20 +20,16 @@ export const CapturesContext = createContext({
   setPage: () => {},
   setOrder: () => {},
   setOrderBy: () => {},
-  setCapture: () => {},
   queryCapturesApi: () => {},
   getCaptureCount: () => {},
   getCapturesAsync: () => {},
-  getCaptureAsync: () => {},
   getAllCaptures: () => {},
   updateFilter: () => {},
 });
 
 export function CapturesProvider(props) {
-  // log.debug('render: captures');
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
-  const [capture, setCapture] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
@@ -114,19 +109,6 @@ export function CapturesProvider(props) {
     return response;
   };
 
-  const getCaptureAsync = (id) => {
-    setIsLoading(true);
-    queryCapturesApi({ id })
-      .then((res) => {
-        setIsLoading(false);
-        setCapture(res.data);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        console.error(`ERROR: FAILED TO GET SELECTED TREE ${err}`);
-      });
-  };
-
   const updateFilter = async (filter) => {
     log.debug('2 - updateFilter', filter);
     setFilter(filter);
@@ -142,7 +124,6 @@ export function CapturesProvider(props) {
   const value = {
     captures,
     captureCount,
-    capture,
     page,
     rowsPerPage,
     order,
@@ -157,8 +138,6 @@ export function CapturesProvider(props) {
     queryCapturesApi,
     getCaptureCount,
     getCapturesAsync,
-    getCaptureAsync,
-    setCapture,
     getAllCaptures,
     updateFilter,
   };

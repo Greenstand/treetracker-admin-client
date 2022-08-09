@@ -41,12 +41,7 @@ export function CaptureDetailProvider(props) {
 
   // EVENT HANDLERS
 
-  const getCaptureDetail = async (capture) => {
-    log.debug('getCaptureDetail:', {
-      reference_id: capture.reference_id,
-      id: capture.id,
-    });
-
+  const getCaptureDetail = async (id) => {
     // getOrganization gets the wrong org when this is in the global context
     const BASE_URL = {
       LEGACY: `${API_ROOT}/api/${getOrganization()}trees/`,
@@ -54,15 +49,15 @@ export function CaptureDetailProvider(props) {
     };
 
     try {
-      if (!capture?.id) {
+      if (!id) {
         log.debug('getCapture called with no reference_id');
       } else {
         // NOTE: The reference_id in the new api === the id in the old api
         const query = `${
-          BASE_URL[capture.reference_id ? 'CAPTURE_MATCH' : 'LEGACY']
-        }${capture.reference_id || capture.id}`;
+          BASE_URL[typeof id !== 'number' ? 'CAPTURE_MATCH' : 'LEGACY']
+        }${id}`;
 
-        fetch(query, {
+        return fetch(query, {
           headers: {
             Authorization: session.token,
           },
@@ -70,11 +65,12 @@ export function CaptureDetailProvider(props) {
           .then(handleResponse)
           .then((data) => {
             if (data.captures) {
+              log.debug('data', data);
               // new treetracker-api
               setState({ ...state, capture: data.captures[0] });
             } else {
               // legacy api
-              setState({ ...state, data });
+              setState({ ...state, capture: data });
             }
           });
       }

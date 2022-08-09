@@ -112,19 +112,20 @@ const CaptureTable = () => {
     order,
     orderBy,
     captures,
-    capture,
     captureCount,
     isLoading,
     setPage,
     setRowsPerPage,
     setOrder,
     setOrderBy,
-    setCapture,
-    getCaptureAsync,
   } = useContext(CapturesContext);
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
+  const [captureDetail, setCaptureDetail] = useState({
+    id: null,
+    isDetailsPaneOpen: false,
+    onClose: closeDrawer,
+  });
   const [speciesLookup, setSpeciesLookup] = useState({});
   const [tagLookup, setTagLookup] = useState({});
   const [captureTagLookup, setCaptureTagLookup] = useState({});
@@ -182,8 +183,11 @@ const CaptureTable = () => {
   };
 
   const toggleDrawer = (id) => {
-    getCaptureAsync(id);
-    setIsDetailsPaneOpen(!isDetailsPaneOpen);
+    setCaptureDetail({
+      ...captureDetail,
+      id,
+      isDetailsPaneOpen: true,
+    });
   };
 
   const createToggleDrawerHandler = (id) => {
@@ -193,9 +197,13 @@ const CaptureTable = () => {
   };
 
   const closeDrawer = () => {
-    setIsDetailsPaneOpen(false);
     setDisableHoverListener(false);
-    setCapture({});
+
+    setCaptureDetail({
+      ...captureDetail,
+      id: null,
+      isDetailsPaneOpen: false,
+    });
   };
 
   const handleOpenExport = () => {
@@ -348,8 +356,8 @@ const CaptureTable = () => {
       {tablePagination()}
       <CaptureDetailProvider>
         <CaptureDetailDialog
-          open={isDetailsPaneOpen}
-          capture={capture}
+          open={captureDetail.isDetailsPaneOpen}
+          captureId={captureDetail.id}
           onClose={closeDrawer}
         />
       </CaptureDetailProvider>

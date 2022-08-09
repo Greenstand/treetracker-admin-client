@@ -199,7 +199,7 @@ const Verify = (props) => {
   const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
-    capture: {},
+    capture: null,
   });
   const [growerDetail, setGrowerDetail] = useState({
     isOpen: false,
@@ -301,7 +301,7 @@ const Verify = (props) => {
     setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
-      capture,
+      capture: capture.id,
     });
   }
 
@@ -309,7 +309,7 @@ const Verify = (props) => {
     setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
-      capture: {},
+      capture: null,
     });
   }
 
@@ -737,7 +737,7 @@ const Verify = (props) => {
         <CaptureDetailDialog
           open={captureDetail.isOpen}
           onClose={() => handleCloseCaptureDetail()}
-          capture={captureDetail.capture}
+          captureId={captureDetail.capture}
         />
       </CaptureDetailProvider>
     </>

@@ -88,12 +88,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  log.debug('render: capture detail dialog');
-  const { open, capture, onClose } = props;
+  const { open, captureId, onClose } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
-  const [renderCapture, setRenderCapture] = useState(capture);
+  const [renderCapture, setRenderCapture] = useState(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const resizeWindow = useCallback(() => {
@@ -103,12 +102,11 @@ function CaptureDetailDialog(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    // prevent request if capture is empty or undefined because it will fail without a valid id
-    // but if we have capture info, do we need to make the request?
-    if (capture?.id) {
-      cdContext.getCaptureDetail(capture);
+    // prevent request because it will fail without a valid id
+    if (captureId) {
+      cdContext.getCaptureDetail(captureId);
     }
-  }, [capture]);
+  }, [captureId]);
 
   useEffect(() => {
     window.addEventListener('resize', resizeWindow);
@@ -121,8 +119,9 @@ function CaptureDetailDialog(props) {
    * Render the most complete capture detail we have
    */
   useEffect(() => {
-    const current = capture || cdContext.capture;
+    const current = cdContext.capture;
     if (current) {
+      // map the keys from legacy to new api keys
       setRenderCapture({
         status:
           current.status ||
@@ -151,7 +150,7 @@ function CaptureDetailDialog(props) {
         updated_at: current.updated_at || current.timeUpdated,
       });
     }
-  }, [cdContext.capture, capture]);
+  }, [cdContext.capture]);
 
   function handleClose() {
     setSnackbarOpen(false);
@@ -345,43 +344,45 @@ function CaptureDetailDialog(props) {
   }
 
   return (
-    <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        style={{ width: screenWidth - 340 }}
-        BackdropProps={{
-          classes: {
-            root: classes.dialog,
-          },
-        }}
-        maxWidth="md"
-      >
-        <OptimizedImage
-          src={renderCapture?.image_url}
-          width={screenHeight * 0.9}
-          style={{ maxWidth: '100%' }}
-          objectFit="contain"
-          fixed
-        />
-      </Dialog>
-      <Drawer
-        anchor="right"
-        open={open}
-        className={classes.drawer}
-        onClose={handleClose}
-      >
-        <Grid className={classes.root}>
-          <Grid container direction="column">
-            <Tags
-              capture={renderCapture}
-              species={cdContext.species}
-              captureTags={cdContext.tags}
-            />
+    renderCapture && (
+      <>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          style={{ width: screenWidth - 340 }}
+          BackdropProps={{
+            classes: {
+              root: classes.dialog,
+            },
+          }}
+          maxWidth="md"
+        >
+          <OptimizedImage
+            src={renderCapture?.image_url}
+            width={screenHeight * 0.9}
+            style={{ maxWidth: '100%' }}
+            objectFit="contain"
+            fixed
+          />
+        </Dialog>
+        <Drawer
+          anchor="right"
+          open={open}
+          className={classes.drawer}
+          onClose={handleClose}
+        >
+          <Grid className={classes.root}>
+            <Grid container direction="column">
+              <Tags
+                capture={renderCapture}
+                species={cdContext.species}
+                captureTags={cdContext.tags}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </Drawer>
-    </>
+        </Drawer>
+      </>
+    )
   );
 }
 
