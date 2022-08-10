@@ -12,10 +12,10 @@ import {
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import FilterModel from '../../models/FilterStakeholder';
-import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 import { localeSort } from '../../common/utils';
+import { ALL_ORGANIZATIONS } from 'models/Filter';
 
 const useStyles = makeStyles({
   root: {
@@ -119,7 +119,7 @@ function StakeholderFilter() {
 
   const defaultOrgList = [
     {
-      id: ORGANIZATION_NOT_SET,
+      id: ALL_ORGANIZATIONS,
       name: 'All',
       value: '',
     },
