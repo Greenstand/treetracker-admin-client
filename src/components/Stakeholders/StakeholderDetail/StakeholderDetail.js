@@ -47,7 +47,7 @@ const useStyles = makeStyles({
   },
   alertText: {
     fontWeight: 'normal',
-  }
+  },
 });
 
 export default function StakeholderDetail({ row, columns, child }) {
@@ -95,22 +95,18 @@ export default function StakeholderDetail({ row, columns, child }) {
   };
 
   const AlertEditingDialog = () => {
-
     const handleYes = () => {
       setShowAlert(false);
       setIsEditing(false);
       setOpen(false);
-    }
-  
+    };
+
     return (
-      showAlert && <Dialog
-          open={showAlert}
-          onClose={() => setShowAlert(false)}
-        >
+      showAlert && (
+        <Dialog open={showAlert} onClose={() => setShowAlert(false)}>
           <DialogContent>
             <Typography variant="h6" className={classes.alertText}>
-              You have unsaved changes. Close the dialog will clear all the changes.
-              Do you want to continue?
+              Save changes?
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -122,15 +118,12 @@ export default function StakeholderDetail({ row, columns, child }) {
             >
               Yes
             </Button>
-            <Button 
-              onClick={() => setShowAlert(false)} 
-            >
-              Cancel
-            </Button>
+            <Button onClick={() => setShowAlert(false)}>Cancel</Button>
           </DialogActions>
         </Dialog>
+      )
     );
-  }
+  };
 
   return (
     <>
@@ -181,10 +174,11 @@ export default function StakeholderDetail({ row, columns, child }) {
         </IconButton>
 
         <DialogContent className={`${classes.my} ${classes.noScroll}`}>
-          <StakeholderDialogHeader 
+          <StakeholderDialogHeader
             data={rowData}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
+            forceSave={!open && !isEditing && !showAlert}
           />
 
           <Divider className={classes.my} />
