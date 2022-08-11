@@ -26,6 +26,7 @@ export default class Filter {
   organizationId;
   tokenId;
   verifyStatus;
+  wallet;
 
   constructor(options) {
     Object.assign(this, options);
@@ -66,6 +67,10 @@ export default class Filter {
 
     if (this.deviceIdentifier) {
       where.deviceIdentifier = this.deviceIdentifier;
+    }
+
+    if (this.wallet) {
+      where.wallet = this.wallets;
     }
 
     if (this.planterIdentifier) {
@@ -190,6 +195,10 @@ export default class Filter {
     }
 
     if (this.captureId) {
+      numFilters += 1;
+    }
+
+    if (this.wallet) {
       numFilters += 1;
     }
 

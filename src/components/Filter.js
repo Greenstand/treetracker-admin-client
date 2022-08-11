@@ -60,6 +60,7 @@ function Filter(props) {
   const dateStartDefault = null;
   const dateEndDefault = null;
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.deviceIdentifier || ''
@@ -96,6 +97,7 @@ function Filter(props) {
     e.preventDefault();
     const filter = new FilterModel();
     filter.captureId = captureId;
+    filter.wallet = wallet
     filter.planterId = growerId;
     filter.deviceIdentifier = deviceIdentifier;
     filter.planterIdentifier = growerIdentifier;
@@ -110,6 +112,7 @@ function Filter(props) {
 
   function handleClear() {
     setCaptureId('');
+    setWallet('');
     setGrowerId('');
     setDeviceIdentifier('');
     setGrowerIdentifier('');
@@ -174,6 +177,15 @@ function Filter(props) {
         }}
         value={captureId}
         onChange={(e) => setCaptureId(e.target.value)}
+      />
+      <GSInputLabel text="Wallet" />
+      <TextField
+        placeholder="wallet"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        value={wallet}
+        onChange={(e) => setWallet(e.target.value)}
       />
       <GSInputLabel text="Grower ID" />
       <TextField

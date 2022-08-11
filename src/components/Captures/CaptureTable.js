@@ -68,6 +68,11 @@ const columns = [
     renderer: (val) => val,
   },
   {
+    attr: 'wallet',
+    label: 'Wallet',
+    renderer: (val) => val,
+  },
+  {
     attr: 'captureTags',
     label: 'Capture Tags',
     noSort: true,
