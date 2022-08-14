@@ -49,8 +49,6 @@ import { MatchingToolContext } from '../../context/MatchingToolContext';
 import api from '../../api/treeTrackerApi';
 import moment from 'moment';
 import log from 'loglevel';
-import { GrowerProvider } from 'context/GrowerContext';
-import GrowerDetail from 'components/GrowerDetail';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -268,7 +266,6 @@ function CaptureMatchingView() {
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
-  const [isGrowerDetailsOpen, setGrowerDetailsOpen] = useState(false);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -598,10 +595,7 @@ function CaptureMatchingView() {
             </Box>
 
             {!loading && growerAccount && (
-              <Box
-                onClick={() => setGrowerDetailsOpen(true)}
-                className={classes.growerBox1}
-              >
+              <Box className={classes.growerBox1}>
                 <Avatar
                   className={classes.growerAvatar}
                   src={growerAccount.image_url}
@@ -833,13 +827,6 @@ function CaptureMatchingView() {
           onClose={closeDrawer}
         />
       </CaptureDetailProvider>
-      <GrowerProvider>
-        <GrowerDetail
-          open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
-          onClose={() => setGrowerDetailsOpen(false)}
-        />
-      </GrowerProvider>
     </>
   );
 }
