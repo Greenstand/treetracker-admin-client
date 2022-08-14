@@ -12,10 +12,10 @@ import {
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import FilterModel from '../../models/FilterStakeholder';
-import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 import { localeSort } from '../../common/utils';
+import { ALL_ORGANIZATIONS } from 'models/Filter';
 
 const useStyles = makeStyles({
   root: {
@@ -92,7 +92,7 @@ function StakeholderFilter() {
       e.target.name === 'organization_id'
         ? orgList.find((o) => o.stakeholder_uuid === e.target.value)
             ?.stakeholder_uuid || ''
-        : e.target.value !== 'Not Set'
+        : e.target.value !== 'All'
         ? e.target.value
         : '';
     setFormData({ ...formData, [key]: value });
@@ -119,15 +119,15 @@ function StakeholderFilter() {
 
   const defaultOrgList = [
     {
-      id: ORGANIZATION_NOT_SET,
-      name: 'Not Set',
+      id: ALL_ORGANIZATIONS,
+      name: 'All',
       value: '',
     },
   ];
 
   const defaultTypeList = [
     {
-      name: 'Not set',
+      name: 'All',
       value: undefined,
     },
     {
@@ -242,7 +242,7 @@ function StakeholderFilter() {
             >
               {filters?.firstNames?.map((option) => (
                 <MenuItem data-testid="first_name" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
@@ -260,7 +260,7 @@ function StakeholderFilter() {
             >
               {filters?.lastNames?.map((option) => (
                 <MenuItem data-testid="last_name" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
@@ -278,7 +278,7 @@ function StakeholderFilter() {
             >
               {filters?.maps?.map((option) => (
                 <MenuItem data-testid="map" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
@@ -296,7 +296,7 @@ function StakeholderFilter() {
             >
               {filters?.emails?.map((option) => (
                 <MenuItem data-testid="email" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
@@ -314,7 +314,7 @@ function StakeholderFilter() {
             >
               {filters?.phones?.map((option) => (
                 <MenuItem data-testid="phone" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
@@ -332,7 +332,7 @@ function StakeholderFilter() {
             >
               {filters?.websites?.map((option) => (
                 <MenuItem data-testid="website" key={option} value={option}>
-                  {option || 'Not set'}
+                  {option || 'All'}
                 </MenuItem>
               ))}
             </TextField>
