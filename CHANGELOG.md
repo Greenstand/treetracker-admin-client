@@ -1,3 +1,10 @@
+## [1.103.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.0...v1.103.1) (2022-08-14)
+
+
+### Bug Fixes
+
+* **verify:** make gallery images taller ([#783](https://github.com/Greenstand/treetracker-admin-client/issues/783)) ([a035e3e](https://github.com/Greenstand/treetracker-admin-client/commit/a035e3e60ac63de823662191e47338c2a6f88179))
+
 # [1.103.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.4...v1.103.0) (2022-08-14)
 
 
