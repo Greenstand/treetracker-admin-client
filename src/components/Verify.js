@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.action.selected,
   },
   cardContent: {
-    padding: '87% 0 0 0',
+    padding: 'calc(400%/3) 0 0 0',
     position: 'relative',
     overflow: 'hidden',
     display: 'flex',

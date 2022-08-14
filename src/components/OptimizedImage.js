@@ -74,10 +74,13 @@ export default function OptimizedImage(props) {
           loading="lazy"
           style={{
             position: 'absolute',
+            left: 0,
+            right: 0,
+            margin: 'auto',
             inset: 0,
             objectFit,
-            width: '100%',
-            height: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
           }}
           {...rest}
         />
