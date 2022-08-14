@@ -70,7 +70,7 @@ export default class Filter {
     }
 
     if (this.wallet) {
-      where.wallet = this.wallets;
+      where.wallet = this.wallet;
     }
 
     if (this.planterIdentifier) {
