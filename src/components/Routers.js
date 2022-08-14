@@ -1,5 +1,8 @@
 import React, { useContext, useRef, useMemo } from 'react';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
+// import { Routes } from 'react-router-dom-v5-compat';
+// import v6 components and integrate to app. Run v5 and v6 simultaneously
+
 import Grid from '@material-ui/core/Grid';
 import Login from './Login';
 import { AppContext } from '../context/AppContext';
@@ -36,9 +39,7 @@ export default function Routers() {
             }}
           >
             <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
+              <Route path="/login" element={<Login />} />
               <Route path="/planters">
                 {' '}
                 {/* cater for legacy naming */}
@@ -92,24 +93,30 @@ export default function Routers() {
                   };
                   return (
                     <Switch>
-                      <Route path="/reporting/card1">
-                        <ReportingCard1 {...props} />
-                      </Route>
-                      <Route path="/reporting/card2">
-                        <ReportingCard2 {...props} />
-                      </Route>
-                      <Route path="/reporting/card3">
-                        <ReportingCard3 {...props} />
-                      </Route>
-                      <Route path="/reporting/card4">
-                        <ReportingCard4 {...props} />
-                      </Route>
-                      <Route path="/reporting/card5">
-                        <ReportingCard5 {...props} />
-                      </Route>
-                      <Route path="/reporting/card6">
-                        <ReportingCard6 {...props} />
-                      </Route>
+                      <Route
+                        path="/reporting/card1"
+                        element={<ReportingCard1 {...props} />}
+                      />
+                      <Route
+                        path="/reporting/card2"
+                        element={<ReportingCard2 {...props} />}
+                      />
+                      <Route
+                        path="/reporting/card3"
+                        element={<ReportingCard3 {...props} />}
+                      />
+                      <Route
+                        path="/reporting/card4"
+                        element={<ReportingCard4 {...props} />}
+                      />
+                      <Route
+                        path="/reporting/card5"
+                        element={<ReportingCard5 {...props} />}
+                      />
+                      <Route
+                        path="/reporting/card6"
+                        element={<ReportingCard6 {...props} />}
+                      />
                     </Switch>
                   );
                 })()}
