@@ -1,3 +1,10 @@
+# [1.103.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.4...v1.103.0) (2022-08-14)
+
+
+### Features
+
+* add grower detail dialog in capture matching ([#778](https://github.com/Greenstand/treetracker-admin-client/issues/778)) ([fa511ab](https://github.com/Greenstand/treetracker-admin-client/commit/fa511ab8a0d2b4908f734b0a7292a4ad5a9a08fc))
+
 ## [1.102.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.102.3...v1.102.4) (2022-08-14)
 
 
