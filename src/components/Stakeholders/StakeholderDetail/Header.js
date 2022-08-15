@@ -56,6 +56,7 @@ export default function StakeholderDialogHeader({
   isEditing,
   setIsEditing,
   forceSave,
+  setForceSave,
 }) {
   const { updateStakeholder } = useContext(StakeholdersContext);
   const [details, setDetails] = useState({ ...data });
@@ -155,7 +156,8 @@ export default function StakeholderDialogHeader({
 
   useEffect(() => {
     if (forceSave) handleSave();
-  });
+    setForceSave(false);
+  }, [forceSave]);
 
   return (
     <Grid container direction="row">

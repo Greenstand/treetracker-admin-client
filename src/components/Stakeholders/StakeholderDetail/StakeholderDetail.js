@@ -80,6 +80,7 @@ export default function StakeholderDetail({ row, columns, child }) {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [forceSave, setForceSave] = useState(false);
   const classes = useStyles();
 
   const openModal = () => {
@@ -99,6 +100,7 @@ export default function StakeholderDetail({ row, columns, child }) {
       setShowAlert(false);
       setIsEditing(false);
       setOpen(false);
+      setForceSave(true);
     };
 
     return (
@@ -178,7 +180,8 @@ export default function StakeholderDetail({ row, columns, child }) {
             data={rowData}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            forceSave={!open && !isEditing && !showAlert}
+            forceSave={forceSave}
+            setForceSave={setForceSave}
           />
 
           <Divider className={classes.my} />
