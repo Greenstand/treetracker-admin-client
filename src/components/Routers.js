@@ -39,7 +39,9 @@ export default function Routers() {
             }}
           >
             <Switch>
-              <Route path="/login" element={<Login />} />
+              <Route path="/login">
+                <Login />
+              </Route>
               <Route path="/planters">
                 {' '}
                 {/* cater for legacy naming */}
