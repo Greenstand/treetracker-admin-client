@@ -65,7 +65,13 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should match: planterId=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterId: '1' })
+      expect.objectContaining({
+        and: expect.arrayContaining([
+          {
+            or: [{ planterId: '1' }],
+          },
+        ]),
+      })
     );
   });
 
