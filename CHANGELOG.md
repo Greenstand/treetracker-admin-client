@@ -1,3 +1,10 @@
+## [1.103.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.3...v1.103.4) (2022-08-18)
+
+
+### Bug Fixes
+
+* filtering by multiple Grower ids gives incorrect results ([#776](https://github.com/Greenstand/treetracker-admin-client/issues/776)) ([db0e48b](https://github.com/Greenstand/treetracker-admin-client/commit/db0e48bb6cff8e1131858328b6210212dcd6d22c))
+
 ## [1.103.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.2...v1.103.3) (2022-08-18)
 
 
