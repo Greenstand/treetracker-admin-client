@@ -110,19 +110,19 @@ export default class Filter {
       where.verifyStatus = this.verifyStatus;
     }
 
-    const { verifyStatus, ...restFilter } = where;
+    const { verifyStatus: vs, ...restFilter } = where;
+    let verifyStatus = [];
+    let planterIds = [];
 
-    if (verifyStatus) {
-      if (verifyStatus.length === 1) {
-        where = [];
-        where.push({
-          active: verifyStatus[0].active,
-          approved: verifyStatus[0].approved,
+    if (vs) {
+      if (vs.length === 1) {
+        verifyStatus.push({
+          active: vs[0].active,
+          approved: vs[0].approved,
         });
       } else {
-        where = [];
-        verifyStatus.forEach((status) => {
-          where.push({
+        vs.forEach((status) => {
+          verifyStatus.push({
             active: status.active,
             approved: status.approved,
           });
@@ -131,30 +131,16 @@ export default class Filter {
     }
 
     if (this.planterId) {
-      const planterIds = this.planterId.split(',').map((item) => item.trim());
-      if (planterIds.length === 1) {
-        restFilter.planterId = this.planterId;
-      } else {
-        planterIds.forEach((planterId) => {
-          if (planterId) {
-            where.push({
-              planterId: planterId,
-            });
-          }
-        });
-      }
+      planterIds = this.planterId
+        .split(',')
+        .map((item) => ({ planterId: item.trim() }));
     }
-    return where.length > verifyStatus.length
-      ? verifyStatus.length > 0
-        ? {
-            ...restFilter,
-            and: [
-              { or: where.slice(0, verifyStatus.length) },
-              { or: where.slice(verifyStatus.length) },
-            ],
-          }
-        : { ...restFilter, and: [{ or: where.slice(verifyStatus.length) }] }
-      : { ...restFilter, or: where };
+    return planterIds
+      ? {
+          ...restFilter,
+          and: [{ or: planterIds }, { or: verifyStatus }],
+        }
+      : { ...restFilter, and: [{ or: verifyStatus }] };
   }
 
   /*
