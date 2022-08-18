@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -51,9 +51,14 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StakeholderDialogHeader({ data }) {
+export default function StakeholderDialogHeader({
+  data,
+  isEditing,
+  setIsEditing,
+  forceSave,
+  setForceSave,
+}) {
   const { updateStakeholder } = useContext(StakeholdersContext);
-  const [isEditing, setIsEditing] = useState(false);
   const [details, setDetails] = useState({ ...data });
   const [errors, setErrors] = useState({});
 
@@ -148,6 +153,11 @@ export default function StakeholderDialogHeader({ data }) {
   };
 
   const defaultTypeList = ['Organization', 'Person'];
+
+  useEffect(() => {
+    if (forceSave) handleSave();
+    setForceSave(false);
+  }, [forceSave]);
 
   return (
     <Grid container direction="row">

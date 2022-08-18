@@ -4,10 +4,13 @@ import {
   TableRow,
   TableCell,
   Dialog,
+  DialogActions,
   DialogContent,
   Divider,
   IconButton,
+  Typography,
   Grid,
+  Button,
 } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import CloseIcon from '@material-ui/icons/Close';
@@ -45,6 +48,12 @@ const useStyles = makeStyles({
   noScroll: {
     overflow: 'hidden',
   },
+  textWhite: {
+    color: 'white',
+  },
+  alertText: {
+    fontWeight: 'normal',
+  },
 });
 
 export default function StakeholderDetail({ row, columns, child }) {
@@ -75,6 +84,9 @@ export default function StakeholderDetail({ row, columns, child }) {
   };
 
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [forceSave, setForceSave] = useState(false);
   const classes = useStyles();
 
   const openModal = () => {
@@ -82,11 +94,49 @@ export default function StakeholderDetail({ row, columns, child }) {
   };
 
   const closeModal = () => {
+    if (isEditing) {
+      setShowAlert(true);
+      return;
+    }
     setOpen(false);
+  };
+
+  const AlertEditingDialog = () => {
+    const handleYes = () => {
+      setShowAlert(false);
+      setIsEditing(false);
+      setOpen(false);
+      setForceSave(true);
+    };
+
+    return (
+      showAlert && (
+        <Dialog open={showAlert} onClose={() => setShowAlert(false)}>
+          <DialogContent>
+            <Typography variant="h6" className={classes.alertText}>
+              Save changes?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.textWhite}
+              onClick={handleYes}
+            >
+              Yes
+            </Button>
+            <Button onClick={() => setShowAlert(false)}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
+      )
+    );
   };
 
   return (
     <>
+      {/* alert unsaved changes */}
+      <AlertEditingDialog />
       {/* Table row */}
       <TableRow
         hover
@@ -137,7 +187,13 @@ export default function StakeholderDetail({ row, columns, child }) {
         </IconButton>
 
         <DialogContent className={`${classes.my} ${classes.noScroll}`}>
-          <StakeholderDialogHeader data={rowData} />
+          <StakeholderDialogHeader
+            data={rowData}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            forceSave={forceSave}
+            setForceSave={setForceSave}
+          />
 
           <Divider className={classes.my} />
 
