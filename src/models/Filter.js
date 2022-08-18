@@ -106,41 +106,25 @@ export default class Filter {
       where.tokenId = { eq: null };
     }
 
-    if (this.verifyStatus) {
-      where.verifyStatus = this.verifyStatus;
+    // Fields that allow multiple values should be included as "or"s
+    // inside an "and" clause: { and: [ {or: [...]}, {or: [...]} ] }
+
+    const planterIds = (this.planterId || '')
+      .split(',')
+      .filter((item) => item)
+      .map((item) => ({ planterId: item.trim() }));
+
+    const andClause = [this.verifyStatus, planterIds]
+      .map((array) => {
+        return array?.length ? { or: array } : null;
+      })
+      .filter((term) => term);
+
+    if (andClause.length) {
+      where.and = andClause;
     }
 
-    const { verifyStatus: vs, ...restFilter } = where;
-    let verifyStatus = [];
-    let planterIds = [];
-
-    if (vs) {
-      if (vs.length === 1) {
-        verifyStatus.push({
-          active: vs[0].active,
-          approved: vs[0].approved,
-        });
-      } else {
-        vs.forEach((status) => {
-          verifyStatus.push({
-            active: status.active,
-            approved: status.approved,
-          });
-        });
-      }
-    }
-
-    if (this.planterId) {
-      planterIds = this.planterId
-        .split(',')
-        .map((item) => ({ planterId: item.trim() }));
-    }
-    return planterIds
-      ? {
-          ...restFilter,
-          and: [{ or: planterIds }, { or: verifyStatus }],
-        }
-      : { ...restFilter, and: [{ or: verifyStatus }] };
+    return where;
   }
 
   /*
