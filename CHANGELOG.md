@@ -1,3 +1,10 @@
+## [1.103.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.2...v1.103.3) (2022-08-18)
+
+
+### Bug Fixes
+
+* show warning for unsaved changes in editing stakeholder ([#765](https://github.com/Greenstand/treetracker-admin-client/issues/765)) ([10a6f91](https://github.com/Greenstand/treetracker-admin-client/commit/10a6f9198766030df3b0d0114a83edc60c9b349d))
+
 ## [1.103.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.1...v1.103.2) (2022-08-18)
 
 
