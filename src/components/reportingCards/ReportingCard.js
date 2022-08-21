@@ -31,8 +31,7 @@ const style = (theme) => ({
     borderRadius: 10,
     backgroundColor: 'white',
     padding: theme.spacing(4, 6),
-    height: '80%',
-    // minHeight: theme.spacing(74),
+    minHeight: theme.spacing(74),
     //minWidth: theme.spacing(79),
     maxWidth: '100%',
     display: 'flex',
@@ -174,18 +173,12 @@ function ReportingCard(props) {
           </Box>
           <Box mt={6} />
           {data ? (
-            data.top.slice(0, 3).map((item, i) => (
+            data.top.slice(0, 4).map((item, i) => (
               <Box key={i} className={classes.box4}>
                 <Typography className={classes.name}>{item.name}</Typography>
-                {typeof item.num === 'string' ? (
-                  <Typography className={classes.number}>{item.num}</Typography>
-                ) : (
-                  <Typography className={classes.number}>
-                    {new Intl.NumberFormat().format(item.num)}
-                  </Typography>
-                )}
-                <Typography className={classes.totalText}>
-                  {text.text1}
+                <Typography className={classes.number}>
+                  {new Intl.NumberFormat().format(item.number)}
+                  {item.percentage && `  (${item.percentage}%)`}
                 </Typography>
               </Box>
             ))
@@ -236,17 +229,8 @@ function ReportingCard(props) {
                   <Icon className={classes.iconTotal} style={{ color }} />
                 </Box>
                 <Box className={classes.box3}>
-                  {typeof data.num1 === 'string' ? (
-                    <Typography className={classes.number}>
-                      {data.num1}
-                    </Typography>
-                  ) : (
-                    <Typography className={classes.number}>
-                      {new Intl.NumberFormat().format(data.num1)}
-                    </Typography>
-                  )}
-                  <Typography className={classes.totalText}>
-                    {text.text1}
+                  <Typography className={classes.number}>
+                    {new Intl.NumberFormat().format(data.num1)}
                   </Typography>
                 </Box>
               </Box>
@@ -257,15 +241,10 @@ function ReportingCard(props) {
                     <Typography className={classes.name}>
                       {item.name}
                     </Typography>
-                    {typeof data.num1 === 'string' ? (
-                      <Typography className={classes.number}>
-                        {item.number}
-                      </Typography>
-                    ) : (
-                      <Typography className={classes.number}>
-                        {new Intl.NumberFormat().format(item.number)}
-                      </Typography>
-                    )}
+                    <Typography className={classes.number}>
+                      {new Intl.NumberFormat().format(item.number)}
+                      {item.percentage && `  (${item.percentage}%)`}
+                    </Typography>
                   </Box>
                 ))}
             </Box>

@@ -11,31 +11,35 @@ export default function component(props) {
     endDate,
     'gender_details',
     'gender_details',
-    (data) =>
-      data.gender_details.reduce((acc, cur) => acc + Number(cur.number), 0),
+    (data) => data.total,
     rows
   );
 
   const formatData = (data) => {
-    const result = data.top.map((item) => {
-      return {
-        name:
-          item.name && item.name.match(/f/i)
-            ? 'Female'
-            : item.name
-            ? 'Male'
-            : 'Unknown',
-        num: `${item.percentage}%`,
-      };
-    });
-    return { ...data, top: result };
+    if (data?.moreData) {
+      const moreData = data.moreData.map((item) => {
+        return {
+          ...item,
+          name: item.name || 'Not Set',
+        };
+      });
+      return { ...data, moreData };
+    } else {
+      const top = data.top.map((item) => {
+        return {
+          ...item,
+          name: item.name || 'Not Set',
+        };
+      });
+      return { ...data, top };
+    }
   };
 
   return (
     <ReportingCard
       text={{
-        title: 'Grower Gender Count',
-        text1: 'Total growers',
+        title: 'Gender Percentage',
+        text1: 'Total Growers',
       }}
       icon={PeopleIcon}
       color="#e95839"

@@ -60,11 +60,7 @@ export default function useLoadData(
 
     setData({
       num1: getNum1(data[field1]),
-      top: (top || data[field1][field2]).map((p) => ({
-        name: p.name,
-        num: p.number,
-        percentage: p.percentage,
-      })),
+      top: top || data[field1][field2],
       loadMore,
     });
   }

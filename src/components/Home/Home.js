@@ -165,7 +165,7 @@ function Home(props) {
                 <DashStatGrowerCount />
               )}
             {hasFreetownPermission(appContext.user) && (
-              <Grid className={classes.statCardGrid} container xs={12}>
+              <Grid item xs={12} className={classes.statCardGrid} container>
                 <Grid item xs={4}>
                   <ReportingCard1 startDate={startDate} endDate={endDate} />
                 </Grid>
@@ -187,11 +187,9 @@ function Home(props) {
                 <Grid item xs={4}>
                   <ReportingCard7 startDate={startDate} endDate={endDate} />
                 </Grid>
-                {process.env.REACT_APP_ENABLE_GENDER_REPORTING_CARD && (
-                  <Grid item xs={4}>
-                    <ReportingCard8 startDate={startDate} endDate={endDate} />
-                  </Grid>
-                )}
+                <Grid item xs={4}>
+                  <ReportingCard8 startDate={startDate} endDate={endDate} />
+                </Grid>
               </Grid>
             )}
           </div>
