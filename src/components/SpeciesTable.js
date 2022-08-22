@@ -220,14 +220,14 @@ const SpeciesTable = (props) => {
           <IconButton
             title="edit"
             onClick={() => handleEdit(species)}
-            classname={classes.operationButton}
+            className={classes.operationButton}
           >
             <Edit />
           </IconButton>
           <IconButton
             title="delete"
             onClick={() => openDeleteDialog(species)}
-            classname={classes.operationButton}
+            className={classes.operationButton}
           >
             <Delete />
           </IconButton>
