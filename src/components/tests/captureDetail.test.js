@@ -1,11 +1,9 @@
-import React, { forwardRef } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { act, render, screen, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+// import userEvent from '@testing-library/user-event';
+import axios from 'axios';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
-import Slide from '@material-ui/core/Slide';
-import { AppProvider } from '../../context/AppContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
 import { CAPTURE, TAG, SPECIES } from './fixtures';
@@ -13,9 +11,11 @@ import { CAPTURE, TAG, SPECIES } from './fixtures';
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/captureDetail.test.js');
 
+jest.mock('axios');
+
 describe('captureDetail', () => {
   let api;
-  let captureValues;
+  let context;
 
   beforeEach(() => {
     //mock the api
@@ -37,7 +37,7 @@ describe('captureDetail', () => {
 
   describe('with a default context', () => {
     beforeEach(async () => {
-      captureValues = {
+      context = {
         capture: null,
         species: null,
         tags: [],
@@ -47,37 +47,37 @@ describe('captureDetail', () => {
         reset: () => {},
       };
 
+      context.getCaptureDetail = jest.fn(() => {
+        console.log('mock getCaptureDetail');
+        return axios.get.mockReturnValueOnce(CAPTURE);
+      });
+
       render(
         <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <AppProvider>
-              <CaptureDetailProvider>
-                <CaptureDetailDialog
-                  open={true}
-                  onClose={() => {}}
-                  capture={{ id: 0 }}
-                />
-              </CaptureDetailProvider>
-            </AppProvider>
-          </BrowserRouter>
+          <CaptureDetailProvider value={context}>
+            <CaptureDetailDialog
+              open={true}
+              onClose={() => {}}
+              capture={{ id: 0 }}
+            />
+          </CaptureDetailProvider>
         </ThemeProvider>
       );
 
       await act(() => api.getCaptureById());
+      await act(() => context.getCaptureDetail());
     });
 
     afterEach(cleanup);
 
     describe('query captureDetail', () => {
-      beforeEach(async () => {
-        // await CapturesContext.getCaptureDetail(0);
-      });
-
       it('loaded captureDetail', () => {
         // screen.logTestingPlaygroundURL();
-        expect(screen.getByText(/grower@some.place/i));
-        expect(screen.getByText(/new_tree/i));
-        expect(screen.getByText(/simple_leaf/i));
+        expect(screen.findByText(/capture data/i));
+        expect(screen.findByText(/capture token/i));
+        expect(screen.findByText(/grower@some.place/i));
+        expect(screen.findByText(/new_tree/i));
+        expect(screen.findByText(/simple_leaf/i));
       });
     });
   });
