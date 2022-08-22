@@ -1,3 +1,10 @@
+## [1.103.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.4...v1.103.5) (2022-08-22)
+
+
+### Bug Fixes
+
+* api request for Capture Detail from Capture Match vs. other tools ([#775](https://github.com/Greenstand/treetracker-admin-client/issues/775)) ([64d47bc](https://github.com/Greenstand/treetracker-admin-client/commit/64d47bc3dc7172d1ae440f16d1030f4f25de8539))
+
 ## [1.103.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.3...v1.103.4) (2022-08-18)
 
 

@@ -124,7 +124,6 @@ const CaptureTable = () => {
   const [captureDetail, setCaptureDetail] = useState({
     id: null,
     isDetailsPaneOpen: false,
-    onClose: closeDrawer,
   });
   const [speciesLookup, setSpeciesLookup] = useState({});
   const [tagLookup, setTagLookup] = useState({});
@@ -184,7 +183,6 @@ const CaptureTable = () => {
 
   const toggleDrawer = (id) => {
     setCaptureDetail({
-      ...captureDetail,
       id,
       isDetailsPaneOpen: true,
     });
@@ -200,7 +198,6 @@ const CaptureTable = () => {
     setDisableHoverListener(false);
 
     setCaptureDetail({
-      ...captureDetail,
       id: null,
       isDetailsPaneOpen: false,
     });

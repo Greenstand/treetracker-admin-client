@@ -24,9 +24,9 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
 import Country from './common/Country';
-import * as loglevel from 'loglevel';
+// import * as loglevel from 'loglevel';
 
-const log = loglevel.getLogger('../context/CaptureDetailDialog');
+// const log = loglevel.getLogger('../context/CaptureDetailDialog');
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
