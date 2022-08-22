@@ -116,7 +116,7 @@ const styles = (theme) => ({
   minWidth: {
     minWidth: '320px',
   },
-  oberationButton: {
+  operationButton: {
     padding: '6px',
   },
 });
