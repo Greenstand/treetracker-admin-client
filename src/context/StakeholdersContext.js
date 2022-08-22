@@ -79,6 +79,7 @@ export function StakeholdersProvider(props) {
     log.debug('load stakeholders - id:', id);
     const { stakeholders, totalCount } = await api.getStakeholders(id, filter);
     setStakeholders(stakeholders);
+    console.log('stakeholders(marwan): ', stakeholders);
     setCount(totalCount);
   };
 

@@ -116,6 +116,9 @@ const styles = (theme) => ({
   minWidth: {
     minWidth: '320px',
   },
+  oberationButton: {
+    padding: '6px',
+  },
 });
 
 const SpeciesTable = (props) => {
@@ -213,11 +216,19 @@ const SpeciesTable = (props) => {
         </TableCell>
         <TableCell>{species.desc}</TableCell>
         <TableCell>{species.captureCount}</TableCell>
-        <TableCell>
-          <IconButton title="edit" onClick={() => handleEdit(species)}>
+        <TableCell className={classes.operations}>
+          <IconButton
+            title="edit"
+            onClick={() => handleEdit(species)}
+            className={classes.oberationButton}
+          >
             <Edit />
           </IconButton>
-          <IconButton title="delete" onClick={() => openDeleteDialog(species)}>
+          <IconButton
+            title="delete"
+            onClick={() => openDeleteDialog(species)}
+            className={classes.oberationButton}
+          >
             <Delete />
           </IconButton>
         </TableCell>
