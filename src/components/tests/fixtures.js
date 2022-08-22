@@ -305,7 +305,6 @@ const capturesValues = {
   queryCapturesApi: () => {},
   getCaptureCount: () => {},
   getCapturesAsync: () => {},
-  getCaptureAsync: () => {},
 };
 const growerValues = {
   growers: GROWERS,

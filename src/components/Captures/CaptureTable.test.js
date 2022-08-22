@@ -167,7 +167,6 @@ describe('Captures', () => {
       queryCapturesApi: () => {},
       getCaptureCount: () => {},
       getCapturesAsync: () => {},
-      getCaptureAsync: () => {},
     };
 
     // Mock the API

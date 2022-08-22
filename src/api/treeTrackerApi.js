@@ -186,7 +186,7 @@ export default {
   },
   getCaptureById(id) {
     try {
-      const query = `${TREETRACKER_API}/captures/${id}`;
+      const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
 
       return fetch(query, {
         headers: {
@@ -463,7 +463,7 @@ export default {
     try {
       const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
-      console.log('GET ORGANIZATIONS -----', query);
+      log.debug('GET ORGANIZATIONS -----', query);
 
       return fetch(query, {
         method: 'GET',
