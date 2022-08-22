@@ -116,6 +116,9 @@ const styles = (theme) => ({
   minWidth: {
     minWidth: '320px',
   },
+  spacer: {
+    flex: '0 0 16px',
+  },
 });
 
 const SpeciesTable = (props) => {
@@ -229,7 +232,7 @@ const SpeciesTable = (props) => {
     <TablePagination
       count={speciesContext.speciesList.length}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-      colSpan={3}
+      classes={{ spacer: classes.spacer }}
       page={page}
       rowsPerPage={rowsPerPage}
       onPageChange={handleChangePage}
