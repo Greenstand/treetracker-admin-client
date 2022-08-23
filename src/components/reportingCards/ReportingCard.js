@@ -178,7 +178,6 @@ function ReportingCard(props) {
                 <Typography className={classes.name}>{item.name}</Typography>
                 <Typography className={classes.number}>
                   {new Intl.NumberFormat().format(item.number)}
-                  {item.percentage && `  (${item.percentage}%)`}
                 </Typography>
               </Box>
             ))
@@ -243,7 +242,6 @@ function ReportingCard(props) {
                     </Typography>
                     <Typography className={classes.number}>
                       {new Intl.NumberFormat().format(item.number)}
-                      {item.percentage && `  (${item.percentage}%)`}
                     </Typography>
                   </Box>
                 ))}

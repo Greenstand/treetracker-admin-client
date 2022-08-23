@@ -38,7 +38,7 @@ export default function component(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Gender Percentage',
+        title: 'Grower Gender Counts',
         text1: 'Total Growers',
       }}
       icon={PeopleIcon}
