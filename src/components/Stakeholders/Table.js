@@ -75,7 +75,7 @@ function StakeholderTable() {
     }
     return sorted;
   };
-
+  console.log('StakeholderTable..', sortedStakeholders);
   return (
     <>
       {isLoading ? (
@@ -117,6 +117,7 @@ function StakeholderTable() {
                           key={child.id}
                           row={child}
                           columns={columns}
+                          parentId={stakeholder.id}
                           child
                         />
                       ))}
