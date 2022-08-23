@@ -161,7 +161,7 @@ function StakeholderFilter() {
       >
         Filter
       </Button>
-      {Object.keys(filter).length > 0 && (
+      {Object.values(filter).some((e) => Boolean(e)) && (
         <Button onClick={resetFilters}>Reset Filters</Button>
       )}
       <Dialog open={open} onClose={close} fullWidth={true} maxWidth={'md'}>
