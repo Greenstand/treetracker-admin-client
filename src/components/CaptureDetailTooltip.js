@@ -11,6 +11,9 @@ import AccessTime from '@material-ui/icons/DateRange';
 import Note from '@material-ui/icons/Note';
 import Person from '@material-ui/icons/Person';
 import Nature from '@material-ui/icons/Nature';
+import Category from '@material-ui/icons/Category';
+import { useContext } from 'react';
+import { SpeciesContext } from 'context/SpeciesContext';
 
 const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
   const CaptureDetailTooltipUseStyles = makeStyles(() => ({
@@ -21,9 +24,20 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       marginLeft: '12px',
     },
   }));
+  const [speciesName, setSpeciesName] = React.useState();
+  const { speciesList } = useContext(SpeciesContext);
+
+  React.useEffect(() => {
+    if (capture?.speciesId) {
+      const currentSpecies = () => {
+        return speciesList.find((species) => species.id === capture.speciesId);
+      };
+      const speciesData = currentSpecies();
+      setSpeciesName(speciesData?.name);
+    }
+  }, [capture]);
 
   const CaptureDetailTooltipStyles = CaptureDetailTooltipUseStyles();
-
   return (
     <Box style={{ width: '160px', display: 'block' }}>
       <Card
@@ -32,6 +46,14 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       >
         <CardActionArea>
           <Container>
+            {capture?.speciesId && (
+              <Box className={CaptureDetailTooltipStyles.box}>
+                <Category color="primary" />
+                <Typography className={CaptureDetailTooltipStyles.label}>
+                  {speciesName}
+                </Typography>
+              </Box>
+            )}
             {capture.id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Nature color="primary" />
