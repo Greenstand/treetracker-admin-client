@@ -33,7 +33,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
         return speciesList.find((species) => species.id === capture.speciesId);
       };
       const speciesData = currentSpecies();
-      setSpeciesName(speciesData?.name);
+      setSpeciesName(speciesData.name);
     }
   }, [capture]);
 
