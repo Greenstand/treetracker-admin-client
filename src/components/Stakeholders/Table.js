@@ -117,6 +117,7 @@ function StakeholderTable() {
                           key={child.id}
                           row={child}
                           columns={columns}
+                          parentId={stakeholder.id}
                           child
                         />
                       ))}

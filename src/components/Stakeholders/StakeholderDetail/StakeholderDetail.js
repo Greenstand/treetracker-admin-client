@@ -56,7 +56,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StakeholderDetail({ row, columns, child }) {
+export default function StakeholderDetail({ row, columns, child, parentId }) {
   const {
     type,
     org_name,
@@ -201,6 +201,7 @@ export default function StakeholderDetail({ row, columns, child }) {
             <StakeholderGroups
               data={rowData}
               render={['parents', 'children']}
+              parentId={parentId}
             />
           </Grid>
         </DialogContent>

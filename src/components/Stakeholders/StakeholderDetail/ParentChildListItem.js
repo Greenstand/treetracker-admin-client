@@ -42,7 +42,7 @@ export default function ParentChildListItem({ data }) {
       </Grid>
       <Grid item xs={5} className={classes.flex}>
         <IdIcon className={classes.pr} />
-        <Typography>{data.id}</Typography>
+        <Typography noWrap={true}>{data.id}</Typography>
       </Grid>
     </>
   );
