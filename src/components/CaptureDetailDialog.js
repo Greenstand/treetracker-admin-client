@@ -24,9 +24,7 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import { Link } from '@material-ui/core';
 import Country from './common/Country';
-// import * as loglevel from 'loglevel';
-
-// const log = loglevel.getLogger('../context/CaptureDetailDialog');
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -85,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     color: '#fff',
   },
+  itemValue: {
+    lineHeight: 1.7,
+  },
 }));
 
 function CaptureDetailDialog(props) {
@@ -95,6 +96,7 @@ function CaptureDetailDialog(props) {
   const [renderCapture, setRenderCapture] = useState(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [isLoading, setIsLoading] = useState(true);
   const resizeWindow = useCallback(() => {
     setScreenWidth(window.innerWidth);
     setScreenHeight(window.innerHeight);
@@ -150,7 +152,14 @@ function CaptureDetailDialog(props) {
         updated_at: current.updated_at || current.timeUpdated,
       });
     }
+    if(isLoading) {
+      setIsLoading(false);
+    }
   }, [cdContext.capture]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  },[open])
 
   function handleClose() {
     setSnackbarOpen(false);
@@ -237,7 +246,7 @@ function CaptureDetailDialog(props) {
           ].map((item) => (
             <Grid item key={item.label}>
               <Typography variant="subtitle1">{item.label}</Typography>
-              <Typography variant="body1">
+              <Typography variant="body1"  className={classes.itemValue}>
                 {item.link ? (
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
@@ -252,7 +261,7 @@ function CaptureDetailDialog(props) {
                     <LinkToWebmap value={item.value} type="user" />
                   )
                 ) : (
-                  item.value || '---'
+                  item.value ? (item.value) : isLoading ? <Skeleton variant="text"/> : '---'
                 )}
                 {item.value && item.copy && (
                   <CopyButton
@@ -266,8 +275,8 @@ function CaptureDetailDialog(props) {
           ))}
           <Grid>
             <Typography variant="subtitle1">Country</Typography>
-            <Typography variant="body1">
-              {capture?.lat && capture?.lon && countryInfo}
+            <Typography variant="body1" className={classes.itemValue}>
+              {isLoading ? <Skeleton variant="text"/>  : capture?.lat && capture?.lon && countryInfo}
             </Typography>
           </Grid>
         </Grid>

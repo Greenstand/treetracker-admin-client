@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 export default function Country({ lat, lon }) {
   console.log('Country:', lat, lon);
@@ -11,7 +12,7 @@ export default function Country({ lat, lon }) {
 
   useEffect(() => {
     // if (lat && lon) {
-    setContent('loading...');
+    setContent(<Skeleton variant="text"/> );
     fetch(
       `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
     )
