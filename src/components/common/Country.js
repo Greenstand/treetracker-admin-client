@@ -5,14 +5,14 @@ export default function Country({ lat, lon }) {
   console.log('Country:', lat, lon);
   console.count();
 
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(<Skeleton variant="text"/>);
+
   if (!lat || !lon || lat === 'undefined' || lon === 'undefined') {
     setContent('No data');
   }
 
   useEffect(() => {
     // if (lat && lon) {
-    setContent(<Skeleton variant="text"/> );
     fetch(
       `${process.env.REACT_APP_QUERY_API_ROOT}/countries?lat=${lat}&lon=${lon}`
     )
