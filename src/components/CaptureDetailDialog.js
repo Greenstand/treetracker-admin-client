@@ -1,20 +1,17 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Chip from '@material-ui/core/Chip';
-import IconButton from '@material-ui/core/IconButton';
-import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
+import {
+  Typography,
+  Dialog,
+  Grid,
+  Divider,
+  Chip,
+  IconButton,
+  Drawer,
+  Box,
+  Link,
+} from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
@@ -22,7 +19,6 @@ import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
-import { Link } from '@material-ui/core';
 import Country from './common/Country';
 // import * as loglevel from 'loglevel';
 
@@ -93,12 +89,6 @@ function CaptureDetailDialog(props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(null);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
-  const resizeWindow = useCallback(() => {
-    setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
-  }, []);
   const classes = useStyles();
 
   useEffect(() => {
@@ -107,13 +97,6 @@ function CaptureDetailDialog(props) {
       cdContext.getCaptureDetail(captureId);
     }
   }, [captureId]);
-
-  useEffect(() => {
-    window.addEventListener('resize', resizeWindow);
-    return () => {
-      window.removeEventListener('resize', resizeWindow);
-    };
-  }, [resizeWindow]);
 
   /*
    * Render the most complete capture detail we have
@@ -349,7 +332,7 @@ function CaptureDetailDialog(props) {
         <Dialog
           open={open}
           onClose={handleClose}
-          style={{ width: screenWidth - 340 }}
+          style={{ width: 'calc(100vw - 340px)' }}
           BackdropProps={{
             classes: {
               root: classes.dialog,
@@ -359,7 +342,7 @@ function CaptureDetailDialog(props) {
         >
           <OptimizedImage
             src={renderCapture?.image_url}
-            width={screenHeight * 0.9}
+            width={window.innerHeight * 0.9}
             style={{ maxWidth: '100%' }}
             objectFit="contain"
             fixed
