@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.8em',
     color: 'rgba(0,0,0,0.5)',
   },
-  root: {
+  paper: {
     width: 340,
   },
   drawer: {
@@ -370,15 +370,14 @@ function CaptureDetailDialog(props) {
           open={open}
           className={classes.drawer}
           onClose={handleClose}
+          classes={{ paper: classes.paper }}
         >
-          <Grid className={classes.root}>
-            <Grid container direction="column">
-              <Tags
-                capture={renderCapture}
-                species={cdContext.species}
-                captureTags={cdContext.tags}
-              />
-            </Grid>
+          <Grid container direction="column">
+            <Tags
+              capture={renderCapture}
+              species={cdContext.species}
+              captureTags={cdContext.tags}
+            />
           </Grid>
         </Drawer>
       </>
