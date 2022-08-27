@@ -1,3 +1,11 @@
+## [1.103.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.6...v1.103.7) (2022-08-27)
+
+
+### Bug Fixes
+
+* loading of capture details dialog ([#796](https://github.com/Greenstand/treetracker-admin-client/issues/796)) ([cd3f57a](https://github.com/Greenstand/treetracker-admin-client/commit/cd3f57aed293796d80b6127f68f97d655862f4d2))
+* **stakeholder tool:** filter always shows a button. [#726](https://github.com/Greenstand/treetracker-admin-client/issues/726) ([#793](https://github.com/Greenstand/treetracker-admin-client/issues/793)) ([b0af866](https://github.com/Greenstand/treetracker-admin-client/commit/b0af86674a403a7c91bc1e9ccbd034331a88261f))
+
 ## [1.103.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.5...v1.103.6) (2022-08-27)
 
 
