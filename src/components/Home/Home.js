@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Grid from '@material-ui/core/Grid';
@@ -30,6 +30,7 @@ import ReportingCard4 from '../reportingCards/ReportingCard4';
 import ReportingCard5 from '../reportingCards/ReportingCard5';
 import ReportingCard6 from '../reportingCards/ReportingCard6';
 import ReportingCard7 from '../reportingCards/ReportingCard7';
+import ReportingCard8 from '../reportingCards/ReportingCard8';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import moment from 'moment';
@@ -48,15 +49,15 @@ import log from 'loglevel';
 function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [updateTime, setUpdateTime] = React.useState(undefined);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [updateTime, setUpdateTime] = useState(undefined);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
   }, []);
 
   // the reporting card, update time, the time range
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadUpdateTime() {
       const res = await axios(
         `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics?`
@@ -72,11 +73,9 @@ function Home(props) {
     { range: 365, text: 'Last Year' },
     { range: 365 * 100, text: 'All' },
   ];
-  const [timeRangeIndex, setTimeRangeIndex] = React.useState(3);
-  const [startDate, setStartDate] = React.useState('1970-01-01');
-  const [endDate /*, setEndDate*/] = React.useState(
-    moment().format('YYYY-MM-DD')
-  );
+  const [timeRangeIndex, setTimeRangeIndex] = useState(3);
+  const [startDate, setStartDate] = useState('1970-01-01');
+  const [endDate /*, setEndDate*/] = useState(moment().format('YYYY-MM-DD'));
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -166,7 +165,7 @@ function Home(props) {
                 <DashStatGrowerCount />
               )}
             {hasFreetownPermission(appContext.user) && (
-              <Grid className={classes.statCardGrid} container xs={12}>
+              <Grid item xs={12} className={classes.statCardGrid} container>
                 <Grid item xs={4}>
                   <ReportingCard1 startDate={startDate} endDate={endDate} />
                 </Grid>
@@ -187,6 +186,9 @@ function Home(props) {
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard7 startDate={startDate} endDate={endDate} />
+                </Grid>
+                <Grid item xs={4}>
+                  <ReportingCard8 startDate={startDate} endDate={endDate} />
                 </Grid>
               </Grid>
             )}
