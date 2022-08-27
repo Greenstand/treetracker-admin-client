@@ -1,3 +1,10 @@
+## [1.103.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.5...v1.103.6) (2022-08-27)
+
+
+### Bug Fixes
+
+* **species:** prevent operations from wrapping ([#790](https://github.com/Greenstand/treetracker-admin-client/issues/790)) ([9e0528c](https://github.com/Greenstand/treetracker-admin-client/commit/9e0528c5d5c86c1f5204c89ccc06c7f702ec8091))
+
 ## [1.103.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.4...v1.103.5) (2022-08-22)
 
 
