@@ -1,3 +1,10 @@
+# [1.104.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.7...v1.104.0) (2022-08-28)
+
+
+### Features
+
+* **account:** improve account page styling [#719](https://github.com/Greenstand/treetracker-admin-client/issues/719) ([#795](https://github.com/Greenstand/treetracker-admin-client/issues/795)) ([b7e5832](https://github.com/Greenstand/treetracker-admin-client/commit/b7e5832d28bfb79eab6d4fd05694effb8c764166))
+
 ## [1.103.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.6...v1.103.7) (2022-08-27)
 
 
