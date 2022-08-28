@@ -1,3 +1,10 @@
+# [1.105.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.104.0...v1.105.0) (2022-08-28)
+
+
+### Features
+
+* **capture:** getting rid of unnecessary horizontal scroll [#799](https://github.com/Greenstand/treetracker-admin-client/issues/799) ([#801](https://github.com/Greenstand/treetracker-admin-client/issues/801)) ([d93c25f](https://github.com/Greenstand/treetracker-admin-client/commit/d93c25f1a6a3f31073967faa340596c98c689709))
+
 # [1.104.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.103.7...v1.104.0) (2022-08-28)
 
 
