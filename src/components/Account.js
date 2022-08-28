@@ -35,7 +35,6 @@ const style = (theme) => ({
   menu: {
     height: '100%',
   },
-
   rightBox: {
     height: '100%',
     padding: theme.spacing(8),
@@ -44,25 +43,34 @@ const style = (theme) => ({
     marginBottom: theme.spacing(4),
   },
   accountIcon: {
-    fontSize: 67,
-    marginRight: 11,
+    fontSize: '4rem',
+    marginRight: theme.spacing(4),
+    color: 'gray',
   },
   title: {
-    fontSize: 33,
-    marginBottom: theme.spacing(2),
+    fontSize: '.8rem',
+    color: 'gray',
   },
   item: {
-    fontSize: 24,
-    marginBottom: theme.spacing(3),
+    fontSize: '1.2rem',
+  },
+  element: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   bodyBox: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
   },
   changeBox: {
     height: '100%',
   },
   logout: {
-    width: 250,
+    width: '15rem',
+    fontSize: '1rem',
+    marginTop: theme.spacing(2),
+  },
+  border: {
+    borderBottom: '1px solid #ddd',
   },
 });
 
@@ -202,69 +210,61 @@ function Account(props) {
         <Grid container className={classes.rightBox}>
           <Grid item xs={12}>
             <Grid container className={classes.titleBox}>
-              <Grid item>
+              <Grid container alignItems="center" item>
                 <AccountIcon className={classes.accountIcon} />
-              </Grid>
-              <Grid item>
-                <Typography variant="h2">Account</Typography>
+                <Typography variant="h3">Account</Typography>
               </Grid>
             </Grid>
+            <Box className={classes.border} />
+            <Box height={12} />
             <Grid container direction="column" className={classes.bodyBox}>
-              <Grid item>
+              <Grid className={classes.element} item>
                 <Typography className={classes.title}>Username</Typography>
                 <Typography className={classes.item}>
                   {user.userName}
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid className={classes.element} item>
                 <Typography className={classes.title}>Name</Typography>
                 <Typography className={classes.item}>
                   {user.firstName} {user.lastName}
                 </Typography>
               </Grid>
-              <Grid item>
+              <Grid className={classes.element} item>
                 <Typography className={classes.title}>Email</Typography>
                 <Typography className={classes.item}>{user.email}</Typography>
               </Grid>
-              <Grid item>
+              <Grid className={classes.element} item>
                 <Typography className={classes.title}>Roles</Typography>
                 {roles}
               </Grid>
-              <Grid item>
+              <Grid className={classes.element} item>
                 <Typography className={classes.title}>Created</Typography>
                 <Typography className={classes.item}>
                   {getDateTimeStringLocale(user.createdAt)}
                 </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Typography className={classes.title}>Password</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Grid
-                      container
-                      justif="center"
-                      alignItems="center"
-                      className={classes.changeBox}
-                    >
-                      <Button onClick={handleClickOpen} color="primary">
-                        CHANGE
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <Box height={20} />
-                  <Button
-                    onClick={handleLogout}
-                    color="secondary"
-                    variant="contained"
-                    className={classes.logout}
-                  >
-                    LOG OUT
-                  </Button>
-                </Grid>
+              <Grid className={classes.element} item>
+                <Typography className={classes.title}>Password</Typography>
+                <Button
+                  onClick={handleClickOpen}
+                  color="primary"
+                  className={classes.logout}
+                >
+                  CHANGE
+                </Button>
+              </Grid>
+              <Box className={classes.border} height={20} />
+              <Box height={12} />
+              <Grid className={classes.element} item>
+                <Button
+                  onClick={handleLogout}
+                  color="secondary"
+                  variant="contained"
+                  className={classes.logout}
+                >
+                  LOG OUT
+                </Button>
               </Grid>
             </Grid>
           </Grid>
