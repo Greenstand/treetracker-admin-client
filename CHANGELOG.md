@@ -1,3 +1,10 @@
+## [1.105.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.105.0...v1.105.1) (2022-08-29)
+
+
+### Bug Fixes
+
+* species - the next page button is invisible [#785](https://github.com/Greenstand/treetracker-admin-client/issues/785) ([#807](https://github.com/Greenstand/treetracker-admin-client/issues/807)) ([482e17f](https://github.com/Greenstand/treetracker-admin-client/commit/482e17fb2367ea857f7c68b76c6e142c4a00ec9d))
+
 # [1.105.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.104.0...v1.105.0) (2022-08-28)
 
 
