@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import log from 'loglevel';
 
@@ -10,7 +10,7 @@ export default function useLoadData(
   getNum1 = (e) => e.total,
   rows
 ) {
-  const [data, setData] = React.useState(undefined);
+  const [data, setData] = useState(undefined);
 
   async function loadMore() {
     const res = await axios({
@@ -40,7 +40,7 @@ export default function useLoadData(
       },
     });
     const { data } = res;
-    log.warn('load data: ', data);
+    log.warn('load reporting data: ', data);
 
     let top;
     if (rows !== undefined) {
@@ -60,15 +60,12 @@ export default function useLoadData(
 
     setData({
       num1: getNum1(data[field1]),
-      top: (top || data[field1][field2]).map((p) => ({
-        name: p.name,
-        num: p.number,
-      })),
+      top: top || data[field1][field2],
       loadMore,
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setData(undefined);
     load(startDate, endDate);
   }, [startDate, endDate]);

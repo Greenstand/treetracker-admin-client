@@ -116,6 +116,12 @@ const styles = (theme) => ({
   minWidth: {
     minWidth: '320px',
   },
+  operationButton: {
+    padding: '6px',
+  },
+  spacer: {
+    flex: '0 0 16px',
+  },
 });
 
 const SpeciesTable = (props) => {
@@ -214,10 +220,18 @@ const SpeciesTable = (props) => {
         <TableCell>{species.desc}</TableCell>
         <TableCell>{species.captureCount}</TableCell>
         <TableCell>
-          <IconButton title="edit" onClick={() => handleEdit(species)}>
+          <IconButton
+            title="edit"
+            onClick={() => handleEdit(species)}
+            className={classes.operationButton}
+          >
             <Edit />
           </IconButton>
-          <IconButton title="delete" onClick={() => openDeleteDialog(species)}>
+          <IconButton
+            title="delete"
+            onClick={() => openDeleteDialog(species)}
+            className={classes.operationButton}
+          >
             <Delete />
           </IconButton>
         </TableCell>
@@ -229,7 +243,7 @@ const SpeciesTable = (props) => {
     <TablePagination
       count={speciesContext.speciesList.length}
       rowsPerPageOptions={[25, 50, 100, { label: 'All', value: -1 }]}
-      colSpan={3}
+      classes={{ spacer: classes.spacer }}
       page={page}
       rowsPerPage={rowsPerPage}
       onPageChange={handleChangePage}

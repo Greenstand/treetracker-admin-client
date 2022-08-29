@@ -1,7 +1,7 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
-import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import PeopleIcon from '@material-ui/icons/People';
 
 export default function ReportingCard1(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -21,7 +21,7 @@ export default function ReportingCard1(props) {
         title: 'Growers',
         text1: 'Total',
       }}
-      icon={PeopleOutlineIcon}
+      icon={PeopleIcon}
       color="#e95839"
       data={data}
       disableSeeMore={disableSeeMore}

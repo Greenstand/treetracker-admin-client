@@ -11,7 +11,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import ArrayIcon from '@material-ui/icons/ArrowForward';
 // import theme from '../common/theme';
 import log from 'loglevel';
@@ -126,7 +126,7 @@ const style = (theme) => ({
   },
 });
 
-function GrowerReportingCard(props) {
+function ReportingCard(props) {
   const {
     classes,
     data,
@@ -135,7 +135,7 @@ function GrowerReportingCard(props) {
     icon,
     disableSeeMore /*, moreData*/,
   } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const Icon = icon;
 
@@ -173,11 +173,11 @@ function GrowerReportingCard(props) {
           </Box>
           <Box mt={6} />
           {data ? (
-            data.top.slice(0, 3).map((item, i) => (
+            data.top.slice(0, 4).map((item, i) => (
               <Box key={i} className={classes.box4}>
                 <Typography className={classes.name}>{item.name}</Typography>
                 <Typography className={classes.number}>
-                  {new Intl.NumberFormat().format(item.num)}
+                  {new Intl.NumberFormat().format(item.number)}
                 </Typography>
               </Box>
             ))
@@ -228,11 +228,8 @@ function GrowerReportingCard(props) {
                   <Icon className={classes.iconTotal} style={{ color }} />
                 </Box>
                 <Box className={classes.box3}>
-                  <Typography className={classes.total}>
+                  <Typography className={classes.number}>
                     {new Intl.NumberFormat().format(data.num1)}
-                  </Typography>
-                  <Typography className={classes.totalText}>
-                    {text.text1}
                   </Typography>
                 </Box>
               </Box>
@@ -257,4 +254,4 @@ function GrowerReportingCard(props) {
 }
 
 //export the component
-export default withStyles(style)(GrowerReportingCard);
+export default withStyles(style)(ReportingCard);
