@@ -1,3 +1,10 @@
+# [1.106.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.105.1...v1.106.0) (2022-08-29)
+
+
+### Features
+
+* **capture:** getting rid of unnecessary network queries [#798](https://github.com/Greenstand/treetracker-admin-client/issues/798) ([#800](https://github.com/Greenstand/treetracker-admin-client/issues/800)) ([4d40a7e](https://github.com/Greenstand/treetracker-admin-client/commit/4d40a7e416c3bdb7110d198415bac5afd4fa2418))
+
 ## [1.105.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.105.0...v1.105.1) (2022-08-29)
 
 
