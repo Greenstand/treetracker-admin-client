@@ -28,6 +28,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
   const { speciesList } = useContext(SpeciesContext);
 
   React.useEffect(() => {
+  setSpeciesName();
     if (capture?.speciesId) {
       const currentSpecies = () => {
         return speciesList.find((species) => species.id === capture.speciesId);
@@ -37,7 +38,6 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       setSpeciesName(speciesData.name);
       }
     }
-    return () => setSpeciesName();
   }, [capture]);
 
   const CaptureDetailTooltipStyles = CaptureDetailTooltipUseStyles();
