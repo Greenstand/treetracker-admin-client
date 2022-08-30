@@ -97,7 +97,7 @@ const columns = [
     attr: 'imageUrl',
     label: 'Image URL',
     renderer: (val) => (
-      <Link href={val} underline="always" target="_blank">
+      <Link href={val} underline="always" target="_blank" onClick={e => (e.stopPropagation())} style={{display: 'inline-block'}}>
         Open in new tab
       </Link>
     ),
