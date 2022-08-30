@@ -1,3 +1,11 @@
+## [1.106.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.0...v1.106.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* prevent event bubbling for capture table ([#803](https://github.com/Greenstand/treetracker-admin-client/issues/803)) ([b154dfe](https://github.com/Greenstand/treetracker-admin-client/commit/b154dfe05606140617655bbe009a1c7af96426e7))
+* species - warning while render component [#808](https://github.com/Greenstand/treetracker-admin-client/issues/808) ([#810](https://github.com/Greenstand/treetracker-admin-client/issues/810)) ([853429c](https://github.com/Greenstand/treetracker-admin-client/commit/853429c3ecf586948b45077a935aa876384567a3))
+
 # [1.106.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.105.1...v1.106.0) (2022-08-29)
 
 
