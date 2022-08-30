@@ -23,14 +23,12 @@ import {
   DialogContent,
   DialogTitle,
   DialogContentText,
-  CircularProgress,
 } from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
-import Delete from '@material-ui/icons/Delete';
-import SortIcon from '@material-ui/icons/Sort';
-import Menu from './common/Menu';
+import { Edit, Delete, Category, Sort as SortIcon } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { SpeciesContext } from '../context/SpeciesContext';
+import Menu from './common/Menu';
+import Spinner from './common/Spinner';
 
 const styles = (theme) => ({
   speciesTableContainer: {
@@ -57,6 +55,7 @@ const styles = (theme) => ({
   accountIcon: {
     fontSize: 67,
     marginRight: 11,
+    color: 'gray',
   },
   addUserBox: {
     display: 'flex',
@@ -271,6 +270,9 @@ const SpeciesTable = (props) => {
             <Grid item>
               <Grid container>
                 <Grid item>
+                  <Category className={classes.accountIcon} />
+                </Grid>
+                <Grid item>
                   <Typography variant="h2">Species</Typography>
                 </Grid>
               </Grid>
@@ -298,8 +300,8 @@ const SpeciesTable = (props) => {
               <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell>
+                    <TableCell width={20}></TableCell>
+                    <TableCell width={60}>
                       ID
                       <IconButton
                         title="sortbyId"
@@ -308,7 +310,7 @@ const SpeciesTable = (props) => {
                         <SortIcon />
                       </IconButton>
                     </TableCell>
-                    <TableCell>
+                    <TableCell width={80}>
                       name
                       <IconButton
                         title="sortbyName"
@@ -322,19 +324,16 @@ const SpeciesTable = (props) => {
                     <TableCell>Operations</TableCell>
                   </TableRow>
                 </TableHead>
-                {isLoading ? (
-                  <Grid item container className={classes.loadingIndicator}>
-                    <CircularProgress />
-                  </Grid>
-                ) : (
-                  <TableBody>{renderSpecies()}</TableBody>
+                <TableBody>{renderSpecies()}</TableBody>
+                {!isLoading && (
+                  <TableFooter>
+                    <TableRow>{tablePagination()}</TableRow>
+                  </TableFooter>
                 )}
-
-                <TableFooter>
-                  <TableRow>{tablePagination()}</TableRow>
-                </TableFooter>
               </Table>
             </TableContainer>
+
+            {isLoading && <Spinner />}
           </Grid>
         </Grid>
       </Grid>
