@@ -28,14 +28,13 @@ import {
   Snackbar,
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
-import { Edit, Close } from '@material-ui/icons';
-// import SortIcon from '@material-ui/icons/Sort';
-import Delete from '@material-ui/icons/Delete';
-import Menu from './common/Menu';
+import { Edit, Close, Delete, Map } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 import { AppContext } from '../context/AppContext';
 import { getOrganizationUUID } from '../api/apiUtils';
+import Menu from './common/Menu';
+import Spinner from './common/Spinner';
 
 const styles = (theme) => ({
   regionsTableContainer: {
@@ -62,6 +61,7 @@ const styles = (theme) => ({
   accountIcon: {
     fontSize: 67,
     marginRight: 11,
+    color: 'gray',
   },
   headerButtonBox: {
     display: 'flex',
@@ -124,6 +124,7 @@ const RegionTable = (props) => {
     updateCollection,
     deleteRegion,
     deleteCollection,
+    isLoading,
   } = useContext(RegionContext);
   const { orgList, userHasOrg } = useContext(AppContext);
   const [openEdit, setOpenEdit] = useState(false);
@@ -295,6 +296,9 @@ const RegionTable = (props) => {
               <Grid item>
                 <Grid container>
                   <Grid item>
+                    <Map className={classes.accountIcon} />
+                  </Grid>
+                  <Grid item>
                     <Typography variant="h2">Regions</Typography>
                   </Grid>
                 </Grid>
@@ -352,13 +356,17 @@ const RegionTable = (props) => {
                   <TableBody>
                     <RegionTableRows />
                   </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <RegionTablePagination />
-                    </TableRow>
-                  </TableFooter>
+                  {!isLoading && (
+                    <TableFooter>
+                      <TableRow>
+                        <RegionTablePagination />
+                      </TableRow>
+                    </TableFooter>
+                  )}
                 </Table>
               </TableContainer>
+
+              {isLoading && <Spinner />}
             </Grid>
           </Grid>
         </Grid>

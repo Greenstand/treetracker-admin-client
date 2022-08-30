@@ -5,50 +5,55 @@ import React, {
   useEffect,
   useContext,
 } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import Typography from '@material-ui/core/Typography';
-import Group from '@material-ui/icons/Group';
-import Edit from '@material-ui/icons/Edit';
-import VpnKey from '@material-ui/icons/VpnKey';
-import Help from '@material-ui/icons/Help';
-import Delete from '@material-ui/icons/Delete';
+import {
+  Grid,
+  Paper,
+  Button,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  TextField,
+  Checkbox,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  CircularProgress,
+  Snackbar,
+  FormControl,
+} from '@material-ui/core';
+import {
+  Group,
+  Edit,
+  Help,
+  Delete,
+  VpnKey,
+  FileCopy as FileCopyIcon,
+  Close as CloseIcon,
+} from '@material-ui/icons';
 import EmojiObjects from '@material-ui/icons/EmojiObjects';
 import { withStyles } from '@material-ui/core/styles';
-import Menu from './common/Menu';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import pwdGenerator from 'generate-password';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
+import Menu from './common/Menu';
+import Spinner from './common/Spinner';
 
 const style = (theme) => ({
   userContainer: {
@@ -73,6 +78,7 @@ const style = (theme) => ({
   accountIcon: {
     fontSize: 67,
     marginRight: 11,
+    color: 'gray',
   },
   addUserBox: {
     display: 'flex',
@@ -117,10 +123,6 @@ const style = (theme) => ({
     '&$radioChecked': { color: theme.palette.primary.main },
   },
   radioChecked: {},
-  progressContainer: {
-    justifyContent: 'space-around',
-    padding: theme.spacing(2),
-  },
   disabledUser: {
     color: 'red',
   },
@@ -622,11 +624,8 @@ function Users(props) {
               </Table>
             </TableContainer>
           </Grid>
-          {!usersLoaded && (
-            <Grid item container className={classes.progressContainer}>
-              <CircularProgress />
-            </Grid>
-          )}
+
+          {!usersLoaded && <Spinner />}
         </Grid>
       </Grid>
       <Dialog
