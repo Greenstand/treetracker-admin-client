@@ -37,6 +37,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       setSpeciesName(speciesData.name);
       }
     }
+    return () => setSpeciesName('');
   }, [capture]);
 
   const CaptureDetailTooltipStyles = CaptureDetailTooltipUseStyles();
