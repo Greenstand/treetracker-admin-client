@@ -460,7 +460,7 @@ const Verify = (props) => {
                 </CardContent>
 
                 <Grid
-                  justify="center"
+                  justifyContent="center"
                   container
                   className={classes.cardActions}
                 >
@@ -617,7 +617,7 @@ const Verify = (props) => {
               >
                 <Grid
                   container
-                  justify="space-between"
+                  justifyContent="space-between"
                   alignItems="center"
                   className={classes.title}
                 >

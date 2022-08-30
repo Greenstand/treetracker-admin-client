@@ -249,7 +249,11 @@ const SpeciesTable = (props) => {
 
       <Grid item container className={classes.rightBox}>
         <Grid item xs={12}>
-          <Grid container justify="space-between" className={classes.titleBox}>
+          <Grid
+            container
+            justifyContent="space-between"
+            className={classes.titleBox}
+          >
             <Grid item>
               <Grid container>
                 <Grid item>

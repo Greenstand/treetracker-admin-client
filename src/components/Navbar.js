@@ -40,7 +40,7 @@ const Navbar = (props) => {
       <AppBar color="default" className={classes.navbar}>
         <Grid container direction="column">
           <Toolbar className={classes.toolbar} disableGutters={true}>
-            <Grid container justify="space-between">
+            <Grid container justifyContent="space-between">
               <Grid item>
                 <IconButton title="menu" onClick={() => handleMenuClick()}>
                   <MenuIcon />

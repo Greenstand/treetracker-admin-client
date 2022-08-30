@@ -141,7 +141,7 @@ function AddStakeholder() {
       <Dialog open={open} onClose={closeModal} fullWidth={true} maxWidth={'sm'}>
         <DialogTitle>Add Stakeholder</DialogTitle>
         <DialogContent>
-          <Grid container justify-content="space-between">
+          <Grid container justifyContent="space-between">
             <FormControl
               xs={12}
               sm={6}
@@ -282,7 +282,7 @@ function AddStakeholder() {
               />
             </FormControl>
           </Grid>
-          <Grid container justify-content="space-between">
+          <Grid container justifyContent="space-between">
             <FormControl xs={12} sm={6} className={classes.root}>
               <FormLabel id="relation">Relationship</FormLabel>
               <RadioGroup
