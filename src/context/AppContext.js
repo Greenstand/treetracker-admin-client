@@ -37,6 +37,7 @@ import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import stakeholder_api from '../api/stakeholders';
 import RegionsView from 'views/RegionsView';
+import log from 'loglevel';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({});
@@ -305,19 +306,25 @@ export const AppProvider = (props) => {
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
     const { stakeholders } = await stakeholder_api.getStakeholders();
-    const results = [];
-    stakeholders.forEach((s) => {
+    // reduce to only the allowed organizations for the user
+    // won't include orgs that don't have a corresponding stakeholder
+    // expect to get data from keycloak in future
+    const results = stakeholders.reduce((orgList, s) => {
       const org = orgs.find((o) => s.id === o.stakeholder_uuid);
       if (org) {
-        return {
+        orgList.push({
           id: s.id,
           stakeholder_uuid: s.id,
           name: s.org_name || s.first_name + ' ' + s.last_name,
           type: s.type,
-        };
+        });
       }
-    });
-    setOrgList([...orgs, ...results]);
+      return orgList;
+    }, []);
+    log.debug('stakeholders --->', stakeholders);
+    log.debug('orgs --->', orgs);
+    log.debug('results --->', results);
+    setOrgList(results);
   }
 
   async function updateSelectedFilter(filters) {
