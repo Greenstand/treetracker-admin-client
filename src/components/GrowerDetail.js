@@ -16,12 +16,16 @@ import {
   Drawer,
   Divider,
   LinearProgress,
+  Fab,
 } from '@material-ui/core';
-import Close from '@material-ui/icons/Close';
-import Person from '@material-ui/icons/Person';
-import EditIcon from '@material-ui/icons/Edit';
-import { Done, Clear, HourglassEmptyOutlined } from '@material-ui/icons';
-import Fab from '@material-ui/core/Fab';
+import {
+  Close,
+  Person,
+  Edit as EditIcon,
+  Done,
+  Clear,
+  HourglassEmptyOutlined,
+} from '@material-ui/icons';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
@@ -38,7 +42,7 @@ import FilterModel from '../models/Filter';
 import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
 
-const GROWER_IMAGE_SIZE = 441;
+const GROWER_IMAGE_SIZE = 440;
 
 const useStyle = makeStyles((theme) => ({
   box: {
@@ -75,6 +79,7 @@ const useStyle = makeStyles((theme) => ({
   listCaptures: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   rejectedChip: {
     backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
@@ -94,6 +99,22 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: '0.8em',
   },
+  captures: {
+    width: '100%',
+  },
+  liAvatar: {
+    minWidth: 50,
+  },
+  boxItem: {
+    flex: '1 1 auto',
+    borderRadius: 10,
+    border: '1px solid #ddd',
+    margin: 2,
+  },
+  gutters: {
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
   messageButton: {
     background: theme.palette.primary.main,
     color: 'white',
@@ -106,6 +127,9 @@ const useStyle = makeStyles((theme) => ({
       borderColor: theme.palette.primary.main,
       color: theme.palette.primary.main,
     },
+  },
+  paper: {
+    width: GROWER_IMAGE_SIZE,
   },
 }));
 
@@ -266,12 +290,13 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   return (
     <>
-      <Drawer anchor="right" open={open} onClose={onClose}>
-        <Grid
-          style={{
-            width: GROWER_IMAGE_SIZE,
-          }}
-        >
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={onClose}
+        classes={{ paper: classes.paper }}
+      >
+        <Grid>
           {errorMessage ? (
             <Grid container direction="column">
               <Grid item>
@@ -386,19 +411,16 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 )}
               <Divider />
               <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">Captures</Typography>
+                <Typography variant="subtitle1" className={classes.captures}>
+                  Captures
+                </Typography>
                 {loading ? (
                   <LinearProgress color="primary" />
                 ) : (
                   <List className={classes.listCaptures}>
-                    <Box
-                      borderColor="grey.300"
-                      borderRadius={10}
-                      border={0.5}
-                      m={0.5}
-                    >
-                      <ListItem>
-                        <ListItemAvatar>
+                    <Box className={classes.boxItem}>
+                      <ListItem classes={{ gutters: classes.gutters }}>
+                        <ListItemAvatar className={classes.liAvatar}>
                           <Avatar className={classes.approvedChip}>
                             <Done />
                           </Avatar>
@@ -413,14 +435,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                         />
                       </ListItem>
                     </Box>
-                    <Box
-                      borderColor="grey.300"
-                      borderRadius={10}
-                      border={0.5}
-                      m={0.5}
-                    >
-                      <ListItem>
-                        <ListItemAvatar>
+                    <Box className={classes.boxItem}>
+                      <ListItem classes={{ gutters: classes.gutters }}>
+                        <ListItemAvatar className={classes.liAvatar}>
                           <Avatar className={classes.awaitingChip}>
                             <HourglassEmptyOutlined />
                           </Avatar>
@@ -435,14 +452,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                         />
                       </ListItem>
                     </Box>
-                    <Box
-                      borderColor="grey.300"
-                      borderRadius={10}
-                      border={0.5}
-                      m={0.5}
-                    >
-                      <ListItem>
-                        <ListItemAvatar>
+                    <Box className={classes.boxItem}>
+                      <ListItem classes={{ gutters: classes.gutters }}>
+                        <ListItemAvatar className={classes.liAvatar}>
                           <Avatar className={classes.rejectedChip}>
                             <Clear />
                           </Avatar>

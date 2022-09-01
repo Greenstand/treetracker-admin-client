@@ -3,15 +3,18 @@
  */
 import React, { useState, useContext } from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
+import {
+  Grid,
+  TablePagination,
+  Typography,
+  Tooltip,
+  Box,
+} from '@material-ui/core';
 import Grower from './Grower';
 import GrowerDetail from '../GrowerDetail';
 import GrowerTooltip from './GrowerTooltip';
 import { GrowerContext } from '../../context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
-import { Tooltip, Box } from '@material-ui/core';
 
 // const log = require('loglevel').getLogger('../components/Growers');
 
@@ -51,6 +54,7 @@ const Growers = (props) => {
     : growerContext.growers
   ).map((grower, i) => {
     //combine i + grower.id to create unique keys even when there are duplicate grower.ids
+
     return (
       <Tooltip
         key={`${i} + ${grower.id}`}
@@ -100,12 +104,7 @@ const Growers = (props) => {
     <Grid item container style={{ height: '100%', overflow: 'auto' }}>
       <Grid item className={classes.body}>
         <Grid container>
-          <Grid
-            item
-            style={{
-              width: '100%',
-            }}
-          >
+          <Grid item style={{ width: '100%' }}>
             <Grid
               container
               justifyContent="space-between"
@@ -129,9 +128,7 @@ const Growers = (props) => {
       <GrowerDetail
         open={isDetailShown}
         growerId={growerDetail.id}
-        onClose={() => {
-          setDetailShown(false);
-        }}
+        onClose={() => setDetailShown(false)}
       />
     </Grid>
   );
