@@ -1,3 +1,10 @@
+## [1.106.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.1...v1.106.2) (2022-09-02)
+
+
+### Bug Fixes
+
+* main - optimization of packages handling dates [#805](https://github.com/Greenstand/treetracker-admin-client/issues/805) ([#813](https://github.com/Greenstand/treetracker-admin-client/issues/813)) ([fc34c2c](https://github.com/Greenstand/treetracker-admin-client/commit/fc34c2c5bea7bd6a025a26b78d9ecd0b8b8e0489))
+
 ## [1.106.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.0...v1.106.1) (2022-08-30)
 
 
