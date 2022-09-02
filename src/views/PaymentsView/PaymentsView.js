@@ -19,7 +19,7 @@ function PaymentsView() {
     <Grid
       container
       direction="column"
-      style={{ flexWrap: 'nowrap', height: '100%', overflow: 'scroll' }}
+      style={{ flexWrap: 'nowrap', height: '100%' }}
     >
       <Navbar />
       <PaymentsTable />

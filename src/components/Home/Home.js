@@ -33,7 +33,7 @@ import ReportingCard7 from '../reportingCards/ReportingCard7';
 import ReportingCard8 from '../reportingCards/ReportingCard8';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
-import moment from 'moment';
+import { format, subDays, formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import log from 'loglevel';
 
@@ -67,6 +67,7 @@ function Home(props) {
     }
     loadUpdateTime();
   }, []);
+
   const timeRange = [
     { range: 30, text: 'Last Month' },
     { range: 30 * 6, text: 'Last 6 Months' },
@@ -75,7 +76,8 @@ function Home(props) {
   ];
   const [timeRangeIndex, setTimeRangeIndex] = useState(3);
   const [startDate, setStartDate] = useState('1970-01-01');
-  const [endDate /*, setEndDate*/] = useState(moment().format('YYYY-MM-DD'));
+  const [endDate /*, setEndDate*/] = useState(format(new Date(), 'yyyy-MM-dd'));
+
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -85,11 +87,7 @@ function Home(props) {
     setAnchorEl(null);
     if (isNaN(index)) return;
     setTimeRangeIndex(index);
-    setStartDate(
-      moment()
-        .add(-1 * timeRange[index].range, 'day')
-        .format('YYYY-MM-DD')
-    );
+    setStartDate(format(subDays(new Date(), timeRange[0].range), 'yyyy-MM-dd'));
   };
 
   return (
@@ -112,7 +110,10 @@ function Home(props) {
               <Grid item xs={5} className={classes.timeBox}>
                 {updateTime && (
                   <Typography variant="body1" className={classes.time}>
-                    Last updated {moment(updateTime).fromNow()}
+                    Last updated{' '}
+                    {formatDistanceToNow(new Date(updateTime), {
+                      addSuffix: true,
+                    })}
                   </Typography>
                 )}
                 <Button

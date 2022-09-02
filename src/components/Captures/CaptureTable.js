@@ -11,6 +11,7 @@ import {
   TableSortLabel,
   Typography,
   Tooltip,
+  Link,
 } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 import { getDateTimeStringLocale } from '../../common/locale';
@@ -18,15 +19,14 @@ import { getVerificationStatus } from '../../common/utils';
 import LinkToWebmap from '../common/LinkToWebmap';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
-import CaptureDetailDialog from '../CaptureDetailDialog';
-import useStyle from './CaptureTable.styles.js';
-import ExportCaptures from 'components/ExportCaptures';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
-import api from '../../api/treeTrackerApi';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CaptureDetailDialog from '../CaptureDetailDialog';
 import CaptureTooltip from './CaptureTooltip';
-import { Link } from '@material-ui/core';
+import ExportCaptures from 'components/ExportCaptures';
+import Spinner from 'components/common/Spinner';
+import api from '../../api/treeTrackerApi';
+import useStyle from './CaptureTable.styles.js';
 
 const columns = [
   {
@@ -97,7 +97,13 @@ const columns = [
     attr: 'imageUrl',
     label: 'Image URL',
     renderer: (val) => (
-      <Link href={val} underline="always" target="_blank" onClick={e => (e.stopPropagation())} style={{display: 'inline-block'}}>
+      <Link
+        href={val}
+        underline="always"
+        target="_blank"
+        onClick={(e) => e.stopPropagation()}
+        style={{ display: 'inline-block' }}
+      >
         Open in new tab
       </Link>
     ),
@@ -293,64 +299,58 @@ const CaptureTable = () => {
           </TableRow>
         </TableHead>
         <TableBody data-testid="captures-table-body">
-          {isLoading && !captures?.length ? (
-            <TableRow className={classes.loadingIndicator}>
-              <TableCell className={classes.loadingIndicator}>
-                <CircularProgress />
-              </TableCell>
-            </TableRow>
-          ) : (
-            <>
-              {captures &&
-                captures.map((capture) => (
-                  <Tooltip
-                    key={capture.id}
-                    placement="top"
-                    arrow={true}
-                    interactive={!disableHoverListener}
-                    enterDelay={500}
-                    enterNextDelay={500}
-                    disableFocusListener={true}
-                    disableHoverListener={disableHoverListener}
-                    classes={{
-                      tooltipPlacementTop: classes.tooltipTop,
-                      arrow: classes.arrow,
-                    }}
-                    title={
-                      enableTooltips ? (
-                        <CaptureTooltip
-                          capture={capture}
-                          toggleDrawer={createToggleDrawerHandler}
-                        />
-                      ) : (
-                        ''
-                      )
-                    }
-                  >
-                    <TableRow
-                      key={capture.id}
-                      onClick={createToggleDrawerHandler(capture.id)}
-                      className={classes.tableRow}
-                    >
-                      {columns.map(({ attr, renderer }, i) => (
-                        <TableCell key={`${attr}_${i}`}>
-                          {formatCell(
-                            capture,
-                            speciesLookup,
-                            captureTagLookup[capture.id] || [],
-                            attr,
-                            renderer
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </Tooltip>
-                ))}
-            </>
-          )}
+          {captures &&
+            captures.map((capture) => (
+              <Tooltip
+                key={capture.id}
+                placement="top"
+                arrow={true}
+                interactive={!disableHoverListener}
+                enterDelay={500}
+                enterNextDelay={500}
+                disableFocusListener={true}
+                disableHoverListener={disableHoverListener}
+                classes={{
+                  tooltipPlacementTop: classes.tooltipTop,
+                  arrow: classes.arrow,
+                }}
+                title={
+                  enableTooltips ? (
+                    <CaptureTooltip
+                      capture={capture}
+                      toggleDrawer={createToggleDrawerHandler}
+                    />
+                  ) : (
+                    ''
+                  )
+                }
+              >
+                <TableRow
+                  key={capture.id}
+                  onClick={createToggleDrawerHandler(capture.id)}
+                  className={classes.tableRow}
+                >
+                  {columns.map(({ attr, renderer }, i) => (
+                    <TableCell key={`${attr}_${i}`}>
+                      {formatCell(
+                        capture,
+                        speciesLookup,
+                        captureTagLookup[capture.id] || [],
+                        attr,
+                        renderer
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </Tooltip>
+            ))}
         </TableBody>
       </Table>
+
+      {isLoading && <Spinner />}
+
       {tablePagination()}
+
       <CaptureDetailProvider>
         <CaptureDetailDialog
           open={captureDetail.isDetailsPaneOpen}

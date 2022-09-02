@@ -1,4 +1,4 @@
-import dateFormat from 'dateformat';
+import { format } from 'date-fns';
 
 /**
  * @function
@@ -32,18 +32,18 @@ export const getOrganizationById = (organizations, organizationId) =>
  *
  * @param {string} dateString - date iso string to convert
  * @param {string} format - format to convert to
- * @link https://github.com/felixge/node-dateformat - library used to convert date(follow link to see format options)
+ * @link https://github.com/date-fns/date-fns - library used to convert date(follow link to see format options)
  *
  * @returns {string} human readable date
  */
-export const covertDateStringToHumanReadableFormat = (
+export const convertDateStringToHumanReadableFormat = (
   dateString,
-  format = 'dddd, mmm d, yyyy'
+  fmt = 'eeee, MMM d, yyyy'
 ) => {
   if (!dateString) return '';
   const date = new Date(dateString);
 
-  return dateFormat(date, format);
+  return format(date, fmt);
 };
 
 /**
@@ -56,13 +56,13 @@ export const covertDateStringToHumanReadableFormat = (
  * @returns {string} - active date range filter string
  */
 export const generateActiveDateRangeFilterString = (startDate, endDate) => {
-  const format = 'mmm d';
+  const format = 'MMM d';
 
-  const startDateString = covertDateStringToHumanReadableFormat(
+  const startDateString = convertDateStringToHumanReadableFormat(
     startDate,
     format
   );
-  const endDateString = covertDateStringToHumanReadableFormat(endDate, format);
+  const endDateString = convertDateStringToHumanReadableFormat(endDate, format);
 
   return `${startDateString} - ${endDateString}`;
 };

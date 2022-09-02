@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import uuid from 'uuid/v4';
+import { format } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Announcement,
@@ -16,11 +17,9 @@ import {
   Modal,
   Paper,
   Typography,
+  CircularProgress,
 } from '@material-ui/core';
 import { TextInput } from './TextInput.js';
-import dateFormat from 'dateformat';
-import { CircularProgress } from '@material-ui/core';
-
 import { MessagingContext } from 'context/MessagingContext.js';
 import SurveyCharts from './SurveyCharts.js';
 const log = require('loglevel');
@@ -255,7 +254,6 @@ export const SurveyResponseMessage = ({ message }) => {
 
 export const SurveyMessage = ({ message, type }) => {
   const { messageRow, surveyContent } = useStyles();
-
   const { questions } = message.survey;
 
   return (
@@ -301,19 +299,18 @@ export const RecievedMessage = ({ message }) => {
     messageContent,
     recievedMessage,
   } = useStyles();
+
   return (
-    <>
-      <div className={messageRow}>
-        <div className={recievedMessage}>
-          <div>
-            <Typography className={messageContent}>{message.body}</Typography>
-          </div>
+    <div className={messageRow}>
+      <div className={recievedMessage}>
+        <div>
+          <Typography className={messageContent}>{message.body}</Typography>
         </div>
-        <Grid item className={messageTimeStampRight}>
-          <Typography>{message.composed_at.slice(0, 10)}</Typography>
-        </Grid>
       </div>
-    </>
+      <Grid item className={messageTimeStampRight}>
+        <Typography>{message.composed_at.slice(0, 10)}</Typography>
+      </Grid>
+    </div>
   );
 };
 
@@ -386,7 +383,7 @@ const SenderInformation = ({
           type === 'announce') && (
           <>
             <Typography align="left" color="primary">
-              <b>DATE:</b> {dateFormat(message?.composed_at, 'yyyy/mm/dd')}
+              <b>DATE:</b> {format(message?.composed_at, 'yyyy/MM/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
               message.bulk_message_recipients.map((recipient, i) => (

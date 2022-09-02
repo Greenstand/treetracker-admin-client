@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -22,6 +16,7 @@ import {
   TextField,
   Avatar,
   Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import CloseIcon from '@material-ui/icons/Close';
@@ -32,25 +27,23 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
-import IconButton from '@material-ui/core/IconButton';
 
 import { documentTitle } from '../../common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
+import { AppContext } from '../../context/AppContext';
+import { MatchingToolContext } from '../../context/MatchingToolContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import { GrowerProvider } from 'context/GrowerContext';
 import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
+import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
 import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
-
-import { AppContext } from '../../context/AppContext';
-import { MatchingToolContext } from '../../context/MatchingToolContext';
 import api from '../../api/treeTrackerApi';
-import moment from 'moment';
+import { format } from 'date-fns';
 import log from 'loglevel';
-import { GrowerProvider } from 'context/GrowerContext';
-import GrowerDetail from 'components/GrowerDetail';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -271,17 +264,6 @@ function CaptureMatchingView() {
   const [isGrowerDetailsOpen, setGrowerDetailsOpen] = useState(false);
   // To get total tree count on candidate capture image icon
   // const treesCount = candidateImgData.length;
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const resizeWindow = useCallback(() => {
-    setScreenWidth(window.innerWidth);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('resize', resizeWindow);
-    return () => {
-      window.removeEventListener('resize', resizeWindow);
-    };
-  }, [resizeWindow]);
 
   async function fetchCandidateTrees(captureId, abortController) {
     const data = await api.fetchCandidateTrees(captureId, abortController);
@@ -434,6 +416,7 @@ function CaptureMatchingView() {
   const closeDrawer = () => {
     setIsDetailsPaneOpen(false);
   };
+
   const countryInfo = useMemo(
     () => (
       <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
@@ -613,10 +596,11 @@ function CaptureMatchingView() {
                   </Typography>
                   <Typography variant="body1">
                     Joined at{' '}
-                    {moment(
+                    {format(
                       growerAccount.first_registration_at ||
-                        growerAccount.created_at
-                    ).format('MM/DD/YYYY')}
+                        growerAccount.created_at,
+                      'MM/dd/yyyy'
+                    )}
                   </Typography>
                 </Box>
               </Box>
@@ -646,7 +630,7 @@ function CaptureMatchingView() {
               src={captureImage.image_url}
               alt={`Capture ${captureImage.reference_id}`}
               objectFit="contain"
-              width={screenWidth * 0.5}
+              width={window.innerWidth * 0.5}
               fixed
               alertWidth="100%"
               alertHeight="30%"

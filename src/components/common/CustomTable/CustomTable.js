@@ -1,17 +1,15 @@
 import React, { useState, useContext } from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import IconFilter from '@material-ui/icons/FilterList';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
-import dateFormat from 'dateformat';
+import { format } from 'date-fns';
 import { CSVLink } from 'react-csv';
 import {
   Avatar,
   Button,
-  CircularProgress,
   Grid,
   IconButton,
   Paper,
@@ -24,7 +22,9 @@ import {
   TableRow,
   TableSortLabel,
   Typography,
+  Tooltip,
 } from '@material-ui/core';
+import Spinner from '../Spinner';
 import PropTypes from 'prop-types';
 import useStyles from './CustomTable.styles';
 import GrowerDetail from '../../GrowerDetail';
@@ -144,11 +144,8 @@ function CustomTableHeader({
       const maxPeriodEnd = consolidationPeriodEnds.reduce((pEnd1, pEnd2) => {
         return pEnd1 > pEnd2 ? pEnd1 : pEnd2;
       });
-      const minCsvStartDate = dateFormat(
-        new Date(minPeriodStart),
-        'yyyy-mm-dd'
-      );
-      const maxCsvEndDate = dateFormat(new Date(maxPeriodEnd), 'yyyy-mm-dd');
+      const minCsvStartDate = format(new Date(minPeriodStart), 'yyyy-MM-dd');
+      const maxCsvEndDate = format(new Date(maxPeriodEnd), 'yyyy-MM-dd');
       setCsvFileNameSuffix(`${minCsvStartDate}_to_${maxCsvEndDate}`);
     }
 
@@ -502,79 +499,64 @@ function CustomTable({
           </TableHead>
 
           <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell>
-                  <Grid item container className={classes.progressContainer}>
-                    <CircularProgress />
-                  </Grid>
-                </TableCell>
-              </TableRow>
-            ) : rows.length > 0 ? (
-              <>
-                {rows.map((row, i) => (
-                  <TableRow
-                    key={`${i}-${row.id}`}
-                    onClick={() => handleOpenRowDetails(row)}
-                    className={
-                      isRowSelected(row.id) ? classes.selectedRow : null
-                    }
-                  >
-                    {tableMetaData.map((column, j) => (
-                      <TableCell key={`${i}-${j}-${column.name}`}>
-                        {column.name === 'grower' ? (
-                          <Grid item>
-                            <Typography
-                              variant="body1"
-                              style={{ textTransform: 'capitalize' }}
-                            >
-                              {row[column.name]}
-
-                              <IconButton
-                                onClick={(e) => {
-                                  handleShowGrowerDetail(e, row);
-                                }}
-                                aria-label={`View/Edit Grower details`}
-                                title={`View/Edit Grower details`}
-                                style={{ padding: '0 2px 2px 0' }}
-                                disabled
-                              >
-                                <Person color="disabled" />
-                              </IconButton>
-                            </Typography>
-                          </Grid>
-                        ) : (
+            {rows.length > 0 &&
+              rows.map((row, i) => (
+                <TableRow
+                  key={`${i}-${row.id}`}
+                  onClick={() => handleOpenRowDetails(row)}
+                  className={isRowSelected(row.id) ? classes.selectedRow : null}
+                >
+                  {tableMetaData.map((column, j) => (
+                    <TableCell key={`${i}-${j}-${column.name}`}>
+                      {column.name === 'grower' ? (
+                        <Grid item>
                           <Typography
                             variant="body1"
-                            style={{
-                              textTransform: 'capitalize',
-                              textAlign:
-                                column.align === 'right' ? 'right' : 'inherit',
-                            }}
+                            style={{ textTransform: 'capitalize' }}
                           >
                             {row[column.name]}
+
+                            <IconButton
+                              onClick={(e) => {
+                                handleShowGrowerDetail(e, row);
+                              }}
+                              aria-label={`View/Edit Grower details`}
+                              title={`View/Edit Grower details`}
+                              style={{ padding: '0 2px 2px 0' }}
+                              disabled
+                            >
+                              <Person color="disabled" />
+                            </IconButton>
                           </Typography>
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </>
-            ) : (
-              <TableRow>
-                <TableCell>
-                  <Typography
-                    variant="body1"
-                    className={classes.noDataToDisplay}
-                  >
-                    No data to display
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
+                        </Grid>
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          style={{
+                            textTransform: 'capitalize',
+                            textAlign:
+                              column.align === 'right' ? 'right' : 'inherit',
+                          }}
+                        >
+                          {row[column.name]}
+                        </Typography>
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {!isLoading && !rows.length && (
+        <Typography variant="body1" className={classes.noDataToDisplay}>
+          No data to display
+        </Typography>
+      )}
+
+      {isLoading && <Spinner />}
+
       {tablePagination()}
 
       <GrowerProvider>

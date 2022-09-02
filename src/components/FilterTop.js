@@ -232,7 +232,7 @@ function Filter(props) {
                   id="start-date-picker"
                   htmlFor="start-date-picker"
                   label="Start Date"
-                  format={getDateFormatLocale(true)}
+                  format={getDateFormatLocale()}
                   value={dateStart}
                   onChange={handleDateStartChange}
                   maxDate={dateEnd || Date()} // Don't allow selection after today
@@ -245,7 +245,7 @@ function Filter(props) {
                   id="end-date-picker"
                   htmlFor="end-date-picker"
                   label="End Date"
-                  format={getDateFormatLocale(true)}
+                  format={getDateFormatLocale()}
                   value={dateEnd}
                   onChange={handleDateEndChange}
                   minDate={dateStart || datePickerDefaultMinDate}

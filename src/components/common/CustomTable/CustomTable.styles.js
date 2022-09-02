@@ -120,8 +120,8 @@ const customTableStyles = (theme) => ({
     fontSize: theme.spacing(5),
     padding: theme.spacing(5, 0, 5, 0),
     position: 'relative',
-    left: theme.spacing(120),
     bottom: theme.spacing(0),
+    textAlign: 'center',
   },
 
   progressContainer: {

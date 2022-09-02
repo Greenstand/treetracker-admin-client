@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import moment from 'moment';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -9,10 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
+import { format } from 'date-fns';
 import paymentsAPI from '../../api/earnings';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
-  covertDateStringToHumanReadableFormat,
+  convertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
@@ -95,19 +95,19 @@ const prepareRows = (rows) =>
       ...row,
       csv_start_date: row.consolidation_period_start,
       csv_end_date: row.consolidation_period_end,
-      consolidation_period_start: covertDateStringToHumanReadableFormat(
+      consolidation_period_start: convertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      consolidation_period_end: covertDateStringToHumanReadableFormat(
+      consolidation_period_end: convertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(
+      calculated_at: convertDateStringToHumanReadableFormat(
         row.calculated_at,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
+      paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
     };
   });
 
