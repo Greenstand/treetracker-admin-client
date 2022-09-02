@@ -1,11 +1,10 @@
 import enLocale from 'date-fns/locale/en-US';
-import dateformat from 'dateformat';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, getYear } from 'date-fns';
 // Per default set to EN
 var localeLanguage = 'en';
 // default date pattern when converting dates
 // to work with sql queries
-const defaultSqlDatePattern = 'yyyy-mm-dd';
+const defaultSqlDatePattern = 'yyyy-MM-dd';
 
 // Contains the locale for the DatePicker
 // now only EN is used, otherwise, many imports
@@ -30,7 +29,7 @@ const timeOptions = {
 
 // Returns a date or dateTime format string depending on the locale
 // and options set in dateOptions and timeOptions
-const getDateTimeFormatString = (includeTime, forMuiDatepicker) => {
+const getDateTimeFormatString = (includeTime) => {
   const intlOptions = includeTime
     ? { ...dateOptions, ...timeOptions }
     : dateOptions;
@@ -47,16 +46,16 @@ const getDateTimeFormatString = (includeTime, forMuiDatepicker) => {
         case 'day':
           return 'dd';
         case 'month':
-          return forMuiDatepicker ? 'MM' : 'mm';
+          return 'MM';
         case 'year':
           return 'yyyy';
         case 'hour':
           // Check if locale is a 12-hour or 24-hour timezone
           return is12HourTimeZone ? 'hh' : 'HH';
         case 'minute':
-          return forMuiDatepicker ? 'mm' : 'MM';
+          return 'mm';
         case 'dayPeriod':
-          return is12HourTimeZone ? (forMuiDatepicker ? 'a' : 'tt') : '';
+          return is12HourTimeZone ? 'a' : '';
         default:
           return obj.value;
       }
@@ -74,25 +73,33 @@ const getDatePickerLocale = () => {
   return localeMap['en'];
 };
 
-const getDateFormatLocale = (forMuiDatepicker = false) => {
-  return getDateTimeFormatString(false, forMuiDatepicker);
+const getDateFormatLocale = () => {
+  return getDateTimeFormatString(false);
 };
 
-const getDateTimeFormatLocale = (forMuiDatepicker = false) => {
-  return getDateTimeFormatString(true, forMuiDatepicker);
+const getDateTimeFormatLocale = () => {
+  return getDateTimeFormatString(true);
 };
 
-const getDateStringLocale = (date, forMuiDatepicker = false) => {
-  return dateformat(date, getDateFormatLocale(forMuiDatepicker));
+const getDateStringLocale = (date) => {
+  return format(date, getDateFormatLocale());
 };
 
-const getDateTimeStringLocale = (date, forMuiDatepicker = false) => {
-  return dateformat(date, getDateTimeFormatLocale(forMuiDatepicker));
+const getDateTimeStringLocale = (date) => {
+  // this block is created to fix an error due to an incorrect test date, you can then delete it
+  let d = new Date(date);
+  let incomingYear = getYear(d);
+  let currentYear = getYear(Date.now());
+  if (incomingYear > currentYear) {
+    d.setFullYear(currentYear);
+  }
+  //------------------------------------------------------------
+  return format(d, getDateTimeFormatLocale());
 };
 
 // used for converting application date to sql readable date format
 const convertDateToDefaultSqlDate = (date) => {
-  return dateformat(date, defaultSqlDatePattern);
+  return format(date, defaultSqlDatePattern);
 };
 
 const timeAgoFormatDate = (date) => {

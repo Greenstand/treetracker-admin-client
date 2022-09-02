@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import earningsAPI from '../../api/earnings';
-import moment from 'moment';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
-  covertDateStringToHumanReadableFormat,
+  convertDateStringToHumanReadableFormat,
   generateActiveDateRangeFilterString,
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
@@ -79,22 +79,22 @@ const prepareRows = (rows) =>
       ...row,
       csv_start_date: row.consolidation_period_start,
       csv_end_date: row.consolidation_period_end,
-      consolidation_period_start: covertDateStringToHumanReadableFormat(
+      consolidation_period_start: convertDateStringToHumanReadableFormat(
         row.consolidation_period_start,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      consolidation_period_end: covertDateStringToHumanReadableFormat(
+      consolidation_period_end: convertDateStringToHumanReadableFormat(
         row.consolidation_period_end,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      calculated_at: covertDateStringToHumanReadableFormat(
+      calculated_at: convertDateStringToHumanReadableFormat(
         row.calculated_at,
-        'yyyy-mm-dd'
+        'yyyy-MM-dd'
       ),
-      payment_confirmed_at: covertDateStringToHumanReadableFormat(
+      payment_confirmed_at: convertDateStringToHumanReadableFormat(
         row.payment_confirmed_at
       ),
-      paid_at: row.paid_at ? moment.utc(row.paid_at).format('yyyy-MM-DD') : '',
+      paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
     };
   });
 
