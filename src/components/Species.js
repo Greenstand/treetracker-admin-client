@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import TextField from '@material-ui/core/TextField';
+import { TextField, CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
 import { SpeciesContext } from '../context/SpeciesContext';
-import { CircularProgress } from '@material-ui/core';
 
 const styles = () => {
   return {
@@ -28,7 +27,6 @@ function Species(props) {
         <Autocomplete
           options={speciesContext.speciesList}
           getOptionLabel={(option) => option.name}
-          style={{ width: 300 }}
           onChange={(_event, value) => {
             speciesContext.onChange((value && value.name) || '');
           }}
