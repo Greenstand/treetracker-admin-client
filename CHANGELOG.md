@@ -1,3 +1,10 @@
+## [1.106.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.2...v1.106.3) (2022-09-03)
+
+
+### Bug Fixes
+
+* verify - getting rid of horizontal scrollbar of selected captures ([#815](https://github.com/Greenstand/treetracker-admin-client/issues/815)) ([32d0738](https://github.com/Greenstand/treetracker-admin-client/commit/32d0738a84335374048623120db8a3ef8acfd779))
+
 ## [1.106.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.1...v1.106.2) (2022-09-02)
 
 
