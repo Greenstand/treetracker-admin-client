@@ -178,7 +178,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   useEffect(() => {
     async function loadCaptures() {
-      console.log('grower ----> ', grower);
       if (grower.id) {
         setLoading(true);
         const [

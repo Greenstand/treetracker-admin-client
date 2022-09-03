@@ -8,7 +8,6 @@ import { session } from '../models/auth';
 import log from 'loglevel';
 
 // Set API as a variable
-const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;

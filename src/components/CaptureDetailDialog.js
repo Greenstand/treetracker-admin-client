@@ -142,7 +142,7 @@ function CaptureDetailDialog(props) {
     return (
       <Grid container direction="column">
         <Grid item>
-          <Grid container justify="space-between" alignItems="center">
+          <Grid container justifyContent="space-between" alignItems="center">
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">

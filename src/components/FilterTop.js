@@ -94,9 +94,6 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter.organizationId || ALL_ORGANIZATIONS
   );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
-  );
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -124,7 +121,6 @@ function Filter(props) {
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
     filter.status = status;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -142,7 +138,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
 
     const filter = new FilterModel({
       status: 'unprocessed',
@@ -320,12 +315,7 @@ function Filter(props) {
                 ]}
                 value={tag}
                 defaultValue={'Not set'}
-                getOptionLabel={(tag) => {
-                  // if (tag === 'Not set') {
-                  //   return 'Not set';
-                  // }
-                  return tag.name;
-                }}
+                getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
                   setTag(newVal);
@@ -344,8 +334,9 @@ function Filter(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) => {
-                  setStakeholderUUID(org.stakeholder_uuid);
-                  setOrganizationId(org.id);
+                  setOrganizationId(
+                    org?.stakeholder_uuid ? org.stakeholder_uuid : org
+                  );
                 }}
               />
             </Grid>

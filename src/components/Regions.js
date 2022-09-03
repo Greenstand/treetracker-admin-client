@@ -289,7 +289,7 @@ const RegionTable = (props) => {
           <Grid item xs={12}>
             <Grid
               container
-              justify="space-between"
+              justifyContent="space-between"
               className={classes.titleBox}
             >
               <Grid item>

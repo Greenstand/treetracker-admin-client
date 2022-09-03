@@ -378,7 +378,7 @@ function SidePanel(props) {
         <Grid
           container
           className={`${classes.sidePanelItem}`}
-          justify="space-between"
+          justifyContent="space-between"
         >
           <Button
             onClick={handleSubmit}
