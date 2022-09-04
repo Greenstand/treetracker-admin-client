@@ -24,6 +24,9 @@ const useStyles = makeStyles({
     height: '100%',
     objectFit: 'contain',
   },
+  grayFilter: {
+    filter: 'grayscale(100%)',
+  },
   pr: {
     paddingRight: 8,
   },
@@ -163,7 +166,16 @@ export default function StakeholderDialogHeader({
     <Grid container direction="row">
       <Grid item xs={1}>
         {data.type === 'Organization' ? (
-          <img src={data.logo_url} alt="" className={classes.logoLg} />
+          <img
+            src={data.logo_url || './logo_192x192.png'}
+            alt=""
+            className={
+              data.logo_url
+                ? classes.logoLg
+                : `${classes.logoLg}
+              ${classes.grayFilter}`
+            }
+          />
         ) : (
           <PersonIcon className={classes.logoLg} />
         )}
