@@ -1,3 +1,10 @@
+## [1.106.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.3...v1.106.4) (2022-09-04)
+
+
+### Bug Fixes
+
+* add default icon for stakeholder details ([#817](https://github.com/Greenstand/treetracker-admin-client/issues/817)) ([29f7951](https://github.com/Greenstand/treetracker-admin-client/commit/29f7951bca2034061c6dc1dc3da9d38049adb9e3))
+
 ## [1.106.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.2...v1.106.3) (2022-09-03)
 
 
