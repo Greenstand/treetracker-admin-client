@@ -109,12 +109,11 @@ function CaptureDetailDialog(props) {
       // map the keys from legacy to new api keys
       setRenderCapture({
         status:
-          current.status ||
           (current.active && current.approved
             ? 'approved'
             : current.active && !current.approved
             ? 'pending'
-            : 'rejected'),
+            : 'rejected') || current.status,
         id: current.id || current.uuid,
         reference_id: current.reference_id || current.id,
         grower_account_id: current.grower_account_id || current.planterId,
@@ -135,14 +134,14 @@ function CaptureDetailDialog(props) {
         updated_at: current.updated_at || current.timeUpdated,
       });
     }
-    if(isLoading) {
+    if (isLoading) {
       setIsLoading(false);
     }
   }, [cdContext.capture]);
 
   useEffect(() => {
     setIsLoading(true);
-  },[open])
+  }, [open]);
 
   function handleClose() {
     setSnackbarOpen(false);
@@ -229,7 +228,7 @@ function CaptureDetailDialog(props) {
           ].map((item) => (
             <Grid item key={item.label}>
               <Typography variant="subtitle1">{item.label}</Typography>
-              <Typography variant="body1"  className={classes.itemValue}>
+              <Typography variant="body1" className={classes.itemValue}>
                 {item.link ? (
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
@@ -243,8 +242,12 @@ function CaptureDetailDialog(props) {
                   ) : (
                     <LinkToWebmap value={item.value} type="user" />
                   )
+                ) : item.value ? (
+                  item.value
+                ) : isLoading ? (
+                  <Skeleton variant="text" />
                 ) : (
-                  item.value ? (item.value) : isLoading ? <Skeleton variant="text"/> : '---'
+                  '---'
                 )}
                 {item.value && item.copy && (
                   <CopyButton
@@ -259,7 +262,11 @@ function CaptureDetailDialog(props) {
           <Grid>
             <Typography variant="subtitle1">Country</Typography>
             <Typography variant="body1" className={classes.itemValue}>
-              {isLoading ? <Skeleton variant="text"/>  : capture?.lat && capture?.lon && countryInfo}
+              {isLoading ? (
+                <Skeleton variant="text" />
+              ) : (
+                capture?.lat && capture?.lon && countryInfo
+              )}
             </Typography>
           </Grid>
         </Grid>
@@ -268,14 +275,13 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {capture.status === 'pending' ? (
+          {/* the 'planted' status is legacy, we'll interpret as 'pending' */}
+          {capture.status === 'planted' || capture.status === 'pending' ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.status === 'approved' ||
-            capture.status === 'planted' ||
-            capture.status === 'active' ? (
+          ) : capture.status === 'approved' || capture.status === 'active' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}
