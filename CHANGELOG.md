@@ -1,3 +1,10 @@
+## [1.106.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.4...v1.106.5) (2022-09-05)
+
+
+### Bug Fixes
+
+* incorrect display of status in capture detail dialog ([#821](https://github.com/Greenstand/treetracker-admin-client/issues/821)) ([199a0f5](https://github.com/Greenstand/treetracker-admin-client/commit/199a0f53b191539069d39db3323088d342fc66af))
+
 ## [1.106.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.3...v1.106.4) (2022-09-04)
 
 
