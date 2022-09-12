@@ -11,6 +11,7 @@ import {
   Drawer,
   Box,
   Link,
+  CircularProgress,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
@@ -82,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
   itemValue: {
     lineHeight: 1.7,
   },
+  spinner: {
+    position: 'fixed',
+  },
 }));
 
 function CaptureDetailDialog(props) {
@@ -91,6 +95,7 @@ function CaptureDetailDialog(props) {
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const classes = useStyles();
 
   useEffect(() => {
@@ -135,14 +140,15 @@ function CaptureDetailDialog(props) {
         updated_at: current.updated_at || current.timeUpdated,
       });
     }
-    if(isLoading) {
+    if (isLoading) {
       setIsLoading(false);
     }
+    setIsImageLoading(true);
   }, [cdContext.capture]);
 
   useEffect(() => {
     setIsLoading(true);
-  },[open])
+  }, [open]);
 
   function handleClose() {
     setSnackbarOpen(false);
@@ -229,7 +235,7 @@ function CaptureDetailDialog(props) {
           ].map((item) => (
             <Grid item key={item.label}>
               <Typography variant="subtitle1">{item.label}</Typography>
-              <Typography variant="body1"  className={classes.itemValue}>
+              <Typography variant="body1" className={classes.itemValue}>
                 {item.link ? (
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
@@ -243,8 +249,12 @@ function CaptureDetailDialog(props) {
                   ) : (
                     <LinkToWebmap value={item.value} type="user" />
                   )
+                ) : item.value ? (
+                  item.value
+                ) : isLoading ? (
+                  <Skeleton variant="text" />
                 ) : (
-                  item.value ? (item.value) : isLoading ? <Skeleton variant="text"/> : '---'
+                  '---'
                 )}
                 {item.value && item.copy && (
                   <CopyButton
@@ -259,7 +269,11 @@ function CaptureDetailDialog(props) {
           <Grid>
             <Typography variant="subtitle1">Country</Typography>
             <Typography variant="body1" className={classes.itemValue}>
-              {isLoading ? <Skeleton variant="text"/>  : capture?.lat && capture?.lon && countryInfo}
+              {isLoading ? (
+                <Skeleton variant="text" />
+              ) : (
+                capture?.lat && capture?.lon && countryInfo
+              )}
             </Typography>
           </Grid>
         </Grid>
@@ -349,13 +363,26 @@ function CaptureDetailDialog(props) {
           }}
           maxWidth="md"
         >
-          <OptimizedImage
-            src={renderCapture?.image_url}
-            width={window.innerHeight * 0.9}
-            style={{ maxWidth: '100%' }}
-            objectFit="contain"
-            fixed
-          />
+          {isLoading ? (
+            <CircularProgress className={classes.spinner} />
+          ) : (
+            <>
+              {isImageLoading && (
+                <CircularProgress className={classes.spinner} />
+              )}
+
+              <OptimizedImage
+                src={renderCapture?.image_url}
+                width={window.innerHeight * 0.9}
+                style={{ maxWidth: '100%' }}
+                objectFit="contain"
+                fixed
+                onImageReady={() => {
+                  setIsImageLoading(false);
+                }}
+              />
+            </>
+          )}
         </Dialog>
         <Drawer
           anchor="right"
