@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, capture, url } = props;
+  const { open, capture, captureType } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -94,7 +94,7 @@ function CaptureDetailDialog(props) {
 
   // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
   useEffect(() => {
-    cdContext.getCaptureDetail(url, capture?.id);
+    cdContext.getCaptureDetail(captureType, capture?.id);
   }, [capture.id]);
 
   useEffect(() => {

@@ -21,7 +21,10 @@ import { SpeciesContext } from '../../context/SpeciesContext';
 import CaptureDetailDialog from '../CaptureDetailDialog';
 import useStyle from './CaptureTable.styles.js';
 import ExportCaptures from 'components/ExportCaptures';
-import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import {
+  CaptureDetailProvider,
+  CaptureType,
+} from '../../context/CaptureDetailContext';
 import { TagsContext } from 'context/TagsContext';
 import api from '../../api/treeTrackerApi';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -335,8 +338,8 @@ const CaptureTable = () => {
         <CaptureDetailDialog
           open={isDetailsPaneOpen}
           capture={capture}
+          captureType={CaptureType.Capture}
           onClose={closeDrawer}
-          url={`${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures`}
         />
       </CaptureDetailProvider>
     </Grid>
