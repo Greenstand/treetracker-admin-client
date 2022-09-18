@@ -28,14 +28,7 @@ import {
   Snackbar,
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
-import {
-  Edit,
-  Close,
-  CloudDownload,
-  GetApp,
-  Delete,
-  Map,
-} from '@material-ui/icons';
+import { Edit, Close, GetApp, Delete, Map } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 import { AppContext } from '../context/AppContext';
