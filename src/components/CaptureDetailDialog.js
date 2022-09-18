@@ -157,7 +157,7 @@ function CaptureDetailDialog(props) {
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags.map((t) => t.tagName),
+      ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));

@@ -102,14 +102,14 @@ export function VerifyProvider(props) {
 
   // EVENT HANDLERS
 
-  const approve = async ({ approveAction, id }) => {
+  const approve = async ({ approveAction, captureImage }) => {
     if (!approveAction) {
       throw Error('no approve action object!');
     }
     if (approveAction.isApproved) {
       log.debug('approve');
       await api.approveCaptureImage(
-        id,
+        captureImage,
         approveAction.morphology,
         approveAction.age,
         approveAction.captureApprovalTag,
@@ -117,11 +117,11 @@ export function VerifyProvider(props) {
       );
     } else {
       log.debug('reject');
-      await api.rejectCaptureImage(id, approveAction.rejectionReason);
+      await api.rejectCaptureImage(captureImage, approveAction.rejectionReason);
     }
 
     if (approveAction.tags) {
-      await api.createCaptureTags(id, approveAction.tags);
+      await api.createCaptureTags(captureImage.uuid, approveAction.tags);
     }
 
     return true;
@@ -223,7 +223,7 @@ export function VerifyProvider(props) {
         log.debug('approve:%d', captureImage.id);
         log.trace('approve:%d', captureImage.id);
         await approve({
-          id: captureImage.id,
+          captureImage,
           approveAction,
         });
         setApproveAllComplete(100 * ((i + 1) / total));

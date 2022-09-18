@@ -3,8 +3,9 @@ import { session } from '../models/auth';
 import log from 'loglevel';
 
 // Set API as a variable
-const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
+const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
+const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 const CAPTURE_FIELDS = {
   uuid: true,
@@ -54,6 +55,8 @@ export default {
         fields: CAPTURE_FIELDS,
       };
 
+      log.debug('getCaptureImages', filterData);
+
       const query = `${API_ROOT}/api/${getOrganization()}trees?filter=${JSON.stringify(
         filterData
       )}`;
@@ -68,38 +71,66 @@ export default {
       handleError(error);
     }
   },
-  approveCaptureImage(id, morphology, age, captureApprovalTag, speciesId) {
+  approveCaptureImage(capture, morphology, speciesId, captureApprovalTag) {
     try {
-      const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
+      log.debug(
+        'approveCaptureImage',
+        capture,
+        morphology,
+        speciesId,
+        captureApprovalTag
+      );
 
-      log.debug(query);
+      // map legacy data to fields for new microservice
+      const newCapture = {
+        id: capture.uuid,
+        reference_id: capture.id,
+        session_id: capture.session_id, // no legacy equivalent
+        grower_account_id: capture.planterId,
+        planting_organization_id: capture.organization_id,
+        device_configuration_id: capture.device_configuration_id, // no legacy equivalent
+        image_url: capture.imageUrl,
+        lat: capture.lat,
+        lon: capture.lon,
+        gps_accuracy: capture.gps_accuracy,
+        captured_at: capture.timeCreated,
+        note: capture.note,
+        morphology,
+        species_id: speciesId, // need uuid
+        captureApprovalTag, // how does this fit into the new API?
+      };
 
-      return fetch(query, {
+      log.debug('newCapture data', newCapture);
+
+      // update the raw capture
+      fetch(`${FIELD_DATA_API}/raw-captures/${capture.uuid}`, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
         body: JSON.stringify({
-          id: id,
-          approved: true,
-          //revise, if click approved on a rejected pic, then, should set the pic approved, AND restore to ACTIVE = true
-          active: true,
-          morphology,
-          age,
-          captureApprovalTag,
-          speciesId: speciesId,
+          status: 'approved',
         }),
+      }).then(handleResponse);
+
+      // add the new capture
+      fetch(`${TREETRACKER_API}/captures`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify(newCapture),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
   },
-  rejectCaptureImage(id, rejectionReason) {
+  rejectCaptureImage(capture, rejection_reason) {
     try {
-      console.log('reject capture', id, rejectionReason);
-      const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
-
+      log.debug('reject capture', capture.uuid, rejection_reason);
+      const query = `${FIELD_DATA_API}/raw-captures/${capture.uuid}`;
       return fetch(query, {
         method: 'PATCH',
         headers: {
@@ -107,12 +138,8 @@ export default {
           Authorization: session.token,
         },
         body: JSON.stringify({
-          id: id,
-          active: false,
-          //revise, if click a approved pic, then, should set active = false and
-          //at the same time, should set approved to false
-          approved: false,
-          rejectionReason,
+          status: 'rejected',
+          rejection_reason,
         }),
       }).then(handleResponse);
     } catch (error) {
@@ -354,8 +381,9 @@ export default {
    */
   getTags(abortController) {
     try {
-      const filterString = `filter[order]=tagName`;
-      const query = `${API_ROOT}/api/tags?${filterString}`;
+      // const filterString = `order=name`;
+      // const query = `${TREETRACKER_API}/tags?${filterString}`;
+      const query = `${TREETRACKER_API}/tags`; // TODO: order is not allowed as a filter
 
       return fetch(query, {
         method: 'GET',
@@ -371,8 +399,8 @@ export default {
   },
   getTagById(id) {
     try {
-      const query = `${API_ROOT}/api/tags/${id}`;
-
+      const query = `${TREETRACKER_API}/tags/${id}`;
+      //     const query = `${API_ROOT}/api/tags/${id}`;
       return fetch(query, {
         method: 'GET',
         headers: {
@@ -384,21 +412,17 @@ export default {
       handleError(error);
     }
   },
-  createTag(tagName) {
+  createTag(tag) {
+    log.debug('createTag ---> ', tag);
     try {
-      const query = `${API_ROOT}/api/tags`;
-
+      const query = `${TREETRACKER_API}/tags`;
       return fetch(query, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify({
-          tagName,
-          active: true,
-          public: true,
-        }),
+        body: JSON.stringify(tag),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
@@ -407,28 +431,43 @@ export default {
   /*
    * Capture Tags
    */
-  createCaptureTags(captureId, tags) {
+  createCaptureTags(capture_id, tags) {
+    log.debug('createCaptureTags ---> ', capture_id, tags);
     try {
-      return tags.map((t) => {
-        const query = `${API_ROOT}/api/tree_tags`;
+      const query = `${TREETRACKER_API}/captures/${capture_id}/tags`;
 
-        return fetch(query, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            Authorization: session.token,
-          },
-          body: JSON.stringify({
-            treeId: captureId,
-            tagId: t.id,
-          }),
-        }).then(handleResponse);
-      });
+      return fetch(query, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+        body: JSON.stringify({ tags }),
+      }).then(handleResponse);
     } catch (error) {
       handleError(error);
     }
   },
-  getCaptureTags({ captureIds, tagIds }) {
+  async getCaptureTags(captureIds = []) {
+    try {
+      const result = captureIds.map((id) => {
+        const query = `${TREETRACKER_API}/captures/${id}/tags`;
+
+        return fetch(query, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            Authorization: session.token,
+          },
+        }).then(handleResponse);
+      });
+
+      return Promise.all(result);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  getLegacyCaptureTags({ captureIds, tagIds }) {
     try {
       const useAnd = captureIds && tagIds;
       const captureIdClauses = (captureIds || []).map(

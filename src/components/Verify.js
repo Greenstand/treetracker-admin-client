@@ -270,7 +270,8 @@ const Verify = (props) => {
     /*
      * create/retrieve tags
      */
-    approveAction.tags = await tagsContext.createTags();
+    const tags = await tagsContext.createTags();
+    approveAction.tags = tags.map((t) => t.id);
     const result = await verifyContext.approveAll(approveAction);
     if (!result) {
       window.alert('Failed to approve a capture');

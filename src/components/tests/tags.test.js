@@ -27,7 +27,7 @@ describe('tags', () => {
     // TAGS CONTEXT
     api.getTags = jest.fn((filter) => {
       log.debug('mock getTags:');
-      return Promise.resolve(TAGS);
+      return Promise.resolve({ tags: TAGS });
     });
 
     tagsValues.setTagInput = jest.fn((filter) => {
@@ -39,9 +39,9 @@ describe('tags', () => {
       log.debug('mock createTag');
       return Promise.resolve({
         id: 2,
-        tagName: 'new_tag',
-        public: true,
-        active: true,
+        name: 'new_tag',
+        isPublic: true,
+        owner_id: null,
       });
     });
   });

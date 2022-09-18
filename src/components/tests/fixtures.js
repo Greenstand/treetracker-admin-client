@@ -174,27 +174,33 @@ const ORGS = [
 
 const TAG = {
   id: 3,
-  tagName: 'test',
+  name: 'test',
+  isPublic: true,
+  status: 'active',
+  owner_id: null,
 };
 
 const TAGS = [
   {
     id: 0,
-    tagName: 'tag_a',
-    public: true,
-    active: true,
+    name: 'tag_a',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
   {
     id: 1,
-    tagName: 'tag_b',
-    public: true,
-    active: true,
+    name: 'tag_b',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
   {
     id: 3,
-    tagName: 'tag_c',
-    public: true,
-    active: true,
+    name: 'tag_c',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
 ];
 

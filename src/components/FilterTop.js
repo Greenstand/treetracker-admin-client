@@ -337,18 +337,18 @@ function Filter(props) {
                 options={[
                   {
                     id: TAG_NOT_SET,
-                    tagName: 'Not set',
+                    name: 'Not set',
                     active: true,
                     public: true,
                   },
                   {
                     id: ANY_TAG_SET,
-                    tagName: 'Any tag set',
+                    name: 'Any tag set',
                     active: true,
                     public: true,
                   },
                   ...tagsContext.tagList.filter((t) =>
-                    t.tagName
+                    t.name
                       .toLowerCase()
                       .startsWith(tagSearchString.toLowerCase())
                   ),
@@ -359,11 +359,11 @@ function Filter(props) {
                   // if (tag === 'Not set') {
                   //   return 'Not set';
                   // }
-                  return tag.tagName;
+                  return tag.name;
                 }}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('newVal -- ', newVal);
+                  console.log('tag -- ', newVal);
                   setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {

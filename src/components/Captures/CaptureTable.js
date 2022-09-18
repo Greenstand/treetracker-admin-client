@@ -182,7 +182,7 @@ const CaptureTable = () => {
   const populateTagLookup = async () => {
     let tags = {};
     tagsContext.tagList.forEach((t) => {
-      tags[t.id] = t.tagName;
+      tags[t.id] = t.name;
     });
     setTagLookup(tags);
   };
