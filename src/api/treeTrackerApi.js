@@ -201,11 +201,27 @@ export default {
   /**
    * Verify & Captures -- Captures Detail Dialog
    */
-  getCaptureById(url, id, abortController) {
+  getRawCaptureById(id, abortController) {
     try {
       // use field data api for Verify
       // use query api for Captures
-      const query = `${url}/${id}`;
+      const query = `${QUERY_API}/raw-captures/${id}`;
+      return fetch(query, {
+        headers: {
+          Authorization: session.token,
+        },
+        signal: abortController?.signal,
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  /**
+   * Captures Detail Dialog in CaptureTable
+   */
+  getCaptureById(id, abortController) {
+    try {
+      const query = `${QUERY_API}/v2/captures/${id}`;
       return fetch(query, {
         headers: {
           Authorization: session.token,

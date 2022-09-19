@@ -98,7 +98,7 @@ export function CapturesProvider(props) {
     setIsLoading(true);
 
     api
-      .getCaptureById(`${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures`, id)
+      .getCaptureById(id)
       .then((res) => {
         setIsLoading(false);
         setCapture(res);

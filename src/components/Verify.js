@@ -37,7 +37,10 @@ import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
-import { CaptureDetailProvider } from '../context/CaptureDetailContext';
+import {
+  CaptureDetailProvider,
+  CaptureType,
+} from '../context/CaptureDetailContext';
 import CaptureDetailTooltip from './CaptureDetailTooltip';
 
 const log = require('loglevel').getLogger('../components/Verify');
@@ -736,7 +739,7 @@ const Verify = (props) => {
           open={captureDetail.isOpen}
           onClose={handleCloseCaptureDetail}
           capture={captureDetail.capture}
-          url={`${process.env.REACT_APP_QUERY_API_ROOT}/raw-captures`}
+          captureType={CaptureType.RawCapture}
         />
       </CaptureDetailProvider>
     </>
