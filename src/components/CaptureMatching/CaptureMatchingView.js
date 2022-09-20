@@ -424,6 +424,13 @@ function CaptureMatchingView() {
     [captureImage?.latitude, captureImage?.longitude]
   );
 
+  const getGroverRegDate = () => {
+    return growerAccount.first_registration_at
+      ? 'Joined at ' +
+          format(new Date(growerAccount.first_registration_at), 'MM/dd/yyyy')
+      : 'Joined at ' + format(new Date(growerAccount.created_at), 'MM/dd/yyyy');
+  };
+
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
     return (
@@ -594,14 +601,7 @@ function CaptureMatchingView() {
                   <Typography variant="h5">
                     {growerAccount.first_name}
                   </Typography>
-                  <Typography variant="body1">
-                    Joined at{' '}
-                    {format(
-                      growerAccount.first_registration_at ||
-                        growerAccount.created_at,
-                      'MM/dd/yyyy'
-                    )}
-                  </Typography>
+                  <Typography variant="body1">{getGroverRegDate()}</Typography>
                 </Box>
               </Box>
             )}
