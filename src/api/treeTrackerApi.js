@@ -5,7 +5,7 @@ import log from 'loglevel';
 // Set API as a variable
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
-const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
+const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 
 const CAPTURE_FIELDS = {
   uuid: true,
@@ -73,20 +73,15 @@ export default {
   },
   approveCaptureImage(capture, morphology, speciesId, captureApprovalTag) {
     try {
-      log.debug(
-        'approveCaptureImage',
-        capture,
-        morphology,
-        speciesId,
-        captureApprovalTag
-      );
+      log.debug('approveCaptureImage', capture, captureApprovalTag);
 
       // map legacy data to fields for new microservice
       const newCapture = {
         id: capture.uuid,
         reference_id: capture.id,
         session_id: capture.session_id, // no legacy equivalent
-        grower_account_id: capture.planterId,
+        planterId: capture.planterId, // legacy only
+        grower_account_id: capture.grower_account_id, // no legacy equivalent
         planting_organization_id: capture.organization_id,
         device_configuration_id: capture.device_configuration_id, // no legacy equivalent
         image_url: capture.imageUrl,
@@ -97,7 +92,7 @@ export default {
         note: capture.note,
         morphology,
         species_id: speciesId, // need uuid
-        captureApprovalTag, // how does this fit into the new API?
+        // captureApprovalTag, // how does this fit into the new API?
       };
 
       log.debug('newCapture data', newCapture);
@@ -431,10 +426,9 @@ export default {
   /*
    * Capture Tags
    */
-  createCaptureTags(capture_id, tags) {
-    log.debug('createCaptureTags ---> ', capture_id, tags);
+  createCaptureTags(captureId, tags) {
     try {
-      const query = `${TREETRACKER_API}/captures/${capture_id}/tags`;
+      const query = `${TREETRACKER_API}/captures/${captureId}/tags`;
 
       return fetch(query, {
         method: 'POST',

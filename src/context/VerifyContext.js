@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
+import { getOrganizationId, getOrganizationUUID } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -102,14 +103,14 @@ export function VerifyProvider(props) {
 
   // EVENT HANDLERS
 
-  const approve = async ({ approveAction, captureImage }) => {
+  const approve = async ({ approveAction, capture }) => {
     if (!approveAction) {
       throw Error('no approve action object!');
     }
     if (approveAction.isApproved) {
       log.debug('approve');
       await api.approveCaptureImage(
-        captureImage,
+        capture,
         approveAction.morphology,
         approveAction.age,
         approveAction.captureApprovalTag,
@@ -117,11 +118,11 @@ export function VerifyProvider(props) {
       );
     } else {
       log.debug('reject');
-      await api.rejectCaptureImage(captureImage, approveAction.rejectionReason);
+      await api.rejectCaptureImage(capture, approveAction.rejectionReason);
     }
 
     if (approveAction.tags) {
-      await api.createCaptureTags(captureImage.uuid, approveAction.tags);
+      await api.createCaptureTags(capture.uuid, approveAction.tags);
     }
 
     return true;
@@ -213,17 +214,26 @@ export function VerifyProvider(props) {
     try {
       for (let i = 0; i < total; i++) {
         const captureId = captureSelected[i];
-        const captureImage = captureImages.reduce((a, c) => {
+        const capture = captureImages.reduce((a, c) => {
           if (c && c.id === captureId) {
             return c;
           } else {
             return a;
           }
         }, undefined);
-        log.debug('approve:%d', captureImage.id);
-        log.trace('approve:%d', captureImage.id);
+        const currentFilter = filter.getWhereObj();
+        capture.organization_id =
+          currentFilter.organizationId || getOrganizationUUID();
+        log.debug(
+          'organization_id:',
+          currentFilter.organizationId,
+          getOrganizationUUID(),
+          capture.organization_id
+        );
+        log.debug('approve:%d', capture.id);
+        log.trace('approve:%d', capture.id);
         await approve({
-          captureImage,
+          capture,
           approveAction,
         });
         setApproveAllComplete(100 * ((i + 1) / total));
