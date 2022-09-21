@@ -60,7 +60,7 @@ describe('FilterTop organizations', () => {
         expect(input).toBeInTheDocument();
       });
 
-      it('renders Species dropdown ', () => {
+      it.skip('renders Species dropdown ', () => {
         render(component);
         let dropdown = screen.getByTestId('species-dropdown');
         expect(dropdown).toBeInTheDocument();

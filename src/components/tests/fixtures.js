@@ -86,6 +86,79 @@ const CAPTURES = [
   },
 ];
 
+const RAW_CAPTURE = {
+  reference_id: 100,
+  id: '11942400-6617-4c6c-bf5e',
+  grower_account_id: 10,
+  wallet: 'grower1@some.place',
+  device_identifier: '1-abcdef123456',
+  status: 'unprocessed',
+  speciesId: 0,
+  created_at: '2020-07-29T21:46:03.522Z',
+  morphology: 'seedling',
+  age: 'new_tree',
+  captureApprovalTag: 'simple_leaf',
+};
+
+const RAW_CAPTURES = {
+  query: { count: 4, page: 0, limit: 25, offset: 0 },
+  total: 4,
+  raw_captures: [
+    {
+      reference_id: 100,
+      id: '11942400-6617-4c6c-bf5e',
+      grower_account_id: 10,
+      wallet: 'grower1@some.place',
+      device_identifier: '1-abcdef123456',
+      status: 'unprocessed',
+      speciesId: 0,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 110,
+      id: 'bbf0e582-ec06-45c4-9a71-7bab679e945b',
+      grower_account_id: 11,
+      wallet: 'grower2@some.place',
+      device_identifier: '2-abcdef123456',
+      status: 'unprocessed',
+      speciesId: 0,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      // age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 120,
+      id: '5a91c4fd-b57b-47fe-ac99-5d95eccad91d',
+      grower_account_id: 12,
+      wallet: 'grower3@some.place',
+      device_identifier: '3-abcdef123456',
+      status: 'unprocessed',
+      speciesId: 1,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 101,
+      id: '6760d7bc-48b7-4105-8437-ed3b48473d9a',
+      grower_account_id: 10,
+      wallet: 'grower3@some.place',
+      device_identifier: '3-abcdef123456',
+      status: 'unprocessed',
+      speciesId: 30,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+  ],
+};
+
 const CAPTURE_TAGS = [
   {
     id: 1,
@@ -331,7 +404,7 @@ const growerValues = {
   getTotalGrowerCount: () => {},
 };
 const verifyValues = {
-  captureImages: CAPTURES,
+  captureImages: RAW_CAPTURES,
   captureImagesSelected: [],
   captureImageAnchor: undefined,
   captureImagesUndo: [],
@@ -382,6 +455,8 @@ const speciesValues = {
 module.exports = {
   CAPTURE,
   CAPTURES,
+  RAW_CAPTURE,
+  RAW_CAPTURES,
   CAPTURE_TAGS,
   GROWER,
   GROWERS,

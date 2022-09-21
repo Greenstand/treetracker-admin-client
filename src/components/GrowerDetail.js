@@ -41,6 +41,9 @@ import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
 import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../components/GrowerDetail.js');
 
 const GROWER_IMAGE_SIZE = 440;
 
@@ -134,7 +137,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
-  // console.log('render: grower detail');
+  log.debug('render: grower detail', growerId);
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
@@ -152,7 +155,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      if (grower && grower.growerAccountUuid !== growerId) {
+      log.debug('grower', grower);
+      if (grower && grower.grower_account_id !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
@@ -169,6 +173,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
             growerAccountUuid: undefined,
           });
         }
+
+        log.debug('match', match);
 
         if (match.error) {
           setErrorMessage(match.message);
@@ -262,7 +268,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     if (!grower && !id) {
       const filter = new FilterGrower();
       filter.growerAccountUuid = growerAccountUuid;
-      [grower] = await api.getGrowers({ filter }); // Otherwise query the API
+      const result = await api.getGrowers({ filter }); // Otherwise query the API
+      log.debug('getGrowers result', result.length);
+      // only assign to grower if it finds one match, seems to return all otherwise
+      if (result.length === 1) {
+        grower = result[0];
+      }
     }
 
     if (!grower && !growerAccountUuid) {

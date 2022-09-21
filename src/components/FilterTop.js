@@ -5,8 +5,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SelectOrg from './common/SelectOrg';
 import FilterModel, {
   ALL_SPECIES,
-  SPECIES_ANY_SET,
-  SPECIES_NOT_SET,
+  // SPECIES_ANY_SET,
+  // SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
   TAG_NOT_SET,
   ANY_TAG_SET,
@@ -23,13 +23,13 @@ import {
 } from '../common/locale';
 import {
   verificationStates,
-  tokenizationStates,
+  // tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
 import { getVerificationStatus } from '../common/utils';
-import { SpeciesContext } from '../context/SpeciesContext';
+// import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
-import { CircularProgress } from '@material-ui/core';
+// import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
 
@@ -72,7 +72,7 @@ const styles = (theme) => {
 
 function Filter(props) {
   // console.log('render: filter top');
-  const speciesContext = useContext(SpeciesContext);
+  // const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
@@ -100,7 +100,7 @@ function Filter(props) {
   const [stakeholderUUID, setStakeholderUUID] = useState(
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
-  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -131,7 +131,7 @@ function Filter(props) {
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
-    filter.tokenId = tokenId;
+    // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -149,7 +149,7 @@ function Filter(props) {
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
     setStakeholderUUID(ALL_ORGANIZATIONS);
-    setTokenId(filterOptionAll);
+    // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
     filter.approved = approved; // keeps last value set
@@ -203,7 +203,7 @@ function Filter(props) {
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
+              {/* <TextField
                 select
                 htmlFor="token-status"
                 id="token-status"
@@ -222,7 +222,7 @@ function Filter(props) {
                     {name}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
               <MuiPickersUtilsProvider
                 utils={DateFnsUtils}
                 locale={getDatePickerLocale()}
@@ -258,7 +258,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower ID"
+                label="Grower Account ID"
                 placeholder="e.g. 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
@@ -266,7 +266,7 @@ function Filter(props) {
               <TextField
                 htmlFor="capture-id"
                 id="capture-id"
-                label="Capture ID"
+                label="Capture Reference ID"
                 placeholder="e.g. 80"
                 value={captureId}
                 onChange={(e) => setCaptureId(e.target.value)}
@@ -290,12 +290,12 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-identifier"
                 id="grower-identifier"
-                label="Grower Identifier"
+                label="Wallet/Grower Identifier"
                 placeholder="e.g. grower@example.com"
                 value={growerIdentifier}
                 onChange={(e) => setGrowerIdentifier(e.target.value)}
               />
-              <TextField
+              {/* <TextField
                 data-testid="species-dropdown"
                 select
                 htmlFor="species"
@@ -325,7 +325,7 @@ function Filter(props) {
                     </MenuItem>
                   ))
                 )}
-              </TextField>
+              </TextField> */}
               <Autocomplete
                 data-testid="tag-dropdown"
                 label="Tag"
@@ -355,12 +355,7 @@ function Filter(props) {
                 ]}
                 value={tag}
                 defaultValue={'Not set'}
-                getOptionLabel={(tag) => {
-                  // if (tag === 'Not set') {
-                  //   return 'Not set';
-                  // }
-                  return tag.name;
-                }}
+                getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
                   console.log('tag -- ', newVal);
@@ -373,9 +368,6 @@ function Filter(props) {
                   return <TextField {...params} label="Tag" />;
                 }}
                 getOptionSelected={(option, value) => option.id === value.id}
-                // selectOnFocus
-                // clearOnBlur
-                // handleHomeEndKeys
               />
               <SelectOrg
                 orgId={organizationId}

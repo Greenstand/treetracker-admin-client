@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
-import { getOrganizationId, getOrganizationUUID } from 'api/apiUtils';
+import { getOrganizationUUID } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -141,13 +141,15 @@ export function VerifyProvider(props) {
     setIsLoading(true);
 
     const pageParams = {
-      skip: pageSize * currentPage,
+      page: currentPage,
       rowsPerPage: pageSize,
       filter: filter,
     };
     log.debug('load page with params:', pageParams);
-    const result = await api.getCaptureImages(pageParams, abortController);
-    setCaptureImages(result || []);
+    const result = await api.getRawCaptures(pageParams, abortController);
+    setCaptureImages(result?.raw_captures || []);
+    setCaptureCount(Number(result?.total));
+    setInvalidateCaptureCount(false);
     //restore loading status
     setIsLoading(false);
   };
@@ -296,10 +298,15 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    // console.log('-- verify getCaptureCount');
-    // setInvalidateCaptureCount(false);
-    const result = await api.getCaptureCount(newfilter);
-    setCaptureCount(Number(result.count));
+    log.debug('-- verify getCaptureCount');
+
+    const pageParams = {
+      page: currentPage,
+      rowsPerPage: pageSize,
+      filter: newfilter,
+    };
+    const result = await api.getRawCaptures(pageParams);
+    setCaptureCount(Number(result?.total));
     setInvalidateCaptureCount(false);
   };
 
