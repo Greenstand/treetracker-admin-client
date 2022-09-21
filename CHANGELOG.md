@@ -1,3 +1,10 @@
+## [1.106.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.5...v1.106.6) (2022-09-21)
+
+
+### Bug Fixes
+
+* inbox - crashes with invalid time value [#838](https://github.com/Greenstand/treetracker-admin-client/issues/838) ([#839](https://github.com/Greenstand/treetracker-admin-client/issues/839)) ([0d19be2](https://github.com/Greenstand/treetracker-admin-client/commit/0d19be28d8057798ebb492fba3d50d21a59bb08b))
+
 ## [1.106.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.4...v1.106.5) (2022-09-05)
 
 
