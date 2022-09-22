@@ -94,7 +94,7 @@ export default {
   },
 
   getGrowerSelfies(growerId) {
-    try {
+    function getRegistrationPictures() {
       const filter = {
         order: 'timeUpdated DESC',
         limit: 100,
@@ -125,6 +125,49 @@ export default {
             ),
           ];
         });
+    }
+
+    // Get images from tracking sessions
+    function getCheckInPictures() {
+      const filter = {
+        where: { planterId: growerId },
+        order: 'timeUpdated DESC',
+        limit: 100,
+        fields: ['planterPhotoUrl'],
+      };
+
+      const url = `${
+        process.env.REACT_APP_API_ROOT
+      }/api/${getOrganization()}trees?filter=${JSON.stringify(filter)}`;
+
+      return fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      })
+        .then(handleResponse)
+        .then((items) => {
+          // Remove duplicates
+          return [
+            ...new Set(
+              items
+                .map((tree) => tree.planterPhotoUrl)
+                .filter((img) => img !== '')
+            ),
+          ];
+        });
+    }
+    try {
+      return Promise.all([
+        getRegistrationPictures(),
+        getCheckInPictures(),
+      ]).then((results) => {
+        const concatenatedResults = results[0].concat(results[1]);
+        // De-duplicate across both result sets
+        return [...new Set(concatenatedResults)];
+      });
     } catch (error) {
       handleError(error);
     }
