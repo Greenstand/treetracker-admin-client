@@ -85,6 +85,13 @@ const getDateStringLocale = (date) => {
   return format(date, getDateFormatLocale());
 };
 
+const getDateFormatted = (date, pattern) => {
+  if (date) {
+    let d = new Date(date);
+    return format(d, pattern);
+  }
+};
+
 const getDateTimeStringLocale = (date) => {
   // this block is created to fix an error due to an incorrect test date, you can then delete it
   let d = new Date(date);
@@ -114,6 +121,7 @@ export {
   getDateTimeFormatLocale,
   getDateStringLocale,
   getDateTimeStringLocale,
+  getDateFormatted,
   convertDateToDefaultSqlDate,
   timeAgoFormatDate,
 };

@@ -29,7 +29,7 @@ import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
 
 import { documentTitle } from '../../common/variables';
-import { getDateTimeStringLocale } from 'common/locale';
+import { getDateTimeStringLocale, getDateFormatted } from 'common/locale';
 import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
@@ -42,7 +42,6 @@ import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
-import { format } from 'date-fns';
 import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
@@ -427,8 +426,8 @@ function CaptureMatchingView() {
   const getGroverRegDate = () => {
     return growerAccount.first_registration_at
       ? 'Joined at ' +
-          format(new Date(growerAccount.first_registration_at), 'MM/dd/yyyy')
-      : 'Joined at ' + format(new Date(growerAccount.created_at), 'MM/dd/yyyy');
+          getDateFormatted(growerAccount.first_registration_at, 'dd.MM.yyyy')
+      : 'Joined at ' + getDateFormatted(growerAccount.created_at, 'dd.MM.yyyy');
   };
 
   // components
