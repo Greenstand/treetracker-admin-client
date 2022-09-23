@@ -1,3 +1,31 @@
+## [1.107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.0...v1.107.1) (2022-09-23)
+
+
+### Bug Fixes
+
+* update unlink icon to delete icon to reflect current behavior ([#822](https://github.com/Greenstand/treetracker-admin-client/issues/822)) ([ac29121](https://github.com/Greenstand/treetracker-admin-client/commit/ac29121849543beae20518be2cfe1ab188a17129))
+
+# [1.107.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.6...v1.107.0) (2022-09-23)
+
+
+### Features
+
+* **regions:** add download button, onClick returns a downloadable ge… ([#826](https://github.com/Greenstand/treetracker-admin-client/issues/826)) ([c47bac6](https://github.com/Greenstand/treetracker-admin-client/commit/c47bac6bfeb61972af45aeb652de19fbcec04eec))
+
+## [1.106.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.5...v1.106.6) (2022-09-21)
+
+
+### Bug Fixes
+
+* inbox - crashes with invalid time value [#838](https://github.com/Greenstand/treetracker-admin-client/issues/838) ([#839](https://github.com/Greenstand/treetracker-admin-client/issues/839)) ([0d19be2](https://github.com/Greenstand/treetracker-admin-client/commit/0d19be28d8057798ebb492fba3d50d21a59bb08b))
+
+## [1.106.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.4...v1.106.5) (2022-09-05)
+
+
+### Bug Fixes
+
+* incorrect display of status in capture detail dialog ([#821](https://github.com/Greenstand/treetracker-admin-client/issues/821)) ([199a0f5](https://github.com/Greenstand/treetracker-admin-client/commit/199a0f53b191539069d39db3323088d342fc66af))
+
 ## [1.106.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.3...v1.106.4) (2022-09-04)
 
 

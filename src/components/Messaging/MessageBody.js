@@ -383,8 +383,9 @@ const SenderInformation = ({
           type === 'announce') && (
           <>
             <Typography align="left" color="primary">
-              <b>DATE:</b>{' '}
-              {format(parseISO(message?.composed_at), 'yyyy/MM/dd')}
+              <b>DATE:</b>
+              {message?.composed_at &&
+                format(new Date(message.composed_at), 'yyyy/MM/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
               message.bulk_message_recipients.map((recipient, i) => (
