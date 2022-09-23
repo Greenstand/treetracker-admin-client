@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, IconButton, Grid, ListItem } from '@material-ui/core';
-import UnlinkIcon from '@material-ui/icons/LinkOff';
+import DeleteIcon from '@material-ui/icons/Delete';
+// in future we'll want to unlink rather than delete
+// import UnlinkIcon from '@material-ui/icons/LinkOff';
 import LinkIcon from '@material-ui/icons/Link';
 import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import ParentChildListItem from './ParentChildListItem';
@@ -48,7 +50,7 @@ function StakeholderList({ id, data, type, linked }) {
           <Grid item xs={1}>
             {isLinked ? (
               <IconButton onClick={(e) => handleChange(e, data)}>
-                <UnlinkIcon />
+                <DeleteIcon />
               </IconButton>
             ) : (
               <IconButton onClick={(e) => handleChange(e, data)}>
