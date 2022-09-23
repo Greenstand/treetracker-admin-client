@@ -1,3 +1,11 @@
+## [1.107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.1...v1.107.2) (2022-09-23)
+
+
+### Bug Fixes
+
+* date format bug and mui setting update ([#824](https://github.com/Greenstand/treetracker-admin-client/issues/824)) ([3dd428e](https://github.com/Greenstand/treetracker-admin-client/commit/3dd428e9a59907ec4f0f7d9b9154924f0be6990b))
+* remove unused import ([#844](https://github.com/Greenstand/treetracker-admin-client/issues/844)) ([0e59fef](https://github.com/Greenstand/treetracker-admin-client/commit/0e59fef55e0abd90cc31abfdf96f2496dc39565d))
+
 ## [1.107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.0...v1.107.1) (2022-09-23)
 
 
