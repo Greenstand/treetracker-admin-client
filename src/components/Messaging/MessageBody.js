@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import uuid from 'uuid/v4';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Announcement,
@@ -428,7 +428,7 @@ const SenderInformation = ({
           <Badge
             badgeContent={responseCount}
             color="secondary"
-            overlap="circle"
+            overlap="circular"
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right',
