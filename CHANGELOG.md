@@ -1,3 +1,10 @@
+## [1.107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.0...v1.107.1) (2022-09-23)
+
+
+### Bug Fixes
+
+* update unlink icon to delete icon to reflect current behavior ([#822](https://github.com/Greenstand/treetracker-admin-client/issues/822)) ([ac29121](https://github.com/Greenstand/treetracker-admin-client/commit/ac29121849543beae20518be2cfe1ab188a17129))
+
 # [1.107.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.6...v1.107.0) (2022-09-23)
 
 
