@@ -1,3 +1,10 @@
+# [1.107.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.6...v1.107.0) (2022-09-23)
+
+
+### Features
+
+* **regions:** add download button, onClick returns a downloadable ge… ([#826](https://github.com/Greenstand/treetracker-admin-client/issues/826)) ([c47bac6](https://github.com/Greenstand/treetracker-admin-client/commit/c47bac6bfeb61972af45aeb652de19fbcec04eec))
+
 ## [1.106.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.106.5...v1.106.6) (2022-09-21)
 
 
