@@ -8,16 +8,7 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
-/**
- * @constant
- * @name earningTableMetaData
- * @description contains table meta data
- * @type {Object[]}
- * @param {string} earningTableMetaData[].name - earning property used to get earning property value from earning object to display in table
- * @param {string} earningTableMetaData[].description - column description/label to be displayed in table
- * @param {boolean} earningTableMetaData[].sortable - determines if column is sortable
- * @param {boolean} earningTableMetaData[].showInfoIcon - determines if column has info icon
- */
+
 const earningTableMetaData = [
   {
     description: 'Grower',
@@ -140,7 +131,7 @@ function EarningsTable() {
     // filter out keys we don't want to submit
     Object.keys(filtersToSubmit).forEach((k) => {
       if (
-        filtersToSubmit[k] === 'all' ||
+        filtersToSubmit[k].includes('all') ||
         filtersToSubmit[k] === '' ||
         k === 'organization_id'
       ) {
