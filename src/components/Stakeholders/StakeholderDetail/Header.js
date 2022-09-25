@@ -417,10 +417,10 @@ export default function StakeholderDialogHeader({
                   {details?.map && (
                     <Typography className={classes.fields}>
                       <Link
-                        href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${details?.map}`}
+                        href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${details.map}`}
                         target="_blank"
                       >
-                        {details?.map}
+                        {details.map}
                       </Link>
                     </Typography>
                   )}
