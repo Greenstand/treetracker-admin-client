@@ -11,7 +11,7 @@ export default function component(props) {
     endDate,
     'top_planters',
     'top_planters',
-    (data) => data.average,
+    (data) => data?.average,
     rows
   );
 

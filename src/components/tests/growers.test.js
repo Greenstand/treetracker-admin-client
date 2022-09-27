@@ -30,7 +30,7 @@ describe('growers', () => {
     };
     api.getGrowers = () => {
       log.debug('mock load');
-      return Promise.resolve(GROWERS);
+      return Promise.resolve({ grower_accounts: GROWERS });
     };
   });
 

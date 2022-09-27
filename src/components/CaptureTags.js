@@ -47,7 +47,7 @@ function renderSuggestion(suggestion, { isHighlighted }) {
       component="div"
       onMouseDown={(e) => e.preventDefault()} // prevent the click causing the input to be blurred
     >
-      <div>{suggestion.tagName}</div>
+      <div>{suggestion.name}</div>
     </MenuItem>
   );
 }
@@ -63,11 +63,11 @@ function renderSuggestionsContainer(options) {
 }
 
 function getSuggestionValue(suggestion) {
-  return suggestion.tagName;
+  return suggestion.name;
 }
 
 const CaptureTags = (props) => {
-  // console.log('render: capture tags');
+  // log.debug('render: capture tags');
   const classes = useStyles(props);
   const tagsContext = useContext(TagsContext);
   const [textFieldInput, setTextFieldInput] = useState('');
@@ -86,7 +86,9 @@ const CaptureTags = (props) => {
         value={chips}
         variant="outlined"
         fullWidth
-        classes={{ inputRoot: classes.chipInput }}
+        classes={{
+          inputRoot: classes.chipInput,
+        }}
         allowDuplicates={false}
         blurBehavior="add"
         InputProps={{
@@ -116,10 +118,10 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(tagsContext.tagInput.concat([chip]));
   };
 
-  const handleDeleteChip = (_chip) => {
-    const temp = tagsContext.tagInput;
-    const result = temp.filter((value) => value !== _chip);
-    tagsContext.setTagInput(result);
+  const handleDeleteChip = (_chip, index) => {
+    const temp = [...tagsContext.tagInput];
+    temp.splice(index, 1);
+    tagsContext.setTagInput(temp);
   };
 
   return (
@@ -133,7 +135,7 @@ const CaptureTags = (props) => {
       }}
       renderInputComponent={renderInput}
       suggestions={tagsContext.tagList.filter((t) => {
-        const tagName = t.tagName.toLowerCase();
+        const tagName = t.name.toLowerCase();
         return (
           (textFieldInput.length === 0 ||
             tagName.startsWith(textFieldInput.toLowerCase())) &&

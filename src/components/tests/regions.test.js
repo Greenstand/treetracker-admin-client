@@ -134,22 +134,22 @@ describe('region management', () => {
         userEvent.click(screen.getByText(/Upload/i));
       });
 
-      it('see popup with upload region or collection form', () => {
+      it('see popup with upload region or collection form', async () => {
         expect(
-          screen.getByText(/Upload New Region or Collection/i)
+          await screen.findByText(/Upload New Region or Collection/i)
         ).toBeTruthy();
       });
 
-      it('has inputs for owner and region name property', () => {
-        const dialog = screen.getByRole(/dialog/i);
+      it('has inputs for owner and region name property', async () => {
+        const dialog = await screen.findByRole(/dialog/i);
         expect(within(dialog).getByLabelText(/owner/i)).toBeTruthy();
         expect(
           within(dialog).getByLabelText(/region name property/i)
         ).toBeTruthy();
       });
 
-      it('has buttons to upload and cancel', () => {
-        const dialog = screen.getByRole(/dialog/i);
+      it('has buttons to upload and cancel', async () => {
+        const dialog = await screen.findByRole(/dialog/i);
         expect(
           within(dialog).getByRole('button', { name: /upload/i })
         ).toBeTruthy();

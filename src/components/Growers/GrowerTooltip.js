@@ -12,7 +12,7 @@ import { useStyle } from './Growers.styles.js';
 
 const GrowerTooltip = ({ grower, growerClick }) => {
   const classes = useStyle();
-  const matches = grower.imageUrl?.match(/\/\/(.*?)\/(.*)/);
+  const matches = grower.image_url?.match(/\/\/(.*?)\/(.*)/);
   const useStyles = makeStyles(() => ({
     box: {
       display: 'flex',
@@ -49,8 +49,8 @@ const GrowerTooltip = ({ grower, growerClick }) => {
               >
                 {matches?.length > 1 ? (
                   <OptimizedImage
-                    rotation={grower.imageRotation}
-                    src={grower.imageUrl}
+                    rotation={grower.image_rotation}
+                    src={grower.image_url}
                     style={{
                       height: '24px',
                       width: '24px',
@@ -68,7 +68,7 @@ const GrowerTooltip = ({ grower, growerClick }) => {
               </Box>
               <Box>
                 <Typography className={growerToolTipStyles.label}>
-                  {grower.firstName} {grower.lastName}
+                  {grower.first_name} {grower.last_name}
                 </Typography>
               </Box>
             </Box>
@@ -95,13 +95,13 @@ const GrowerTooltip = ({ grower, growerClick }) => {
                   </Typography>
                 </Box>
               )}
-              {(grower.organizaton || grower.organizationId) && (
+              {(grower.organizaton || grower.organization_id) && (
                 <Box className={growerToolTipStyles.box}>
                   <OrgIcon color="primary" />
                   <Box className={growerToolTipStyles.label}>
                     <GrowerOrganization
                       organizationName={grower.organization}
-                      assignedOrganizationId={grower.organizationId}
+                      assignedOrganizationId={grower.organization_id}
                       compact={true}
                     />
                   </Box>

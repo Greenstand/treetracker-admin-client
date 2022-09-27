@@ -6,6 +6,7 @@ import {
   screen,
   within,
   cleanup,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -98,22 +99,24 @@ describe('species management', () => {
     });
 
     describe('when the "Add New Species" button is clicked', () => {
-      beforeEach(() => {
-        userEvent.click(screen.getByText(/Add New Species/i));
+      beforeEach(async () => {
+        await waitFor(() => {
+          userEvent.click(screen.getByText(/Add New Species/i));
+        });
       });
 
-      it('see popup with species detail form', () => {
-        expect(screen.getByText(/Species Detail/i)).toBeTruthy();
+      it('see popup with species detail form', async () => {
+        expect(await screen.findByText(/Species Detail/i)).toBeTruthy();
       });
 
-      it('has inputs for name and description', () => {
-        const dialog = screen.getByRole(/dialog/i);
+      it('has inputs for name and description', async () => {
+        const dialog = await screen.findByRole(/dialog/i);
         const item = within(dialog).getByLabelText(/name/i);
         expect(item).toBeTruthy();
       });
 
-      it('has buttons to save and cancel', () => {
-        const dialog = screen.getByRole(/dialog/i);
+      it('has buttons to save and cancel', async () => {
+        const dialog = await screen.findByRole(/dialog/i);
         expect(within(dialog).getByText(/save/i)).toBeTruthy();
       });
     });
@@ -129,20 +132,23 @@ describe('species management', () => {
     describe('when creating a new species', () => {
       beforeEach(async () => {
         // await api.createSpecies({ name: 'water melon' });
-        userEvent.click(screen.getByText(/Add New Species/i));
-        const dialog = screen.getByRole(/dialog/i);
-        const inputName = screen.getByLabelText(/name/i);
-        const inputDesc = screen.getByLabelText(/description/i);
-        const saveBtn = screen.getByText(/Save/i);
+        userEvent.click(await screen.findByText(/Add New Species/i));
+        const dialog = await screen.findByRole(/dialog/i);
+        const inputName = await screen.findByLabelText(/name/i);
+        const inputDesc = await screen.findByLabelText(/description/i);
+        const saveBtn = await screen.findByText(/Save/i);
 
         userEvent.type(inputName, 'water melon');
-        expect(inputName.value).toBe('water melon');
+        await waitFor(() => {
+          expect(inputName.value).toBe('water melon');
+        });
 
         userEvent.type(inputDesc, 'test');
-        expect(inputDesc.value).toBe('test');
-
-        expect(screen.getByDisplayValue('water melon')).toBeTruthy();
-        expect(screen.getByDisplayValue('test')).toBeTruthy();
+        await waitFor(() => {
+          expect(inputDesc.value).toBe('test');
+          expect(screen.getByDisplayValue('water melon')).toBeTruthy();
+          expect(screen.getByDisplayValue('test')).toBeTruthy();
+        });
 
         userEvent.click(saveBtn);
 
@@ -161,8 +167,10 @@ describe('species management', () => {
 
       afterEach(cleanup);
 
-      it('api.createSpecies should be called with "water melon"', () => {
-        expect(api.createSpecies.mock.calls[0][0].name).toBe('water melon');
+      it('api.createSpecies should be called with "water melon"', async () => {
+        await waitFor(() => {
+          expect(api.createSpecies.mock.calls[0][0].name).toBe('water melon');
+        });
       });
 
       // it('species list should be 3 (1 added)', () => {
@@ -173,7 +181,7 @@ describe('species management', () => {
       //   const items = screen.getAllByTestId('species');
       //   // screen.logTestingPlaygroundURL();
       //   const speciesNames = items.map((el) => el.textContent);
-      //   // console.log('speciesNames', speciesNames);
+      //   // log.debug('speciesNames', speciesNames);
       //   expect(items).toHaveLength(3);
       // });
 

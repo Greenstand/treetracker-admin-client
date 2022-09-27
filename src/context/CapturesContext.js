@@ -1,11 +1,12 @@
 import React, { useState, useEffect, createContext } from 'react';
 import axios from 'axios';
-import { getOrganization } from '../api/apiUtils';
+// import { getOrganizationUUID } from '../api/apiUtils';
 import { session } from '../models/auth';
 import FilterModel from '../models/Filter';
+import api from '../api/treeTrackerApi';
 
-import * as loglevel from 'loglevel';
-const log = loglevel.getLogger('../context/CapturesContext');
+// import * as loglevel from 'loglevel';
+// const log = loglevel.getLogger('../context/CapturesContext');
 
 export const CapturesContext = createContext({
   isLoading: false,
@@ -21,8 +22,7 @@ export const CapturesContext = createContext({
   setOrder: () => {},
   setOrderBy: () => {},
   queryCapturesApi: () => {},
-  getCaptureCount: () => {},
-  getCapturesAsync: () => {},
+  getCaptures: () => {},
   getAllCaptures: () => {},
   updateFilter: () => {},
 });
@@ -33,33 +33,21 @@ export function CapturesProvider(props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('timeCreated');
+  const [orderBy, setOrderBy] = useState('created_at');
   const [isLoading, setIsLoading] = useState(false);
-  const [filter, setFilter] = useState(
-    new FilterModel({
-      verifyStatus: [
-        { active: true, approved: true },
-        { active: true, approved: false },
-      ],
-    })
-  );
+  const [filter, setFilter] = useState(new FilterModel());
 
   useEffect(() => {
-    getCapturesAsync();
-    getCaptureCount();
+    getCaptures();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
   // EVENT HANDLERS
-  const queryCapturesApi = ({
-    id = null,
-    count = false,
-    paramString = null,
-  }) => {
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees${count ? '/count' : ''}${
-      id != null ? '/' + id : ''
-    }${paramString ? '?' + paramString : ''}`;
+  const queryCapturesApi = ({ ...params }) => {
+    let filterObj = { limit: 25, offset: 0, ...params };
+
+    const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
+      filterObj ? `?${api.makeQueryString(filterObj)}` : ''
+    }`;
 
     return axios.get(query, {
       headers: {
@@ -69,48 +57,39 @@ export function CapturesProvider(props) {
     });
   };
 
-  const getCaptureCount = async () => {
-    log.debug('load capture count');
-    const paramString = `where=${JSON.stringify(filter.getWhereObj())}`;
-    const response = await queryCapturesApi({
-      count: true,
-      paramString,
-    });
-    const { count } = response.data;
-    setCaptureCount(Number(count));
-  };
-
-  const getCapturesAsync = async () => {
-    log.debug('4 - load captures');
+  const getCaptures = async () => {
     const filterData = {
-      where: filter.getWhereObj(),
-      order: [`${orderBy} ${order}`],
+      ...filter.getWhereObj(),
+      order_by: orderBy,
+      order,
       limit: rowsPerPage,
-      skip: page * rowsPerPage,
+      offset: page * rowsPerPage,
     };
-    const paramString = `filter=${JSON.stringify(filterData)}`;
+
+    // log.debug('4 - getCaptures filter', filterData);
+
     setIsLoading(true);
-    const response = await queryCapturesApi({ paramString });
+    const response = await queryCapturesApi(filterData);
+    // log.debug('getCaptures -->', response.data);
     setIsLoading(false);
-    setCaptures(response.data);
+    setCaptures(response?.data?.captures);
+    setCaptureCount(Number(response?.data?.total));
   };
 
   // GET CAPTURES FOR EXPORT
   const getAllCaptures = async () => {
-    log.debug('load all captures for export');
+    // log.debug('load all captures for export');
     const filterData = {
-      where: filter.getWhereObj(),
+      ...filter.getWhereObj(),
       order: [`${orderBy} ${order}`],
       limit: 20000,
     };
-
-    const paramString = `filter=${JSON.stringify(filterData)}`;
-    const response = await queryCapturesApi({ paramString });
-    return response;
+    const { data } = await queryCapturesApi(filterData);
+    return data;
   };
 
   const updateFilter = async (filter) => {
-    log.debug('2 - updateFilter', filter);
+    // log.debug('2 - updateFilter', filter);
     setFilter(filter);
     reset();
   };
@@ -136,8 +115,7 @@ export function CapturesProvider(props) {
     setOrder,
     setOrderBy,
     queryCapturesApi,
-    getCaptureCount,
-    getCapturesAsync,
+    getCaptures,
     getAllCaptures,
     updateFilter,
   };

@@ -241,7 +241,7 @@ function CaptureMatchingView() {
   const initialFilter = {
     startDate: '',
     endDate: '',
-    stakeholderUUID: null,
+    organizationId: null,
   };
 
   const classes = useStyle();
@@ -257,7 +257,6 @@ function CaptureMatchingView() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [organizationId, setOrganizationId] = useState(null);
-  const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
@@ -291,7 +290,7 @@ function CaptureMatchingView() {
     const filterParameters = {
       captured_at_start_date: filter.startDate,
       captured_at_end_date: filter.endDate,
-      'organization_ids[]': filter.stakeholderUUID && [filter.stakeholderUUID],
+      'organization_ids[]': filter.organizationId && [filter.organizationId],
     };
     // log.debug('fetchCaptures filterParameters', filterParameters);
     const data = await api.fetchCapturesToMatch(
@@ -319,6 +318,7 @@ function CaptureMatchingView() {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
         );
+        log.debug('growerAccount', data);
         setGrowerAccount(data);
       } else {
         log.warn('No grower account id found');
@@ -399,7 +399,7 @@ function CaptureMatchingView() {
     setFilter({
       startDate,
       endDate,
-      stakeholderUUID,
+      organizationId,
     });
     matchingToolContext.handleFilterToggle();
   }
@@ -486,10 +486,10 @@ function CaptureMatchingView() {
                   }
                 />
               )}
-              {filter.stakeholderUUID && (
+              {filter.organizationId && (
                 <Chip
                   label={appContext.orgList.reduce((a, c) => {
-                    return c.stakeholder_uuid === filter.stakeholderUUID
+                    return c.stakeholder_uuid === filter.organizationId
                       ? c.name
                       : a;
                   }, '')}
@@ -497,7 +497,7 @@ function CaptureMatchingView() {
                   onDelete={() =>
                     setFilter({
                       ...filter,
-                      stakeholderUUID: undefined,
+                      organizationId: undefined,
                     })
                   }
                 />
@@ -550,7 +550,9 @@ function CaptureMatchingView() {
               <Tooltip title={captureImage.reference_id} interactive>
                 <Typography variant="h5">
                   Capture{' '}
-                  {(captureImage.reference_id + '').substring(0, 10) + '...'}
+                  {captureImage.reference_id.length > 7
+                    ? `${captureImage.reference_id.slice(0, 7)}...`
+                    : captureImage.reference_id}
                 </Typography>
               </Tooltip>
               <Box className={classes.captureImageCaptureInfo}>
@@ -773,10 +775,11 @@ function CaptureMatchingView() {
                   value: null,
                 },
               ]}
-              handleSelection={(org) => {
-                setOrganizationId(org.id);
-                setStakeholderUUID(org.stakeholder_uuid);
-              }}
+              handleSelection={(org) =>
+                setOrganizationId(
+                  org?.stakeholder_uuid ? org.stakeholder_uuid : org
+                )
+              }
             />
           </FormControl>
 
@@ -815,18 +818,21 @@ function CaptureMatchingView() {
         {isDetailsPaneOpen && (
           <CaptureDetailDialog
             open={isDetailsPaneOpen}
-            captureId={captureImage?.reference_id}
+            captureId={captureImage?.id}
             onClose={closeDrawer}
+            page={'CAPTURES'}
           />
         )}
       </CaptureDetailProvider>
-      <GrowerProvider>
-        <GrowerDetail
-          open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
-          onClose={() => setGrowerDetailsOpen(false)}
-        />
-      </GrowerProvider>
+      {growerAccount.growerId && (
+        <GrowerProvider>
+          <GrowerDetail
+            open={isGrowerDetailsOpen}
+            growerId={growerAccount.growerId}
+            onClose={() => setGrowerDetailsOpen(false)}
+          />
+        </GrowerProvider>
+      )}
     </>
   );
 }

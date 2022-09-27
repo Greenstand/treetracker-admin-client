@@ -125,11 +125,13 @@ const Growers = (props) => {
           {pagination}
         </Grid>
       </Grid>
-      <GrowerDetail
-        open={isDetailShown}
-        growerId={growerDetail.id}
-        onClose={() => setDetailShown(false)}
-      />
+      {growerDetail.id && (
+        <GrowerDetail
+          open={isDetailShown}
+          growerId={growerDetail.id}
+          onClose={() => setDetailShown(false)}
+        />
+      )}
     </Grid>
   );
 };

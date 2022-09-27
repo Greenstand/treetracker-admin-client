@@ -12,16 +12,15 @@ import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined'
 import apiPlanters from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
+import log from 'loglevel';
 
 function DashStatTotalCaptures(props) {
-  const activeFilter = new FilterModel({
-    active: true,
-  });
+  const activeFilter = new FilterModel();
 
   const [total, setTotal] = useState(null);
 
   const getTotal = async () => {
-    console.log('-- dash getTotal');
+    log.debug('-- dash getTotal');
     const { count } = await api.getCaptureCount(activeFilter);
     setTotal(count);
   };
@@ -43,14 +42,13 @@ function DashStatTotalCaptures(props) {
 
 function DashStatUnprocessedCaptures(props) {
   const unprocessedFilter = new FilterModel({
-    approved: false,
-    active: true,
+    status: 'unprocessed',
   });
 
   const [totalUnprocessed, setTotalUnprocessed] = useState(null);
 
   const getTotalUnprocessed = async () => {
-    console.log('-- dash getTotalUnprocessed');
+    log.debug('-- dash getTotalUnprocessed');
     const { count } = await api.getCaptureCount(unprocessedFilter);
     setTotalUnprocessed(count);
   };
@@ -72,14 +70,13 @@ function DashStatUnprocessedCaptures(props) {
 
 function DashStatVerifiedCaptures(props) {
   const verifiedFilter = new FilterModel({
-    approved: true,
-    active: true,
+    status: 'approved',
   });
 
   const [totalVerified, setTotalVerified] = useState(null);
 
   const getTotalVerified = async () => {
-    console.log('-- dash getTotalVerified');
+    log.debug('-- dash getTotalVerified');
     const { count } = await api.getCaptureCount(verifiedFilter);
     setTotalVerified(count);
   };
@@ -100,9 +97,7 @@ function DashStatVerifiedCaptures(props) {
 }
 
 function DashStatGrowerCount(props) {
-  const growerFilter = new FilterModel({
-    active: true,
-  });
+  const growerFilter = new FilterModel();
 
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 

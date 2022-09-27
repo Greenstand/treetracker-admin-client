@@ -559,13 +559,15 @@ function CustomTable({
 
       {tablePagination()}
 
-      <GrowerProvider>
-        <GrowerDetail
-          open={growerDetail.isOpen}
-          growerId={growerDetail.growerId}
-          onClose={() => handleCloseGrowerDetail()}
-        />
-      </GrowerProvider>
+      {growerDetail.growerId && (
+        <GrowerProvider>
+          <GrowerDetail
+            open={growerDetail.isOpen}
+            growerId={growerDetail.growerId}
+            onClose={() => handleCloseGrowerDetail()}
+          />
+        </GrowerProvider>
+      )}
 
       {/* start table main filter */}
       {mainFilterComponent}

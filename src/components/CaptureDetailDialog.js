@@ -21,6 +21,7 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import Country from './common/Country';
 import Skeleton from '@material-ui/lab/Skeleton';
+import log from 'loglevel';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, captureId, onClose } = props;
+  const { open, captureId, onClose, page } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -96,7 +97,7 @@ function CaptureDetailDialog(props) {
   useEffect(() => {
     // prevent request because it will fail without a valid id
     if (captureId) {
-      cdContext.getCaptureDetail(captureId);
+      cdContext.getCaptureDetail(captureId, page);
     }
   }, [captureId]);
 
@@ -109,11 +110,12 @@ function CaptureDetailDialog(props) {
       // map the keys from legacy to new api keys
       setRenderCapture({
         status:
+          current.status ||
           (current.active && current.approved
             ? 'approved'
             : current.active && !current.approved
-            ? 'pending'
-            : 'rejected') || current.status,
+            ? 'unprocessed'
+            : 'rejected'),
         id: current.id || current.uuid,
         reference_id: current.reference_id || current.id,
         grower_account_id: current.grower_account_id || current.planterId,
@@ -152,12 +154,13 @@ function CaptureDetailDialog(props) {
 
   function Tags(props) {
     const { capture, species, captureTags } = props;
+    log.debug('captureTags', captureTags);
     const allTags = [
       capture.morphology,
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags.map((t) => t.tagName),
+      ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
@@ -202,18 +205,18 @@ function CaptureDetailDialog(props) {
           {[
             {
               label: 'Grower ID',
-              value: capture.grower_account_id,
+              value: capture?.grower_account_id,
               copy: true,
               link: true,
             },
             {
               label: 'Wallet',
-              value: capture.wallet,
+              value: capture?.wallet,
               copy: true,
             },
             {
               label: 'Device Identifier',
-              value: capture.device_identifier,
+              value: capture?.device_identifier,
               copy: true,
             },
             { label: 'Created', value: dateCreated.toLocaleString() },
@@ -276,7 +279,7 @@ function CaptureDetailDialog(props) {
             Verification Status
           </Typography>
           {/* the 'planted' status is legacy, we'll interpret as 'pending' */}
-          {capture.status === 'planted' || capture.status === 'pending' ? (
+          {capture.status === 'unprocessed' ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}

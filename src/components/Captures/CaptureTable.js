@@ -27,48 +27,49 @@ import ExportCaptures from 'components/ExportCaptures';
 import Spinner from 'components/common/Spinner';
 import api from '../../api/treeTrackerApi';
 import useStyle from './CaptureTable.styles.js';
+// import log from 'loglevel';
 
 const columns = [
   {
-    attr: 'id',
-    label: 'Capture ID',
+    attr: 'reference_id',
+    label: 'Capture Ref. ID',
   },
   {
-    attr: 'planterId',
-    label: 'Grower ID',
+    attr: 'grower_account_id',
+    label: 'Grower Acct. ID',
   },
   {
-    attr: 'deviceIdentifier',
+    attr: 'device_identifier',
     label: 'Device Identifier',
     noSort: false,
     renderer: (val) => val,
   },
   {
-    attr: 'planterIdentifier',
-    label: 'Planter Identifier',
+    attr: 'wallet',
+    label: 'Grower Wallet',
     noSort: false,
     renderer: (val) => val,
   },
   {
-    attr: 'verificationStatus',
+    attr: 'status',
     label: 'Verification Status',
     noSort: true,
     renderer: (val) => val,
   },
   {
-    attr: 'speciesId',
+    attr: 'species_id',
     label: 'Species',
     noSort: true,
     renderer: (val) => val,
   },
 
   {
-    attr: 'tokenId',
+    attr: 'token_id',
     label: 'Token ID',
     renderer: (val) => val,
   },
   {
-    attr: 'captureTags',
+    attr: 'tags',
     label: 'Capture Tags',
     noSort: true,
   },
@@ -79,7 +80,7 @@ const columns = [
     renderer: (val) => val,
   },
   {
-    attr: 'timeCreated',
+    attr: 'created_at',
     label: 'Created',
     renderer: (val) => getDateTimeStringLocale(val),
   },
@@ -155,6 +156,9 @@ const CaptureTable = () => {
     const captureTags = await api.getCaptureTags({
       captureIds: captures.map((c) => c.id),
     });
+    // const captureTags = await api.getCaptureTags(captures.map((c) => c.id));
+    // log.debug('getCaptureTags', captureTags);
+    // log.debug('tagLookup', tagLookup);
 
     // Populate a lookup for quick access when rendering the table
     let lookup = {};
@@ -164,6 +168,8 @@ const CaptureTable = () => {
       }
       lookup[captureTag.treeId].push(tagLookup[captureTag.tagId]);
     });
+
+    // log.debug('lookup', lookup);
     setCaptureTagLookup(lookup);
   };
 
@@ -182,8 +188,9 @@ const CaptureTable = () => {
   const populateTagLookup = async () => {
     let tags = {};
     tagsContext.tagList.forEach((t) => {
-      tags[t.id] = t.tagName;
+      tags[t.id] = t.name;
     });
+    // log.debug('tags', tags);
     setTagLookup(tags);
   };
 
@@ -192,6 +199,7 @@ const CaptureTable = () => {
       id,
       isDetailsPaneOpen: true,
     });
+    // log.debug('toggleDrawer', id);
   };
 
   const createToggleDrawerHandler = (id) => {
@@ -356,6 +364,7 @@ const CaptureTable = () => {
           open={captureDetail.isDetailsPaneOpen}
           captureId={captureDetail.id}
           onClose={closeDrawer}
+          page={'CAPTURES'}
         />
       </CaptureDetailProvider>
     </Grid>
@@ -369,11 +378,11 @@ export const formatCell = (
   attr,
   renderer
 ) => {
-  if (attr === 'id' || attr === 'planterId') {
+  if (attr === 'reference_id' || attr === 'grower_account_id') {
     return (
       <LinkToWebmap
-        value={capture[attr]}
-        type={attr === 'id' ? 'tree' : 'user'}
+        value={attr === 'reference_id' ? capture : capture[attr]}
+        type={attr === 'reference_id' ? 'tree' : 'user'}
       />
     );
   } else if (attr === 'speciesId') {
@@ -382,16 +391,18 @@ export const formatCell = (
     return capture['active'] === null || capture['approved'] === null
       ? '--'
       : getVerificationStatus(capture['active'], capture['approved']);
+  } else if (attr === 'status') {
+    return capture['status'];
   } else if (attr === 'captureTags') {
     return [
-      capture.age,
-      capture.morphology,
-      capture.captureApprovalTag,
-      capture.rejectionReason,
+      capture.morphology ? `morphology: ${capture.morphology}` : '',
+      capture.captureApprovalTag
+        ? `approval tag: ${capture.captureApprovalTag}`
+        : '',
       ...additionalTags,
     ]
       .filter((tag) => tag !== null)
-      .join(', ');
+      .join('\n');
   } else {
     return renderer ? renderer(capture[attr]) : capture[attr];
   }

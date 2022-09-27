@@ -9,7 +9,7 @@ import { TagsContext, TagsProvider } from '../../context/TagsContext';
 import Verify from '../Verify';
 import CaptureTags from '../CaptureTags';
 import CaptureFilter from '../CaptureFilter';
-import { ORGS, TAGS, tagsValues } from './fixtures';
+import { ORGS, TAGS, CAPTURE_TAGS, tagsValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/tags.test');
@@ -22,26 +22,27 @@ describe('tags', () => {
     //mock the api
     api = require('../../api/treeTrackerApi').default;
     // VERIFY CONTEXT
-    api.getCaptureImages = jest.fn(() => Promise.resolve([{ id: '1' }]));
+    api.getRawCaptures = jest.fn(() => Promise.resolve([{ id: '1' }]));
 
     // TAGS CONTEXT
     api.getTags = jest.fn((filter) => {
-      log.debug('mock getTags:');
-      return Promise.resolve(TAGS);
+      // log.debug('mock getTags:');
+      return Promise.resolve({ tags: TAGS });
     });
 
     tagsValues.setTagInput = jest.fn((filter) => {
-      log.debug('mock setTagInput:');
+      // log.debug('mock setTagInput:');
       return Promise.resolve(['newly_created_tag']);
     });
 
     api.createTag = jest.fn((tagName) => {
-      log.debug('mock createTag');
+      // log.debug('mock createTag');
       return Promise.resolve({
         id: 2,
-        tagName: 'new_tag',
-        public: true,
-        active: true,
+        name: 'new_tag',
+        isPublic: true,
+        status: 'active',
+        owner_id: null,
       });
     });
   });
@@ -55,7 +56,7 @@ describe('tags', () => {
           </TagsProvider>
         );
 
-        await act(() => api.getTags());
+        await act(async () => await api.getTags());
       });
 
       afterEach(cleanup);
@@ -71,29 +72,29 @@ describe('tags', () => {
         expect(chip).toBeInTheDocument();
       });
 
-      it('can enter text to search tags', () => {
-        let input = screen.getByRole('textbox');
+      it('can enter text to search tags', async () => {
+        let input = await screen.findByRole('textbox');
         expect(input).toBeInTheDocument();
         userEvent.type(input, 'searchTag');
 
-        const result = screen.getByDisplayValue(/searchTag/i);
+        const result = await screen.findByDisplayValue(/searchTag/i);
         expect(result).toBeInTheDocument();
       });
 
-      it('shows suggestions and chips when tags are entered', () => {
-        const textbox = screen.getByRole('textbox');
+      it('shows suggestions and chips when tags are entered', async () => {
+        const textbox = await screen.findByRole('textbox');
         expect(textbox).toBeInTheDocument();
         userEvent.type(textbox, 'testTag{enter}');
         // userEvent.click(textbox);
         // screen.logTestingPlaygroundURL();
 
-        const suggestion = screen.getByTestId('tag-suggestion');
+        const suggestion = await screen.findByTestId('tag-suggestion');
         expect(suggestion).toBeInTheDocument();
 
-        const chip = screen.getByTestId('tag-chip-input');
+        const chip = await screen.findByTestId('tag-chip-input');
         expect(chip).toBeInTheDocument();
 
-        const text = screen.getByText('testTag');
+        const text = await screen.findByText('testTag');
         expect(text).toBeTruthy();
       });
     });
@@ -117,7 +118,7 @@ describe('tags', () => {
         </ThemeProvider>
       );
 
-      await act(() => api.getTags());
+      await act(async () => await api.getTags());
     });
 
     afterEach(cleanup);
@@ -134,24 +135,29 @@ describe('tags', () => {
         expect(chip).toBeInTheDocument();
       });
 
-      it('shows suggestions and chips when tags are entered', () => {
-        const textbox = screen.getByPlaceholderText(/Add other text tags/i);
+      it('shows suggestions and chips when tags are entered', async () => {
+        const textbox = await screen.findByPlaceholderText(
+          /Add other text tags/i
+        );
         expect(textbox).toBeInTheDocument();
+
         userEvent.type(textbox, 'testTag{enter}');
         userEvent.type(textbox, 'test');
 
-        const suggestion = screen.getByTestId('tag-suggestion');
+        const suggestion = await screen.findByTestId('tag-suggestion');
         expect(suggestion).toBeInTheDocument();
 
-        const chip = screen.getByTestId('tag-chip-input');
+        const chip = await screen.findByTestId('tag-chip-input');
         expect(chip).toBeInTheDocument();
-        // screen.logTestingPlaygroundURL(chip);
 
-        const item = screen.findByText('testTag');
-        expect(item).toBeTruthy();
+        // const sidepanel = await screen.findByTestId('capture-tags');
+        // screen.logTestingPlaygroundURL(sidepanel);
 
-        const text = screen.getByDisplayValue('test');
-        expect(text).toBeInTheDocument();
+        // const item = await screen.findByText('testTag');
+        // expect(item).toBeTruthy();
+
+        // const text = await screen.findByDisplayValue('test');
+        // expect(text).toBeInTheDocument();
       });
     });
   });
@@ -166,44 +172,40 @@ describe('tags', () => {
         </AppProvider>
       );
 
-      await act(() => api.getTags());
+      await act(async () => await api.getTags());
     });
 
     afterEach(cleanup);
 
     describe('filter top', () => {
       it('renders subcomponents of filter top', () => {
-        // const filter = screen.getByRole('button', { name: /filter/i });
-        // userEvent.click(filter);
-
-        expect(
-          screen.getByLabelText(/verification status/i)
-        ).toBeInTheDocument();
-
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
-        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
+        expect(screen.getByLabelText('Grower Account ID')).toBeInTheDocument();
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/wallet/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/tag/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
 
-        // expect(screen.getByLabelText(/submit/i)).toBeInTheDocument();
-
-        // expect(screen.getByLabelText(/reset/i)).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: /apply/i })
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: /reset/i })
+        ).toBeInTheDocument();
       });
 
       it('can click the dropdown to see the tag options', async () => {
         // const filter = screen.getByRole('button', { name: /filter/i });
         // userEvent.click(filter);
 
-        const dropdown = screen.getByTestId('tag-dropdown');
+        const dropdown = await screen.findByTestId('tag-dropdown');
         expect(dropdown).toBeInTheDocument();
 
-        const open = screen.getByRole('button', { name: /open/i });
+        const open = await screen.findByRole('button', { name: /open/i });
         userEvent.click(open);
 
         const optionList = await screen.findByRole('presentation');
@@ -212,23 +214,26 @@ describe('tags', () => {
         // screen.logTestingPlaygroundURL();
         const options = await screen.findAllByRole('option');
         const tags = options.map((option) => option.textContent);
-        console.log('tags', tags);
-
-        expect(tags[0]).toBe('tag_a');
-        expect(tags[1]).toBe('tag_b');
-        expect(screen.getByText(/tag_a/i)).toBeInTheDocument();
-        expect(screen.getByText(/tag_b/i)).toBeInTheDocument();
+        log.debug('tags', tags);
+        await waitFor(() => {
+          expect(tags[0]).toBe('tag_a');
+          expect(tags[1]).toBe('tag_b');
+          expect(screen.getByText(/tag_a/i)).toBeInTheDocument();
+          expect(screen.getByText(/tag_b/i)).toBeInTheDocument();
+        });
       });
 
       it('can enter a search tag', async () => {
         // const filter = screen.getByRole('button', { name: /filter/i });
         // userEvent.click(filter);
 
-        const input = screen.getByRole('textbox', { name: /tag/i });
+        const input = await screen.findByRole('textbox', { name: /tag/i });
         expect(input).toBeInTheDocument();
         userEvent.type(input, 'something{enter}');
 
-        expect(screen.getByDisplayValue('something')).toBeInTheDocument();
+        expect(
+          await screen.findByDisplayValue('something')
+        ).toBeInTheDocument();
       });
     });
     //}}}
@@ -262,8 +267,8 @@ describe('tags', () => {
   //     });
 
   //     it('tags are sorted alphabetically', () => {
-  //       const tagNames = TagsContext.tagList.map((el) => el.tagName);
-  //       expect(tagNames).toStrictEqual(['tag_a', 'tag_b']);
+  //       const tagName = TagsContext.tagList.map((el) => el.name);
+  //       expect(tagName).toStrictEqual(['tag_a', 'tag_b']);
   //     });
   //   });
 
@@ -274,7 +279,7 @@ describe('tags', () => {
   //     });
 
   //     it('api.createTag should be called with newly_created_tag', () => {
-  //       console.log('createTag mock calls 1', api.createTag.mock.calls);
+  //       log.debug('createTag mock calls 1', api.createTag.mock.calls);
   //       // screen.logTestingPlaygroundURL();
   //       expect(api.createTag.mock.calls[0][0]).toBe('newly_created_tag');
   //     });

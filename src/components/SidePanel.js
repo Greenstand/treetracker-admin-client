@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SidePanel(props) {
-  // console.log('render: sidepanel');
+  // log.debug('render: sidepanel');
   const DEFAULT_SWITCH_APPROVE = 0;
   const DEFAULT_MORPHOLOGY = 'seedling';
   const DEFAULT_AGE = 'new_tree';
@@ -119,6 +119,7 @@ function SidePanel(props) {
 
   return (
     <Drawer
+      data-testid="sidepanel"
       variant="permanent"
       anchor="right"
       className={classes.sidePanel}
@@ -209,7 +210,7 @@ function SidePanel(props) {
                   />
                 </RadioGroup>
               </Grid>
-              <Grid
+              {/* <Grid
                 className={`${classes.bottomLine} ${classes.sidePanelItem}`}
               >
                 <Typography variant="h6">Age</Typography>
@@ -227,27 +228,32 @@ function SidePanel(props) {
                     label="> 2 years old"
                   />
                 </RadioGroup>
-              </Grid>
+              </Grid> */}
               {/*
-        <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
-          <RadioGroup className={classes.radioGroup}>
-            <FormControlLabel disabled value='Create token' control={<Radio/>} label='Create token' />
-            <FormControlLabel disabled value='No token' control={<Radio/>} label='No token' />
-          </RadioGroup>
-        </Grid>
-        */}
+              <Grid className={`${classes.bottomLine} ${classes.sidePanelItem}`}>
+                <RadioGroup className={classes.radioGroup}>
+                  <FormControlLabel disabled value='Create token' control={<Radio/>} label='Create token' />
+                  <FormControlLabel disabled value='No token' control={<Radio/>} label='No token' />
+                </RadioGroup>
+              </Grid>
+              */}
+
               <Grid>
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Species (if known)
                 </Typography>
                 <Species />
               </Grid>
-              <Grid>
+              <Grid data-testid="capture-tags">
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Additional tags
                 </Typography>
                 <CaptureTags placeholder="Add other text tags" />
-                <br />
+              </Grid>
+              <Grid>
+                <Typography className={classes.sidePanelItem} variant="h6">
+                  Approval Tag
+                </Typography>
               </Grid>
               <RadioGroup
                 className={classes.sidePanelItem}
@@ -353,12 +359,12 @@ function SidePanel(props) {
                   label="Flag capture for contact/review"
                 />
               </RadioGroup>
-              <Grid className={classes.mb}>
+              {/* <Grid className={classes.mb}>
                 <Typography className={classes.sidePanelItem} variant="h6">
                   Additional tags
                 </Typography>
                 <CaptureTags placeholder="Add other text tags" />
-              </Grid>
+              </Grid> */}
             </>
           )}
         </Grid>

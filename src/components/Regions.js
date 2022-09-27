@@ -136,10 +136,8 @@ const RegionTable = (props) => {
   useEffect(() => {
     if (!openDelete && !openEdit) {
       // Wait for the dialog to disappear before clearing the selected item.
-      setTimeout(() => {
-        setSelectedItem(undefined);
-        setIsUpload(false);
-      }, 300);
+      setSelectedItem(undefined);
+      setIsUpload(false);
     }
   }, [openDelete, openEdit]);
 

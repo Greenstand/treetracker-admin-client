@@ -1,6 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { act, render, screen, within, cleanup } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  within,
+  cleanup,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
 import CaptureFilter from '../CaptureFilter';
@@ -15,10 +22,10 @@ describe('CaptureFilter organizations', () => {
   beforeEach(() => {
     //mock the api
 
-    api.getOrganizations = () => {
+    api.getOrganizations = jest.fn(() => {
       // log.debug('mock getOrganizations:');
       return Promise.resolve(ORGS);
-    };
+    });
   });
 
   describe('CaptureFilter', () => {
@@ -33,8 +40,8 @@ describe('CaptureFilter organizations', () => {
 
       afterEach(cleanup);
 
-      it('renders text "Verification Status" ', () => {
-        expect(screen.getByText('Verification Status')).toBeInTheDocument();
+      it('renders text "Token Status" ', () => {
+        expect(screen.getByText('Token Status')).toBeInTheDocument();
       });
 
       it('renders "Start Date" input ', () => {
@@ -62,8 +69,8 @@ describe('CaptureFilter organizations', () => {
         expect(dropdown).toBeInTheDocument();
       });
 
-      it('renders default orgList when dropdown clicked ', () => {
-        const dropdown = screen.getByTestId('org-dropdown');
+      it('renders default orgList when dropdown clicked ', async () => {
+        const dropdown = await screen.findByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
         const button = within(dropdown).getByRole('button', {
@@ -74,10 +81,10 @@ describe('CaptureFilter organizations', () => {
 
         // the actual list of orgs is displayed in a popup that is not part of CaptureFilter
         // this list is the default list
-        const orglist = screen.getByRole('listbox');
+        const orglist = await screen.findByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         expect(orgs).toHaveLength(2);
       });
@@ -108,8 +115,8 @@ describe('CaptureFilter organizations', () => {
         expect(dropdown).toBeInTheDocument();
       });
 
-      it('renders default orgList when dropdown clicked ', () => {
-        const dropdown = screen.getByTestId('org-dropdown');
+      it('renders default orgList when dropdown clicked ', async () => {
+        const dropdown = await screen.findByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
         const button = within(dropdown).getByRole('button', { name: /all/i });
@@ -119,13 +126,22 @@ describe('CaptureFilter organizations', () => {
         // screen.logTestingPlaygroundURL();
 
         // the actual list of orgs is displayed in a popup that is not part of CaptureFilter
-        const orglist = screen.getByRole('listbox');
+        const orglist = await screen.findByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);
+      });
+
+      it('api loaded 2 organizations', async () => {
+        await waitFor(async () => {
+          const orgs = await api.getOrganizations.mock.results[0].value;
+          // log.debug('MOCK CALLS --->', orgs);
+          expect(orgs).toHaveLength(2);
+          expect(orgs[0].name).toBe('Dummy Org');
+        });
       });
     });
 
@@ -133,25 +149,26 @@ describe('CaptureFilter organizations', () => {
       beforeEach(async () => {
         render(
           <AppProvider>
-            <AppContext.Consumer>
-              {(value) => <p>Received: {value.orgList}</p>}
-            </AppContext.Consumer>
+            {(value) => (
+              <div>
+                Received:{' '}
+                {value.orgList.map((org) => (
+                  <p>{org.name}</p>
+                ))}
+              </div>
+            )}
           </AppProvider>
         );
 
         await act(() => api.getOrganizations());
       });
 
-      // just tests the mock api, not what's showing on the page
-      it('api loaded 2 organizations', () => {
-        expect(orgs).toHaveLength(2);
-      });
-
-      it('renders text "Dummy Org" ', () => {
-        // screen.debug(); // shows structure in console
-        screen.logTestingPlaygroundURL();
-        // expect(screen.getByText(/^Received:/).textContent).toBe('Received: ');
-        expect(screen.getByText('Dummy Org')).toBeInTheDocument();
+      it('renders text "Dummy Org" ', async () => {
+        await waitFor(async () => {
+          screen.logTestingPlaygroundURL();
+          expect(screen.getByText('Received:')).toBeInTheDocument();
+          expect(screen.getByText('Dummy Org')).toBeInTheDocument();
+        });
       });
     });
   });

@@ -66,6 +66,10 @@ describe('captureDetail', () => {
 
       await act(() => api.getCaptureById());
       await act(() => context.getCaptureDetail());
+
+      // await act(
+      //   async () => await api.getCaptureById('11942400-6617-4c6c-bf5e')
+      // );
     });
 
     afterEach(cleanup);
@@ -75,7 +79,7 @@ describe('captureDetail', () => {
         // screen.logTestingPlaygroundURL();
         expect(screen.findByText(/capture data/i));
         expect(screen.findByText(/capture token/i));
-        expect(screen.findByText(/grower@some.place/i));
+        expect(screen.findByText(/grower1@some.place/i));
         expect(screen.findByText(/new_tree/i));
         expect(screen.findByText(/simple_leaf/i));
       });

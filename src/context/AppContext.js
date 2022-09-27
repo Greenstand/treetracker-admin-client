@@ -34,7 +34,8 @@ import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
-import api from '../api/treeTrackerApi';
+// import api from '../api/treeTrackerApi';
+import stakeholder_api from '../api/stakeholders';
 import RegionsView from 'views/RegionsView';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
@@ -302,8 +303,21 @@ export const AppProvider = (props) => {
   }
 
   async function loadOrganizations() {
-    const orgs = await api.getOrganizations();
-    setOrgList(orgs);
+    // const orgs = await api.getOrganizations();
+    const { stakeholders } = await stakeholder_api.getStakeholders();
+    const results = [];
+    stakeholders.forEach((s) => {
+      // const org = orgs.find((o) => s.id === o.stakeholder_uuid);
+      // if (org) {
+      results.push({
+        id: s.id,
+        stakeholder_uuid: s.id,
+        name: s.org_name || s.first_name + ' ' + s.last_name,
+        type: s.type,
+      });
+      // }
+    });
+    setOrgList(results);
   }
 
   async function updateSelectedFilter(filters) {
@@ -327,7 +341,6 @@ export const AppProvider = (props) => {
     checkSession();
   }
 
-  // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
     <AppContext.Provider value={value}>
       <MessagingProvider>{props.children}</MessagingProvider>

@@ -78,9 +78,9 @@ describe('FilterTop organizations', () => {
         expect(dropdown).toBeInTheDocument();
       });
 
-      it('renders default orgList when dropdown clicked ', () => {
+      it('renders default orgList when dropdown clicked ', async () => {
         render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        let dropdown = await screen.findByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
         let button = within(dropdown).getByRole('button', {
@@ -91,10 +91,10 @@ describe('FilterTop organizations', () => {
 
         // the actual list of orgs is displayed in a popup that is not part of FilterTop
         // this list is the default list
-        const orglist = screen.getByRole('listbox');
+        const orglist = await screen.findByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         expect(orgs).toHaveLength(2);
       });
@@ -127,9 +127,9 @@ describe('FilterTop organizations', () => {
         expect(dropdown).toBeInTheDocument();
       });
 
-      it('renders default orgList when dropdown clicked ', () => {
+      it('renders default orgList when dropdown clicked ', async () => {
         render(component);
-        let dropdown = screen.getByTestId('org-dropdown');
+        let dropdown = await screen.findByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
 
         let button = within(dropdown).getByRole('button', { name: /all/i });
@@ -139,10 +139,10 @@ describe('FilterTop organizations', () => {
         // screen.logTestingPlaygroundURL();
 
         // the actual list of orgs is displayed in a popup that is not part of FilterTop
-        const orglist = screen.getByRole('listbox');
+        const orglist = await screen.findByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);

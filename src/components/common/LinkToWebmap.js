@@ -13,14 +13,18 @@ export default function LinkToWebmap(props) {
   const { value, type } = props;
   const classes = useStyles();
 
+  //the web map needs the id for the request but we want to display the reference_id
+  const urlId = value?.id || value;
+  const displayId = value?.reference_id || value;
+
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
-      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${value}`}
+      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${urlId}`}
       underline="always"
       target="_blank"
     >
-      {value}
+      {displayId?.length > 7 ? `${displayId.slice(0, 7)}...` : displayId}
       <OpenInNewIcon fontSize="inherit" className={classes.openInNewIcon} />
     </Link>
   );

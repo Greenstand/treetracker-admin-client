@@ -400,7 +400,7 @@ const EditModal = ({
   };
 
   const handleSave = async () => {
-    // console.log('speciesEdit -- ', speciesEdit);
+    // log.debug('speciesEdit -- ', speciesEdit);
     const editName = speciesEdit.name.toLowerCase().trim();
     const otherSpeciesList = isEdit
       ? data.filter((species) => Number(species.id) !== speciesEdit.id)

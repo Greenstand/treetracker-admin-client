@@ -1,5 +1,11 @@
-import { handleResponse, handleError, getOrganizationId } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganizationId,
+  // getOrganization,
+} from './apiUtils';
 import { session } from '../models/auth';
+import FilterModel from '../models/FilterStakeholder';
 const log = require('loglevel').getLogger('../api/stakeholders');
 
 const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
@@ -19,7 +25,7 @@ function removeEmptyValues(obj) {
 }
 
 export default {
-  getStakeholders(id, filter) {
+  getStakeholders(id, filter = new FilterModel()) {
     try {
       const orgId = id || getOrganizationId();
 

@@ -33,6 +33,10 @@ const log = loglevel.getLogger('../models/captures.test');
 
 jest.mock('axios');
 
+const setState = jest.fn();
+const useStateMock = (initialState) => [initialState, setState];
+jest.spyOn(React, 'useState').mockImplementation(useStateMock);
+
 describe('Captures', () => {
   let component;
   let data = CAPTURES;
@@ -41,13 +45,13 @@ describe('Captures', () => {
   const captureApi = require('../../api/treeTrackerApi').default;
 
   captureApi.getCaptureTags = () => {
-    log.debug(`mock getCaptureTags: ${CAPTURE_TAGS}`);
+    // log.debug(`mock getCaptureTags: ${JSON.stringify(CAPTURE_TAGS)}`);
     return Promise.resolve(CAPTURE_TAGS);
   };
 
   describe('CapturesTable renders properly', () => {
     beforeEach(async () => {
-      component = (
+      render(
         <ThemeProvider theme={theme}>
           <CapturesContext.Provider value={capturesValues}>
             <SpeciesContext.Provider value={speciesValues}>
@@ -59,13 +63,12 @@ describe('Captures', () => {
         </ThemeProvider>
       );
 
-      render(component);
+      await act(async () => await captureApi.getCaptureTags());
     });
 
-    afterEach(cleanup);
+    // afterEach(cleanup);
 
     it('api loaded 4 captures', () => {
-      // screen.logTestingPlaygroundURL();
       expect(capturesValues.captures).toHaveLength(4);
     });
 
@@ -77,6 +80,8 @@ describe('Captures', () => {
     });
 
     it('should show page # and capture count', () => {
+      // screen.logTestingPlaygroundURL();
+      expect(screen.getAllByText(/1\-4 of 4/i)).toHaveLength(2);
       const counts = Array.from(
         document.querySelectorAll('.MuiTablePagination-caption')
       );
@@ -95,13 +100,11 @@ describe('Captures', () => {
       const table = screen.getByRole(/table/i);
       let item = screen.getAllByText(/Captures/i)[0];
       expect(item).toBeInTheDocument();
-      item = within(table).getByText(/Capture ID/i);
-      expect(item).toBeInTheDocument();
-      item = within(table).getByText(/Grower ID/i);
+      item = within(table).getByText(/Grower Acct. ID/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Device Identifier/i);
       expect(item).toBeInTheDocument();
-      item = within(table).getByText(/Planter Identifier/i);
+      item = within(table).getByText(/Grower Wallet/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Verification Status/i);
       expect(item).toBeInTheDocument();
@@ -110,6 +113,8 @@ describe('Captures', () => {
       item = within(table).getByText(/Token Id/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Capture Tags/i);
+      expect(item).toBeInTheDocument();
+      item = within(table).getByText(/Notes/i);
       expect(item).toBeInTheDocument();
       item = within(table).getByText(/Created/i);
       expect(item).toBeInTheDocument();
@@ -128,23 +133,25 @@ describe('Captures', () => {
       expect(rows).toHaveLength(4);
     });
 
-    it('renders links for planter ids (10-12)', () => {
+    it('renders links for planter ids', () => {
       const table = screen.getByTestId('captures-table-body');
       const links = within(table).getAllByRole('link');
       const arr = links.map((link) => link.textContent);
-      expect(arr.includes('10')).toBeTruthy();
-      expect(arr.includes('11')).toBeTruthy();
-      expect(arr.includes('12')).toBeTruthy();
+
+      expect(arr.includes('100')).toBeTruthy();
+      expect(arr.includes('110')).toBeTruthy();
+      expect(arr.includes('120')).toBeTruthy();
+      expect(arr.includes('101')).toBeTruthy();
     });
 
     it('displays captures data', () => {
       const table = screen.getByTestId('captures-table-body');
-      const status = within(table).getAllByText(/approved/i);
+      const status = within(table).getAllByText(/grower3@some.place/i);
       expect(status).toHaveLength(2);
       const device = within(table).getAllByText(/1-abcdef123456/i);
       expect(device).toHaveLength(1);
-      const captureTag = within(table).getAllByText(/tag_c/i);
-      expect(captureTag).toHaveLength(4);
+      // const captureTag = within(table).getAllByText(/tag_c/i);
+      // expect(captureTag).toHaveLength(4);
     });
   });
 
@@ -165,8 +172,7 @@ describe('Captures', () => {
       filter: new FilterModel(),
       // queryCapturesApi: jest.fn(),
       queryCapturesApi: () => {},
-      getCaptureCount: () => {},
-      getCapturesAsync: () => {},
+      getCaptures: () => {},
     };
 
     // Mock the API
@@ -180,7 +186,7 @@ describe('Captures', () => {
 
     // PASSES TESTS BUT STILL DOESN'T RETURN DATA
     context.queryCapturesApi = jest.fn(() => {
-      console.log('mock queryCapturesApi');
+      log.debug('mock queryCapturesApi');
       // return Promise.resolve({ data });
       return axios.get
         .mockReturnValueOnce({
@@ -190,7 +196,7 @@ describe('Captures', () => {
     });
 
     context.queryCapturesApi = jest.fn(() => {
-      console.log('mock queryCapturesApi');
+      log.debug('mock queryCapturesApi');
       // return Promise.resolve({ data });
       return axios.get
         .mockReturnValueOnce({
@@ -218,7 +224,7 @@ describe('Captures', () => {
 
     it('should make a request for capture count', () => {
       expect(axios.get).toHaveBeenCalled();
-      // console.log(axios.get.mock.calls);
+      // log.debug(axios.get.mock.calls);
       expect(axios.get.mock.calls[1][0]).toContain(`trees/count?`);
     });
 

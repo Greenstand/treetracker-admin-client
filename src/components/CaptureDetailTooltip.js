@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -24,10 +24,10 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       marginLeft: '12px',
     },
   }));
-  const [speciesName, setSpeciesName] = React.useState();
+  const [speciesName, setSpeciesName] = useState();
   const { speciesList } = useContext(SpeciesContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSpeciesName('');
     if (capture?.speciesId) {
       const currentSpecies = () => {
@@ -57,27 +57,27 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
                 </Typography>
               </Box>
             )}
-            {capture.id && (
+            {capture.reference_id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Nature color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.id}
+                  {capture.reference_id}
                 </Typography>
               </Box>
             )}
-            {capture.planterId && (
+            {capture.grower_account_id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Person color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.planterId}
+                  {capture.grower_account_id}
                 </Typography>
               </Box>
             )}
-            {capture.planterIdentifier && (
+            {capture.wallet && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Badge color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.planterIdentifier}
+                  {capture.wallet}
                 </Typography>
               </Box>
             )}
@@ -85,7 +85,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
               <Box className={CaptureDetailTooltipStyles.box}>
                 <AccessTime color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {getDateTimeStringLocale(capture.timeCreated)}
+                  {getDateTimeStringLocale(capture.created_at)}
                 </Typography>
               </Box>
             }
