@@ -385,11 +385,14 @@ export default function StakeholderDialogHeader({
                   onKeyDown={handleEnterPress}
                 />
               ) : (
-                <Typography className={classes.fields}>
-                  <Link href={details?.website} target="_blank">
-                    {details?.website}
-                  </Link>
-                </Typography>
+                <Link
+                  className={classes.fields}
+                  variant="body1"
+                  href={details?.website}
+                  target="_blank"
+                >
+                  {details?.website}
+                </Link>
               )}
             </Grid>
             <Grid
@@ -415,14 +418,14 @@ export default function StakeholderDialogHeader({
               ) : (
                 <>
                   {details?.map && (
-                    <Typography className={classes.fields}>
-                      <Link
-                        href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${details.map}`}
-                        target="_blank"
-                      >
-                        {details.map}
-                      </Link>
-                    </Typography>
+                    <Link
+                      variant="body1"
+                      className={classes.fields}
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${details.map}`}
+                      target="_blank"
+                    >
+                      {details.map}
+                    </Link>
                   )}
                 </>
               )}
