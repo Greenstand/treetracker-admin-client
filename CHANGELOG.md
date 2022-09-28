@@ -1,3 +1,10 @@
+## [1.107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.2...v1.107.3) (2022-09-28)
+
+
+### Bug Fixes
+
+* specify react version 18 ([#848](https://github.com/Greenstand/treetracker-admin-client/issues/848)) ([b8c4d09](https://github.com/Greenstand/treetracker-admin-client/commit/b8c4d09c84deb73410bf51960d5b422582921adc))
+
 ## [1.107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.1...v1.107.2) (2022-09-23)
 
 
