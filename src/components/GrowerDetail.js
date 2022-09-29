@@ -16,6 +16,7 @@ import {
   Drawer,
   Divider,
   LinearProgress,
+  CircularProgress,
   Fab,
 } from '@material-ui/core';
 import {
@@ -131,6 +132,11 @@ const useStyle = makeStyles((theme) => ({
   paper: {
     width: GROWER_IMAGE_SIZE,
   },
+  spinner: {
+    position: 'fixed',
+    top: `${GROWER_IMAGE_SIZE / 2}px`,
+    right: `${GROWER_IMAGE_SIZE / 2}px`,
+  },
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
@@ -147,6 +153,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
@@ -157,6 +164,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         setDeviceIdentifiers([]);
       }
       if (growerId) {
+        setIsImageLoading(true);
         let match;
         if (isNaN(Number(growerId))) {
           match = await getGrower({
@@ -351,18 +359,29 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.imageContainer}>
-                {grower?.imageUrl && (
-                  <OptimizedImage
-                    src={grower.imageUrl}
-                    width={GROWER_IMAGE_SIZE}
-                    height={GROWER_IMAGE_SIZE}
-                    className={classes.cardMedia}
-                    fixed
-                    rotation={grower.imageRotation}
-                    alertTitleSize="1.6rem"
-                    alertTextSize="1rem"
-                    alertHeight="50%"
-                  />
+                {loading ? (
+                  <CircularProgress className={classes.spinner} />
+                ) : (
+                  <>
+                    {isImageLoading && grower?.imageUrl && (
+                      <CircularProgress className={classes.spinner} />
+                    )}
+
+                    <OptimizedImage
+                      src={grower.imageUrl}
+                      width={GROWER_IMAGE_SIZE}
+                      height={GROWER_IMAGE_SIZE}
+                      className={classes.cardMedia}
+                      fixed
+                      rotation={grower.imageRotation}
+                      alertTitleSize="1.6rem"
+                      alertTextSize="1rem"
+                      alertHeight="50%"
+                      onImageReady={() => {
+                        setIsImageLoading(false);
+                      }}
+                    />
+                  </>
                 )}
                 {!grower.imageUrl && (
                   <CardMedia className={classes.cardMedia}>

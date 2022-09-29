@@ -18,6 +18,7 @@ export default function OptimizedImage(props) {
     alertPosition,
     alertTextSize,
     alertTitleSize,
+    onImageReady,
     objectFit = 'cover',
     ...rest
   } = props;
@@ -72,6 +73,9 @@ export default function OptimizedImage(props) {
           srcSet={srcSet}
           sizes={sizes}
           loading="lazy"
+          onLoad={() => {
+            onImageReady && onImageReady();
+          }}
           style={{
             position: 'absolute',
             left: 0,
