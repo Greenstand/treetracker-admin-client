@@ -28,21 +28,20 @@ import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
 
-import { documentTitle } from '../../common/variables';
+import { documentTitle } from 'common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
-import { AppContext } from '../../context/AppContext';
-import { MatchingToolContext } from '../../context/MatchingToolContext';
-import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import { AppContext } from 'context/AppContext';
+import { MatchingToolContext } from 'context/MatchingToolContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 import { GrowerProvider } from 'context/GrowerContext';
-import CaptureDetailDialog from '../../components/CaptureDetailDialog';
+import CaptureDetailDialog from 'components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
 import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
-import api from '../../api/treeTrackerApi';
-import { format } from 'date-fns';
+import api from 'api/treeTrackerApi';
 import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
@@ -424,6 +423,15 @@ function CaptureMatchingView() {
     [captureImage?.latitude, captureImage?.longitude]
   );
 
+  const getGroverRegDate = () => {
+    if (Object.keys(growerAccount).length !== 0) {
+      return growerAccount.first_registration_at
+        ? 'Joined at ' +
+            getDateTimeStringLocale(growerAccount.first_registration_at)
+        : 'Joined at ' + getDateTimeStringLocale(growerAccount.created_at);
+    }
+  };
+
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
     return (
@@ -594,14 +602,7 @@ function CaptureMatchingView() {
                   <Typography variant="h5">
                     {growerAccount.first_name}
                   </Typography>
-                  <Typography variant="body1">
-                    Joined at{' '}
-                    {format(
-                      growerAccount.first_registration_at ||
-                        growerAccount.created_at,
-                      'MM/dd/yyyy'
-                    )}
-                  </Typography>
+                  <Typography variant="body1">{getGroverRegDate()}</Typography>
                 </Box>
               </Box>
             )}
