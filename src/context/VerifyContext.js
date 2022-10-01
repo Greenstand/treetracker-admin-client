@@ -155,11 +155,10 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureSelectedArr = () => {
-    return Object.keys(captureImagesSelected)
-      .filter((captureId) => {
-        return captureImagesSelected[captureId] === true;
-      })
-      .map((captureId) => parseInt(captureId));
+    return Object.keys(captureImagesSelected).filter((captureId) => {
+      return captureImagesSelected[captureId] === true;
+    });
+    // .map((captureId) => parseInt(captureId));
   };
 
   const clickCapture = (payload) => {
