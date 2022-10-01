@@ -18,6 +18,7 @@ import {
 import Species from './Species';
 import CaptureTags from './CaptureTags';
 import { VerifyContext } from 'context/VerifyContext';
+import { getDistance } from 'geolib';
 
 const SIDE_PANEL_WIDTH = 315;
 const CAP_APP_TAG = [
@@ -118,6 +119,26 @@ function SidePanel(props) {
     }
   }
 
+  function calculateLatLonDistance(capture1Id, capture2Id) {
+    let obj1 = verifyContext.captureImages.filter(
+      (capture) => capture.id == capture1Id
+    )[0];
+    let obj2 = verifyContext.captureImages.filter(
+      (capture) => capture.id == capture2Id
+    )[0];
+    const distance = getDistance(
+      {
+        latitude: Number(obj1.lat),
+        longitude: Number(obj1.lon),
+      },
+      {
+        latitude: Number(obj2.lat),
+        longitude: Number(obj2.lon),
+      }
+    );
+    return `Distance bewteen selected captures: ${distance.toLocaleString()}m`;
+  }
+
   async function handleSubmit() {
     const approveAction =
       switchApprove === 0
@@ -207,7 +228,10 @@ function SidePanel(props) {
             Select None
           </Button>
         </Box>
-
+        <Typography className={classes.subtitle}>
+          {captureSelected.length == 2 &&
+            calculateLatLonDistance(captureSelected[0], captureSelected[1])}
+        </Typography>
         <Divider />
 
         <Box mt={1}>
