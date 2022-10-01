@@ -1,3 +1,11 @@
+## [1.108.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0...v1.108.1) (2022-10-01)
+
+
+### Bug Fixes
+
+* capture - incorrectly formed csv file [#851](https://github.com/Greenstand/treetracker-admin-client/issues/851) ([#856](https://github.com/Greenstand/treetracker-admin-client/issues/856)) ([888fc0a](https://github.com/Greenstand/treetracker-admin-client/commit/888fc0ae00d148b12ab489fe6a3b33cce72d81c4))
+* removed download button from regions page ([#857](https://github.com/Greenstand/treetracker-admin-client/issues/857)) ([e9c205e](https://github.com/Greenstand/treetracker-admin-client/commit/e9c205eb39a533d1804f30dc8f5585fa0c028d88))
+
 # [1.108.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.3...v1.108.0) (2022-10-01)
 
 
