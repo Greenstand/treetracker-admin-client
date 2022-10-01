@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
-
-import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Modal from '@material-ui/core/Modal';
@@ -16,31 +14,32 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
+import Paper from '@material-ui/core/Paper';
+import { Box } from '@material-ui/core';
+import TablePagination from '@material-ui/core/TablePagination';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-import FilterTop from './FilterTop';
 import CheckIcon from '@material-ui/icons/Check';
-import Person from '@material-ui/icons/Person';
-import Nature from '@material-ui/icons/Nature';
-import Map from '@material-ui/icons/Map';
-import Paper from '@material-ui/core/Paper';
-import TablePagination from '@material-ui/core/TablePagination';
+import { LocationOn, Person, Nature, Map } from '@material-ui/icons';
 import Navbar from './Navbar';
 import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
+import FilterTop from './FilterTop';
 import CaptureDetailDialog from './CaptureDetailDialog';
 import OptimizedImage from './OptimizedImage';
-import { LocationOn } from '@material-ui/icons';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
+import { selectedHighlightColor, documentTitle } from '../common/variables.js';
 import { countToLocaleString } from '../common/numbers';
 import { VerifyContext } from '../context/VerifyContext';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CaptureDetailProvider } from '../context/CaptureDetailContext';
-import CaptureDetailTooltip from './CaptureDetailTooltip';
 
 const log = require('loglevel').getLogger('../components/Verify');
+const EMPTY_ARRAY = new Array(16).fill();
+const SIDE_PANEL_WIDTH = 315;
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -205,7 +204,6 @@ const Verify = (props) => {
     isOpen: false,
     growerId: {},
   });
-  const refContainer = useRef();
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
 
@@ -348,64 +346,33 @@ const Verify = (props) => {
     : [];
 
   /*=============================================================*/
+  const makeCardStyles = makeStyles(() => {
+    const WIDTH = isImagesLarge ? 350 : 250;
 
-  const [captureImageContainerWidth, setCaptureImageContainerWidth] = useState(
-    0
-  );
-  const refCaptureImageContainer = useRef(0);
+    const styles = EMPTY_ARRAY.reduce((next, _, idx) => {
+      let style = {
+        cardElement: {
+          width: `calc(100% / ${idx ? idx : 1})`,
+        },
+      };
+      const key = `@media (min-width: ${WIDTH * idx + SIDE_PANEL_WIDTH}px) 
+                      and (max-width: ${
+                        WIDTH * (idx + 1) + SIDE_PANEL_WIDTH
+                      }px)`;
+      next[key] = style;
+      return next;
+    }, {});
 
-  const handleResize = () => {
-    setCaptureImageContainerWidth(refCaptureImageContainer.current.clientWidth);
-  };
-
-  useEffect(() => {
-    handleResize();
-  }, [refCaptureImageContainer?.current?.clientWidth]);
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [window]);
-
-  // Calculate the number of captures per row based on the container width
-  // and whether large or small images are toggled
-
-  const containerWidth = captureImageContainerWidth || 100;
-  const minCaptureSize = isImagesLarge ? 350 : 250; // Shouldn't this be reversed?
-
-  const breakpoints = Array.from({ length: 16 }, (_, idx) => {
-    return minCaptureSize * (idx + 1);
+    return styles;
   });
 
-  // The index of the next breakpoint up from the container width
-  // gives the number of captures per row
-  const capturesPerRow = breakpoints.findIndex((val, idx) => {
-    if (idx === 0) {
-      return false;
-    }
-    if (
-      (idx === 1 && containerWidth <= val) ||
-      (containerWidth > breakpoints[idx - 1] && containerWidth <= val) ||
-      (containerWidth > val && idx === breakpoints.length - 1)
-    ) {
-      return true;
-    }
-    return false;
-  });
+  const cardStyles = makeCardStyles();
 
   const captureImageItems = captureImages
     .concat(placeholderImages)
     .map((capture) => {
       return (
-        <Grid
-          item
-          key={capture.id}
-          style={{
-            width: `calc(100% / ${capturesPerRow})`,
-          }}
-        >
+        <Box key={capture.id} className={cardStyles.cardElement}>
           <div
             className={clsx(
               classes.cardWrapper,
@@ -510,10 +477,9 @@ const Verify = (props) => {
               </Card>
             </Tooltip>
           </div>
-        </Grid>
+        </Box>
       );
     });
-
   /*=============================================================*/
 
   function handleFilterClick() {
@@ -603,13 +569,7 @@ const Verify = (props) => {
               )}
             </Navbar>
           </Grid>
-          <Grid
-            item
-            ref={refContainer}
-            style={{
-              overflow: 'hidden auto',
-            }}
-          >
+          <Box style={{ overflow: 'hidden auto' }}>
             <Grid container>
               <Grid
                 item
@@ -655,12 +615,7 @@ const Verify = (props) => {
                   width: '100%',
                 }}
               >
-                <Grid
-                  container
-                  className={classes.wrapper}
-                  spacing={2}
-                  ref={refCaptureImageContainer}
-                >
+                <Grid container className={classes.wrapper} spacing={2}>
                   {captureImageItems}
                 </Grid>
               </Grid>
@@ -673,7 +628,7 @@ const Verify = (props) => {
                 {imagePagination}
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Grid>
         <SidePanel
           onSubmit={handleSubmit}
