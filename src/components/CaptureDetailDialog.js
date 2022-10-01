@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CaptureDetailDialog(props) {
-  const { open, captureId, onClose } = props;
+  const { open, captureId, onClose, page } = props;
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -93,10 +93,11 @@ function CaptureDetailDialog(props) {
   const [isLoading, setIsLoading] = useState(true);
   const classes = useStyles();
 
+  // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
   useEffect(() => {
     // prevent request because it will fail without a valid id
     if (captureId) {
-      cdContext.getCaptureDetail(captureId);
+      cdContext.getCaptureDetail(captureId, page);
     }
   }, [captureId]);
 
@@ -109,11 +110,12 @@ function CaptureDetailDialog(props) {
       // map the keys from legacy to new api keys
       setRenderCapture({
         status:
+          current.status ||
           (current.active && current.approved
             ? 'approved'
             : current.active && !current.approved
             ? 'pending'
-            : 'rejected') || current.status,
+            : 'rejected'),
         id: current.id || current.uuid,
         reference_id: current.reference_id || current.id,
         grower_account_id: current.grower_account_id || current.planterId,
@@ -157,7 +159,8 @@ function CaptureDetailDialog(props) {
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags.map((t) => t.tagName),
+      ...captureTags,
+      // ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
@@ -179,8 +182,7 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture{' '}
-                  <LinkToWebmap value={capture.reference_id} type="tree" />
+                  Capture <LinkToWebmap value={capture} type="tree" />
                   <CopyButton
                     label="Capture ID"
                     value={capture.reference_id}
@@ -201,7 +203,7 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Grower ID',
+              label: 'Grower Account ID',
               value: capture.grower_account_id,
               copy: true,
               link: true,
@@ -220,7 +222,7 @@ function CaptureDetailDialog(props) {
             { label: 'Note', value: capture?.note },
             {
               label: 'Original Image URL',
-              value: capture?.image_url,
+              value: renderCapture.image_url,
               copy: true,
               link: true,
               image: true,
@@ -233,7 +235,7 @@ function CaptureDetailDialog(props) {
                   // a link is either a GrowerID (item.image == false) or OriginalImage (item.image == true)
                   item.image ? (
                     <Link
-                      href={capture?.image_url}
+                      href={renderCapture.image_url}
                       underline="always"
                       target="_blank"
                     >
@@ -275,13 +277,12 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {/* the 'planted' status is legacy, we'll interpret as 'pending' */}
-          {capture.status === 'planted' || capture.status === 'pending' ? (
+          {capture.status === 'unprocessed' ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.status === 'approved' || capture.status === 'active' ? (
+          ) : capture.status === 'approved' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}

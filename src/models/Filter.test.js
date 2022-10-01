@@ -18,20 +18,21 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should be: ', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ uuid: '11942400-6617-4c6c-bf5e' })
+      expect.objectContaining({ id: '11942400-6617-4c6c-bf5e' })
     );
   });
 
   it('getWhereObj() should be: ', () => {
-    expect(filter.getWhereObj()).toEqual(expect.objectContaining({ id: '10' }));
+    expect(filter.getWhereObj()).toEqual(
+      expect.objectContaining({ reference_id: '10' })
+    );
   });
 
   it('getWhereObj() should match: timeCreated between', () => {
     expect(filter.getWhereObj()).toEqual(
       expect.objectContaining({
-        timeCreated: {
-          between: ['2019-07-25', '2019-07-30'],
-        },
+        startDate: '2019-07-25',
+        endDate: '2019-07-30',
       })
     );
   });
@@ -63,27 +64,21 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  it('getWhereObj() should match: planterId=1', () => {
+  it('getWhereObj() should match: grower_account_id=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({
-        and: expect.arrayContaining([
-          {
-            or: [{ planterId: '1' }],
-          },
-        ]),
-      })
+      expect.objectContaining({ grower_account_id: '1' })
     );
   });
 
-  it('getWhereObj() should match: deviceIdentifier=1', () => {
+  it('getWhereObj() should match: device_identifier=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ deviceIdentifier: '1' })
+      expect.objectContaining({ device_identifier: '1' })
     );
   });
 
-  it('getWhereObj() should match: planterIdentifier=1', () => {
+  it('getWhereObj() should match: wallet=1', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ planterIdentifier: '1' })
+      expect.objectContaining({ wallet: '1' })
     );
   });
 
@@ -94,20 +89,20 @@ describe('Filter, with initial values about this filter object', () => {
     });
 
     it('loopback object should not match any [id]', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('id');
+      expect(filter.getWhereObj()).not.toHaveProperty('reference_id');
     });
     //}}}
   });
 
-  describe('set planterId = ""', () => {
+  describe('set grower_account_id = ""', () => {
     //{{{
     beforeEach(() => {
       filter.planterId = '';
     });
 
-    it('loopback object should not match any [planterId]', () => {
+    it('loopback object should not match any [grower_account_id]', () => {
       // console.error('the where:', filter.getWhereObj());
-      expect(filter.getWhereObj()).not.toHaveProperty('planterId');
+      expect(filter.getWhereObj()).not.toHaveProperty('grower_account_id');
     });
     //}}}
   });
@@ -118,8 +113,8 @@ describe('Filter, with initial values about this filter object', () => {
       filter.deviceIdentifier = '';
     });
 
-    it('loopback object should not match any deviceIdentifier', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('deviceIdentifier');
+    it('loopback object should not match any device_identifier', () => {
+      expect(filter.getWhereObj()).not.toHaveProperty('device_identifier');
     });
     //}}}
   });
@@ -144,7 +139,7 @@ describe('Filter, with initial values about this filter object', () => {
 
     it('should be lte', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { lte: '2019-07-30' } })
+        expect.objectContaining({ endDate: '2019-07-30' })
       );
     });
     //}}}
@@ -158,7 +153,7 @@ describe('Filter, with initial values about this filter object', () => {
 
     it('should be gte', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ timeCreated: { gte: '2019-07-25' } })
+        expect.objectContaining({ startDate: '2019-07-25' })
       );
     });
     //}}}
