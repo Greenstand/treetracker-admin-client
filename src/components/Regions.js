@@ -265,11 +265,6 @@ const RegionTable = (props) => {
           </>
         )}
         <TableCell align="right" className={classes.operations}>
-          {!showCollections && (
-            <IconButton title="download" onClick={() => handleDownload(item)}>
-              <GetApp />
-            </IconButton>
-          )}
           <IconButton
             title="edit"
             onClick={() => handleEdit(item, showCollections)}
