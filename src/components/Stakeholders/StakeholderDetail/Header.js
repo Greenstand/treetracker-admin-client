@@ -1,22 +1,23 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   FormControl,
-  TextField,
   Grid,
   Link,
   MenuItem,
+  TextField,
   Typography,
 } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
+
+import EmailIcon from '@material-ui/icons/Email';
+import IdIcon from '@material-ui/icons/Money';
+import MapIcon from '@material-ui/icons/Map';
 import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
-import EmailIcon from '@material-ui/icons/Email';
-import MapIcon from '@material-ui/icons/Map';
-import WebsiteIcon from '@material-ui/icons/Language';
-import IdIcon from '@material-ui/icons/Money';
-import TypeIcon from '@material-ui/icons/Category';
 import { StakeholdersContext } from '../../../context/StakeholdersContext';
+import TypeIcon from '@material-ui/icons/Category';
+import WebsiteIcon from '@material-ui/icons/Language';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   logoLg: {
@@ -384,11 +385,14 @@ export default function StakeholderDialogHeader({
                   onKeyDown={handleEnterPress}
                 />
               ) : (
-                <Typography className={classes.fields}>
-                  <Link href={details?.website} target="_blank">
-                    {details?.website}
-                  </Link>
-                </Typography>
+                <Link
+                  className={classes.fields}
+                  variant="body1"
+                  href={details?.website}
+                  target="_blank"
+                >
+                  {details?.website}
+                </Link>
               )}
             </Grid>
             <Grid
@@ -412,11 +416,18 @@ export default function StakeholderDialogHeader({
                   onKeyDown={handleEnterPress}
                 />
               ) : (
-                <Typography className={classes.fields}>
-                  <Link href={details?.map} target="_blank">
-                    {details?.map}
-                  </Link>
-                </Typography>
+                <>
+                  {details?.map && (
+                    <Link
+                      variant="body1"
+                      className={classes.fields}
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${details.map}`}
+                      target="_blank"
+                    >
+                      {details.map}
+                    </Link>
+                  )}
+                </>
               )}
             </Grid>
           </Grid>

@@ -22,12 +22,12 @@ describe('tags', () => {
     //mock the api
     api = require('../../api/treeTrackerApi').default;
     // VERIFY CONTEXT
-    api.getCaptureImages = jest.fn(() => Promise.resolve([{ id: '1' }]));
+    api.getRawCaptures = jest.fn(() => Promise.resolve([{ id: '1' }]));
 
     // TAGS CONTEXT
     api.getTags = jest.fn((filter) => {
       log.debug('mock getTags:');
-      return Promise.resolve(TAGS);
+      return Promise.resolve({ tags: TAGS });
     });
 
     tagsValues.setTagInput = jest.fn((filter) => {
@@ -39,9 +39,9 @@ describe('tags', () => {
       log.debug('mock createTag');
       return Promise.resolve({
         id: 2,
-        tagName: 'new_tag',
-        public: true,
-        active: true,
+        name: 'new_tag',
+        isPublic: true,
+        owner_id: null,
       });
     });
   });

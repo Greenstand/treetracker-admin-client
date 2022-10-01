@@ -153,7 +153,7 @@ const CaptureTable = () => {
     }
     // Get the capture tags for all of the displayed captures
     const captureTags = await api.getCaptureTags({
-      captureIds: captures.map((c) => c.id),
+      captureIds: captures.map((c) => c.uuid),
     });
 
     // Populate a lookup for quick access when rendering the table
@@ -182,7 +182,7 @@ const CaptureTable = () => {
   const populateTagLookup = async () => {
     let tags = {};
     tagsContext.tagList.forEach((t) => {
-      tags[t.id] = t.tagName;
+      tags[t.id] = t.name;
     });
     setTagLookup(tags);
   };
@@ -327,7 +327,7 @@ const CaptureTable = () => {
               >
                 <TableRow
                   key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.id)}
+                  onClick={createToggleDrawerHandler(capture.uuid)}
                   className={classes.tableRow}
                 >
                   {columns.map(({ attr, renderer }, i) => (
@@ -356,6 +356,7 @@ const CaptureTable = () => {
           open={captureDetail.isDetailsPaneOpen}
           captureId={captureDetail.id}
           onClose={closeDrawer}
+          page={'CAPTURES'}
         />
       </CaptureDetailProvider>
     </Grid>

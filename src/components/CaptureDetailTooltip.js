@@ -49,7 +49,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
       >
         <CardActionArea>
           <Container>
-            {capture?.speciesId && (
+            {capture?.species_id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Category color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
@@ -57,27 +57,27 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
                 </Typography>
               </Box>
             )}
-            {capture.id && (
+            {capture.reference_id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Nature color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.id}
+                  {capture.reference_id}
                 </Typography>
               </Box>
             )}
-            {capture.planterId && (
+            {capture.grower_account_id && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Person color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.planterId}
+                  {capture.grower_account_id}
                 </Typography>
               </Box>
             )}
-            {capture.planterIdentifier && (
+            {capture.wallet && (
               <Box className={CaptureDetailTooltipStyles.box}>
                 <Badge color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.planterIdentifier}
+                  {capture.wallet}
                 </Typography>
               </Box>
             )}
@@ -85,7 +85,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
               <Box className={CaptureDetailTooltipStyles.box}>
                 <AccessTime color="primary" />
                 <Typography className={CaptureDetailTooltipStyles.label}>
-                  {getDateTimeStringLocale(capture.timeCreated)}
+                  {getDateTimeStringLocale(capture.captured_at)}
                 </Typography>
               </Box>
             }

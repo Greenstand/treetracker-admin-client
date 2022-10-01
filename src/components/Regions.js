@@ -28,7 +28,7 @@ import {
   Snackbar,
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
-import { Edit, Close, Delete, Map } from '@material-ui/icons';
+import { Edit, Close, GetApp, Delete, Map } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 import { AppContext } from '../context/AppContext';
@@ -133,7 +133,6 @@ const RegionTable = (props) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMesssage] = useState('');
-
   useEffect(() => {
     if (!openDelete && !openEdit) {
       // Wait for the dialog to disappear before clearing the selected item.
@@ -181,6 +180,25 @@ const RegionTable = (props) => {
   const handleUploadClick = () => {
     setIsUpload(true);
     setOpenEdit(true);
+  };
+
+  const handleDownload = async (item) => {
+    const query = `${process.env.REACT_APP_REGION_API_ROOT}/${item.shape}`;
+    console.log('item', item);
+    const result = await fetch(query, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        // Authorization: session.token,
+      },
+    });
+    if (!result.ok) {
+      console.error(
+        `There has been an error status ${result.status} on a fetch request to ${query}`
+      );
+      return;
+    }
+    location.replace(result.url);
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -247,6 +265,11 @@ const RegionTable = (props) => {
           </>
         )}
         <TableCell align="right" className={classes.operations}>
+          {!showCollections && (
+            <IconButton title="download" onClick={() => handleDownload(item)}>
+              <GetApp />
+            </IconButton>
+          )}
           <IconButton
             title="edit"
             onClick={() => handleEdit(item, showCollections)}

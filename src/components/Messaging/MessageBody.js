@@ -383,7 +383,9 @@ const SenderInformation = ({
           type === 'announce') && (
           <>
             <Typography align="left" color="primary">
-              <b>DATE:</b> {format(message?.composed_at, 'yyyy/MM/dd')}
+              <b>DATE:</b>
+              {message?.composed_at &&
+                format(new Date(message.composed_at), 'yyyy/MM/dd')}
             </Typography>
             {message?.bulk_message_recipients &&
               message.bulk_message_recipients.map((recipient, i) => (
@@ -426,7 +428,7 @@ const SenderInformation = ({
           <Badge
             badgeContent={responseCount}
             color="secondary"
-            overlap="circle"
+            overlap="circular"
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right',
