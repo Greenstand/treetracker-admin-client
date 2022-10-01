@@ -11,6 +11,7 @@ import {
   Drawer,
   Box,
   Link,
+  CircularProgress,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
@@ -82,6 +83,9 @@ const useStyles = makeStyles((theme) => ({
   itemValue: {
     lineHeight: 1.7,
   },
+  spinner: {
+    position: 'fixed',
+  },
 }));
 
 function CaptureDetailDialog(props) {
@@ -91,6 +95,7 @@ function CaptureDetailDialog(props) {
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [renderCapture, setRenderCapture] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const classes = useStyles();
 
   // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
@@ -139,6 +144,7 @@ function CaptureDetailDialog(props) {
     if (isLoading) {
       setIsLoading(false);
     }
+    setIsImageLoading(true);
   }, [cdContext.capture]);
 
   useEffect(() => {
@@ -356,13 +362,26 @@ function CaptureDetailDialog(props) {
           }}
           maxWidth="md"
         >
-          <OptimizedImage
-            src={renderCapture?.image_url}
-            width={window.innerHeight * 0.9}
-            style={{ maxWidth: '100%' }}
-            objectFit="contain"
-            fixed
-          />
+          {isLoading ? (
+            <CircularProgress className={classes.spinner} />
+          ) : (
+            <>
+              {isImageLoading && (
+                <CircularProgress className={classes.spinner} />
+              )}
+
+              <OptimizedImage
+                src={renderCapture?.image_url}
+                width={window.innerHeight * 0.9}
+                style={{ maxWidth: '100%' }}
+                objectFit="contain"
+                fixed
+                onImageReady={() => {
+                  setIsImageLoading(false);
+                }}
+              />
+            </>
+          )}
         </Dialog>
         <Drawer
           anchor="right"
