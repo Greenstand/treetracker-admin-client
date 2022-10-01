@@ -1,3 +1,17 @@
+# [1.108.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.3...v1.108.0) (2022-10-01)
+
+
+### Bug Fixes
+
+* add REACT_APP_WEBMAP_DOMAIN in the link ([#830](https://github.com/Greenstand/treetracker-admin-client/issues/830)) ([67f1dec](https://github.com/Greenstand/treetracker-admin-client/commit/67f1decda47eb28bec8c4d17d165f42572319dd1))
+* add spinner to prevent previous capture appearance ([#827](https://github.com/Greenstand/treetracker-admin-client/issues/827)) ([c399ad4](https://github.com/Greenstand/treetracker-admin-client/commit/c399ad45e724bf0afc31318644279897f9d5295f))
+* grower detail - previous capture appears while new selection loads ([#842](https://github.com/Greenstand/treetracker-admin-client/issues/842)) ([#852](https://github.com/Greenstand/treetracker-admin-client/issues/852)) ([cdf12dc](https://github.com/Greenstand/treetracker-admin-client/commit/cdf12dc16e8479f19595936710cd271055f8ac63))
+
+
+### Features
+
+* update verify approve/reject links to point to new microservices ([#832](https://github.com/Greenstand/treetracker-admin-client/issues/832)) ([5530aef](https://github.com/Greenstand/treetracker-admin-client/commit/5530aef7e704be7764ee217e8a1d5d554a5781f3))
+
 ## [1.107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.2...v1.107.3) (2022-09-28)
 
 
