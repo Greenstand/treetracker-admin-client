@@ -1,4 +1,6 @@
 import React from 'react';
+import Spinner from './common/Spinner';
+import { Box } from '@material-ui/core';
 
 import ImageErrorAlert from './ImageErrorAlert';
 
@@ -19,6 +21,8 @@ export default function OptimizedImage(props) {
     alertTextSize,
     alertTitleSize,
     objectFit = 'cover',
+    loadingState,
+    setLoadingState,
     ...rest
   } = props;
 
@@ -62,28 +66,45 @@ export default function OptimizedImage(props) {
           alertTitleSize={alertTitleSize}
         />
       ) : (
-        <img
-          src={cdnUrl || src}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null;
-            currentTarget.src = null;
-          }}
-          alt=".."
-          srcSet={srcSet}
-          sizes={sizes}
-          loading="lazy"
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            margin: 'auto',
-            inset: 0,
-            objectFit,
-            maxWidth: '100%',
-            maxHeight: '100%',
-          }}
-          {...rest}
-        />
+        <>
+          {loadingState && (
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%);',
+              }}
+            >
+              <Spinner />
+            </Box>
+          )}
+          <img
+            src={cdnUrl || src}
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null;
+              currentTarget.src = null;
+            }}
+            alt=".."
+            srcSet={srcSet}
+            sizes={sizes}
+            loading="lazy"
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              margin: 'auto',
+              inset: 0,
+              objectFit,
+              maxWidth: '100%',
+              maxHeight: '100%',
+            }}
+            onLoad={() => {
+              setLoadingState && setLoadingState(false);
+            }}
+            {...rest}
+          />
+        </>
       )}
     </>
   );

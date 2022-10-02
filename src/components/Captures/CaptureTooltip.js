@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import OptimizedImage from '../OptimizedImage';
 import { Box } from '@material-ui/core';
 const CaptureTooltip = ({ capture, toggleDrawer }) => {
+  const [loading, setLoading] = useState(true);
+
   return (
     <Box>
       <OptimizedImage
@@ -12,9 +14,11 @@ const CaptureTooltip = ({ capture, toggleDrawer }) => {
         style={{
           height: '160px',
           width: '160px',
-          border: '2px solid black',
+          border: !loading && '2px solid black',
           borderRadius: '8px',
         }}
+        loadingState={loading}
+        setLoadingState={setLoading}
       />
     </Box>
   );
