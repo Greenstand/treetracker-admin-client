@@ -1,3 +1,10 @@
+## [1.108.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.1...v1.108.2) (2022-10-02)
+
+
+### Bug Fixes
+
+* select capture in verify tool ([#864](https://github.com/Greenstand/treetracker-admin-client/issues/864)) ([63e51da](https://github.com/Greenstand/treetracker-admin-client/commit/63e51da5499fddf8fb801c1345f179e4545e1f5d))
+
 ## [1.108.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0...v1.108.1) (2022-10-01)
 
 
