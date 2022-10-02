@@ -376,7 +376,7 @@ const Verify = (props) => {
           <div
             className={clsx(
               classes.cardWrapper,
-              verifyContext.captureImagesSelected[capture.reference_id]
+              verifyContext.captureImagesSelected[capture.id]
                 ? classes.cardSelected
                 : undefined,
               capture.placeholder && classes.placeholderCard
@@ -409,9 +409,9 @@ const Verify = (props) => {
               >
                 <CardContent className={classes.cardContent}>
                   <Paper className={classes.cardCheckbox} elevation={4}>
-                    {verifyContext.captureImagesSelected[
-                      capture.reference_id
-                    ] && <CheckIcon />}
+                    {verifyContext.captureImagesSelected[capture.id] && (
+                      <CheckIcon />
+                    )}
                   </Paper>
                   <OptimizedImage
                     src={capture.image_url}
