@@ -1,3 +1,10 @@
+## [1.108.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.2...v1.108.3) (2022-10-02)
+
+
+### Bug Fixes
+
+* remove grower uuid in verify tool ([#867](https://github.com/Greenstand/treetracker-admin-client/issues/867)) ([87743de](https://github.com/Greenstand/treetracker-admin-client/commit/87743de1cc308e8173f176848eeb76687e9b6618))
+
 ## [1.108.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.1...v1.108.2) (2022-10-02)
 
 
