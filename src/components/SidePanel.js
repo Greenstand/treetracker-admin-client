@@ -88,6 +88,7 @@ function SidePanel(props) {
   const classes = useStyles(props);
   const verifyContext = useContext(VerifyContext);
   const captureSelected = verifyContext.getCaptureSelectedArr();
+  const captureIdSelected = verifyContext.getCaptureSelectedIdArr();
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
@@ -136,7 +137,9 @@ function SidePanel(props) {
         longitude: Number(obj2.lon),
       }
     );
-    return `Distance bewteen selected captures: ${distance.toLocaleString()}m`;
+    return `Distance bewteen selected captures: ${(
+      Math.round(distance * 10) / 10
+    ).toLocaleString()}m`;
   }
 
   async function handleSubmit() {
@@ -229,8 +232,8 @@ function SidePanel(props) {
           </Button>
         </Box>
         <Typography className={classes.subtitle}>
-          {captureSelected.length == 2 &&
-            calculateLatLonDistance(captureSelected[0], captureSelected[1])}
+          {captureIdSelected?.length == 2 &&
+            calculateLatLonDistance(captureIdSelected[0], captureIdSelected[1])}
         </Typography>
         <Divider />
 
