@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import CloseIcon from '@material-ui/icons/Close';
 import {
   Grid,
   TableContainer,
@@ -18,6 +19,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
+  Drawer,
   FormGroup,
   FormControlLabel,
   Switch,
@@ -82,6 +85,26 @@ const styles = (theme) => ({
     height: 230,
     overflow: 'auto',
   },
+  detailsDrawer: {
+    width: theme.spacing(80),
+    overflow: 'auto',
+  },
+  itemDrawerDetails: {
+    width: theme.spacing(80),
+    padding: theme.spacing(5, 4),
+  },
+  itemRegionsDetail: {
+    padding: theme.spacing(1, 0, 0, 0),
+    color: theme.palette.stats.carbonGrey,
+  },
+  itemDetailsContentsDivider: {
+    margin: theme.spacing(4, 0, 4, 0),
+  },
+  itemDetailsCloseIcon: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.lightVery,
+  },
   button: {
     margin: theme.spacing(0.5, 0),
   },
@@ -133,6 +156,8 @@ const RegionTable = (props) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMesssage] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   useEffect(() => {
     if (!openDelete && !openEdit) {
       // Wait for the dialog to disappear before clearing the selected item.
@@ -232,7 +257,14 @@ const RegionTable = (props) => {
 
   const RegionTableRows = () => {
     return (showCollections ? collections : regions).map((item) => (
-      <TableRow key={item.id} role="listitem">
+      <TableRow
+        key={item.id}
+        role="listitem"
+        hover
+        onClick={() => {
+          setDrawerOpen(!drawerOpen);
+        }}
+      >
         {/* <TableCell>
           <Checkbox
             onChange={(e) => handleSelect(e.target.checked, region.id)}
@@ -304,6 +336,117 @@ const RegionTable = (props) => {
 
   return (
     <>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        BackdropProps={{ invisible: true }}
+        onClose={() => {
+          setDrawerOpen(false);
+        }}
+        classes={{ paper: classes.detailsDrawer }}
+      >
+        <Grid
+          container
+          direction="column"
+          className={classes.itemDrawerDetails}
+        >
+          {/* start  details header */}
+          <Grid item>
+            <Grid container direction="row" justifyContent="space-between">
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  alignContent="flex-end"
+                  justifyContent="flex-start"
+                >
+                  <Typography variant="h4">Details</Typography>
+                </Grid>
+              </Grid>
+              <CloseIcon
+                onClick={() => {
+                  setDrawerOpen(false);
+                }}
+                className={classes.itemDetailsCloseIcon}
+              />
+            </Grid>
+          </Grid>
+          {/* end details header */}
+          <Grid item className={classes.itemDetailsContents}>
+            <Grid container direction="column" justifyContent="space-around">
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>The region shape on a basic map</Typography>
+                <Typography variant="h6">Upcoming...</Typography>
+              </Grid>
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Name</Typography>
+                <Typography variant="h6">Name from API</Typography>
+              </Grid>
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Owner</Typography>
+                <Typography variant="h6">Owner from API</Typography>
+              </Grid>
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>
+                  Collection: would be a link to collection details
+                </Typography>
+                <Typography variant="h6">Link</Typography>
+              </Grid>
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Properties</Typography>
+                <Typography variant="body2">Id: </Typography>
+                <Typography variant="body2">gid: </Typography>
+                <Typography variant="body2">City</Typography>
+              </Grid>
+            </Grid>
+
+            <Divider className={classes.itemDetailsContentsDivider} />
+
+            <Grid container direction="column" justifyContent="space-around">
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Show on Org Map</Typography>
+                <Typography variant="h6">Answer from API</Typography>
+              </Grid>
+            </Grid>
+
+            <Divider className={classes.itemDetailsContentsDivider} />
+
+            <Grid container direction="column" justifyContent="space-around">
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Statistics Calculated</Typography>
+                <Typography variant="h6">Statistics from API</Typography>
+              </Grid>
+            </Grid>
+
+            <Divider className={classes.itemDetailsContentsDivider} />
+          </Grid>
+
+          <Grid container direction="column" justifyContent="space-around">
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.itemTableFilterSubmitButton}
+            >
+              DOWNLOAD
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.itemTableFilterSubmitButton}
+            >
+              EDIT
+            </Button>
+            <Button
+              color="primary"
+              variant="text"
+              className={classes.itemTableFilterResetButton}
+            >
+              DELETE
+            </Button>
+          </Grid>
+        </Grid>
+      </Drawer>
+
       <Grid container className={classes.regionsTableContainer}>
         <Paper elevation={3} className={classes.menu}>
           <Menu variant="plain" />
@@ -394,6 +537,7 @@ const RegionTable = (props) => {
           </Grid>
         </Grid>
       </Grid>
+
       <EditModal
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
