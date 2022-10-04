@@ -16,6 +16,7 @@ import {
   Drawer,
   Divider,
   LinearProgress,
+  CircularProgress,
   Fab,
 } from '@material-ui/core';
 import {
@@ -41,6 +42,9 @@ import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
 import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../components/GrowerDetail.js');
 
 const GROWER_IMAGE_SIZE = 440;
 
@@ -131,10 +135,15 @@ const useStyle = makeStyles((theme) => ({
   paper: {
     width: GROWER_IMAGE_SIZE,
   },
+  spinner: {
+    position: 'fixed',
+    top: `${GROWER_IMAGE_SIZE / 2}px`,
+    right: `${GROWER_IMAGE_SIZE / 2}px`,
+  },
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
-  // console.log('render: grower detail');
+  log.debug('render: grower detail', growerId);
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
@@ -147,16 +156,19 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [snackbarLabel, setSnackbarLabel] = useState('');
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      if (grower && grower.growerAccountUuid !== growerId) {
+      log.debug('grower', grower);
+      if (grower && grower.grower_account_id !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
       }
       if (growerId) {
+        setIsImageLoading(true);
         let match;
         if (isNaN(Number(growerId))) {
           match = await getGrower({
@@ -169,6 +181,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
             growerAccountUuid: undefined,
           });
         }
+
+        log.debug('match', match);
 
         if (match.error) {
           setErrorMessage(match.message);
@@ -262,7 +276,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     if (!grower && !id) {
       const filter = new FilterGrower();
       filter.growerAccountUuid = growerAccountUuid;
-      [grower] = await api.getGrowers({ filter }); // Otherwise query the API
+      const result = await api.getGrowers({ filter }); // Otherwise query the API
+      log.debug('getGrowers result', result.length);
+      // only assign to grower if it finds one match, seems to return all otherwise
+      if (result.length === 1) {
+        grower = result[0];
+      }
     }
 
     if (!grower && !growerAccountUuid) {
@@ -351,18 +370,29 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.imageContainer}>
-                {grower?.imageUrl && (
-                  <OptimizedImage
-                    src={grower.imageUrl}
-                    width={GROWER_IMAGE_SIZE}
-                    height={GROWER_IMAGE_SIZE}
-                    className={classes.cardMedia}
-                    fixed
-                    rotation={grower.imageRotation}
-                    alertTitleSize="1.6rem"
-                    alertTextSize="1rem"
-                    alertHeight="50%"
-                  />
+                {loading ? (
+                  <CircularProgress className={classes.spinner} />
+                ) : (
+                  <>
+                    {isImageLoading && grower?.imageUrl && (
+                      <CircularProgress className={classes.spinner} />
+                    )}
+
+                    <OptimizedImage
+                      src={grower.imageUrl}
+                      width={GROWER_IMAGE_SIZE}
+                      height={GROWER_IMAGE_SIZE}
+                      className={classes.cardMedia}
+                      fixed
+                      rotation={grower.imageRotation}
+                      alertTitleSize="1.6rem"
+                      alertTextSize="1rem"
+                      alertHeight="50%"
+                      onImageReady={() => {
+                        setIsImageLoading(false);
+                      }}
+                    />
+                  </>
                 )}
                 {!grower.imageUrl && (
                   <CardMedia className={classes.cardMedia}>

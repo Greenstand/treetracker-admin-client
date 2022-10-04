@@ -20,6 +20,7 @@ export default function OptimizedImage(props) {
     alertPosition,
     alertTextSize,
     alertTitleSize,
+    onImageReady,
     objectFit = 'cover',
     loadingState,
     setLoadingState,

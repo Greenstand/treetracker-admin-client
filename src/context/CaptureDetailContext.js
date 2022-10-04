@@ -1,13 +1,11 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { handleResponse, handleError, getOrganization } from '../api/apiUtils';
-import { session } from '../models/auth';
+import { handleError } from '../api/apiUtils';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/CaptureDetailContext');
 
-const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
-const API_ROOT = process.env.REACT_APP_API_ROOT;
+const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export const CaptureDetailContext = createContext({
   capture: null,
@@ -15,7 +13,6 @@ export const CaptureDetailContext = createContext({
   tags: [],
   getCaptureDetail: () => {},
   getSpecies: () => {},
-  getTags: () => {},
   reset: () => {},
 });
 
@@ -29,8 +26,7 @@ export function CaptureDetailProvider(props) {
   const [state, setState] = useState(STATE_EMPTY);
 
   useEffect(() => {
-    getSpecies(state.capture?.speciesId);
-    getTags(state.capture?.treeTags);
+    getSpecies(state.capture?.species_id);
   }, [state.capture]);
 
   // STATE HELPER FUNCTIONS
@@ -41,38 +37,22 @@ export function CaptureDetailProvider(props) {
 
   // EVENT HANDLERS
 
-  const getCaptureDetail = async (id) => {
-    // getOrganization gets the wrong org when this is in the global context
+  const getCaptureDetail = async (id, page) => {
     const BASE_URL = {
-      LEGACY: `${API_ROOT}/api/${getOrganization()}trees/`,
-      CAPTURE_MATCH: `${TREETRACKER_API}/captures?reference_id=`,
+      CAPTURES: `${QUERY_API}/v2/captures`,
+      VERIFY: `${QUERY_API}/raw-captures`,
     };
 
     try {
       if (!id) {
         log.debug('getCapture called with no reference_id');
       } else {
-        // NOTE: The reference_id in the new api === the id in the old api
-        const query = `${
-          BASE_URL[typeof id !== 'number' ? 'CAPTURE_MATCH' : 'LEGACY']
-        }${id}`;
+        const query = `${BASE_URL[page]}`;
 
-        return fetch(query, {
-          headers: {
-            Authorization: session.token,
-          },
-        })
-          .then(handleResponse)
-          .then((data) => {
-            if (data.captures) {
-              log.debug('data', data);
-              // new treetracker-api
-              setState({ ...state, capture: data.captures[0] });
-            } else {
-              // legacy api
-              setState({ ...state, capture: data });
-            }
-          });
+        return api.getCaptureById(query, id).then((capture) => {
+          setState({ ...state, capture });
+          return capture;
+        });
       }
     } catch (error) {
       handleError(error);
@@ -90,28 +70,12 @@ export function CaptureDetailProvider(props) {
     });
   };
 
-  const getTags = async (captureTags) => {
-    if (captureTags == null) {
-      return Promise.resolve(STATE_EMPTY.tags);
-    }
-
-    return Promise.all(
-      captureTags.map((tag) => {
-        return api.getTagById(tag.tagId);
-      })
-    ).then((tags) => {
-      setState({ ...state, tags });
-      return tags;
-    });
-  };
-
   const value = {
     capture: state.capture,
     species: state.species,
     tags: state.tags,
     getCaptureDetail,
     getSpecies,
-    getTags,
     reset,
   };
 

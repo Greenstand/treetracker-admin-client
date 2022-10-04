@@ -13,14 +13,16 @@ export default function LinkToWebmap(props) {
   const { value, type } = props;
   const classes = useStyles();
 
+  const id = value?.reference_id || value;
+
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
-      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${value}`}
+      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${id}`}
       underline="always"
       target="_blank"
     >
-      {value}
+      {id?.length > 7 ? `${id.slice(0, 7)}...` : id}
       <OpenInNewIcon fontSize="inherit" className={classes.openInNewIcon} />
     </Link>
   );

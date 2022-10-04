@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
+import { getOrganizationUUID } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -102,14 +103,14 @@ export function VerifyProvider(props) {
 
   // EVENT HANDLERS
 
-  const approve = async ({ approveAction, id }) => {
+  const approve = async ({ approveAction, capture }) => {
     if (!approveAction) {
       throw Error('no approve action object!');
     }
     if (approveAction.isApproved) {
       log.debug('approve');
       await api.approveCaptureImage(
-        id,
+        capture,
         approveAction.morphology,
         approveAction.age,
         approveAction.captureApprovalTag,
@@ -117,11 +118,11 @@ export function VerifyProvider(props) {
       );
     } else {
       log.debug('reject');
-      await api.rejectCaptureImage(id, approveAction.rejectionReason);
+      await api.rejectCaptureImage(capture, approveAction.rejectionReason);
     }
 
     if (approveAction.tags) {
-      await api.createCaptureTags(id, approveAction.tags);
+      await api.createCaptureTags(capture.uuid, approveAction.tags);
     }
 
     return true;
@@ -140,13 +141,15 @@ export function VerifyProvider(props) {
     setIsLoading(true);
 
     const pageParams = {
-      skip: pageSize * currentPage,
+      page: currentPage,
       rowsPerPage: pageSize,
       filter: filter,
     };
     log.debug('load page with params:', pageParams);
-    const result = await api.getCaptureImages(pageParams, abortController);
-    setCaptureImages(result || []);
+    const result = await api.getRawCaptures(pageParams, abortController);
+    setCaptureImages(result?.raw_captures || []);
+    setCaptureCount(Number(result?.total));
+    setInvalidateCaptureCount(false);
     //restore loading status
     setIsLoading(false);
   };
@@ -213,17 +216,26 @@ export function VerifyProvider(props) {
     try {
       for (let i = 0; i < total; i++) {
         const captureId = captureSelected[i];
-        const captureImage = captureImages.reduce((a, c) => {
+        const capture = captureImages.reduce((a, c) => {
           if (c && c.id === captureId) {
             return c;
           } else {
             return a;
           }
         }, undefined);
-        log.debug('approve:%d', captureImage.id);
-        log.trace('approve:%d', captureImage.id);
+        const currentFilter = filter.getWhereObj();
+        capture.organization_id =
+          currentFilter.organizationId || getOrganizationUUID();
+        log.debug(
+          'organization_id:',
+          currentFilter.organizationId,
+          getOrganizationUUID(),
+          capture.organization_id
+        );
+        log.debug('approve:%d', capture.id);
+        log.trace('approve:%d', capture.id);
         await approve({
-          id: captureImage.id,
+          capture,
           approveAction,
         });
         setApproveAllComplete(100 * ((i + 1) / total));
@@ -286,10 +298,15 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    // console.log('-- verify getCaptureCount');
-    // setInvalidateCaptureCount(false);
-    const result = await api.getCaptureCount(newfilter);
-    setCaptureCount(Number(result.count));
+    log.debug('-- verify getCaptureCount');
+
+    const pageParams = {
+      page: currentPage,
+      rowsPerPage: pageSize,
+      filter: newfilter,
+    };
+    const result = await api.getRawCaptures(pageParams);
+    setCaptureCount(Number(result?.total));
     setInvalidateCaptureCount(false);
   };
 
