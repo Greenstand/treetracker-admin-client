@@ -1,3 +1,10 @@
+## [1.108.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.3...v1.108.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* added a spinner while the image loads up in capture page ([#877](https://github.com/Greenstand/treetracker-admin-client/issues/877)) ([3ecd687](https://github.com/Greenstand/treetracker-admin-client/commit/3ecd687e2fdf6d423cb82145e4a870a0b52c4cdc))
+
 ## [1.108.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.2...v1.108.3) (2022-10-02)
 
 
