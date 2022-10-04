@@ -1,3 +1,10 @@
+# [1.109.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.4...v1.109.0) (2022-10-04)
+
+
+### Features
+
+* duplicate capture v1: display distance between two selected captures ([#863](https://github.com/Greenstand/treetracker-admin-client/issues/863)) ([a05cdb5](https://github.com/Greenstand/treetracker-admin-client/commit/a05cdb5712e27d6d11ee3f187d061450de8bc141))
+
 ## [1.108.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.3...v1.108.4) (2022-10-04)
 
 
