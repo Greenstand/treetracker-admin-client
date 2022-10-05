@@ -1,3 +1,10 @@
+## [1.109.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.0...v1.109.1) (2022-10-05)
+
+
+### Bug Fixes
+
+* growers - multiply network requests with negative results [#880](https://github.com/Greenstand/treetracker-admin-client/issues/880) ([#881](https://github.com/Greenstand/treetracker-admin-client/issues/881)) ([0c0e390](https://github.com/Greenstand/treetracker-admin-client/commit/0c0e3901c647ae3a05c0f5a853393eaee3bf8388))
+
 # [1.109.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.4...v1.109.0) (2022-10-04)
 
 
