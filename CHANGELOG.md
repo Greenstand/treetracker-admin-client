@@ -1,3 +1,10 @@
+## [1.109.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.1...v1.109.2) (2022-10-06)
+
+
+### Bug Fixes
+
+* select org - reset not working [#873](https://github.com/Greenstand/treetracker-admin-client/issues/873) ([#882](https://github.com/Greenstand/treetracker-admin-client/issues/882)) ([33dd4c7](https://github.com/Greenstand/treetracker-admin-client/commit/33dd4c7ba4039439496fc1167a49a49ab7ba9584))
+
 ## [1.109.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.0...v1.109.1) (2022-10-05)
 
 
