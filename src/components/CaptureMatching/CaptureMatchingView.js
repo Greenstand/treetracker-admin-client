@@ -405,6 +405,7 @@ function CaptureMatchingView() {
 
   function handleFilterReset() {
     setFilter(initialFilter);
+    setOrganizationId(null);
     matchingToolContext.handleFilterToggle();
   }
 
