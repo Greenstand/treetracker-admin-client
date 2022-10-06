@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -13,7 +13,7 @@ import {
   FormControlLabel,
   LinearProgress,
 } from '@material-ui/core';
-import { CapturesContext } from '../context/CapturesContext';
+import { CapturesContext } from 'context/CapturesContext';
 import { CSVLink } from 'react-csv';
 import { formatCell } from './Captures/CaptureTable';
 
@@ -52,6 +52,13 @@ const ExportCaptures = (props) => {
   const [loading, setLoading] = useState(false);
   const csvLink = useRef();
 
+  useEffect(() => {
+    if (downloadData.length) {
+      csvLink.current.link.click();
+      handleClose();
+    }
+  }, [downloadData]);
+
   function handleChange(attr) {
     const newStatus = !checkedColumns[attr].status;
     setCheckColumns({
@@ -64,7 +71,7 @@ const ExportCaptures = (props) => {
     return captures.map((capture) => {
       let formatCapture = {};
       Object.keys(selectedColumns).forEach((attr) => {
-        if (attr === 'id' || attr === 'planterId') {
+        if (['id', 'planterId', 'imageUrl'].includes(attr)) {
           formatCapture[attr] = capture[attr];
         } else {
           const renderer = selectedColumns[attr].renderer;
@@ -87,12 +94,10 @@ const ExportCaptures = (props) => {
       (val) => val[1].status === true
     );
     const selectedColumns = Object.fromEntries(filterColumns);
-    await capturesContext.getAllCaptures({ filter }).then((response) => {
-      setDownloadData(processDownloadData(response.data, selectedColumns));
-      setLoading(false);
-    });
-    csvLink.current.link.click();
-    handleClose();
+    let response = await capturesContext.getAllCaptures({ filter });
+    let data = await processDownloadData(response.data, selectedColumns);
+    setDownloadData(data);
+    setLoading(false);
   }
 
   return (
