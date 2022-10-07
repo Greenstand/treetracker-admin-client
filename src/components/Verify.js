@@ -1,25 +1,26 @@
 import React, { useEffect, useState, useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button'; // replace with icons down the line
-import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Modal from '@material-ui/core/Modal';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import IconFilter from '@material-ui/icons/FilterList';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
-import { Box } from '@material-ui/core';
-import TablePagination from '@material-ui/core/TablePagination';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {
+  Typography,
+  Card,
+  CardContent,
+  Button, // replace with icons down the line
+  Grid,
+  AppBar,
+  Modal,
+  LinearProgress,
+  IconButton,
+  Snackbar,
+  Avatar,
+  Tooltip,
+  Paper,
+  Box,
+  TablePagination,
+} from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
+import IconFilter from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
 import { LocationOn, Person, Nature, Map } from '@material-ui/icons';
 import Navbar from './Navbar';
@@ -30,27 +31,20 @@ import FilterTop from './FilterTop';
 import CaptureDetailDialog from './CaptureDetailDialog';
 import OptimizedImage from './OptimizedImage';
 import CaptureDetailTooltip from './CaptureDetailTooltip';
-import { selectedHighlightColor, documentTitle } from '../common/variables.js';
-import { countToLocaleString } from '../common/numbers';
-import { VerifyContext } from '../context/VerifyContext';
-import { SpeciesContext } from '../context/SpeciesContext';
-import { TagsContext } from '../context/TagsContext';
-import { CaptureDetailProvider } from '../context/CaptureDetailContext';
+import { documentTitle } from 'common/variables';
+import { countToLocaleString } from 'common/numbers';
+import { VerifyContext } from 'context/VerifyContext';
+import { SpeciesContext } from 'context/SpeciesContext';
+import { TagsContext } from 'context/TagsContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 
-const log = require('loglevel').getLogger('../components/Verify');
+const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
 const SIDE_PANEL_WIDTH = 315;
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8, 4, 8),
-  },
-  cardImg: {
-    width: '100%',
-    height: 'auto',
-  },
-  cardTitle: {
-    color: '#f00',
   },
   card: {
     cursor: 'pointer',
@@ -81,9 +75,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  selected: {
-    border: `2px ${selectedHighlightColor} solid`,
-  },
   cardMedia: {
     position: 'absolute',
     top: 0,
@@ -111,6 +102,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(2, 8),
+  },
+  titleLeft: {
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  titleBottom: {
+    justifyContent: 'flex-end',
     padding: theme.spacing(2, 8),
   },
   snackbar: {
@@ -121,10 +124,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardActions: {
     display: 'flex',
-    padding: theme.spacing(0, 2),
-  },
-  button: {
-    marginRight: '8px',
+    justifyContent: 'center',
   },
   body: {
     display: 'flex',
@@ -133,19 +133,6 @@ const useStyles = makeStyles((theme) => ({
   bodyInner: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  tooltip: {
-    maxWidth: 'none',
-  },
-  MuiDialogActionsSpacing: {
-    paddingLeft: '16px',
-    paddingRight: '16px',
-  },
-  sidePanelSubmitButton: {
-    width: '128px',
-  },
-  mb: {
-    marginBottom: '1rem',
   },
   activeFilters: {
     width: theme.spacing(5),
@@ -185,6 +172,12 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.stats.green,
     },
   },
+  tooltipTop: {
+    top: '12px',
+  },
+  tooltipBottom: {
+    top: '-16px',
+  },
 }));
 
 const Verify = (props) => {
@@ -222,31 +215,28 @@ const Verify = (props) => {
     setComplete(verifyContext.approveAllComplete);
   }, [verifyContext.approveAllComplete]);
 
-  function handleCaptureClick(e, captureId) {
+  const handleCaptureClick = (captureId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on capture:', captureId);
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
     });
-  }
+  };
 
-  function handleCapturePinClick(e, captureId) {
+  const handleCapturePinClick = (captureId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on capture pin:', captureId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
     window.open(url, '_blank').opener = null;
-  }
+  };
 
-  function handleGrowerMapClick(e, growerId) {
+  const handleGrowerMapClick = (growerId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on grower:', growerId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
-  }
+  };
 
   function resetApprovalFields() {
     tagsContext.setTagInput([]);
@@ -271,6 +261,7 @@ const Verify = (props) => {
     const tags = await tagsContext.createTags();
     approveAction.tags = tags.map((t) => t.id);
     const result = await verifyContext.approveAll(approveAction);
+
     if (!result) {
       window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
@@ -278,14 +269,13 @@ const Verify = (props) => {
     }
   }
 
-  async function handleShowGrowerDetail(e, capture) {
-    e.preventDefault();
+  const handleShowGrowerDetail = (growerId) => (e) => {
     e.stopPropagation();
     setGrowerDetail({
       isOpen: true,
-      growerId: capture.grower_account_id,
+      growerId,
     });
-  }
+  };
 
   function handleCloseGrowerDetail() {
     setGrowerDetail({
@@ -294,15 +284,14 @@ const Verify = (props) => {
     });
   }
 
-  function handleShowCaptureDetail(e, capture) {
-    e.preventDefault();
+  const handleShowCaptureDetail = (capture) => (e) => {
     e.stopPropagation();
     setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture: capture.id,
     });
-  }
+  };
 
   function handleCloseCaptureDetail() {
     setDisableHoverListener(false);
@@ -322,17 +311,6 @@ const Verify = (props) => {
   }
 
   const captureImages = verifyContext.captureImages;
-
-  const tooltipStyles = makeStyles(() => ({
-    tooltipTop: {
-      top: '12px',
-    },
-    tooltipBottom: {
-      top: '-16px',
-    },
-  }));
-
-  const tooltipPositionStyles = tooltipStyles();
 
   const placeholderImages = verifyContext.isLoading
     ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
@@ -392,7 +370,7 @@ const Verify = (props) => {
               onMouseEnter={() => setDisableHoverListener(false)}
               disableHoverListener={disableHoverListener}
               classes={{
-                tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
+                tooltipPlacementTop: classes.tooltipTop,
               }}
               title={
                 <CaptureDetailTooltip
@@ -402,7 +380,7 @@ const Verify = (props) => {
               }
             >
               <Card
-                onClick={(e) => handleCaptureClick(e, capture.id)}
+                onClick={handleCaptureClick(capture.id)}
                 id={`card_${capture.id}`}
                 className={classes.card}
                 elevation={capture.placeholder ? 0 : 3}
@@ -426,53 +404,39 @@ const Verify = (props) => {
                   />
                 </CardContent>
 
-                <Grid
-                  justifyContent="center"
-                  container
-                  className={classes.cardActions}
-                >
-                  <Grid item>
-                    <IconButton
-                      onClick={(e) => handleShowGrowerDetail(e, capture)}
-                      aria-label={`Grower details`}
-                      name={`Grower details`}
-                      title={`Grower details`}
-                    >
-                      <Person color="primary" />
-                    </IconButton>
-                    <IconButton
-                      onClick={(e) => handleShowCaptureDetail(e, capture)}
-                      aria-label={`Capture details`}
-                      name={`Capture details`}
-                      title={`Capture details`}
-                    >
-                      <Nature color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.reference_id}`}
-                      target="_blank"
-                      onClick={(e) =>
-                        handleCapturePinClick(e, capture.reference_id)
-                      }
-                      aria-label={`Capture location`}
-                      title={`Capture location`}
-                    >
-                      <LocationOn color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.grower_account_id}`}
-                      target="_blank"
-                      onClick={(e) =>
-                        handleGrowerMapClick(e, capture.grower_account_id)
-                      }
-                      aria-label={`Grower map`}
-                      title={`Grower map`}
-                    >
-                      <Map color="primary" />
-                    </IconButton>
-                  </Grid>
+                <Grid className={classes.cardActions}>
+                  <IconButton
+                    onClick={handleShowGrowerDetail(capture.grower_account_id)}
+                    aria-label={`Grower details`}
+                    name={`Grower details`}
+                    title={`Grower details`}
+                  >
+                    <Person color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleShowCaptureDetail(capture)}
+                    aria-label={`Capture details`}
+                    name={`Capture details`}
+                    title={`Capture details`}
+                  >
+                    <Nature color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleCapturePinClick(capture.reference_id)}
+                    aria-label={`Capture location`}
+                    name={`Capture location`}
+                    title={`Capture location`}
+                  >
+                    <LocationOn color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleGrowerMapClick(capture.grower_account_id)}
+                    aria-label={`Grower map`}
+                    name={`Grower map`}
+                    title={`Grower map`}
+                  >
+                    <Map color="primary" />
+                  </IconButton>
                 </Grid>
               </Card>
             </Tooltip>
@@ -483,11 +447,7 @@ const Verify = (props) => {
   /*=============================================================*/
 
   function handleFilterClick() {
-    if (isFilterShown) {
-      setFilterShown(false);
-    } else {
-      setFilterShown(true);
-    }
+    setFilterShown(!isFilterShown);
   }
 
   let imagePagination = (
@@ -571,60 +531,30 @@ const Verify = (props) => {
           </Grid>
           <Box style={{ overflow: 'hidden auto' }}>
             <Grid container>
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                }}
-              >
-                <Grid
-                  container
-                  justifyContent="space-between"
-                  alignItems="center"
-                  className={classes.title}
-                >
-                  <Grid
-                    style={{
-                      display: 'flex',
-                      flexGrow: 1,
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                    item
-                  >
-                    <Typography variant="h5">
-                      {verifyContext.captureCount !== null &&
-                        `${countToLocaleString(
-                          verifyContext.captureCount
-                        )} capture${
-                          verifyContext.captureCount === 1 ? '' : 's'
-                        }`}
-                    </Typography>
+              <Grid container className={classes.title}>
+                <Box className={classes.titleLeft}>
+                  <Typography variant="h5">
+                    {verifyContext.captureCount !== null &&
+                      `${countToLocaleString(
+                        verifyContext.captureCount
+                      )} capture${verifyContext.captureCount === 1 ? '' : 's'}`}
+                  </Typography>
 
-                    <div style={{ display: 'flex' }}>{imageSizeControl}</div>
-                  </Grid>
+                  <Box display="flex">{imageSizeControl}</Box>
+                </Box>
 
-                  <Grid item className={classes.paginationContainer}>
-                    {imagePagination}
-                  </Grid>
-                </Grid>
+                <Box className={classes.paginationContainer}>
+                  {imagePagination}
+                </Box>
               </Grid>
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                }}
-              >
+
+              <Box>
                 <Grid container className={classes.wrapper} spacing={2}>
                   {captureImageItems}
                 </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                justifyContent="flex-end"
-                className={classes.title}
-              >
+              </Box>
+
+              <Grid container className={classes.titleBottom}>
                 {imagePagination}
               </Grid>
             </Grid>
