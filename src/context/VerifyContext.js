@@ -33,6 +33,7 @@ export const VerifyContext = createContext({
   setCurrentPage: () => {},
   setCaptureImagesSelected: () => {},
   getCaptureSelectedArr: () => {},
+  getCaptureSelectedIdArr: () => {},
 });
 
 export function VerifyProvider(props) {
@@ -155,11 +156,16 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureSelectedArr = () => {
-    return Object.keys(captureImagesSelected)
-      .filter((captureId) => {
-        return captureImagesSelected[captureId] === true;
-      })
-      .map((captureId) => parseInt(captureId));
+    return Object.keys(captureImagesSelected).filter((captureId) => {
+      return captureImagesSelected[captureId] === true;
+    });
+    // .map((captureId) => parseInt(captureId));
+  };
+
+  const getCaptureSelectedIdArr = () => {
+    return Object.keys(captureImagesSelected).filter((captureId) => {
+      return captureImagesSelected[captureId] === true;
+    });
   };
 
   const clickCapture = (payload) => {
@@ -333,6 +339,7 @@ export function VerifyProvider(props) {
     setCurrentPage,
     setCaptureImagesSelected,
     getCaptureSelectedArr,
+    getCaptureSelectedIdArr,
   };
 
   return (

@@ -1,3 +1,31 @@
+## [1.109.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.1...v1.109.2) (2022-10-06)
+
+
+### Bug Fixes
+
+* select org - reset not working [#873](https://github.com/Greenstand/treetracker-admin-client/issues/873) ([#882](https://github.com/Greenstand/treetracker-admin-client/issues/882)) ([33dd4c7](https://github.com/Greenstand/treetracker-admin-client/commit/33dd4c7ba4039439496fc1167a49a49ab7ba9584))
+
+## [1.109.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.0...v1.109.1) (2022-10-05)
+
+
+### Bug Fixes
+
+* growers - multiply network requests with negative results [#880](https://github.com/Greenstand/treetracker-admin-client/issues/880) ([#881](https://github.com/Greenstand/treetracker-admin-client/issues/881)) ([0c0e390](https://github.com/Greenstand/treetracker-admin-client/commit/0c0e3901c647ae3a05c0f5a853393eaee3bf8388))
+
+# [1.109.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.4...v1.109.0) (2022-10-04)
+
+
+### Features
+
+* duplicate capture v1: display distance between two selected captures ([#863](https://github.com/Greenstand/treetracker-admin-client/issues/863)) ([a05cdb5](https://github.com/Greenstand/treetracker-admin-client/commit/a05cdb5712e27d6d11ee3f187d061450de8bc141))
+
+## [1.108.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.3...v1.108.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* added a spinner while the image loads up in capture page ([#877](https://github.com/Greenstand/treetracker-admin-client/issues/877)) ([3ecd687](https://github.com/Greenstand/treetracker-admin-client/commit/3ecd687e2fdf6d423cb82145e4a870a0b52c4cdc))
+
 ## [1.108.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.2...v1.108.3) (2022-10-02)
 
 

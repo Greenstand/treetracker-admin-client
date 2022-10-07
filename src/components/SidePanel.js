@@ -18,6 +18,7 @@ import {
 import Species from './Species';
 import CaptureTags from './CaptureTags';
 import { VerifyContext } from 'context/VerifyContext';
+import { getDistance } from 'geolib';
 
 const SIDE_PANEL_WIDTH = 315;
 const CAP_APP_TAG = [
@@ -87,6 +88,7 @@ function SidePanel(props) {
   const classes = useStyles(props);
   const verifyContext = useContext(VerifyContext);
   const captureSelected = verifyContext.getCaptureSelectedArr();
+  const captureIdSelected = verifyContext.getCaptureSelectedIdArr();
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
@@ -116,6 +118,28 @@ function SidePanel(props) {
     } else {
       verifyContext.setCaptureImagesSelected({});
     }
+  }
+
+  function calculateLatLonDistance(capture1Id, capture2Id) {
+    let obj1 = verifyContext.captureImages.filter(
+      (capture) => capture.id == capture1Id
+    )[0];
+    let obj2 = verifyContext.captureImages.filter(
+      (capture) => capture.id == capture2Id
+    )[0];
+    const distance = getDistance(
+      {
+        latitude: Number(obj1.lat),
+        longitude: Number(obj1.lon),
+      },
+      {
+        latitude: Number(obj2.lat),
+        longitude: Number(obj2.lon),
+      }
+    );
+    return `Distance bewteen selected captures: ${(
+      Math.round(distance * 10) / 10
+    ).toLocaleString()}m`;
   }
 
   async function handleSubmit() {
@@ -207,7 +231,10 @@ function SidePanel(props) {
             Select None
           </Button>
         </Box>
-
+        <Typography className={classes.subtitle}>
+          {captureIdSelected?.length == 2 &&
+            calculateLatLonDistance(captureIdSelected[0], captureIdSelected[1])}
+        </Typography>
         <Divider />
 
         <Box mt={1}>
