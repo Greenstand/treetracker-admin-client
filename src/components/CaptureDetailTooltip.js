@@ -10,7 +10,19 @@ import { SpeciesContext } from 'context/SpeciesContext';
 const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
   const CaptureDetailTooltipUseStyles = makeStyles(() => ({
     button: {
+      margin: '4px',
       padding: '4px',
+      background: 'rgba(255,255,255,.45)',
+      '&:hover': {
+        background: 'rgba(255,255,255,.8)',
+      },
+    },
+    title: {
+      fontSize: '.9rem',
+      marginBottom: '4px',
+      padding: '4px',
+      color: 'white',
+      background: 'rgba(0, 0, 0,.5)',
     },
     label: {
       marginLeft: '12px',
@@ -37,6 +49,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
   return (
     <Box width={160} onClick={showCaptureClick(capture)}>
       <CardActionArea className={styles.button}>
+        <Box className={styles.title}>Capture details</Box>
         {capture?.species_id && (
           <Grid container>
             <Category color="primary" />

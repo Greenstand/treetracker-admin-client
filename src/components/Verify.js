@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography,
   Card,
-  CardContent,
   Button, // replace with icons down the line
   Grid,
   AppBar,
@@ -13,10 +12,10 @@ import {
   IconButton,
   Snackbar,
   Avatar,
-  Tooltip,
   Paper,
   Box,
   TablePagination,
+  Divider,
 } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
@@ -44,53 +43,70 @@ const SIDE_PANEL_WIDTH = 315;
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    padding: theme.spacing(2, 8, 4, 8),
+    padding: theme.spacing(2, 8),
   },
   card: {
+    position: 'relative',
+    display: 'grid',
+    padding: 0,
     cursor: 'pointer',
+    borderRadius: '16px',
     '&:hover $cardMedia': {
       transform: 'scale(1.04)',
     },
+    '&:hover $cardActions': {
+      opacity: 1,
+      transition: theme.transitions.create('opacity', {
+        easing: theme.transitions.easing.easeInOut,
+        duration: '.8s',
+      }),
+    },
+    '&:hover $cardDetail': {
+      opacity: 1,
+      transition: theme.transitions.create('opacity', {
+        easing: theme.transitions.easing.easeInOut,
+        duration: '.8s',
+      }),
+    },
+  },
+  cardWrapper: {
+    padding: theme.spacing(2),
   },
   cardCheckbox: {
-    position: 'absolute',
+    gridArea: '1/-1',
     height: '1.2em',
     width: '1.2em',
-    top: '0.2rem',
-    left: '0.3rem',
+    margin: '4px',
     pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: '50%',
     zIndex: 1,
   },
   cardSelected: {
     backgroundColor: theme.palette.action.selected,
   },
-  cardContent: {
-    padding: 'calc(400%/3) 0 0 0',
-    position: 'relative',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   cardMedia: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    gridArea: '1/-1',
     transform: 'scale(1)',
     transition: theme.transitions.create('transform', {
       easing: theme.transitions.easing.easeInOut,
       duration: '0.2s',
     }),
   },
-  cardWrapper: {
-    position: 'relative',
-    padding: theme.spacing(2),
-    flex: '1 0 45%',
+  cardActions: {
+    gridArea: '1/-1',
+    alignSelf: 'end',
+    display: 'flex',
+    zIndex: '1',
+    opacity: 0,
+    padding: '4px',
+  },
+  cardDetail: {
+    position: 'absolute',
+    top: 0,
+    opacity: 0,
+    width: '96%',
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -121,10 +137,6 @@ const useStyles = makeStyles((theme) => ({
   },
   snackbarContent: {
     backgroundColor: theme.palette.action.active,
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'center',
   },
   body: {
     display: 'flex',
@@ -172,11 +184,17 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.stats.green,
     },
   },
-  tooltipTop: {
-    top: '12px',
+  iconButton: {
+    backgroundColor: 'rgba(0, 0, 0, .5)',
+    marginRight: theme.spacing(1),
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    },
   },
-  tooltipBottom: {
-    top: '-16px',
+  label: {
+    '@media (max-width: 1070px)': {
+      display: 'none',
+    },
   },
 }));
 
@@ -187,7 +205,6 @@ const Verify = (props) => {
   const classes = useStyles(props);
   const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
-  const [disableHoverListener, setDisableHoverListener] = useState(false);
   const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
@@ -286,7 +303,6 @@ const Verify = (props) => {
 
   const handleShowCaptureDetail = (capture) => (e) => {
     e.stopPropagation();
-    setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture: capture.id,
@@ -294,7 +310,6 @@ const Verify = (props) => {
   };
 
   function handleCloseCaptureDetail() {
-    setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
       capture: null,
@@ -351,96 +366,87 @@ const Verify = (props) => {
     .map((capture) => {
       return (
         <Box key={capture.id} className={cardStyles.cardElement}>
-          <div
+          <Box
+            p={2}
             className={clsx(
-              classes.cardWrapper,
               verifyContext.captureImagesSelected[capture.id]
                 ? classes.cardSelected
                 : undefined,
               capture.placeholder && classes.placeholderCard
             )}
           >
-            <Tooltip
-              key={capture.id}
-              placement="top"
-              arrow={true}
-              interactive
-              enterDelay={500}
-              enterNextDelay={500}
-              onMouseEnter={() => setDisableHoverListener(false)}
-              disableHoverListener={disableHoverListener}
-              classes={{
-                tooltipPlacementTop: classes.tooltipTop,
-              }}
-              title={
+            <Card
+              onClick={handleCaptureClick(capture.id)}
+              id={`card_${capture.id}`}
+              className={classes.card}
+              elevation={capture.placeholder ? 0 : 3}
+            >
+              <Paper className={classes.cardCheckbox} elevation={4}>
+                {verifyContext.captureImagesSelected[capture.id] && (
+                  <CheckIcon />
+                )}
+              </Paper>
+
+              <OptimizedImage
+                src={capture.image_url}
+                width={isImagesLarge ? 400 : 250}
+                className={classes.cardMedia}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alertWidth="100%"
+                alertHeight="200%"
+                alertPosition="absolute"
+                alertPadding="5rem 0 0 1rem"
+                alertTitleSize="1.6rem"
+                alertTextSize="1rem"
+              />
+
+              <Grid className={classes.cardActions}>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={handleShowGrowerDetail(capture.grower_account_id)}
+                  aria-label={`Grower details`}
+                  name={`Grower details`}
+                  title={`Grower details`}
+                >
+                  <Person color="primary" />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={handleShowCaptureDetail(capture)}
+                  aria-label={`Capture details`}
+                  name={`Capture details`}
+                  title={`Capture details`}
+                >
+                  <Nature color="primary" />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={handleCapturePinClick(capture.reference_id)}
+                  aria-label={`Capture location`}
+                  name={`Capture location`}
+                  title={`Capture location`}
+                >
+                  <LocationOn color="primary" />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={handleGrowerMapClick(capture.grower_account_id)}
+                  aria-label={`Grower map`}
+                  name={`Grower map`}
+                  title={`Grower map`}
+                >
+                  <Map color="primary" />
+                </IconButton>
+              </Grid>
+
+              <Box className={classes.cardDetail}>
                 <CaptureDetailTooltip
                   capture={capture}
                   showCaptureClick={handleShowCaptureDetail}
                 />
-              }
-            >
-              <Card
-                onClick={handleCaptureClick(capture.id)}
-                id={`card_${capture.id}`}
-                className={classes.card}
-                elevation={capture.placeholder ? 0 : 3}
-              >
-                <CardContent className={classes.cardContent}>
-                  <Paper className={classes.cardCheckbox} elevation={4}>
-                    {verifyContext.captureImagesSelected[capture.id] && (
-                      <CheckIcon />
-                    )}
-                  </Paper>
-                  <OptimizedImage
-                    src={capture.image_url}
-                    width={isImagesLarge ? 400 : 250}
-                    className={classes.cardMedia}
-                    alertWidth="100%"
-                    alertHeight="200%"
-                    alertPosition="absolute"
-                    alertPadding="5rem 0 0 1rem"
-                    alertTitleSize="1.6rem"
-                    alertTextSize="1rem"
-                  />
-                </CardContent>
-
-                <Grid className={classes.cardActions}>
-                  <IconButton
-                    onClick={handleShowGrowerDetail(capture.grower_account_id)}
-                    aria-label={`Grower details`}
-                    name={`Grower details`}
-                    title={`Grower details`}
-                  >
-                    <Person color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleShowCaptureDetail(capture)}
-                    aria-label={`Capture details`}
-                    name={`Capture details`}
-                    title={`Capture details`}
-                  >
-                    <Nature color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleCapturePinClick(capture.reference_id)}
-                    aria-label={`Capture location`}
-                    name={`Capture location`}
-                    title={`Capture location`}
-                  >
-                    <LocationOn color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleGrowerMapClick(capture.grower_account_id)}
-                    aria-label={`Grower map`}
-                    name={`Grower map`}
-                    title={`Grower map`}
-                  >
-                    <Map color="primary" />
-                  </IconButton>
-                </Grid>
-              </Card>
-            </Tooltip>
-          </div>
+              </Box>
+            </Card>
+          </Box>
         </Box>
       );
     });
@@ -459,7 +465,9 @@ const Verify = (props) => {
       page={verifyContext.currentPage}
       onPageChange={handleChangePage}
       onRowsPerPageChange={handleChangePageSize}
-      labelRowsPerPage="Captures per page:"
+      labelRowsPerPage={
+        <span className={classes.label}>Captures per page:</span>
+      }
       className={classes.pagination}
     />
   );
@@ -498,65 +506,64 @@ const Verify = (props) => {
     <>
       <Grid item className={classes.body}>
         <Grid item className={classes.bodyInner}>
-          <Grid item>
-            <Navbar
-              buttons={[
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleFilterClick}
-                  startIcon={<IconFilter />}
-                  key={1}
-                >
-                  Filter
-                  {numFilters > 0 && (
-                    <Avatar className={classes.activeFilters}>
-                      {numFilters}
-                    </Avatar>
-                  )}
-                </Button>,
-              ]}
-            >
-              {isFilterShown && (
-                <FilterTop
-                  isOpen={isFilterShown}
-                  onSubmit={(filter) => {
-                    verifyContext.updateFilter(filter);
-                  }}
-                  filter={verifyContext.filter}
-                  onClose={handleFilterClick}
-                />
-              )}
-            </Navbar>
-          </Grid>
+          <Navbar
+            buttons={[
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleFilterClick}
+                startIcon={<IconFilter />}
+                key={1}
+              >
+                Filter
+                {numFilters > 0 && (
+                  <Avatar className={classes.activeFilters}>
+                    {numFilters}
+                  </Avatar>
+                )}
+              </Button>,
+            ]}
+          >
+            {isFilterShown && (
+              <FilterTop
+                isOpen={isFilterShown}
+                onSubmit={(filter) => {
+                  verifyContext.updateFilter(filter);
+                }}
+                filter={verifyContext.filter}
+                onClose={handleFilterClick}
+              />
+            )}
+          </Navbar>
+
           <Box style={{ overflow: 'hidden auto' }}>
-            <Grid container>
-              <Grid container className={classes.title}>
-                <Box className={classes.titleLeft}>
-                  <Typography variant="h5">
-                    {verifyContext.captureCount !== null &&
-                      `${countToLocaleString(
-                        verifyContext.captureCount
-                      )} capture${verifyContext.captureCount === 1 ? '' : 's'}`}
-                  </Typography>
+            <Grid container className={classes.title}>
+              <Box className={classes.titleLeft}>
+                <Typography variant="h5">
+                  {verifyContext.captureCount !== null &&
+                    `${countToLocaleString(
+                      verifyContext.captureCount
+                    )} capture${verifyContext.captureCount === 1 ? '' : 's'}`}
+                </Typography>
 
-                  <Box display="flex">{imageSizeControl}</Box>
+                <Box display="flex" ml={2} mr={2}>
+                  {imageSizeControl}
                 </Box>
-
-                <Box className={classes.paginationContainer}>
-                  {imagePagination}
-                </Box>
-              </Grid>
-
-              <Box>
-                <Grid container className={classes.wrapper} spacing={2}>
-                  {captureImageItems}
-                </Grid>
               </Box>
 
-              <Grid container className={classes.titleBottom}>
+              <Box className={classes.paginationContainer}>
                 {imagePagination}
-              </Grid>
+              </Box>
+            </Grid>
+
+            <Divider width="100%" />
+            <Grid container className={classes.wrapper}>
+              {captureImageItems}
+            </Grid>
+            <Divider width="100%" />
+
+            <Grid container className={classes.titleBottom}>
+              {imagePagination}
             </Grid>
           </Box>
         </Grid>
