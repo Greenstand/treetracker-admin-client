@@ -817,8 +817,9 @@ function CaptureMatchingView() {
         {isDetailsPaneOpen && (
           <CaptureDetailDialog
             open={isDetailsPaneOpen}
-            captureId={captureImage?.reference_id}
+            captureId={captureImage?.id}
             onClose={closeDrawer}
+            page={'CAPTURES'}
           />
         )}
       </CaptureDetailProvider>

@@ -246,7 +246,7 @@ export default {
   },
   getSpeciesById(id) {
     try {
-      const query = `${API_ROOT}/api/species/${id}`;
+      const query = `${API_ROOT}/api/species?filter={"where":{"uuid": "${id}"}}`;
 
       return fetch(query, {
         method: 'GET',
