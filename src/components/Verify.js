@@ -83,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardSelected: {
     backgroundColor: theme.palette.action.selected,
+    borderRadius: '24px',
   },
   cardMedia: {
     gridArea: '1/-1',
