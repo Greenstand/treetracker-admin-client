@@ -110,20 +110,21 @@ export function VerifyProvider(props) {
     }
     if (approveAction.isApproved) {
       log.debug('approve');
-      await api.approveCaptureImage(
+      const result = await api.approveCaptureImage(
         capture,
         approveAction.morphology,
         approveAction.age,
-        approveAction.captureApprovalTag,
         approveAction.speciesId
       );
+
+      log.debug('approved', result);
+
+      if (approveAction.tags) {
+        await api.createCaptureTags(capture.id, approveAction.tags);
+      }
     } else {
       log.debug('reject');
       await api.rejectCaptureImage(capture, approveAction.rejectionReason);
-    }
-
-    if (approveAction.tags) {
-      await api.createCaptureTags(capture.uuid, approveAction.tags);
     }
 
     return true;
@@ -146,7 +147,7 @@ export function VerifyProvider(props) {
       rowsPerPage: pageSize,
       filter: filter,
     };
-    log.debug('load page with params:', pageParams);
+
     const result = await api.getRawCaptures(pageParams, abortController);
     setCaptureImages(result?.raw_captures || []);
     setCaptureCount(Number(result?.total));
@@ -210,16 +211,16 @@ export function VerifyProvider(props) {
   };
 
   const approveAll = async (approveAction) => {
-    log.debug('approveAll with approveAction:', approveAction);
-    setIsLoading(true);
-    setIsApproveAllProcessing(true);
-    const captureSelected = getCaptureSelectedArr();
-    const total = captureSelected.length;
-    const undo = captureImages.filter((capture) =>
-      captureSelected.some((id) => id === capture.id)
-    );
-    log.debug('items:%d', captureImages.length);
     try {
+      log.debug('approveAll items:%d', captureImages.length);
+      setIsLoading(true);
+      setIsApproveAllProcessing(true);
+      const captureSelected = getCaptureSelectedArr();
+      const total = captureSelected.length;
+      const undo = captureImages.filter((capture) =>
+        captureSelected.some((id) => id === capture.id)
+      );
+
       for (let i = 0; i < total; i++) {
         const captureId = captureSelected[i];
         const capture = captureImages.reduce((a, c) => {
@@ -232,35 +233,34 @@ export function VerifyProvider(props) {
         const currentFilter = filter.getWhereObj();
         capture.organization_id =
           currentFilter.organizationId || getOrganizationUUID();
-        log.debug(
-          'organization_id:',
-          currentFilter.organizationId,
-          getOrganizationUUID(),
-          capture.organization_id
-        );
-        log.debug('approve:%d', capture.id);
-        log.trace('approve:%d', capture.id);
+        // log.debug(
+        //   'organization_id:',
+        //   currentFilter.organizationId,
+        //   getOrganizationUUID(),
+        //   capture.organization_id
+        // );
         await approve({
           capture,
           approveAction,
         });
         setApproveAllComplete(100 * ((i + 1) / total));
       }
+
+      //push to undo list and set status flags
+      setCaptureImagesUndo(undo), setIsLoading(false);
+      await loadCaptureImages();
+      setIsApproveAllProcessing(false);
+      setApproveAllComplete(0);
+      setInvalidateCaptureCount(true);
+
+      resetSelection();
+      return true;
     } catch (e) {
       log.warn('get error:', e);
       setIsLoading(false);
       setIsApproveAllProcessing(false);
       return false;
     }
-    //push to undo list and set status flags
-    setCaptureImagesUndo(undo), setIsLoading(false);
-    await loadCaptureImages();
-    setIsApproveAllProcessing(false);
-    setApproveAllComplete(0);
-    setInvalidateCaptureCount(true);
-
-    resetSelection();
-    return true;
   };
 
   const undoAll = async () => {
@@ -304,15 +304,13 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    log.debug('-- verify getCaptureCount');
-
     const pageParams = {
       page: currentPage,
       rowsPerPage: pageSize,
       filter: newfilter,
     };
-    const result = await api.getRawCaptures(pageParams);
-    setCaptureCount(Number(result?.total));
+    const result = await api.getRawCaptureCount(pageParams);
+    setCaptureCount(Number(result?.count));
     setInvalidateCaptureCount(false);
   };
 
