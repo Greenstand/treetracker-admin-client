@@ -4,14 +4,13 @@ const log = require('loglevel');
 export async function handleResponse(response) {
   if (response.status === 204) return {};
   const payload = await response.json();
-  if (response.ok) return payload;
 
-  log.debug('handleResponse error ---', response.status, payload);
+  if (response.ok) return payload;
 
   // pass along user errors
   return Promise.reject({
     status: response.status,
-    message: payload.error,
+    message: payload.error || payload.message,
   });
 }
 
