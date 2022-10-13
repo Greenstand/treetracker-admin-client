@@ -1,3 +1,11 @@
+## [1.109.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.2...v1.109.3) (2022-10-13)
+
+
+### Bug Fixes
+
+* bug for approving and rejecting a raw-capture in verify ([#890](https://github.com/Greenstand/treetracker-admin-client/issues/890)) ([8fda2c0](https://github.com/Greenstand/treetracker-admin-client/commit/8fda2c031ae4ba3f94ceaeb095a0f50e4078fd49))
+* capture detail dialog open from captures & capture-match ([#891](https://github.com/Greenstand/treetracker-admin-client/issues/891)) ([40419b8](https://github.com/Greenstand/treetracker-admin-client/commit/40419b83371ed65ce0e64b95ccc1ccde3020b98d))
+
 ## [1.109.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.1...v1.109.2) (2022-10-06)
 
 
