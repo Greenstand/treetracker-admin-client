@@ -6,9 +6,7 @@ import {
   Card,
   Button, // replace with icons down the line
   Grid,
-  AppBar,
-  Modal,
-  LinearProgress,
+  CircularProgress,
   IconButton,
   Snackbar,
   Avatar,
@@ -142,10 +140,12 @@ const useStyles = makeStyles((theme) => ({
   body: {
     display: 'flex',
     height: '100%',
+    width: '100%',
   },
   bodyInner: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
   activeFilters: {
     width: theme.spacing(5),
@@ -196,6 +196,12 @@ const useStyles = makeStyles((theme) => ({
     '@media (max-width: 1070px)': {
       display: 'none',
     },
+  },
+  spinner: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: theme.spacing(2),
+    width: '100%',
   },
 }));
 
@@ -528,9 +534,7 @@ const Verify = (props) => {
             {isFilterShown && (
               <FilterTop
                 isOpen={isFilterShown}
-                onSubmit={(filter) => {
-                  verifyContext.updateFilter(filter);
-                }}
+                onSubmit={verifyContext.updateFilter}
                 filter={verifyContext.filter}
                 onClose={handleFilterClick}
               />
@@ -559,7 +563,13 @@ const Verify = (props) => {
 
             <Divider width="100%" />
             <Grid container className={classes.wrapper}>
-              {captureImageItems}
+              {verifyContext.isLoading ? (
+                <Box className={classes.spinner}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                captureImageItems
+              )}
             </Grid>
             <Divider width="100%" />
 
@@ -573,25 +583,7 @@ const Verify = (props) => {
           submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
-      {verifyContext.isLoading && (
-        <AppBar
-          position="fixed"
-          style={{
-            zIndex: 10000,
-          }}
-        >
-          <LinearProgress
-            color="primary"
-            variant="determinate"
-            value={complete}
-          />
-        </AppBar>
-      )}
-      {verifyContext.isLoading && (
-        <Modal open={true}>
-          <div></div>
-        </Modal>
-      )}
+
       {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
         !verifyContext.isLoading &&
         verifyContext.isApproveAllProcessing &&
