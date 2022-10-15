@@ -327,7 +327,7 @@ const CaptureTable = () => {
               >
                 <TableRow
                   key={capture.id}
-                  onClick={createToggleDrawerHandler(capture.uuid)}
+                  onClick={createToggleDrawerHandler(capture.id)}
                   className={classes.tableRow}
                 >
                   {columns.map(({ attr, renderer }, i) => (
@@ -356,7 +356,7 @@ const CaptureTable = () => {
           open={captureDetail.isDetailsPaneOpen}
           captureId={captureDetail.id}
           onClose={closeDrawer}
-          page={'CAPTURES'}
+          page={'LEGACY'}
         />
       </CaptureDetailProvider>
     </Grid>

@@ -274,11 +274,15 @@ const Verify = (props) => {
     }
 
     /*
-     * create new tags and return all the applied tags
+     * if approved, create new tags and return all the applied tags
      */
-    const tags = await tagsContext.createTags();
-    approveAction.tags = tags.map((t) => t.id);
+    if (approveAction.isApproved) {
+      const tags = await tagsContext.createTags();
+      log.debug('TAGS -->', tags);
+      approveAction.tags = tags.map((t) => t.id);
+    }
     const result = await verifyContext.approveAll(approveAction);
+    log.debug('APPROVED captures --->', result);
 
     if (!result) {
       window.alert('Failed to approve/reject a capture');
@@ -349,7 +353,7 @@ const Verify = (props) => {
           width: `calc(100% / ${idx ? idx : 1})`,
         },
       };
-      const key = `@media (min-width: ${WIDTH * idx + SIDE_PANEL_WIDTH}px) 
+      const key = `@media (min-width: ${WIDTH * idx + SIDE_PANEL_WIDTH}px)
                       and (max-width: ${
                         WIDTH * (idx + 1) + SIDE_PANEL_WIDTH
                       }px)`;

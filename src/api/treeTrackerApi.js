@@ -46,8 +46,6 @@ export default {
       delete where.active;
       delete where.approved;
 
-      log.debug('getRawCaptures where -->', where);
-
       const filterObj = {
         ...where,
         limit: rowsPerPage,
@@ -68,32 +66,53 @@ export default {
       handleError(error);
     }
   },
-  approveCaptureImage(capture, morphology, age, captureApprovalTag, speciesId) {
+  getRawCaptureCount({ filter }, abortController) {
     try {
-      log.debug('approveCaptureImage', capture, captureApprovalTag);
+      const where = filter.getWhereObj();
+      where.status =
+        STATUS_STATES[getVerificationStatus(where.active, where.approved)];
+      delete where.active;
+      delete where.approved;
 
-      // map legacy data to fields for new microservice
+      const filterObj = { ...where };
+
+      const query = `${QUERY_API}/raw-captures/count${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
+
+      return fetch(query, {
+        headers: {
+          Authorization: session.token,
+        },
+        signal: abortController?.signal,
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  approveCaptureImage(capture, morphology, age, speciesId) {
+    try {
+      // Note: not all raw-capture fields are added to a capture
       const newCapture = {
-        id: capture.uuid,
-        reference_id: capture.id,
-        session_id: capture.session_id, // no legacy equivalent
-        planterId: capture.planterId, // legacy only
-        grower_account_id: capture.grower_account_id, // no legacy equivalent
+        id: capture.id,
+        reference_id: capture.reference_id,
+        session_id: capture.session_id,
+        grower_account_id: capture.grower_account_id,
         planting_organization_id: capture.organization_id,
-        device_configuration_id: capture.device_configuration_id, // no legacy equivalent
-        image_url: capture.imageUrl,
+        device_configuration_id: capture.device_configuration_id,
+        image_url: capture.image_url,
         lat: capture.lat,
         lon: capture.lon,
         gps_accuracy: capture.gps_accuracy,
-        captured_at: capture.timeCreated,
-        note: capture.note,
+        captured_at: capture.captured_at,
+        note: capture.note ? capture.note : null,
         age: age,
         morphology,
         species_id: speciesId,
       };
 
       // add the new capture
-      fetch(`${TREETRACKER_API}/captures`, {
+      return fetch(`${TREETRACKER_API}/captures`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -105,21 +124,19 @@ export default {
       handleError(error);
     }
   },
-  rejectCaptureImage(capture, rejectionReason) {
+  async rejectCaptureImage(capture, rejectionReason) {
     try {
-      log.debug('reject capture', capture.uuid, rejectionReason);
-      const query = `${FIELD_DATA_API}/raw-captures/${capture.uuid}`;
-      return fetch(query, {
+      log.debug('reject capture', capture.id, rejectionReason);
+      const query = `${FIELD_DATA_API}/raw-captures/${capture.id}/reject`;
+      const data = await fetch(query, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify({
-          status: 'rejected',
-          rejection_reason: rejectionReason,
-        }),
+        body: JSON.stringify({ rejection_reason: rejectionReason }),
       }).then(handleResponse);
+      return data;
     } catch (error) {
       handleError(error);
     }
@@ -246,7 +263,7 @@ export default {
   },
   getSpeciesById(id) {
     try {
-      const query = `${API_ROOT}/api/species/${id}`;
+      const query = `${API_ROOT}/api/species?filter={"where":{"uuid": "${id}"}}`;
 
       return fetch(query, {
         method: 'GET',
