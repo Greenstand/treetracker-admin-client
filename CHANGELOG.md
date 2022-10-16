@@ -1,3 +1,10 @@
+## [1.109.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.3...v1.109.4) (2022-10-16)
+
+
+### Bug Fixes
+
+* remove truncate logic for capture reference id ([#898](https://github.com/Greenstand/treetracker-admin-client/issues/898)) ([bee1c94](https://github.com/Greenstand/treetracker-admin-client/commit/bee1c946cc32ccf1be03042f1119298446a50384))
+
 ## [1.109.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.2...v1.109.3) (2022-10-13)
 
 
