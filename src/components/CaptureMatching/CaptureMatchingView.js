@@ -558,8 +558,7 @@ function CaptureMatchingView() {
             <Box className={classes.box2}>
               <Tooltip title={captureImage.reference_id} interactive>
                 <Typography variant="h5">
-                  Capture{' '}
-                  {(captureImage.reference_id + '').substring(0, 10) + '...'}
+                  Capture {captureImage.reference_id}
                 </Typography>
               </Tooltip>
               <Box className={classes.captureImageCaptureInfo}>
