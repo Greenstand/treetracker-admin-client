@@ -25,6 +25,7 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
+  Link,
   MenuItem,
   Tooltip,
   Input,
@@ -199,7 +200,6 @@ const RegionTable = (props) => {
   };
 
   const handleOpenDetails = (item, isCollection) => {
-    console.log(item);
     setSelectedItem({
       ...item,
       isCollection,
@@ -277,7 +277,7 @@ const RegionTable = (props) => {
   const RegionTableRows = () => {
     return (showCollections ? collections : regions).map((row) => (
       <TableRow
-        key={row.id}
+        key={`${row.id}-${row.gid}`}
         role="listitem"
         hover
         onClick={() => {
@@ -394,10 +394,6 @@ const RegionTable = (props) => {
           <Grid item className={classes.itemDetailsContents}>
             <Grid container direction="column" justifyContent="space-around">
               <Grid item className={classes.itemRegionsDetail}>
-                <Typography>The region shape on a basic map</Typography>
-                <Typography variant="h6">Upcoming...</Typography>
-              </Grid>
-              <Grid item className={classes.itemRegionsDetail}>
                 <Typography>Name</Typography>
                 <Typography variant="h6">
                   {selectedItem?.name ?? '---'}
@@ -415,13 +411,26 @@ const RegionTable = (props) => {
               )}
               {!showCollections && (
                 <Grid item className={classes.itemRegionsDetail}>
+                  <Typography>Collection</Typography>
                   <Typography>
-                    Collection: would be a link to collection details
+                    <Link
+                      underline="always"
+                      target="_blank"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowCollections(true);
+                        let region = selectedItem;
+                        let collection = region.collection;
+                        setSelectedItem(collection);
+                      }}
+                      style={{ display: 'inline-block', cursor: 'pointer' }}
+                    >
+                      Collection details
+                    </Link>
                   </Typography>
-                  <Typography variant="h6">Link</Typography>
                 </Grid>
               )}
-              {!showCollections && (
+              {!showCollections && selectedItem?.properties && (
                 <Grid item className={classes.itemRegionsDetail}>
                   <Typography>Properties</Typography>
                   <Typography>
@@ -429,21 +438,6 @@ const RegionTable = (props) => {
                   </Typography>
                 </Grid>
               )}
-              {/* <Grid item className={classes.itemRegionsDetail}>
-                <Typography>Properties</Typography>
-                <Typography>Id: </Typography>
-                <Typography variant="h6">
-                  {selectedItem?.properties.Id ?? "---"}
-                </Typography>
-                <Typography>gid: </Typography>
-                <Typography variant="h6">
-                  {selectedItem?.properties.gid ?? "---"}
-                </Typography>
-                <Typography>City</Typography>
-                <Typography variant="h6">
-                  {selectedItem?.properties.City ?? "---"}
-                </Typography>
-              </Grid> */}
             </Grid>
 
             {!showCollections && (
@@ -496,17 +490,24 @@ const RegionTable = (props) => {
           </Grid>
 
           <Grid container direction="column" justifyContent="space-around">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.itemDrawerDetailsDownloadButton}
-            >
-              DOWNLOAD
-            </Button>
+            {!showCollections && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.itemDrawerDetailsDownloadButton}
+                onClick={() => handleDownload(selectedItem)}
+              >
+                DOWNLOAD
+              </Button>
+            )}
             <Button
               variant="contained"
               color="primary"
               className={classes.itemDrawerDetailsEditButton}
+              onClick={() => {
+                handleEdit(selectedItem, showCollections);
+                setDrawerOpen(false);
+              }}
             >
               EDIT
             </Button>
@@ -514,6 +515,7 @@ const RegionTable = (props) => {
               color="primary"
               variant="text"
               className={classes.itemDrawerDetailsDeleteButton}
+              onClick={() => handleDelete(selectedItem, showCollections)}
             >
               DELETE
             </Button>
@@ -858,13 +860,13 @@ const EditModal = ({
           showSnackbar(
             `${isCollection ? 'Collection' : res?.region?.name} ${
               isUpload ? 'uploaded' : 'updated'
-            }`
+            } `
           );
           setOpenEdit(false);
         }
       } catch (error) {
         // TO DO - report the error details
-        alert(`Upload failed: ${error}`);
+        alert(`Upload failed: ${error} `);
       }
       setSaveInProgress(false);
     }
@@ -875,7 +877,7 @@ const EditModal = ({
       <DialogTitle id="form-dialog-title">
         {isUpload
           ? 'Upload New Region or Collection'
-          : `Edit ${isCollection ? 'Collection' : 'Region'}`}
+          : `Edit ${isCollection ? 'Collection' : 'Region'} `}
       </DialogTitle>
       <DialogContent>
         {isUpload && (
@@ -1043,7 +1045,7 @@ const DeleteDialog = ({
         setOpenDelete(false);
       }
     } catch (error) {
-      alert(`Failed to delete item: ${error}`);
+      alert(`Failed to delete item: ${error} `);
     }
   };
 
