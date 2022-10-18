@@ -100,7 +100,6 @@ const styles = (theme) => ({
   },
   itemRegionsDetail: {
     padding: theme.spacing(1, 0, 0, 0),
-    color: theme.palette.stats.carbonGrey,
   },
   itemDetailsContentsDivider: {
     margin: theme.spacing(4, 0, 4, 0),
