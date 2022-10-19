@@ -205,7 +205,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
         setGrower(match);
 
-        if (match.devices.length) {
+        if (match?.devices?.length) {
           const devices = formatDevices(match);
           setDeviceIdentifiers(devices);
         }
