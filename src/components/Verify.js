@@ -7,6 +7,7 @@ import {
   Button, // replace with icons down the line
   Grid,
   CircularProgress,
+  LinearProgress,
   IconButton,
   Snackbar,
   Avatar,
@@ -14,6 +15,7 @@ import {
   Box,
   TablePagination,
   Divider,
+  AppBar,
 } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
@@ -42,28 +44,34 @@ const SIDE_PANEL_WIDTH = 315;
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8),
+    justifyContent: 'center',
+  },
+  appBar: {
+    position: 'fixed',
+    zIndex: '10000',
   },
   card: {
     position: 'relative',
-    display: 'grid',
     padding: 0,
     cursor: 'pointer',
     borderRadius: '16px',
+  },
+  cardContainer: {
+    position: 'relative',
+    margin: theme.spacing(1),
+    padding: theme.spacing(2),
     '&:hover $cardMedia': {
-      transform: 'scale(1.04)',
+      transform: 'scale(1.08)',
+    },
+    '&:hover $cardShade': {
+      background:
+        'linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.5) 15%, rgba(0,0,0,.15) 31%, rgba(0,0,0,0) 100%);',
     },
     '&:hover $cardActions': {
       opacity: 1,
       transition: theme.transitions.create('opacity', {
         easing: theme.transitions.easing.easeInOut,
-        duration: '.8s',
-      }),
-    },
-    '&:hover $cardDetail': {
-      opacity: 1,
-      transition: theme.transitions.create('opacity', {
-        easing: theme.transitions.easing.easeInOut,
-        duration: '.8s',
+        duration: '.4s',
       }),
     },
   },
@@ -71,41 +79,39 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   cardCheckbox: {
-    gridArea: '1/-1',
+    position: 'absolute',
+    top: 0,
     height: '1.2em',
     width: '1.2em',
     margin: '4px',
     pointerEvents: 'none',
     borderRadius: '50%',
-    zIndex: 1,
+  },
+  cardShade: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%',
   },
   cardSelected: {
     backgroundColor: theme.palette.action.selected,
     borderRadius: '24px',
   },
   cardMedia: {
-    gridArea: '1/-1',
-    transform: 'scale(1)',
+    transform: 'scale(1.02)',
     transition: theme.transitions.create('transform', {
       easing: theme.transitions.easing.easeInOut,
       duration: '0.2s',
     }),
   },
   cardActions: {
-    gridArea: '1/-1',
-    alignSelf: 'end',
-    display: 'flex',
-    zIndex: '1',
-    opacity: 0,
-    padding: '4px',
-  },
-  cardDetail: {
     position: 'absolute',
-    top: 0,
-    opacity: 0,
-    width: '96%',
+    bottom: '12px',
+    left: 0,
+    width: '100%',
     display: 'flex',
-    justifyContent: 'flex-end',
+    opacity: 0,
+    justifyContent: 'center',
   },
   placeholderCard: {
     pointerEvents: 'none',
@@ -186,10 +192,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   iconButton: {
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    marginRight: theme.spacing(1),
+    margin: theme.spacing(0.5),
+    backgroundColor: 'rgba(255, 255, 255, .9)',
     '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+      backgroundColor: 'rgba(255, 255, 255, 0)',
+      outline: '1px solid #999',
+    },
+    '&:hover $myTooltip': {
+      visibility: 'visible',
+      opacity: 1,
+      transition: 'opacity .8s',
     },
   },
   label: {
@@ -197,11 +209,35 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
-  spinner: {
-    display: 'flex',
-    justifyContent: 'center',
-    margin: theme.spacing(2),
-    width: '100%',
+  tooltip: {
+    backgroundColor: 'rgba(40, 40, 40, 0.8)',
+    fontSize: '.8rem',
+  },
+  myTooltip: {
+    visibility: 'hidden',
+    opacity: 0,
+    minWidth: '90px',
+    color: 'white',
+    backgroundColor: 'rgba(40, 40, 40, 0.8)',
+    fontSize: '.8rem',
+    textAlign: 'center',
+    padding: theme.spacing(1),
+    borderRadius: '6px',
+    position: 'absolute',
+    zIndex: 1,
+    bottom: '130%',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+    '&::after': {
+      content: '" "',
+      position: 'absolute',
+      top: '100%',
+      left: '50%',
+      marginLeft: '-8px',
+      borderWidth: '8px',
+      borderStyle: 'solid',
+      borderColor: 'rgba(40, 40, 40, 0.8) transparent transparent transparent',
+    },
   },
 }));
 
@@ -210,7 +246,6 @@ const Verify = (props) => {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const classes = useStyles(props);
-  const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
   const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
@@ -227,17 +262,11 @@ const Verify = (props) => {
   /*
    * effect to load page when mounted
    */
-
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
     document.title = `Verify - ${documentTitle}`;
   }, []);
-
-  /* to display progress */
-  useEffect(() => {
-    setComplete(verifyContext.approveAllComplete);
-  }, [verifyContext.approveAllComplete]);
 
   const handleCaptureClick = (captureId) => (e) => {
     e.stopPropagation();
@@ -280,12 +309,16 @@ const Verify = (props) => {
     }
 
     /*
-     * create new tags and return all the applied tags
+     * if approved, create new tags and return all the applied tags
      */
-    const tags = await tagsContext.createTags();
-    approveAction.tags = tags.map((t) => t.id);
+    if (approveAction.isApproved) {
+      const tags = await tagsContext.createTags();
+      log.debug('TAGS -->', tags);
+      approveAction.tags = tags.map((t) => t.id);
+    }
     const result = await verifyContext.approveAll(approveAction);
 
+    log.debug('APPROVED captures --->', result);
     if (!result) {
       window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
@@ -355,7 +388,7 @@ const Verify = (props) => {
           width: `calc(100% / ${idx ? idx : 1})`,
         },
       };
-      const key = `@media (min-width: ${WIDTH * idx + SIDE_PANEL_WIDTH}px) 
+      const key = `@media (min-width: ${WIDTH * idx + SIDE_PANEL_WIDTH}px)
                       and (max-width: ${
                         WIDTH * (idx + 1) + SIDE_PANEL_WIDTH
                       }px)`;
@@ -374,8 +407,8 @@ const Verify = (props) => {
       return (
         <Box key={capture.id} className={cardStyles.cardElement}>
           <Box
-            p={2}
             className={clsx(
+              classes.cardContainer,
               verifyContext.captureImagesSelected[capture.id]
                 ? classes.cardSelected
                 : undefined,
@@ -388,12 +421,6 @@ const Verify = (props) => {
               className={classes.card}
               elevation={capture.placeholder ? 0 : 3}
             >
-              <Paper className={classes.cardCheckbox} elevation={4}>
-                {verifyContext.captureImagesSelected[capture.id] && (
-                  <CheckIcon />
-                )}
-              </Paper>
-
               <OptimizedImage
                 src={capture.image_url}
                 width={isImagesLarge ? 400 : 250}
@@ -406,53 +433,57 @@ const Verify = (props) => {
                 alertTitleSize="1.6rem"
                 alertTextSize="1rem"
               />
-
-              <Grid className={classes.cardActions}>
-                <IconButton
-                  className={classes.iconButton}
-                  onClick={handleShowGrowerDetail(capture.grower_account_id)}
-                  aria-label={`Grower details`}
-                  name={`Grower details`}
-                  title={`Grower details`}
-                >
-                  <Person color="primary" />
-                </IconButton>
-                <IconButton
-                  className={classes.iconButton}
-                  onClick={handleShowCaptureDetail(capture)}
-                  aria-label={`Capture details`}
-                  name={`Capture details`}
-                  title={`Capture details`}
-                >
-                  <Nature color="primary" />
-                </IconButton>
-                <IconButton
-                  className={classes.iconButton}
-                  onClick={handleCapturePinClick(capture.reference_id)}
-                  aria-label={`Capture location`}
-                  name={`Capture location`}
-                  title={`Capture location`}
-                >
-                  <LocationOn color="primary" />
-                </IconButton>
-                <IconButton
-                  className={classes.iconButton}
-                  onClick={handleGrowerMapClick(capture.grower_account_id)}
-                  aria-label={`Grower map`}
-                  name={`Grower map`}
-                  title={`Grower map`}
-                >
-                  <Map color="primary" />
-                </IconButton>
-              </Grid>
-
-              <Box className={classes.cardDetail}>
-                <CaptureDetailTooltip
-                  capture={capture}
-                  showCaptureClick={handleShowCaptureDetail}
-                />
-              </Box>
+              <Box className={classes.cardShade}></Box>
+              <Paper className={classes.cardCheckbox} elevation={4}>
+                {verifyContext.captureImagesSelected[capture.id] && (
+                  <CheckIcon />
+                )}
+              </Paper>
             </Card>
+
+            <Grid className={classes.cardActions}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowGrowerDetail(capture.grower_account_id)}
+                aria-label={`Grower details`}
+                name={`Grower details`}
+              >
+                <Person color="primary" />
+                <Box className={classes.myTooltip}>Grower details</Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowCaptureDetail(capture)}
+                aria-label={`Capture details`}
+                name={`Capture details`}
+              >
+                <Nature color="primary" />
+                <Box className={classes.myTooltip}>
+                  <CaptureDetailTooltip capture={capture} />
+                </Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleCapturePinClick(capture.reference_id)}
+                aria-label={`Capture location`}
+                name={`Capture location`}
+              >
+                <LocationOn color="primary" />
+                <Box className={classes.myTooltip}>Capture location</Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleGrowerMapClick(capture.grower_account_id)}
+                aria-label={`Grower map`}
+                name={`Grower map`}
+              >
+                <Map color="primary" />
+                <Box className={classes.myTooltip}>Grower map</Box>
+              </IconButton>
+            </Grid>
           </Box>
         </Box>
       );
@@ -564,9 +595,7 @@ const Verify = (props) => {
             <Divider width="100%" />
             <Grid container className={classes.wrapper}>
               {verifyContext.isLoading ? (
-                <Box className={classes.spinner}>
-                  <CircularProgress />
-                </Box>
+                <CircularProgress />
               ) : (
                 captureImageItems
               )}
@@ -583,6 +612,16 @@ const Verify = (props) => {
           submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
+
+      {verifyContext.isLoading && (
+        <AppBar className={classes.appBar}>
+          <LinearProgress
+            color="primary"
+            variant="determinate"
+            value={verifyContext.approveAllComplete}
+          />
+        </AppBar>
+      )}
 
       {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
         !verifyContext.isLoading &&

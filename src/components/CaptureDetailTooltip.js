@@ -1,22 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid, Typography, CardActionArea } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 import Badge from '@material-ui/icons/PersonPin';
 import AccessTime from '@material-ui/icons/DateRange';
 import { Note, Nature, Category } from '@material-ui/icons';
 import { getDateTimeStringLocale } from 'common/locale';
 import { SpeciesContext } from 'context/SpeciesContext';
 
-const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
+const CaptureDetailTooltip = ({ capture }) => {
   const CaptureDetailTooltipUseStyles = makeStyles(() => ({
-    button: {
-      margin: '4px',
-      padding: '4px',
-      background: 'rgba(255,255,255,.45)',
-      '&:hover': {
-        background: 'rgba(255,255,255,.8)',
-      },
-    },
     title: {
       fontSize: '.9rem',
       marginBottom: '4px',
@@ -47,8 +39,8 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
   }, [capture]);
 
   return (
-    <Box width={160} onClick={showCaptureClick(capture)}>
-      <CardActionArea className={styles.button}>
+    <Box width={160}>
+      <Box className={styles.button}>
         <Box className={styles.title}>Capture details</Box>
         {capture?.species_id && (
           <Grid container>
@@ -84,7 +76,7 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
             <Typography className={styles.label}>{capture.note}</Typography>
           </Grid>
         )}
-      </CardActionArea>
+      </Box>
     </Box>
   );
 };
