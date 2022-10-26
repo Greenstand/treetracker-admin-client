@@ -424,7 +424,7 @@ const RegionTable = (props) => {
                       }}
                       style={{ display: 'inline-block', cursor: 'pointer' }}
                     >
-                      Collection details
+                      {selectedItem?.collection_name || '---'}
                     </Link>
                   </Typography>
                 </Grid>
@@ -450,7 +450,7 @@ const RegionTable = (props) => {
                   direction="row"
                   className={classes.itemRegionsDetail}
                 >
-                  <Typography>Show on Org Map?</Typography>
+                  <Typography>Show on Org Map</Typography>
                   <Typography>
                     {selectedItem?.show_on_org_map ? (
                       <CheckIcon color="primary" />

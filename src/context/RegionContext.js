@@ -95,7 +95,7 @@ export function RegionProvider(props) {
     });
     setRegions(regions);
     setRegionCount(count);
-
+    console.log(regions);
     const collectionIds = [
       ...new Set(
         regions.map((region) => region.collection_id).filter((id) => id)
