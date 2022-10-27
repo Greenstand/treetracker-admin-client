@@ -162,11 +162,21 @@ const EditGrower = (props) => {
             </Grid>
           ))}
           <TextField
+            id="outlined-multiline-static"
+            className={classes.textInput}
+            label="About Me"
+            multiline
+            rows={3}
+            placeholder="About Me"
+            value={getValue('about')}
+          />
+          <TextField
             className={classes.textInput}
             label="Grower-entered organization"
             value={getValue('organization')}
             disabled
           />
+
           <SelectOrg
             orgId={getValue('organizationId')}
             defaultOrgs={[
