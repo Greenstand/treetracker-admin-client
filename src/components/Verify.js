@@ -266,15 +266,20 @@ const Verify = (props) => {
     }
 
     /*
-     * if approved, create new tags and return all the applied tags
+     * if approved, add captureApprovalTag to tagInput, create new tags, and return all the applied tags
      */
     if (approveAction.isApproved) {
-      const tags = await tagsContext.createTags();
-      log.debug('TAGS -->', tags);
+      log.debug('create tags');
+      const tags = await tagsContext.createTags(
+        approveAction.captureApprovalTag
+      );
       approveAction.tags = tags.map((t) => t.id);
+      delete approveAction.captureApprovalTag;
     }
+
+    // update approved and rejected captures
     const result = await verifyContext.approveAll(approveAction);
-    log.debug('APPROVED captures --->', result);
+
     if (!result) {
       window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
