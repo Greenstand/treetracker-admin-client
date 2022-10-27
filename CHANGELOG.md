@@ -1,3 +1,10 @@
+# [1.110.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.4...v1.110.0) (2022-10-27)
+
+
+### Features
+
+* add captureApprovalTags to other tags ([#906](https://github.com/Greenstand/treetracker-admin-client/issues/906)) ([6dcef09](https://github.com/Greenstand/treetracker-admin-client/commit/6dcef09d0f1bc415130ea72f098bdbe4451680ea))
+
 ## [1.109.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.3...v1.109.4) (2022-10-16)
 
 
