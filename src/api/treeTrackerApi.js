@@ -409,7 +409,6 @@ export default {
     }
   },
   createTag(tag) {
-    log.debug('createTag ---> ', tag);
     try {
       const query = `${TREETRACKER_API}/tags`;
       return fetch(query, {

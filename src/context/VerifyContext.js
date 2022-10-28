@@ -2,7 +2,6 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
-import { getOrganizationUUID } from 'api/apiUtils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -109,17 +108,15 @@ export function VerifyProvider(props) {
       throw Error('no approve action object!');
     }
     if (approveAction.isApproved) {
-      log.debug('approve');
-      const result = await api.approveCaptureImage(
+      log.debug('approve', capture.id);
+      await api.approveCaptureImage(
         capture,
         approveAction.morphology,
         approveAction.age,
         approveAction.speciesId
       );
 
-      log.debug('approved', result);
-
-      if (approveAction.tags) {
+      if (approveAction.tags.length) {
         await api.createCaptureTags(capture.id, approveAction.tags);
       }
     } else {
@@ -160,7 +157,6 @@ export function VerifyProvider(props) {
     return Object.keys(captureImagesSelected).filter((captureId) => {
       return captureImagesSelected[captureId] === true;
     });
-    // .map((captureId) => parseInt(captureId));
   };
 
   const getCaptureSelectedIdArr = () => {
@@ -212,7 +208,6 @@ export function VerifyProvider(props) {
 
   const approveAll = async (approveAction) => {
     try {
-      log.debug('approveAll items:%d', captureImages.length);
       setIsLoading(true);
       setIsApproveAllProcessing(true);
       const captureSelected = getCaptureSelectedArr();
@@ -220,6 +215,7 @@ export function VerifyProvider(props) {
       const undo = captureImages.filter((capture) =>
         captureSelected.some((id) => id === capture.id)
       );
+      log.debug('approveAll items:%d', captureSelected.length);
 
       for (let i = 0; i < total; i++) {
         const captureId = captureSelected[i];
@@ -230,15 +226,7 @@ export function VerifyProvider(props) {
             return a;
           }
         }, undefined);
-        const currentFilter = filter.getWhereObj();
-        capture.organization_id =
-          currentFilter.organizationId || getOrganizationUUID();
-        // log.debug(
-        //   'organization_id:',
-        //   currentFilter.organizationId,
-        //   getOrganizationUUID(),
-        //   capture.organization_id
-        // );
+
         await approve({
           capture,
           approveAction,
