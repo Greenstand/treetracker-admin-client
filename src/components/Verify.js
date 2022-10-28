@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     padding: theme.spacing(2, 8),
     justifyContent: 'center',
-    pointerEvents: 'none',
   },
   appBar: {
     position: 'fixed',
@@ -63,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     margin: theme.spacing(0.5),
     padding: theme.spacing(2),
+    pointerEvents: 'none',
     '&:hover $cardMedia': {
       transform: 'scale(1.04)',
     },
@@ -265,7 +265,8 @@ const Verify = (props) => {
   });
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
-  const cardRef = useRef();
+  const cRef = useRef([]);
+
   /*
    * effect to load page when mounted
    */
@@ -373,12 +374,13 @@ const Verify = (props) => {
     verifyContext.setCurrentPage(page);
   }
 
-  function handleImageLoaded() {
+  const handleImageLoaded = (idx) => () => {
     // unblocking pointer events on cards after first image loaded
     // pointer events are blocked due to prevent unnecessary visual effects
     // on cards before images loaded
-    cardRef.current.style.pointerEvents = 'all';
-  }
+    // WARNING: This behavior causes a test error
+    cRef.current[idx].style.pointerEvents = 'auto';
+  };
 
   /*=============================================================*/
   const makeCardStyles = makeStyles(() => {
@@ -403,7 +405,7 @@ const Verify = (props) => {
 
   const cardStyles = makeCardStyles();
 
-  const captureImageItems = verifyContext.captureImages.map((capture) => {
+  const captureImageItems = verifyContext.captureImages.map((capture, idx) => {
     return (
       <Box key={capture.id} className={cardStyles.cardElement}>
         <Box
@@ -413,6 +415,7 @@ const Verify = (props) => {
               ? classes.cardSelected
               : undefined
           )}
+          ref={(el) => (cRef.current[idx] = el)}
         >
           <Card
             onClick={handleCaptureClick(capture.id)}
@@ -434,7 +437,7 @@ const Verify = (props) => {
               alertPadding="5rem 0 0 1rem"
               alertTitleSize="1.6rem"
               alertTextSize="1rem"
-              onImageReady={handleImageLoaded}
+              onImageReady={handleImageLoaded(idx)}
             />
             <Box className={classes.cardShade}></Box>
             <Paper className={classes.cardCheckbox} elevation={4}>
@@ -594,7 +597,7 @@ const Verify = (props) => {
             </Grid>
 
             <Divider width="100%" />
-            <Grid container className={classes.wrapper} ref={cardRef}>
+            <Grid container className={classes.wrapper}>
               {verifyContext.isLoading ? (
                 <CircularProgress />
               ) : (
