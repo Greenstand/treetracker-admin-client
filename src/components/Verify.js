@@ -323,8 +323,6 @@ const Verify = (props) => {
     }
     const result = await verifyContext.approveAll(approveAction);
 
-    log.debug('APPROVED captures --->', result);
-
     if (!result) {
       window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
