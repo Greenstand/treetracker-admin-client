@@ -62,14 +62,12 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     margin: theme.spacing(0.5),
     padding: theme.spacing(2),
-    pointerEvents: 'none',
+  },
+  cardHover: {
     '&:hover $cardMedia': {
       transform: 'scale(1.04)',
     },
-    '&:hover $cardShade': {
-      opacity: 1,
-    },
-    '&:hover $cardActions': {
+    '&:hover $cardShade, &:hover $cardActions': {
       opacity: 1,
     },
   },
@@ -80,9 +78,8 @@ const useStyles = makeStyles((theme) => ({
     width: '1.5em',
     margin: theme.spacing(1),
     borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: 'grid',
+    placeItems: 'center',
   },
   cardShade: {
     position: 'absolute',
@@ -375,11 +372,8 @@ const Verify = (props) => {
   }
 
   const handleImageLoaded = (idx) => () => {
-    // unblocking pointer events on cards after first image loaded
-    // pointer events are blocked due to prevent unnecessary visual effects
-    // on cards before images loaded
-    // WARNING: This behavior causes a test error
-    cRef.current[idx].style.pointerEvents = 'auto';
+    // add hover effect on card after image loaded
+    cRef.current[idx].className += ` ${classes.cardHover}`;
   };
 
   /*=============================================================*/
@@ -415,79 +409,86 @@ const Verify = (props) => {
               ? classes.cardSelected
               : undefined
           )}
-          ref={(el) => (cRef.current[idx] = el)}
         >
-          <Card
-            onClick={handleCaptureClick(capture.id)}
-            id={`card_${capture.id}`}
-            className={classes.card}
-            elevation={capture.placeholder ? 0 : 3}
+          <Box
+            ref={(el) => {
+              cRef.current[idx] = el;
+            }}
           >
-            <Box className={classes.cardIconContainer}>
-              <Image className={classes.cardIcon} />
-            </Box>
-            <OptimizedImage
-              src={capture.image_url}
-              width={isImagesLarge ? 400 : 250}
-              className={classes.cardMedia}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              alertWidth="100%"
-              alertHeight="200%"
-              alertPosition="absolute"
-              alertPadding="5rem 0 0 1rem"
-              alertTitleSize="1.6rem"
-              alertTextSize="1rem"
-              onImageReady={handleImageLoaded(idx)}
-            />
-            <Box className={classes.cardShade}></Box>
-            <Paper className={classes.cardCheckbox} elevation={4}>
-              {verifyContext.captureImagesSelected[capture.id] && <CheckIcon />}
-            </Paper>
-          </Card>
-
-          <Grid className={classes.cardActions}>
-            <IconButton
-              className={classes.iconButton}
-              onClick={handleShowGrowerDetail(capture.grower_account_id)}
-              aria-label={`Grower details`}
-              name={`Grower details`}
+            <Card
+              onClick={handleCaptureClick(capture.id)}
+              id={`card_${capture.id}`}
+              className={classes.card}
+              elevation={capture.placeholder ? 0 : 3}
             >
-              <Person color="primary" />
-              <Box className={classes.myTooltip}>Grower details</Box>
-            </IconButton>
-
-            <IconButton
-              className={classes.iconButton}
-              onClick={handleShowCaptureDetail(capture)}
-              aria-label={`Capture details`}
-              name={`Capture details`}
-            >
-              <Nature color="primary" />
-              <Box className={classes.myTooltip}>
-                <CaptureDetailTooltip capture={capture} />
+              <Box className={classes.cardIconContainer}>
+                <Image className={classes.cardIcon} />
               </Box>
-            </IconButton>
+              <OptimizedImage
+                src={capture.image_url}
+                width={isImagesLarge ? 400 : 250}
+                className={classes.cardMedia}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alertWidth="100%"
+                alertHeight="200%"
+                alertPosition="absolute"
+                alertPadding="5rem 0 0 1rem"
+                alertTitleSize="1.6rem"
+                alertTextSize="1rem"
+                onImageReady={handleImageLoaded(idx)}
+              />
+              <Box className={classes.cardShade}></Box>
+              <Paper className={classes.cardCheckbox} elevation={4}>
+                {verifyContext.captureImagesSelected[capture.id] && (
+                  <CheckIcon />
+                )}
+              </Paper>
+            </Card>
 
-            <IconButton
-              className={classes.iconButton}
-              onClick={handleCapturePinClick(capture.reference_id)}
-              aria-label={`Capture location`}
-              name={`Capture location`}
-            >
-              <LocationOn color="primary" />
-              <Box className={classes.myTooltip}>Capture location</Box>
-            </IconButton>
+            <Grid className={classes.cardActions}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowGrowerDetail(capture.grower_account_id)}
+                aria-label={`Grower details`}
+                name={`Grower details`}
+              >
+                <Person color="primary" />
+                <Box className={classes.myTooltip}>Grower details</Box>
+              </IconButton>
 
-            <IconButton
-              className={classes.iconButton}
-              onClick={handleGrowerMapClick(capture.grower_account_id)}
-              aria-label={`Grower map`}
-              name={`Grower map`}
-            >
-              <Map color="primary" />
-              <Box className={classes.myTooltip}>Grower map</Box>
-            </IconButton>
-          </Grid>
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowCaptureDetail(capture)}
+                aria-label={`Capture details`}
+                name={`Capture details`}
+              >
+                <Nature color="primary" />
+                <Box className={classes.myTooltip}>
+                  <CaptureDetailTooltip capture={capture} />
+                </Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleCapturePinClick(capture.reference_id)}
+                aria-label={`Capture location`}
+                name={`Capture location`}
+              >
+                <LocationOn color="primary" />
+                <Box className={classes.myTooltip}>Capture location</Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleGrowerMapClick(capture.grower_account_id)}
+                aria-label={`Grower map`}
+                name={`Grower map`}
+              >
+                <Map color="primary" />
+                <Box className={classes.myTooltip}>Grower map</Box>
+              </IconButton>
+            </Grid>
+          </Box>
         </Box>
       </Box>
     );
