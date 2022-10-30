@@ -567,7 +567,6 @@ const Verify = (props) => {
           >
             {isFilterShown && (
               <FilterTop
-                isOpen={isFilterShown}
                 onSubmit={verifyContext.updateFilter}
                 filter={verifyContext.filter}
                 onClose={handleFilterClick}
@@ -656,13 +655,13 @@ const Verify = (props) => {
             className={classes.snackbar}
           />
         )}
-      {growerDetail.isOpen && (
-        <GrowerDetail
-          open={growerDetail.isOpen}
-          growerId={growerDetail.growerId}
-          onClose={handleCloseGrowerDetail}
-        />
-      )}
+
+      <GrowerDetail
+        open={growerDetail.isOpen}
+        growerId={growerDetail.growerId}
+        onClose={handleCloseGrowerDetail}
+      />
+
       <CaptureDetailProvider>
         <CaptureDetailDialog
           open={captureDetail.isOpen}
