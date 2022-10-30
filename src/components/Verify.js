@@ -6,7 +6,6 @@ import {
   Card,
   Button, // replace with icons down the line
   Grid,
-  CircularProgress,
   LinearProgress,
   IconButton,
   Snackbar,
@@ -30,6 +29,7 @@ import FilterTop from './FilterTop';
 import CaptureDetailDialog from './CaptureDetailDialog';
 import OptimizedImage from './OptimizedImage';
 import CaptureDetailTooltip from './CaptureDetailTooltip';
+import Spinner from './common/Spinner';
 import { documentTitle } from 'common/variables';
 import { countToLocaleString } from 'common/numbers';
 import { VerifyContext } from 'context/VerifyContext';
@@ -597,11 +597,7 @@ const Verify = (props) => {
 
             <Divider width="100%" />
             <Grid container className={classes.wrapper}>
-              {verifyContext.isLoading ? (
-                <CircularProgress />
-              ) : (
-                captureImageItems
-              )}
+              {verifyContext.isLoading ? <Spinner /> : captureImageItems}
             </Grid>
             <Divider width="100%" />
 
