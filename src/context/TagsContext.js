@@ -1,6 +1,8 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useContext, useState, createContext, useEffect } from 'react';
 import api from '../api/treeTrackerApi';
-import { getOrganizationUUID } from '../api/apiUtils';
+import { getOrganizationId } from '../api/apiUtils';
+import { AppContext } from './AppContext';
+
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/TagsContext');
@@ -14,6 +16,7 @@ export const TagsContext = createContext({
 });
 
 export function TagsProvider(props) {
+  const { orgList } = useContext(AppContext);
   const [tagList, setTagList] = useState([]);
   const [tagInput, setTagInput] = useState([]);
 
@@ -33,10 +36,11 @@ export function TagsProvider(props) {
    */
 
   const createTags = async (newTag) => {
-    const orgId = getOrganizationUUID();
+    const orgId = getOrganizationId();
+    const { stakeholder_uuid = null } = orgList.find((org) => org.id === orgId);
     const newTagTemplate = {
       isPublic: orgId ? false : true,
-      owner_id: orgId,
+      owner_id: stakeholder_uuid,
     };
     const promises = [...tagInput, newTag].map(async (t) => {
       const existingTag = tagList.find((tag) => tag.name === t);
