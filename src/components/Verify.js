@@ -16,7 +16,7 @@ import {
   Divider,
   AppBar,
 } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
 import IconFilter from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
@@ -40,6 +40,11 @@ import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
 const SIDE_PANEL_WIDTH = 315;
+const absPosition = {
+  position: 'absolute',
+  top: 0,
+};
+const size = (width, height) => ({ width, height });
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -55,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     cursor: 'pointer',
     borderRadius: theme.spacing(4),
-    minHeight: '4rem',
+    minHeight: '15rem',
     background: 'ghostwhite',
   },
   cardContainer: {
@@ -72,36 +77,34 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   cardCheckbox: {
-    position: 'absolute',
-    top: 0,
-    height: '1.5em',
-    width: '1.5em',
+    ...absPosition,
+    ...size('1.5em', '1.5em'),
     margin: theme.spacing(1),
     borderRadius: '50%',
     display: 'grid',
     placeItems: 'center',
   },
   cardShade: {
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: '100%',
+    ...absPosition,
+    ...size('100%', '100%'),
     background:
       'linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.5) 15%, rgba(0,0,0,.15) 31%, rgba(0,0,0,0) 100%);',
     opacity: 0,
     transition: 'opacity .4s',
   },
   cardIconContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
+    ...absPosition,
+    ...size('100%', '100%'),
+    display: 'grid',
+    placeItems: 'center',
   },
   cardIcon: {
-    position: 'absolute',
-    top: 0,
-    width: '4rem',
-    height: '4rem',
+    ...size('50%', '50%'),
     fill: 'gainsboro',
+  },
+  cardSkeleton: {
+    ...absPosition,
+    ...size('100%', '100%'),
   },
   cardSelected: {
     backgroundColor: theme.palette.action.selected,
@@ -144,8 +147,7 @@ const useStyles = makeStyles((theme) => ({
   },
   body: {
     display: 'flex',
-    height: '100%',
-    width: '100%',
+    ...size('100%', '100%'),
   },
   bodyInner: {
     display: 'flex',
@@ -153,8 +155,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   activeFilters: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
+    ...size(theme.spacing(5), theme.spacing(5)),
     marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
     fontSize: 'smaller',
@@ -421,6 +422,7 @@ const Verify = (props) => {
             >
               <Box className={classes.cardIconContainer}>
                 <Image className={classes.cardIcon} />
+                <Skeleton className={classes.cardSkeleton} variant="rect" />
               </Box>
               <OptimizedImage
                 src={capture.image_url}
