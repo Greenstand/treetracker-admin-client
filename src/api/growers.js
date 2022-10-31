@@ -8,7 +8,10 @@ export default {
   makeQueryString(filterObj) {
     let arr = [];
     for (const key in filterObj) {
-      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+      if (
+        (filterObj[key] || filterObj[key] === 0 || filterObj[key] === null) &&
+        filterObj[key] !== ''
+      ) {
         arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
       }
     }
@@ -31,7 +34,7 @@ export default {
     }
   },
   // query new microservice
-  getGrowers({ skip, rowsPerPage, filter }) {
+  getGrowers({ skip, rowsPerPage, filter }, abortController) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
       const growerFilter = {
@@ -49,6 +52,7 @@ export default {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

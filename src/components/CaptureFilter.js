@@ -313,11 +313,9 @@ function Filter(props) {
               />
               <SelectOrg
                 orgId={organizationId}
-                handleSelection={(org) =>
-                  setOrganizationId(
-                    org?.stakeholder_uuid ? org.stakeholder_uuid : org
-                  )
-                }
+                handleSelection={(org) => {
+                  setOrganizationId(org.stakeholder_uuid);
+                }}
               />
             </Grid>
             <Grid className={classes.inputContainer}>

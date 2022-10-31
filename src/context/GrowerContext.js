@@ -1,5 +1,6 @@
-import React, { useState, useEffect, createContext } from 'react';
-import FilterGrower from 'models/FilterGrower';
+import React, { useContext, useState, useEffect, createContext } from 'react';
+import { AppContext } from './AppContext.js';
+import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
 import * as loglevel from 'loglevel';
 
@@ -26,6 +27,7 @@ export const GrowerContext = createContext({
 });
 
 export function GrowerProvider(props) {
+  const { orgId, orgList } = useContext(AppContext);
   const [growers, setGrowers] = useState([]);
   const [pageSize, setPageSize] = useState(24);
   const [count, setCount] = useState(null);
@@ -35,9 +37,13 @@ export function GrowerProvider(props) {
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
-    load();
-    getCount();
-  }, [filter, pageSize, currentPage]);
+    const abortController = new AbortController();
+    if (orgId !== undefined) {
+      load({ signal: abortController.signal });
+      // getCount();
+    }
+    return () => abortController.abort();
+  }, [filter, pageSize, currentPage, orgId]);
 
   // EVENT HANDLERS
 
@@ -53,21 +59,59 @@ export function GrowerProvider(props) {
     setGrowers(growers);
   };
 
-  const load = async () => {
+  const load = async (abortController) => {
     log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const { total, grower_accounts } = await api.getGrowers({
-      skip: pageNumber * pageSize,
-      rowsPerPage: pageSize,
-      filter,
-    });
+
+    if (!filter.organizationId && orgId === null) {
+      filter.organizationId = null;
+    } else if (
+      //handle organization_id query to query all uuids for logged in org by default
+      filter.organizationId === ALL_ORGANIZATIONS ||
+      (!filter.organizationId && orgId)
+    ) {
+      // prevent it from being assigned an empty array
+      if (orgList.length && orgId !== null) {
+        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
+      } else {
+        filter.organizationId = orgId;
+      }
+    }
+
+    // log.debug('load growers', filter);
+
+    const { total, grower_accounts } = await api.getGrowers(
+      {
+        skip: pageNumber * pageSize,
+        rowsPerPage: pageSize,
+        filter,
+      },
+      abortController
+    );
     setCount(total);
     setGrowers(grower_accounts);
     setIsLoading(false);
   };
 
   const getCount = async () => {
+    if (!filter.organizationId && orgId === null) {
+      filter.organizationId = null;
+    } else if (
+      //handle organization_id query to query all uuids for logged in org by default
+      filter.organizationId === ALL_ORGANIZATIONS ||
+      (!filter.organizationId && orgId)
+    ) {
+      // prevent it from being assigned an empty array
+      if (orgList.length && orgId !== null) {
+        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
+      } else {
+        filter.organizationId = orgId;
+      }
+    }
+
+    log.debug('load grower count', filter);
+
     const { count } = await api.getCount({ filter });
     setCount(Number(count));
   };

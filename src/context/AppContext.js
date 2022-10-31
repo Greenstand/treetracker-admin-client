@@ -218,6 +218,7 @@ export const AppProvider = (props) => {
   const [routes, setRoutes] = useState(getRoutes(localUser));
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
+  const [orgId, setOrgId] = useState(undefined);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -232,6 +233,12 @@ export const AppProvider = (props) => {
     }
     setUserHasOrg(!!user?.policy?.organization?.id);
   }, [user, token]);
+
+  useEffect(() => {
+    if (orgList.length) {
+      getOrganizationUUID();
+    }
+  }, [orgList]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -308,8 +315,14 @@ export const AppProvider = (props) => {
 
   function getOrganizationUUID() {
     const orgId = session.user?.policy?.organization?.id || null;
-
     const foundOrg = orgList.find((org) => org.id === orgId);
+    console.log(
+      'getOrganizationUUID',
+      orgId,
+      foundOrg?.stakeholder_uuid,
+      orgList
+    );
+    setOrgId(foundOrg?.stakeholder_uuid || null);
     return foundOrg?.stakeholder_uuid || null;
   }
 
@@ -323,6 +336,7 @@ export const AppProvider = (props) => {
     user,
     token,
     routes,
+    orgId,
     orgList,
     userHasOrg,
     selectedFilters,

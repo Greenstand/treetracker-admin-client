@@ -63,28 +63,26 @@ export default class Filter {
       where.wallet = this.wallet;
     }
 
-    if (this.species_id === SPECIES_NOT_SET) {
+    if (this.speciesId === SPECIES_NOT_SET) {
       where.species_id = null;
-    } else if (this.species_id !== ALL_SPECIES) {
-      where.species_id = this.species_id;
-    }
-
-    if (this.tag) {
-      where.tag = this.tag;
+    } else if (this.speciesId === SPECIES_ANY_SET) {
+      where.species_id = 'not null';
+    } else if (this.speciesId !== ALL_SPECIES) {
+      where.species_id = this.speciesId;
     }
 
     if (this.tagId === TAG_NOT_SET) {
-      where.tag = null;
+      where.tag_id = null;
     } else if (this.tagId === ANY_TAG_SET) {
-      where.tag = '0';
+      where.tag_id = 'not null';
     } else if (this.tagId) {
-      where.tag = this.tagId;
+      where.tag_id = this.tagId;
     }
 
     if (this.organization_id === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
-    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
-      where.organization_id = this.organization_id;
+    } else {
+      where.organization_id = this.organizationId;
     }
 
     if (this.status) {
@@ -104,6 +102,8 @@ export default class Filter {
 
     let orCondition = false;
     const { ...restFilter } = where;
+
+    // can remove above once everything is updated to ms apis
 
     if (this.grower_account_id) {
       const planterIds = this.grower_account_id
@@ -188,7 +188,8 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
+    // if there's an organization id and it's not an array of all ids
+    if (this.organizationId && !this.organizationId.length) {
       numFilters += 1;
     }
 
@@ -196,13 +197,9 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.tokenId && this.tokenId !== 'All') {
-      numFilters += 1;
-    }
-
-    if (this.status) {
-      numFilters += 1;
-    }
+    // if (this.tokenId && this.tokenId !== 'All') {
+    //   numFilters += 1;
+    // }
 
     if (this.grower_account_id) {
       numFilters += 1;

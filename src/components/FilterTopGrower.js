@@ -50,9 +50,6 @@ function FilterTopGrower(props) {
   const [organizationId, setOrganizationId] = useState(
     filter?.organizationId || ALL_ORGANIZATIONS
   );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter?.stakeholderUUID || ALL_ORGANIZATIONS
-  );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
@@ -67,7 +64,7 @@ function FilterTopGrower(props) {
       id,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      organizationId: stakeholderUUID,
+      organizationId,
       email: email.trim(),
       phone: phone.trim(),
       device_identifier: deviceIdentifier.trim(),
@@ -82,7 +79,6 @@ function FilterTopGrower(props) {
     setFirstName('');
     setLastName('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
@@ -135,8 +131,7 @@ function FilterTopGrower(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) => {
-                  setStakeholderUUID(org.stakeholder_uuid);
-                  setOrganizationId(org.id);
+                  setOrganizationId(org.stakeholder_uuid);
                 }}
               />
               <TextField

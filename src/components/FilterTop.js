@@ -74,10 +74,7 @@ function Filter(props) {
   // console.log('render: filter top');
   // const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const {
-    classes,
-    filter = new FilterModel({ status: captureStatus.UNPROCESSED }),
-  } = props;
+  const { classes, filter } = props;
   const filterOptionAll = 'All';
   const startDateDefault = null;
   const endDateDefault = null;
@@ -95,10 +92,7 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organization_id || ALL_ORGANIZATIONS
-  );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
+    filter?.organizationId || ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
@@ -128,8 +122,7 @@ function Filter(props) {
     filter.status = status;
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
-    filter.organization_id = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
+    filter.organizationId = organizationId;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -147,7 +140,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -372,8 +364,7 @@ function Filter(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) => {
-                  setStakeholderUUID(org.stakeholder_uuid);
-                  setOrganizationId(org.id);
+                  setOrganizationId(org.stakeholder_uuid);
                 }}
               />
             </Grid>

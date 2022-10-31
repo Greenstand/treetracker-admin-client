@@ -18,7 +18,10 @@ export default {
   makeQueryString(filterObj) {
     let arr = [];
     for (const key in filterObj) {
-      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+      if (
+        (filterObj[key] || filterObj[key] === 0 || filterObj[key] === null) &&
+        filterObj[key] !== ''
+      ) {
         arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
       }
     }

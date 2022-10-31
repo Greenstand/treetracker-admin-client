@@ -1,8 +1,10 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useContext, useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
+import { AppContext } from './AppContext.js';
+import { ALL_ORGANIZATIONS } from 'models/Filter';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -36,6 +38,7 @@ export const VerifyContext = createContext({
 });
 
 export function VerifyProvider(props) {
+  const { orgId, orgList } = useContext(AppContext);
   const [captureImages, setCaptureImages] = useState([]);
   const [captureImagesUndo, setCaptureImagesUndo] = useState([]);
   const [captureImagesSelected, setCaptureImagesSelected] = useState({});
@@ -60,10 +63,13 @@ export function VerifyProvider(props) {
   /* load captures when the page or page size changes */
   useEffect(() => {
     const abortController = new AbortController();
-    setCaptureImages([]);
-    loadCaptureImages({ signal: abortController.signal });
+    // orgId can be either null, a uuid, or an [] when set
+    if (orgId !== undefined) {
+      setCaptureImages([]);
+      loadCaptureImages({ signal: abortController.signal });
+    }
     return () => abortController.abort();
-  }, [filter, pageSize, currentPage]);
+  }, [filter, pageSize, currentPage, orgId]);
 
   // STATE HELPER FUNCTIONS
 
@@ -137,6 +143,21 @@ export function VerifyProvider(props) {
 
     //set loading status
     setIsLoading(true);
+
+    if (!filter.organizationId && orgId === null) {
+      filter.organizationId = null;
+    } else if (
+      //handle organization_id query to query all uuids for logged in org by default
+      filter.organizationId === ALL_ORGANIZATIONS ||
+      (!filter.organizationId && orgId)
+    ) {
+      // prevent it from being assigned an empty array
+      if (orgList.length && orgId !== null) {
+        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
+      } else {
+        filter.organizationId = orgId;
+      }
+    }
 
     const pageParams = {
       page: currentPage,
