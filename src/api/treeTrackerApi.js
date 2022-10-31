@@ -372,12 +372,10 @@ export default {
   /*
    * Tags
    */
-  getTags(abortController) {
+  getTags(orgId, abortController) {
     try {
-      // TODO: order is not allowed as a filter
-      // const filterString = `order=name`;
-      // const query = `${TREETRACKER_API}/tags?${filterString}`;
-      const query = `${TREETRACKER_API}/tags`;
+      const filterString = orgId ? `?owner_id=${orgId}` : '';
+      const query = `${TREETRACKER_API}/tags${filterString}`;
 
       return fetch(query, {
         method: 'GET',

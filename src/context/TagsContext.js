@@ -1,6 +1,5 @@
 import React, { useContext, useState, createContext, useEffect } from 'react';
 import api from '../api/treeTrackerApi';
-import { getOrganizationId } from '../api/apiUtils';
 import { AppContext } from './AppContext';
 
 import * as loglevel from 'loglevel';
@@ -16,31 +15,31 @@ export const TagsContext = createContext({
 });
 
 export function TagsProvider(props) {
-  const { orgList } = useContext(AppContext);
+  const { getOrganizationUUID } = useContext(AppContext);
   const [tagList, setTagList] = useState([]);
   const [tagInput, setTagInput] = useState([]);
+  const orgId = getOrganizationUUID();
 
   useEffect(() => {
     const abortController = new AbortController();
-    loadTags({ signal: abortController.signal });
+    loadTags(orgId, { signal: abortController.signal });
     return () => abortController.abort();
-  }, []);
+  }, [orgId]);
 
   // EVENT HANDLERS
-  const loadTags = async () => {
-    const response = await api.getTags();
+  const loadTags = async (orgId, abortSignal) => {
+    const response = await api.getTags(orgId, abortSignal);
     setTagList(response.tags);
   };
+
   /*
    * check for new tags in tagInput and add them to the database
    */
-
   const createTags = async (newTag) => {
-    const orgId = getOrganizationId();
-    const { stakeholder_uuid = null } = orgList.find((org) => org.id === orgId);
+    const orgId = getOrganizationUUID();
     const newTagTemplate = {
       isPublic: orgId ? false : true,
-      owner_id: stakeholder_uuid,
+      owner_id: orgId,
     };
     const promises = [...tagInput, newTag].map(async (t) => {
       const existingTag = tagList.find((tag) => tag.name === t);
