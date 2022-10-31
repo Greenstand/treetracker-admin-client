@@ -210,9 +210,6 @@ const SpeciesTable = (props) => {
             checked={selected.includes(species.id)}
           />
         </TableCell>
-        <TableCell component="th" scope="row">
-          {species.id}
-        </TableCell>
         <TableCell component="th" scope="row" data-testid="species">
           {species.name}
         </TableCell>
@@ -301,15 +298,6 @@ const SpeciesTable = (props) => {
                 <TableHead>
                   <TableRow>
                     <TableCell width={20}></TableCell>
-                    <TableCell width={60}>
-                      ID
-                      <IconButton
-                        title="sortbyId"
-                        onClick={() => setOption(sortOptions.byId)}
-                      >
-                        <SortIcon />
-                      </IconButton>
-                    </TableCell>
                     <TableCell width={80}>
                       name
                       <IconButton
