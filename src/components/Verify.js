@@ -1,27 +1,26 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button'; // replace with icons down the line
-import Grid from '@material-ui/core/Grid';
-import AppBar from '@material-ui/core/AppBar';
-import Modal from '@material-ui/core/Modal';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import IconFilter from '@material-ui/icons/FilterList';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
-import { Box } from '@material-ui/core';
-import TablePagination from '@material-ui/core/TablePagination';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {
+  Typography,
+  Card,
+  Button, // replace with icons down the line
+  Grid,
+  LinearProgress,
+  IconButton,
+  Snackbar,
+  Avatar,
+  Paper,
+  Box,
+  TablePagination,
+  Divider,
+  AppBar,
+} from '@material-ui/core';
+import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
+import IconFilter from '@material-ui/icons/FilterList';
 import CheckIcon from '@material-ui/icons/Check';
-import { LocationOn, Person, Nature, Map } from '@material-ui/icons';
+import { LocationOn, Person, Nature, Map, Image } from '@material-ui/icons';
 import Navbar from './Navbar';
 import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
@@ -30,87 +29,114 @@ import FilterTop from './FilterTop';
 import CaptureDetailDialog from './CaptureDetailDialog';
 import OptimizedImage from './OptimizedImage';
 import CaptureDetailTooltip from './CaptureDetailTooltip';
-import { selectedHighlightColor, documentTitle } from '../common/variables.js';
-import { countToLocaleString } from '../common/numbers';
-import { VerifyContext } from '../context/VerifyContext';
-import { SpeciesContext } from '../context/SpeciesContext';
-import { TagsContext } from '../context/TagsContext';
-import { CaptureDetailProvider } from '../context/CaptureDetailContext';
+import Spinner from './common/Spinner';
+import { documentTitle } from 'common/variables';
+import { countToLocaleString } from 'common/numbers';
+import { VerifyContext } from 'context/VerifyContext';
+import { SpeciesContext } from 'context/SpeciesContext';
+import { TagsContext } from 'context/TagsContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 
-const log = require('loglevel').getLogger('../components/Verify');
+const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
 const SIDE_PANEL_WIDTH = 315;
+const absPosition = {
+  position: 'absolute',
+  top: 0,
+};
+const size = (width, height) => ({ width, height });
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    padding: theme.spacing(2, 8, 4, 8),
+    padding: theme.spacing(2, 8),
+    justifyContent: 'center',
   },
-  cardImg: {
-    width: '100%',
-    height: 'auto',
-  },
-  cardTitle: {
-    color: '#f00',
+  appBar: {
+    position: 'fixed',
+    zIndex: '10000',
   },
   card: {
+    position: 'relative',
+    padding: 0,
     cursor: 'pointer',
+    borderRadius: theme.spacing(4),
+    minHeight: '15rem',
+    background: 'ghostwhite',
+  },
+  cardContainer: {
+    position: 'relative',
+    margin: theme.spacing(0.5),
+    padding: theme.spacing(2),
+  },
+  cardHover: {
     '&:hover $cardMedia': {
       transform: 'scale(1.04)',
     },
+    '&:hover $cardShade, &:hover $cardActions': {
+      opacity: 1,
+    },
   },
   cardCheckbox: {
-    position: 'absolute',
-    height: '1.2em',
-    width: '1.2em',
-    top: '0.2rem',
-    left: '0.3rem',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
+    ...absPosition,
+    ...size('1.5em', '1.5em'),
+    margin: theme.spacing(1),
+    borderRadius: '50%',
+    display: 'grid',
+    placeItems: 'center',
+  },
+  cardShade: {
+    ...absPosition,
+    ...size('100%', '100%'),
+    background:
+      'linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.5) 15%, rgba(0,0,0,.15) 31%, rgba(0,0,0,0) 100%);',
+    opacity: 0,
+    transition: 'opacity .4s',
+  },
+  cardIconContainer: {
+    ...absPosition,
+    ...size('100%', '100%'),
+    display: 'grid',
+    placeItems: 'center',
+  },
+  cardIcon: {
+    ...size('50%', '50%'),
+    fill: 'gainsboro',
+  },
+  cardSkeleton: {
+    ...absPosition,
+    ...size('100%', '100%'),
   },
   cardSelected: {
     backgroundColor: theme.palette.action.selected,
-  },
-  cardContent: {
-    padding: 'calc(400%/3) 0 0 0',
-    position: 'relative',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selected: {
-    border: `2px ${selectedHighlightColor} solid`,
+    borderRadius: theme.spacing(6),
   },
   cardMedia: {
+    transform: 'scale(1.02)',
+    transition: 'transform .4s',
+  },
+  cardActions: {
     position: 'absolute',
-    top: 0,
-    bottom: 0,
+    bottom: theme.spacing(3),
     left: 0,
-    right: 0,
-    transform: 'scale(1)',
-    transition: theme.transitions.create('transform', {
-      easing: theme.transitions.easing.easeInOut,
-      duration: '0.2s',
-    }),
-  },
-  cardWrapper: {
-    position: 'relative',
-    padding: theme.spacing(2),
-    flex: '1 0 45%',
-  },
-  placeholderCard: {
-    pointerEvents: 'none',
-    '& $card': {
-      background: '#eee',
-      '& *': {
-        opacity: 0,
-      },
-    },
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    opacity: 0,
+    transition: 'opacity .4s',
   },
   title: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(2, 8),
+  },
+  titleLeft: {
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  titleBottom: {
+    justifyContent: 'flex-end',
     padding: theme.spacing(2, 8),
   },
   snackbar: {
@@ -119,37 +145,17 @@ const useStyles = makeStyles((theme) => ({
   snackbarContent: {
     backgroundColor: theme.palette.action.active,
   },
-  cardActions: {
-    display: 'flex',
-    padding: theme.spacing(0, 2),
-  },
-  button: {
-    marginRight: '8px',
-  },
   body: {
     display: 'flex',
-    height: '100%',
+    ...size('100%', '100%'),
   },
   bodyInner: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  tooltip: {
-    maxWidth: 'none',
-  },
-  MuiDialogActionsSpacing: {
-    paddingLeft: '16px',
-    paddingRight: '16px',
-  },
-  sidePanelSubmitButton: {
-    width: '128px',
-  },
-  mb: {
-    marginBottom: '1rem',
+    width: '100%',
   },
   activeFilters: {
-    width: theme.spacing(5),
-    height: theme.spacing(5),
+    ...size(theme.spacing(5), theme.spacing(5)),
     marginLeft: '0.75rem',
     backgroundColor: theme.palette.stats.green,
     fontSize: 'smaller',
@@ -179,10 +185,63 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(0, 0, 0, 0.25)',
     color: 'black',
     '&.Mui-selected': {
-      borderColor: theme.palette.action.active,
+      borderColor: theme.palette.stats.green,
+      border: '2px solid',
     },
     '&.Mui-selected span': {
       color: theme.palette.stats.green,
+    },
+  },
+  iconButton: {
+    margin: theme.spacing(0.5),
+    backgroundColor: 'transparent',
+    outline: '2px solid #bbb',
+    '&:hover': {
+      backgroundColor: theme.palette.stats.green,
+      outline: 'none',
+    },
+    '&:hover > span > svg': {
+      fill: 'black',
+    },
+    '&:hover $myTooltip': {
+      visibility: 'visible',
+      opacity: 1,
+    },
+  },
+  label: {
+    '@media (max-width: 1070px)': {
+      display: 'none',
+    },
+  },
+  tooltip: {
+    backgroundColor: 'rgba(40, 40, 40, 0.8)',
+    fontSize: '.8rem',
+  },
+  myTooltip: {
+    visibility: 'hidden',
+    opacity: 0,
+    transition: 'opacity .4s',
+    minWidth: '90px',
+    color: 'white',
+    backgroundColor: 'rgba(40, 40, 40, 0.8)',
+    fontSize: '.8rem',
+    textAlign: 'center',
+    padding: theme.spacing(1),
+    borderRadius: '6px',
+    position: 'absolute',
+    zIndex: 1,
+    bottom: '130%',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+    '&::after': {
+      content: '" "',
+      position: 'absolute',
+      top: '100%',
+      left: '50%',
+      marginLeft: '-8px',
+      borderWidth: '8px',
+      borderStyle: 'solid',
+      borderColor: 'rgba(40, 40, 40, 0.8) transparent transparent transparent',
     },
   },
 }));
@@ -192,9 +251,7 @@ const Verify = (props) => {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const classes = useStyles(props);
-  const [complete, setComplete] = useState(0);
   const [isFilterShown, setFilterShown] = useState(false);
-  const [disableHoverListener, setDisableHoverListener] = useState(false);
   const [isImagesLarge, setImagesLarge] = useState(true);
   const [captureDetail, setCaptureDetail] = useState({
     isOpen: false,
@@ -206,47 +263,39 @@ const Verify = (props) => {
   });
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
+  const cRef = useRef([]);
 
   /*
    * effect to load page when mounted
    */
-
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
     document.title = `Verify - ${documentTitle}`;
   }, []);
 
-  /* to display progress */
-  useEffect(() => {
-    setComplete(verifyContext.approveAllComplete);
-  }, [verifyContext.approveAllComplete]);
-
-  function handleCaptureClick(e, captureId) {
+  const handleCaptureClick = (captureId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on capture:', captureId);
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
     });
-  }
+  };
 
-  function handleCapturePinClick(e, captureId) {
+  const handleCapturePinClick = (captureId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on capture pin:', captureId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
     window.open(url, '_blank').opener = null;
-  }
+  };
 
-  function handleGrowerMapClick(e, growerId) {
+  const handleGrowerMapClick = (growerId) => (e) => {
     e.stopPropagation();
-    e.preventDefault();
     log.debug('click on grower:', growerId);
     const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
     window.open(url, '_blank').opener = null;
-  }
+  };
 
   function resetApprovalFields() {
     tagsContext.setTagInput([]);
@@ -287,14 +336,13 @@ const Verify = (props) => {
     }
   }
 
-  async function handleShowGrowerDetail(e, capture) {
-    e.preventDefault();
+  const handleShowGrowerDetail = (growerId) => (e) => {
     e.stopPropagation();
     setGrowerDetail({
       isOpen: true,
-      growerId: capture.grower_account_id,
+      growerId,
     });
-  }
+  };
 
   function handleCloseGrowerDetail() {
     setGrowerDetail({
@@ -303,18 +351,15 @@ const Verify = (props) => {
     });
   }
 
-  function handleShowCaptureDetail(e, capture) {
-    e.preventDefault();
+  const handleShowCaptureDetail = (capture) => (e) => {
     e.stopPropagation();
-    setDisableHoverListener(true);
     setCaptureDetail({
       isOpen: true,
       capture: capture.id,
     });
-  }
+  };
 
   function handleCloseCaptureDetail() {
-    setDisableHoverListener(false);
     setCaptureDetail({
       isOpen: false,
       capture: null,
@@ -330,29 +375,10 @@ const Verify = (props) => {
     verifyContext.setCurrentPage(page);
   }
 
-  const captureImages = verifyContext.captureImages;
-
-  const tooltipStyles = makeStyles(() => ({
-    tooltipTop: {
-      top: '12px',
-    },
-    tooltipBottom: {
-      top: '-16px',
-    },
-  }));
-
-  const tooltipPositionStyles = tooltipStyles();
-
-  const placeholderImages = verifyContext.isLoading
-    ? Array(Math.max(verifyContext.pageSize - captureImages.length, 0))
-        .fill()
-        .map((_, index) => {
-          return {
-            id: index,
-            placeholder: true,
-          };
-        })
-    : [];
+  const handleImageLoaded = (idx) => () => {
+    // add hover effect on card after image loaded
+    cRef.current[idx].className += ` ${classes.cardHover}`;
+  };
 
   /*=============================================================*/
   const makeCardStyles = makeStyles(() => {
@@ -377,126 +403,105 @@ const Verify = (props) => {
 
   const cardStyles = makeCardStyles();
 
-  const captureImageItems = captureImages
-    .concat(placeholderImages)
-    .map((capture) => {
-      return (
-        <Box key={capture.id} className={cardStyles.cardElement}>
-          <div
-            className={clsx(
-              classes.cardWrapper,
-              verifyContext.captureImagesSelected[capture.id]
-                ? classes.cardSelected
-                : undefined,
-              capture.placeholder && classes.placeholderCard
-            )}
+  const captureImageItems = verifyContext.captureImages.map((capture, idx) => {
+    return (
+      <Box key={capture.id} className={cardStyles.cardElement}>
+        <Box
+          className={clsx(
+            classes.cardContainer,
+            verifyContext.captureImagesSelected[capture.id]
+              ? classes.cardSelected
+              : undefined
+          )}
+        >
+          <Box
+            ref={(el) => {
+              cRef.current[idx] = el;
+            }}
           >
-            <Tooltip
-              key={capture.id}
-              placement="top"
-              arrow={true}
-              interactive
-              enterDelay={500}
-              enterNextDelay={500}
-              onMouseEnter={() => setDisableHoverListener(false)}
-              disableHoverListener={disableHoverListener}
-              classes={{
-                tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
-              }}
-              title={
-                <CaptureDetailTooltip
-                  capture={capture}
-                  showCaptureClick={handleShowCaptureDetail}
-                />
-              }
+            <Card
+              onClick={handleCaptureClick(capture.id)}
+              id={`card_${capture.id}`}
+              className={classes.card}
+              elevation={capture.placeholder ? 0 : 3}
             >
-              <Card
-                onClick={(e) => handleCaptureClick(e, capture.id)}
-                id={`card_${capture.id}`}
-                className={classes.card}
-                elevation={capture.placeholder ? 0 : 3}
-              >
-                <CardContent className={classes.cardContent}>
-                  <Paper className={classes.cardCheckbox} elevation={4}>
-                    {verifyContext.captureImagesSelected[capture.id] && (
-                      <CheckIcon />
-                    )}
-                  </Paper>
-                  <OptimizedImage
-                    src={capture.image_url}
-                    width={isImagesLarge ? 400 : 250}
-                    className={classes.cardMedia}
-                    alertWidth="100%"
-                    alertHeight="200%"
-                    alertPosition="absolute"
-                    alertPadding="5rem 0 0 1rem"
-                    alertTitleSize="1.6rem"
-                    alertTextSize="1rem"
-                  />
-                </CardContent>
+              <Box className={classes.cardIconContainer}>
+                <Image className={classes.cardIcon} />
+                <Skeleton className={classes.cardSkeleton} variant="rect" />
+              </Box>
+              <OptimizedImage
+                src={capture.image_url}
+                width={isImagesLarge ? 400 : 250}
+                className={classes.cardMedia}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alertWidth="100%"
+                alertHeight="200%"
+                alertPosition="absolute"
+                alertPadding="5rem 0 0 1rem"
+                alertTitleSize="1.6rem"
+                alertTextSize="1rem"
+                onImageReady={handleImageLoaded(idx)}
+              />
+              <Box className={classes.cardShade}></Box>
+              <Paper className={classes.cardCheckbox} elevation={4}>
+                {verifyContext.captureImagesSelected[capture.id] && (
+                  <CheckIcon />
+                )}
+              </Paper>
+            </Card>
 
-                <Grid
-                  justifyContent="center"
-                  container
-                  className={classes.cardActions}
-                >
-                  <Grid item>
-                    <IconButton
-                      onClick={(e) => handleShowGrowerDetail(e, capture)}
-                      aria-label={`Grower details`}
-                      name={`Grower details`}
-                      title={`Grower details`}
-                    >
-                      <Person color="primary" />
-                    </IconButton>
-                    <IconButton
-                      onClick={(e) => handleShowCaptureDetail(e, capture)}
-                      aria-label={`Capture details`}
-                      name={`Capture details`}
-                      title={`Capture details`}
-                    >
-                      <Nature color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.reference_id}`}
-                      target="_blank"
-                      onClick={(e) =>
-                        handleCapturePinClick(e, capture.reference_id)
-                      }
-                      aria-label={`Capture location`}
-                      title={`Capture location`}
-                    >
-                      <LocationOn color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.grower_account_id}`}
-                      target="_blank"
-                      onClick={(e) =>
-                        handleGrowerMapClick(e, capture.grower_account_id)
-                      }
-                      aria-label={`Grower map`}
-                      title={`Grower map`}
-                    >
-                      <Map color="primary" />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Card>
-            </Tooltip>
-          </div>
+            <Grid className={classes.cardActions}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowGrowerDetail(capture.grower_account_id)}
+                aria-label={`Grower details`}
+                name={`Grower details`}
+              >
+                <Person color="primary" />
+                <Box className={classes.myTooltip}>Grower details</Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleShowCaptureDetail(capture)}
+                aria-label={`Capture details`}
+                name={`Capture details`}
+              >
+                <Nature color="primary" />
+                <Box className={classes.myTooltip}>
+                  <CaptureDetailTooltip capture={capture} />
+                </Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleCapturePinClick(capture.reference_id)}
+                aria-label={`Capture location`}
+                name={`Capture location`}
+              >
+                <LocationOn color="primary" />
+                <Box className={classes.myTooltip}>Capture location</Box>
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                onClick={handleGrowerMapClick(capture.grower_account_id)}
+                aria-label={`Grower map`}
+                name={`Grower map`}
+              >
+                <Map color="primary" />
+                <Box className={classes.myTooltip}>Grower map</Box>
+              </IconButton>
+            </Grid>
+          </Box>
         </Box>
-      );
-    });
+      </Box>
+    );
+  });
   /*=============================================================*/
 
   function handleFilterClick() {
-    if (isFilterShown) {
-      setFilterShown(false);
-    } else {
-      setFilterShown(true);
-    }
+    setFilterShown(!isFilterShown);
   }
 
   let imagePagination = (
@@ -508,7 +513,9 @@ const Verify = (props) => {
       page={verifyContext.currentPage}
       onPageChange={handleChangePage}
       onRowsPerPageChange={handleChangePageSize}
-      labelRowsPerPage="Captures per page:"
+      labelRowsPerPage={
+        <span className={classes.label}>Captures per page:</span>
+      }
       className={classes.pagination}
     />
   );
@@ -547,95 +554,61 @@ const Verify = (props) => {
     <>
       <Grid item className={classes.body}>
         <Grid item className={classes.bodyInner}>
-          <Grid item>
-            <Navbar
-              buttons={[
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleFilterClick}
-                  startIcon={<IconFilter />}
-                  key={1}
-                >
-                  Filter
-                  {numFilters > 0 && (
-                    <Avatar className={classes.activeFilters}>
-                      {numFilters}
-                    </Avatar>
-                  )}
-                </Button>,
-              ]}
-            >
-              {isFilterShown && (
-                <FilterTop
-                  isOpen={isFilterShown}
-                  onSubmit={(filter) => {
-                    verifyContext.updateFilter(filter);
-                  }}
-                  filter={verifyContext.filter}
-                  onClose={handleFilterClick}
-                />
-              )}
-            </Navbar>
-          </Grid>
+          <Navbar
+            buttons={[
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleFilterClick}
+                startIcon={<IconFilter />}
+                key={1}
+              >
+                Filter
+                {numFilters > 0 && (
+                  <Avatar className={classes.activeFilters}>
+                    {numFilters}
+                  </Avatar>
+                )}
+              </Button>,
+            ]}
+          >
+            {isFilterShown && (
+              <FilterTop
+                onSubmit={verifyContext.updateFilter}
+                filter={verifyContext.filter}
+                onClose={handleFilterClick}
+              />
+            )}
+          </Navbar>
+
           <Box style={{ overflow: 'hidden auto' }}>
-            <Grid container>
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                }}
-              >
-                <Grid
-                  container
-                  justifyContent="space-between"
-                  alignItems="center"
-                  className={classes.title}
-                >
-                  <Grid
-                    style={{
-                      display: 'flex',
-                      flexGrow: 1,
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                    item
-                  >
-                    <Typography variant="h5">
-                      {verifyContext.captureCount !== null &&
-                        `${countToLocaleString(
-                          verifyContext.captureCount
-                        )} capture${
-                          verifyContext.captureCount === 1 ? '' : 's'
-                        }`}
-                    </Typography>
+            <Grid container className={classes.title}>
+              <Box className={classes.titleLeft}>
+                <Typography variant="h5">
+                  {verifyContext.captureCount !== null &&
+                    `${countToLocaleString(
+                      verifyContext.captureCount
+                    )} capture${verifyContext.captureCount === 1 ? '' : 's'}`}
+                </Typography>
 
-                    <div style={{ display: 'flex' }}>{imageSizeControl}</div>
-                  </Grid>
+                <Box display="flex" ml={2} mr={2}>
+                  {imageSizeControl}
+                </Box>
+              </Box>
 
-                  <Grid item className={classes.paginationContainer}>
-                    {imagePagination}
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                }}
-              >
-                <Grid container className={classes.wrapper} spacing={2}>
-                  {captureImageItems}
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                justifyContent="flex-end"
-                className={classes.title}
-              >
+              <Box className={classes.paginationContainer}>
                 {imagePagination}
-              </Grid>
+              </Box>
+            </Grid>
+
+            <Divider width="100%" />
+            <Grid container className={classes.wrapper}>
+              {verifyContext.isLoading ? <Spinner /> : captureImageItems}
+            </Grid>
+            <Divider width="100%" />
+
+            <Grid container className={classes.titleBottom}>
+              {imagePagination}
             </Grid>
           </Box>
         </Grid>
@@ -644,25 +617,17 @@ const Verify = (props) => {
           submitEnabled={captureSelected && captureSelected.length > 0}
         />
       </Grid>
+
       {verifyContext.isLoading && (
-        <AppBar
-          position="fixed"
-          style={{
-            zIndex: 10000,
-          }}
-        >
+        <AppBar className={classes.appBar}>
           <LinearProgress
             color="primary"
             variant="determinate"
-            value={complete}
+            value={verifyContext.approveAllComplete}
           />
         </AppBar>
       )}
-      {verifyContext.isLoading && (
-        <Modal open={true}>
-          <div></div>
-        </Modal>
-      )}
+
       {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
         !verifyContext.isLoading &&
         verifyContext.isApproveAllProcessing &&
@@ -697,13 +662,13 @@ const Verify = (props) => {
             className={classes.snackbar}
           />
         )}
-      {growerDetail.isOpen && (
-        <GrowerDetail
-          open={growerDetail.isOpen}
-          growerId={growerDetail.growerId}
-          onClose={handleCloseGrowerDetail}
-        />
-      )}
+
+      <GrowerDetail
+        open={growerDetail.isOpen}
+        growerId={growerDetail.growerId}
+        onClose={handleCloseGrowerDetail}
+      />
+
       <CaptureDetailProvider>
         <CaptureDetailDialog
           open={captureDetail.isOpen}
