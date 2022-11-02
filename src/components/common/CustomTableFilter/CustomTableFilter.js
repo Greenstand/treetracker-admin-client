@@ -85,8 +85,6 @@ function CustomTableFilter(props) {
         ...filtersToSubmit,
         organization_id: '',
         sub_organization: '',
-        grower: localFilter.grower.trim(),
-        phone: localFilter.phone.trim(),
       };
       setFilter(modifiedFiltersToSubmit);
       setIsFilterOpen(false);
