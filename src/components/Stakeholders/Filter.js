@@ -136,7 +136,7 @@ function StakeholderFilter() {
       value: 'Person',
     },
   ];
-  console.log('ORG', org);
+
   return (
     <>
       <TextField
