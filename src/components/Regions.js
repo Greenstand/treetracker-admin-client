@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 import {
   Grid,
   TableContainer,
@@ -18,9 +20,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
+  Drawer,
   FormGroup,
   FormControlLabel,
   Switch,
+  Link,
   MenuItem,
   Tooltip,
   Input,
@@ -82,6 +87,34 @@ const styles = (theme) => ({
     height: 230,
     overflow: 'auto',
   },
+  detailsDrawer: {
+    width: theme.spacing(80),
+    overflow: 'auto',
+  },
+  itemDrawerDetails: {
+    width: theme.spacing(80),
+    padding: theme.spacing(5, 4),
+  },
+  itemDetailsContents: {
+    padding: theme.spacing(5, 0, 5, 0),
+  },
+  itemRegionsDetail: {
+    padding: theme.spacing(1, 0, 0, 0),
+  },
+  itemDetailsContentsDivider: {
+    margin: theme.spacing(4, 0, 4, 0),
+  },
+  itemDetailsCloseIcon: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.lightVery,
+  },
+  itemDrawerDetailsDownloadButton: {
+    margin: theme.spacing(0, 0, 4, 0),
+  },
+  itemDrawerDetailsEditButton: {
+    margin: theme.spacing(0, 0, 4, 0),
+  },
   button: {
     margin: theme.spacing(0.5, 0),
   },
@@ -133,6 +166,8 @@ const RegionTable = (props) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMesssage] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   useEffect(() => {
     if (!openDelete && !openEdit) {
       // Wait for the dialog to disappear before clearing the selected item.
@@ -161,6 +196,14 @@ const RegionTable = (props) => {
       isCollection,
     });
     setOpenEdit(true);
+  };
+
+  const handleOpenDetails = (item, isCollection) => {
+    setSelectedItem({
+      ...item,
+      isCollection,
+    });
+    setDrawerOpen(true);
   };
 
   const handleDelete = (item, isCollection) => {
@@ -231,8 +274,15 @@ const RegionTable = (props) => {
   };
 
   const RegionTableRows = () => {
-    return (showCollections ? collections : regions).map((item) => (
-      <TableRow key={item.id} role="listitem">
+    return (showCollections ? collections : regions).map((row) => (
+      <TableRow
+        key={`${row.id}-${row.gid}`}
+        role="listitem"
+        hover
+        onClick={() => {
+          handleOpenDetails(row, showCollections);
+        }}
+      >
         {/* <TableCell>
           <Checkbox
             onChange={(e) => handleSelect(e.target.checked, region.id)}
@@ -240,45 +290,45 @@ const RegionTable = (props) => {
           />
         </TableCell> */}
         <TableCell component="th" scope="row" data-testid="region">
-          {item.name}
+          {row.name}
         </TableCell>
         {!userHasOrg && (
           <TableCell>
-            {orgList.find((org) => org.stakeholder_uuid === item.owner_id)
+            {orgList.find((org) => org.stakeholder_uuid === row.owner_id)
               ?.name || '---'}
           </TableCell>
         )}
         {!showCollections && (
           <>
-            <TableCell>{item.collection_name || '---'}</TableCell>
-            <Tooltip title={<RegionProperties region={item} />}>
+            <TableCell>{row.collection_name || '---'}</TableCell>
+            <Tooltip title={<RegionProperties region={row} />}>
               <TableCell>
-                <RegionProperties region={item} max={3} />
+                <RegionProperties region={row} max={3} />
               </TableCell>
             </Tooltip>
             <TableCell align="center">
-              {item.show_on_org_map ? 'Yes' : 'No'}
+              {row.show_on_org_map ? 'Yes' : 'No'}
             </TableCell>
             <TableCell align="center">
-              {item.calculate_statistics ? 'Yes' : 'No'}
+              {row.calculate_statistics ? 'Yes' : 'No'}
             </TableCell>
           </>
         )}
         <TableCell align="right" className={classes.operations}>
           {!showCollections && (
-            <IconButton title="download" onClick={() => handleDownload(item)}>
+            <IconButton title="download" onClick={() => handleDownload(row)}>
               <GetApp />
             </IconButton>
           )}
           <IconButton
             title="edit"
-            onClick={() => handleEdit(item, showCollections)}
+            onClick={() => handleEdit(row, showCollections)}
           >
             <Edit />
           </IconButton>
           <IconButton
             title="delete"
-            onClick={() => handleDelete(item, showCollections)}
+            onClick={() => handleDelete(row, showCollections)}
           >
             <Delete />
           </IconButton>
@@ -304,6 +354,174 @@ const RegionTable = (props) => {
 
   return (
     <>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        BackdropProps={{ invisible: true }}
+        onClose={() => {
+          setDrawerOpen(false);
+        }}
+        classes={{ paper: classes.detailsDrawer }}
+      >
+        <Grid
+          container
+          direction="column"
+          className={classes.itemDrawerDetails}
+        >
+          {/* start  details header */}
+          <Grid item>
+            <Grid container direction="row" justifyContent="space-between">
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  alignContent="flex-end"
+                  justifyContent="flex-start"
+                >
+                  <Typography variant="h4">Details</Typography>
+                </Grid>
+              </Grid>
+              <CloseIcon
+                onClick={() => {
+                  setDrawerOpen(false);
+                }}
+                className={classes.itemDetailsCloseIcon}
+              />
+            </Grid>
+          </Grid>
+          {/* end details header */}
+          <Grid item className={classes.itemDetailsContents}>
+            <Grid container direction="column" justifyContent="space-around">
+              <Grid item className={classes.itemRegionsDetail}>
+                <Typography>Name</Typography>
+                <Typography variant="h6">
+                  {selectedItem?.name ?? '---'}
+                </Typography>
+              </Grid>
+              {!userHasOrg && (
+                <Grid item className={classes.itemRegionsDetail}>
+                  <Typography>Owner</Typography>
+                  <Typography variant="h6">
+                    {orgList.find(
+                      (org) => org.stakeholder_uuid === selectedItem?.owner_id
+                    )?.name || '---'}
+                  </Typography>
+                </Grid>
+              )}
+              {!showCollections && (
+                <Grid item className={classes.itemRegionsDetail}>
+                  <Typography>Collection</Typography>
+                  <Typography>
+                    <Link
+                      underline="always"
+                      target="_blank"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowCollections(true);
+                        let region = selectedItem;
+                        let collection = region.collection;
+                        setSelectedItem(collection);
+                      }}
+                      style={{ display: 'inline-block', cursor: 'pointer' }}
+                    >
+                      {selectedItem?.collection_name || '---'}
+                    </Link>
+                  </Typography>
+                </Grid>
+              )}
+              {!showCollections && selectedItem?.properties && (
+                <Grid item className={classes.itemRegionsDetail}>
+                  <Typography>Properties</Typography>
+                  <Typography>
+                    <RegionProperties region={selectedItem} />
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+
+            {!showCollections && (
+              <Divider className={classes.itemDetailsContentsDivider} />
+            )}
+
+            {!showCollections && (
+              <Grid container direction="column" justifyContent="space-around">
+                <Grid
+                  container
+                  direction="row"
+                  className={classes.itemRegionsDetail}
+                >
+                  <Typography>Show on Org Map</Typography>
+                  <Typography>
+                    {selectedItem?.show_on_org_map ? (
+                      <CheckIcon color="primary" />
+                    ) : (
+                      <CloseIcon color="error" />
+                    )}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
+
+            {!showCollections && (
+              <Divider className={classes.itemDetailsContentsDivider} />
+            )}
+
+            {!showCollections && (
+              <Grid container direction="column" justifyContent="space-around">
+                <Grid
+                  container
+                  direction="row"
+                  className={classes.itemRegionsDetail}
+                >
+                  <Typography>Statistics Calculated</Typography>
+                  <Typography>
+                    {selectedItem?.calculate_statistics ? (
+                      <CheckIcon color="primary" />
+                    ) : (
+                      <CloseIcon color="error" />
+                    )}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
+
+            <Divider className={classes.itemDetailsContentsDivider} />
+          </Grid>
+
+          <Grid container direction="column" justifyContent="space-around">
+            {!showCollections && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.itemDrawerDetailsDownloadButton}
+                onClick={() => handleDownload(selectedItem)}
+              >
+                DOWNLOAD
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.itemDrawerDetailsEditButton}
+              onClick={() => {
+                handleEdit(selectedItem, showCollections);
+                setDrawerOpen(false);
+              }}
+            >
+              EDIT
+            </Button>
+            <Button
+              color="primary"
+              variant="text"
+              className={classes.itemDrawerDetailsDeleteButton}
+              onClick={() => handleDelete(selectedItem, showCollections)}
+            >
+              DELETE
+            </Button>
+          </Grid>
+        </Grid>
+      </Drawer>
+
       <Grid container className={classes.regionsTableContainer}>
         <Paper elevation={3} className={classes.menu}>
           <Menu variant="plain" />
@@ -394,6 +612,7 @@ const RegionTable = (props) => {
           </Grid>
         </Grid>
       </Grid>
+
       <EditModal
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
@@ -640,13 +859,13 @@ const EditModal = ({
           showSnackbar(
             `${isCollection ? 'Collection' : res?.region?.name} ${
               isUpload ? 'uploaded' : 'updated'
-            }`
+            } `
           );
           setOpenEdit(false);
         }
       } catch (error) {
         // TO DO - report the error details
-        alert(`Upload failed: ${error}`);
+        alert(`Upload failed: ${error} `);
       }
       setSaveInProgress(false);
     }
@@ -657,7 +876,7 @@ const EditModal = ({
       <DialogTitle id="form-dialog-title">
         {isUpload
           ? 'Upload New Region or Collection'
-          : `Edit ${isCollection ? 'Collection' : 'Region'}`}
+          : `Edit ${isCollection ? 'Collection' : 'Region'} `}
       </DialogTitle>
       <DialogContent>
         {isUpload && (
@@ -825,7 +1044,7 @@ const DeleteDialog = ({
         setOpenDelete(false);
       }
     } catch (error) {
-      alert(`Failed to delete item: ${error}`);
+      alert(`Failed to delete item: ${error} `);
     }
   };
 
