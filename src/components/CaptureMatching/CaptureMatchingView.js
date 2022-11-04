@@ -701,6 +701,7 @@ function CaptureMatchingView() {
         anchor="right"
         BackdropProps={{ invisible: false }}
         open={matchingToolContext.isFilterOpen}
+        onClose={matchingToolContext.handleFilterToggle}
       >
         <Grid
           container
