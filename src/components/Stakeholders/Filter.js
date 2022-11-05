@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import FilterModel from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
@@ -42,6 +43,7 @@ function StakeholderFilter() {
   const [formData, setFormData] = useState(initialFilterState);
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState({});
+  const [org, setOrg] = useState('');
   const orgNames = new Set(['']);
   const firstNames = new Set(['']);
   const lastNames = new Set(['']);
@@ -87,14 +89,8 @@ function StakeholderFilter() {
   };
 
   const handleChanges = (e) => {
-    const key = e.target.name === 'organization_id' ? 'id' : e.target.name;
-    const value =
-      e.target.name === 'organization_id'
-        ? orgList.find((o) => o.stakeholder_uuid === e.target.value)
-            ?.stakeholder_uuid || ''
-        : e.target.value !== 'All'
-        ? e.target.value
-        : '';
+    const key = e.target.name;
+    const value = e.target.value !== 'All' ? e.target.value : '';
     setFormData({ ...formData, [key]: value });
   };
 
@@ -104,6 +100,7 @@ function StakeholderFilter() {
 
   const resetFilters = () => {
     setFormData(initialFilterState);
+    setOrg('');
     const resetFilter = new FilterModel(initialFilterState);
     updateFilter(resetFilter);
   };
@@ -192,32 +189,15 @@ function StakeholderFilter() {
           </FormControl>
           <FormControl className={classes.root}>
             <TextField
-              data-testid="org-dropdown"
-              select
-              label="Organization"
-              htmlFor="organization"
-              id="organizationId"
-              name="organization_id"
-              value={formData.id}
-              onChange={handleChanges}
-            >
-              {[...defaultOrgList, ...orgList].map((org) => (
-                <MenuItem
-                  data-testid="org-item"
-                  key={org.id}
-                  value={org.stakeholder_uuid}
-                >
-                  {org.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </FormControl>
-          <FormControl className={classes.root}>
-            <TextField
               label="Organization ID"
               variant="outlined"
               name="id"
-              onChange={handleChanges}
+              onChange={(e) => (
+                handleChanges(e),
+                orgList.find(
+                  (o) => o.stakeholder_uuid === e.target.value && setOrg(o.name)
+                )
+              )}
               value={formData.id}
             />
           </FormControl>
@@ -231,112 +211,152 @@ function StakeholderFilter() {
             />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
+              data-testid="org-dropdown"
+              label="Organization"
+              htmlFor="organization"
+              id="organizationId"
+              name="organization_id"
+              options={[...defaultOrgList, ...orgList].filter((t) => ({
+                orgName: t,
+              }))}
+              getOptionLabel={(option) => option.name || org || 'All'}
+              onChange={(_oldVal, newVal) => (
+                setFormData({
+                  ...formData,
+                  id:
+                    !newVal || !newVal.stakeholder_uuid
+                      ? ''
+                      : newVal.stakeholder_uuid,
+                }),
+                setOrg(newVal ? newVal.name : '')
+              )}
+              getOptionSelected={(option) => option.name === org}
+              value={org ? org : null}
+              renderInput={(params) => {
+                return <TextField {...params} label="Organization" />;
+              }}
+            />
+          </FormControl>
+          <FormControl className={classes.root}>
+            <Autocomplete
               data-testid="firstName-dropdown"
-              select
               label="First Name"
               htmlFor="first_name"
               id="first_name"
               name="first_name"
-              value={formData.first_name}
-              onChange={handleChanges}
-            >
-              {filters?.firstNames?.map((option) => (
-                <MenuItem data-testid="first_name" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={formData.first_name ? formData.first_name : null}
+              options={filters?.firstNames?.filter((t) => ({
+                firstName: t,
+              }))}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, first_name: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="First Name" />;
+              }}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
               data-testid="lastName-dropdown"
-              select
               label="Last Name"
               htmlFor="last_name"
               id="last_name"
               name="last_name"
-              value={formData.last_name}
-              onChange={handleChanges}
-            >
-              {filters?.lastNames?.map((option) => (
-                <MenuItem data-testid="last_name" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={formData.last_name ? formData.last_name : null}
+              options={filters?.lastNames?.filter((t) => ({
+                lastName: t,
+              }))}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, last_name: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="Last Name" />;
+              }}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
               data-testid="map-dropdown"
-              select
               label="Map"
               htmlFor="map"
               id="map"
               name="map"
-              value={formData.map}
-              onChange={handleChanges}
-            >
-              {filters?.maps?.map((option) => (
-                <MenuItem data-testid="map" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={formData.map ? formData.map : null}
+              options={filters?.maps?.filter((t) => ({
+                map: t,
+              }))}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, map: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="Map" />;
+              }}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
               data-testid="email-dropdown"
-              select
               label="Email"
               htmlFor="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChanges}
-            >
-              {filters?.emails?.map((option) => (
-                <MenuItem data-testid="email" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              options={filters?.emails?.filter((t) => ({
+                email: t,
+              }))}
+              value={formData.email ? formData.email : null}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, email: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="Email" />;
+              }}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
               data-testid="phone-dropdown"
-              select
               label="Phone"
               htmlFor="phone"
               id="phone"
               name="phone"
-              value={formData.phone}
-              onChange={handleChanges}
-            >
-              {filters?.phones?.map((option) => (
-                <MenuItem data-testid="phone" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={formData.phone ? formData.phone : null}
+              options={filters?.phones?.filter((t) => ({
+                phone: t,
+              }))}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, phone: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="Phone" />;
+              }}
+            />
           </FormControl>
           <FormControl className={classes.root}>
-            <TextField
+            <Autocomplete
               data-testid="website-dropdown"
-              select
               label="Website"
               htmlFor="website"
               id="website"
               name="website"
-              value={formData.website}
-              onChange={handleChanges}
-            >
-              {filters?.websites?.map((option) => (
-                <MenuItem data-testid="website" key={option} value={option}>
-                  {option || 'All'}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={formData.website ? formData.website : null}
+              options={filters?.websites?.filter((t) => ({
+                website: t,
+              }))}
+              getOptionLabel={(option) => option || 'All'}
+              onChange={(_oldVal, newVal) =>
+                setFormData({ ...formData, website: newVal })
+              }
+              renderInput={(params) => {
+                return <TextField {...params} label="Website" />;
+              }}
+            />
           </FormControl>
         </DialogContent>
         <DialogActions>
