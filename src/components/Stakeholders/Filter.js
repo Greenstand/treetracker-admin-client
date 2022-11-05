@@ -112,6 +112,7 @@ function StakeholderFilter() {
     const newFilter = new FilterModel({
       ...filter,
       ...formData,
+      org_name: formData.org_name.trim(),
     });
     updateFilter(newFilter);
     setOpen(false);

@@ -76,6 +76,8 @@ function CustomTableFilter(props) {
     const filtersToSubmit = {
       ...filter,
       ...localFilter,
+      grower: localFilter.grower.trim(),
+      phone: localFilter.phone.trim(),
     };
 
     if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {

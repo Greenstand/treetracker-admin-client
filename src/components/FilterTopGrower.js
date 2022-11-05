@@ -64,12 +64,12 @@ function FilterTopGrower(props) {
     const filter = new FilterModel({
       personId,
       id,
-      firstName,
-      lastName,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
       organizationId,
       stakeholderUUID,
-      email,
-      phone,
+      email: email.trim(),
+      phone: phone.trim(),
       deviceIdentifier,
     });
     props.onSubmit && props.onSubmit(filter);

@@ -119,10 +119,10 @@ function Filter(props) {
     // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.uuid = uuid;
-    filter.captureId = captureId;
-    filter.planterId = growerId;
-    filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = growerIdentifier;
+    filter.captureId = captureId.trim();
+    filter.planterId = growerId.trim();
+    filter.deviceIdentifier = deviceId.trim();
+    filter.planterIdentifier = growerIdentifier.trim();
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.approved = approved;
