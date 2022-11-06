@@ -5,8 +5,8 @@ import {
   makeQueryString,
 } from './apiUtils';
 import { getVerificationStatus } from '../common/utils';
-import { session } from '../models/auth';
 import log from 'loglevel';
+import { session } from '../models/auth';
 
 // Set API as a variable
 const API_ROOT = process.env.REACT_APP_API_ROOT;

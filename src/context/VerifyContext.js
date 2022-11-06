@@ -6,6 +6,11 @@ import { captureStatus } from 'common/variables';
 import { AppContext } from './AppContext.js';
 import { setOrganizationFilter } from '../common/utils';
 
+import React, { createContext, useEffect, useState } from 'react';
+
+import FilterModel from '../models/Filter';
+import api from '../api/treeTrackerApi';
+
 const log = loglevel.getLogger('../context/VerifyContext');
 
 export const VerifyContext = createContext({

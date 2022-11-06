@@ -1,36 +1,32 @@
-import React, { useState, useContext } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField, MenuItem } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import SelectOrg from './common/SelectOrg';
+import { Button, Grid, MenuItem, TextField } from '@material-ui/core';
 import FilterModel, {
-  ALL_SPECIES,
-  // SPECIES_ANY_SET,
-  // SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
-  ALL_TAGS,
-  TAG_NOT_SET,
+  ALL_SPECIES,
   ANY_TAG_SET,
+  TAG_NOT_SET,
 } from '../models/Filter';
-import DateFnsUtils from '@date-io/date-fns';
 import {
-  MuiPickersUtilsProvider,
   KeyboardDatePicker,
+  MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  getDatePickerLocale,
-  getDateFormatLocale,
   convertDateToDefaultSqlDate,
+  getDateFormatLocale,
+  getDatePickerLocale,
 } from '../common/locale';
 import {
   verificationStates,
   captureStatus,
   datePickerDefaultMinDate,
-  // tokenizationStates,
+  verificationStates,
 } from '../common/variables';
 
 // import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import { getVerificationStatus } from '../common/utils';
+import { withStyles } from '@material-ui/core/styles';
+
 // import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
@@ -74,28 +70,63 @@ const styles = (theme) => {
 
 function Filter(props) {
   // const speciesContext = useContext(SpeciesContext);
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
   const tagsContext = useContext(TagsContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
-  const startDateDefault = null;
-  const endDateDefault = null;
-  const [uuid, setUUID] = useState(filter?.uuid || '');
-  const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
-  const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
-  const [wallet, setWallet] = useState(filter?.wallet || '');
-  const [status, setStatus] = useState(filter?.status);
-  const [startDate, setStartDate] = useState(
-    filter?.startDate || startDateDefault
+  const dateStartDefault = null;
+  const dateEndDefault = null;
+  const [uuid, setUUID] = useState(
+    url.searchParams.get('uuid') || filter?.uuid || ''
   );
-  const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
-  const [speciesId, setSpeciesId] = useState(filter?.species_id || ALL_SPECIES);
-  const [tag, setTag] = useState(null);
-  const [tagSearchString, setTagSearchString] = useState('');
+  const [captureId, setCaptureId] = useState(
+    url.searchParams.get('captureId') || filter?.captureId || ''
+  );
+  const [growerId, setGrowerId] = useState(
+    url.searchParams.get('growerId') || filter?.planterId || ''
+  );
+  const [deviceId, setDeviceId] = useState(
+    url.searchParams.get('deviceId') || filter?.deviceIdentifier || ''
+  );
+  const [growerIdentifier, setGrowerIdentifier] = useState(
+    url.searchParams.get('growerIdentifier') || filter?.planterIdentifier || ''
+  );
+  const [approved, setApproved] = useState(filter?.approved);
+  const [active, setActive] = useState(filter?.active);
+  const [dateStart, setDateStart] = useState(
+    url.searchParams.get('dateStart') || filter?.dateStart || dateStartDefault
+  );
+  const [dateEnd, setDateEnd] = useState(
+    url.searchParams.get('dateEnd') || filter?.dateEnd || dateEndDefault
+  );
+  const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
+  const [tag, setTag] = useState(url.searchParams.get('tag') || null);
+  const [tagSearchString, setTagSearchString] = useState(
+    url.searchParams.get('tagSearchString') || ''
+  );
   const [organizationId, setOrganizationId] = useState(
-    filter?.organizationId || ALL_ORGANIZATIONS
+    url.searchParams.get('organizationId') ||
+      filter?.organizationId ||
+      ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  useEffect(() => {
+    handleQuerySearchParams('deviceId', deviceId);
+  }, []);
+
+  const handleQuerySearchParams = (name, value) => {
+    if (!params.get(name)) {
+      params.append(name, value);
+      if (window.location.href.includes('?')) {
+        window.location.href += '&' + name + '=' + value;
+      } else {
+        window.location.href += '?' + name + '=' + value;
+      }
+    } else {
+      params.set(name, value);
+    }
+  };
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
