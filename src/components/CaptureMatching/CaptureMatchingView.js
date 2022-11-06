@@ -648,17 +648,19 @@ function CaptureMatchingView() {
             />
           </Box>
 
-          <Box
-            className={classes.notesContainerBox}
-            margin={4}
-            display="flex"
-            justifyContent="center"
-          >
-            <Typography variant="h6">Notes:</Typography>
-            <Typography variant="body1" className={classes.notesBody}>
-              {captureImage.note}
-            </Typography>
-          </Box>
+          {captureImage.note && (
+            <Box
+              className={classes.notesContainerBox}
+              margin={4}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h6">Notes:</Typography>
+              <Typography variant="body1" className={classes.notesBody}>
+                {captureImage.note}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       )}
     </Box>
