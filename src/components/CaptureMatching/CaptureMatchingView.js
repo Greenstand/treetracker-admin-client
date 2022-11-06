@@ -231,6 +231,13 @@ const useStyle = makeStyles((theme) => ({
     height: 48,
   },
   growerBox2: {},
+  notesContainerBox: {
+    textAlign: 'center',
+  },
+  notesBody: {
+    marginLeft: theme.spacing(2),
+    alignSelf: 'flex-end',
+  },
 }));
 
 // Set API as a variable
