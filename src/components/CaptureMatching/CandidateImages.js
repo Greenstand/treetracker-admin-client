@@ -58,6 +58,7 @@ const useStyles = makeStyles({
     display: 'flex',
     gap: theme.spacing(2),
   },
+  candidateImageNotes: { fontStyle: 'italic', paddingTop: theme.spacing(1) },
   button: {
     fontSize: '16px',
   },
@@ -84,7 +85,7 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    position: 'relative',
+    flexBasis: '250px',
   },
   captureInfo: {
     position: 'absolute',
@@ -215,64 +216,71 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                 }}
               >
                 <Box className={classes.gridList} cols={3}>
-                  {(tree.captures.length ? tree.captures : [tree]).map(
+                  {(tree.captures?.length ? tree.captures : [tree]).map(
                     (candidateCapture) => {
                       return (
                         <Box
                           key={`${tree.id}_${candidateCapture.id}`}
                           className={classes.candidateCaptureContainer}
                         >
-                          <OptimizedImage
-                            src={candidateCapture.image_url}
-                            alt={`Candidate capture ${candidateCapture.id}`}
-                            objectFit="cover"
-                            width={250}
-                            style={{
-                              width: '250px',
-                              height: '100%',
-                            }}
-                            alertHeight="300px"
-                            alertTextSize=".9rem"
-                            alertTitleSize="1.2rem"
-                          />
-                          <Box className={classes.captureInfo}>
-                            <Box className={classes.captureInfoDetail}>
-                              <AccessTimeIcon />
-                              <Typography variant="body1">
-                                {getDateStringLocale(
-                                  new Date(candidateCapture.created_at)
-                                )}
-                              </Typography>
-                            </Box>
-                            <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon
-                                style={{
-                                  cursor: 'pointer',
-                                }}
-                                onClick={() => {
-                                  window.open(
-                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
-                                  );
-                                }}
-                              />
-                              <Typography variant="body1">
-                                {capture?.latitude && capture?.longitude && (
-                                  <DistanceTo
-                                    lat1={capture.latitude}
-                                    lon1={capture.longitude}
-                                    lat2={
-                                      candidateCapture.latitude ||
-                                      candidateCapture.lat
-                                    }
-                                    lon2={
-                                      candidateCapture.longitude ||
-                                      candidateCapture.lon
-                                    }
-                                  />
-                                )}
-                              </Typography>
+                          <Box style={{ position: 'relative' }}>
+                            <OptimizedImage
+                              src={candidateCapture.image_url}
+                              alt={`Candidate capture ${candidateCapture.id}`}
+                              objectFit="cover"
+                              width={250}
+                              style={{
+                                width: '250px',
+                                height: '100%',
+                              }}
+                              alertHeight="300px"
+                              alertTextSize=".9rem"
+                              alertTitleSize="1.2rem"
+                            />
+                            <Box className={classes.captureInfo}>
+                              <Box className={classes.captureInfoDetail}>
+                                <AccessTimeIcon />
+                                <Typography variant="body1">
+                                  {getDateStringLocale(
+                                    new Date(candidateCapture.created_at)
+                                  )}
+                                </Typography>
+                              </Box>
+                              <Box className={classes.captureInfoDetail}>
+                                <LocationOnOutlinedIcon
+                                  style={{
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={() => {
+                                    window.open(
+                                      `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                    );
+                                  }}
+                                />
+                                <Typography variant="body1">
+                                  {capture?.latitude && capture?.longitude && (
+                                    <DistanceTo
+                                      lat1={capture.latitude}
+                                      lon1={capture.longitude}
+                                      lat2={
+                                        candidateCapture.latitude ||
+                                        candidateCapture.lat
+                                      }
+                                      lon2={
+                                        candidateCapture.longitude ||
+                                        candidateCapture.lon
+                                      }
+                                    />
+                                  )}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Box>
+                          {candidateCapture.notes && (
+                            <Typography className={classes.candidateImageNotes}>
+                              {candidateCapture.notes}
+                            </Typography>
+                          )}
                         </Box>
                       );
                     }
