@@ -1,3 +1,22 @@
+# [1.112.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.111.0...v1.112.0) (2022-11-05)
+
+
+### Bug Fixes
+
+* add trim method for typed entries in all filters [#871](https://github.com/Greenstand/treetracker-admin-client/issues/871) ([#910](https://github.com/Greenstand/treetracker-admin-client/issues/910)) ([50b525e](https://github.com/Greenstand/treetracker-admin-client/commit/50b525eab3bb9ddfb3c09471c191146877b0efe8))
+
+
+### Features
+
+* **stakeholder:** autocomplete in the filter dropdowns ([#913](https://github.com/Greenstand/treetracker-admin-client/issues/913)) ([4c9e779](https://github.com/Greenstand/treetracker-admin-client/commit/4c9e779cb52a534d368642c04e68d1d763d3e301))
+
+# [1.111.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.110.1...v1.111.0) (2022-11-04)
+
+
+### Features
+
+* Dismiss filter drawer on background click or ESC keypress ([#918](https://github.com/Greenstand/treetracker-admin-client/issues/918)) ([4fc89a0](https://github.com/Greenstand/treetracker-admin-client/commit/4fc89a0f41c5c903d57e4350157d42931c98f1bb))
+
 ## [1.110.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.110.0...v1.110.1) (2022-10-27)
 
 

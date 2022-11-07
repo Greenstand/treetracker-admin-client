@@ -76,6 +76,8 @@ function CustomTableFilter(props) {
     const filtersToSubmit = {
       ...filter,
       ...localFilter,
+      grower: localFilter.grower.trim(),
+      phone: localFilter.phone.trim(),
     };
 
     if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
@@ -225,6 +227,7 @@ function CustomTableFilter(props) {
       anchor="right"
       BackdropProps={{ invisible: true }}
       open={isFilterOpen}
+      onClose={() => setIsFilterOpen(false)}
     >
       <Grid
         container
