@@ -1,5 +1,4 @@
 import React, { useState, useContext, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import IconFilter from '@material-ui/icons/FilterList';
@@ -118,7 +117,7 @@ function CustomTableHeader({
   const query = useQuery().get('name');
 
   function useQuery() {
-    const { search } = useLocation();
+    const { search } = window.location;
 
     return useMemo(() => new URLSearchParams(search), [search]);
   }

@@ -36,7 +36,6 @@ import { VerifyContext } from 'context/VerifyContext';
 import { SpeciesContext } from 'context/SpeciesContext';
 import { TagsContext } from 'context/TagsContext';
 import { CaptureDetailProvider } from 'context/CaptureDetailContext';
-import { useLocation } from 'react-router-dom';
 
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
@@ -270,7 +269,7 @@ const Verify = (props) => {
    * effect to load page when mounted
    */
   function useQuery() {
-    const { search } = useLocation();
+    const { search } = window.location;
 
     return useMemo(() => new URLSearchParams(search), [search]);
   }

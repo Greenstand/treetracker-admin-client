@@ -1,5 +1,4 @@
 import React, { useState, useContext, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -54,7 +53,7 @@ function CustomTableFilter(props) {
   } = props;
 
   function useQuery() {
-    const { search } = useLocation();
+    const { search } = window.location;
 
     return useMemo(() => new URLSearchParams(search), [search]);
   }

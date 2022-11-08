@@ -1,5 +1,4 @@
 import React, { useState, useContext, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, MenuItem } from '@material-ui/core';
@@ -106,7 +105,7 @@ function Filter(props) {
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   function useQuery() {
-    const { search } = useLocation();
+    const { search } = window.location;
 
     return useMemo(() => new URLSearchParams(search), [search]);
   }
