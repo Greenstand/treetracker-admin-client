@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import LinkD from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography,
@@ -441,8 +442,14 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 )}
               <Divider />
               <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1" className={classes.captures}>
-                  Captures
+                <Typography variant="subtitle1">
+                  <LinkD
+                    href={`/verify?wallet=${grower.email}`}
+                    underline="always"
+                    target="_blank"
+                  >
+                    Captures
+                  </LinkD>
                 </Typography>
                 {loading ? (
                   <LinearProgress color="primary" />

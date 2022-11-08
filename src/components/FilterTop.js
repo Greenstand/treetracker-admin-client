@@ -1,4 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, MenuItem } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -73,6 +75,7 @@ const styles = (theme) => {
 function Filter(props) {
   // console.log('render: filter top');
   // const speciesContext = useContext(SpeciesContext);
+  const query = useQuery().get('wallet');
   const tagsContext = useContext(TagsContext);
   const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
@@ -83,7 +86,7 @@ function Filter(props) {
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || ''
+    query || filter?.planterIdentifier || ''
   );
   const [approved, setApproved] = useState(filter?.approved);
   const [active, setActive] = useState(filter?.active);
@@ -101,6 +104,20 @@ function Filter(props) {
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+
+  function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  useEffect(() => {
+    if (query) {
+      const filter = new FilterModel();
+      filter.planterIdentifier = growerIdentifier;
+      props.onSubmit && props.onSubmit(filter);
+    }
+  }, [query]);
 
   const handleDateStartChange = (date) => {
     setDateStart(date);

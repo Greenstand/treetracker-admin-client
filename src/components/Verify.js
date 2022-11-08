@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef, useMemo } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -36,6 +36,7 @@ import { VerifyContext } from 'context/VerifyContext';
 import { SpeciesContext } from 'context/SpeciesContext';
 import { TagsContext } from 'context/TagsContext';
 import { CaptureDetailProvider } from 'context/CaptureDetailContext';
+import { useLocation } from 'react-router-dom';
 
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
@@ -264,14 +265,24 @@ const Verify = (props) => {
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
   const cRef = useRef([]);
-
+  const query = useQuery().get('wallet');
   /*
    * effect to load page when mounted
    */
+  function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+  }
+
   useEffect(() => {
     log.debug('verify mounted:');
     // update filter right away to prevent non-Filter type objects loading
     document.title = `Verify - ${documentTitle}`;
+
+    if (query) {
+      setFilterShown(true);
+    }
   }, []);
 
   const handleCaptureClick = (captureId) => (e) => {
