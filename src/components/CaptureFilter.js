@@ -83,6 +83,7 @@ function Filter(props) {
   const dateEndDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
   const [growerId, setGrowerId] = useState(filter?.planterId || '');
   const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
   const [growerIdentifier, setGrowerIdentifier] = useState(
@@ -163,6 +164,7 @@ function Filter(props) {
     filter.planterId = growerId;
     filter.deviceIdentifier = deviceId;
     filter.planterIdentifier = growerIdentifier;
+    filter.wallet = wallet;
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
     filter.speciesId = speciesId;
@@ -181,6 +183,7 @@ function Filter(props) {
     setGrowerId('');
     setDeviceId('');
     setGrowerIdentifier('');
+    setWallet('');
     setDateStart(dateStartDefault);
     setDateEnd(dateEndDefault);
     setSpeciesId(ALL_SPECIES);
@@ -293,6 +296,13 @@ function Filter(props) {
                   }}
                 />
               </MuiPickersUtilsProvider>
+              <TextField
+                htmlFor="wallet"
+                id="wallet"
+                label="Wallet"
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
+              />
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
