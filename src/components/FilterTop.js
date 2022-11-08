@@ -113,9 +113,7 @@ function Filter(props) {
 
   useEffect(() => {
     if (query) {
-      const filter = new FilterModel();
-      filter.planterIdentifier = growerIdentifier;
-      props.onSubmit && props.onSubmit(filter);
+      handleSubmit();
     }
   }, [query]);
 
@@ -132,7 +130,7 @@ function Filter(props) {
   };
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e && e.preventDefault();
     // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.uuid = uuid;
