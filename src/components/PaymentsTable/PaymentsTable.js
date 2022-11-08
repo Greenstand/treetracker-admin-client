@@ -239,6 +239,7 @@ function PaymentsTable() {
             filterType="date"
             setFilter={setFilter}
             setIsFilterOpen={setIsDateFilterOpen}
+            disablePaymentStatus={true}
           />
         }
         rowDetails={

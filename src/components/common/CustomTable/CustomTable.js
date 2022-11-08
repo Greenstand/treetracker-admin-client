@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Person } from '@material-ui/icons';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import IconFilter from '@material-ui/icons/FilterList';
@@ -113,6 +114,20 @@ function CustomTableHeader({
 
   // const [data, setData] = useState([]);
   const [dataToExport, setDataToExport] = useState([]);
+
+  const query = useQuery().get('name');
+
+  function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  useEffect(() => {
+    if (query) {
+      openMainFilter();
+    }
+  }, []);
 
   async function fetchData() {
     // If organisation is used to filter data, use that as prefix for the csv filename

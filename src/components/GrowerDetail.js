@@ -446,7 +446,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   <LinkD
                     href={`/verify?wallet=${grower.email}`}
                     underline="always"
-                    target="_blank"
                   >
                     Captures
                   </LinkD>
@@ -595,6 +594,30 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     </tbody>
                   </table>
                 )) || <Typography variant="body1">---</Typography>}
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Grower Earnings</Typography>
+                <Typography variant="body1">
+                  <LinkD
+                    href={`/earnings?name=${grower.firstName}%20${grower.lastName}`}
+                    underline="always"
+                  >
+                    Earnings
+                  </LinkD>
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Grower Payments</Typography>
+                <Typography variant="body1">
+                  <LinkD
+                    href={`/payments?name=${grower.firstName}%20${grower.lastName}`}
+                    underline="always"
+                  >
+                    Payments
+                  </LinkD>
+                </Typography>
               </Grid>
             </Grid>
           )}

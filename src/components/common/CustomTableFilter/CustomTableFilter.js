@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -34,12 +35,13 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  */
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
+  const query = useQuery().get('name');
   const initialFilter = {
-    organization_id: '',
-    grower: '',
+    // organization_id: '',
+    grower: query || '',
     payment_status: 'all',
     earnings_status: 'all',
-    phone: '',
+    phone: '' || undefined,
   };
   const [localFilter, setLocalFilter] = useState(initialFilter);
   const {
@@ -50,6 +52,18 @@ function CustomTableFilter(props) {
     filterType,
     disablePaymentStatus,
   } = props;
+
+  function useQuery() {
+    const { search } = useLocation();
+
+    return useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  useEffect(() => {
+    if (query) {
+      handleOnFilterFormSubmit();
+    }
+  }, [query]);
 
   const classes = useStyles();
   const { updateSelectedFilter } = useContext(AppContext);
@@ -72,12 +86,17 @@ function CustomTableFilter(props) {
   };
 
   const handleOnFilterFormSubmit = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     const filtersToSubmit = {
       ...filter,
-      ...localFilter,
       grower: localFilter.grower.trim(),
-      phone: localFilter.phone.trim(),
+      phone: localFilter.phone ? localFilter.phone.trim() : undefined,
+      payment_status: disablePaymentStatus
+        ? undefined
+        : localFilter.payment_status,
+      earnings_status: disablePaymentStatus
+        ? undefined
+        : localFilter.earnings_status,
     };
 
     if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
@@ -100,8 +119,13 @@ function CustomTableFilter(props) {
 
   const handleOnFilterFormReset = (e) => {
     e.preventDefault();
-    setFilter(initialFilter);
-    setLocalFilter(initialFilter);
+    disablePaymentStatus
+      ? setFilter({
+          payment_status: undefined,
+          grower: undefined,
+        })
+      : setFilter({ ...initialFilter, grower: '' });
+    setLocalFilter(filter);
     setIsFilterOpen(false);
   };
 
