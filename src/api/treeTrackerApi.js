@@ -165,7 +165,7 @@ export default {
         .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
         .join('&');
 
-      const req = `${TREETRACKER_API}/captures?tree_associated=false&limit=${1}&offset=${
+      const req = `${TREETRACKER_API}/captures?order_by=captured_at&tree_associated=false&limit=${1}&offset=${
         currentPage - 1
       }&${where}`;
 
