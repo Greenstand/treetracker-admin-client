@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   },
 });
 
-function StakeholderGroups({ data, render, tall }) {
+function StakeholderGroups({ data, render, tall, parentId }) {
   const classes = useStyles();
   const { stakeholders, setStakeholders } = useContext(StakeholdersContext);
 
@@ -50,6 +50,12 @@ function StakeholderGroups({ data, render, tall }) {
     setStakeholders(linked);
   };
 
+  const selectParent = (id) => {
+    return stakeholders.filter((item) => item.id === id);
+  };
+
+  const parent = selectParent(parentId);
+
   return (
     <>
       {render.map((type) => (
@@ -64,7 +70,11 @@ function StakeholderGroups({ data, render, tall }) {
             <div className={classes.flex}>
               {stakeholder[type]?.icon}
               <Typography variant="h6">
-                {stakeholder[type]?.label} ({data[type]?.length || 0})
+                {stakeholder[type]?.label} (
+                {data[type]?.length ||
+                  (type === 'parents' && parent.length) ||
+                  0}
+                )
               </Typography>
             </div>
           </Grid>
@@ -73,8 +83,9 @@ function StakeholderGroups({ data, render, tall }) {
             className={`${classes.listBox} ${tall ? classes.tall : ''}`}
             dense
           >
-            {data[type] &&
-              data[type].map((stakeholder) => (
+            {type === 'children' &&
+              data?.[type] &&
+              data?.[type].map((stakeholder) => (
                 <StakeholderList
                   key={stakeholder.id}
                   id={data.id}
@@ -82,6 +93,17 @@ function StakeholderGroups({ data, render, tall }) {
                   type={type}
                   linked={true}
                   onLinkUpdate={() => onUnlink(stakeholder, data, type)}
+                />
+              ))}
+            {type === 'parents' &&
+              parent &&
+              parent.map((stakeholder) => (
+                <StakeholderList
+                  key={stakeholder.id}
+                  id={data.id}
+                  data={stakeholder}
+                  type={type}
+                  linked={true}
                 />
               ))}
           </List>
