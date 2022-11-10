@@ -240,7 +240,10 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               <AccessTimeIcon />
                               <Typography variant="body1">
                                 {getDateStringLocale(
-                                  new Date(candidateCapture.created_at)
+                                  new Date(
+                                    candidateCapture.captured_at ||
+                                      candidateCapture.created_at
+                                  )
                                 )}
                               </Typography>
                             </Box>
