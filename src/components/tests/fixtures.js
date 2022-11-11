@@ -402,6 +402,7 @@ const growerValues = {
   updateGrowers: () => {},
   updateFilter: () => {},
   getTotalGrowerCount: () => {},
+  getGrowerSelfies: () => {},
 };
 const verifyValues = {
   captureImages: RAW_CAPTURES,
