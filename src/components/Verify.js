@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     borderRadius: theme.spacing(4),
     background: 'ghostwhite',
+    height: '100%',
   },
   cardPlaceholder: {
     aspectRatio: '4/3',
@@ -379,9 +380,7 @@ const Verify = (props) => {
 
   const handleImageLoaded = (idx) => () => {
     // add hover effect on card after image loaded
-    const element = cRef.current[idx];
-    element.className += ` ${classes.cardHover}`;
-    element.childNodes[0].classList.remove(`${classes.cardPlaceholder}`);
+    cRef.current[idx].className = `${classes.cardHover}`;
   };
 
   /*=============================================================*/
@@ -419,6 +418,7 @@ const Verify = (props) => {
           )}
         >
           <Box
+            className={classes.cardPlaceholder}
             ref={(el) => {
               cRef.current[idx] = el;
             }}
@@ -426,7 +426,7 @@ const Verify = (props) => {
             <Card
               onClick={handleCaptureClick(capture.id)}
               id={`card_${capture.id}`}
-              className={clsx(classes.card, classes.cardPlaceholder)}
+              className={classes.card}
               elevation={capture.placeholder ? 0 : 3}
             >
               <Box className={classes.cardIconContainer}>
