@@ -10,20 +10,34 @@ import {
   TextField,
   CircularProgress,
 } from '@material-ui/core';
-import api from '../api/growers';
 import ImageScroller from './ImageScroller';
 import SelectOrg from './common/SelectOrg';
-import { GrowerContext } from '../context/GrowerContext';
-import { ORGANIZATION_NOT_SET } from '../models/Filter';
+import { GrowerContext } from 'context/GrowerContext';
+import { ORGANIZATION_NOT_SET } from 'models/Filter';
+
+const inputs = [
+  {
+    attr: 'firstName',
+    label: 'First Name',
+  },
+  {
+    attr: 'lastName',
+    label: 'Last Name',
+  },
+];
 
 const useStyle = makeStyles((theme) => ({
   container: {
-    position: 'relative',
     padding: theme.spacing(0, 4),
+  },
+  textContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
   },
   textInput: {
     margin: theme.spacing(2, 0),
-    flexGrow: 1,
+    flex: '0 0 49%',
   },
 }));
 
@@ -40,7 +54,7 @@ const EditGrower = (props) => {
     async function loadGrowerImages() {
       if (grower?.id) {
         setLoadingGrowerImages(true);
-        const selfies = await api.getGrowerSelfies(grower.id);
+        const selfies = await growerContext.getGrowerSelfies(grower.id);
         setLoadingGrowerImages(false);
 
         setGrowerImages([
@@ -54,27 +68,11 @@ const EditGrower = (props) => {
     loadGrowerImages();
   }, [grower]);
 
-  async function updateGrower(grower) {
-    await api.updateGrower(grower);
-    const updatedGrower = await api.getGrower(grower.id);
-    // only update context if growers have already been downloaded
-    if (growerContext.growers.length) {
-      const index = growerContext.growers.findIndex(
-        (p) => p.id === updatedGrower.id
-      );
-      if (index >= 0) {
-        const growers = [...growerContext.growers];
-        growers[index] = updatedGrower;
-        growerContext.updateGrowers(growers);
-      }
-    }
-  }
-
   async function handleSave() {
     if (growerUpdate) {
       setSaveInProgress(true);
       // TODO handle errors
-      await updateGrower({
+      await growerContext.updateGrower({
         id: grower.id,
         ...growerUpdate,
       });
@@ -84,6 +82,7 @@ const EditGrower = (props) => {
   }
 
   function handleCancel() {
+    setGrowerUpdate(null);
     onClose();
   }
 
@@ -95,35 +94,13 @@ const EditGrower = (props) => {
       return newGrower[key] !== grower[key];
     });
 
-    if (changed) {
-      setGrowerUpdate(newGrower);
-    } else {
-      setGrowerUpdate(null);
-    }
+    changed ? setGrowerUpdate(newGrower) : setGrowerUpdate(null);
   }
 
   function getValue(attr) {
     // Ensure empty strings are not overlooked
-    if (growerUpdate?.[attr] != null) {
-      return growerUpdate[attr];
-    } else if (grower[attr] != null) {
-      return grower[attr];
-    }
-    return '';
+    return growerUpdate?.[attr] ?? grower?.[attr] ?? '';
   }
-
-  const inputs = [
-    [
-      {
-        attr: 'firstName',
-        label: 'First Name',
-      },
-      {
-        attr: 'lastName',
-        label: 'Last Name',
-      },
-    ],
-  ];
 
   return (
     <Dialog open={isOpen} aria-labelledby="form-dialog-title" maxWidth={false}>
@@ -140,27 +117,27 @@ const EditGrower = (props) => {
             }
             onSelectChange={handleChange}
           />
-          {inputs.map((row, rowIdx) => (
-            <Grid item container direction="row" key={rowIdx}>
-              {row.map((input, colIdx) => (
-                <TextField
-                  key={`${rowIdx}_${colIdx}`}
-                  className={classes.textInput}
-                  id={input.attr}
-                  label={input.label}
-                  type={input.type || 'text'}
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={(e) => {
-                    handleChange(input.attr, e.target.value);
-                  }}
-                  value={getValue(input.attr)}
-                />
-              ))}
-            </Grid>
-          ))}
+
+          <Grid className={classes.textContainer}>
+            {inputs.map((input, colIdx) => (
+              <TextField
+                key={`TextField_${colIdx}`}
+                className={classes.textInput}
+                id={input.attr}
+                label={input.label}
+                type={input.type || 'text'}
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => {
+                  handleChange(input.attr, e.target.value);
+                }}
+                value={getValue(input.attr)}
+              />
+            ))}
+          </Grid>
+
           <TextField
             className={classes.textInput}
             label="Grower-entered organization"

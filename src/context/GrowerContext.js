@@ -1,9 +1,9 @@
 import React, { useState, useEffect, createContext } from 'react';
-import FilterGrower from '../models/FilterGrower';
-import api from '../api/growers';
+import FilterGrower from 'models/FilterGrower';
+import api from 'api/growers';
 import * as loglevel from 'loglevel';
 
-const log = loglevel.getLogger('../context/GrowerContext');
+const log = loglevel.getLogger('context/GrowerContext');
 
 export const GrowerContext = createContext({
   growers: [],
@@ -22,6 +22,7 @@ export const GrowerContext = createContext({
   updateGrowers: () => {},
   updateFilter: () => {},
   getTotalGrowerCount: () => {},
+  getGrowerSelfies: () => {},
 });
 
 export function GrowerProvider(props) {
@@ -82,14 +83,16 @@ export function GrowerProvider(props) {
   };
 
   const updateGrower = async (payload) => {
+    if (payload.organizationId === 'ORGANIZATION_NOT_SET') {
+      payload.organizationId = null;
+    }
     await api.updateGrower(payload);
     const updatedGrower = await api.getGrower(payload.id);
     const index = growers.findIndex((p) => p.id === updatedGrower.id);
     if (index >= 0) {
-      const growers = Object.assign([], growers, {
-        [index]: updatedGrower,
-      });
-      setGrowers(growers);
+      const newGrowers = [...growers];
+      newGrowers[index] = updatedGrower;
+      setGrowers(newGrowers);
     }
   };
 
@@ -101,6 +104,10 @@ export function GrowerProvider(props) {
   const getTotalGrowerCount = async () => {
     const { count } = await api.getCount({});
     setTotalGrowerCount(count);
+  };
+
+  const getGrowerSelfies = async (growerId) => {
+    return await api.getGrowerSelfies(growerId);
   };
 
   const value = {
@@ -120,6 +127,7 @@ export function GrowerProvider(props) {
     updateGrowers,
     updateFilter,
     getTotalGrowerCount,
+    getGrowerSelfies,
   };
 
   return (
