@@ -1,3 +1,10 @@
+## [1.114.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.0...v1.114.1) (2022-11-13)
+
+
+### Bug Fixes
+
+* display capture location ([#931](https://github.com/Greenstand/treetracker-admin-client/issues/931)) ([abff3fe](https://github.com/Greenstand/treetracker-admin-client/commit/abff3fe4e0ede414a99e1b48d9f303510b0095d4))
+
 # [1.114.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.113.0...v1.114.0) (2022-11-10)
 
 
