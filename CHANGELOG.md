@@ -1,3 +1,10 @@
+# [1.114.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.113.0...v1.114.0) (2022-11-10)
+
+
+### Features
+
+* display captured_at instead of created_at if it exists ([#929](https://github.com/Greenstand/treetracker-admin-client/issues/929)) ([1bdd4d7](https://github.com/Greenstand/treetracker-admin-client/commit/1bdd4d7be4758e661db6c6c436c0ce6c43940dd9))
+
 # [1.113.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.112.0...v1.113.0) (2022-11-08)
 
 
