@@ -231,6 +231,13 @@ const useStyle = makeStyles((theme) => ({
     height: 48,
   },
   growerBox2: {},
+  notesContainerBox: {
+    textAlign: 'center',
+  },
+  notesBody: {
+    marginLeft: theme.spacing(2),
+    alignSelf: 'flex-end',
+  },
 }));
 
 // Set API as a variable
@@ -642,6 +649,20 @@ function CaptureMatchingView() {
               alertTextSize="1rem"
             />
           </Box>
+
+          {captureImage.note && (
+            <Box
+              className={classes.notesContainerBox}
+              margin={4}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h6">Notes:</Typography>
+              <Typography variant="body1" className={classes.notesBody}>
+                {captureImage.note}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       )}
     </Box>
