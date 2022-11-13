@@ -30,9 +30,14 @@ const useStyle = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 4),
   },
+  textContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
+  },
   textInput: {
     margin: theme.spacing(2, 0),
-    flexGrow: 1,
+    flex: '0 0 49%',
   },
 }));
 
@@ -113,10 +118,10 @@ const EditGrower = (props) => {
             onSelectChange={handleChange}
           />
 
-          <Grid item container direction="row">
+          <Grid className={classes.textContainer}>
             {inputs.map((input, colIdx) => (
               <TextField
-                key={`1_${colIdx}`}
+                key={`TextField_${colIdx}`}
                 className={classes.textInput}
                 id={input.attr}
                 label={input.label}
