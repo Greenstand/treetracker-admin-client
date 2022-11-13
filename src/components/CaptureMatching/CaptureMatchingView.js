@@ -572,7 +572,9 @@ function CaptureMatchingView() {
                 <Box className={classes.captureImageBox3}>
                   <AccessTimeIcon />
                   <Typography variant="body1">
-                    {getDateTimeStringLocale(captureImage.created_at)}
+                    {getDateTimeStringLocale(
+                      captureImage.captured_at || captureImage.created_at
+                    )}
                   </Typography>
                 </Box>
                 <Box className={classes.captureImageBox3}>
