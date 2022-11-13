@@ -424,12 +424,17 @@ function CaptureMatchingView() {
     setIsDetailsPaneOpen(false);
   };
 
-  const countryInfo = useMemo(
-    () => (
-      <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
-    ),
-    [captureImage?.latitude, captureImage?.longitude]
-  );
+  const countryInfo = useMemo(() => {
+    const latitude = captureImage?.latitude || captureImage?.lat;
+    const longitude = captureImage?.longitude || captureImage?.lon;
+
+    return latitude && longitude && <Country lat={latitude} lon={longitude} />;
+  }, [
+    captureImage?.latitude,
+    captureImage?.longitude,
+    captureImage?.lat,
+    captureImage?.lon,
+  ]);
 
   const getGroverRegDate = () => {
     if (Object.keys(growerAccount).length !== 0) {
@@ -584,16 +589,15 @@ function CaptureMatchingView() {
                     }}
                     onClick={() => {
                       window.open(
-                        `https://www.google.com/maps/search/?api=1&query=${captureImage.latitude},${captureImage.longitude}`
+                        `https://www.google.com/maps/search/?api=1&query=${
+                          captureImage.latitude || captureImage.lat
+                        },${captureImage.longitude || captureImage.lon}`
                       );
                     }}
                   />
-                  <Typography variant="body1">
-                    {captureImage?.latitude &&
-                      captureImage?.longitude &&
-                      countryInfo}
-                    ;
-                  </Typography>
+                  {countryInfo && (
+                    <Typography variant="body1">{countryInfo};</Typography>
+                  )}
                 </Box>
               </Box>
             </Box>
