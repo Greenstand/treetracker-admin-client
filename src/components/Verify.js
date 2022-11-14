@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
   },
   cardPlaceholder: {
-    aspectRatio: '4/3',
+    aspectRatio: '3/4',
   },
   cardContainer: {
     position: 'relative',
