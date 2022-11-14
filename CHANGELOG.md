@@ -1,3 +1,10 @@
+## [1.114.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.1...v1.114.2) (2022-11-14)
+
+
+### Bug Fixes
+
+* payments filter not working ([#937](https://github.com/Greenstand/treetracker-admin-client/issues/937)) ([48dd41d](https://github.com/Greenstand/treetracker-admin-client/commit/48dd41df30dfdbbb4bb0800f9a631252ae9005ad))
+
 ## [1.114.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.0...v1.114.1) (2022-11-13)
 
 
