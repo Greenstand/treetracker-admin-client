@@ -35,7 +35,7 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
   const initialFilter = {
-    organization_id: '',
+    // organization_id: '',
     grower: '',
     payment_status: 'all',
     earnings_status: 'all',
@@ -75,9 +75,11 @@ function CustomTableFilter(props) {
     e.preventDefault();
     const filtersToSubmit = {
       ...filter,
-      ...localFilter,
-      grower: localFilter.grower.trim(),
-      phone: localFilter.phone.trim(),
+      grower: localFilter.grower ? localFilter.grower.trim() : undefined,
+      phone: localFilter.phone ? localFilter.phone.trim() : undefined,
+      payment_status: disablePaymentStatus
+        ? undefined
+        : localFilter.payment_status,
     };
 
     if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
@@ -100,7 +102,12 @@ function CustomTableFilter(props) {
 
   const handleOnFilterFormReset = (e) => {
     e.preventDefault();
-    setFilter(initialFilter);
+    disablePaymentStatus
+      ? setFilter({
+          payment_status: undefined,
+          grower: undefined,
+        })
+      : setFilter({ ...initialFilter, grower: '' });
     setLocalFilter(initialFilter);
     setIsFilterOpen(false);
   };
@@ -170,23 +177,25 @@ function CustomTableFilter(props) {
         </FormControl>
       )}
 
-      <FormControl
-        variant="outlined"
-        className={classes.customTableFilterSelectFormControl}
-      >
-        <SelectOrg
-          orgId={localFilter?.organization_id}
-          defaultOrgs={[
-            {
-              id: ALL_ORGANIZATIONS,
-              stakeholder_uuid: ALL_ORGANIZATIONS,
-              name: 'All',
-              value: 'All',
-            },
-          ]}
-          handleSelection={handleOnFormControlChange}
-        />
-      </FormControl>
+      {!disablePaymentStatus && (
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <SelectOrg
+            orgId={localFilter?.organization_id}
+            defaultOrgs={[
+              {
+                id: ALL_ORGANIZATIONS,
+                stakeholder_uuid: ALL_ORGANIZATIONS,
+                name: 'All',
+                value: 'All',
+              },
+            ]}
+            handleSelection={handleOnFormControlChange}
+          />
+        </FormControl>
+      )}
 
       <FormControl
         variant="outlined"
