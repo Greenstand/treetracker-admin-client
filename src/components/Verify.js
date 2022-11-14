@@ -60,8 +60,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     cursor: 'pointer',
     borderRadius: theme.spacing(4),
-    minHeight: '15rem',
     background: 'ghostwhite',
+    height: '100%',
+  },
+  cardPlaceholder: {
+    aspectRatio: '3/4',
   },
   cardContainer: {
     position: 'relative',
@@ -377,7 +380,7 @@ const Verify = (props) => {
 
   const handleImageLoaded = (idx) => () => {
     // add hover effect on card after image loaded
-    cRef.current[idx].className += ` ${classes.cardHover}`;
+    cRef.current[idx].className = `${classes.cardHover}`;
   };
 
   /*=============================================================*/
@@ -415,6 +418,7 @@ const Verify = (props) => {
           )}
         >
           <Box
+            className={classes.cardPlaceholder}
             ref={(el) => {
               cRef.current[idx] = el;
             }}
