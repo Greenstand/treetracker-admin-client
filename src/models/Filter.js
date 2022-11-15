@@ -93,6 +93,14 @@ export default class Filter {
       where.organization_id = this.stakeholderUUID;
     }
 
+    if (this.status) {
+      where.status = this.status;
+    }
+
+    if (this.growerAccountId) {
+      where.grower_account_id = this.growerAccountId;
+    }
+
     // if (this.stakeholderUUID === ORGANIZATION_NOT_SET) {
     //   where.stakeholderUUID = null;
     // } else if (this.stakeholderUUID !== ALL_ORGANIZATIONS) {
@@ -233,8 +241,12 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.verifyStatus) {
-      numFilters += this.verifyStatus.length;
+    if (this.status) {
+      numFilters += 1;
+    }
+
+    if (this.growerAccountId) {
+      numFilters += 1;
     }
 
     return numFilters;

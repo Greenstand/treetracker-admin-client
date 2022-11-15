@@ -66,8 +66,7 @@ function FilterTopGrower(props) {
       id,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      organizationId,
-      stakeholderUUID,
+      organizationId: stakeholderUUID,
       email: email.trim(),
       phone: phone.trim(),
       deviceIdentifier,
@@ -102,10 +101,10 @@ function FilterTopGrower(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
-                label="Grower ID"
-                htmlFor="Grower ID"
-                id="Grower ID"
-                placeholder="Grower ID"
+                label="Grower Account ID"
+                htmlFor="Grower Account ID"
+                id="Grower Account ID"
+                placeholder="Grower Account ID"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 onKeyDown={handleEnterPress}

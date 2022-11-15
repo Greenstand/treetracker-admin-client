@@ -47,8 +47,7 @@ export function VerifyProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: false,
-      active: true,
+      status: 'unprocessed',
     })
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);

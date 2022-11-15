@@ -262,7 +262,7 @@ const Verify = (props) => {
   });
   const [growerDetail, setGrowerDetail] = useState({
     isOpen: false,
-    growerId: {},
+    growerId: '',
   });
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();

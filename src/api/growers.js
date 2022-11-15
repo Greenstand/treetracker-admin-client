@@ -1,8 +1,23 @@
 import { handleResponse, handleError, getOrganization } from './apiUtils';
 import { session } from '../models/auth';
 
+const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
+const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
+
 export default {
+  makeQueryString(filterObj) {
+    let arr = [];
+    for (const key in filterObj) {
+      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
+        arr.push(`${key}=${filterObj[key]}`);
+      }
+    }
+
+    return arr.join('&');
+  },
+  // query legacy api
   getGrower(id) {
+    console.log('getGrower', id);
     try {
       const growerQuery = `${
         process.env.REACT_APP_API_ROOT
@@ -19,32 +34,19 @@ export default {
       handleError(error);
     }
   },
-
-  getGrowers({ skip, rowsPerPage, orderBy = 'id', order = 'desc', filter }) {
+  // query new microservice
+  getGrowers({ skip, rowsPerPage, filter }) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
       const growerFilter = {
-        where: { ...where, active: true },
-        order: [`${orderBy} ${order}`],
+        ...where,
         limit: rowsPerPage,
-        skip,
-        fields: {
-          firstName: true,
-          lastName: true,
-          imageUrl: true,
-          email: true,
-          phone: true,
-          personId: true,
-          organization: true,
-          organizationId: true,
-          imageRotation: true,
-          id: true,
-          // growerAccountUuid: true,
-        },
+        offset: skip,
       };
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
+
+      const query = `${QUERY_API}/grower-accounts${
+        growerFilter ? `?${this.makeQueryString(growerFilter)}` : ''
+      }`;
 
       return fetch(query, {
         headers: {
@@ -57,32 +59,13 @@ export default {
     }
   },
 
-  getCount({ filter }) {
+  getCount(filter) {
     try {
-      const filterObj = filter.getWhereObj ? filter.getWhereObj() : {};
-      const query = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/count?where=${JSON.stringify(
-        filterObj
-      )}`;
+      const filterObj = filter?.getWhereObj ? filter.getWhereObj() : {};
+      const query = `${QUERY_API}/grower-accounts/count${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
       return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
-
-  getGrowerRegistrations(growerId) {
-    try {
-      const registrationQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter-registration?filter[where][planterId]=${growerId}`;
-      return fetch(registrationQuery, {
-        method: 'GET',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
@@ -95,17 +78,7 @@ export default {
 
   getGrowerSelfies(growerId) {
     try {
-      const filter = {
-        order: 'timeUpdated DESC',
-        limit: 100,
-        fields: ['planterPhotoUrl'],
-      };
-
-      const growerSelfiesQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${growerId}/selfies/?filter=${JSON.stringify(
-        filter
-      )}`;
+      const growerSelfiesQuery = `${QUERY_API}/grower-accounts/${growerId}/selfies`;
 
       return fetch(growerSelfiesQuery, {
         method: 'GET',
@@ -115,16 +88,7 @@ export default {
         },
       })
         .then(handleResponse)
-        .then((items) => {
-          // Remove duplicates
-          return [
-            ...new Set(
-              items
-                .map((tree) => tree.planterPhotoUrl)
-                .filter((img) => img !== '')
-            ),
-          ];
-        });
+        .then((items) => items?.selfies?.filter((img) => img !== ''));
     } catch (error) {
       handleError(error);
     }
@@ -136,9 +100,7 @@ export default {
         growerUpdate = { ...growerUpdate, organizationId: null };
       }
       const { id } = growerUpdate;
-      const growerQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${id}`;
+      const growerQuery = `${FIELD_DATA_API}/grower-accounts/${id}`;
 
       return fetch(growerQuery, {
         method: 'PATCH',
