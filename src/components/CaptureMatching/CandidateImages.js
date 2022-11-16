@@ -84,9 +84,9 @@ const useStyles = makeStyles({
     borderRadius: '50%',
     textAlign: 'center',
   },
-  candidateCaptureContainer: {
-    flexBasis: '250px',
-  },
+  // candidateCaptureContainer: {
+  //   // flexBasis: '250px',
+  // },
   captureInfo: {
     position: 'absolute',
     bottom: 0,
@@ -230,8 +230,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               objectFit="cover"
                               width={250}
                               style={{
-                                width: '250px',
-                                height: '100%',
+                                width: 'auto',
+                                height: '300px',
                               }}
                               alertHeight="300px"
                               alertTextSize=".9rem"
@@ -244,7 +244,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                                   {getDateStringLocale(
                                     new Date(
                                       candidateCapture.captured_at ||
-                                      candidateCapture.created_at
+                                        candidateCapture.created_at
                                     )
                                   )}
                                 </Typography>
