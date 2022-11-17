@@ -254,23 +254,17 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                                 }}
                                 onClick={() => {
                                   window.open(
-                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                    `https://www.google.com/maps/search/?api=1&query=${capture.lat},${capture.lon}`
                                   );
                                 }}
                               />
                               <Typography variant="body1">
-                                {capture?.latitude && capture?.longitude && (
+                                {capture?.lat && capture?.lon && (
                                   <DistanceTo
-                                    lat1={capture.latitude}
-                                    lon1={capture.longitude}
-                                    lat2={
-                                      candidateCapture.latitude ||
-                                      candidateCapture.lat
-                                    }
-                                    lon2={
-                                      candidateCapture.longitude ||
-                                      candidateCapture.lon
-                                    }
+                                    lat1={capture.lat}
+                                    lon1={capture.lon}
+                                    lat2={candidateCapture.lat}
+                                    lon2={candidateCapture.lon}
                                   />
                                 )}
                               </Typography>
