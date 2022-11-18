@@ -42,7 +42,7 @@ import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
