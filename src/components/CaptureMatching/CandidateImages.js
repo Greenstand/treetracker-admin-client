@@ -228,8 +228,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             objectFit="cover"
                             width={250}
                             style={{
-                              width: '250px',
-                              height: '100%',
+                              width: 'auto',
+                              height: '350px',
                             }}
                             alertHeight="300px"
                             alertTextSize=".9rem"
@@ -239,7 +239,9 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             <Box className={classes.captureInfoDetail}>
                               <AccessTimeIcon />
                               <Typography variant="body1">
-                                {candidateCapture.created_at}
+                                {(candidateCapture.created_at &&
+                                  candidateCapture.created_at.slice(0, 10)) ||
+                                  'Unknown'}
                               </Typography>
                             </Box>
                             <Box className={classes.captureInfoDetail}>
