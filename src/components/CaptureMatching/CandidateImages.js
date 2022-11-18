@@ -239,9 +239,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             <Box className={classes.captureInfoDetail}>
                               <AccessTimeIcon />
                               <Typography variant="body1">
-                                {getDateStringLocale(
-                                  candidateCapture.created_at
-                                )}
+                                {candidateCapture.created_at}
                               </Typography>
                             </Box>
                             <Box className={classes.captureInfoDetail}>

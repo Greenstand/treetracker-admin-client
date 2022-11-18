@@ -301,7 +301,15 @@ function CaptureMatchingView() {
     );
     // log.debug('fetchCaptures data', currentPage, data);
     if (data?.captures?.length > 0) {
-      setCaptureImage(data.captures[0]);
+      const cleanup = (capture) => {
+        if (!capture) return capture;
+        return {
+          ...capture,
+          latitude: capture.lat || 0,
+          longitude: capture.lon || 0,
+        };
+      };
+      setCaptureImage(cleanup(data.captures[0]));
       setNoOfPages(data.count);
       setImgCount(data.count);
     } else {
@@ -596,11 +604,8 @@ function CaptureMatchingView() {
                   </Typography>
                   <Typography variant="body1">
                     Joined at{' '}
-                    {format(
-                      growerAccount.first_registration_at ||
-                        growerAccount.created_at,
-                      'MM/dd/yyyy'
-                    )}
+                    {growerAccount.first_registration_at ||
+                      growerAccount.created_at}
                   </Typography>
                 </Box>
               </Box>
