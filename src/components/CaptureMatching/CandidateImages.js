@@ -19,6 +19,8 @@ import theme from '../common/theme';
 import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
+import { CopyButton } from '../common/CopyButton';
+import CopyNotification from '../common/CopyNotification';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -139,6 +141,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
 
   const [showBox, setShowBox] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState('');
 
   useEffect(() => {
     const initialCandidateData = candidateImgData.map((tree) => tree.id);
@@ -152,6 +156,12 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
 
   const showImgBox = (i) => {
     setShowBox([...showBox, i]);
+  };
+
+  const confirmCopy = (label) => {
+    setSnackbarOpen(false);
+    setSnackbarLabel(label);
+    setSnackbarOpen(true);
   };
 
   return (
@@ -181,6 +191,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                     <Tooltip title={tree.id}>
                       <Typography variant="h5">
                         Tree {(tree.id + '').substring(0, 10) + '...'}
+                        <CopyButton
+                          label={tree.id}
+                          value={tree.id}
+                          confirmCopy={confirmCopy}
+                        />
                       </Typography>
                     </Tooltip>
                   </Box>
@@ -317,6 +332,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
             </Paper>
           );
         })}
+      <CopyNotification
+        snackbarLabel={snackbarLabel}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
     </Box>
   );
 }
