@@ -133,7 +133,34 @@ export default class Filter {
       where.and = andClause;
     }
 
-    return where;
+    //return where;
+
+    let orCondition = false;
+    const { ...restFilter } = where;
+
+    if (this.planterId) {
+      const planterIds = this.planterId.split(',').map((item) => item.trim());
+
+      if (planterIds.length === 1) {
+        restFilter.grower_account_id = this.planterId;
+      } else {
+        if (!orCondition) {
+          orCondition = true;
+          where = [];
+        }
+        planterIds.forEach((planterId) => {
+          if (planterId) {
+            where.push({
+              grower_account_id: planterId,
+            });
+          }
+        });
+      }
+    }
+
+    return orCondition
+      ? { ...restFilter, or: where }
+      : { ...restFilter, ...where };
   }
 
   /*
