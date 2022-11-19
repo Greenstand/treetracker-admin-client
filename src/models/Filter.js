@@ -69,6 +69,14 @@ export default class Filter {
       where.deviceIdentifier = this.deviceIdentifier;
     }
 
+    if (this.wallet) {
+      where.wallet = this.wallet;
+    }
+
+    if (this.planterIdentifier) {
+      where.wallet = this.planterIdentifier;
+    }
+
     if (this.planterIdentifier) {
       where.planterIdentifier = this.planterIdentifier;
     }
