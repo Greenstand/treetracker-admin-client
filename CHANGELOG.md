@@ -1,3 +1,10 @@
+# [1.115.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.2...v1.115.0) (2022-11-19)
+
+
+### Features
+
+* add copy button capture uuid ([#940](https://github.com/Greenstand/treetracker-admin-client/issues/940)) ([d0d4873](https://github.com/Greenstand/treetracker-admin-client/commit/d0d4873b2d3784526b23c98b58066b7963c2b896))
+
 ## [1.114.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.1...v1.114.2) (2022-11-14)
 
 
