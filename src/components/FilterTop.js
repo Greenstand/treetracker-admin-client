@@ -161,7 +161,12 @@ function Filter(props) {
     <>
       {
         <form onSubmit={handleSubmit}>
-          <Grid container wrap="nowrap" direction="row">
+          <Grid
+            container
+            wrap="nowrap"
+            direction="row"
+            data-testid="filter-top"
+          >
             <Grid item className={classes.inputContainer}>
               <TextField
                 select

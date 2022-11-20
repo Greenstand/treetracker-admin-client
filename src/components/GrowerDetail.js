@@ -143,7 +143,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
-  log.debug('render: grower detail', growerId);
+  // log.debug('render: grower detail', growerId);
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
@@ -181,7 +181,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      log.debug('grower', grower);
       if (grower && grower.grower_account_id !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
@@ -198,8 +197,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
             growerAccountUuid: undefined,
           });
         }
-
-        log.debug('match', match);
 
         if (match.error) {
           setErrorMessage(match.message);
@@ -253,7 +250,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   async function getGrower(payload) {
     const { id, growerAccountUuid } = payload;
-
     // Look for a match in the context first
     let grower = growers?.find(
       (p) =>
