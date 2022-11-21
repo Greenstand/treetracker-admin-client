@@ -239,8 +239,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                             <Box className={classes.captureInfoDetail}>
                               <AccessTimeIcon />
                               <Typography variant="body1">
-                                {(candidateCapture.created_at &&
-                                  candidateCapture.created_at.slice(0, 10)) ||
+                                {(candidateCapture.captured_at &&
+                                  candidateCapture.captured_at.slice(0, 10)) ||
                                   'Unknown'}
                               </Typography>
                             </Box>
