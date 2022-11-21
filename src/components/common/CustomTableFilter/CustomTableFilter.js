@@ -1,21 +1,21 @@
-import React, { useState, useContext } from 'react';
-import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import React, { useContext, useState } from 'react';
+
+import { ALL_ORGANIZATIONS } from '../../../models/Filter';
+import { AppContext } from '../../../context/AppContext';
+import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
+import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-
+import PropTypes from 'prop-types';
+import Select from '@material-ui/core/Select';
 import SelectOrg from '../SelectOrg';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import useStyles from './CustomTableFilter.styles';
-import { AppContext } from '../../../context/AppContext';
-import { ALL_ORGANIZATIONS } from '../../../models/Filter';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -35,11 +35,13 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
   const initialFilter = {
-    // organization_id: '',
-    grower: '',
-    payment_status: 'all',
-    earnings_status: 'all',
-    phone: '',
+    organization_id: url.searchParams.get('organization_id') || '',
+    grower: url.searchParams.get('grower') || '',
+    payment_status: url.searchParams.get('payment_status') || 'all',
+    earnings_status: url.searchParams.get('earnings_status') || 'all',
+    phone: url.searchParams.get('phone') || '',
+    start_date: url.searchParams.get('start_date') || '',
+    end_date: url.searchParams.get('end_date') || '',
   };
   const [localFilter, setLocalFilter] = useState(initialFilter);
   const {
@@ -54,8 +56,63 @@ function CustomTableFilter(props) {
   const classes = useStyles();
   const { updateSelectedFilter } = useContext(AppContext);
 
+  useEffect(() => {
+    const filtersToSubmit = {
+      ...filter,
+      ...localFilter,
+    };
+    console.log(
+      'useEffect - CustomTableFilter.js:66 - localFilter --',
+      localFilter
+    );
+
+    if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
+      const modifiedFiltersToSubmit = {
+        ...filtersToSubmit,
+        organization_id: '',
+        sub_organization: '',
+      };
+      setFilter(modifiedFiltersToSubmit);
+      setIsFilterOpen(false);
+      console.log(modifiedFiltersToSubmit);
+      updateSelectedFilter({
+        modifiedFiltersToSubmit,
+      });
+      mapFiltersToQueries(modifiedFiltersToSubmit);
+    } else {
+      setFilter(filtersToSubmit);
+      setIsFilterOpen(false);
+      console.log(filtersToSubmit);
+      updateSelectedFilter(filtersToSubmit);
+      mapFiltersToQueries(filtersToSubmit);
+    }
+  }, []);
+
+  const handleQuerySearchParams = (name, value) => {
+    if (params.has(name) && value == '') {
+      url.searchParams.delete(name);
+      window.history.pushState({}, '', url.search);
+    } else if (!params.has(name) && value == '') {
+      return;
+    } else if (!params.get(name)) {
+      url.searchParams.append(name, value);
+      window.history.pushState({}, '', url.search);
+    } else if (params.get(name)) {
+      url.searchParams.set(name, value);
+      window.history.pushState({}, '', url.search);
+    }
+  };
+
+  const mapFiltersToQueries = (filter) => {
+    console.log(filter);
+    for (var key in filter) {
+      handleQuerySearchParams(key, filter[key]);
+    }
+  };
+
   const handleOnFormControlChange = (e) => {
     let updatedFilter = { ...localFilter };
+    console.log('updatedFilter --', updatedFilter);
     if (e?.target) {
       e.preventDefault();
       const { name, value } = e.target;
