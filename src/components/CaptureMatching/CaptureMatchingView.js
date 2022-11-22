@@ -234,6 +234,26 @@ const useStyle = makeStyles((theme) => ({
   growerBox2: {},
 }));
 
+const filterTree = (trees, capture) => {
+  log.warn('capture:', capture);
+  log.warn('trees:', trees);
+  if (!capture) return [];
+  const capturedAt = new Date(capture.captured_at);
+  const filteredTrees = trees.filter((tree) => {
+    const firstCapture = tree.captures[0];
+    const firstCaptureAt = new Date(firstCapture.captured_at);
+    if (
+      capturedAt.getTime() - firstCaptureAt.getTime() >
+      1000 * 60 * 60 * 24 * 30
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return filteredTrees;
+};
+
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
@@ -269,7 +289,7 @@ function CaptureMatchingView() {
     const data = await api.fetchCandidateTrees(captureId, abortController);
     if (data) {
       setCandidateImgData(data.matches);
-      setTreesCount(data.matches.length);
+      setTreesCount(filterTree(data.matches, captureImage).length);
       setLoading(false);
     }
   }
@@ -678,14 +698,14 @@ function CaptureMatchingView() {
             {loading ? null : (
               <CandidateImages
                 capture={captureImage}
-                candidateImgData={candidateImgData}
+                candidateImgData={filterTree(candidateImgData, captureImage)}
                 sameTreeHandler={sameTreeHandler}
               />
             )}
             {!loading &&
               captureImage &&
               candidateImgData &&
-              candidateImgData.length === 0 && (
+              filterTree(candidateImgData, captureImage).length === 0 && (
                 //captureImage && treesCount === 0 && (
                 <Box className={classes.noCandidateBox}>
                   <Typography variant="h5">
