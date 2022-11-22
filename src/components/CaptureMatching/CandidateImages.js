@@ -177,7 +177,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                     <Paper elevation={0} className={classes.box1}>
                       {i + 1}
                     </Paper>
-                    <Tooltip title={tree.id}>
+                    <Tooltip title={tree.id} interactive>
                       <Typography variant="h5">
                         Tree {(tree.id + '').substring(0, 10) + '...'}
                       </Typography>
