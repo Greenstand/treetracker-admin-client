@@ -17,7 +17,6 @@ export default {
   },
   // query legacy api
   getGrower(id) {
-    console.log('getGrower', id);
     try {
       const growerQuery = `${
         process.env.REACT_APP_API_ROOT
