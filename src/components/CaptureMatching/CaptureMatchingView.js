@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { getDistance } from 'geolib';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -251,7 +252,47 @@ const filterTree = (trees, capture) => {
       return false;
     }
   });
-  return filteredTrees;
+
+  // order by distance and captutre date
+  return trees.sort((a, b) => {
+    const distance1 = getDistance(
+      {
+        latitude: Number(a.captures[0].latitude || a.captures[0].lat),
+        longitude: Number(a.captures[0].longitude || a.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    log.warn('distance1:', distance1);
+    const distance2 = getDistance(
+      {
+        latitude: Number(b.captures[0].latitude || b.captures[0].lat),
+        longitude: Number(b.captures[0].longitude || b.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    log.warn('distance2:', distance2);
+    if (distance1 < distance2) {
+      return -1;
+    } else if (distance1 > distance2) {
+      return 1;
+    } else {
+      const firstCaptureAt1 = new Date(a.captures[0].captured_at);
+      const firstCaptureAt2 = new Date(b.captures[0].captured_at);
+      if (firstCaptureAt1 < firstCaptureAt2) {
+        return -1;
+      } else if (firstCaptureAt1 > firstCaptureAt2) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  });
 };
 
 // Set API as a variable
