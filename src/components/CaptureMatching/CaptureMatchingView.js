@@ -254,7 +254,7 @@ const filterTree = (trees, capture) => {
   });
 
   // order by distance and captutre date
-  return trees.sort((a, b) => {
+  return filteredTrees.sort((a, b) => {
     const distance1 = getDistance(
       {
         latitude: Number(a.captures[0].latitude || a.captures[0].lat),
@@ -265,7 +265,6 @@ const filterTree = (trees, capture) => {
         longitude: Number(capture.longitude || capture.lon),
       }
     );
-    log.warn('distance1:', distance1);
     const distance2 = getDistance(
       {
         latitude: Number(b.captures[0].latitude || b.captures[0].lat),
@@ -276,7 +275,6 @@ const filterTree = (trees, capture) => {
         longitude: Number(capture.longitude || capture.lon),
       }
     );
-    log.warn('distance2:', distance2);
     if (distance1 < distance2) {
       return -1;
     } else if (distance1 > distance2) {
