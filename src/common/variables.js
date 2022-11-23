@@ -6,6 +6,11 @@ export const verificationStates = {
   AWAITING: 'Awaiting Verification',
   REJECTED: 'Rejected',
 };
+export const captureStatus = {
+  APPROVED: 'approved',
+  UNPROCESSED: 'unprocessed',
+  REJECTED: 'rejected',
+};
 export const tokenizationStates = {
   TOKENIZED: 'Tokenized',
   NOT_TOKENIZED: 'Not Tokenized',

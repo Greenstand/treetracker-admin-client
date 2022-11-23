@@ -27,6 +27,7 @@ import {
   Clear,
   HourglassEmptyOutlined,
 } from '@material-ui/icons';
+import { captureStatus } from './variables';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
@@ -223,15 +224,15 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           awaitingCount,
           rejectedCount,
         ] = await Promise.all([
-          getCaptureCountGrower('approved', grower.id),
-          getCaptureCountGrower('unprocessed', grower.id),
-          getCaptureCountGrower('rejected', grower.id),
+          getCaptureCountGrower(captureStatus.APPROVED, grower.id),
+          getCaptureCountGrower(captureStatus.UNPROCESSED, grower.id),
+          getCaptureCountGrower(captureStatus.REJECTED, grower.id),
         ]);
 
         setVerificationStatus({
-          approved: approvedCount,
-          awaiting: awaitingCount,
-          rejected: rejectedCount,
+          [captureStatus.APPROVED]: approvedCount,
+          [captureStatus.UNPROCESSED]: awaitingCount,
+          [captureStatus.REJECTED]: rejectedCount,
         });
         setLoading(false);
       }

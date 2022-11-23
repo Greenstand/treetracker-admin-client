@@ -17,7 +17,6 @@ export default {
   },
   // query legacy api
   getGrower(id) {
-    console.log('getGrower', id);
     try {
       const growerQuery = `${
         process.env.REACT_APP_API_ROOT
@@ -44,9 +43,9 @@ export default {
         offset: skip,
       };
 
-      const query = `${QUERY_API}/grower-accounts${
-        growerFilter ? `?${this.makeQueryString(growerFilter)}` : ''
-      }`;
+      const query = `${QUERY_API}/grower-accounts?${this.makeQueryString(
+        growerFilter
+      )}`;
 
       return fetch(query, {
         headers: {
