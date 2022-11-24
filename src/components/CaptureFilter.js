@@ -117,8 +117,12 @@ function Filter(props) {
     filter.grower_account_id = growerId;
     filter.device_identifier = deviceId;
     filter.wallet = wallet;
-    filter.startDate = startDate ? formatDate(startDate) : undefined;
-    filter.endDate = endDate ? formatDate(endDate) : undefined;
+    filter.startDate = startDate
+      ? formatDate(startDate) + 'T00:00:00.000Z'
+      : undefined;
+    filter.endDate = endDate
+      ? formatDate(endDate) + 'T23:59:59.999Z'
+      : undefined; //Added 'T23:59:59.999Z' to fix the dates query, that wasn`t getting the last day
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organization_id = organizationId;
