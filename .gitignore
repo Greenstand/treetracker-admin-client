@@ -23,6 +23,3 @@ yarn-debug.log*
 yarn-error.log*
 .nyc_output
 *.orig
-
-package-lock.json
-yarn.lock
