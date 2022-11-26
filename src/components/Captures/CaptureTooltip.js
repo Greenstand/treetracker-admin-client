@@ -24,7 +24,7 @@ const CaptureTooltip = ({ capture, toggleDrawer }) => {
       )}
       <OptimizedImage
         onClick={toggleDrawer(capture.id)}
-        src={capture.imageUrl}
+        src={capture.image_url}
         width={160}
         height={160}
         style={{

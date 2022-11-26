@@ -10,7 +10,6 @@ import Verify from '../Verify';
 import CaptureTags from '../CaptureTags';
 import CaptureFilter from '../CaptureFilter';
 import { ORGS, TAGS, tagsValues } from './fixtures';
-
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/tags.test');
 
@@ -173,22 +172,14 @@ describe('tags', () => {
 
     afterEach(cleanup);
 
-    describe('filter top', () => {
+    describe('capture filter', () => {
       it('renders subcomponents of filter top', () => {
-        // const filter = screen.getByRole('button', { name: /filter/i });
-        // userEvent.click(filter);
-
-        expect(
-          screen.getByLabelText(/verification status/i)
-        ).toBeInTheDocument();
-
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
-        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
+        expect(screen.getByLabelText('Grower Account ID')).toBeInTheDocument();
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/grower identifier/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/tag/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
@@ -214,7 +205,7 @@ describe('tags', () => {
         // screen.logTestingPlaygroundURL();
         const options = await screen.findAllByRole('option');
         const tags = options.map((option) => option.textContent);
-        console.log('tags', tags);
+        log.debug('tags', tags);
 
         expect(tags[0]).toBe('tag_a');
         expect(tags[1]).toBe('tag_b');
@@ -276,7 +267,7 @@ describe('tags', () => {
   //     });
 
   //     it('api.createTag should be called with newly_created_tag', () => {
-  //       console.log('createTag mock calls 1', api.createTag.mock.calls);
+  //       log.debug('createTag mock calls 1', api.createTag.mock.calls);
   //       // screen.logTestingPlaygroundURL();
   //       expect(api.createTag.mock.calls[0][0]).toBe('newly_created_tag');
   //     });

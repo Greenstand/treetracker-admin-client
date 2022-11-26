@@ -1,8 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
-import axios from 'axios';
-import { getOrganization } from '../api/apiUtils';
-import { session } from '../models/auth';
 import FilterModel from '../models/Filter';
+import api from '../api/treeTrackerApi';
+import { captureStatus } from '../common/variables';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
@@ -11,6 +10,7 @@ export const CapturesContext = createContext({
   isLoading: false,
   captures: [],
   captureCount: 0,
+  capture: {},
   page: 0,
   rowsPerPage: 25,
   order: 'desc',
@@ -20,9 +20,9 @@ export const CapturesContext = createContext({
   setPage: () => {},
   setOrder: () => {},
   setOrderBy: () => {},
-  queryCapturesApi: () => {},
-  getCaptureCount: () => {},
-  getCapturesAsync: () => {},
+  setCapture: () => {},
+  getCaptures: () => {},
+  getCapture: () => {},
   getAllCaptures: () => {},
   updateFilter: () => {},
 });
@@ -30,83 +30,76 @@ export const CapturesContext = createContext({
 export function CapturesProvider(props) {
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
+  const [capture, setCapture] = useState({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('timeCreated');
+  const [orderBy, setOrderBy] = useState('created_at');
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(
     new FilterModel({
-      verifyStatus: [
-        { active: true, approved: true },
-        { active: true, approved: false },
-      ],
+      status: captureStatus.APPROVED,
     })
   );
 
   useEffect(() => {
-    getCapturesAsync();
-    getCaptureCount();
+    getCaptures();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
-  // EVENT HANDLERS
-  const queryCapturesApi = ({
-    id = null,
-    count = false,
-    paramString = null,
-  }) => {
-    const query = `${
-      process.env.REACT_APP_API_ROOT
-    }/api/${getOrganization()}trees${count ? '/count' : ''}${
-      id != null ? '/' + id : ''
-    }${paramString ? '?' + paramString : ''}`;
-
-    return axios.get(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    });
-  };
-
-  const getCaptureCount = async () => {
-    log.debug('load capture count');
-    const paramString = `where=${JSON.stringify(filter.getWhereObj())}`;
-    const response = await queryCapturesApi({
-      count: true,
-      paramString,
-    });
-    const { count } = response.data;
-    setCaptureCount(Number(count));
-  };
-
-  const getCapturesAsync = async () => {
+  const getCaptures = async () => {
     log.debug('4 - load captures');
+
     const filterData = {
-      where: filter.getWhereObj(),
-      order: [`${orderBy} ${order}`],
+      ...filter.getWhereObj(),
+      order_by: orderBy,
+      order,
       limit: rowsPerPage,
-      skip: page * rowsPerPage,
+      offset: page * rowsPerPage,
     };
-    const paramString = `filter=${JSON.stringify(filterData)}`;
+
+    // status is not allowed by api because all captures should be "approved"
+    if (filterData.status) {
+      delete filterData.status;
+    }
+
     setIsLoading(true);
-    const response = await queryCapturesApi({ paramString });
+    const response = await api.getCaptures(filterData);
     setIsLoading(false);
-    setCaptures(response.data);
+    setCaptures(response?.captures);
+    setCaptureCount(Number(response?.data?.total));
   };
 
   // GET CAPTURES FOR EXPORT
   const getAllCaptures = async () => {
     log.debug('load all captures for export');
     const filterData = {
-      where: filter.getWhereObj(),
+      ...filter.getWhereObj(),
       order: [`${orderBy} ${order}`],
       limit: 20000,
     };
 
-    const paramString = `filter=${JSON.stringify(filterData)}`;
-    const response = await queryCapturesApi({ paramString });
-    return response;
+    // status is not allowed by api because all captures should be "approved"
+    if (filterData.status) {
+      delete filterData.status;
+    }
+
+    const { captures } = await api.getCaptures(filterData);
+    return captures;
+  };
+
+  const getCapture = (id) => {
+    setIsLoading(true);
+
+    api
+      .getCaptureById(`${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures`, id)
+      .then((res) => {
+        setIsLoading(false);
+        setCapture(res);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        log.error(`ERROR: FAILED TO GET SELECTED CAPTURE ${err}`);
+      });
   };
 
   const updateFilter = async (filter) => {
@@ -124,6 +117,7 @@ export function CapturesProvider(props) {
   const value = {
     captures,
     captureCount,
+    capture,
     page,
     rowsPerPage,
     order,
@@ -135,9 +129,9 @@ export function CapturesProvider(props) {
     setPage,
     setOrder,
     setOrderBy,
-    queryCapturesApi,
-    getCaptureCount,
-    getCapturesAsync,
+    getCaptures,
+    getCapture,
+    setCapture,
     getAllCaptures,
     updateFilter,
   };

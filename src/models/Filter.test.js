@@ -1,4 +1,5 @@
 import Filter from './Filter';
+import log from 'loglevel';
 
 describe('Filter, with initial values about this filter object', () => {
   let filter;
@@ -9,8 +10,7 @@ describe('Filter, with initial values about this filter object', () => {
     filter.captureId = '10';
     filter.dateStart = '2019-07-25';
     filter.dateEnd = '2019-07-30';
-    filter.approved = true;
-    filter.active = true;
+    filter.status = 'unprocessed';
     filter.planterId = '1';
     filter.deviceIdentifier = '1';
     filter.planterIdentifier = '1';
@@ -37,27 +37,27 @@ describe('Filter, with initial values about this filter object', () => {
     );
   });
 
-  it('getWhereObj() should match: approved=true', () => {
+  it('getWhereObj() should match: status=unprocessed', () => {
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ approved: true })
+      expect.objectContaining({ status: 'unprocessed' })
     );
   });
 
-  it('getWhereObj() should match: active=true', () => {
-    expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ active: true })
-    );
-  });
+  // it('getWhereObj() should match: active=true', () => {
+  //   expect(filter.getWhereObj()).toEqual(
+  //     expect.objectContaining({ active: true })
+  //   );
+  // });
 
-  describe('change approved = false', () => {
+  describe('change status = rejected', () => {
     //{{{
     beforeEach(() => {
-      filter.approved = false;
+      filter.status = 'rejected';
     });
 
-    it('getWhereObj() should be approved=false', () => {
+    it('getWhereObj() should be status=rejected', () => {
       expect(filter.getWhereObj()).toEqual(
-        expect.objectContaining({ approved: false })
+        expect.objectContaining({ status: 'rejected' })
       );
     });
 
@@ -88,7 +88,7 @@ describe('Filter, with initial values about this filter object', () => {
       filter.captureId = '';
     });
 
-    it('loopback object should not match any [id]', () => {
+    it('should not match any [id]', () => {
       expect(filter.getWhereObj()).not.toHaveProperty('reference_id');
     });
     //}}}
@@ -100,7 +100,7 @@ describe('Filter, with initial values about this filter object', () => {
       filter.planterId = '';
     });
 
-    it('loopback object should not match any [grower_account_id]', () => {
+    it('should not match any [grower_account_id]', () => {
       // console.error('the where:', filter.getWhereObj());
       expect(filter.getWhereObj()).not.toHaveProperty('grower_account_id');
     });
@@ -113,7 +113,7 @@ describe('Filter, with initial values about this filter object', () => {
       filter.deviceIdentifier = '';
     });
 
-    it('loopback object should not match any device_identifier', () => {
+    it('should not match any device_identifier', () => {
       expect(filter.getWhereObj()).not.toHaveProperty('device_identifier');
     });
     //}}}
@@ -125,7 +125,7 @@ describe('Filter, with initial values about this filter object', () => {
       filter.planterIdentifier = '';
     });
 
-    it('loopback object should not match any planterIdentifier', () => {
+    it('should not match any planterIdentifier', () => {
       expect(filter.getWhereObj()).not.toHaveProperty('planterIdentifier');
     });
     //}}}
@@ -159,16 +159,16 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('new Filter({approved:false})', () => {
+  describe('new Filter({status:rejected})', () => {
     //{{{
     beforeEach(() => {
       filter = new Filter({
-        approved: false,
+        status: 'rejected',
       });
     });
 
-    it('filter.approved should be false', () => {
-      expect(filter.approved).toBe(false);
+    it('filter.status should be rejected', () => {
+      expect(filter.status).toBe('rejected');
     });
 
     //}}}
@@ -182,30 +182,26 @@ describe('Filter, with initial values about this filter object', () => {
       data = [
         {
           id: 'a',
-          active: true,
-          approved: false,
+          status: 'unprocessed',
         },
         {
           id: 'b',
-          active: true,
-          approved: true,
+          status: 'approved',
         },
         {
           id: 'c',
-          active: false,
-          approved: true,
+          status: 'rejected',
         },
       ];
     });
 
-    describe('new Filter({active: true, approved:false})', () => {
+    describe('new Filter({status: unprocessed})', () => {
       //{{{
       let filter;
 
       beforeEach(() => {
         filter = new Filter({
-          active: true,
-          approved: false,
+          status: 'unprocessed',
         });
       });
 
@@ -217,14 +213,13 @@ describe('Filter, with initial values about this filter object', () => {
       //}}}
     });
 
-    describe('new Filter({active: false, approved:true})', () => {
+    describe('new Filter({status: rejected})', () => {
       //{{{
       let filter;
 
       beforeEach(() => {
         filter = new Filter({
-          active: false,
-          approved: true,
+          status: 'rejected',
         });
       });
 

@@ -22,6 +22,7 @@ import CopyNotification from './common/CopyNotification';
 import { CopyButton } from './common/CopyButton';
 import Country from './common/Country';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { captureStatus } from '../common/variables';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -88,8 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CaptureDetailDialog(props) {
-  const { open, captureId, onClose, page } = props;
+function CaptureDetailDialog({ open, captureId, onClose, page }) {
   const cdContext = useContext(CaptureDetailContext);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
@@ -114,13 +114,7 @@ function CaptureDetailDialog(props) {
     if (current) {
       // map the keys from legacy to new api keys
       setRenderCapture({
-        status:
-          current.status ||
-          (current.active && current.approved
-            ? 'approved'
-            : current.active && !current.approved
-            ? 'pending'
-            : 'rejected'),
+        status: current.status,
         id: current.id || current.uuid,
         reference_id: current.reference_id || current.id,
         grower_account_id: current.grower_account_id || current.planterId,
@@ -166,7 +160,6 @@ function CaptureDetailDialog(props) {
       capture.captureApprovalTag,
       capture.rejectionReason,
       ...captureTags,
-      // ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
@@ -188,7 +181,8 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture <LinkToWebmap value={capture} type="tree" />
+                  Capture{' '}
+                  <LinkToWebmap value={capture.reference_id} type="tree" />
                   <CopyButton
                     label="Capture ID"
                     value={capture.reference_id}
@@ -283,12 +277,12 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {capture.status === 'unprocessed' ? (
+          {capture.status === captureStatus.UNPROCSSED ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.status === 'approved' ? (
+          ) : capture.status === captureStatus.APPROVED ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}

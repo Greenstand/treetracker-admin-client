@@ -95,7 +95,7 @@ const ExportCaptures = (props) => {
     );
     const selectedColumns = Object.fromEntries(filterColumns);
     let response = await capturesContext.getAllCaptures({ filter });
-    let data = await processDownloadData(response.data, selectedColumns);
+    let data = await processDownloadData(response, selectedColumns);
     setDownloadData(data);
     setLoading(false);
   }

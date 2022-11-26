@@ -9,24 +9,28 @@ export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
-// import { tokenizationStates } from '../common/variables';
+import { tokenizationStates } from '../common/variables';
 
 export default class Filter {
-  uuid;
+  uuid; //  id
   captureId;
-  dateStart;
-  dateEnd;
-  approved;
-  active;
-  planterId;
-  deviceIdentifier;
-  planterIdentifier;
-  speciesId;
+  dateStart; //  startDate
+  dateEnd; //  endDate
+  planterId; //  grower_account_id
+  deviceIdentifier; //  device_identifier
+  planterIdentifier; //  wallet
+  speciesId; //  species_id
   tagId;
-  organizationId;
+  organizationId; //  organization_id
   tokenId;
-  verifyStatus;
-  wallet;
+  status; // status
+
+  // NEW FILTERS TO ADD
+  //  tree_associated
+  //  tree_id
+  //  tag
+  //  token
+  //  sort: { order: string, order_by: string };
 
   constructor(options) {
     Object.assign(this, options);
@@ -51,20 +55,8 @@ export default class Filter {
       where.endDate = this.dateEnd;
     }
 
-    if (this.approved !== undefined) {
-      where.approved = this.approved;
-    }
-
-    if (this.active !== undefined) {
-      where.active = this.active;
-    }
-
     if (this.deviceIdentifier) {
       where.device_identifier = this.deviceIdentifier;
-    }
-
-    if (this.wallet) {
-      where.wallet = this.wallet;
     }
 
     if (this.planterIdentifier) {
@@ -73,10 +65,12 @@ export default class Filter {
 
     if (this.speciesId === SPECIES_NOT_SET) {
       where.species_id = null;
-    } else if (this.speciesId === SPECIES_ANY_SET) {
-      where.species_id = { neq: null };
     } else if (this.speciesId !== ALL_SPECIES) {
       where.species_id = this.speciesId;
+    }
+
+    if (this.tag) {
+      where.tag = this.tag;
     }
 
     if (this.tagId === TAG_NOT_SET) {
@@ -90,7 +84,7 @@ export default class Filter {
     if (this.organizationId === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organization_id = this.stakeholderUUID;
+      where.organization_id = this.organizationId;
     }
 
     if (this.status) {
@@ -101,37 +95,12 @@ export default class Filter {
       where.grower_account_id = this.growerAccountId;
     }
 
-    // if (this.stakeholderUUID === ORGANIZATION_NOT_SET) {
-    //   where.stakeholderUUID = null;
-    // } else if (this.stakeholderUUID !== ALL_ORGANIZATIONS) {
-    //   where.stakeholderUUID = this.stakeholderUUID;
-    // }
-
-    // if (this.tokenId === tokenizationStates.TOKENIZED) {
-    //   where.tokenId = { neq: null };
-    // } else if (this.tokenId === tokenizationStates.NOT_TOKENIZED) {
-    //   where.tokenId = { eq: null };
-    // }
-
-    // Fields that allow multiple values should be included as "or"s
-    // inside an "and" clause: { and: [ {or: [...]}, {or: [...]} ] }
-
-    // const planterIds = (this.planterId || '')
-    //   .split(',')
-    //   .filter((item) => item)
-    //   .map((item) => ({ planterId: item.trim() }));
-
-    // const andClause = [this.verifyStatus, planterIds]
-    //   .map((array) => {
-    //     return array?.length ? { or: array } : null;
-    //   })
-    //   .filter((term) => term);
-
-    // if (andClause.length) {
-    //   where.and = andClause;
-    // }
-
-    // return where;
+    if (this.tokenId && this.tokenId !== 'All') {
+      where.tokenized =
+        this.tokenId === tokenizationStates.TOKENIZED ? 'true' : 'false';
+    } else {
+      delete where.tokenized;
+    }
 
     let orCondition = false;
     const { ...restFilter } = where;
@@ -168,14 +137,7 @@ export default class Filter {
    * Note, not support start/end date yet.
    */
   filter = (element) => {
-    if (this.active !== undefined && this.active !== element.active) {
-      return false;
-    } else if (
-      this.approved !== undefined &&
-      this.approved !== element.approved
-    ) {
-      return false;
-    } else if (this.status !== undefined && this.status !== element.status) {
+    if (this.status !== undefined && this.status !== element.status) {
       return false;
     } else {
       return true;
@@ -187,13 +149,6 @@ export default class Filter {
    */
   countAppliedFilters() {
     let numFilters = 0;
-
-    if (
-      this.status ||
-      (this.active !== undefined && this.approved !== undefined)
-    ) {
-      numFilters += 1;
-    }
 
     if (this.uuid) {
       numFilters += 1;
@@ -207,15 +162,15 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.deviceIdentifier) {
+    if (this.device_identifier) {
       numFilters += 1;
     }
 
-    if (this.planterId) {
+    if (this.planter_id) {
       numFilters += 1;
     }
 
-    if (this.planterIdentifier) {
+    if (this.planter_identifier) {
       numFilters += 1;
     }
 
@@ -223,20 +178,19 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.dateStart) {
+    if (this.tag > 0) {
       numFilters += 1;
     }
 
-    if (this.dateEnd) {
+    if (this.dateStart || this.dateEnd) {
       numFilters += 1;
     }
 
-    // organizationId and stakeholderUUID count as one filter
-    if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
 
-    if (this.speciesId && this.speciesId !== ALL_SPECIES) {
+    if (this.species_id && this.species_id !== ALL_SPECIES) {
       numFilters += 1;
     }
 
