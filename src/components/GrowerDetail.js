@@ -27,7 +27,7 @@ import {
   Clear,
   HourglassEmptyOutlined,
 } from '@material-ui/icons';
-import { captureStatus } from './variables';
+import { captureStatus } from '../common/variables';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';

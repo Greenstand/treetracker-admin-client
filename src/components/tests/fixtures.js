@@ -1,6 +1,6 @@
 import FilterModel from '../../models/Filter';
 import FilterGrower from '../../models/FilterGrower';
-import { captureStatus } from './variables';
+import { captureStatus } from '../../common/variables';
 
 const CAPTURE = {
   id: 100,
