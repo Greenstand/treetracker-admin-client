@@ -57,12 +57,13 @@ export function GrowerProvider(props) {
     log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const growers = await api.getGrowers({
+    const { total, grower_accounts } = await api.getGrowers({
       skip: pageNumber * pageSize,
       rowsPerPage: pageSize,
       filter,
     });
-    setGrowers(growers);
+    setCount(total);
+    setGrowers(grower_accounts);
     setIsLoading(false);
   };
 

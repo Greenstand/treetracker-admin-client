@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
+import { captureStatus } from 'common/variables';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -47,8 +48,7 @@ export function VerifyProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: false,
-      active: true,
+      status: captureStatus.UNPROCESSED,
     })
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
