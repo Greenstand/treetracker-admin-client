@@ -1,3 +1,10 @@
+# [1.116.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.115.0...v1.116.0) (2022-12-01)
+
+
+### Features
+
+* update verify filter, growers,  and grower detail to use new microservice ([#955](https://github.com/Greenstand/treetracker-admin-client/issues/955)) ([058c36d](https://github.com/Greenstand/treetracker-admin-client/commit/058c36dd9fb7e8d7b297a76ae11047fdb7aecd90))
+
 # [1.115.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.2...v1.115.0) (2022-11-19)
 
 
