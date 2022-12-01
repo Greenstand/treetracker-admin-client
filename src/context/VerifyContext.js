@@ -141,7 +141,7 @@ export function VerifyProvider(props) {
     const pageParams = {
       page: currentPage,
       rowsPerPage: pageSize,
-      filter: filter,
+      filter,
     };
 
     const result = await api.getRawCaptures(pageParams, abortController);
