@@ -188,7 +188,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
-    if (this.active !== undefined && this.approved !== undefined) {
+    if (
+      this.status ||
+      (this.active !== undefined && this.approved !== undefined)
+    ) {
       numFilters += 1;
     }
 

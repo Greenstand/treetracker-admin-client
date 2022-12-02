@@ -88,7 +88,6 @@ function SidePanel(props) {
   const classes = useStyles(props);
   const verifyContext = useContext(VerifyContext);
   const captureSelected = verifyContext.getCaptureSelectedArr();
-  const captureIdSelected = verifyContext.getCaptureSelectedIdArr();
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
@@ -120,24 +119,18 @@ function SidePanel(props) {
     }
   }
 
-  function calculateLatLonDistance(capture1Id, capture2Id) {
-    let obj1 = verifyContext.captureImages.filter(
-      (capture) => capture.id == capture1Id
-    )[0];
-    let obj2 = verifyContext.captureImages.filter(
-      (capture) => capture.id == capture2Id
-    )[0];
+  function calculateLatLonDistance(capture1, capture2) {
     const distance = getDistance(
       {
-        latitude: Number(obj1.lat),
-        longitude: Number(obj1.lon),
+        latitude: Number(capture1.lat),
+        longitude: Number(capture1.lon),
       },
       {
-        latitude: Number(obj2.lat),
-        longitude: Number(obj2.lon),
+        latitude: Number(capture2.lat),
+        longitude: Number(capture2.lon),
       }
     );
-    return `Distance bewteen selected captures: ${(
+    return `Distance between selected captures: ${(
       Math.round(distance * 10) / 10
     ).toLocaleString()}m`;
   }
@@ -232,8 +225,8 @@ function SidePanel(props) {
           </Button>
         </Box>
         <Typography className={classes.subtitle}>
-          {captureIdSelected?.length == 2 &&
-            calculateLatLonDistance(captureIdSelected[0], captureIdSelected[1])}
+          {captureSelected?.length == 2 &&
+            calculateLatLonDistance(captureSelected[0], captureSelected[1])}
         </Typography>
         <Divider />
 

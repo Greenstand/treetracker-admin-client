@@ -167,7 +167,7 @@ describe('Verify', () => {
       await waitFor(() => {
         //data won't actually be filtered but filters should be selected
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
-        expect(screen.getByText('1')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
       });
 
       let dropdown = screen.getByTestId('org-dropdown');
