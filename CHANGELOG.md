@@ -1,3 +1,10 @@
+## [1.117.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.0...v1.117.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* calling click handler with event to allow multiple selection again ([c79464b](https://github.com/Greenstand/treetracker-admin-client/commit/c79464bf8be7effcd3a63ce9fb242ccb98fe8e05))
+
 # [1.117.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.116.0...v1.117.0) (2022-12-02)
 
 
