@@ -1,3 +1,10 @@
+# [1.117.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.116.0...v1.117.0) (2022-12-02)
+
+
+### Features
+
+* extend use of state object to Verify Filter for consistency ([c1081a6](https://github.com/Greenstand/treetracker-admin-client/commit/c1081a6af215c85baa15d90bde1eff6bddb85b89))
+
 # [1.116.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.115.0...v1.116.0) (2022-12-01)
 
 
