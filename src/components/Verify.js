@@ -420,7 +420,7 @@ const Verify = (props) => {
             }}
           >
             <Card
-              onClick={() => handleCaptureClick(capture.id)}
+              onClick={(e) => handleCaptureClick(e, capture.id)}
               id={`card_${capture.id}`}
               className={classes.card}
               elevation={capture.placeholder ? 0 : 3}
