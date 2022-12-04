@@ -94,7 +94,7 @@ function FilterTopGrower(props) {
   return (
     <>
       {
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{}}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
               <TextField

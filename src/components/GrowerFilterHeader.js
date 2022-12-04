@@ -1,11 +1,12 @@
-import React, { useState, useContext } from 'react';
-import { Grid, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Grid } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+
 import Avatar from '@material-ui/core/Avatar';
-import IconFilter from '@material-ui/icons/FilterList';
-import { GrowerContext } from '../context/GrowerContext';
-import Navbar from './Navbar';
 import FilterTopGrower from './FilterTopGrower';
+import { GrowerContext } from '../context/GrowerContext';
+import IconFilter from '@material-ui/icons/FilterList';
+import Navbar from './Navbar';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles((theme) => ({
   activeFilters: {
@@ -50,14 +51,12 @@ function GrowersFilterHeader(props) {
           </Button>,
         ]}
       >
-        {isFilterShown && (
-          <FilterTopGrower
-            isOpen={isFilterShown}
-            onSubmit={handleFilterSubmit}
-            filter={growerContext.filter}
-            onClick={handleFilterClick}
-          />
-        )}
+        <FilterTopGrower
+          isOpen={isFilterShown}
+          onSubmit={handleFilterSubmit}
+          filter={growerContext.filter}
+          onClick={handleFilterClick}
+        />
       </Navbar>
     </Grid>
   );
