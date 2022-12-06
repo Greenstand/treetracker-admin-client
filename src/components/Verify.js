@@ -288,14 +288,14 @@ const Verify = (props) => {
   const handleCapturePinClick = (captureId) => (e) => {
     e.stopPropagation();
     log.debug('click on capture pin:', captureId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/trees/${captureId}`;
     window.open(url, '_blank').opener = null;
   };
 
   const handleGrowerMapClick = (growerId) => (e) => {
     e.stopPropagation();
     log.debug('click on grower:', growerId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/planters/${growerId}`;
     window.open(url, '_blank').opener = null;
   };
 

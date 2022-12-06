@@ -414,7 +414,13 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   {grower.firstName} {grower.lastName}
                 </Typography>
                 <Typography variant="body2">
-                  ID: <LinkToWebmap value={grower.id} type="user" />
+                  ID:{' '}
+                  <LinkToWebmap
+                    value={
+                      grower.reference_id ? grower.reference_id : grower.id
+                    }
+                    type="planters"
+                  />
                 </Typography>
               </Grid>
               {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&

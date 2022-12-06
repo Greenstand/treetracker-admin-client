@@ -188,7 +188,7 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture <LinkToWebmap value={capture} type="tree" />
+                  Capture <LinkToWebmap value={capture} type="trees" />
                   <CopyButton
                     label="Capture ID"
                     value={capture.reference_id}
@@ -248,7 +248,7 @@ function CaptureDetailDialog(props) {
                       Open in new tab
                     </Link>
                   ) : (
-                    <LinkToWebmap value={item.value} type="user" />
+                    <LinkToWebmap value={item.value} type="planters" />
                   )
                 ) : item.value ? (
                   item.value

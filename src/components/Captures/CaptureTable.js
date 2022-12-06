@@ -379,7 +379,7 @@ export const formatCell = (
     return (
       <LinkToWebmap
         value={capture[attr]}
-        type={attr === 'id' ? 'tree' : 'user'}
+        type={attr === 'id' ? 'trees' : 'planters'}
       />
     );
   } else if (attr === 'speciesId') {

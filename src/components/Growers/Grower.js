@@ -52,7 +52,11 @@ export const Grower = ({ grower, growerClick }) => {
               {grower.firstName} {grower.lastName}
             </Typography>
             <Typography>
-              ID: <LinkToWebmap value={grower.id} type="user" />
+              ID:{' '}
+              <LinkToWebmap
+                value={grower.reference_id ? grower.reference_id : grower.id}
+                type="planters"
+              />
             </Typography>
             <GrowerOrganization
               organizationName={grower?.organization}

@@ -18,7 +18,7 @@ export default function LinkToWebmap(props) {
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
-      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${id}`}
+      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${type}/${id}`}
       underline="always"
       target="_blank"
     >
