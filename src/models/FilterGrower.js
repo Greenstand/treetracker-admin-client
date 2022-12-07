@@ -16,6 +16,10 @@ export default class Filter {
       where.person_id = this.personId;
     }
 
+    if (this.wallet) {
+      where.wallet = this.wallet;
+    }
+
     if (this.id) {
       where.id = this.id;
     }
