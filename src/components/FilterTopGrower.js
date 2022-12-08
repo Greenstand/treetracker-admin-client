@@ -161,22 +161,22 @@ function FilterTopGrower(props) {
               />
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
-                label="Email"
-                htmlFor="Email"
-                id="Email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={handleEnterPress}
-              />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
                 label="Wallet"
                 htmlFor="Wallet"
                 id="Wallet"
                 placeholder="Wallet"
                 value={wallet}
                 onChange={(e) => setWallet(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Email"
+                htmlFor="Email"
+                id="Email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
               <TextField
