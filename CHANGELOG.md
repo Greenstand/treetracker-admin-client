@@ -1,3 +1,10 @@
+## [1.117.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.1...v1.117.2) (2022-12-07)
+
+
+### Bug Fixes
+
+* legacy growers count dash stat ([#975](https://github.com/Greenstand/treetracker-admin-client/issues/975)) ([0f096fb](https://github.com/Greenstand/treetracker-admin-client/commit/0f096fbf7f1b0ad90170ec48a6bf94f344b20db8))
+
 ## [1.117.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.0...v1.117.1) (2022-12-02)
 
 
