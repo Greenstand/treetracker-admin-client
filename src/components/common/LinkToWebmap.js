@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const pathType = {
+  tree: 'trees',
+  planter: 'planters',
+};
+
 export default function LinkToWebmap(props) {
   const { value, type } = props;
   const classes = useStyles();

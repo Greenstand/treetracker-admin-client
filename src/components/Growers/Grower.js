@@ -8,7 +8,7 @@ import {
   CardContent,
 } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
-import LinkToWebmap from '../common/LinkToWebmap';
+import LinkToWebmap, { pathType } from '../common/LinkToWebmap';
 import OptimizedImage from '../OptimizedImage';
 import GrowerOrganization from 'components/GrowerOrganization';
 import { useStyle, GROWER_IMAGE_SIZE } from './Growers.styles.js';
@@ -54,8 +54,8 @@ export const Grower = ({ grower, growerClick }) => {
             <Typography>
               ID:{' '}
               <LinkToWebmap
-                value={grower.reference_id ? grower.reference_id : grower.id}
-                type="planters"
+                value={grower.reference_id || grower.id}
+                type={pathType.planter}
               />
             </Typography>
             <GrowerOrganization

@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
-import LinkToWebmap from './common/LinkToWebmap';
+import LinkToWebmap, { pathType } from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
@@ -188,7 +188,7 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture <LinkToWebmap value={capture} type="trees" />
+                  Capture <LinkToWebmap value={capture} type={pathType.tree} />
                   <CopyButton
                     label="Capture ID"
                     value={capture.reference_id}
@@ -248,7 +248,7 @@ function CaptureDetailDialog(props) {
                       Open in new tab
                     </Link>
                   ) : (
-                    <LinkToWebmap value={item.value} type="planters" />
+                    <LinkToWebmap value={item.value} type={pathType.planter} />
                   )
                 ) : item.value ? (
                   item.value
