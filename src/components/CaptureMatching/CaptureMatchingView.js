@@ -297,9 +297,11 @@ const filterTree = (trees, capture) => {
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
+  const now = new Date();
+  const aWeakAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7);
   const initialFilter = {
-    startDate: '',
-    endDate: '',
+    startDate: aWeakAgo.toISOString().split('T')[0],
+    endDate: now.toISOString().split('T')[0],
     stakeholderUUID: null,
   };
 
@@ -313,8 +315,8 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(initialFilter.startDate);
+  const [endDate, setEndDate] = useState(initialFilter.endDate);
   const [organizationId, setOrganizationId] = useState(null);
   const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
