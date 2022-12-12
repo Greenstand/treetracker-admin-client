@@ -16,6 +16,10 @@ export default class Filter {
       where.person_id = this.personId;
     }
 
+    if (this.wallet) {
+      where.wallet = this.wallet;
+    }
+
     if (this.id) {
       where.id = this.id;
     }
@@ -57,40 +61,8 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    let numFilters = 0;
-
-    if (this.id) {
-      numFilters += 1;
+    if (this.organizationId) {
+      return Object.keys(this.getWhereObj()).length;
     }
-
-    if (this.personId) {
-      numFilters += 1;
-    }
-
-    if (this.deviceIdentifier) {
-      numFilters += 1;
-    }
-
-    if (this.firstName) {
-      numFilters += 1;
-    }
-
-    if (this.lastName) {
-      numFilters += 1;
-    }
-
-    if (this.email) {
-      numFilters += 1;
-    }
-
-    if (this.phone) {
-      numFilters += 1;
-    }
-
-    if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
-      numFilters += 1;
-    }
-
-    return numFilters;
   }
 }
