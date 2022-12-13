@@ -1,3 +1,10 @@
+# [1.118.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.2...v1.118.0) (2022-12-12)
+
+
+### Features
+
+* add wallet filter to growers ([#974](https://github.com/Greenstand/treetracker-admin-client/issues/974)) ([c21cafd](https://github.com/Greenstand/treetracker-admin-client/commit/c21cafdfb26fa9e4806764ca36d675b70e2c9922))
+
 ## [1.117.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.1...v1.117.2) (2022-12-07)
 
 
