@@ -123,6 +123,13 @@ const EditGrower = (props) => {
         label: 'Last Name',
       },
     ],
+    [
+      {
+        attr: 'about',
+        label: 'About',
+        multiline: true,
+      },
+    ],
   ];
 
   return (
@@ -144,12 +151,13 @@ const EditGrower = (props) => {
             <Grid item container direction="row" key={rowIdx}>
               {row.map((input, colIdx) => (
                 <TextField
-                  key={`${rowIdx}_${colIdx}`}
+                  key={`TextField_${rowIdx}_${colIdx}`}
                   className={classes.textInput}
                   id={input.attr}
                   label={input.label}
                   type={input.type || 'text'}
                   variant="outlined"
+                  multiline={input.multiline || undefined}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -161,15 +169,7 @@ const EditGrower = (props) => {
               ))}
             </Grid>
           ))}
-          <TextField
-            id="outlined-multiline-static"
-            className={classes.textInput}
-            label="About Me"
-            multiline
-            rows={3}
-            placeholder="About Me"
-            value={getValue('about')}
-          />
+
           <TextField
             className={classes.textInput}
             label="Grower-entered organization"
