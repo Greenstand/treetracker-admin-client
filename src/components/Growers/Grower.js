@@ -29,9 +29,9 @@ export const Grower = ({ grower, growerClick }) => {
         }}
       >
         <CardContent className={classes.cardContent}>
-          {grower.imageUrl ? (
+          {grower.image_url ? (
             <OptimizedImage
-              src={grower.imageUrl}
+              src={grower.image_url}
               width={GROWER_IMAGE_SIZE}
               height={GROWER_IMAGE_SIZE}
               className={classes.cardMedia}
@@ -49,14 +49,14 @@ export const Grower = ({ grower, growerClick }) => {
         <CardActions>
           <Box>
             <Typography className={classes.name}>
-              {grower.firstName} {grower.lastName}
+              {grower.first_name} {grower.last_name}
             </Typography>
             <Typography>
-              ID: <LinkToWebmap value={grower.id} type="user" />
+              ID: <LinkToWebmap value={grower?.reference_id} type="user" />
             </Typography>
             <GrowerOrganization
               organizationName={grower?.organization}
-              assignedOrganizationId={grower?.organizationId}
+              assignedOrganizationId={grower?.organization_id}
               compact={true}
             />
           </Box>
