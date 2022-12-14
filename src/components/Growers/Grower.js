@@ -49,7 +49,7 @@ export const Grower = ({ grower, growerClick }) => {
         <CardActions>
           <Box>
             <Typography className={classes.name}>
-              {grower.first_name} {grower.last_name}
+              {grower?.first_name} {grower?.last_name}
             </Typography>
             <Typography>
               ID: <LinkToWebmap value={grower?.reference_id} type="user" />
