@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { ALL_ORGANIZATIONS } from '../models/Filter';
 import Button from '@material-ui/core/Button';
-import FilterModel from '../models/FilterGrower';
+import FilterModel, { ALL_ORGANIZATIONS, FILTER_FIELDS } from '../models/FilterGrower';
 import Grid from '@material-ui/core/Grid';
 import SelectOrg from './common/SelectOrg';
 import TextField from '@material-ui/core/TextField';
@@ -44,20 +43,75 @@ const styles = (theme) => {
 
 function FilterTopGrower(props) {
   const { classes, filter } = props;
-  const [id, setId] = useState(filter?.id || '');
-  const [personId, setPersonId] = useState(filter?.personId || '');
-  const [firstName, setFirstName] = useState(filter?.firstName || '');
-  const [lastName, setLastName] = useState(filter?.lastName || '');
-  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
-  const [email, setEmail] = useState(filter?.email || '');
-  const [phone, setPhone] = useState(filter?.phone || '');
-  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+
+  const [id, setId] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.id));
+  const [personId, setPersonId] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.personId));
+  const [firstName, setFirstName] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.firstName));
+  const [lastName, setLastName] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.lastName));
+  const [email, setEmail] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.email));
+  const [phone, setPhone] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.phone));
+  const [wallet, setWallet] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.wallet));
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.device_identifier || ''
+    getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.deviceIdentifier
+  ));
+  const [organizationId, setOrganizationId] = useState(
+    getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.organizationId, ALL_ORGANIZATIONS)
   );
+      
+  const getValueFromUrlOrFilter = (url, filter, attr, defaultVal = '') => {
+    return (url?.searchParams.get(attr) || filter?.[attr] || defaultVal);
+  }
+
+  const handleQuerySearchParams = (name, value) => {
+    if (params.has(name) && value == '') {
+      url.searchParams.delete(name);
+      window.history.pushState({}, '', url.search);
+    } else if (!params.has(name) && value == '') {
+      return;
+    } else if (!params.get(name)) {
+      url.searchParams.append(name, value);
+      window.history.pushState({}, '', url.search);
+    } else if (params.get(name)) {
+      url.searchParams.set(name, value);
+      window.history.pushState({}, '', url.search);
+    }
+  };
+
+  handleAllQuerySearchParams() {
+    handleQuerySearchParams(FILTER_FIELDS.id, id);
+    handleQuerySearchParams(FILTER_FIELDS.personId, personId);
+    handleQuerySearchParams(FILTER_FIELDS.firstName, firstName);
+    handleQuerySearchParams(FILTER_FIELDS.lastName, lastName);
+    handleQuerySearchParams(FILTER_FIELDS.organizationId, organizationId);
+    handleQuerySearchParams(FILTER_FIELDS.email, email);
+    handleQuerySearchParams(FILTER_FIELDS.phone, phone);
+    handleQuerySearchParams(FILTER_FIELDS.deviceIdentifier, deviceIdentifier);
+    handleQuerySearchParams(FILTER_FIELDS.wallet, wallet);
+  }
+
+  useEffect(() => {
+    handleAllQuerySearchParams();
+
+    const filter = new FilterModel({
+      personId,
+      id,
+      firstName,
+      lastName,
+      organizationId,
+      stakeholderUUID,
+      email,
+      phone,
+      deviceIdentifier,
+    });
+    props.onSubmit && props.onSubmit(filter);
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
+    handleAllQuerySearchParams();
+
     const filter = new FilterModel({
       personId,
       id,
@@ -82,6 +136,8 @@ function FilterTopGrower(props) {
     setPhone('');
     setDeviceIdentifier('');
     setWallet('');
+
+    handleAllQuerySearchParams();
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
