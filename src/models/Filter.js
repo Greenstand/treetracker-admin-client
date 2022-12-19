@@ -190,7 +190,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
-    if (this.active !== undefined && this.approved !== undefined) {
+    if (
+      this.status ||
+      (this.active !== undefined && this.approved !== undefined)
+    ) {
       numFilters += 1;
     }
 
@@ -243,8 +246,12 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.verifyStatus) {
-      numFilters += this.verifyStatus.length;
+    if (this.status) {
+      numFilters += 1;
+    }
+
+    if (this.growerAccountId) {
+      numFilters += 1;
     }
 
     return numFilters;

@@ -1,5 +1,3 @@
-import { stringToSearchRegExp } from '../utilities';
-
 /*
  * A simple model for grower filter
  */
@@ -15,7 +13,11 @@ export default class Filter {
     let where = {};
 
     if (this.personId) {
-      where.personId = this.personId;
+      where.person_id = this.personId;
+    }
+
+    if (this.wallet) {
+      where.wallet = this.wallet;
     }
 
     if (this.id) {
@@ -23,43 +25,33 @@ export default class Filter {
     }
 
     if (this.growerAccountUuid) {
-      where.growerAccountUuid = this.growerAccountUuid;
+      where.id = this.growerAccountUuid;
     }
 
     if (this.firstName) {
-      where.firstName = {
-        regexp: stringToSearchRegExp(this.firstName),
-      };
+      where.first_name = this.firstName;
     }
 
     if (this.lastName) {
-      where.lastName = {
-        regexp: stringToSearchRegExp(this.lastName),
-      };
+      where.last_name = this.lastName;
     }
 
     if (this.organizationId === ORGANIZATION_NOT_SET) {
-      where.organizationId = null;
+      where.organization_id = null;
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organizationId = this.organizationId;
+      where.organization_id = this.organizationId;
     }
 
     if (this.deviceIdentifier) {
-      where.deviceIdentifier = this.deviceIdentifier;
-    } else {
-      where.deviceIdentifier = null;
+      where.device_identifier = this.deviceIdentifier;
     }
 
     if (this.email) {
-      where.email = {
-        regexp: stringToSearchRegExp(this.email),
-      };
+      where.email = this.email;
     }
 
     if (this.phone) {
-      where.phone = {
-        regexp: stringToSearchRegExp(this.phone),
-      };
+      where.phone = this.phone;
     }
 
     return where;
@@ -69,40 +61,8 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    let numFilters = 0;
-
-    if (this.id || this.growerAccountUuid) {
-      numFilters += 1;
+    if (this.organizationId) {
+      return Object.keys(this.getWhereObj()).length;
     }
-
-    if (this.personId) {
-      numFilters += 1;
-    }
-
-    if (this.deviceIdentifier) {
-      numFilters += 1;
-    }
-
-    if (this.firstName) {
-      numFilters += 1;
-    }
-
-    if (this.lastName) {
-      numFilters += 1;
-    }
-
-    if (this.email) {
-      numFilters += 1;
-    }
-
-    if (this.phone) {
-      numFilters += 1;
-    }
-
-    if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
-      numFilters += 1;
-    }
-
-    return numFilters;
   }
 }

@@ -27,6 +27,7 @@ import {
   Clear,
   HourglassEmptyOutlined,
 } from '@material-ui/icons';
+import { captureStatus } from '../common/variables';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
@@ -143,12 +144,11 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
-  log.debug('render: grower detail', growerId);
+  // log.debug('render: grower detail', growerId);
   const classes = useStyle();
   const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
-  const [growerRegistrations, setGrowerRegistrations] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
@@ -159,15 +159,32 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  function formatDevices(grower) {
+    // deduplicate and format
+    const devices = grower?.devices?.reduce((result, device) => {
+      if (!device.device_identifier) return result;
+
+      result[device.device_identifier] = {
+        id: device.device_identifier,
+        os:
+          device.manufacturer?.toLowerCase() === 'apple'
+            ? `iOS ${device.os_version && device.os_version}`
+            : `Android ${device.os_version && device.os_version}: ${
+                device.brand
+              }`,
+      };
+      return result;
+    }, {});
+
+    return Object.values(devices);
+  }
+
   useEffect(() => {
     setErrorMessage(null);
     async function loadGrowerDetail() {
-      log.debug('grower', grower);
       if (grower && grower.grower_account_id !== growerId) {
         setGrower({});
         setDeviceIdentifiers([]);
-      }
-      if (growerId) {
         setIsImageLoading(true);
         let match;
         if (isNaN(Number(growerId))) {
@@ -182,49 +199,15 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           });
         }
 
-        log.debug('match', match);
-
         if (match.error) {
           setErrorMessage(match.message);
         }
 
         setGrower(match);
 
-        if (
-          match.id &&
-          (!growerRegistrations ||
-            (growerRegistrations.length > 0 &&
-              growerRegistrations[0].planter_id !== match.id))
-        ) {
-          setGrowerRegistrations(null);
-          api.getGrowerRegistrations(match.id).then((registrations) => {
-            if (registrations && registrations.length) {
-              const sortedReg = registrations.sort((a, b) =>
-                a.created_at > b.created_at ? 1 : -1
-              );
-              const uniqueDevices = {};
-              const devices = sortedReg.reduce((result, reg) => {
-                if (!reg.device_identifier) {
-                  return result;
-                }
-                if (!uniqueDevices[reg.device_identifier]) {
-                  uniqueDevices[reg.device_identifier] = true;
-                  // if manufacturer isn't 'apple' it's an android phone
-                  result.push({
-                    id: reg.device_identifier,
-                    os:
-                      reg.manufacturer?.toLowerCase() === 'apple'
-                        ? 'iOS'
-                        : 'Android',
-                  });
-                }
-                return result;
-              }, []);
-
-              setDeviceIdentifiers(devices);
-              setGrowerRegistrations(sortedReg);
-            }
-          });
+        if (match?.devices?.length) {
+          const devices = formatDevices(match);
+          setDeviceIdentifiers(devices);
         }
       }
     }
@@ -241,14 +224,15 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           awaitingCount,
           rejectedCount,
         ] = await Promise.all([
-          getCaptureCountGrower(true, true, grower.id),
-          getCaptureCountGrower(true, false, grower.id),
-          getCaptureCountGrower(false, false, grower.id),
+          getCaptureCountGrower(captureStatus.APPROVED, grower.id),
+          getCaptureCountGrower(captureStatus.UNPROCESSED, grower.id),
+          getCaptureCountGrower(captureStatus.REJECTED, grower.id),
         ]);
+
         setVerificationStatus({
-          approved: approvedCount,
-          awaiting: awaitingCount,
-          rejected: rejectedCount,
+          [captureStatus.APPROVED]: approvedCount,
+          [captureStatus.UNPROCESSED]: awaitingCount,
+          [captureStatus.REJECTED]: rejectedCount,
         });
         setLoading(false);
       }
@@ -256,39 +240,46 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     loadCaptures();
   }, [grower]);
 
-  async function getCaptureCountGrower(active, approved, growerId) {
+  async function getCaptureCountGrower(status, growerId) {
     let filter = new FilterModel();
-    filter.planterId = growerId?.toString();
-    filter.active = active;
-    filter.approved = approved;
-    const countResponse = await treeTrackerApi.getCaptureCount(filter);
+    filter.growerAccountId = growerId?.toString();
+    filter.status = status;
+    log.warn('Need to get capture count for grower:', filter.status);
+    const countResponse = await treeTrackerApi.getRawCaptureCount({ filter });
     return countResponse && countResponse.count ? countResponse.count : 0;
   }
 
   async function getGrower(payload) {
     const { id, growerAccountUuid } = payload;
+    // Look for a match in the context first
     let grower = growers?.find(
       (p) =>
         (growerAccountUuid && p.growerAccountUuid === growerAccountUuid) ||
         p.id === id
-    ); // Look for a match in the context first
+    );
 
     if (!grower && !id) {
+      // query microservice
       const filter = new FilterGrower();
       filter.growerAccountUuid = growerAccountUuid;
-      const result = await api.getGrowers({ filter }); // Otherwise query the API
-      log.debug('getGrowers result', result.length);
-      // only assign to grower if it finds one match, seems to return all otherwise
-      if (result.length === 1) {
-        grower = result[0];
+      const { grower_accounts } = await api.getGrowers({ filter });
+      // only assign to grower if it finds one match
+      if (grower_accounts.length === 1) {
+        grower = grower_accounts[0];
       }
     }
 
     if (!grower && !growerAccountUuid) {
+      // query legacy api
       grower = await api.getGrower(id);
     }
     // throw error if no match at all
-    return grower || { error: true, message: 'Sorry! No grower info found' };
+    return (
+      grower || {
+        error: true,
+        message: 'Sorry! No grower info found',
+      }
+    );
   }
 
   function handleEditClick() {
@@ -504,6 +495,20 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">First Name</Typography>
+                <Typography variant="body1">
+                  {grower.first_name || '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Wallet</Typography>
+                <Typography variant="body1">
+                  {grower.wallet || '---'}
+                </Typography>
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Email address</Typography>
                 <Typography variant="body1">{grower.email || '---'}</Typography>
               </Grid>
@@ -516,16 +521,16 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Person ID</Typography>
                 <Typography variant="body1">
-                  {grower.personId || '---'}
+                  {grower.person_id || '---'}
                 </Typography>
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Organization</Typography>
-                {grower.organization || grower.organizationId ? (
+                {grower.organization || grower.organization_id ? (
                   <GrowerOrganization
                     organizationName={grower.organization}
-                    assignedOrganizationId={grower.organizationId}
+                    assignedOrganizationId={grower.organization_id}
                   />
                 ) : (
                   <Typography variant="body1">---</Typography>
@@ -533,28 +538,19 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">Country</Typography>
+                <Typography variant="subtitle1">
+                  Region{grower?.regions?.length >= 2 ? 's' : ''}
+                </Typography>
                 <Typography variant="body1">
-                  {(growerRegistrations &&
-                    growerRegistrations
-                      .map((item) => item.country)
-                      .filter(
-                        (country, i, arr) =>
-                          country && arr.indexOf(country) === i
-                      )
-                      .join(', ')) ||
-                    '---'}
+                  {grower?.regions?.length ? grower?.regions.join(', ') : '---'}
                 </Typography>
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Registered</Typography>
                 <Typography variant="body1">
-                  {(growerRegistrations &&
-                    growerRegistrations.length > 0 &&
-                    getDateTimeStringLocale(
-                      growerRegistrations[0].created_at
-                    )) ||
+                  {(grower?.id &&
+                    getDateTimeStringLocale(grower?.first_registration_at)) ||
                     '---'}
                 </Typography>
               </Grid>

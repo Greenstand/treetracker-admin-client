@@ -55,6 +55,7 @@ function FilterTopGrower(props) {
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.deviceIdentifier || ''
   );
@@ -66,11 +67,11 @@ function FilterTopGrower(props) {
       id,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      organizationId,
-      stakeholderUUID,
+      organizationId: stakeholderUUID,
       email: email.trim(),
       phone: phone.trim(),
       deviceIdentifier,
+      wallet: wallet.trim(),
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -85,6 +86,7 @@ function FilterTopGrower(props) {
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
+    setWallet('');
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -102,10 +104,10 @@ function FilterTopGrower(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
-                label="Grower ID"
-                htmlFor="Grower ID"
-                id="Grower ID"
-                placeholder="Grower ID"
+                label="Grower Account ID"
+                htmlFor="Grower Account ID"
+                id="Grower Account ID"
+                placeholder="Grower Account ID"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 onKeyDown={handleEnterPress}
@@ -155,6 +157,16 @@ function FilterTopGrower(props) {
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Wallet"
+                htmlFor="Wallet"
+                id="Wallet"
+                placeholder="Wallet"
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
               <TextField

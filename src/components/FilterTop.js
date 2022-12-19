@@ -23,10 +23,10 @@ import {
 } from '../common/locale';
 import {
   verificationStates,
-  // tokenizationStates,
+  captureStatus,
   datePickerDefaultMinDate,
 } from '../common/variables';
-import { getVerificationStatus } from '../common/utils';
+
 // import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 // import { CircularProgress } from '@material-ui/core';
@@ -74,7 +74,10 @@ function Filter(props) {
   // console.log('render: filter top');
   // const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const { classes, filter = new FilterModel() } = props;
+  const {
+    classes,
+    filter = new FilterModel({ status: captureStatus.UNPROCESSED }),
+  } = props;
   const filterOptionAll = 'All';
   const dateStartDefault = null;
   const dateEndDefault = null;
@@ -85,8 +88,7 @@ function Filter(props) {
   const [growerIdentifier, setGrowerIdentifier] = useState(
     filter?.planterIdentifier || ''
   );
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
+  const [status, setStatus] = useState(filter?.status);
   const [dateStart, setDateStart] = useState(
     filter?.dateStart || dateStartDefault
   );
@@ -125,8 +127,7 @@ function Filter(props) {
     filter.planterIdentifier = growerIdentifier.trim();
     filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
     filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
+    filter.status = status;
     filter.speciesId = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organizationId = organizationId;
@@ -152,8 +153,7 @@ function Filter(props) {
     // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
-    filter.approved = approved; // keeps last value set
-    filter.active = active; // keeps last value set
+    filter.status = status; //keep last value set
     props.onSubmit && props.onSubmit(filter);
   }
 
@@ -161,7 +161,12 @@ function Filter(props) {
     <>
       {
         <form onSubmit={handleSubmit}>
-          <Grid container wrap="nowrap" direction="row">
+          <Grid
+            container
+            wrap="nowrap"
+            direction="row"
+            data-testid="filter-top"
+          >
             <Grid item className={classes.inputContainer}>
               <TextField
                 select
@@ -169,26 +174,23 @@ function Filter(props) {
                 id="verification-status"
                 label="Verification Status"
                 value={
-                  active === undefined && approved === undefined
+                  status === undefined
                     ? filterOptionAll
-                    : getVerificationStatus(active, approved)
+                    : status === captureStatus.APPROVED
+                    ? verificationStates.APPROVED
+                    : status === captureStatus.REJECTED
+                    ? verificationStates.REJECTED
+                    : verificationStates.AWAITING
                 }
                 onChange={(e) => {
-                  setApproved(
+                  setStatus(
                     e.target.value === filterOptionAll
                       ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.REJECTED
-                      ? false
-                      : true
-                  );
-                  setActive(
-                    e.target.value === filterOptionAll
-                      ? undefined
-                      : e.target.value === verificationStates.AWAITING ||
-                        e.target.value === verificationStates.APPROVED
-                      ? true
-                      : false
+                      : e.target.value === verificationStates.APPROVED
+                      ? captureStatus.APPROVED
+                      : e.target.value === verificationStates.REJECTED
+                      ? captureStatus.REJECTED
+                      : captureStatus.UNPROCESSED
                   );
                 }}
               >

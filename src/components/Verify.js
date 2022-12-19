@@ -262,7 +262,7 @@ const Verify = (props) => {
   });
   const [growerDetail, setGrowerDetail] = useState({
     isOpen: false,
-    growerId: {},
+    growerId: '',
   });
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
@@ -277,14 +277,13 @@ const Verify = (props) => {
     document.title = `Verify - ${documentTitle}`;
   }, []);
 
-  const handleCaptureClick = (captureId) => (e) => {
-    e.stopPropagation();
+  function handleCaptureClick(e, captureId) {
     log.debug('click on capture:', captureId);
     verifyContext.clickCapture({
       captureId,
       isShift: e.shiftKey,
     });
-  };
+  }
 
   const handleCapturePinClick = (captureId) => (e) => {
     e.stopPropagation();
@@ -321,18 +320,15 @@ const Verify = (props) => {
      * if approved, add captureApprovalTag to tagInput, create new tags, and return all the applied tags
      */
     if (approveAction.isApproved) {
-      log.debug('create tags');
       const tags = await tagsContext.createTags(
         approveAction.captureApprovalTag
       );
       approveAction.tags = tags.map((t) => t.id);
       delete approveAction.captureApprovalTag;
     }
+    const result = await verifyContext.processCaptures(approveAction);
 
-    // update approved and rejected captures
-    const result = await verifyContext.approveAll(approveAction);
-
-    if (!result) {
+    if (result.error) {
       window.alert('Failed to approve/reject a capture');
     } else if (!approveAction.rememberSelection) {
       resetApprovalFields();
@@ -424,7 +420,7 @@ const Verify = (props) => {
             }}
           >
             <Card
-              onClick={handleCaptureClick(capture.id)}
+              onClick={(e) => handleCaptureClick(e, capture.id)}
               id={`card_${capture.id}`}
               className={classes.card}
               elevation={capture.placeholder ? 0 : 3}
@@ -627,14 +623,14 @@ const Verify = (props) => {
           <LinearProgress
             color="primary"
             variant="determinate"
-            value={verifyContext.approveAllComplete}
+            value={verifyContext.percentComplete}
           />
         </AppBar>
       )}
 
       {false /* disabled until we can delete approved captures and prevent updating previously updated records */ &&
         !verifyContext.isLoading &&
-        verifyContext.isApproveAllProcessing &&
+        verifyContext.isProcessing &&
         verifyContext.captureImagesUndo.length > 0 && (
           <Snackbar
             open

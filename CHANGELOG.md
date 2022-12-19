@@ -1,3 +1,38 @@
+# [1.118.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.2...v1.118.0) (2022-12-12)
+
+
+### Features
+
+* add wallet filter to growers ([#974](https://github.com/Greenstand/treetracker-admin-client/issues/974)) ([c21cafd](https://github.com/Greenstand/treetracker-admin-client/commit/c21cafdfb26fa9e4806764ca36d675b70e2c9922))
+
+## [1.117.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.1...v1.117.2) (2022-12-07)
+
+
+### Bug Fixes
+
+* legacy growers count dash stat ([#975](https://github.com/Greenstand/treetracker-admin-client/issues/975)) ([0f096fb](https://github.com/Greenstand/treetracker-admin-client/commit/0f096fbf7f1b0ad90170ec48a6bf94f344b20db8))
+
+## [1.117.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.0...v1.117.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* calling click handler with event to allow multiple selection again ([c79464b](https://github.com/Greenstand/treetracker-admin-client/commit/c79464bf8be7effcd3a63ce9fb242ccb98fe8e05))
+
+# [1.117.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.116.0...v1.117.0) (2022-12-02)
+
+
+### Features
+
+* extend use of state object to Verify Filter for consistency ([c1081a6](https://github.com/Greenstand/treetracker-admin-client/commit/c1081a6af215c85baa15d90bde1eff6bddb85b89))
+
+# [1.116.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.115.0...v1.116.0) (2022-12-01)
+
+
+### Features
+
+* update verify filter, growers,  and grower detail to use new microservice ([#955](https://github.com/Greenstand/treetracker-admin-client/issues/955)) ([058c36d](https://github.com/Greenstand/treetracker-admin-client/commit/058c36dd9fb7e8d7b297a76ae11047fdb7aecd90))
+
 # [1.115.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.2...v1.115.0) (2022-11-19)
 
 

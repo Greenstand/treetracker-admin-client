@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
+import { captureStatus } from 'common/variables';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -11,8 +12,8 @@ export const VerifyContext = createContext({
   captureImageAnchor: undefined,
   captureImagesUndo: [],
   isLoading: false,
-  isApproveAllProcessing: false,
-  approveAllComplete: 0,
+  isProcessing: false,
+  percentComplete: 0,
   pageSize: 24,
   currentPage: 0,
   filter: new FilterModel({
@@ -23,7 +24,7 @@ export const VerifyContext = createContext({
   captureCount: null,
   approve: () => {},
   loadCaptureImages: () => {},
-  approveAll: () => {},
+  processCaptures: () => {},
   undoAll: () => {},
   updateFilter: () => {},
   getCaptureCount: () => {},
@@ -32,7 +33,6 @@ export const VerifyContext = createContext({
   setCurrentPage: () => {},
   setCaptureImagesSelected: () => {},
   getCaptureSelectedArr: () => {},
-  getCaptureSelectedIdArr: () => {},
 });
 
 export function VerifyProvider(props) {
@@ -41,14 +41,13 @@ export function VerifyProvider(props) {
   const [captureImagesSelected, setCaptureImagesSelected] = useState({});
   const [captureImageAnchor, setCaptureImageAnchor] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [isApproveAllProcessing, setIsApproveAllProcessing] = useState(false);
-  const [approveAllComplete, setApproveAllComplete] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [percentComplete, setPercentComplete] = useState(0);
   const [pageSize, setPageSize] = useState(24);
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
-      approved: false,
-      active: true,
+      status: captureStatus.UNPROCESSED,
     })
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
@@ -103,7 +102,7 @@ export function VerifyProvider(props) {
 
   // EVENT HANDLERS
 
-  const approve = async ({ approveAction, capture }) => {
+  const updateCaptureStatus = async ({ approveAction, capture }) => {
     if (!approveAction) {
       throw Error('no approve action object!');
     }
@@ -120,7 +119,7 @@ export function VerifyProvider(props) {
         await api.createCaptureTags(capture.id, approveAction.tags);
       }
     } else {
-      log.debug('reject');
+      log.debug('reject', capture.id);
       await api.rejectCaptureImage(capture, approveAction.rejectionReason);
     }
 
@@ -142,7 +141,7 @@ export function VerifyProvider(props) {
     const pageParams = {
       page: currentPage,
       rowsPerPage: pageSize,
-      filter: filter,
+      filter,
     };
 
     const result = await api.getRawCaptures(pageParams, abortController);
@@ -154,15 +153,9 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureSelectedArr = () => {
-    return Object.keys(captureImagesSelected).filter((captureId) => {
-      return captureImagesSelected[captureId] === true;
-    });
-  };
-
-  const getCaptureSelectedIdArr = () => {
-    return Object.keys(captureImagesSelected).filter((captureId) => {
-      return captureImagesSelected[captureId] === true;
-    });
+    return captureImages.filter(
+      (capture) => !!captureImagesSelected[capture.id]
+    );
   };
 
   const clickCapture = (payload) => {
@@ -194,67 +187,65 @@ export function VerifyProvider(props) {
           Math.max(indexAnchor, indexCurrent) + 1
         )
         .forEach((capture) => {
-          captureShiftSelected[capture.id] = true;
+          captureShiftSelected[capture.id] = capture;
         });
       setCaptureImagesSelected(captureShiftSelected);
     } else {
       setCaptureImageAnchor(captureId);
+      const value = !captureImagesSelected[captureId]
+        ? captureImages.find((c) => c.id === captureId)
+        : null;
       setCaptureImagesSelected({
         ...captureImagesSelected,
-        [captureId]: !captureImagesSelected[captureId],
+        [captureId]: value,
       });
     }
   };
 
-  const approveAll = async (approveAction) => {
+  const processCaptures = async (approveAction) => {
     try {
       setIsLoading(true);
-      setIsApproveAllProcessing(true);
+      setIsProcessing(true);
       const captureSelected = getCaptureSelectedArr();
       const total = captureSelected.length;
-      const undo = captureImages.filter((capture) =>
-        captureSelected.some((id) => id === capture.id)
+
+      log.debug(
+        'processCaptures items: %d of %d',
+        captureSelected.length,
+        captureImages.length
       );
-      log.debug('approveAll items:%d', captureSelected.length);
+      log.debug('captureSelected', captureSelected);
 
       for (let i = 0; i < total; i++) {
-        const captureId = captureSelected[i];
-        const capture = captureImages.reduce((a, c) => {
-          if (c && c.id === captureId) {
-            return c;
-          } else {
-            return a;
-          }
-        }, undefined);
-
-        await approve({
+        const capture = captureSelected[i];
+        await updateCaptureStatus({
           capture,
           approveAction,
         });
-        setApproveAllComplete(100 * ((i + 1) / total));
+        setPercentComplete(100 * ((i + 1) / total));
       }
 
       //push to undo list and set status flags
-      setCaptureImagesUndo(undo), setIsLoading(false);
+      setCaptureImagesUndo(captureSelected), setIsLoading(false);
       await loadCaptureImages();
-      setIsApproveAllProcessing(false);
-      setApproveAllComplete(0);
+      setIsProcessing(false);
+      setPercentComplete(0);
       setInvalidateCaptureCount(true);
 
       resetSelection();
-      return true;
+      return { error: false, message: 'Captures were approved' };
     } catch (e) {
       log.warn('get error:', e);
       setIsLoading(false);
-      setIsApproveAllProcessing(false);
-      return false;
+      setIsProcessing(false);
+      return { error: true, message: `There was a problem: ${e}` };
     }
   };
 
   const undoAll = async () => {
     log.debug('undo with state:', captureImagesUndo);
     setIsLoading(true);
-    setIsApproveAllProcessing(true);
+    setIsProcessing(true);
 
     const total = captureImagesUndo.length;
     log.debug('items:%d', captureImages.length);
@@ -264,20 +255,18 @@ export function VerifyProvider(props) {
         // log.trace('undo:%d', captureImage.id);
         await undoCaptureImage(captureImage.id);
 
-        setApproveAllComplete(100 * ((i + 1) / total));
+        setPercentComplete(100 * ((i + 1) / total));
         setInvalidateCaptureCount(true);
       }
     } catch (e) {
       log.warn('get error:', e);
-
-      //   // isRejectAllProcessing: false,
       setIsLoading(true);
-      setIsApproveAllProcessing(true);
+      setIsProcessing(true);
       return false;
     }
     setIsLoading(false);
-    setIsApproveAllProcessing(false);
-    setApproveAllComplete(0);
+    setIsProcessing(false);
+    setPercentComplete(0);
     setInvalidateCaptureCount(true);
 
     resetSelection();
@@ -308,15 +297,15 @@ export function VerifyProvider(props) {
     captureImageAnchor,
     captureImagesUndo,
     isLoading,
-    isApproveAllProcessing,
-    approveAllComplete,
+    isProcessing,
+    percentComplete,
     pageSize,
     currentPage,
     filter,
     invalidateCaptureCount,
     captureCount,
     loadCaptureImages,
-    approveAll,
+    processCaptures,
     undoAll: undoAll,
     updateFilter,
     getCaptureCount,
@@ -325,7 +314,6 @@ export function VerifyProvider(props) {
     setCurrentPage,
     setCaptureImagesSelected,
     getCaptureSelectedArr,
-    getCaptureSelectedIdArr,
   };
 
   return (

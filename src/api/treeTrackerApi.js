@@ -41,10 +41,12 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
-      where.status =
-        STATUS_STATES[getVerificationStatus(where.active, where.approved)];
-      delete where.active;
-      delete where.approved;
+      if (where.active) {
+        where.status =
+          STATUS_STATES[getVerificationStatus(where.active, where.approved)];
+        delete where.active;
+        delete where.approved;
+      }
 
       const filterObj = {
         ...where,
@@ -69,11 +71,6 @@ export default {
   getRawCaptureCount({ filter }, abortController) {
     try {
       const where = filter.getWhereObj();
-      where.status =
-        STATUS_STATES[getVerificationStatus(where.active, where.approved)];
-      delete where.active;
-      delete where.approved;
-
       const filterObj = { ...where };
 
       const query = `${QUERY_API}/raw-captures/count${

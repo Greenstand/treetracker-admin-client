@@ -61,7 +61,7 @@ describe('growers', () => {
       // const filter = screen.getByRole('button', { name: /filter/i });
       // userEvent.click(filter);
 
-      expect(screen.getByLabelText(/Grower ID/)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Grower Account ID/)).toBeInTheDocument();
 
       expect(screen.getByLabelText(/Person ID/)).toBeInTheDocument();
 

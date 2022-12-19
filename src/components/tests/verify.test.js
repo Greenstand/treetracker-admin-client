@@ -139,33 +139,45 @@ describe('Verify', () => {
     it('renders filter top', async () => {
       const filter = screen.getByRole('button', { name: /filter/i });
       userEvent.click(filter);
+      const filterTop = screen.getByTestId('filter-top');
+      // screen.logTestingPlaygroundURL(filterTop);
+
       await waitFor(() => {
-        const verifyStatus = screen.getByLabelText(/awaiting verification/i);
+        const verifyStatus = screen.getByLabelText(/verification status/i);
         expect(verifyStatus).toBeInTheDocument();
 
-        // const tokenStatus = screen.getByLabelText(/token status/i);
-        // expect(tokenStatus).toBeInTheDocument();
+        const growerAccount = screen.getByLabelText(/grower account id/i);
+        expect(growerAccount).toBeInTheDocument();
+
+        const tag = screen.getByLabelText(/tag/i);
+        expect(tag).toBeInTheDocument();
+
+        const wallet = screen.getByLabelText(/wallet\/grower identifier/i);
+        expect(wallet).toBeInTheDocument();
       });
     });
 
-    it('renders number of applied filters', async () => {
+    it.only('renders number of applied filters', async () => {
       const filter = screen.getByRole('button', {
-        name: /filter 1/i,
+        name: /filter/i,
       });
 
       userEvent.click(filter);
+
       await waitFor(() => {
-        expect(screen.getByText(/awaiting verification/i)).toBeInTheDocument();
         //data won't actually be filtered but filters should be selected
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
+        expect(screen.getByText('2')).toBeInTheDocument();
       });
 
       let dropdown = screen.getByTestId('org-dropdown');
+
       expect(dropdown).toBeInTheDocument();
 
       let button = within(dropdown).getByRole('button', {
         name: /all/i,
       });
+
       userEvent.click(button);
 
       await waitFor(() => {
@@ -181,7 +193,7 @@ describe('Verify', () => {
       await waitFor(() => {
         expect(
           screen.getByRole('button', {
-            name: /filter 1/i,
+            name: /filter/i,
           })
         ).toBeTruthy();
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
@@ -201,7 +213,7 @@ describe('Verify', () => {
         name: /capture details/i,
       });
 
-      // screen.logTestingPlaygroundURL();
+      screen.logTestingPlaygroundURL(captureDetails);
 
       expect(captureDetails).toHaveLength(4);
       userEvent.click(captureDetails[0]);
@@ -222,6 +234,8 @@ describe('Verify', () => {
       const growerDetails = screen.getAllByRole('button', {
         name: /grower details/i,
       });
+
+      screen.logTestingPlaygroundURL(growerDetails);
 
       await waitFor(() => {
         expect(growerDetails).toHaveLength(4);
