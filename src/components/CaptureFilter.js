@@ -116,9 +116,7 @@ function Filter(props) {
     filter.startDate = startDate
       ? formatDateAndAddTime(startDate, 'start')
       : undefined;
-    filter.endDate = endDate
-      ? formatDateAndAddTime(endDate, 'start')
-      : undefined;
+    filter.endDate = endDate ? formatDateAndAddTime(endDate, 'end') : undefined;
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
     filter.organization_id = organizationId;
