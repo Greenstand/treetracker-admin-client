@@ -102,6 +102,17 @@ const convertDateToDefaultSqlDate = (date) => {
   return format(date, defaultSqlDatePattern);
 };
 
+const formatDate = (date) => {
+  return convertDateToDefaultSqlDate(date);
+};
+
+const formatDateAndAddTime = (date, startOrEnd) => {
+  let formatedDate = formatDate(date);
+  if (startOrEnd === 'start') return formatedDate + 'T00:00:00.000Z';
+  if (startOrEnd === 'end') return formatedDate + 'T23:59:59.999Z';
+  return formatedDate;
+};
+
 const timeAgoFormatDate = (date) => {
   let timeStr = formatDistanceToNow(date).replace(/about/, '');
   return timeStr;
@@ -116,4 +127,5 @@ export {
   getDateTimeStringLocale,
   convertDateToDefaultSqlDate,
   timeAgoFormatDate,
+  formatDateAndAddTime,
 };

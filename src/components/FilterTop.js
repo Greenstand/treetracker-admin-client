@@ -19,7 +19,7 @@ import {
 import {
   getDatePickerLocale,
   getDateFormatLocale,
-  convertDateToDefaultSqlDate,
+  formatDateAndAddTime,
 } from '../common/locale';
 import {
   verificationStates,
@@ -110,10 +110,6 @@ function Filter(props) {
     setEndDate(date);
   };
 
-  const formatDate = (date) => {
-    return convertDateToDefaultSqlDate(date);
-  };
-
   function handleSubmit(e) {
     e.preventDefault();
     // save the filer to context for editing & submit
@@ -124,11 +120,11 @@ function Filter(props) {
     filter.device_identifier = deviceId.trim();
     filter.wallet = wallet.trim();
     filter.startDate = startDate
-      ? formatDate(startDate) + 'T00:00:00.000Z'
+      ? formatDateAndAddTime(startDate, 'start')
       : undefined;
     filter.endDate = endDate
-      ? formatDate(endDate) + 'T23:59:59.999Z'
-      : undefined; //Added 'T23:59:59.999Z' to fix the dates query, that wasn`t getting the last day
+      ? formatDateAndAddTime(endDate, 'start')
+      : undefined;
     filter.status = status;
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
