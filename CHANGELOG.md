@@ -1,3 +1,10 @@
+# [1.119.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.118.0...v1.119.0) (2022-12-19)
+
+
+### Features
+
+* **account:** add About Me input in Edit Grower ([#902](https://github.com/Greenstand/treetracker-admin-client/issues/902)) ([e6863fd](https://github.com/Greenstand/treetracker-admin-client/commit/e6863fd3628917b1b7cdf65ae10dd9e95c0bc0a8))
+
 # [1.118.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.2...v1.118.0) (2022-12-12)
 
 
