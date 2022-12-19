@@ -16,7 +16,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
-// import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
 
