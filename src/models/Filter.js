@@ -26,6 +26,7 @@ export default class Filter {
   organizationId;
   tokenId;
   verifyStatus;
+  wallet;
 
   constructor(options) {
     Object.assign(this, options);
@@ -62,6 +63,10 @@ export default class Filter {
       where.device_identifier = this.deviceIdentifier;
     }
 
+    if (this.wallet) {
+      where.wallet = this.wallet;
+    }
+
     if (this.planterIdentifier) {
       where.wallet = this.planterIdentifier;
     }
@@ -86,6 +91,14 @@ export default class Filter {
       where.organization_id = null;
     } else if (this.organizationId !== ALL_ORGANIZATIONS) {
       where.organization_id = this.stakeholderUUID;
+    }
+
+    if (this.status) {
+      where.status = this.status;
+    }
+
+    if (this.growerAccountId) {
+      where.grower_account_id = this.growerAccountId;
     }
 
     // if (this.stakeholderUUID === ORGANIZATION_NOT_SET) {
@@ -175,7 +188,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
-    if (this.active !== undefined && this.approved !== undefined) {
+    if (
+      this.status ||
+      (this.active !== undefined && this.approved !== undefined)
+    ) {
       numFilters += 1;
     }
 
@@ -184,6 +200,10 @@ export default class Filter {
     }
 
     if (this.captureId) {
+      numFilters += 1;
+    }
+
+    if (this.wallet) {
       numFilters += 1;
     }
 
@@ -224,8 +244,12 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.verifyStatus) {
-      numFilters += this.verifyStatus.length;
+    if (this.status) {
+      numFilters += 1;
+    }
+
+    if (this.growerAccountId) {
+      numFilters += 1;
     }
 
     return numFilters;

@@ -1,32 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import { getDateTimeStringLocale } from '../common/locale';
+import { Box, Grid, Typography } from '@material-ui/core';
 import Badge from '@material-ui/icons/PersonPin';
 import AccessTime from '@material-ui/icons/DateRange';
-import Note from '@material-ui/icons/Note';
-import Nature from '@material-ui/icons/Nature';
-import Category from '@material-ui/icons/Category';
-import { useContext } from 'react';
+import { Note, Nature, Category } from '@material-ui/icons';
+import { getDateTimeStringLocale } from 'common/locale';
 import { SpeciesContext } from 'context/SpeciesContext';
 
-const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
+const CaptureDetailTooltip = ({ capture }) => {
   const CaptureDetailTooltipUseStyles = makeStyles(() => ({
-    box: {
-      display: 'flex',
+    title: {
+      fontSize: '.9rem',
+      marginBottom: '4px',
+      padding: '4px',
+      color: 'white',
+      background: 'rgba(0, 0, 0,.5)',
     },
     label: {
       marginLeft: '12px',
     },
   }));
-  const [speciesName, setSpeciesName] = React.useState();
+  const styles = CaptureDetailTooltipUseStyles();
+
+  const [speciesName, setSpeciesName] = useState();
   const { speciesList } = useContext(SpeciesContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSpeciesName('');
     if (capture?.speciesId) {
       const currentSpecies = () => {
@@ -39,58 +38,45 @@ const CaptureDetailTooltip = ({ capture, showCaptureClick }) => {
     }
   }, [capture]);
 
-  const CaptureDetailTooltipStyles = CaptureDetailTooltipUseStyles();
   return (
-    <Box style={{ width: '160px', display: 'block' }}>
-      <Card
-        style={{ paddingTop: '4px', paddingBottom: '4px' }}
-        onClick={(e) => showCaptureClick(e, capture)}
-      >
-        <CardActionArea>
-          <Container>
-            {capture?.species_id && (
-              <Box className={CaptureDetailTooltipStyles.box}>
-                <Category color="primary" />
-                <Typography className={CaptureDetailTooltipStyles.label}>
-                  {speciesName}
-                </Typography>
-              </Box>
-            )}
-            {capture.reference_id && (
-              <Box className={CaptureDetailTooltipStyles.box}>
-                <Nature color="primary" />
-                <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.reference_id}
-                </Typography>
-              </Box>
-            )}
-            {capture.wallet && (
-              <Box className={CaptureDetailTooltipStyles.box}>
-                <Badge color="primary" />
-                <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.wallet}
-                </Typography>
-              </Box>
-            )}
-            {
-              <Box className={CaptureDetailTooltipStyles.box}>
-                <AccessTime color="primary" />
-                <Typography className={CaptureDetailTooltipStyles.label}>
-                  {getDateTimeStringLocale(capture.captured_at)}
-                </Typography>
-              </Box>
-            }
-            {capture.note && (
-              <Box className={CaptureDetailTooltipStyles.box}>
-                <Note color="primary" />
-                <Typography className={CaptureDetailTooltipStyles.label}>
-                  {capture.note}
-                </Typography>
-              </Box>
-            )}
-          </Container>
-        </CardActionArea>
-      </Card>
+    <Box width={160}>
+      <Box className={styles.button}>
+        <Box className={styles.title}>Capture details</Box>
+        {capture?.species_id && (
+          <Grid container>
+            <Category color="primary" />
+            <Typography className={styles.label}>{speciesName}</Typography>
+          </Grid>
+        )}
+        {capture.reference_id && (
+          <Grid container>
+            <Nature color="primary" />
+            <Typography className={styles.label}>
+              {capture.reference_id}
+            </Typography>
+          </Grid>
+        )}
+        {capture.wallet && (
+          <Grid container>
+            <Badge color="primary" />
+            <Typography className={styles.label}>{capture.wallet}</Typography>
+          </Grid>
+        )}
+        {capture.captured_at && (
+          <Grid container>
+            <AccessTime color="primary" />
+            <Typography className={styles.label}>
+              {getDateTimeStringLocale(capture.captured_at)}
+            </Typography>
+          </Grid>
+        )}
+        {capture.note && (
+          <Grid container>
+            <Note color="primary" />
+            <Typography className={styles.label}>{capture.note}</Typography>
+          </Grid>
+        )}
+      </Box>
     </Box>
   );
 };

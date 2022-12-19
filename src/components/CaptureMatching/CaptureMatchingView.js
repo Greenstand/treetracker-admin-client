@@ -231,6 +231,13 @@ const useStyle = makeStyles((theme) => ({
     height: 48,
   },
   growerBox2: {},
+  notesContainerBox: {
+    textAlign: 'center',
+  },
+  notesBody: {
+    marginLeft: theme.spacing(2),
+    alignSelf: 'flex-end',
+  },
 }));
 
 // Set API as a variable
@@ -417,12 +424,17 @@ function CaptureMatchingView() {
     setIsDetailsPaneOpen(false);
   };
 
-  const countryInfo = useMemo(
-    () => (
-      <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
-    ),
-    [captureImage?.latitude, captureImage?.longitude]
-  );
+  const countryInfo = useMemo(() => {
+    const latitude = captureImage?.latitude || captureImage?.lat;
+    const longitude = captureImage?.longitude || captureImage?.lon;
+
+    return latitude && longitude && <Country lat={latitude} lon={longitude} />;
+  }, [
+    captureImage?.latitude,
+    captureImage?.longitude,
+    captureImage?.lat,
+    captureImage?.lon,
+  ]);
 
   const getGroverRegDate = () => {
     if (Object.keys(growerAccount).length !== 0) {
@@ -565,7 +577,9 @@ function CaptureMatchingView() {
                 <Box className={classes.captureImageBox3}>
                   <AccessTimeIcon />
                   <Typography variant="body1">
-                    {getDateTimeStringLocale(captureImage.created_at)}
+                    {getDateTimeStringLocale(
+                      captureImage.captured_at || captureImage.created_at
+                    )}
                   </Typography>
                 </Box>
                 <Box className={classes.captureImageBox3}>
@@ -575,16 +589,15 @@ function CaptureMatchingView() {
                     }}
                     onClick={() => {
                       window.open(
-                        `https://www.google.com/maps/search/?api=1&query=${captureImage.latitude},${captureImage.longitude}`
+                        `https://www.google.com/maps/search/?api=1&query=${
+                          captureImage.latitude || captureImage.lat
+                        },${captureImage.longitude || captureImage.lon}`
                       );
                     }}
                   />
-                  <Typography variant="body1">
-                    {captureImage?.latitude &&
-                      captureImage?.longitude &&
-                      countryInfo}
-                    ;
-                  </Typography>
+                  {countryInfo && (
+                    <Typography variant="body1">{countryInfo};</Typography>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -640,6 +653,20 @@ function CaptureMatchingView() {
               alertTextSize="1rem"
             />
           </Box>
+
+          {captureImage.note && (
+            <Box
+              className={classes.notesContainerBox}
+              margin={4}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h6">Notes:</Typography>
+              <Typography variant="body1" className={classes.notesBody}>
+                {captureImage.note}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       )}
     </Box>
@@ -701,6 +728,7 @@ function CaptureMatchingView() {
         anchor="right"
         BackdropProps={{ invisible: false }}
         open={matchingToolContext.isFilterOpen}
+        onClose={matchingToolContext.handleFilterToggle}
       >
         <Grid
           container

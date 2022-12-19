@@ -100,9 +100,7 @@ function DashStatVerifiedCaptures(props) {
 }
 
 function DashStatGrowerCount(props) {
-  const growerFilter = new FilterModel({
-    active: true,
-  });
+  const growerFilter = new FilterModel();
 
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 

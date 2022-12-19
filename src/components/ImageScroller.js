@@ -41,8 +41,7 @@ const useStyle = makeStyles((theme) => ({
     height: '100%',
   },
   selectedImageCard: {
-    border: `inset ${theme.spacing(1.5)}px ${theme.palette.primary.main}`,
-    margin: 0,
+    outline: `${theme.spacing(1.5)}px solid ${theme.palette.primary.main}`,
   },
   scrollButton: {
     height: `${SCROLL_BUTTON_SIZE}px`,

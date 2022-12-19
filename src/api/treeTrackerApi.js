@@ -41,10 +41,12 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
-      where.status =
-        STATUS_STATES[getVerificationStatus(where.active, where.approved)];
-      delete where.active;
-      delete where.approved;
+      if (where.active) {
+        where.status =
+          STATUS_STATES[getVerificationStatus(where.active, where.approved)];
+        delete where.active;
+        delete where.approved;
+      }
 
       const filterObj = {
         ...where,
@@ -69,11 +71,6 @@ export default {
   getRawCaptureCount({ filter }, abortController) {
     try {
       const where = filter.getWhereObj();
-      where.status =
-        STATUS_STATES[getVerificationStatus(where.active, where.approved)];
-      delete where.active;
-      delete where.approved;
-
       const filterObj = { ...where };
 
       const query = `${QUERY_API}/raw-captures/count${
@@ -165,7 +162,7 @@ export default {
         .map((key) => (filter[key] ? `${key}=${filter[key]}` : ''))
         .join('&');
 
-      const req = `${TREETRACKER_API}/captures?tree_associated=false&limit=${1}&offset=${
+      const req = `${TREETRACKER_API}/captures?order_by=captured_at&tree_associated=false&limit=${1}&offset=${
         currentPage - 1
       }&${where}`;
 
@@ -375,12 +372,10 @@ export default {
   /*
    * Tags
    */
-  getTags(abortController) {
+  getTags(orgId, abortController) {
     try {
-      // TODO: order is not allowed as a filter
-      // const filterString = `order=name`;
-      // const query = `${TREETRACKER_API}/tags?${filterString}`;
-      const query = `${TREETRACKER_API}/tags`;
+      const filterString = orgId ? `?owner_id=${orgId}` : '';
+      const query = `${TREETRACKER_API}/tags${filterString}`;
 
       return fetch(query, {
         method: 'GET',
@@ -409,7 +404,6 @@ export default {
     }
   },
   createTag(tag) {
-    log.debug('createTag ---> ', tag);
     try {
       const query = `${TREETRACKER_API}/tags`;
       return fetch(query, {
