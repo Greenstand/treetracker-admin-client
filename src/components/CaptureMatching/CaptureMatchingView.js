@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { getDistance } from 'geolib';
-
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -45,6 +46,21 @@ import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
 // import { format } from 'date-fns';
 import log from 'loglevel';
+
+const org_list = [
+  {
+    name: 'FCCFED',
+    id: 'e35ccdbe-3c49-447e-82b4-5fb6b172d50b',
+  },
+  {
+    name: 'FCCEFA',
+    id: 'bb57baa5-ece7-49f4-88f4-be76ca6a011c',
+  },
+  {
+    name: 'FCCGRS',
+    id: '58e1e783-89f3-41e6-8c96-b9afd85769ae',
+  },
+];
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -302,7 +318,7 @@ function CaptureMatchingView() {
   const initialFilter = {
     startDate: aWeakAgo.toISOString().split('T')[0],
     endDate: now.toISOString().split('T')[0],
-    stakeholderUUID: null,
+    stakeholderUUID: 'ALL',
   };
 
   const classes = useStyle();
@@ -317,8 +333,7 @@ function CaptureMatchingView() {
   const [treesCount, setTreesCount] = useState(0);
   const [startDate, setStartDate] = useState(initialFilter.startDate);
   const [endDate, setEndDate] = useState(initialFilter.endDate);
-  const [organizationId, setOrganizationId] = useState(null);
-  const [stakeholderUUID, setStakeholderUUID] = useState(null);
+  const [stakeholderUUID, setStakeholderUUID] = useState('ALL');
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
@@ -352,7 +367,9 @@ function CaptureMatchingView() {
     const filterParameters = {
       captured_at_start_date: filter.startDate,
       captured_at_end_date: filter.endDate,
-      'organization_ids[]': filter.stakeholderUUID && [filter.stakeholderUUID],
+      'organization_ids[]': filter.stakeholderUUID !== 'ALL' && [
+        filter.stakeholderUUID,
+      ],
     };
     // log.debug('fetchCaptures filterParameters', filterParameters);
     const data = await api.fetchCapturesToMatch(
@@ -555,18 +572,16 @@ function CaptureMatchingView() {
                   }
                 />
               )}
-              {filter.stakeholderUUID && (
+              {filter.stakeholderUUID !== 'ALL' && (
                 <Chip
-                  label={appContext.orgList.reduce((a, c) => {
-                    return c.stakeholder_uuid === filter.stakeholderUUID
-                      ? c.name
-                      : a;
+                  label={org_list.reduce((a, c) => {
+                    return c.id === filter.stakeholderUUID ? c.name : a;
                   }, '')}
                   className={classes.currentHeaderChip}
                   onDelete={() =>
                     setFilter({
                       ...filter,
-                      stakeholderUUID: undefined,
+                      stakeholderUUID: 'ALL',
                     })
                   }
                 />
@@ -829,7 +844,7 @@ function CaptureMatchingView() {
             variant="outlined"
             className={classes.customTableFilterSelectFormControl}
           >
-            <SelectOrg
+            {/* <SelectOrg
               orgId={organizationId || 'ORGANIZATION_NOT_SET'}
               defaultOrgs={[
                 {
@@ -843,7 +858,23 @@ function CaptureMatchingView() {
                 setOrganizationId(org.id);
                 setStakeholderUUID(org.stakeholder_uuid);
               }}
-            />
+            /> */}
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={stakeholderUUID}
+              onChange={(e) => {
+                log.warn('e: ', e);
+                setStakeholderUUID(e.target.value);
+              }}
+            >
+              <MenuItem value={'ALL'}>ALL</MenuItem>
+              {org_list.map((o) => (
+                <MenuItem key={o.id} value={o.id}>
+                  {o.name}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
 
           <Divider
