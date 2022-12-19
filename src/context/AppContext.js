@@ -308,7 +308,7 @@ export const AppProvider = (props) => {
 
   function getOrganizationUUID() {
     const orgId = session.user?.policy?.organization?.id || null;
-    console.log('getOrganizationUUID', orgId);
+
     const foundOrg = orgList.find((org) => org.id === orgId);
     return foundOrg?.stakeholder_uuid || null;
   }
