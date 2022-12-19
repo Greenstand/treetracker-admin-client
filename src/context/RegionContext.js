@@ -114,6 +114,7 @@ export function RegionProvider(props) {
         return {
           ...region,
           collection_name: collection?.name || undefined,
+          collection: collection,
         };
       })
     );

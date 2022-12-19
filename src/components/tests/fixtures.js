@@ -1,5 +1,6 @@
 import FilterModel from '../../models/Filter';
 import FilterGrower from '../../models/FilterGrower';
+import { captureStatus } from '../../common/variables';
 
 const CAPTURE = {
   id: 100,
@@ -32,7 +33,7 @@ const CAPTURES = [
     deviceIdentifier: '1-abcdef123456',
     approved: true,
     active: true,
-    status: 'planted',
+    status: captureStatus.APPROVED,
     speciesId: 0,
     timeCreated: '2020-07-29T21:46:03.522Z',
     morphology: 'seedling',
@@ -47,7 +48,7 @@ const CAPTURES = [
     deviceIdentifier: '2-abcdef123456',
     approved: false,
     active: true,
-    status: 'planted',
+    status: captureStatus.APPROVED,
     speciesId: 0,
     timeCreated: '2020-07-29T21:46:03.522Z',
     morphology: 'seedling',
@@ -62,7 +63,7 @@ const CAPTURES = [
     deviceIdentifier: '3-abcdef123456',
     approved: true,
     active: true,
-    status: 'planted',
+    status: captureStatus.APPROVED,
     speciesId: 1,
     timeCreated: '2020-07-29T21:46:03.522Z',
     morphology: 'seedling',
@@ -77,7 +78,7 @@ const CAPTURES = [
     deviceIdentifier: '3-abcdef123456',
     approved: false,
     active: false,
-    status: 'planted',
+    status: captureStatus.APPROVED,
     speciesId: 30,
     timeCreated: '2020-07-29T21:46:03.522Z',
     morphology: 'seedling',
@@ -85,6 +86,79 @@ const CAPTURES = [
     captureApprovalTag: 'simple_leaf',
   },
 ];
+
+const RAW_CAPTURE = {
+  reference_id: 100,
+  id: '11942400-6617-4c6c-bf5e',
+  grower_account_id: 10,
+  wallet: 'grower1@some.place',
+  device_identifier: '1-abcdef123456',
+  status: captureStatus.UNPROCESSED,
+  speciesId: 0,
+  created_at: '2020-07-29T21:46:03.522Z',
+  morphology: 'seedling',
+  age: 'new_tree',
+  captureApprovalTag: 'simple_leaf',
+};
+
+const RAW_CAPTURES = {
+  query: { count: 4, page: 0, limit: 25, offset: 0 },
+  total: 4,
+  raw_captures: [
+    {
+      reference_id: 100,
+      id: '11942400-6617-4c6c-bf5e',
+      grower_account_id: 10,
+      wallet: 'grower1@some.place',
+      device_identifier: '1-abcdef123456',
+      status: captureStatus.UNPROCESSED,
+      speciesId: 0,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 110,
+      id: 'bbf0e582-ec06-45c4-9a71-7bab679e945b',
+      grower_account_id: 11,
+      wallet: 'grower2@some.place',
+      device_identifier: '2-abcdef123456',
+      status: captureStatus.UNPROCESSED,
+      speciesId: 0,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      // age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 120,
+      id: '5a91c4fd-b57b-47fe-ac99-5d95eccad91d',
+      grower_account_id: 12,
+      wallet: 'grower3@some.place',
+      device_identifier: '3-abcdef123456',
+      status: captureStatus.UNPROCESSED,
+      speciesId: 1,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+    {
+      reference_id: 101,
+      id: '6760d7bc-48b7-4105-8437-ed3b48473d9a',
+      grower_account_id: 10,
+      wallet: 'grower3@some.place',
+      device_identifier: '3-abcdef123456',
+      status: captureStatus.UNPROCESSED,
+      speciesId: 30,
+      created_at: '2020-07-29T21:46:03.522Z',
+      morphology: 'seedling',
+      age: 'new_tree',
+      captureApprovalTag: 'simple_leaf',
+    },
+  ],
+};
 
 const CAPTURE_TAGS = [
   {
@@ -109,55 +183,137 @@ const CAPTURE_TAGS = [
   },
 ];
 
+// const GROWER = {
+//   id: 1,
+//   firstName: 'testFirstName',
+//   lastName: 'testLastName',
+//   email: 'test@gmail.com',
+//   organization: null,
+//   phone: '123-456-7890',
+//   imageUrl:
+//     'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
+//   personId: null,
+//   organizationId: 11,
+// };
+
 const GROWER = {
   id: 1,
-  firstName: 'testFirstName',
-  lastName: 'testLastName',
+  first_name: 'testFirstName',
+  last_name: 'testLastName',
   email: 'test@gmail.com',
   organization: null,
   phone: '123-456-7890',
   imageUrl:
     'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
   personId: null,
-  organizationId: 11,
+  organization_id: 11,
+  wallet: 'rebecca.layland@gmail.com',
+  person_id: null,
+  image_rotation: 0,
+  status: 'active',
+  first_registration_at: '2022-11-13T11:36:12.781Z',
+  created_at: '2022-11-13T11:36:12.781Z',
+  updated_at: '2022-11-13T11:36:12.781Z',
+  location: '0101000020E610000000000000000000000000000000000000',
+  lon: '0',
+  lat: '0',
+  bulk_pack_file_name: null,
+  gender: null,
+  about: null,
+  reference_id: 105,
+  devices: [],
+  regions: null,
 };
 
-const GROWERS = [
-  {
-    id: 1,
-    firstName: 'testFirstName',
-    lastName: 'testLastName',
-    email: 'test@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl:
-      'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
-    personId: null,
-    organizationId: 1,
-  },
-  {
-    id: 2,
-    firstName: 'testFirstName2',
-    lastName: 'testLastName2',
-    email: 'test2@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl: '',
-    personId: null,
-    organizationId: 11,
-  },
-  {
-    id: 3,
-    firstName: 'testFirstName3',
-    lastName: 'testLastName3',
-    email: 'test3@gmail.com',
-    organization: null,
-    phone: '123-456-7890',
-    imageUrl: '',
-    personId: null,
-    organizationId: 1,
-  },
-];
+const GROWERS = {
+  total: 3,
+  grower_accounts: [
+    {
+      id: 1,
+      firstName: 'testFirstName',
+      lastName: 'testLastName',
+      email: 'test@gmail.com',
+      organization: null,
+      phone: '123-456-7890',
+      imageUrl:
+        'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.11.17.12.45.48_8.42419553_-13.16719857_11d157fb-1bb0-4497-a7d7-7c16ce658158_IMG_20201117_104118_1916638584657622896.jpg',
+      personId: null,
+      organizationId: 1,
+
+      wallet: 'test@gmail.com',
+      person_id: null,
+      image_rotation: 0,
+      status: 'active',
+      first_registration_at: '2022-11-13T11:36:12.781Z',
+      created_at: '2022-11-13T11:36:12.781Z',
+      updated_at: '2022-11-13T11:36:12.781Z',
+      location: '0101000020E610000000000000000000000000000000000000',
+      lon: '1',
+      lat: '1',
+      bulk_pack_file_name: null,
+      gender: 'female',
+      about: null,
+      reference_id: 105,
+      devices: ['a', 'b', 'c'],
+      regions: null,
+    },
+    {
+      id: 2,
+      firstName: 'testFirstName2',
+      lastName: 'testLastName2',
+      email: 'test2@gmail.com',
+      organization: null,
+      phone: '123-456-7890',
+      imageUrl: '',
+      personId: null,
+      organizationId: 11,
+      wallet: 'rebecca.layland@gmail.com',
+      person_id: null,
+      image_rotation: 0,
+      status: 'active',
+      first_registration_at: '2022-11-14T11:36:12.781Z',
+      created_at: '2022-11-14T11:36:12.781Z',
+      updated_at: '2022-11-14T11:36:12.781Z',
+      location: '0101000020E610000000000000000000000000000000000000',
+      lon: '2',
+      lat: '2',
+      bulk_pack_file_name: null,
+      gender: 'male',
+      about: null,
+      reference_id: 106,
+      devices: ['d', 'e', 'f'],
+      regions: null,
+    },
+    {
+      id: 3,
+      firstName: 'testFirstName3',
+      lastName: 'testLastName3',
+      email: 'test3@gmail.com',
+      organization: null,
+      phone: '123-456-7890',
+      imageUrl: '',
+      personId: null,
+      organizationId: 1,
+
+      wallet: 'rebecca.layland@gmail.com',
+      person_id: null,
+      image_rotation: 0,
+      status: 'active',
+      first_registration_at: '2022-11-15T11:36:12.781Z',
+      created_at: '2022-11-15T11:36:12.781Z',
+      updated_at: '2022-11-15T11:36:12.781Z',
+      location: '0101000020E610000000000000000000000000000000000000',
+      lon: '2',
+      lat: '2',
+      bulk_pack_file_name: null,
+      gender: null,
+      about: null,
+      reference_id: 107,
+      devices: ['a'],
+      regions: null,
+    },
+  ],
+};
 
 const ORGS = [
   {
@@ -174,27 +330,33 @@ const ORGS = [
 
 const TAG = {
   id: 3,
-  tagName: 'test',
+  name: 'test',
+  isPublic: true,
+  status: 'active',
+  owner_id: null,
 };
 
 const TAGS = [
   {
     id: 0,
-    tagName: 'tag_a',
-    public: true,
-    active: true,
+    name: 'tag_a',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
   {
     id: 1,
-    tagName: 'tag_b',
-    public: true,
-    active: true,
+    name: 'tag_b',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
   {
     id: 3,
-    tagName: 'tag_c',
-    public: true,
-    active: true,
+    name: 'tag_c',
+    isPublic: true,
+    status: 'active',
+    owner_id: null,
   },
 ];
 
@@ -307,7 +469,7 @@ const capturesValues = {
   getCapturesAsync: () => {},
 };
 const growerValues = {
-  growers: GROWERS,
+  growers: GROWERS.grower_accounts,
   pageSize: 24,
   count: null,
   currentPage: 0,
@@ -323,9 +485,10 @@ const growerValues = {
   updateGrowers: () => {},
   updateFilter: () => {},
   getTotalGrowerCount: () => {},
+  getGrowerSelfies: () => {},
 };
 const verifyValues = {
-  captureImages: CAPTURES,
+  captureImages: RAW_CAPTURES,
   captureImagesSelected: [],
   captureImageAnchor: undefined,
   captureImagesUndo: [],
@@ -376,6 +539,8 @@ const speciesValues = {
 module.exports = {
   CAPTURE,
   CAPTURES,
+  RAW_CAPTURE,
+  RAW_CAPTURES,
   CAPTURE_TAGS,
   GROWER,
   GROWERS,

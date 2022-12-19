@@ -2,18 +2,11 @@
  * Grower page
  */
 import React, { useState, useContext } from 'react';
-
-import {
-  Grid,
-  TablePagination,
-  Typography,
-  Tooltip,
-  Box,
-} from '@material-ui/core';
+import { TablePagination, Typography, Tooltip, Box } from '@material-ui/core';
 import Grower from './Grower';
 import GrowerDetail from '../GrowerDetail';
 import GrowerTooltip from './GrowerTooltip';
-import { GrowerContext } from '../../context/GrowerContext';
+import { GrowerContext } from 'context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
 
 // const log = require('loglevel').getLogger('../components/Growers');
@@ -76,12 +69,7 @@ const Growers = (props) => {
         }
       >
         <Box>
-          <Grower
-            onClick={() => handleGrowerClick(grower)}
-            key={`${i} + ${grower.id}`}
-            grower={grower}
-            placeholder={grower.placeholder}
-          />
+          <Grower grower={grower} growerClick={handleGrowerClick} />
         </Box>
       </Tooltip>
     );
@@ -101,36 +89,22 @@ const Growers = (props) => {
   );
 
   return (
-    <Grid item container style={{ height: '100%', overflow: 'auto' }}>
-      <Grid item className={classes.body}>
-        <Grid container>
-          <Grid item style={{ width: '100%' }}>
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              className={classes.title}
-            >
-              <Grid item>
-                <Typography variant="h5">Growers</Typography>
-              </Grid>
-              <Grid item>{pagination}</Grid>
-            </Grid>
-          </Grid>
-          <Grid item container direction="row" justifyContent="center">
-            {growersItems}
-          </Grid>
-        </Grid>
-        <Grid container className={classes.page} justifyContent="flex-end">
-          {pagination}
-        </Grid>
-      </Grid>
+    <Box className={classes.body}>
+      <Box className={classes.title}>
+        <Typography variant="h5">Growers</Typography>
+        <Box>{pagination}</Box>
+      </Box>
+
+      <Box className={classes.items}>{growersItems}</Box>
+
+      <Box className={classes.pagination}>{pagination}</Box>
+
       <GrowerDetail
         open={isDetailShown}
         growerId={growerDetail.id}
         onClose={() => setDetailShown(false)}
       />
-    </Grid>
+    </Box>
   );
 };
 

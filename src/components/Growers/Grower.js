@@ -1,39 +1,35 @@
 import React from 'react';
 import clsx from 'clsx';
-
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Person from '@material-ui/icons/Person';
+import {
+  Box,
+  Typography,
+  Card,
+  CardActions,
+  CardContent,
+} from '@material-ui/core';
+import { Person } from '@material-ui/icons';
 import LinkToWebmap from '../common/LinkToWebmap';
 import OptimizedImage from '../OptimizedImage';
 import GrowerOrganization from 'components/GrowerOrganization';
 import { useStyle, GROWER_IMAGE_SIZE } from './Growers.styles.js';
 
-export const Grower = (props) => {
-  const { grower } = props;
-  const classes = useStyle(props);
+export const Grower = ({ grower, growerClick }) => {
+  const classes = useStyle();
+
   return (
-    <div
-      onClick={() => props.onClick()}
-      className={clsx(classes.cardWrapper)}
-      key={grower.id}
-    >
+    <Box onClick={() => growerClick(grower)}>
       <Card
         id={`card_${grower.id}`}
         className={clsx(
           classes.card,
-          props.placeholder && classes.placeholderCard
+          grower.placeholder && classes.placeholderCard
         )}
         classes={{
           root: classes.growerCard,
         }}
       >
         <CardContent className={classes.cardContent}>
-          {grower.imageUrl && (
+          {grower.imageUrl ? (
             <OptimizedImage
               src={grower.imageUrl}
               width={GROWER_IMAGE_SIZE}
@@ -44,34 +40,29 @@ export const Grower = (props) => {
               alertTextSize=".7rem"
               alertTitleSize="1rem"
             />
-          )}
-          {!grower.imageUrl && (
-            <CardMedia className={classes.cardMedia}>
-              <Grid container className={classes.personBox}>
-                <Person className={classes.person} />
-              </Grid>
-            </CardMedia>
+          ) : (
+            <Box className={classes.cardMedia}>
+              <Person className={classes.person} />
+            </Box>
           )}
         </CardContent>
-        <CardActions className={classes.cardActions}>
-          <Grid justifyContent="flex-start" container>
-            <Grid container direction="column">
-              <Typography className={classes.name}>
-                {grower.firstName} {grower.lastName}
-              </Typography>
-              <Typography>
-                ID: <LinkToWebmap value={grower.id} type="user" />
-              </Typography>
-              <GrowerOrganization
-                organizationName={grower?.organization}
-                assignedOrganizationId={grower?.organizationId}
-                compact={true}
-              />
-            </Grid>
-          </Grid>
+        <CardActions>
+          <Box>
+            <Typography className={classes.name}>
+              {grower.firstName} {grower.lastName}
+            </Typography>
+            <Typography>
+              ID: <LinkToWebmap value={grower.id} type="user" />
+            </Typography>
+            <GrowerOrganization
+              organizationName={grower?.organization}
+              assignedOrganizationId={grower?.organizationId}
+              compact={true}
+            />
+          </Box>
         </CardActions>
       </Card>
-    </div>
+    </Box>
   );
 };
 

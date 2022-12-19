@@ -80,7 +80,7 @@ export function SpeciesProvider(props) {
         if (a) {
           return a;
         } else if (c.name === speciesInput) {
-          return c.id;
+          return c.uuid;
         } else {
           return a;
         }

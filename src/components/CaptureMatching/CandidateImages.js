@@ -18,6 +18,8 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
+import { CopyButton } from '../common/CopyButton';
+import CopyNotification from '../common/CopyNotification';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -57,6 +59,7 @@ const useStyles = makeStyles({
     display: 'flex',
     gap: theme.spacing(2),
   },
+  candidateImageNotes: { fontStyle: 'italic', paddingTop: theme.spacing(1) },
   button: {
     fontSize: '16px',
   },
@@ -83,7 +86,7 @@ const useStyles = makeStyles({
     textAlign: 'center',
   },
   candidateCaptureContainer: {
-    position: 'relative',
+    flexBasis: '250px',
   },
   captureInfo: {
     position: 'absolute',
@@ -137,6 +140,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
 
   const [showBox, setShowBox] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarLabel, setSnackbarLabel] = useState('');
 
   useEffect(() => {
     const initialCandidateData = candidateImgData.map((tree) => tree.id);
@@ -150,6 +155,12 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
 
   const showImgBox = (i) => {
     setShowBox([...showBox, i]);
+  };
+
+  const confirmCopy = (label) => {
+    setSnackbarOpen(false);
+    setSnackbarLabel(label);
+    setSnackbarOpen(true);
   };
 
   return (
@@ -179,6 +190,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                     <Tooltip title={tree.id} interactive>
                       <Typography variant="h5">
                         Tree {(tree.id + '').substring(0, 10) + '...'}
+                        <CopyButton
+                          label={tree.id}
+                          value={tree.id}
+                          confirmCopy={confirmCopy}
+                        />
                       </Typography>
                     </Tooltip>
                   </Box>
@@ -214,64 +230,71 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                 }}
               >
                 <Box className={classes.gridList} cols={3}>
-                  {(tree.captures.length ? tree.captures : [tree]).map(
+                  {(tree.captures?.length ? tree.captures : [tree]).map(
                     (candidateCapture) => {
                       return (
                         <Box
                           key={`${tree.id}_${candidateCapture.id}`}
                           className={classes.candidateCaptureContainer}
                         >
-                          <OptimizedImage
-                            src={candidateCapture.image_url}
-                            alt={`Candidate capture ${candidateCapture.id}`}
-                            objectFit="cover"
-                            width={250}
-                            style={{
-                              width: 'auto',
-                              height: '350px',
-                            }}
-                            alertHeight="300px"
-                            alertTextSize=".9rem"
-                            alertTitleSize="1.2rem"
-                          />
-                          <Box className={classes.captureInfo}>
-                            <Box className={classes.captureInfoDetail}>
-                              <AccessTimeIcon />
-                              <Typography variant="body1">
-                                {(candidateCapture.captured_at &&
-                                  candidateCapture.captured_at.slice(0, 10)) ||
-                                  'Unknown'}
-                              </Typography>
-                            </Box>
-                            <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon
-                                style={{
-                                  cursor: 'pointer',
-                                }}
-                                onClick={() => {
-                                  window.open(
-                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
-                                  );
-                                }}
-                              />
-                              <Typography variant="body1">
-                                {capture?.latitude && capture?.longitude && (
-                                  <DistanceTo
-                                    lat1={capture.latitude}
-                                    lon1={capture.longitude}
-                                    lat2={
-                                      candidateCapture.latitude ||
-                                      candidateCapture.lat
-                                    }
-                                    lon2={
-                                      candidateCapture.longitude ||
-                                      candidateCapture.lon
-                                    }
-                                  />
-                                )}
-                              </Typography>
+                          <Box style={{ position: 'relative' }}>
+                            <OptimizedImage
+                              src={candidateCapture.image_url}
+                              alt={`Candidate capture ${candidateCapture.id}`}
+                              objectFit="cover"
+                              width={250}
+                              style={{
+                                width: 'auto',
+                                height: '350px',
+                              }}
+                              alertHeight="300px"
+                              alertTextSize=".9rem"
+                              alertTitleSize="1.2rem"
+                            />
+                            <Box className={classes.captureInfo}>
+                              <Box className={classes.captureInfoDetail}>
+                                <AccessTimeIcon />
+                                <Typography variant="body1">
+                                  {(candidateCapture.captured_at &&
+                                    candidateCapture.captured_at.slice(0, 10)) ||
+                                    'Unknown'}
+                                </Typography>
+                              </Box>
+                              <Box className={classes.captureInfoDetail}>
+                                <LocationOnOutlinedIcon
+                                  style={{
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={() => {
+                                    window.open(
+                                      `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                    );
+                                  }}
+                                />
+                                <Typography variant="body1">
+                                  {capture?.latitude && capture?.longitude && (
+                                    <DistanceTo
+                                      lat1={capture.latitude}
+                                      lon1={capture.longitude}
+                                      lat2={
+                                        candidateCapture.latitude ||
+                                        candidateCapture.lat
+                                      }
+                                      lon2={
+                                        candidateCapture.longitude ||
+                                        candidateCapture.lon
+                                      }
+                                    />
+                                  )}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Box>
+                          {candidateCapture.notes && (
+                            <Typography className={classes.candidateImageNotes}>
+                              {candidateCapture.notes}
+                            </Typography>
+                          )}
                         </Box>
                       );
                     }
@@ -305,6 +328,11 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
             </Paper>
           );
         })}
+      <CopyNotification
+        snackbarLabel={snackbarLabel}
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+      />
     </Box>
   );
 }

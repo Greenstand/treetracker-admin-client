@@ -1,41 +1,24 @@
-import { selectedHighlightColor } from '../../common/variables.js';
 import { makeStyles } from '@material-ui/core/styles';
 
 const GROWER_IMAGE_SIZE = 182;
 
 const useStyle = makeStyles((theme) => ({
-  outer: {
-    height: '100vh',
-    flex: 1,
-    flexWrap: 'nowrap',
-  },
-  cardImg: {
-    width: '100%',
-    height: 'auto',
-  },
-  cardTitle: {
-    color: '#f00',
-  },
   card: {
+    width: `${GROWER_IMAGE_SIZE}px`,
     cursor: 'pointer',
     margin: '0.5rem',
-  },
-  cardSelected: {
-    backgroundColor: theme.palette.action.selected,
   },
   cardContent: {
     padding: 0,
     height: `${GROWER_IMAGE_SIZE}px`,
     position: 'relative',
   },
-  selected: {
-    border: `2px ${selectedHighlightColor} solid`,
-  },
   cardMedia: {
     height: `${GROWER_IMAGE_SIZE}px`,
-  },
-  cardWrapper: {
-    width: 200,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightgray',
   },
   growerCard: {
     borderRadius: 16,
@@ -51,44 +34,25 @@ const useStyle = makeStyles((theme) => ({
     border: 'none',
   },
   title: {
-    padding: theme.spacing(2, 16),
-  },
-  snackbar: {
-    bottom: 20,
-  },
-  snackbarContent: {
-    backgroundColor: theme.palette.action.active,
-  },
-  cardActions: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(2, 14),
   },
-  button: {
-    marginRight: '8px',
+  items: {
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'center',
+    padding: theme.spacing(0, 4),
   },
-  sidePanel: {},
+  pagination: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(2, 14),
+  },
   body: {
     width: '100%',
     overflow: 'hidden auto',
-  },
-  radioGroup: {
-    flexDirection: 'row',
-  },
-  bottomLine: {
-    borderBottom: '1px solid lightgray',
-  },
-  tooltip: {
-    maxWidth: 'none',
-  },
-  page: {
-    padding: theme.spacing(2, 16),
-  },
-  personBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'lightgray',
-    height: '100%',
   },
   person: {
     height: 90,
@@ -103,6 +67,31 @@ const useStyle = makeStyles((theme) => ({
   },
   tooltipBottom: {
     top: '-16px',
+  },
+  tooltipCard: {
+    maxWidth: '180px',
+  },
+  tooltipCardHeader: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    margin: theme.spacing(1),
+  },
+  tooltipIcon: {
+    display: 'flex',
+    marginTop: theme.spacing(1),
+  },
+  tooltipTitle: {
+    marginLeft: '12px',
+    fontSize: '.9rem',
+    fontWeight: 'bold',
+    lineHeight: 1.2,
+  },
+  tooltipLabel: {
+    marginLeft: '12px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
 }));
 

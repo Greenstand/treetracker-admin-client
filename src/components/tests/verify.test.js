@@ -22,15 +22,14 @@ import FilterGrower from '../../models/FilterGrower';
 import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 import {
-  CAPTURE,
-  CAPTURES,
+  RAW_CAPTURE,
+  RAW_CAPTURES,
   GROWER,
   GROWERS,
   ORGS,
   TAG,
   TAGS,
   SPECIES,
-  capturesValues,
   growerValues,
   verifyValues,
   tagsValues,
@@ -58,6 +57,10 @@ describe('Verify', () => {
     log.debug('mock getGrower:');
     return Promise.resolve(GROWER);
   };
+  growerApi.getGrowers = () => {
+    log.debug('mock getGrower:');
+    return Promise.resolve({ grower_accounts: GROWERS });
+  };
   growerApi.getGrowerRegistrations = () => {
     log.debug('mock getGrowerRegistrations:');
     return Promise.resolve([]);
@@ -70,9 +73,9 @@ describe('Verify', () => {
   // mock the treeTrackerApi
   captureApi = require('../../api/treeTrackerApi').default;
 
-  captureApi.getCaptureImages = () => {
+  captureApi.getRawCaptures = () => {
     log.debug('mock getCaptureImages:');
-    return Promise.resolve(CAPTURES);
+    return Promise.resolve(RAW_CAPTURES);
   };
   captureApi.getCaptureCount = () => {
     log.debug('mock getCaptureCount:');
@@ -80,7 +83,7 @@ describe('Verify', () => {
   };
   captureApi.getCaptureById = (_id) => {
     log.debug('mock getCaptureById:');
-    return Promise.resolve(CAPTURE);
+    return Promise.resolve(RAW_CAPTURE);
   };
   captureApi.getSpecies = () => {
     log.debug('mock getSpecies:');
@@ -127,7 +130,7 @@ describe('Verify', () => {
         </ThemeProvider>
       );
 
-      await act(() => captureApi.getCaptureImages());
+      await act(() => captureApi.getRawCaptures());
       await act(() => captureApi.getCaptureCount());
     });
 
@@ -136,33 +139,45 @@ describe('Verify', () => {
     it('renders filter top', async () => {
       const filter = screen.getByRole('button', { name: /filter/i });
       userEvent.click(filter);
+      const filterTop = screen.getByTestId('filter-top');
+      // screen.logTestingPlaygroundURL(filterTop);
+
       await waitFor(() => {
-        const verifyStatus = screen.getByLabelText(/awaiting verification/i);
+        const verifyStatus = screen.getByLabelText(/verification status/i);
         expect(verifyStatus).toBeInTheDocument();
 
-        const tokenStatus = screen.getByLabelText(/token status/i);
-        expect(tokenStatus).toBeInTheDocument();
+        const growerAccount = screen.getByLabelText(/grower account id/i);
+        expect(growerAccount).toBeInTheDocument();
+
+        const tag = screen.getByLabelText(/tag/i);
+        expect(tag).toBeInTheDocument();
+
+        const wallet = screen.getByLabelText(/wallet\/grower identifier/i);
+        expect(wallet).toBeInTheDocument();
       });
     });
 
-    it('renders number of applied filters', async () => {
+    it.only('renders number of applied filters', async () => {
       const filter = screen.getByRole('button', {
-        name: /filter 1/i,
+        name: /filter/i,
       });
 
       userEvent.click(filter);
+
       await waitFor(() => {
-        expect(screen.getByText(/awaiting verification/i)).toBeInTheDocument();
         //data won't actually be filtered but filters should be selected
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
+        expect(screen.getByText('2')).toBeInTheDocument();
       });
 
       let dropdown = screen.getByTestId('org-dropdown');
+
       expect(dropdown).toBeInTheDocument();
 
       let button = within(dropdown).getByRole('button', {
         name: /all/i,
       });
+
       userEvent.click(button);
 
       await waitFor(() => {
@@ -178,7 +193,7 @@ describe('Verify', () => {
       await waitFor(() => {
         expect(
           screen.getByRole('button', {
-            name: /filter 1/i,
+            name: /filter/i,
           })
         ).toBeTruthy();
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
@@ -198,7 +213,7 @@ describe('Verify', () => {
         name: /capture details/i,
       });
 
-      // screen.logTestingPlaygroundURL();
+      screen.logTestingPlaygroundURL(captureDetails);
 
       expect(captureDetails).toHaveLength(4);
       userEvent.click(captureDetails[0]);
@@ -215,16 +230,18 @@ describe('Verify', () => {
     });
 
     it('renders grower details', async () => {
+      // screen.logTestingPlaygroundURL();
       const growerDetails = screen.getAllByRole('button', {
         name: /grower details/i,
       });
+
+      screen.logTestingPlaygroundURL(growerDetails);
 
       await waitFor(() => {
         expect(growerDetails).toHaveLength(4);
       });
 
       userEvent.click(growerDetails[0]);
-      // screen.logTestingPlaygroundURL();
 
       await waitFor(() => {
         expect(screen.getByText(/country/i)).toBeInTheDocument();

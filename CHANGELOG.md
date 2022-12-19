@@ -1,3 +1,185 @@
+# [1.118.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.2...v1.118.0) (2022-12-12)
+
+
+### Features
+
+* add wallet filter to growers ([#974](https://github.com/Greenstand/treetracker-admin-client/issues/974)) ([c21cafd](https://github.com/Greenstand/treetracker-admin-client/commit/c21cafdfb26fa9e4806764ca36d675b70e2c9922))
+
+## [1.117.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.1...v1.117.2) (2022-12-07)
+
+
+### Bug Fixes
+
+* legacy growers count dash stat ([#975](https://github.com/Greenstand/treetracker-admin-client/issues/975)) ([0f096fb](https://github.com/Greenstand/treetracker-admin-client/commit/0f096fbf7f1b0ad90170ec48a6bf94f344b20db8))
+
+## [1.117.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.0...v1.117.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* calling click handler with event to allow multiple selection again ([c79464b](https://github.com/Greenstand/treetracker-admin-client/commit/c79464bf8be7effcd3a63ce9fb242ccb98fe8e05))
+
+# [1.117.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.116.0...v1.117.0) (2022-12-02)
+
+
+### Features
+
+* extend use of state object to Verify Filter for consistency ([c1081a6](https://github.com/Greenstand/treetracker-admin-client/commit/c1081a6af215c85baa15d90bde1eff6bddb85b89))
+
+# [1.116.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.115.0...v1.116.0) (2022-12-01)
+
+
+### Features
+
+* update verify filter, growers,  and grower detail to use new microservice ([#955](https://github.com/Greenstand/treetracker-admin-client/issues/955)) ([058c36d](https://github.com/Greenstand/treetracker-admin-client/commit/058c36dd9fb7e8d7b297a76ae11047fdb7aecd90))
+
+# [1.115.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.2...v1.115.0) (2022-11-19)
+
+
+### Features
+
+* add copy button capture uuid ([#940](https://github.com/Greenstand/treetracker-admin-client/issues/940)) ([d0d4873](https://github.com/Greenstand/treetracker-admin-client/commit/d0d4873b2d3784526b23c98b58066b7963c2b896))
+
+## [1.114.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.1...v1.114.2) (2022-11-14)
+
+
+### Bug Fixes
+
+* payments filter not working ([#937](https://github.com/Greenstand/treetracker-admin-client/issues/937)) ([48dd41d](https://github.com/Greenstand/treetracker-admin-client/commit/48dd41df30dfdbbb4bb0800f9a631252ae9005ad))
+
+## [1.114.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.114.0...v1.114.1) (2022-11-13)
+
+
+### Bug Fixes
+
+* display capture location ([#931](https://github.com/Greenstand/treetracker-admin-client/issues/931)) ([abff3fe](https://github.com/Greenstand/treetracker-admin-client/commit/abff3fe4e0ede414a99e1b48d9f303510b0095d4))
+
+# [1.114.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.113.0...v1.114.0) (2022-11-10)
+
+
+### Features
+
+* display captured_at instead of created_at if it exists ([#929](https://github.com/Greenstand/treetracker-admin-client/issues/929)) ([1bdd4d7](https://github.com/Greenstand/treetracker-admin-client/commit/1bdd4d7be4758e661db6c6c436c0ce6c43940dd9))
+
+# [1.113.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.112.0...v1.113.0) (2022-11-08)
+
+
+### Features
+
+* show oldest unmatched captures first ([#924](https://github.com/Greenstand/treetracker-admin-client/issues/924)) ([c177bcf](https://github.com/Greenstand/treetracker-admin-client/commit/c177bcffcf3453a817701af0c76b14ca671a8d6f))
+
+# [1.112.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.111.0...v1.112.0) (2022-11-05)
+
+
+### Bug Fixes
+
+* add trim method for typed entries in all filters [#871](https://github.com/Greenstand/treetracker-admin-client/issues/871) ([#910](https://github.com/Greenstand/treetracker-admin-client/issues/910)) ([50b525e](https://github.com/Greenstand/treetracker-admin-client/commit/50b525eab3bb9ddfb3c09471c191146877b0efe8))
+
+
+### Features
+
+* **stakeholder:** autocomplete in the filter dropdowns ([#913](https://github.com/Greenstand/treetracker-admin-client/issues/913)) ([4c9e779](https://github.com/Greenstand/treetracker-admin-client/commit/4c9e779cb52a534d368642c04e68d1d763d3e301))
+
+# [1.111.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.110.1...v1.111.0) (2022-11-04)
+
+
+### Features
+
+* Dismiss filter drawer on background click or ESC keypress ([#918](https://github.com/Greenstand/treetracker-admin-client/issues/918)) ([4fc89a0](https://github.com/Greenstand/treetracker-admin-client/commit/4fc89a0f41c5c903d57e4350157d42931c98f1bb))
+
+## [1.110.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.110.0...v1.110.1) (2022-10-27)
+
+
+### Bug Fixes
+
+* capture detail dialog open from captures & capture-match ([#907](https://github.com/Greenstand/treetracker-admin-client/issues/907)) ([74da7e2](https://github.com/Greenstand/treetracker-admin-client/commit/74da7e29e23ccf21078ac7f49cd2858649a0f0b8))
+
+# [1.110.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.4...v1.110.0) (2022-10-27)
+
+
+### Features
+
+* add captureApprovalTags to other tags ([#906](https://github.com/Greenstand/treetracker-admin-client/issues/906)) ([6dcef09](https://github.com/Greenstand/treetracker-admin-client/commit/6dcef09d0f1bc415130ea72f098bdbe4451680ea))
+
+## [1.109.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.3...v1.109.4) (2022-10-16)
+
+
+### Bug Fixes
+
+* remove truncate logic for capture reference id ([#898](https://github.com/Greenstand/treetracker-admin-client/issues/898)) ([bee1c94](https://github.com/Greenstand/treetracker-admin-client/commit/bee1c946cc32ccf1be03042f1119298446a50384))
+
+## [1.109.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.2...v1.109.3) (2022-10-13)
+
+
+### Bug Fixes
+
+* bug for approving and rejecting a raw-capture in verify ([#890](https://github.com/Greenstand/treetracker-admin-client/issues/890)) ([8fda2c0](https://github.com/Greenstand/treetracker-admin-client/commit/8fda2c031ae4ba3f94ceaeb095a0f50e4078fd49))
+* capture detail dialog open from captures & capture-match ([#891](https://github.com/Greenstand/treetracker-admin-client/issues/891)) ([40419b8](https://github.com/Greenstand/treetracker-admin-client/commit/40419b83371ed65ce0e64b95ccc1ccde3020b98d))
+
+## [1.109.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.1...v1.109.2) (2022-10-06)
+
+
+### Bug Fixes
+
+* select org - reset not working [#873](https://github.com/Greenstand/treetracker-admin-client/issues/873) ([#882](https://github.com/Greenstand/treetracker-admin-client/issues/882)) ([33dd4c7](https://github.com/Greenstand/treetracker-admin-client/commit/33dd4c7ba4039439496fc1167a49a49ab7ba9584))
+
+## [1.109.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.109.0...v1.109.1) (2022-10-05)
+
+
+### Bug Fixes
+
+* growers - multiply network requests with negative results [#880](https://github.com/Greenstand/treetracker-admin-client/issues/880) ([#881](https://github.com/Greenstand/treetracker-admin-client/issues/881)) ([0c0e390](https://github.com/Greenstand/treetracker-admin-client/commit/0c0e3901c647ae3a05c0f5a853393eaee3bf8388))
+
+# [1.109.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.4...v1.109.0) (2022-10-04)
+
+
+### Features
+
+* duplicate capture v1: display distance between two selected captures ([#863](https://github.com/Greenstand/treetracker-admin-client/issues/863)) ([a05cdb5](https://github.com/Greenstand/treetracker-admin-client/commit/a05cdb5712e27d6d11ee3f187d061450de8bc141))
+
+## [1.108.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.3...v1.108.4) (2022-10-04)
+
+
+### Bug Fixes
+
+* added a spinner while the image loads up in capture page ([#877](https://github.com/Greenstand/treetracker-admin-client/issues/877)) ([3ecd687](https://github.com/Greenstand/treetracker-admin-client/commit/3ecd687e2fdf6d423cb82145e4a870a0b52c4cdc))
+
+## [1.108.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.2...v1.108.3) (2022-10-02)
+
+
+### Bug Fixes
+
+* remove grower uuid in verify tool ([#867](https://github.com/Greenstand/treetracker-admin-client/issues/867)) ([87743de](https://github.com/Greenstand/treetracker-admin-client/commit/87743de1cc308e8173f176848eeb76687e9b6618))
+
+## [1.108.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.1...v1.108.2) (2022-10-02)
+
+
+### Bug Fixes
+
+* select capture in verify tool ([#864](https://github.com/Greenstand/treetracker-admin-client/issues/864)) ([63e51da](https://github.com/Greenstand/treetracker-admin-client/commit/63e51da5499fddf8fb801c1345f179e4545e1f5d))
+
+## [1.108.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0...v1.108.1) (2022-10-01)
+
+
+### Bug Fixes
+
+* capture - incorrectly formed csv file [#851](https://github.com/Greenstand/treetracker-admin-client/issues/851) ([#856](https://github.com/Greenstand/treetracker-admin-client/issues/856)) ([888fc0a](https://github.com/Greenstand/treetracker-admin-client/commit/888fc0ae00d148b12ab489fe6a3b33cce72d81c4))
+* removed download button from regions page ([#857](https://github.com/Greenstand/treetracker-admin-client/issues/857)) ([e9c205e](https://github.com/Greenstand/treetracker-admin-client/commit/e9c205eb39a533d1804f30dc8f5585fa0c028d88))
+
+# [1.108.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.3...v1.108.0) (2022-10-01)
+
+
+### Bug Fixes
+
+* add REACT_APP_WEBMAP_DOMAIN in the link ([#830](https://github.com/Greenstand/treetracker-admin-client/issues/830)) ([67f1dec](https://github.com/Greenstand/treetracker-admin-client/commit/67f1decda47eb28bec8c4d17d165f42572319dd1))
+* add spinner to prevent previous capture appearance ([#827](https://github.com/Greenstand/treetracker-admin-client/issues/827)) ([c399ad4](https://github.com/Greenstand/treetracker-admin-client/commit/c399ad45e724bf0afc31318644279897f9d5295f))
+* grower detail - previous capture appears while new selection loads ([#842](https://github.com/Greenstand/treetracker-admin-client/issues/842)) ([#852](https://github.com/Greenstand/treetracker-admin-client/issues/852)) ([cdf12dc](https://github.com/Greenstand/treetracker-admin-client/commit/cdf12dc16e8479f19595936710cd271055f8ac63))
+
+
+### Features
+
+* update verify approve/reject links to point to new microservices ([#832](https://github.com/Greenstand/treetracker-admin-client/issues/832)) ([5530aef](https://github.com/Greenstand/treetracker-admin-client/commit/5530aef7e704be7764ee217e8a1d5d554a5781f3))
+
 ## [1.107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.2...v1.107.3) (2022-09-28)
 
 

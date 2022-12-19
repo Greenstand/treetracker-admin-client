@@ -29,21 +29,20 @@ import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import Pagination from '@material-ui/lab/Pagination';
 
-import { documentTitle } from '../../common/variables';
+import { documentTitle } from 'common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
-import { AppContext } from '../../context/AppContext';
-import { MatchingToolContext } from '../../context/MatchingToolContext';
-import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import { AppContext } from 'context/AppContext';
+import { MatchingToolContext } from 'context/MatchingToolContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 import { GrowerProvider } from 'context/GrowerContext';
-import CaptureDetailDialog from '../../components/CaptureDetailDialog';
+import CaptureDetailDialog from 'components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
 import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
-import api from '../../api/treeTrackerApi';
-// import { format } from 'date-fns';
+import api from 'api/treeTrackerApi';
 import log from 'loglevel';
 
 const useStyle = makeStyles((theme) => ({
@@ -233,6 +232,13 @@ const useStyle = makeStyles((theme) => ({
     height: 48,
   },
   growerBox2: {},
+  notesContainerBox: {
+    textAlign: 'center',
+  },
+  notesBody: {
+    marginLeft: theme.spacing(2),
+    alignSelf: 'flex-end',
+  },
 }));
 
 const filterTree = (trees, capture) => {
@@ -475,6 +481,7 @@ function CaptureMatchingView() {
 
   function handleFilterReset() {
     setFilter(initialFilter);
+    setOrganizationId(null);
     matchingToolContext.handleFilterToggle();
   }
 
@@ -486,12 +493,26 @@ function CaptureMatchingView() {
     setIsDetailsPaneOpen(false);
   };
 
-  const countryInfo = useMemo(
-    () => (
-      <Country lat={captureImage?.latitude} lon={captureImage?.longitude} />
-    ),
-    [captureImage?.latitude, captureImage?.longitude]
-  );
+  const countryInfo = useMemo(() => {
+    const latitude = captureImage?.latitude || captureImage?.lat;
+    const longitude = captureImage?.longitude || captureImage?.lon;
+
+    return latitude && longitude && <Country lat={latitude} lon={longitude} />;
+  }, [
+    captureImage?.latitude,
+    captureImage?.longitude,
+    captureImage?.lat,
+    captureImage?.lon,
+  ]);
+
+  const getGrowerRegDate = () => {
+    if (Object.keys(growerAccount).length !== 0) {
+      return 'Joined at ' + getDateTimeStringLocale(
+        growerAccount.first_registration_at || growerAccount.created_at
+      );
+    }
+    return '';
+  };
 
   // components
   function currentCaptureNumber(text, icon, count, tooltip) {
@@ -618,15 +639,16 @@ function CaptureMatchingView() {
             <Box className={classes.box2}>
               <Tooltip title={captureImage.reference_id} interactive>
                 <Typography variant="h5">
-                  Capture{' '}
-                  {(captureImage.reference_id + '').substring(0, 10) + '...'}
+                  Capture {captureImage.reference_id}
                 </Typography>
               </Tooltip>
               <Box className={classes.captureImageCaptureInfo}>
                 <Box className={classes.captureImageBox3}>
                   <AccessTimeIcon />
                   <Typography variant="body1">
-                    {getDateTimeStringLocale(captureImage.captured_at)}
+                    {getDateTimeStringLocale(
+                      captureImage.captured_at || captureImage.created_at
+                    )}
                   </Typography>
                 </Box>
                 <Box className={classes.captureImageBox3}>
@@ -636,16 +658,15 @@ function CaptureMatchingView() {
                     }}
                     onClick={() => {
                       window.open(
-                        `https://www.google.com/maps/search/?api=1&query=${captureImage.latitude},${captureImage.longitude}`
+                        `https://www.google.com/maps/search/?api=1&query=${
+                          captureImage.latitude || captureImage.lat
+                        },${captureImage.longitude || captureImage.lon}`
                       );
                     }}
                   />
-                  <Typography variant="body1">
-                    {captureImage?.latitude &&
-                      captureImage?.longitude &&
-                      countryInfo}
-                    ;
-                  </Typography>
+                  {countryInfo && (
+                    <Typography variant="body1">{countryInfo};</Typography>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -663,11 +684,7 @@ function CaptureMatchingView() {
                   <Typography variant="h5">
                     {growerAccount.first_name}
                   </Typography>
-                  <Typography variant="body1">
-                    Joined at{' '}
-                    {growerAccount.first_registration_at ||
-                      growerAccount.created_at}
-                  </Typography>
+                  <Typography variant="body1">{getGrowerRegDate()}</Typography>
                 </Box>
               </Box>
             )}
@@ -705,6 +722,20 @@ function CaptureMatchingView() {
               alertTextSize="1rem"
             />
           </Box>
+
+          {captureImage.note && (
+            <Box
+              className={classes.notesContainerBox}
+              margin={4}
+              display="flex"
+              justifyContent="center"
+            >
+              <Typography variant="h6">Notes:</Typography>
+              <Typography variant="body1" className={classes.notesBody}>
+                {captureImage.note}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       )}
     </Box>
@@ -766,6 +797,7 @@ function CaptureMatchingView() {
         anchor="right"
         BackdropProps={{ invisible: false }}
         open={matchingToolContext.isFilterOpen}
+        onClose={matchingToolContext.handleFilterToggle}
       >
         <Grid
           container
@@ -881,8 +913,9 @@ function CaptureMatchingView() {
         {isDetailsPaneOpen && (
           <CaptureDetailDialog
             open={isDetailsPaneOpen}
-            captureId={captureImage?.reference_id}
+            captureId={captureImage?.id}
             onClose={closeDrawer}
+            page={'CAPTURES'}
           />
         )}
       </CaptureDetailProvider>
