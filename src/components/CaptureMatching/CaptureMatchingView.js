@@ -40,7 +40,7 @@ import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
-import SelectOrg from '../common/SelectOrg';
+//import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
@@ -322,7 +322,7 @@ function CaptureMatchingView() {
   };
 
   const classes = useStyle();
-  const appContext = useContext(AppContext);
+  //const appContext = useContext(AppContext);
   const matchingToolContext = useContext(MatchingToolContext);
   const [captureImage, setCaptureImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
