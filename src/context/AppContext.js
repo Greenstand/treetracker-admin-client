@@ -306,6 +306,13 @@ export const AppProvider = (props) => {
     setOrgList(orgs);
   }
 
+  function getOrganizationUUID() {
+    const orgId = session.user?.policy?.organization?.id || null;
+
+    const foundOrg = orgList.find((org) => org.id === orgId);
+    return foundOrg?.stakeholder_uuid || null;
+  }
+
   async function updateSelectedFilter(filters) {
     setSelectedFilters(filters);
   }
@@ -320,6 +327,7 @@ export const AppProvider = (props) => {
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
+    getOrganizationUUID,
     ...props.value,
   };
 

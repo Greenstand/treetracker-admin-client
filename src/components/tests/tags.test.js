@@ -50,9 +50,11 @@ describe('tags', () => {
     describe('renders', () => {
       beforeEach(async () => {
         render(
-          <TagsProvider value={tagsValues}>
-            <CaptureTags placeholder="test placeholder text" />
-          </TagsProvider>
+          <AppProvider>
+            <TagsProvider value={tagsValues}>
+              <CaptureTags placeholder="test placeholder text" />
+            </TagsProvider>
+          </AppProvider>
         );
 
         await act(() => api.getTags());
