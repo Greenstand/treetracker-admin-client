@@ -56,6 +56,10 @@ const org_list = [
     name: 'FCCEFA',
     id: 'bb57baa5-ece7-49f4-88f4-be76ca6a011c',
   },
+  {
+    name: 'FCCGRS',
+    id: '58e1e783-89f3-41e6-8c96-b9afd85769ae',
+  },
 ];
 
 const useStyle = makeStyles((theme) => ({
