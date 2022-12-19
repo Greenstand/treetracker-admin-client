@@ -119,8 +119,10 @@ function Filter(props) {
     filter.grower_account_id = growerId.trim();
     filter.device_identifier = deviceId.trim();
     filter.wallet = wallet.trim();
-    filter.startDate = startDate ? formatDateAndAddTime(startDate) : undefined;
-    filter.endDate = endDate ? formatDateAndAddTime(endDate) : undefined;
+    filter.startDate = startDate
+      ? formatDateAndAddTime(startDate, 'start')
+      : undefined;
+    filter.endDate = endDate ? formatDateAndAddTime(endDate, 'end') : undefined;
     filter.status = status;
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
