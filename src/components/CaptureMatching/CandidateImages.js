@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
+import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
 import { CopyButton } from '../common/CopyButton';
@@ -255,9 +256,12 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               <Box className={classes.captureInfoDetail}>
                                 <AccessTimeIcon />
                                 <Typography variant="body1">
-                                  {(candidateCapture.captured_at &&
-                                    candidateCapture.captured_at.slice(0, 10)) ||
-                                    'Unknown'}
+                                  {getDateStringLocale(
+                                    new Date(
+                                      candidateCapture.captured_at ||
+                                      candidateCapture.created_at
+                                    )
+                                  )}
                                 </Typography>
                               </Box>
                               <Box className={classes.captureInfoDetail}>
