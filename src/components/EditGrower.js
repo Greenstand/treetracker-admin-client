@@ -15,17 +15,6 @@ import SelectOrg from './common/SelectOrg';
 import { GrowerContext } from 'context/GrowerContext';
 import { ORGANIZATION_NOT_SET } from 'models/Filter';
 
-const inputs = [
-  {
-    attr: 'firstName',
-    label: 'First Name',
-  },
-  {
-    attr: 'lastName',
-    label: 'Last Name',
-  },
-];
-
 const useStyle = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 4),
@@ -102,6 +91,26 @@ const EditGrower = (props) => {
     return growerUpdate?.[attr] ?? grower?.[attr] ?? '';
   }
 
+  const inputs = [
+    [
+      {
+        attr: 'firstName',
+        label: 'First Name',
+      },
+      {
+        attr: 'lastName',
+        label: 'Last Name',
+      },
+    ],
+    [
+      {
+        attr: 'about',
+        label: 'About',
+        multiline: true,
+      },
+    ],
+  ];
+
   return (
     <Dialog open={isOpen} aria-labelledby="form-dialog-title" maxWidth={false}>
       <DialogTitle id="form-dialog-title">Edit Grower</DialogTitle>
@@ -117,26 +126,28 @@ const EditGrower = (props) => {
             }
             onSelectChange={handleChange}
           />
-
-          <Grid className={classes.textContainer}>
-            {inputs.map((input, colIdx) => (
-              <TextField
-                key={`TextField_${colIdx}`}
-                className={classes.textInput}
-                id={input.attr}
-                label={input.label}
-                type={input.type || 'text'}
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => {
-                  handleChange(input.attr, e.target.value);
-                }}
-                value={getValue(input.attr)}
-              />
-            ))}
-          </Grid>
+          {inputs.map((row, rowIdx) => (
+            <Grid item container direction="row" key={rowIdx}>
+              {row.map((input, colIdx) => (
+                <TextField
+                  key={`TextField_${rowIdx}_${colIdx}`}
+                  className={classes.textInput}
+                  id={input.attr}
+                  label={input.label}
+                  type={input.type || 'text'}
+                  variant="outlined"
+                  multiline={input.multiline || undefined}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={(e) => {
+                    handleChange(input.attr, e.target.value);
+                  }}
+                  value={getValue(input.attr)}
+                />
+              ))}
+            </Grid>
+          ))}
 
           <TextField
             className={classes.textInput}
@@ -144,6 +155,7 @@ const EditGrower = (props) => {
             value={getValue('organization')}
             disabled
           />
+
           <SelectOrg
             orgId={getValue('organizationId')}
             defaultOrgs={[
