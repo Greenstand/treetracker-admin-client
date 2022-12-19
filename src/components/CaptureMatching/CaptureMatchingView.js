@@ -32,7 +32,7 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import { documentTitle } from '../../common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
-import { AppContext } from '../../context/AppContext';
+//import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { GrowerProvider } from 'context/GrowerContext';
@@ -40,7 +40,7 @@ import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
-import SelectOrg from '../common/SelectOrg';
+//import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
@@ -322,7 +322,7 @@ function CaptureMatchingView() {
   };
 
   const classes = useStyle();
-  const appContext = useContext(AppContext);
+  //const appContext = useContext(AppContext);
   const matchingToolContext = useContext(MatchingToolContext);
   const [captureImage, setCaptureImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
