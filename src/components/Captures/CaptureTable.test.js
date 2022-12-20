@@ -243,26 +243,13 @@ describe('Captures', () => {
 
     it('should call captures API with a valid filter', () => {
       const filter = JSON.stringify({
-        where: { approved: true, active: true },
-        order: ['id asc'],
+        status: 'approved',
         limit: 25,
-        skip: 0,
-        fields: {
-          id: true,
-          timeCreated: true,
-          status: true,
-          active: true,
-          approved: true,
-          planterId: true,
-          planterIdentifier: true,
-          deviceIdentifier: true,
-          speciesId: true,
-          tokenId: true,
-        },
+        offset: 0,
       });
 
       expect(axios.get).toHaveBeenCalled();
-      expect(axios.get.mock.calls[0][0]).toContain(`/trees?filter=${filter}`);
+      expect(axios.get.mock.calls[0][0]).toContain(`/v2/captures`);
     });
   });
 });

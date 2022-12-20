@@ -74,20 +74,17 @@ function Filter(props) {
   const tagsContext = useContext(TagsContext);
   const { classes, filter = new FilterModel() } = props;
   const filterOptionAll = 'All';
-  const dateStartDefault = null;
-  const dateEndDefault = null;
+  const startDateDefault = null;
+  const endDateDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
-  const [growerId, setGrowerId] = useState(filter?.planterId || '');
-  const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
-  const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || ''
+  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
+  const [startDate, setStartDate] = useState(
+    filter?.startDate || startDateDefault
   );
-  const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault
-  );
-  const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
+  const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
@@ -99,12 +96,12 @@ function Filter(props) {
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
-  const handleDateStartChange = (date) => {
-    setDateStart(date);
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
-  const handleDateEndChange = (date) => {
-    setDateEnd(date);
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
   };
 
   const formatDate = (date) => {
@@ -117,15 +114,14 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.uuid = uuid;
     filter.captureId = captureId;
-    filter.planterId = growerId;
-    filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = growerIdentifier;
+    filter.grower_account_id = growerId;
+    filter.device_identifier = deviceId;
     filter.wallet = wallet;
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.speciesId = speciesId;
+    filter.startDate = startDate ? formatDate(startDate) : undefined;
+    filter.endDate = endDate ? formatDate(endDate) : undefined;
+    filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
-    filter.organizationId = organizationId;
+    filter.organization_id = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
 
@@ -138,10 +134,9 @@ function Filter(props) {
     setCaptureId('');
     setGrowerId('');
     setDeviceId('');
-    setGrowerIdentifier('');
     setWallet('');
-    setDateStart(dateStartDefault);
-    setDateEnd(dateEndDefault);
+    setStartDate(startDateDefault);
+    setEndDate(endDateDefault);
     setSpeciesId(ALL_SPECIES);
     setTag(null);
     setTagSearchString('');
@@ -188,9 +183,9 @@ function Filter(props) {
                   htmlFor="start-date-picker"
                   label="Start Date"
                   format={getDateFormatLocale()}
-                  value={dateStart}
-                  onChange={handleDateStartChange}
-                  maxDate={dateEnd || Date()} // Don't allow selection after today
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  maxDate={endDate || Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
@@ -201,9 +196,9 @@ function Filter(props) {
                   htmlFor="end-date-picker"
                   label="End Date"
                   format={getDateFormatLocale()}
-                  value={dateEnd}
-                  onChange={handleDateEndChange}
-                  minDate={dateStart || datePickerDefaultMinDate}
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  minDate={startDate || datePickerDefaultMinDate}
                   maxDate={Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -248,14 +243,6 @@ function Filter(props) {
                 placeholder="e.g. 1234abcd"
                 value={deviceId}
                 onChange={(e) => setDeviceId(e.target.value)}
-              />
-              <TextField
-                htmlFor="grower-identifier"
-                id="grower-identifier"
-                label="Wallet"
-                placeholder="e.g. grower@example.com"
-                value={growerIdentifier}
-                onChange={(e) => setGrowerIdentifier(e.target.value)}
               />
               <TextField
                 data-testid="species-dropdown"

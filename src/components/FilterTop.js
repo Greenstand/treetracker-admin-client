@@ -79,37 +79,35 @@ function Filter(props) {
     filter = new FilterModel({ status: captureStatus.UNPROCESSED }),
   } = props;
   const filterOptionAll = 'All';
-  const dateStartDefault = null;
-  const dateEndDefault = null;
+  const startDateDefault = null;
+  const endDateDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [growerId, setGrowerId] = useState(filter?.planterId || '');
-  const [deviceId, setDeviceId] = useState(filter?.deviceIdentifier || '');
-  const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || ''
-  );
+  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
   const [status, setStatus] = useState(filter?.status);
-  const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault
+  const [startDate, setStartDate] = useState(
+    filter?.startDate || startDateDefault
   );
-  const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
-  const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
+  const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
+  const [speciesId, setSpeciesId] = useState(filter?.species_id || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS
+    filter.organization_id || ALL_ORGANIZATIONS
   );
   const [stakeholderUUID, setStakeholderUUID] = useState(
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
-  const handleDateStartChange = (date) => {
-    setDateStart(date);
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
-  const handleDateEndChange = (date) => {
-    setDateEnd(date);
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
   };
 
   const formatDate = (date) => {
@@ -122,15 +120,15 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.uuid = uuid;
     filter.captureId = captureId.trim();
-    filter.planterId = growerId.trim();
-    filter.deviceIdentifier = deviceId.trim();
-    filter.planterIdentifier = growerIdentifier.trim();
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
+    filter.grower_account_id = growerId.trim();
+    filter.device_identifier = deviceId.trim();
+    filter.wallet = wallet.trim();
+    filter.startDate = startDate ? formatDate(startDate) : undefined;
+    filter.endDate = endDate ? formatDate(endDate) : undefined;
     filter.status = status;
-    filter.speciesId = speciesId;
+    filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
-    filter.organizationId = organizationId;
+    filter.organization_id = organizationId;
     filter.stakeholderUUID = stakeholderUUID;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
@@ -142,9 +140,9 @@ function Filter(props) {
     setCaptureId('');
     setGrowerId('');
     setDeviceId('');
-    setGrowerIdentifier('');
-    setDateStart(dateStartDefault);
-    setDateEnd(dateEndDefault);
+    setWallet('');
+    setStartDate(startDateDefault);
+    setEndDate(endDateDefault);
     setSpeciesId(ALL_SPECIES);
     setTag(null);
     setTagSearchString('');
@@ -235,9 +233,9 @@ function Filter(props) {
                   htmlFor="start-date-picker"
                   label="Start Date"
                   format={getDateFormatLocale()}
-                  value={dateStart}
-                  onChange={handleDateStartChange}
-                  maxDate={dateEnd || Date()} // Don't allow selection after today
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  maxDate={endDate || Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
@@ -248,9 +246,9 @@ function Filter(props) {
                   htmlFor="end-date-picker"
                   label="End Date"
                   format={getDateFormatLocale()}
-                  value={dateEnd}
-                  onChange={handleDateEndChange}
-                  minDate={dateStart || datePickerDefaultMinDate}
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  minDate={startDate || datePickerDefaultMinDate}
                   maxDate={Date()} // Don't allow selection after today
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -294,8 +292,8 @@ function Filter(props) {
                 id="grower-identifier"
                 label="Wallet/Grower Identifier"
                 placeholder="e.g. grower@example.com"
-                value={growerIdentifier}
-                onChange={(e) => setGrowerIdentifier(e.target.value)}
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
               />
               {/* <TextField
                 data-testid="species-dropdown"

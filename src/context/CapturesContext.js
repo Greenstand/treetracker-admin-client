@@ -66,7 +66,7 @@ export function CapturesProvider(props) {
     const response = await api.getCaptures(filterData);
     setIsLoading(false);
     setCaptures(response?.captures);
-    setCaptureCount(Number(response?.data?.total));
+    setCaptureCount(Number(response?.total));
   };
 
   // GET CAPTURES FOR EXPORT

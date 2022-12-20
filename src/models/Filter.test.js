@@ -8,12 +8,12 @@ describe('Filter, with initial values about this filter object', () => {
     filter = new Filter();
     filter.uuid = '11942400-6617-4c6c-bf5e';
     filter.captureId = '10';
-    filter.dateStart = '2019-07-25';
-    filter.dateEnd = '2019-07-30';
+    filter.startDate = '2019-07-25';
+    filter.endDate = '2019-07-30';
     filter.status = 'unprocessed';
-    filter.planterId = '1';
-    filter.deviceIdentifier = '1';
-    filter.planterIdentifier = '1';
+    filter.grower_account_id = '1';
+    filter.device_identifier = '1';
+    filter.wallet = '1';
   });
 
   it('getWhereObj() should be: ', () => {
@@ -97,7 +97,7 @@ describe('Filter, with initial values about this filter object', () => {
   describe('set grower_account_id = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.planterId = '';
+      filter.grower_account_id = '';
     });
 
     it('should not match any [grower_account_id]', () => {
@@ -107,10 +107,10 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set deviceIdentifier = ""', () => {
+  describe('set device_identifier = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.deviceIdentifier = '';
+      filter.device_identifier = '';
     });
 
     it('should not match any device_identifier', () => {
@@ -119,22 +119,22 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set planterIdentifier = ""', () => {
+  describe('set wallet = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.planterIdentifier = '';
+      filter.wallet = '';
     });
 
-    it('should not match any planterIdentifier', () => {
-      expect(filter.getWhereObj()).not.toHaveProperty('planterIdentifier');
+    it('should not match any wallet', () => {
+      expect(filter.getWhereObj()).not.toHaveProperty('wallet');
     });
     //}}}
   });
 
-  describe('remove dateStart', () => {
+  describe('remove startDate', () => {
     //{{{
     beforeEach(() => {
-      delete filter.dateStart;
+      delete filter.startDate;
     });
 
     it('should be lte', () => {
@@ -145,10 +145,10 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('remove dateEnd', () => {
+  describe('remove endDate', () => {
     //{{{
     beforeEach(() => {
-      delete filter.dateEnd;
+      delete filter.endDate;
     });
 
     it('should be gte', () => {

@@ -113,27 +113,7 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
     const current = cdContext.capture;
     if (current) {
       // map the keys from legacy to new api keys
-      setRenderCapture({
-        status: current.status,
-        id: current.id || current.uuid,
-        reference_id: current.reference_id || current.id,
-        grower_account_id: current.grower_account_id || current.planterId,
-        wallet: current.wallet || current.planterIdentifier,
-        device_identifier:
-          current.device_identifier || current.deviceIdentifier,
-        image_url: current.image_url || current.imageUrl,
-        lat: current.lat || current.latitude,
-        lon: current.lon || current.longitude,
-        age: current.age,
-        captureApprovalTag: current.captureApprovalTag || null,
-        morphology: current.morphology || null,
-        note: current.note,
-        rejectionReason: current.rejectionReason || null,
-        species_id: current.species_id || current.speciesId,
-        token_id: current.token_id || current.tokenId,
-        created_at: current.created_at || current.timeCreated,
-        updated_at: current.updated_at || current.timeUpdated,
-      });
+      setRenderCapture({ ...current });
     }
     if (isLoading) {
       setIsLoading(false);
@@ -277,12 +257,14 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {capture.status === captureStatus.UNPROCSSED ? (
+          {capture.status === captureStatus.UNPROCESSED ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.status === captureStatus.APPROVED ? (
+          ) : // Verify will have status of 'approved', Captures and CaptureMatch will have status of 'active' because all captures are approved
+          capture.status === captureStatus.APPROVED ||
+            capture.status === 'active' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}
