@@ -14,7 +14,6 @@ import {
   CircularProgress,
   Container,
   Button,
-  ButtonGroup,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
@@ -114,15 +113,9 @@ function CaptureDetailDialog(props) {
   const [renderCapture, setRenderCapture] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [captureTagDeletionTarget, setCaptureTagDeletionTarget] = useState(
     undefined
   );
-  const resizeWindow = useCallback(() => {
-    setScreenWidth(window.innerWidth);
-    setScreenHeight(window.innerHeight);
-  }, []);
   const classes = useStyles();
 
   // This is causing unnecessary re-renders right now, but may be useful if we want to navigate between captures by id
@@ -172,7 +165,7 @@ function CaptureDetailDialog(props) {
       setIsLoading(false);
     }
     setIsImageLoading(true);
-  }, [cdContext.capture, capture]);
+  }, [cdContext.capture]);
 
   useEffect(() => {
     setIsLoading(true);
