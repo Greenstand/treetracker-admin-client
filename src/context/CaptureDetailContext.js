@@ -70,21 +70,6 @@ export function CaptureDetailProvider(props) {
     });
   };
 
-  const getTags = async (captureTags) => {
-    if (captureTags == null) {
-      return Promise.resolve(STATE_EMPTY.tags);
-    }
-
-    return Promise.all(
-      captureTags.map((tag) => {
-        return api.getTagById(tag.tagId);
-      })
-    ).then((tags) => {
-      setState({ ...state, tags });
-      return tags;
-    });
-  };
-
   const deleteCaptureTag = async ({ captureId, tagId }) => {
     if (captureId == null) {
       return Promise.reject('deleteCaptureTag called with no captureId');
