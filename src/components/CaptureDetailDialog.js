@@ -107,6 +107,7 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
   const appContext = useContext(AppContext);
   const hasApproveTreePermission = hasPermission(appContext.user, [
     POLICIES.APPROVE_TREE,
+    POLICIES.SUPER_PERMISSION,
   ]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarLabel, setSnackbarLabel] = useState('');
