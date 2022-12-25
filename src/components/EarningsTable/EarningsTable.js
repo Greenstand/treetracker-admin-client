@@ -139,7 +139,7 @@ function EarningsTable() {
     const filtersToSubmit = { ...filter };
     // filter out keys we don't want to submit
     Object.keys(filtersToSubmit).forEach((k) => {
-      if (k == 'grower') {
+      if (k === 'grower') {
         return;
       } else {
         if (
