@@ -388,8 +388,8 @@ function CaptureMatchingView() {
         };
       };
       setCaptureImage(cleanup(data.captures[0]));
-      setNoOfPages(data.count);
-      setImgCount(data.count);
+      setNoOfPages(data.query.count);
+      setImgCount(data.query.count);
     } else {
       setLoading(false);
       setNoOfPages(0);
