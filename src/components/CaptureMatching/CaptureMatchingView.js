@@ -388,8 +388,8 @@ function CaptureMatchingView() {
         };
       };
       setCaptureImage(cleanup(data.captures[0]));
-      setNoOfPages(data.count);
-      setImgCount(data.count);
+      setNoOfPages(data.query.count);
+      setImgCount(data.query.count);
     } else {
       setLoading(false);
       setNoOfPages(0);
@@ -405,6 +405,7 @@ function CaptureMatchingView() {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
         );
+        log.warn('grower:', data);
         setGrowerAccount(data);
       } else {
         log.warn('No grower account id found');
@@ -920,7 +921,7 @@ function CaptureMatchingView() {
       <GrowerProvider>
         <GrowerDetail
           open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
+          growerId={growerAccount.reference_id}
           onClose={() => setGrowerDetailsOpen(false)}
         />
       </GrowerProvider>
