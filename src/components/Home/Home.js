@@ -31,6 +31,7 @@ import ReportingCard5 from '../reportingCards/ReportingCard5';
 import ReportingCard6 from '../reportingCards/ReportingCard6';
 import ReportingCard7 from '../reportingCards/ReportingCard7';
 import ReportingCard8 from '../reportingCards/ReportingCard8';
+import ReportingCard9 from '../reportingCards/ReportingCard9';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import { format, subDays, formatDistanceToNow } from 'date-fns';
@@ -106,7 +107,7 @@ function Home(props) {
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
             </Grid>
-            {hasFreetownPermission(appContext.user) && (
+            {true && (
               <Grid item xs={5} className={classes.timeBox}>
                 {updateTime && (
                   <Typography variant="body1" className={classes.time}>
@@ -165,13 +166,16 @@ function Home(props) {
               !hasFreetownPermission(appContext.user) && (
                 <DashStatGrowerCount />
               )}
-            {hasFreetownPermission(appContext.user) && (
+            {true && (
               <Grid item xs={12} className={classes.statCardGrid} container>
                 <Grid item xs={4}>
                   <ReportingCard1 startDate={startDate} endDate={endDate} />
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard2 startDate={startDate} endDate={endDate} />
+                </Grid>
+                <Grid item xs={4}>
+                  <ReportingCard9 startDate={startDate} endDate={endDate} />
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard3 startDate={startDate} endDate={endDate} />
