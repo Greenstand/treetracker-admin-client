@@ -405,6 +405,7 @@ function CaptureMatchingView() {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
         );
+        log.warn('grower:', data);
         setGrowerAccount(data);
       } else {
         log.warn('No grower account id found');
@@ -920,7 +921,7 @@ function CaptureMatchingView() {
       <GrowerProvider>
         <GrowerDetail
           open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
+          growerId={growerAccount.reference_id}
           onClose={() => setGrowerDetailsOpen(false)}
         />
       </GrowerProvider>
