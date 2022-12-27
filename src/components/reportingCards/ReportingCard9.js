@@ -4,7 +4,7 @@ import useLoadData from './ReportingCardTree.hook';
 import NatureIcon from '@material-ui/icons/Nature';
 
 export default function ReportingCard9(props) {
-  const { startDate, endDate, disableSeeMore, rows } = props;
+  const { startDate, endDate, /*disableSeeMore,*/ rows } = props;
 
   const data = useLoadData(
     startDate,
