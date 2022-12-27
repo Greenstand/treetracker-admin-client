@@ -107,7 +107,7 @@ function Home(props) {
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
             </Grid>
-            {true && (
+            {hasFreetownPermission(appContext.user) && (
               <Grid item xs={5} className={classes.timeBox}>
                 {updateTime && (
                   <Typography variant="body1" className={classes.time}>
@@ -166,7 +166,7 @@ function Home(props) {
               !hasFreetownPermission(appContext.user) && (
                 <DashStatGrowerCount />
               )}
-            {true && (
+            {hasFreetownPermission(appContext.user) && (
               <Grid item xs={12} className={classes.statCardGrid} container>
                 <Grid item xs={4}>
                   <ReportingCard1 startDate={startDate} endDate={endDate} />
