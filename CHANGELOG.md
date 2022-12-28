@@ -1,3 +1,10 @@
+## [1.119.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.0...v1.119.1) (2022-12-28)
+
+
+### Bug Fixes
+
+* filtering for "All" values in Earnings Table filter ([#989](https://github.com/Greenstand/treetracker-admin-client/issues/989)) ([d0f0f81](https://github.com/Greenstand/treetracker-admin-client/commit/d0f0f8130dd362a000d8c23aaeb6e3903babe046))
+
 # [1.119.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.118.0...v1.119.0) (2022-12-19)
 
 
