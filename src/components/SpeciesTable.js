@@ -29,6 +29,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { SpeciesContext } from '../context/SpeciesContext';
 import Menu from './common/Menu';
 import Spinner from './common/Spinner';
+// import * as loglevel from 'loglevel';
+
+// const log = loglevel.getLogger('./SpeciesTable.js');
 
 const styles = (theme) => ({
   speciesTableContainer: {
@@ -388,7 +391,7 @@ const EditModal = ({
   };
 
   const handleSave = async () => {
-    // console.log('speciesEdit -- ', speciesEdit);
+    // log.debug('speciesEdit -- ', speciesEdit);
     const editName = speciesEdit.name.toLowerCase().trim();
     const otherSpeciesList = isEdit
       ? data.filter((species) => Number(species.id) !== speciesEdit.id)

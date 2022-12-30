@@ -17,6 +17,9 @@ import {
 import { ORGANIZATION_NOT_SET } from '../../models/FilterStakeholder';
 import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from 'context/StakeholdersContext';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('./Add.js');
 
 const useStyles = makeStyles({
   root: {
@@ -116,7 +119,7 @@ function AddStakeholder() {
   };
 
   const handleSubmit = () => {
-    console.log('submitted', data);
+    log.debug('submitted', data);
     // valildate data then post request
     const errors = validateData(data);
 

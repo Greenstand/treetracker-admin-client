@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('./Country.js');
 
 export default function Country({ lat, lon }) {
-  console.log('Country:', lat, lon);
+  log.debug('Country:', lat, lon);
   console.count();
 
-  const [content, setContent] = useState(<Skeleton variant="text"/>);
+  const [content, setContent] = useState(<Skeleton variant="text" />);
 
   if (!lat || !lon || lat === 'undefined' || lon === 'undefined') {
     setContent('No data');

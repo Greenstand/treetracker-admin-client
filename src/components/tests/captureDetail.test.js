@@ -48,7 +48,7 @@ describe('captureDetail', () => {
       };
 
       context.getCaptureDetail = jest.fn(() => {
-        console.log('mock getCaptureDetail');
+        log.debug('mock getCaptureDetail');
         return axios.get.mockReturnValueOnce(CAPTURE);
       });
 

@@ -18,6 +18,9 @@ import { StakeholdersContext } from '../../../context/StakeholdersContext';
 import TypeIcon from '@material-ui/icons/Category';
 import WebsiteIcon from '@material-ui/icons/Language';
 import { makeStyles } from '@material-ui/core/styles';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('./Header.js');
 
 const useStyles = makeStyles({
   logoLg: {
@@ -148,7 +151,7 @@ export default function StakeholderDialogHeader({
         updateStakeholder(details);
       }
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
   };
 

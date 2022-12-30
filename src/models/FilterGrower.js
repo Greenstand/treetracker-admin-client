@@ -24,8 +24,8 @@ export default class Filter {
       where.id = this.id;
     }
 
-    if (this.growerAccountUuid) {
-      where.id = this.growerAccountUuid;
+    if (this.grower_account_id) {
+      where.id = this.grower_account_id;
     }
 
     if (this.firstName) {
@@ -36,14 +36,14 @@ export default class Filter {
       where.last_name = this.lastName;
     }
 
-    if (this.organizationId === ORGANIZATION_NOT_SET) {
+    if (this.organization_id === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
-    } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organization_id = this.organizationId;
+    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
+      where.organization_id = this.organization_id;
     }
 
-    if (this.deviceIdentifier) {
-      where.device_identifier = this.deviceIdentifier;
+    if (this.device_identifier) {
+      where.device_identifier = this.device_identifier;
     }
 
     if (this.email) {
@@ -61,7 +61,7 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    if (this.organizationId) {
+    if (this.organization_id) {
       return Object.keys(this.getWhereObj()).length;
     }
   }

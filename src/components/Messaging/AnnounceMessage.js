@@ -13,8 +13,10 @@ import { makeStyles } from '@material-ui/styles';
 import GSInputLabel from 'components/common/InputLabel';
 import { AppContext } from 'context/AppContext';
 import { MessagingContext } from 'context/MessagingContext';
+import * as loglevel from 'loglevel';
 
-const log = require('loglevel');
+const log = loglevel.getLogger('./AnnounceMessage.js');
+
 const DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -197,7 +199,7 @@ const AnnounceMessageForm = ({ setToggleAnnounceMessage }) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      log.error(err);
     }
   };
 

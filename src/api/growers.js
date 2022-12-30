@@ -9,10 +9,9 @@ export default {
     let arr = [];
     for (const key in filterObj) {
       if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${filterObj[key]}`);
+        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
       }
     }
-
     return arr.join('&');
   },
   // query legacy api

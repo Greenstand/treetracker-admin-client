@@ -38,7 +38,7 @@ import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
-export const AppContext = createContext({});
+export const AppContext = createContext({ getOrganizationUUID: () => {} });
 
 function getRoutes(user) {
   return [
