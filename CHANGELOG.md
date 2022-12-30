@@ -1,3 +1,11 @@
+# [1.120.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.1...v1.120.0) (2022-12-30)
+
+
+### Features
+
+* update captures to use treetracker microservice ([f1164f6](https://github.com/Greenstand/treetracker-admin-client/commit/f1164f673fde148357f69e1c718a8367542f8eb9))
+* update filters to use keys that match new apis ([2f9ba61](https://github.com/Greenstand/treetracker-admin-client/commit/2f9ba61b66e841b0241d4401bf6352747065a71a))
+
 ## [1.119.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.0...v1.119.1) (2022-12-28)
 
 
