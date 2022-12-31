@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const pathType = {
+  tree: 'trees',
+  planter: 'planters',
+};
+
 export default function LinkToWebmap(props) {
   const { value, type } = props;
   const classes = useStyles();
@@ -18,7 +23,7 @@ export default function LinkToWebmap(props) {
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
-      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?${type}id=${id}`}
+      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/${type}/${id}`}
       underline="always"
       target="_blank"
     >

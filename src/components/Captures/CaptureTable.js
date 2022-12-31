@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
 import { getDateTimeStringLocale } from '../../common/locale';
-import LinkToWebmap from '../common/LinkToWebmap';
+import LinkToWebmap, { pathType } from '../common/LinkToWebmap';
 import { CapturesContext } from '../../context/CapturesContext';
 import { SpeciesContext } from '../../context/SpeciesContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
@@ -364,7 +364,7 @@ export const formatCell = (
     return (
       <LinkToWebmap
         value={capture[attr]}
-        type={attr === 'reference_id' ? 'tree' : 'user'}
+        type={attr === 'reference_id' ? pathType.tree : pathType.planter}
       />
     );
   } else if (attr === 'species_id') {

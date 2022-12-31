@@ -37,7 +37,7 @@ import { MessagingContext } from 'context/MessagingContext';
 import EditGrower from './EditGrower';
 import GrowerOrganization from './GrowerOrganization';
 import OptimizedImage from './OptimizedImage';
-import LinkToWebmap from './common/LinkToWebmap';
+import LinkToWebmap, { pathType } from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
@@ -414,7 +414,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   {grower.firstName} {grower.lastName}
                 </Typography>
                 <Typography variant="body2">
-                  ID: <LinkToWebmap value={grower.id} type="user" />
+                  ID:{' '}
+                  <LinkToWebmap
+                    value={grower.reference_id || grower.id}
+                    type={pathType.planter}
+                  />
                 </Typography>
               </Grid>
               {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
