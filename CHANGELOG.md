@@ -1,3 +1,10 @@
+## [1.120.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.0...v1.120.1) (2022-12-31)
+
+
+### Bug Fixes
+
+* change web map links ([#973](https://github.com/Greenstand/treetracker-admin-client/issues/973)) ([6494e52](https://github.com/Greenstand/treetracker-admin-client/commit/6494e52e7b64cef5904d172a9153972a0b0f8dbb))
+
 # [1.120.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.1...v1.120.0) (2022-12-30)
 
 
