@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Login from 'components/Login';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../tests/Login.test.js');
 
 describe('Login Page', () => {
   describe('Layout', () => {
@@ -12,7 +15,7 @@ describe('Login Page', () => {
     });
     it('has "Admin Panel" header', () => {
       const { container } = render(<Login />, { wrapper: MemoryRouter });
-      console.log(container.querySelector('div > h2').innerHTML);
+      log.debug(container.querySelector('div > h2').innerHTML);
       const header = screen.queryByRole('heading', { name: 'Admin Panel' });
       expect(header).toBeInTheDocument();
     });

@@ -1,11 +1,10 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { handleError, getOrganization } from '../api/apiUtils';
+import { handleError } from '../api/apiUtils';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../context/CaptureDetailContext');
 
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export const CaptureDetailContext = createContext({
@@ -40,7 +39,6 @@ export function CaptureDetailProvider(props) {
 
   const getCaptureDetail = async (id, page) => {
     const BASE_URL = {
-      LEGACY: `${API_ROOT}/api/${getOrganization()}trees`,
       CAPTURES: `${QUERY_API}/v2/captures`,
       VERIFY: `${QUERY_API}/raw-captures`,
     };

@@ -71,7 +71,7 @@ const ExportCaptures = (props) => {
     return captures.map((capture) => {
       let formatCapture = {};
       Object.keys(selectedColumns).forEach((attr) => {
-        if (['id', 'planterId', 'imageUrl'].includes(attr)) {
+        if (['id', 'grower_account_id', 'imageUrl'].includes(attr)) {
           formatCapture[attr] = capture[attr];
         } else {
           const renderer = selectedColumns[attr].renderer;
@@ -95,7 +95,7 @@ const ExportCaptures = (props) => {
     );
     const selectedColumns = Object.fromEntries(filterColumns);
     let response = await capturesContext.getAllCaptures({ filter });
-    let data = await processDownloadData(response.data, selectedColumns);
+    let data = await processDownloadData(response, selectedColumns);
     setDownloadData(data);
     setLoading(false);
   }

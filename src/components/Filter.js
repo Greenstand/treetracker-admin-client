@@ -21,9 +21,12 @@ import {
   getDateFormatLocale,
   convertDateToDefaultSqlDate,
 } from '../common/locale';
-import { datePickerDefaultMinDate } from '../common/variables';
-import { getVerificationStatus } from '../common/utils';
-import { verificationStates, tokenizationStates } from '../common/variables';
+import {
+  captureStatus,
+  datePickerDefaultMinDate,
+  verificationStates,
+  tokenizationStates,
+} from '../common/variables';
 
 export const FILTER_WIDTH = 330;
 
@@ -57,32 +60,27 @@ function Filter(props) {
   const { classes, filter } = props;
   // console.log('filter', filter);
   const filterOptionAll = 'All';
-  const dateStartDefault = null;
-  const dateEndDefault = null;
+  const startDateDefault = null;
+  const endDateDefault = null;
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
-  const [growerId, setGrowerId] = useState(filter?.planterId || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.deviceIdentifier || ''
-  );
-  const [growerIdentifier, setGrowerIdentifier] = useState(
-    filter?.planterIdentifier || ''
+    filter?.device_identifier || ''
   );
   const [status, setStatus] = useState(filter?.status);
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
-  const [dateStart, setDateStart] = useState(
-    filter?.dateStart || dateStartDefault
+  const [startDate, setStartDate] = useState(
+    filter?.startDate || startDateDefault
   );
-  const [dateEnd, setDateEnd] = useState(filter?.dateEnd || dateEndDefault);
+  const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
-  const handleDateStartChange = (date) => {
-    setDateStart(date);
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
-  const handleDateEndChange = (date) => {
-    setDateEnd(date);
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
   };
 
   const formatDate = (date) => {
@@ -97,14 +95,11 @@ function Filter(props) {
     e.preventDefault();
     const filter = new FilterModel();
     filter.captureId = captureId;
-    filter.wallet = wallet
-    filter.planterId = growerId;
-    filter.deviceIdentifier = deviceIdentifier;
-    filter.planterIdentifier = growerIdentifier;
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
+    filter.wallet = wallet;
+    filter.grower_account_id = growerId;
+    filter.device_identifier = deviceIdentifier;
+    filter.startDate = startDate ? formatDate(startDate) : undefined;
+    filter.endDate = endDate ? formatDate(endDate) : undefined;
     filter.tokenId = tokenId;
     filter.status = status;
     props.onSubmit && props.onSubmit(filter);
@@ -115,11 +110,8 @@ function Filter(props) {
     setWallet('');
     setGrowerId('');
     setDeviceIdentifier('');
-    setGrowerIdentifier('');
-    setDateStart(dateStartDefault);
-    setDateEnd(dateEndDefault);
-    setApproved();
-    setActive();
+    setStartDate(startDateDefault);
+    setEndDate(endDateDefault);
     setTokenId(filterOptionAll);
     setStatus('All');
 
@@ -205,39 +197,27 @@ function Filter(props) {
         value={deviceIdentifier}
         onChange={(e) => setDeviceIdentifier(e.target.value)}
       />
-      <GSInputLabel text="Grower Identifier" />
-      <TextField
-        placeholder="grower identifier"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        value={growerIdentifier}
-        onChange={(e) => setGrowerIdentifier(e.target.value)}
-      />
       <GSInputLabel text="Verification Status" />
       <TextField
         select
         value={
-          active === undefined && approved === undefined
+          status === undefined
             ? filterOptionAll
-            : getVerificationStatus(active, approved)
+            : status === verificationStates.APPROVED
+            ? captureStatus.APPROVED
+            : status === verificationStates.REJECTED
+            ? captureStatus.REJECTED
+            : captureStatus.UNPROCESSED
         }
         onChange={(e) => {
-          setApproved(
+          setStatus(
             e.target.value === filterOptionAll
               ? undefined
-              : e.target.value === verificationStates.AWAITING ||
-                e.target.value === verificationStates.REJECTED
-              ? false
-              : true
-          );
-          setActive(
-            e.target.value === filterOptionAll
-              ? undefined
-              : e.target.value === verificationStates.AWAITING ||
-                e.target.value === verificationStates.APPROVED
-              ? true
-              : false
+              : e.target.value === captureStatus.APPROVED
+              ? verificationStates.APPROVED
+              : e.target.value === captureStatus.REJECTED
+              ? verificationStates.REJECTED
+              : verificationStates.AWAITING
           );
         }}
       >
@@ -280,10 +260,10 @@ function Filter(props) {
             margin="normal"
             id="start-date-picker"
             label="Start Date"
-            value={dateStart}
-            onChange={handleDateStartChange}
+            value={startDate}
+            onChange={handleStartDateChange}
             format={getDateFormatLocale()}
-            maxDate={dateEnd || Date()} // Don't allow selection after today
+            maxDate={endDate || Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
@@ -293,10 +273,10 @@ function Filter(props) {
             margin="normal"
             id="end-date-picker"
             label="End Date"
-            value={dateEnd}
-            onChange={handleDateEndChange}
+            value={endDate}
+            onChange={handleEndDateChange}
             format={getDateFormatLocale()}
-            minDate={dateStart || datePickerDefaultMinDate}
+            minDate={startDate || datePickerDefaultMinDate}
             maxDate={Date()} // Don't allow selection after today
             KeyboardButtonProps={{
               'aria-label': 'change date',

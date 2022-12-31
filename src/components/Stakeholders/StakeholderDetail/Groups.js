@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, List, Typography } from '@material-ui/core';
 import StakeholderList from './List';
 import { StakeholdersContext } from 'context/StakeholdersContext';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('./Groups.js');
 
 const useStyles = makeStyles({
   flex: {
@@ -39,7 +42,7 @@ function StakeholderGroups({ data, render, tall }) {
   };
 
   const onUnlink = (stakeholder, data, type) => {
-    console.log('onUnlink -- ', stakeholder, data, type);
+    log.debug('onUnlink -- ', stakeholder, data, type);
     const stillLinked = data[type].filter((s) => s.id != stakeholder.id);
     const linked = stakeholders.map((s) => {
       if (s.id === data.id) {

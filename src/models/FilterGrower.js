@@ -16,12 +16,16 @@ export default class Filter {
       where.person_id = this.personId;
     }
 
+    if (this.wallet) {
+      where.wallet = this.wallet;
+    }
+
     if (this.id) {
       where.id = this.id;
     }
 
-    if (this.growerAccountUuid) {
-      where.id = this.growerAccountUuid;
+    if (this.grower_account_id) {
+      where.id = this.grower_account_id;
     }
 
     if (this.firstName) {
@@ -32,14 +36,14 @@ export default class Filter {
       where.last_name = this.lastName;
     }
 
-    if (this.organizationId === ORGANIZATION_NOT_SET) {
+    if (this.organization_id === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
-    } else if (this.organizationId !== ALL_ORGANIZATIONS) {
-      where.organization_id = this.organizationId;
+    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
+      where.organization_id = this.organization_id;
     }
 
-    if (this.deviceIdentifier) {
-      where.device_identifier = this.deviceIdentifier;
+    if (this.device_identifier) {
+      where.device_identifier = this.device_identifier;
     }
 
     if (this.email) {
@@ -57,40 +61,8 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    let numFilters = 0;
-
-    if (this.id) {
-      numFilters += 1;
+    if (this.organization_id) {
+      return Object.keys(this.getWhereObj()).length;
     }
-
-    if (this.personId) {
-      numFilters += 1;
-    }
-
-    if (this.deviceIdentifier) {
-      numFilters += 1;
-    }
-
-    if (this.firstName) {
-      numFilters += 1;
-    }
-
-    if (this.lastName) {
-      numFilters += 1;
-    }
-
-    if (this.email) {
-      numFilters += 1;
-    }
-
-    if (this.phone) {
-      numFilters += 1;
-    }
-
-    if (this.organizationId && this.organizationId !== ALL_ORGANIZATIONS) {
-      numFilters += 1;
-    }
-
-    return numFilters;
   }
 }

@@ -19,10 +19,9 @@ export default {
     let arr = [];
     for (const key in filterObj) {
       if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${filterObj[key]}`);
+        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
       }
     }
-
     return arr.join('&');
   },
   /**
@@ -203,6 +202,24 @@ export default {
       handleError(error);
     }
   },
+  getCaptures({ ...params }) {
+    try {
+      let filterObj = { limit: 25, offset: 0, ...params };
+
+      const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
+
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
   getCaptureById(url, id, abortController) {
     try {
       // use field data api for Verify and query api for Captures
@@ -372,12 +389,10 @@ export default {
   /*
    * Tags
    */
-  getTags(abortController) {
+  getTags(orgId, abortController) {
     try {
-      // TODO: order is not allowed as a filter
-      // const filterString = `order=name`;
-      // const query = `${TREETRACKER_API}/tags?${filterString}`;
-      const query = `${TREETRACKER_API}/tags`;
+      const filterString = orgId ? `?owner_id=${orgId}` : '';
+      const query = `${TREETRACKER_API}/tags${filterString}`;
 
       return fetch(query, {
         method: 'GET',

@@ -55,8 +55,9 @@ function FilterTopGrower(props) {
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.deviceIdentifier || ''
+    filter?.device_identifier || ''
   );
 
   function handleSubmit(e) {
@@ -69,7 +70,8 @@ function FilterTopGrower(props) {
       organizationId: stakeholderUUID,
       email: email.trim(),
       phone: phone.trim(),
-      deviceIdentifier,
+      device_identifier: deviceIdentifier.trim(),
+      wallet: wallet.trim(),
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -84,6 +86,7 @@ function FilterTopGrower(props) {
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
+    setWallet('');
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -154,6 +157,16 @@ function FilterTopGrower(props) {
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <TextField
+                className={`${classes.textField} ${classes.filterElement}`}
+                label="Wallet"
+                htmlFor="Wallet"
+                id="Wallet"
+                placeholder="Wallet"
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
               <TextField

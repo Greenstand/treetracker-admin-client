@@ -1,3 +1,32 @@
+# [1.120.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.1...v1.120.0) (2022-12-30)
+
+
+### Features
+
+* update captures to use treetracker microservice ([f1164f6](https://github.com/Greenstand/treetracker-admin-client/commit/f1164f673fde148357f69e1c718a8367542f8eb9))
+* update filters to use keys that match new apis ([2f9ba61](https://github.com/Greenstand/treetracker-admin-client/commit/2f9ba61b66e841b0241d4401bf6352747065a71a))
+
+## [1.119.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.119.0...v1.119.1) (2022-12-28)
+
+
+### Bug Fixes
+
+* filtering for "All" values in Earnings Table filter ([#989](https://github.com/Greenstand/treetracker-admin-client/issues/989)) ([d0f0f81](https://github.com/Greenstand/treetracker-admin-client/commit/d0f0f8130dd362a000d8c23aaeb6e3903babe046))
+
+# [1.119.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.118.0...v1.119.0) (2022-12-19)
+
+
+### Features
+
+* **account:** add About Me input in Edit Grower ([#902](https://github.com/Greenstand/treetracker-admin-client/issues/902)) ([e6863fd](https://github.com/Greenstand/treetracker-admin-client/commit/e6863fd3628917b1b7cdf65ae10dd9e95c0bc0a8))
+
+# [1.118.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.2...v1.118.0) (2022-12-12)
+
+
+### Features
+
+* add wallet filter to growers ([#974](https://github.com/Greenstand/treetracker-admin-client/issues/974)) ([c21cafd](https://github.com/Greenstand/treetracker-admin-client/commit/c21cafdfb26fa9e4806764ca36d675b70e2c9922))
+
 ## [1.117.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.117.1...v1.117.2) (2022-12-07)
 
 

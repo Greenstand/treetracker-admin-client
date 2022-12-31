@@ -38,7 +38,7 @@ import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
-export const AppContext = createContext({});
+export const AppContext = createContext({ getOrganizationUUID: () => {} });
 
 function getRoutes(user) {
   return [
@@ -306,6 +306,13 @@ export const AppProvider = (props) => {
     setOrgList(orgs);
   }
 
+  function getOrganizationUUID() {
+    const orgId = session.user?.policy?.organization?.id || null;
+
+    const foundOrg = orgList.find((org) => org.id === orgId);
+    return foundOrg?.stakeholder_uuid || null;
+  }
+
   async function updateSelectedFilter(filters) {
     setSelectedFilters(filters);
   }
@@ -320,6 +327,7 @@ export const AppProvider = (props) => {
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
+    getOrganizationUUID,
     ...props.value,
   };
 

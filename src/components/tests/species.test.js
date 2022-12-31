@@ -173,7 +173,7 @@ describe('species management', () => {
       //   const items = screen.getAllByTestId('species');
       //   // screen.logTestingPlaygroundURL();
       //   const speciesNames = items.map((el) => el.textContent);
-      //   // console.log('speciesNames', speciesNames);
+      //   // log.debug('speciesNames', speciesNames);
       //   expect(items).toHaveLength(3);
       // });
 

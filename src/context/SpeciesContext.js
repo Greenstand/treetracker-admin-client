@@ -41,7 +41,7 @@ export function SpeciesProvider(props) {
 
   // only used by Species dropdown
   const onChange = async (text) => {
-    console.log('on change:"', text, '"');
+    log.debug('on change:"', text, '"');
     setSpeciesInput(text);
   };
 
