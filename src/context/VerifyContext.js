@@ -281,12 +281,7 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    const pageParams = {
-      page: currentPage,
-      rowsPerPage: pageSize,
-      filter: newfilter,
-    };
-    const result = await api.getRawCaptureCount(pageParams);
+    const result = await api.getRawCaptureCount(newfilter);
     setCaptureCount(Number(result?.count));
     setInvalidateCaptureCount(false);
   };

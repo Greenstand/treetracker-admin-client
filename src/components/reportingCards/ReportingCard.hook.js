@@ -40,7 +40,7 @@ export default function useLoadData(
       },
     });
     const { data } = res;
-    log.warn('load reporting data: ', data);
+    log.debug('load reporting data: ', data);
 
     let top;
     if (rows !== undefined) {

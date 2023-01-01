@@ -9,24 +9,31 @@ import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 
-import apiPlanters from '../api/growers';
+import growersApi from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
-// import * as loglevel from 'loglevel';
-
-// const log = loglevel.getLogger('./DashStat.container.js');
+import { captureStatus } from 'common/variables';
 
 function DashStatTotalCaptures(props) {
-  const activeFilter = new FilterModel({
-    active: true,
+  const unprocessedFilter = new FilterModel({
+    status: captureStatus.UNPROCESSED,
+  });
+  const approvedFilter = new FilterModel({
+    status: captureStatus.APPROVED,
   });
 
   const [total, setTotal] = useState(null);
 
+  // Temporary mid-migration retrofix for legacy dash stats
   const getTotal = async () => {
-    // log.debug('-- dash getTotal');
-    const { count } = await api.getCaptureCount(activeFilter);
-    setTotal(count);
+    const [
+      { count: unprocessedCount },
+      { count: approvedCount },
+    ] = await Promise.all([
+      api.getRawCaptureCount(unprocessedFilter),
+      api.getRawCaptureCount(approvedFilter),
+    ]);
+    setTotal(unprocessedCount + approvedCount);
   };
 
   useEffect(() => {
@@ -46,15 +53,13 @@ function DashStatTotalCaptures(props) {
 
 function DashStatUnprocessedCaptures(props) {
   const unprocessedFilter = new FilterModel({
-    approved: false,
-    active: true,
+    status: captureStatus.UNPROCESSED,
   });
 
   const [totalUnprocessed, setTotalUnprocessed] = useState(null);
 
   const getTotalUnprocessed = async () => {
-    // log.debug('-- dash getTotalUnprocessed');
-    const { count } = await api.getCaptureCount(unprocessedFilter);
+    const { count } = await api.getRawCaptureCount(unprocessedFilter);
     setTotalUnprocessed(count);
   };
 
@@ -74,16 +79,12 @@ function DashStatUnprocessedCaptures(props) {
 }
 
 function DashStatVerifiedCaptures(props) {
-  const verifiedFilter = new FilterModel({
-    approved: true,
-    active: true,
-  });
+  const filter = new FilterModel();
 
   const [totalVerified, setTotalVerified] = useState(null);
 
   const getTotalVerified = async () => {
-    // log.debug('-- dash getTotalVerified');
-    const { count } = await api.getCaptureCount(verifiedFilter);
+    const { count } = await api.getCaptureCount(filter);
     setTotalVerified(count);
   };
 
@@ -108,7 +109,7 @@ function DashStatGrowerCount(props) {
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   const getTotalGrowerCount = async () => {
-    const { count } = await apiPlanters.getCount(growerFilter);
+    const { count } = await growersApi.getCount(growerFilter);
     setTotalGrowerCount(parseInt(count));
   };
 
