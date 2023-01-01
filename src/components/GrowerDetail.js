@@ -253,9 +253,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     const { id, growerAccountUuid } = payload;
     // Look for a match in the context first
     let grower = growers?.find(
-      (p) =>
-        (growerAccountUuid && p.growerAccountUuid === growerAccountUuid) ||
-        p.id === id
+      (p) => (growerAccountUuid && p.id === growerAccountUuid) || p.id === id
     );
 
     if (!grower && !id) {
@@ -588,6 +586,13 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     </tbody>
                   </table>
                 )) || <Typography variant="body1">---</Typography>}
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">Wallet</Typography>
+                <Typography variant="body1">
+                  {grower?.wallet ? grower.wallet : '---'}
+                </Typography>
               </Grid>
             </Grid>
           )}
