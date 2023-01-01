@@ -470,7 +470,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                         <ListItemText
                           primary={
                             <Typography variant="h5">
-                              {verificationStatus.awaiting || 0}
+                              {verificationStatus.unprocessed || 0}
                             </Typography>
                           }
                           secondary="Awaiting"
