@@ -1,3 +1,10 @@
+## [1.120.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.1...v1.120.2) (2023-01-01)
+
+
+### Bug Fixes
+
+* used the correct property for verification status ([#996](https://github.com/Greenstand/treetracker-admin-client/issues/996)) ([120e50a](https://github.com/Greenstand/treetracker-admin-client/commit/120e50a01f3bb86082b4c5d1ddd37726cf47d2d4))
+
 ## [1.120.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.0...v1.120.1) (2022-12-31)
 
 
