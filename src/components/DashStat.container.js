@@ -18,9 +18,7 @@ function DashStatTotalCaptures(props) {
   const unprocessedFilter = new FilterModel({
     status: captureStatus.UNPROCESSED,
   });
-  const approvedFilter = new FilterModel({
-    status: captureStatus.APPROVED,
-  });
+  const approvedFilter = new FilterModel();
 
   const [total, setTotal] = useState(null);
 
@@ -31,7 +29,7 @@ function DashStatTotalCaptures(props) {
       { count: approvedCount },
     ] = await Promise.all([
       api.getRawCaptureCount(unprocessedFilter),
-      api.getRawCaptureCount(approvedFilter),
+      api.getCaptureCount(approvedFilter),
     ]);
     setTotal(unprocessedCount + approvedCount);
   };
