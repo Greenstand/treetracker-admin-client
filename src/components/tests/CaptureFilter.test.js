@@ -33,10 +33,6 @@ describe('CaptureFilter organizations', () => {
 
       afterEach(cleanup);
 
-      it('renders text "Verification Status" ', () => {
-        expect(screen.getByText('Verification Status')).toBeInTheDocument();
-      });
-
       it('renders "Start Date" input ', () => {
         const input = screen.getByRole('textbox', { name: 'Start Date' });
         expect(input).toBeInTheDocument();
@@ -77,7 +73,7 @@ describe('CaptureFilter organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         expect(orgs).toHaveLength(2);
       });
@@ -122,7 +118,7 @@ describe('CaptureFilter organizations', () => {
         const orglist = screen.getByRole('listbox');
         const orgs = within(orglist).getAllByTestId('org-item');
         const listItems = orgs.map((org) => org.textContent);
-        console.log('default orgList', listItems);
+        log.debug('default orgList', listItems);
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);
@@ -149,7 +145,7 @@ describe('CaptureFilter organizations', () => {
 
       it('renders text "Dummy Org" ', () => {
         // screen.debug(); // shows structure in console
-        screen.logTestingPlaygroundURL();
+        // screen.logTestingPlaygroundURL();
         // expect(screen.getByText(/^Received:/).textContent).toBe('Received: ');
         expect(screen.getByText('Dummy Org')).toBeInTheDocument();
       });

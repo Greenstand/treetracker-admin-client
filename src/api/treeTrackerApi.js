@@ -19,10 +19,9 @@ export default {
     let arr = [];
     for (const key in filterObj) {
       if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${filterObj[key]}`);
+        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
       }
     }
-
     return arr.join('&');
   },
   /**
@@ -196,6 +195,24 @@ export default {
 
       return fetch(query, {
         headers: {
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  getCaptures({ ...params }) {
+    try {
+      let filterObj = { limit: 25, offset: 0, ...params };
+
+      const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
+
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
           Authorization: session.token,
         },
       }).then(handleResponse);

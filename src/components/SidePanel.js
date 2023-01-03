@@ -19,6 +19,9 @@ import Species from './Species';
 import CaptureTags from './CaptureTags';
 import { VerifyContext } from 'context/VerifyContext';
 import { getDistance } from 'geolib';
+// import * as loglevel from 'loglevel';
+
+// const log = loglevel.getLogger('./SidePanel.js');
 
 const SIDE_PANEL_WIDTH = 315;
 const CAP_APP_TAG = [
@@ -84,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SidePanel(props) {
-  // console.log('render: sidepanel');
+  // log.debug('render: sidepanel');
   const classes = useStyles(props);
   const verifyContext = useContext(VerifyContext);
   const captureSelected = verifyContext.getCaptureSelectedArr();

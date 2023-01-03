@@ -40,6 +40,9 @@ import { AppContext } from '../context/AppContext';
 import { getOrganizationUUID } from '../api/apiUtils';
 import Menu from './common/Menu';
 import Spinner from './common/Spinner';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('./Regions.js');
 
 const styles = (theme) => ({
   regionsTableContainer: {
@@ -227,7 +230,7 @@ const RegionTable = (props) => {
 
   const handleDownload = async (item) => {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/${item.shape}`;
-    console.log('item', item);
+    log.debug('item', item);
     const result = await fetch(query, {
       method: 'GET',
       headers: {

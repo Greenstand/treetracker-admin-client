@@ -57,7 +57,7 @@ function FilterTopGrower(props) {
   const [phone, setPhone] = useState(filter?.phone || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
-    filter?.deviceIdentifier || ''
+    filter?.device_identifier || ''
   );
 
   function handleSubmit(e) {
@@ -70,7 +70,7 @@ function FilterTopGrower(props) {
       organizationId: stakeholderUUID,
       email: email.trim(),
       phone: phone.trim(),
-      deviceIdentifier,
+      device_identifier: deviceIdentifier.trim(),
       wallet: wallet.trim(),
     });
     props.onSubmit && props.onSubmit(filter);

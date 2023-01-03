@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import OptimizedImage from './OptimizedImage';
-import LinkToWebmap from './common/LinkToWebmap';
+import LinkToWebmap, { pathType } from './common/LinkToWebmap';
 import { verificationStates } from '../common/variables';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import CopyNotification from './common/CopyNotification';
@@ -27,6 +27,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
 import theme from './common/theme';
+import { captureStatus } from '../common/variables';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -100,8 +101,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CaptureDetailDialog(props) {
-  const { open, captureId, onClose, page } = props;
+function CaptureDetailDialog({ open, captureId, onClose, page }) {
   const cdContext = useContext(CaptureDetailContext);
   const appContext = useContext(AppContext);
   const hasApproveTreePermission = hasPermission(appContext.user, [
@@ -133,33 +133,7 @@ function CaptureDetailDialog(props) {
     const current = cdContext.capture;
     if (current) {
       // map the keys from legacy to new api keys
-      setRenderCapture({
-        status:
-          current.status ||
-          (current.active && current.approved
-            ? 'approved'
-            : current.active && !current.approved
-            ? 'pending'
-            : 'rejected'),
-        id: current.id || current.uuid,
-        reference_id: current.reference_id || current.id,
-        grower_account_id: current.grower_account_id || current.planterId,
-        wallet: current.wallet || current.planterIdentifier,
-        device_identifier:
-          current.device_identifier || current.deviceIdentifier,
-        image_url: current.image_url || current.imageUrl,
-        lat: current.lat || current.latitude,
-        lon: current.lon || current.longitude,
-        age: current.age,
-        captureApprovalTag: current.captureApprovalTag || null,
-        morphology: current.morphology || null,
-        note: current.note,
-        rejectionReason: current.rejectionReason || null,
-        species_id: current.species_id || current.speciesId,
-        token_id: current.token_id || current.tokenId,
-        created_at: current.created_at || current.timeCreated,
-        updated_at: current.updated_at || current.timeUpdated,
-      });
+      setRenderCapture({ ...current });
     }
     if (isLoading) {
       setIsLoading(false);
@@ -203,7 +177,6 @@ function CaptureDetailDialog(props) {
       capture.captureApprovalTag,
       capture.rejectionReason,
       ...captureTags,
-      // ...captureTags.map((t) => t.name),
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
@@ -225,7 +198,8 @@ function CaptureDetailDialog(props) {
             <Grid item>
               <Box m={4}>
                 <Typography color="primary" variant="h6">
-                  Capture <LinkToWebmap value={capture} type="tree" />
+                  Capture{' '}
+                  <LinkToWebmap value={capture} type={pathType.tree} />
                   <CopyButton
                     label="Capture ID"
                     value={capture.reference_id}
@@ -285,7 +259,7 @@ function CaptureDetailDialog(props) {
                       Open in new tab
                     </Link>
                   ) : (
-                    <LinkToWebmap value={item.value} type="user" />
+                    <LinkToWebmap value={item.value} type={pathType.planter} />
                   )
                 ) : item.value ? (
                   item.value
@@ -320,12 +294,14 @@ function CaptureDetailDialog(props) {
           <Typography className={classes.subtitle}>
             Verification Status
           </Typography>
-          {capture.status === 'unprocessed' ? (
+          {capture.status === captureStatus.UNPROCESSED ? (
             <Chip
               label={verificationStates.AWAITING}
               className={classes.awaitingChip}
             />
-          ) : capture.status === 'approved' ? (
+          ) : // Verify will have status of 'approved', Captures and CaptureMatch will have status of 'active' because all captures are approved
+          capture.status === captureStatus.APPROVED ||
+            capture.status === 'active' ? (
             <Chip
               label={verificationStates.APPROVED}
               className={classes.approvedChip}

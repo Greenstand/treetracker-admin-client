@@ -36,6 +36,7 @@ import { VerifyContext } from 'context/VerifyContext';
 import { SpeciesContext } from 'context/SpeciesContext';
 import { TagsContext } from 'context/TagsContext';
 import { CaptureDetailProvider } from 'context/CaptureDetailContext';
+import { pathType } from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
@@ -288,14 +289,14 @@ const Verify = (props) => {
   const handleCapturePinClick = (captureId) => (e) => {
     e.stopPropagation();
     log.debug('click on capture pin:', captureId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/${pathType.tree}/${captureId}`;
     window.open(url, '_blank').opener = null;
   };
 
   const handleGrowerMapClick = (growerId) => (e) => {
     e.stopPropagation();
     log.debug('click on grower:', growerId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/${pathType.planter}/${growerId}`;
     window.open(url, '_blank').opener = null;
   };
 
