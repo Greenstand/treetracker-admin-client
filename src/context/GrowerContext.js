@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect, createContext } from 'react';
 import { AppContext } from './AppContext.js';
-import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
+import FilterGrower from 'models/FilterGrower';
 import api from 'api/growers';
+import { setOrganizationFilter } from '../common/utils';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('context/GrowerContext');
@@ -64,28 +65,20 @@ export function GrowerProvider(props) {
     setIsLoading(true);
     const pageNumber = currentPage;
 
-    if (!filter.organizationId && orgId === null) {
-      filter.organizationId = null;
-    } else if (
-      //handle organization_id query to query all uuids for logged in org by default
-      filter.organizationId === ALL_ORGANIZATIONS ||
-      (!filter.organizationId && orgId)
-    ) {
-      // prevent it from being assigned an empty array
-      if (orgList.length && orgId !== null) {
-        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
-      } else {
-        filter.organizationId = orgId;
-      }
-    }
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
 
-    // log.debug('load growers', filter);
+    log.debug('load growers');
 
     const { total, grower_accounts } = await api.getGrowers(
       {
         skip: pageNumber * pageSize,
         rowsPerPage: pageSize,
-        filter,
+        filter: new FilterGrower(finalFilter),
       },
       abortController
     );
@@ -95,24 +88,18 @@ export function GrowerProvider(props) {
   };
 
   const getCount = async () => {
-    if (!filter.organizationId && orgId === null) {
-      filter.organizationId = null;
-    } else if (
-      //handle organization_id query to query all uuids for logged in org by default
-      filter.organizationId === ALL_ORGANIZATIONS ||
-      (!filter.organizationId && orgId)
-    ) {
-      // prevent it from being assigned an empty array
-      if (orgList.length && orgId !== null) {
-        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
-      } else {
-        filter.organizationId = orgId;
-      }
-    }
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
 
     log.debug('load grower count', filter);
 
-    const { count } = await api.getCount({ filter });
+    const { count } = await api.getCount({
+      filter: new FilterGrower(finalFilter),
+    });
     setCount(Number(count));
   };
 

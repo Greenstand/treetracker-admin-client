@@ -64,12 +64,13 @@ function FilterTopGrower(props) {
       id,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      organizationId,
+      organization_id: organizationId,
       email: email.trim(),
       phone: phone.trim(),
       device_identifier: deviceIdentifier.trim(),
       wallet: wallet.trim(),
     });
+    console.log('FG -- filter', filter);
     props.onSubmit && props.onSubmit(filter);
   }
 

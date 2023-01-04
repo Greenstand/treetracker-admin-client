@@ -1,20 +1,24 @@
 import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
+import log from 'loglevel';
 
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export default {
   makeQueryString(filterObj) {
+    log.debug('makeQueryString 1 ----->', filterObj);
     let arr = [];
     for (const key in filterObj) {
-      if (
-        (filterObj[key] || filterObj[key] === 0 || filterObj[key] === null) &&
-        filterObj[key] !== ''
-      ) {
-        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
+      if (filterObj[key] !== undefined && filterObj[key] !== '') {
+        const value =
+          typeof filterObj[key] !== 'string'
+            ? JSON.stringify(filterObj[key])
+            : filterObj[key];
+        arr.push(`${key}=${encodeURIComponent(value)}`);
       }
     }
+    log.debug('makeQueryString 2 ----->', arr);
     return arr.join('&');
   },
   // query legacy api
@@ -42,6 +46,7 @@ export default {
         limit: rowsPerPage,
         offset: skip,
       };
+      // console.log('getGrowers', filter, where, growerFilter);
 
       const query = `${QUERY_API}/grower-accounts?${this.makeQueryString(
         growerFilter

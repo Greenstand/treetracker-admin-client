@@ -48,6 +48,7 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
       id="organization"
       label="Organization"
       name="organization"
+      // orgId could be either a uuid string or an array of uuids
       value={Array.isArray(orgId) ? ALL_ORGANIZATIONS : orgId}
       onChange={handleChange}
     >

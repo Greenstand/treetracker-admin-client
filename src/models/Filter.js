@@ -79,10 +79,14 @@ export default class Filter {
       where.tag_id = this.tagId;
     }
 
-    if (this.organization_id === ORGANIZATION_NOT_SET) {
+    if (
+      this.organization_id === ORGANIZATION_NOT_SET ||
+      (Array.isArray(this.organization_id) &&
+        this.organization_id[0] === ORGANIZATION_NOT_SET)
+    ) {
       where.organization_id = null;
     } else {
-      where.organization_id = this.organizationId;
+      where.organization_id = this.organization_id;
     }
 
     if (this.status) {
@@ -105,27 +109,29 @@ export default class Filter {
 
     // can remove above once everything is updated to ms apis
 
-    if (this.grower_account_id) {
-      const planterIds = this.grower_account_id
-        .split(',')
-        .map((item) => item.trim());
+    // if (this.grower_account_id) {
+    //   const planterIds = this.grower_account_id
+    //     .split(',')
+    //     .map((item) => item.trim());
 
-      if (planterIds.length === 1) {
-        restFilter.grower_account_id = this.grower_account_id;
-      } else {
-        if (!orCondition) {
-          orCondition = true;
-          where = [];
-        }
-        planterIds.forEach((grower_account_id) => {
-          if (grower_account_id) {
-            where.push({
-              grower_account_id: grower_account_id,
-            });
-          }
-        });
-      }
-    }
+    //   if (planterIds.length === 1) {
+    //     restFilter.grower_account_id = this.grower_account_id;
+    //   } else {
+    //     if (!orCondition) {
+    //       orCondition = true;
+    //       where = [];
+    //     }
+    //     planterIds.forEach((grower_account_id) => {
+    //       if (grower_account_id) {
+    //         where.push({
+    //           grower_account_id: grower_account_id,
+    //         });
+    //       }
+    //     });
+    //   }
+    // }
+
+    console.log('FILTER -----------', restFilter, where);
 
     return orCondition
       ? { ...restFilter, or: where }
@@ -189,7 +195,7 @@ export default class Filter {
     }
 
     // if there's an organization id and it's not an array of all ids
-    if (this.organizationId && !this.organizationId.length) {
+    if (this.organizationId && !(this.organizationId.split(',').length > 1)) {
       numFilters += 1;
     }
 
@@ -197,13 +203,15 @@ export default class Filter {
       numFilters += 1;
     }
 
-    // if (this.tokenId && this.tokenId !== 'All') {
-    //   numFilters += 1;
-    // }
+    if (this.tokenId && this.tokenId !== 'All') {
+      numFilters += 1;
+    }
 
     if (this.grower_account_id) {
       numFilters += 1;
     }
+
+    // console.log('Count Filters ------------------', this.length, numFilters);
 
     return numFilters;
   }

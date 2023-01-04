@@ -72,7 +72,7 @@ const styles = (theme) => {
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const { classes, filter = new FilterModel() } = props;
+  const { classes, filter } = props;
   const filterOptionAll = 'All';
   const startDateDefault = null;
   const endDateDefault = null;
@@ -88,12 +88,7 @@ function Filter(props) {
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
-  const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS
-  );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
-  );
+  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {
@@ -111,19 +106,23 @@ function Filter(props) {
   function handleSubmit(e) {
     e.preventDefault();
     // save the filer to context for editing & submit
-    const filter = new FilterModel();
-    filter.uuid = uuid;
-    filter.captureId = captureId;
-    filter.grower_account_id = growerId;
-    filter.device_identifier = deviceId;
-    filter.wallet = wallet;
-    filter.startDate = startDate ? formatDate(startDate) : undefined;
-    filter.endDate = endDate ? formatDate(endDate) : undefined;
-    filter.species_id = speciesId;
-    filter.tagId = tag ? tag.id : 0;
-    filter.organization_id = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
-    filter.tokenId = tokenId;
+    const test = {
+      uuid: uuid.trim(),
+      captureId: captureId.trim(),
+      grower_account_id: growerId.trim(),
+      device_identifier: deviceId.trim(),
+      wallet: wallet.trim(),
+      startDate: startDate ? formatDate(startDate) : undefined,
+      endDate: endDate ? formatDate(endDate) : undefined,
+      species_id: speciesId,
+      tagId: tag ? tag.id : 0,
+      organization_id: organizationId,
+      tokenId: tokenId.trim(),
+    };
+    console.log('CF -- test', test);
+    const filter = new FilterModel(test);
+
+    console.log('CF -- filter', organizationId, filter);
 
     props.onSubmit && props.onSubmit(filter);
   }
@@ -141,7 +140,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);

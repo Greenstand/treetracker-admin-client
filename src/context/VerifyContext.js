@@ -4,7 +4,7 @@ import FilterModel from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
 import { AppContext } from './AppContext.js';
-import { ALL_ORGANIZATIONS } from 'models/Filter';
+import { setOrganizationFilter } from '../common/utils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -144,25 +144,17 @@ export function VerifyProvider(props) {
     //set loading status
     setIsLoading(true);
 
-    if (!filter.organizationId && orgId === null) {
-      filter.organizationId = null;
-    } else if (
-      //handle organization_id query to query all uuids for logged in org by default
-      filter.organizationId === ALL_ORGANIZATIONS ||
-      (!filter.organizationId && orgId)
-    ) {
-      // prevent it from being assigned an empty array
-      if (orgList.length && orgId !== null) {
-        filter.organizationId = orgList.map((org) => org.stakeholder_uuid);
-      } else {
-        filter.organizationId = orgId;
-      }
-    }
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
 
     const pageParams = {
       page: currentPage,
       rowsPerPage: pageSize,
-      filter,
+      filter: new FilterModel(finalFilter),
     };
 
     const result = await api.getRawCaptures(pageParams, abortController);
@@ -302,7 +294,20 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    const result = await api.getRawCaptureCount(newfilter);
+    log.debug('getCaptureCount');
+
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      newfilter.getWhereObj(),
+      orgId,
+      orgList
+    );
+    const pageParams = {
+      page: currentPage,
+      rowsPerPage: pageSize,
+      filter: new FilterModel(finalFilter),
+    };
+    const result = await api.getRawCaptureCount(pageParams);
     setCaptureCount(Number(result?.count));
     setInvalidateCaptureCount(false);
   };

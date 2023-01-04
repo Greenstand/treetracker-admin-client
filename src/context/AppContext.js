@@ -36,6 +36,7 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
+import log from 'loglevel';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({ getOrganizationUUID: () => {} });
@@ -316,7 +317,7 @@ export const AppProvider = (props) => {
   function getOrganizationUUID() {
     const orgId = session.user?.policy?.organization?.id || null;
     const foundOrg = orgList.find((org) => org.id === orgId);
-    console.log(
+    log.debug(
       'getOrganizationUUID',
       orgId,
       foundOrg?.stakeholder_uuid,

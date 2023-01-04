@@ -1,7 +1,9 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useContext, useState, useEffect, createContext } from 'react';
 import FilterModel from '../models/Filter';
 import api from '../api/treeTrackerApi';
 import { captureStatus } from '../common/variables';
+import { AppContext } from './AppContext.js';
+import { setOrganizationFilter } from '../common/utils';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
@@ -28,6 +30,7 @@ export const CapturesContext = createContext({
 });
 
 export function CapturesProvider(props) {
+  const { orgId, orgList } = useContext(AppContext);
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
   const [capture, setCapture] = useState({});
@@ -36,11 +39,7 @@ export function CapturesProvider(props) {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('created_at');
   const [isLoading, setIsLoading] = useState(false);
-  const [filter, setFilter] = useState(
-    new FilterModel({
-      status: captureStatus.APPROVED,
-    })
-  );
+  const [filter, setFilter] = useState(new FilterModel());
 
   useEffect(() => {
     getCaptures();
@@ -49,8 +48,11 @@ export function CapturesProvider(props) {
   const getCaptures = async () => {
     log.debug('4 - load captures');
 
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(filter, orgId, orgList);
+
     const filterData = {
-      ...filter.getWhereObj(),
+      filter: new FilterModel(finalFilter),
       order_by: orderBy,
       order,
       limit: rowsPerPage,
@@ -72,8 +74,15 @@ export function CapturesProvider(props) {
   // GET CAPTURES FOR EXPORT
   const getAllCaptures = async () => {
     log.debug('load all captures for export');
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
+
     const filterData = {
-      ...filter.getWhereObj(),
+      filter: new FilterModel(finalFilter),
       order: [`${orderBy} ${order}`],
       limit: 20000,
     };

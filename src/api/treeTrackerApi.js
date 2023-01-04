@@ -16,15 +16,18 @@ const STATUS_STATES = {
 
 export default {
   makeQueryString(filterObj) {
+    log.debug('makeQueryString 1 ----->', filterObj);
     let arr = [];
     for (const key in filterObj) {
-      if (
-        (filterObj[key] || filterObj[key] === 0 || filterObj[key] === null) &&
-        filterObj[key] !== ''
-      ) {
-        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
+      if (filterObj[key] !== undefined && filterObj[key] !== '') {
+        const value =
+          typeof filterObj[key] !== 'string'
+            ? JSON.stringify(filterObj[key])
+            : filterObj[key];
+        arr.push(`${key}=${encodeURIComponent(value)}`);
       }
     }
+    log.debug('makeQueryString 2 ----->', arr);
     return arr.join('&');
   },
   /**
@@ -143,10 +146,14 @@ export default {
   /**
    * Captures
    */
-  getCaptures({ ...params }) {
+
+  getCaptures({ limit = 25, offset = 0, order, filter = {} }) {
     try {
+      const where = filter.getWhereObj ? filter.getWhereObj() : {};
+      let filterObj = { ...where, limit, offset, order };
+
       const query = `${QUERY_API}/v2/captures${
-        params ? `?${this.makeQueryString(params)}` : ''
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {

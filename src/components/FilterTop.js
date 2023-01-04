@@ -25,6 +25,7 @@ import {
   verificationStates,
   captureStatus,
   datePickerDefaultMinDate,
+  // tokenizationStates,
 } from '../common/variables';
 
 // import { SpeciesContext } from '../context/SpeciesContext';
@@ -122,7 +123,7 @@ function Filter(props) {
     filter.status = status;
     filter.species_id = speciesId;
     filter.tagId = tag ? tag.id : 0;
-    filter.organizationId = organizationId;
+    filter.organization_id = organizationId;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }

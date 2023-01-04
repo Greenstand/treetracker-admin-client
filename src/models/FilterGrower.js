@@ -38,7 +38,7 @@ export default class Filter {
 
     if (this.organization_id === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
-    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
+    } else {
       where.organization_id = this.organization_id;
     }
 
@@ -54,6 +54,8 @@ export default class Filter {
       where.phone = this.phone;
     }
 
+    console.log('FILTER GROWER', where);
+
     return where;
   }
 
@@ -61,8 +63,61 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    if (this.organization_id) {
-      return Object.keys(this.getWhereObj()).length;
+    let numFilters = 0;
+
+    if (this.personId) {
+      numFilters += 1;
     }
+
+    if (this.wallet) {
+      numFilters += 1;
+    }
+
+    if (this.id) {
+      numFilters += 1;
+    }
+
+    if (this.grower_account_id) {
+      numFilters += 1;
+    }
+
+    if (this.firstName) {
+      numFilters += 1;
+    }
+
+    if (this.lastName) {
+      numFilters += 1;
+    }
+
+    console.log('FilterGrower -----------', this.organizationId);
+    // if there's an organization id and it's not an array of all ids
+    if (this.organizationId && !(this.organizationId.split(',').length > 1)) {
+      numFilters += 1;
+    }
+
+    if (this.device_identifier) {
+      numFilters += 1;
+    }
+
+    if (this.email) {
+      numFilters += 1;
+    }
+
+    if (this.phone) {
+      numFilters += 1;
+    }
+
+    // console.log(
+    //   'Count Filters ------------------',
+    //   this.getWhereObj(),
+    //   Object.keys(this.getWhereObj()).length,
+    //   numFilters
+    // );
+
+    // if (this.organizationId) {
+    //   return Object.keys(this.getWhereObj()).length;
+    // }
+
+    return numFilters;
   }
 }
