@@ -41,7 +41,6 @@ import LinkToWebmap, { pathType } from './common/LinkToWebmap';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import FilterModel from '../models/Filter';
-import FilterGrower from '../models/FilterGrower';
 import treeTrackerApi from 'api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 
@@ -186,18 +185,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         setGrower({});
         setDeviceIdentifiers([]);
         setIsImageLoading(true);
-        let match;
-        if (isNaN(Number(growerId))) {
-          match = await getGrower({
-            id: undefined,
-            growerAccountUuid: growerId,
-          });
-        } else {
-          match = await getGrower({
-            id: growerId,
-            growerAccountUuid: undefined,
-          });
-        }
+        const match = await getGrower(growerId);
 
         if (match.error) {
           setErrorMessage(match.message);
@@ -249,28 +237,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     return countResponse && countResponse.count ? countResponse.count : 0;
   }
 
-  async function getGrower(payload) {
-    const { id, growerAccountUuid } = payload;
+  async function getGrower(id) {
     // Look for a match in the context first
-    let grower = growers?.find(
-      (p) =>
-        (growerAccountUuid && p.growerAccountUuid === growerAccountUuid) ||
-        p.id === id
-    );
+    let grower = growers?.find((p) => p.id === id);
 
-    if (!grower && !id) {
-      // query microservice
-      const filter = new FilterGrower();
-      filter.growerAccountUuid = growerAccountUuid;
-      const { grower_accounts } = await api.getGrowers({ filter });
-      // only assign to grower if it finds one match
-      if (grower_accounts.length === 1) {
-        grower = grower_accounts[0];
-      }
-    }
-
-    if (!grower && growerAccountUuid) {
-      grower = await api.getGrower(growerAccountUuid);
+    if (!grower && id) {
+      grower = await api.getGrower(id);
     }
     // throw error if no match at all
     return (
