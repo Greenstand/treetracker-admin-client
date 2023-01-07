@@ -1,4 +1,4 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import { handleResponse, handleError } from './apiUtils';
 import { session } from '../models/auth';
 
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
@@ -17,9 +17,6 @@ export default {
   // query legacy api
   getGrower(id) {
     try {
-      // const growerQuery = `${
-      //   process.env.REACT_APP_API_ROOT
-      // }/api/${getOrganization()}planter/${id}`;
       const growerQuery = `${QUERY_API}/grower-accounts/${id}`;
 
       return fetch(growerQuery, {
