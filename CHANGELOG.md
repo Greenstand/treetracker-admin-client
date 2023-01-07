@@ -1,3 +1,10 @@
+## [1.120.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.2...v1.120.3) (2023-01-07)
+
+
+### Bug Fixes
+
+* passing correct growerId to GrowerDetail ([#999](https://github.com/Greenstand/treetracker-admin-client/issues/999)) ([52ecb94](https://github.com/Greenstand/treetracker-admin-client/commit/52ecb949e3fc34c72385fbec1e8b34f945a7978e))
+
 ## [1.120.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.1...v1.120.2) (2023-01-01)
 
 
