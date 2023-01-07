@@ -9,6 +9,7 @@ on:
 
 env:
   project-directory: ./
+  node-version: '18'
 
 jobs:
   client:
@@ -20,10 +21,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.tag }}
-      - name: Use Node.js 16.14.x
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '16.14.x'
+          node-version: ${{ env.node-version }}
       - name: npm clean install
         run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}

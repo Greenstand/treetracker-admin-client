@@ -7,6 +7,7 @@ This is the React web frontend of the Admin Panel, built with [create-react-app]
 The legacy Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api). The API specification is (partially) documented in OpenAPI format: [treetracker-admin.v1.yaml](https://github.com/Greenstand/treetracker-admin-api/blob/master/docs/api/spec/treetracker-admin.v1.yaml)
 
 The Admin Panel project is in the process of migrating away from a single, dedicated API to use the latest Greenstand microservices, including:
+
 - [Greenstand/treetracker-api](https://github.com/Greenstand/treetracker-api)
 - [Greenstand/treetracker-earnings-api](https://github.com/Greenstand/treetracker-earnings-api)
 - [Greenstand/treetracker-field-data](https://github.com/Greenstand/treetracker-field-data)
@@ -38,17 +39,14 @@ See https://git-scm.com/downloads for instructions.
 
 ### Step 2: Install Node.js
 
-_Node.js version 16.x works best for now; later versions have exhibited some strange behaviour with this project.
-If you encounter issues with the server, check your version of Node.js first. This includes CORS related issues when fetching the API._
-
 We recommend using [nvm](https://github.com/nvm-sh/nvm) to install and manage your Node.js instances. More details here: https://www.sitepoint.com/quick-tip-multiple-versions-node-nvm/
 
 1. Make sure a profile exists for your terminal, run `touch ~/.profile; touch ~/.zshrc`
 2. Install nvm: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash`
-3. Install the latest version of Node.js 16: `nvm install 16`
-4. Use the installed Node.js: `nvm use 16`
+3. Install the latest version of Node.js 18: `nvm install 18`
+4. Use the installed Node.js: `nvm use 18`
 
-Alternatively, you can install Node.js directly from https://nodejs.org/dist/latest-v16.x/
+Alternatively, you can install Node.js directly from https://nodejs.org/dist/latest-v18.x/
 
 _On MacOS, you can alleviate the need to run as sudo by using nvm or by [following John Papa's instructions](http://jpapa.me/nomoresudo)._
 
@@ -100,7 +98,7 @@ Valid login credentials for the Admin Panel within the development environment c
 ## Getting an Issue Assigned
 
 1. Look through the [open issues](https://github.com/Greenstand/treetracker-admin-client/issues) for one that looks interesting.
-Use labels to look for [good first issues](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), or to filter by size: you could start [small](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+small%22), or get your teeth into something more substantial ([medium](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+medium%22) or [large](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+large%22)).
+   Use labels to look for [good first issues](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), or to filter by size: you could start [small](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+small%22), or get your teeth into something more substantial ([medium](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+medium%22) or [large](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+large%22)).
 2. If you're not sure what to work on, ask in the #admin_panel_chat channel on Slack and we'll find a good issue for you.
 3. Add a comment to the selected issue to say you'd like to work on it, and ask for any clarification you need. Some of the info you need to solve the problem may be missing from the description of the issue.
 4. One of the Greenstand leads will then assign it to you and try to help with any questions.

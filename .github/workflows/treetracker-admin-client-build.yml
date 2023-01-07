@@ -10,6 +10,7 @@ on:
 
 env:
   project-directory: ./
+  node-version: '18'
 
 jobs:
   client:
@@ -19,10 +20,10 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci')
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 16.14.x
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '16.14.x'
+          node-version: ${{ env.node-version }}
       - name: npm clean install
         run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}
@@ -60,7 +61,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '16.14.x'
+          node-version: ${{ env.node-version }}
       # install dependencies and run semantic-release
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
       - run: semantic-release
