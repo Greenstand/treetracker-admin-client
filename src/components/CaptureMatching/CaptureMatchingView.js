@@ -331,7 +331,7 @@ function CaptureMatchingView() {
       }
     }
   }
-
+  console.log('GROWERACCOUNT', growerAccount);
   useEffect(() => {
     document.title = `Capture Matching - ${documentTitle}`;
   }, []);
@@ -853,7 +853,7 @@ function CaptureMatchingView() {
       <GrowerProvider>
         <GrowerDetail
           open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
+          growerId={growerAccount.id}
           onClose={() => setGrowerDetailsOpen(false)}
         />
       </GrowerProvider>

@@ -17,9 +17,10 @@ export default {
   // query legacy api
   getGrower(id) {
     try {
-      const growerQuery = `${
-        process.env.REACT_APP_API_ROOT
-      }/api/${getOrganization()}planter/${id}`;
+      // const growerQuery = `${
+      //   process.env.REACT_APP_API_ROOT
+      // }/api/${getOrganization()}planter/${id}`;
+      const growerQuery = `${QUERY_API}/grower-accounts/${id}`;
 
       return fetch(growerQuery, {
         method: 'GET',

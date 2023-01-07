@@ -269,8 +269,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
       }
     }
 
+    if (!grower && growerAccountUuid) {
+      grower = await api.getGrower(growerAccountUuid);
+    }
+
     if (!grower && !growerAccountUuid) {
-      // query legacy api
+      //   // query legacy api
       grower = await api.getGrower(id);
     }
     // throw error if no match at all
