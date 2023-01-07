@@ -331,7 +331,6 @@ function CaptureMatchingView() {
       }
     }
   }
-  console.log('GROWERACCOUNT', growerAccount);
   useEffect(() => {
     document.title = `Capture Matching - ${documentTitle}`;
   }, []);
