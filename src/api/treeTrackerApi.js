@@ -454,7 +454,7 @@ export default {
       handleError(error);
     }
   },
-  async getCaptureTags({ captureIds = [] }) {
+  async getCaptureTags(captureIds = []) {
     try {
       const result = captureIds.map((id) => {
         const query = `${TREETRACKER_API}/captures/${id}/tags`;
@@ -517,16 +517,19 @@ export default {
       handleError(error);
     }
   },
-  deleteCaptureTag({ captureTagId }) {
+  deleteCaptureTag({ captureId, tagId }) {
     try {
-      const query = `${API_ROOT}/api/tree_tags/${captureTagId}`;
-      console.log(query);
+      const query = `${TREETRACKER_API}/captures/${captureId}/tags/${tagId}`;
+
       return fetch(query, {
-        method: 'DELETE',
+        method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        body: JSON.stringify({
+          status: 'deleted',
+        }),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
