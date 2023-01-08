@@ -149,11 +149,8 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
     try {
       await cdContext.deleteCaptureTag({
         captureId: capture?.id,
-        tagId: tag.id,
+        tagId: tag?.tag_id,
       });
-      if (props.onCaptureTagDelete !== undefined) {
-        props.onCaptureTagDelete();
-      }
     } catch (error) {
       console.log(error);
     }
@@ -176,7 +173,6 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
       capture.age,
       capture.captureApprovalTag,
       capture.rejectionReason,
-      ...captureTags,
     ].filter((tag) => !!tag);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
@@ -339,8 +335,8 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
 
                 {captureTags.map((tag) => (
                   <Chip
-                    key={tag.tagName}
-                    label={tag.tagName}
+                    key={tag.tag_name}
+                    label={tag.tag_name}
                     className={classes.chip}
                     onDelete={
                       hasApproveTreePermission === true
@@ -369,7 +365,7 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
                   >
                     <Typography>
                       Remove tag{' '}
-                      <b>{`"${captureTagDeletionTarget.tag.tagName}"`}</b> ?
+                      <b>{`"${captureTagDeletionTarget.tag?.tag_name}"`}</b> ?
                     </Typography>
                   </Container>
 

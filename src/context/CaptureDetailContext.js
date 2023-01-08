@@ -29,6 +29,10 @@ export function CaptureDetailProvider(props) {
     getSpecies(state.capture?.species_id);
   }, [state.capture]);
 
+  useEffect(() => {
+    getCaptureTags(state.capture?.id);
+  }, [state.capture]);
+
   // STATE HELPER FUNCTIONS
 
   function reset() {
@@ -59,6 +63,17 @@ export function CaptureDetailProvider(props) {
     }
   };
 
+  const getCaptureTags = async (captureId) => {
+    try {
+      api.getCaptureTags([captureId]).then((tags) => {
+        console.log("All tags: ", tags);
+        setState({ ...state, tags: tags[0] });
+      });
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
   const getSpecies = async (speciesId) => {
     if (speciesId == null) {
       return Promise.resolve(STATE_EMPTY.species);
@@ -76,14 +91,13 @@ export function CaptureDetailProvider(props) {
     }
 
     if (tagId == null) {
-      return Promise.reject('deleteCaptureTag called with no tagId');
+      return Promise.reject('deleteCaptureTag called with no tag');
     }
 
     try {
-      const response = await api.getSingleCaptureTag({ captureId, tagId }); // unique capture tag id
-      const captureTagId = response[0].id;
-      return api.deleteCaptureTag({ captureTagId }).then(() => {
-        reset();
+      return api.deleteCaptureTag({ captureId, tagId }).then(() => {
+        const updatedTags = state.tags.filter(tag => tag.tag_id !== tagId);
+        setState({ ...state, tags: updatedTags });
       });
     } catch (error) {
       console.log(error);
