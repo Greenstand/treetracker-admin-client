@@ -89,9 +89,9 @@ export default class Filter {
       numFilters += 1;
     }
 
-    console.log('FilterGrower -----------', this.organizationId);
+    console.log('FilterGrower -----------', this.organization_id);
     // if there's an organization id and it's not an array of all ids
-    if (this.organizationId && !(this.organizationId.split(',').length > 1)) {
+    if (this.organization_id && !(this.organization_id.length > 1)) {
       numFilters += 1;
     }
 

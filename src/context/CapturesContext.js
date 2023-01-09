@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, createContext } from 'react';
-import FilterModel from '../models/Filter';
+import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import api from '../api/treeTrackerApi';
-import { captureStatus } from '../common/variables';
+// import { captureStatus } from '../common/variables';
 import { AppContext } from './AppContext.js';
 import { setOrganizationFilter } from '../common/utils';
 
@@ -39,14 +39,21 @@ export function CapturesProvider(props) {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('created_at');
   const [isLoading, setIsLoading] = useState(false);
-  const [filter, setFilter] = useState(new FilterModel());
+  const [filter, setFilter] = useState(
+    new FilterModel({ organization_id: ALL_ORGANIZATIONS })
+  );
 
   useEffect(() => {
-    getCaptures();
-  }, [filter, rowsPerPage, page, order, orderBy]);
+    const abortController = new AbortController();
+    // orgId can be either null or an [] of uuids
+    if (orgId !== undefined) {
+      getCaptures({ signal: abortController.signal });
+    }
+    return () => abortController.abort();
+  }, [filter, rowsPerPage, page, order, orderBy, orgId]);
 
-  const getCaptures = async () => {
-    log.debug('4 - load captures');
+  const getCaptures = async (abortController) => {
+    log.debug('4 - load captures', filter);
 
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
     const finalFilter = setOrganizationFilter(filter, orgId, orgList);
@@ -65,7 +72,7 @@ export function CapturesProvider(props) {
     }
 
     setIsLoading(true);
-    const response = await api.getCaptures(filterData);
+    const response = await api.getCaptures(filterData, abortController);
     setIsLoading(false);
     setCaptures(response?.captures);
     setCaptureCount(Number(response?.total));

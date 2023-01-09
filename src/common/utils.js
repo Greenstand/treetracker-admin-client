@@ -20,10 +20,7 @@ export const setOrganizationFilter = (filter, orgId, orgList) => {
   );
 
   // if orgId has a value filter by orgId and sub-orgs, don't include null org ids
-  if (
-    (filter.organization_id === ALL_ORGANIZATIONS && orgId) ||
-    (filter.organization_id === orgId && orgId)
-  ) {
+  if (filter.organization_id === ALL_ORGANIZATIONS && orgId) {
     // prevent it from being assigned an empty array
     if (orgList.length) {
       filter.organization_id = orgList.map((org) => org.stakeholder_uuid);

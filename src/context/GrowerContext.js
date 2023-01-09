@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, createContext } from 'react';
 import { AppContext } from './AppContext.js';
-import FilterGrower from 'models/FilterGrower';
+import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
 import { setOrganizationFilter } from '../common/utils';
 import * as loglevel from 'loglevel';
@@ -33,12 +33,15 @@ export function GrowerProvider(props) {
   const [pageSize, setPageSize] = useState(24);
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [filter, setFilter] = useState(new FilterGrower());
+  const [filter, setFilter] = useState(
+    new FilterGrower({ organization_id: ALL_ORGANIZATIONS })
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
     const abortController = new AbortController();
+    // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
       load({ signal: abortController.signal });
       // getCount();

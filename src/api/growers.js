@@ -46,7 +46,7 @@ export default {
         limit: rowsPerPage,
         offset: skip,
       };
-      // console.log('getGrowers', filter, where, growerFilter);
+      console.log('getGrowers', filter, growerFilter);
 
       const query = `${QUERY_API}/grower-accounts?${this.makeQueryString(
         growerFilter

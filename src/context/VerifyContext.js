@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
-import FilterModel from '../models/Filter';
+import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
 import { AppContext } from './AppContext.js';
@@ -18,10 +18,7 @@ export const VerifyContext = createContext({
   percentComplete: 0,
   pageSize: 24,
   currentPage: 0,
-  filter: new FilterModel({
-    approved: false,
-    active: true,
-  }),
+  filter: new FilterModel(),
   invalidateCaptureCount: true,
   captureCount: null,
   approve: () => {},
@@ -50,6 +47,7 @@ export function VerifyProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
+      organization_id: ALL_ORGANIZATIONS,
       status: captureStatus.UNPROCESSED,
     })
   );
@@ -63,7 +61,7 @@ export function VerifyProvider(props) {
   /* load captures when the page or page size changes */
   useEffect(() => {
     const abortController = new AbortController();
-    // orgId can be either null, a uuid, or an [] when set
+    // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
       setCaptureImages([]);
       loadCaptureImages({ signal: abortController.signal });
