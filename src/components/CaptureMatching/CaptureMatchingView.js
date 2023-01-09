@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { getDistance } from 'geolib';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -240,13 +241,73 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
+const filterTree = (trees, capture) => {
+  log.warn('capture:', capture);
+  log.warn('trees:', trees);
+  if (!capture) return [];
+  const capturedAt = new Date(capture.captured_at);
+  const filteredTrees = trees.filter((tree) => {
+    const firstCapture = tree.captures[0];
+    const firstCaptureAt = new Date(firstCapture.captured_at);
+    if (
+      capturedAt.getTime() - firstCaptureAt.getTime() >
+      1000 * 60 * 60 * 24 * 30
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  // order by distance and captutre date
+  return filteredTrees.sort((a, b) => {
+    const distance1 = getDistance(
+      {
+        latitude: Number(a.captures[0].latitude || a.captures[0].lat),
+        longitude: Number(a.captures[0].longitude || a.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    const distance2 = getDistance(
+      {
+        latitude: Number(b.captures[0].latitude || b.captures[0].lat),
+        longitude: Number(b.captures[0].longitude || b.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    if (distance1 < distance2) {
+      return -1;
+    } else if (distance1 > distance2) {
+      return 1;
+    } else {
+      const firstCaptureAt1 = new Date(a.captures[0].captured_at);
+      const firstCaptureAt2 = new Date(b.captures[0].captured_at);
+      if (firstCaptureAt1 < firstCaptureAt2) {
+        return -1;
+      } else if (firstCaptureAt1 > firstCaptureAt2) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  });
+};
+
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
+  const now = new Date();
+  const aWeakAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7);
   const initialFilter = {
-    startDate: '',
-    endDate: '',
+    startDate: aWeakAgo.toISOString().split('T')[0],
+    endDate: now.toISOString().split('T')[0],
     stakeholderUUID: null,
   };
 
@@ -260,8 +321,8 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(initialFilter.startDate);
+  const [endDate, setEndDate] = useState(initialFilter.endDate);
   const [organizationId, setOrganizationId] = useState(null);
   const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
@@ -275,7 +336,7 @@ function CaptureMatchingView() {
     const data = await api.fetchCandidateTrees(captureId, abortController);
     if (data) {
       setCandidateImgData(data.matches);
-      setTreesCount(data.matches.length);
+      setTreesCount(filterTree(data.matches, captureImage).length);
       setLoading(false);
     }
   }
@@ -307,7 +368,15 @@ function CaptureMatchingView() {
     );
     // log.debug('fetchCaptures data', currentPage, data);
     if (data?.captures?.length > 0) {
-      setCaptureImage(data.captures[0]);
+      const cleanup = (capture) => {
+        if (!capture) return capture;
+        return {
+          ...capture,
+          latitude: capture.lat || 0,
+          longitude: capture.lon || 0,
+        };
+      };
+      setCaptureImage(cleanup(data.captures[0]));
       setNoOfPages(data.count);
       setImgCount(data.count);
     } else {
@@ -435,13 +504,13 @@ function CaptureMatchingView() {
     captureImage?.lon,
   ]);
 
-  const getGroverRegDate = () => {
+  const getGrowerRegDate = () => {
     if (Object.keys(growerAccount).length !== 0) {
-      return growerAccount.first_registration_at
-        ? 'Joined at ' +
-            getDateTimeStringLocale(growerAccount.first_registration_at)
-        : 'Joined at ' + getDateTimeStringLocale(growerAccount.created_at);
+      return 'Joined at ' + getDateTimeStringLocale(
+        growerAccount.first_registration_at || growerAccount.created_at
+      );
     }
+    return '';
   };
 
   // components
@@ -614,7 +683,7 @@ function CaptureMatchingView() {
                   <Typography variant="h5">
                     {growerAccount.first_name}
                   </Typography>
-                  <Typography variant="body1">{getGroverRegDate()}</Typography>
+                  <Typography variant="body1">{getGrowerRegDate()}</Typography>
                 </Box>
               </Box>
             )}
@@ -700,14 +769,14 @@ function CaptureMatchingView() {
             {loading ? null : (
               <CandidateImages
                 capture={captureImage}
-                candidateImgData={candidateImgData}
+                candidateImgData={filterTree(candidateImgData, captureImage)}
                 sameTreeHandler={sameTreeHandler}
               />
             )}
             {!loading &&
               captureImage &&
               candidateImgData &&
-              candidateImgData.length === 0 && (
+              filterTree(candidateImgData, captureImage).length === 0 && (
                 //captureImage && treesCount === 0 && (
                 <Box className={classes.noCandidateBox}>
                   <Typography variant="h5">

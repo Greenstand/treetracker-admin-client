@@ -188,7 +188,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                     <Paper elevation={0} className={classes.box1}>
                       {i + 1}
                     </Paper>
-                    <Tooltip title={tree.id}>
+                    <Tooltip title={tree.id} interactive>
                       <Typography variant="h5">
                         Tree {(tree.id + '').substring(0, 10) + '...'}
                         <CopyButton
@@ -245,8 +245,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                               objectFit="cover"
                               width={250}
                               style={{
-                                width: '250px',
-                                height: '100%',
+                                width: 'auto',
+                                height: '350px',
                               }}
                               alertHeight="300px"
                               alertTextSize=".9rem"

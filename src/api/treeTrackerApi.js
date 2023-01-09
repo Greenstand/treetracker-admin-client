@@ -163,7 +163,7 @@ export default {
 
       const req = `${TREETRACKER_API}/captures?order_by=captured_at&tree_associated=false&limit=${1}&offset=${
         currentPage - 1
-      }&${where}`;
+      }&${where}&matchting_tree_distance=6&matchting_tree_time_range=30`;
 
       return fetch(req, {
         headers: {

@@ -13,7 +13,7 @@ import {
   FormControlLabel,
   LinearProgress,
 } from '@material-ui/core';
-import { CapturesContext } from '../context/CapturesContext';
+import { CapturesContext } from 'context/CapturesContext';
 import { CSVLink } from 'react-csv';
 import { formatCell } from './Captures/CaptureTable';
 
