@@ -64,6 +64,10 @@ export function CaptureDetailProvider(props) {
   };
 
   const getCaptureTags = async (captureId) => {
+    if(!captureId) {
+      return null;
+    }
+
     try {
       api.getCaptureTags([captureId]).then((tags) => {
         console.log('All tags: ', tags);
