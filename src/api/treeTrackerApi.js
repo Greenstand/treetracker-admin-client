@@ -454,7 +454,7 @@ export default {
       handleError(error);
     }
   },
-  async getCaptureTags({ captureIds = [] }) {
+  async getCaptureTags(captureIds = []) {
     try {
       const result = captureIds.map((id) => {
         const query = `${TREETRACKER_API}/captures/${id}/tags`;
@@ -473,29 +473,19 @@ export default {
       handleError(error);
     }
   },
-  getLegacyCaptureTags({ captureIds, tagIds }) {
+  deleteCaptureTag({ captureId, tagId }) {
     try {
-      const useAnd = captureIds && tagIds;
-      const captureIdClauses = (captureIds || []).map(
-        (id, index) =>
-          `filter[where]${useAnd ? '[and][0]' : ''}[or][${index}][treeId]=${id}`
-      );
-      const tagIdClauses = (tagIds || []).map(
-        (id, index) =>
-          `filter[where][and]${
-            useAnd ? '[and][1]' : ''
-          }[or][${index}][tagId]=${id}`
-      );
-
-      const filterString = [...captureIdClauses, ...tagIdClauses].join('&');
-      const query = `${API_ROOT}/api/tree_tags?${filterString}`;
+      const query = `${TREETRACKER_API}/captures/${captureId}/tags/${tagId}`;
 
       return fetch(query, {
-        method: 'GET',
+        method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        body: JSON.stringify({
+          status: 'deleted',
+        }),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

@@ -347,6 +347,7 @@ const CaptureTable = () => {
           captureId={captureDetail.id}
           onClose={closeDrawer}
           page={'CAPTURES'}
+          onCaptureTagDelete={getCaptureTags}
         />
       </CaptureDetailProvider>
     </Grid>
