@@ -1,3 +1,11 @@
+# [1.121.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.3...v1.121.0) (2023-01-12)
+
+
+### Features
+
+* capture matching improvements ([#979](https://github.com/Greenstand/treetracker-admin-client/issues/979)) ([55c2240](https://github.com/Greenstand/treetracker-admin-client/commit/55c224067d1e694dc29a00f467e437bdeba6462c)), closes [#870](https://github.com/Greenstand/treetracker-admin-client/issues/870) [#885](https://github.com/Greenstand/treetracker-admin-client/issues/885)
+* capture tag removal ([#1003](https://github.com/Greenstand/treetracker-admin-client/issues/1003)) ([eb2bd5f](https://github.com/Greenstand/treetracker-admin-client/commit/eb2bd5fcf4cc71546acea5442d0aab92814dedda))
+
 ## [1.120.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.2...v1.120.3) (2023-01-07)
 
 
