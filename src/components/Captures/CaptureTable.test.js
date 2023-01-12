@@ -89,12 +89,12 @@ describe('Captures', () => {
       });
     });
 
-    it('should have 12 headers', async () => {
+    it('should have 13 headers', async () => {
       const table = await screen.findByRole(/table/i);
       await waitFor(() => {
         const headers = within(table).getAllByRole(/columnheader/i);
         const arr = headers.map((header) => header.textContent);
-        expect(arr).toHaveLength(12);
+        expect(arr).toHaveLength(13);
       });
     });
 

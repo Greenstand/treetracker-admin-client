@@ -101,7 +101,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CaptureDetailDialog({ open, captureId, onClose, page }) {
+function CaptureDetailDialog({
+  open,
+  captureId,
+  onClose,
+  page,
+  onCaptureTagDelete,
+}) {
   const cdContext = useContext(CaptureDetailContext);
   const appContext = useContext(AppContext);
   const hasApproveTreePermission = hasPermission(appContext.user, [
@@ -151,6 +157,8 @@ function CaptureDetailDialog({ open, captureId, onClose, page }) {
         captureId: capture?.id,
         tagId: tag?.tag_id,
       });
+
+      onCaptureTagDelete && onCaptureTagDelete();
     } catch (error) {
       console.log(error);
     }
