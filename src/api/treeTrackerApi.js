@@ -142,10 +142,8 @@ export default {
    */
   getCaptures({ ...params }) {
     try {
-      let filterObj = { limit: 25, offset: 0, ...params };
-
       const query = `${QUERY_API}/v2/captures${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        params ? `?${this.makeQueryString(params)}` : ''
       }`;
 
       return fetch(query, {
