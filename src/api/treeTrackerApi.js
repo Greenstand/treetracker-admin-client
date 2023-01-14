@@ -67,7 +67,7 @@ export default {
       handleError(error);
     }
   },
-  getRawCaptureCount({ filter }, abortController) {
+  getRawCaptureCount(filter, abortController) {
     try {
       const where = filter.getWhereObj();
       const filterObj = { ...where };
@@ -137,16 +137,53 @@ export default {
       handleError(error);
     }
   },
-  getCaptureCount(filter) {
+  /**
+   * Captures
+   */
+  getCaptures({ ...params }) {
     try {
-      const query = `${API_ROOT}/api/${getOrganization()}trees/count?where=${JSON.stringify(
-        filter.getWhereObj()
-      )}`;
+      const query = `${QUERY_API}/v2/captures${
+        params ? `?${this.makeQueryString(params)}` : ''
+      }`;
+
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  getCaptureCount(filter, abortController) {
+    try {
+      const where = filter.getWhereObj();
+      const filterObj = { ...where };
+
+      const query = `${QUERY_API}/v2/captures/count${
+        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+      }`;
 
       return fetch(query, {
         headers: {
           Authorization: session.token,
         },
+        signal: abortController?.signal,
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
+  getCaptureById(url, id, abortController) {
+    try {
+      // use field data api for Verify and query api for Captures
+      const query = `${url}/${id}`;
+      return fetch(query, {
+        headers: {
+          Authorization: session.token,
+        },
+        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
@@ -197,38 +234,6 @@ export default {
         headers: {
           Authorization: session.token,
         },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
-  getCaptures({ ...params }) {
-    try {
-      let filterObj = { limit: 25, offset: 0, ...params };
-
-      const query = `${process.env.REACT_APP_QUERY_API_ROOT}/v2/captures${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
-      }`;
-
-      return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
-  getCaptureById(url, id, abortController) {
-    try {
-      // use field data api for Verify and query api for Captures
-      const query = `${url}/${id}`;
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

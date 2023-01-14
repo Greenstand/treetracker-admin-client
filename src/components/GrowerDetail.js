@@ -233,7 +233,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     filter.growerAccountId = growerId?.toString();
     filter.status = status;
     log.warn('Need to get capture count for grower:', filter.status);
-    const countResponse = await treeTrackerApi.getRawCaptureCount({ filter });
+    const countResponse = await treeTrackerApi.getRawCaptureCount(filter);
     return countResponse && countResponse.count ? countResponse.count : 0;
   }
 
