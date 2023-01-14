@@ -1,3 +1,10 @@
+## [1.121.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.0...v1.121.1) (2023-01-14)
+
+
+### Bug Fixes
+
+* update api queries for legacy dash stats ([#994](https://github.com/Greenstand/treetracker-admin-client/issues/994)) ([964671e](https://github.com/Greenstand/treetracker-admin-client/commit/964671e234fcef8735d08143610990210d529d34))
+
 # [1.121.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.120.3...v1.121.0) (2023-01-12)
 
 
