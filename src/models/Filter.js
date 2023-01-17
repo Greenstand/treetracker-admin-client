@@ -7,6 +7,7 @@ export const SPECIES_ANY_SET = 'SPECIES_ANY_SET';
 export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+export const SESSION_NOT_SET = 'SESSION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 import { tokenizationStates } from '../common/variables';
@@ -22,6 +23,7 @@ export default class Filter {
   species_id;
   tagId;
   organization_id;
+  session_id;
   tokenId;
   status;
 
@@ -85,6 +87,12 @@ export default class Filter {
       where.organization_id = null;
     } else if (this.organization_id !== ALL_ORGANIZATIONS) {
       where.organization_id = this.organization_id;
+    }
+
+    if (this.session_id === SESSION_NOT_SET) {
+      where.session_id = null;
+    } else {
+      where.session_id = this.session_id;
     }
 
     if (this.status) {
@@ -193,6 +201,10 @@ export default class Filter {
     }
 
     if (this.species_id && this.species_id !== ALL_SPECIES) {
+      numFilters += 1;
+    }
+
+    if (this.session_id && this.session_id !== SESSION_NOT_SET) {
       numFilters += 1;
     }
 

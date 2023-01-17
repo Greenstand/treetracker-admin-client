@@ -218,6 +218,7 @@ export const AppProvider = (props) => {
   const [routes, setRoutes] = useState(getRoutes(localUser));
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
+  const [sessionList, setSessionList] = useState([]);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -225,10 +226,11 @@ export const AppProvider = (props) => {
   // CustomTableFilter under components/common.
   const [selectedFilters, setSelectedFilters] = useState('');
 
-  // check if the user has an org load organizations when the user changes
+  // check if the user has an org, load organizations when the user changes
   useEffect(() => {
     if (user && token) {
       loadOrganizations();
+      loadSessions();
     }
     setUserHasOrg(!!user?.policy?.organization?.id);
   }, [user, token]);
@@ -306,6 +308,11 @@ export const AppProvider = (props) => {
     setOrgList(orgs);
   }
 
+  async function loadSessions() {
+    const sessions = await api.getSessions();
+    setSessionList(sessions);
+  }
+
   function getOrganizationUUID() {
     const orgId = session.user?.policy?.organization?.id || null;
 
@@ -324,6 +331,7 @@ export const AppProvider = (props) => {
     token,
     routes,
     orgList,
+    sessionList,
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
