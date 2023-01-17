@@ -97,7 +97,9 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter?.organizationId || ALL_ORGANIZATIONS
   );
-  const [sessionId, setSessionId] = useState(filter?.session_id || SESSION_NOT_SET);
+  const [sessionId, setSessionId] = useState(
+    filter.session_id || SESSION_NOT_SET
+  );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {

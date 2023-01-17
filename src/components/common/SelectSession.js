@@ -5,7 +5,7 @@ import { SESSION_NOT_SET } from 'models/Filter';
 
 function SelectSession({ orgId, defaultSessions, handleSelection }) {
   const { sessionList } = useContext(AppContext);
-  console.log("Sessions--- ", sessionList);
+  console.log('Sessions--- ', sessionList);
 
   const defaultOrgList = defaultSessions
     ? defaultSessions
@@ -19,7 +19,7 @@ function SelectSession({ orgId, defaultSessions, handleSelection }) {
 
   const handleChange = (e) => {
     const session = [...defaultOrgList, ...sessionList].find(
-      (o) => o.id === e.target.value
+      (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
     );
     handleSelection(session);
   };

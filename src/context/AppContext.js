@@ -221,6 +221,7 @@ export const AppProvider = (props) => {
   const [orgList, setOrgList] = useState([]);
   const [sessionList, setSessionList] = useState([]);
   const [orgId, setOrgId] = useState(undefined);
+  const [sessionList, setSessionList] = useState([]);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
