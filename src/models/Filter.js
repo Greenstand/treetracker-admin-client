@@ -10,6 +10,7 @@ export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 import { tokenizationStates } from '../common/variables';
+// import log from 'loglevel';
 
 export default class Filter {
   uuid;
@@ -132,6 +133,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
+    if (this.status) {
+      numFilters += 1;
+    }
+
     if (this.uuid) {
       numFilters += 1;
     }
@@ -160,20 +165,16 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.tag > 0) {
-      numFilters += 1;
-    }
-
     if (this.startDate || this.endDate) {
       numFilters += 1;
     }
 
     // if there's an organization id and it's not an array of all ids
-    if (this.organization_id && !(this.organization_id.length > 1)) {
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
 
-    if (this.species_id && this.species_id !== ALL_SPECIES) {
+    if (this.speciesId && this.speciesId !== ALL_SPECIES) {
       numFilters += 1;
     }
 
@@ -184,6 +185,13 @@ export default class Filter {
     if (this.grower_account_id) {
       numFilters += 1;
     }
+
+    // log.debug(
+    //   'Count Filters ------------------',
+    //   this.getWhereObj(),
+    //   Object.keys(this.getWhereObj()).length,
+    //   numFilters
+    // );
 
     return numFilters;
   }

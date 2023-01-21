@@ -166,7 +166,11 @@ describe('Verify', () => {
 
       await waitFor(() => {
         //data won't actually be filtered but filters should be selected
-        log.debug('verifyValues.filter', verifyValues.filter);
+        log.debug(
+          'verifyValues.filter',
+          verifyValues.filter.getWhereObj(),
+          verifyValues.filter.countAppliedFilters()
+        );
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
         expect(screen.getByText('1')).toBeInTheDocument();
       });

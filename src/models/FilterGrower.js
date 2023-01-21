@@ -4,6 +4,7 @@
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+// import log from 'loglevel';
 
 export default class Filter {
   constructor(options) {
@@ -63,6 +64,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
+    if (this.status) {
+      numFilters += 1;
+    }
+
     if (this.personId) {
       numFilters += 1;
     }
@@ -88,7 +93,7 @@ export default class Filter {
     }
 
     // if there's an organization id and it's not an array of all ids
-    if (this.organization_id && !(this.organization_id.length > 1)) {
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
 
@@ -104,16 +109,12 @@ export default class Filter {
       numFilters += 1;
     }
 
-    // console.log(
+    // log.debug(
     //   'Count Filters ------------------',
     //   this.getWhereObj(),
     //   Object.keys(this.getWhereObj()).length,
     //   numFilters
     // );
-
-    // if (this.organizationId) {
-    //   return Object.keys(this.getWhereObj()).length;
-    // }
 
     return numFilters;
   }
