@@ -54,8 +54,6 @@ export default class Filter {
       where.phone = this.phone;
     }
 
-    console.log('FILTER GROWER', where);
-
     return where;
   }
 
@@ -89,7 +87,6 @@ export default class Filter {
       numFilters += 1;
     }
 
-    console.log('FilterGrower -----------', this.organization_id);
     // if there's an organization id and it's not an array of all ids
     if (this.organization_id && !(this.organization_id.length > 1)) {
       numFilters += 1;

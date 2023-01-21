@@ -13,12 +13,6 @@ export const getVerificationStatus = (active, approved) => {
 };
 
 export const setOrganizationFilter = (filter, orgId, orgList) => {
-  console.log(
-    'setOrganizationFilter 1 ==========',
-    filter.organization_id,
-    orgId
-  );
-
   // if orgId has a value filter by orgId and sub-orgs, don't include null org ids
   if (filter.organization_id === ALL_ORGANIZATIONS && orgId) {
     // prevent it from being assigned an empty array
@@ -43,9 +37,6 @@ export const setOrganizationFilter = (filter, orgId, orgList) => {
     filter.organization_id = null;
   }
 
-  // delete filter.organization_id;
-
-  console.log('setOrganizationFilter 2 ==========', filter);
   return filter;
 };
 

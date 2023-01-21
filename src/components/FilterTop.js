@@ -72,7 +72,6 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  // console.log('render: filter top');
   // const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { classes, filter } = props;
@@ -351,7 +350,6 @@ function Filter(props) {
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('tag -- ', newVal);
                   setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {

@@ -119,10 +119,7 @@ function Filter(props) {
       organization_id: organizationId,
       tokenId: tokenId.trim(),
     };
-    console.log('CF -- test', test);
     const filter = new FilterModel(test);
-
-    console.log('CF -- filter', organizationId, filter);
 
     props.onSubmit && props.onSubmit(filter);
   }

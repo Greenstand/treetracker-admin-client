@@ -1,4 +1,9 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganization,
+  makeQueryString,
+} from './apiUtils';
 import { getVerificationStatus } from '../common/utils';
 import { session } from '../models/auth';
 import log from 'loglevel';
@@ -15,52 +20,6 @@ const STATUS_STATES = {
 };
 
 export default {
-  makeQueryString(filterObj) {
-    log.debug('makeQueryString 1 ----->', filterObj);
-    const arr = [];
-    const whereNulls = [];
-    const whereNotNulls = [];
-    const whereIns = [];
-    for (const key in filterObj) {
-      if (
-        filterObj[key] !== undefined &&
-        filterObj[key] !== null &&
-        filterObj[key] !== ''
-      ) {
-        const value =
-          typeof filterObj[key] !== 'string'
-            ? JSON.stringify(filterObj[key])
-            : filterObj[key];
-        arr.push(`${key}=${encodeURIComponent(value)}`);
-      }
-
-      if (filterObj[key] === null) {
-        whereNulls.push(key);
-      }
-
-      // only include these specific values in whereNotNulls array or all the regular filters will be included as well
-      if (filterObj[key] === 'not null' || filterObj[key] === 'any') {
-        whereNotNulls.push(key);
-      }
-
-      // ignore filters that are undefined or ''
-    }
-
-    if (whereNulls.length) {
-      arr.push(`whereNulls=${JSON.stringify(whereNulls)}`);
-    }
-
-    if (whereNotNulls.length) {
-      arr.push(`whereNotNulls=${JSON.stringify(whereNotNulls)}`);
-    }
-
-    if (whereIns.length) {
-      arr.push(`whereIns=${JSON.stringify(whereIns)}`);
-    }
-
-    log.debug('makeQueryString 2 ----->', arr);
-    return arr.join('&');
-  },
   /**
    * Verify Tool
    */
@@ -91,7 +50,7 @@ export default {
       };
 
       const query = `${QUERY_API}/raw-captures${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -110,7 +69,7 @@ export default {
       const filterObj = { ...where };
 
       const query = `${QUERY_API}/raw-captures/count${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {

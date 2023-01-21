@@ -68,7 +68,6 @@ function FilterTopGrower(props) {
       device_identifier: deviceIdentifier.trim(),
       wallet: wallet.trim(),
     });
-    console.log('FG -- filter', filter);
     props.onSubmit && props.onSubmit(filter);
   }
 
