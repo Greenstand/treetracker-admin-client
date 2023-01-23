@@ -1,42 +1,41 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import {
-  Typography,
-  Card,
-  Button, // replace with icons down the line
-  Grid,
-  LinearProgress,
-  IconButton,
-  Snackbar,
-  Avatar,
-  Paper,
-  Box,
-  TablePagination,
-  Divider,
   AppBar,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Divider,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Snackbar,
+  TablePagination,
+  Typography,
 } from '@material-ui/core';
+import { Image, LocationOn, Map, Nature, Person } from '@material-ui/icons';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
-import IconFilter from '@material-ui/icons/FilterList';
+import CaptureDetailDialog from './CaptureDetailDialog';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
 import CheckIcon from '@material-ui/icons/Check';
-import { LocationOn, Person, Nature, Map, Image } from '@material-ui/icons';
-import Navbar from './Navbar';
+import FilterTop from './FilterTop';
 import GrowerDetail from './GrowerDetail';
+import IconFilter from '@material-ui/icons/FilterList';
+import Navbar from './Navbar';
+import OptimizedImage from './OptimizedImage';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
-import FilterTop from './FilterTop';
-import CaptureDetailDialog from './CaptureDetailDialog';
-import OptimizedImage from './OptimizedImage';
-import CaptureDetailTooltip from './CaptureDetailTooltip';
-import Spinner from './common/Spinner';
-import { documentTitle } from 'common/variables';
-import { countToLocaleString } from 'common/numbers';
-import { VerifyContext } from 'context/VerifyContext';
 import { SpeciesContext } from 'context/SpeciesContext';
+import Spinner from './common/Spinner';
 import { TagsContext } from 'context/TagsContext';
-import { CaptureDetailProvider } from 'context/CaptureDetailContext';
-import { pathType } from './common/LinkToWebmap';
+import { VerifyContext } from 'context/VerifyContext';
+import clsx from 'clsx';
+import { countToLocaleString } from 'common/numbers';
+import { documentTitle } from 'common/variables';
+import { makeStyles } from '@material-ui/core/styles';
 
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();
@@ -574,13 +573,12 @@ const Verify = (props) => {
               </Button>,
             ]}
           >
-            {isFilterShown && (
-              <FilterTop
-                onSubmit={verifyContext.updateFilter}
-                filter={verifyContext.filter}
-                onClose={handleFilterClick}
-              />
-            )}
+            <FilterTop
+              onSubmit={verifyContext.updateFilter}
+              filter={verifyContext.filter}
+              onClose={handleFilterClick}
+              open={isFilterShown}
+            />
           </Navbar>
 
           <Box style={{ overflow: 'hidden auto' }}>

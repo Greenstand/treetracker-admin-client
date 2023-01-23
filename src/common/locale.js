@@ -1,5 +1,7 @@
-import enLocale from 'date-fns/locale/en-US';
 import { format, formatDistanceToNow, getYear } from 'date-fns';
+
+import enLocale from 'date-fns/locale/en-US';
+
 // Per default set to EN
 var localeLanguage = 'en';
 // default date pattern when converting dates

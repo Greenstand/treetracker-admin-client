@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FilterModel from '../models/FilterGrower';
-import SelectOrg from './common/SelectOrg';
+
 import { ALL_ORGANIZATIONS } from '../models/Filter';
+import Button from '@material-ui/core/Button';
+import FilterModel from '../models/FilterGrower';
+import Grid from '@material-ui/core/Grid';
+import SelectOrg from './common/SelectOrg';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
 
 export const FILTER_WIDTH = 330;
 
