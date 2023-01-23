@@ -36,6 +36,7 @@ import clsx from 'clsx';
 import { countToLocaleString } from 'common/numbers';
 import { documentTitle } from 'common/variables';
 import { makeStyles } from '@material-ui/core/styles';
+import { pathType } from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('components/Verify');
 const EMPTY_ARRAY = new Array(16).fill();

@@ -12,14 +12,17 @@ import {
   Link,
   Typography,
 } from '@material-ui/core';
+import LinkToWebmap, { pathType } from './common/LinkToWebmap';
+import { POLICIES, hasPermission } from 'models/auth';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { captureStatus, verificationStates } from '../common/variables';
 
+import { AppContext } from 'context/AppContext';
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
 import Close from '@material-ui/icons/Close';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
 import Country from './common/Country';
-import LinkToWebmap from './common/LinkToWebmap';
 import OptimizedImage from './OptimizedImage';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { captureStatus } from '../common/variables';
@@ -28,6 +31,7 @@ import { AppContext } from '../context/AppContext';
 import theme from './common/theme';
 import log from 'loglevel';
 import { makeStyles } from '@material-ui/core/styles';
+import theme from './common/theme';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {

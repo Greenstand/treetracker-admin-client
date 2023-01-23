@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { getDistance } from 'geolib';
 
 import { makeStyles } from '@material-ui/core/styles';

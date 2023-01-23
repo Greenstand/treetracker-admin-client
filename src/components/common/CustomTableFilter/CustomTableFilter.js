@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { ALL_ORGANIZATIONS } from '../../../models/Filter';
 import { AppContext } from '../../../context/AppContext';
@@ -34,6 +34,9 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  */
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+
   const initialFilter = {
     organization_id: url.searchParams.get('organization_id') || '',
     grower: url.searchParams.get('grower') || '',

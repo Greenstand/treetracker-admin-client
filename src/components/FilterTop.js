@@ -11,16 +11,15 @@ import {
 } from '@material-ui/pickers';
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  convertDateToDefaultSqlDate,
-  getDateFormatLocale,
-  getDatePickerLocale,
-} from '../common/locale';
-import {
-  verificationStates,
   captureStatus,
   datePickerDefaultMinDate,
   verificationStates,
 } from '../common/variables';
+import {
+  convertDateToDefaultSqlDate,
+  getDateFormatLocale,
+  getDatePickerLocale,
+} from '../common/locale';
 
 // import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
