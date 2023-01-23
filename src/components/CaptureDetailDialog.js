@@ -1,34 +1,33 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-
-import { makeStyles } from '@material-ui/core/styles';
 import {
-  Typography,
-  Dialog,
-  Grid,
-  Divider,
-  Chip,
-  IconButton,
-  Drawer,
   Box,
-  Link,
+  Button,
+  Chip,
   CircularProgress,
   Container,
-  Button,
+  Dialog,
+  Divider,
+  Drawer,
+  Grid,
+  IconButton,
+  Link,
+  Typography,
 } from '@material-ui/core';
-import Close from '@material-ui/icons/Close';
-import OptimizedImage from './OptimizedImage';
-import LinkToWebmap, { pathType } from './common/LinkToWebmap';
-import { verificationStates } from '../common/variables';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+
 import { CaptureDetailContext } from '../context/CaptureDetailContext';
-import CopyNotification from './common/CopyNotification';
+import Close from '@material-ui/icons/Close';
 import { CopyButton } from './common/CopyButton';
+import CopyNotification from './common/CopyNotification';
 import Country from './common/Country';
+import LinkToWebmap from './common/LinkToWebmap';
+import OptimizedImage from './OptimizedImage';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { captureStatus } from '../common/variables';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
 import theme from './common/theme';
 import log from 'loglevel';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {

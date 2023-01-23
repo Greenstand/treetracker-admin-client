@@ -3,47 +3,49 @@ import { getDistance } from 'geolib';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Button,
   AppBar,
+  Avatar,
+  Box,
+  Button,
   Chip,
   Divider,
-  Grid,
-  Box,
-  Paper,
-  LinearProgress,
   Drawer,
-  Typography,
   FormControl,
-  TextField,
-  Avatar,
-  Tooltip,
+  Grid,
   IconButton,
+  LinearProgress,
+  Paper,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
-import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import CloseIcon from '@material-ui/icons/Close';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
-import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
-import Pagination from '@material-ui/lab/Pagination';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import { AppContext } from 'context/AppContext';
+import CandidateImages from './CandidateImages';
+import CaptureDetailDialog from 'components/CaptureDetailDialog';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
+import CloseIcon from '@material-ui/icons/Close';
+import Country from '../common/Country';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import GrowerDetail from 'components/GrowerDetail';
+import { GrowerProvider } from 'context/GrowerContext';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import { MatchingToolContext } from 'context/MatchingToolContext';
+import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
+import Navbar from '../Navbar';
+import OptimizedImage from 'components/OptimizedImage';
+import Pagination from '@material-ui/lab/Pagination';
+import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
+import SelectOrg from '../common/SelectOrg';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import api from 'api/treeTrackerApi';
 import { documentTitle } from 'common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
-import { AppContext } from 'context/AppContext';
-import { MatchingToolContext } from 'context/MatchingToolContext';
-import { CaptureDetailProvider } from 'context/CaptureDetailContext';
-import { GrowerProvider } from 'context/GrowerContext';
-import CaptureDetailDialog from 'components/CaptureDetailDialog';
-import OptimizedImage from 'components/OptimizedImage';
-import GrowerDetail from 'components/GrowerDetail';
-import Country from '../common/Country';
-import SelectOrg from '../common/SelectOrg';
-import CandidateImages from './CandidateImages';
-import Navbar from '../Navbar';
-import api from 'api/treeTrackerApi';
 import log from 'loglevel';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -310,6 +312,8 @@ function CaptureMatchingView() {
     endDate: now.toISOString().split('T')[0],
     stakeholderUUID: null,
   };
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
 
   const classes = useStyle();
   const appContext = useContext(AppContext);
@@ -321,9 +325,13 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState(initialFilter.startDate);
-  const [endDate, setEndDate] = useState(initialFilter.endDate);
-  const [organizationId, setOrganizationId] = useState(null);
+  const [startDate, setStartDate] = useState(
+    url.searchParams.get('startDate') || ''
+  );
+  const [endDate, setEndDate] = useState(url.searchParams.get('endDate') || '');
+  const [organizationId, setOrganizationId] = useState(
+    url.searchParams.get('organizationId') || null
+  );
   const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
@@ -427,6 +435,17 @@ function CaptureMatchingView() {
     return () => abortController.abort();
   }, [captureImage]);
 
+  useEffect(() => {
+    handleQuerySearchParams('startDate', startDate);
+    handleQuerySearchParams('endDate', endDate);
+    handleQuerySearchParams('organizationId', organizationId);
+    setFilter({
+      startDate,
+      endDate,
+      stakeholderUUID,
+    });
+  }, []);
+
   // Capture Image Pagination function
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -468,8 +487,27 @@ function CaptureMatchingView() {
     setEndDate(e.target.value);
   }
 
+  const handleQuerySearchParams = (name, value) => {
+    if (params.has(name) && value == '') {
+      url.searchParams.delete(name);
+      window.history.pushState({}, '', url.search);
+      console.log(url.search);
+    } else if (!params.has(name) && value == '') {
+      return;
+    } else if (!params.get(name)) {
+      url.searchParams.append(name, value);
+      window.history.pushState({}, '', url.search);
+    } else if (params.get(name)) {
+      url.searchParams.set(name, value);
+      window.history.pushState({}, '', url.search);
+    }
+  };
+
   function handleFilterSubmit() {
     // log.debug('filter submit -----> ', organizationId, stakeholderUUID);
+    handleQuerySearchParams('startDate', startDate);
+    handleQuerySearchParams('endDate', endDate);
+    handleQuerySearchParams('organizationId', organizationId);
     setFilter({
       startDate,
       endDate,
@@ -506,8 +544,11 @@ function CaptureMatchingView() {
 
   const getGrowerRegDate = () => {
     if (Object.keys(growerAccount).length !== 0) {
-      return 'Joined at ' + getDateTimeStringLocale(
-        growerAccount.first_registration_at || growerAccount.created_at
+      return (
+        'Joined at ' +
+        getDateTimeStringLocale(
+          growerAccount.first_registration_at || growerAccount.created_at
+        )
       );
     }
     return '';
@@ -566,13 +607,17 @@ function CaptureMatchingView() {
                     filter.endDate || 'End Date'
                   }`}
                   className={classes.currentHeaderChip}
-                  onDelete={() =>
+                  onDelete={() => {
                     setFilter({
                       ...filter,
                       startDate: undefined,
                       endDate: undefined,
-                    })
-                  }
+                    });
+                    handleQuerySearchParams('startDate', '');
+                    handleQuerySearchParams('endDate', '');
+                    setStartDate('');
+                    setEndDate('');
+                  }}
                 />
               )}
               {filter.stakeholderUUID && (
