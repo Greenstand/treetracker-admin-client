@@ -137,7 +137,7 @@ export function VerifyProvider(props) {
   };
 
   const loadCaptureImages = async (abortController) => {
-    log.debug('to load images');
+    log.debug('Verify to load images');
 
     //set loading status
     setIsLoading(true);
@@ -301,8 +301,6 @@ export function VerifyProvider(props) {
       orgList
     );
     const pageParams = {
-      page: currentPage,
-      rowsPerPage: pageSize,
       filter: new FilterModel(finalFilter),
     };
     const result = await api.getRawCaptureCount(pageParams);

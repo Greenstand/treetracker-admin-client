@@ -7,6 +7,7 @@ export const SPECIES_ANY_SET = 'SPECIES_ANY_SET';
 export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+export const ALL_TAGS = 'ALL_TAGS';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 import { tokenizationStates } from '../common/variables';
@@ -21,7 +22,7 @@ export default class Filter {
   device_identifier;
   wallet;
   species_id;
-  tagId;
+  tag_id;
   organization_id;
   tokenId;
   status;
@@ -64,20 +65,20 @@ export default class Filter {
       where.wallet = this.wallet;
     }
 
-    if (this.speciesId === SPECIES_NOT_SET) {
+    if (this.species_id === SPECIES_NOT_SET || this.species_id === null) {
       where.species_id = null;
-    } else if (this.speciesId === SPECIES_ANY_SET) {
+    } else if (this.species_id === SPECIES_ANY_SET) {
       where.species_id = 'not null';
-    } else if (this.speciesId !== ALL_SPECIES) {
-      where.species_id = this.speciesId;
+    } else if (this.species_id !== ALL_SPECIES) {
+      where.species_id = this.species_id;
     }
 
-    if (this.tagId === TAG_NOT_SET) {
+    if (this.tag_id === TAG_NOT_SET || this.tag_id === null) {
       where.tag_id = null;
-    } else if (this.tagId === ANY_TAG_SET) {
+    } else if (this.tag_id === ANY_TAG_SET) {
       where.tag_id = 'not null';
-    } else if (this.tagId) {
-      where.tag_id = this.tagId;
+    } else if (this.tag_id !== ALL_TAGS) {
+      where.tag_id = this.tag_id;
     }
 
     if (
@@ -107,6 +108,8 @@ export default class Filter {
 
     let orCondition = false;
     const { ...restFilter } = where;
+
+    // log.debug('FILTER MODEL', this, where);
 
     return orCondition
       ? { ...restFilter, or: where }
@@ -161,7 +164,7 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.tagId > 0) {
+    if (this.tag_id) {
       numFilters += 1;
     }
 
@@ -174,7 +177,7 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.speciesId && this.speciesId !== ALL_SPECIES) {
+    if (this.species_id && this.species_id !== ALL_SPECIES) {
       numFilters += 1;
     }
 

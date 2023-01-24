@@ -11,6 +11,9 @@ import FilterModel, {
   SPECIES_ANY_SET,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
+  ALL_TAGS,
+  TAG_NOT_SET,
+  ANY_TAG_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -115,7 +118,7 @@ function Filter(props) {
       startDate: startDate ? formatDate(startDate) : undefined,
       endDate: endDate ? formatDate(endDate) : undefined,
       species_id: speciesId,
-      tagId: tag ? tag.id : 0,
+      tag_id: tag ? tag.id : undefined,
       organization_id: organizationId,
       tokenId: tokenId.trim(),
     };
@@ -279,6 +282,27 @@ function Filter(props) {
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
+                  {
+                    id: ALL_TAGS,
+                    name: 'All',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
+                    id: TAG_NOT_SET,
+                    name: 'Not set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
+                    id: ANY_TAG_SET,
+                    name: 'Any tag set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
                   ...tagsContext.tagList.filter((t) =>
                     t.name
                       .toLowerCase()
@@ -290,11 +314,7 @@ function Filter(props) {
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  if (newVal && newVal.name === 'Not set') {
-                    setTag('Not set');
-                  } else {
-                    setTag(newVal);
-                  }
+                  setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -302,9 +322,7 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
-                // selectOnFocus
-                // clearOnBlur
-                // handleHomeEndKeys
+                getOptionSelected={(option, value) => option.id === value.id}
               />
               <SelectOrg
                 orgId={organizationId}

@@ -20,6 +20,7 @@ import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsContext, TagsProvider } from '../../context/TagsContext';
 import Verify from '../Verify';
 import {
+  CAPTURE_TAGS,
   RAW_CAPTURE,
   RAW_CAPTURES,
   GROWER,
@@ -95,6 +96,10 @@ describe('Verify', () => {
     log.debug('mock getCaptureCountPerSpecies:');
     return Promise.resolve({ count: 7 });
   };
+  captureApi.getCaptureTags = () => {
+    log.debug('mock getTags:');
+    return Promise.resolve(CAPTURE_TAGS);
+  };
   captureApi.getTags = () => {
     log.debug('mock getTags:');
     return Promise.resolve(TAGS);
@@ -166,11 +171,11 @@ describe('Verify', () => {
 
       await waitFor(() => {
         //data won't actually be filtered but filters should be selected
-        log.debug(
-          'verifyValues.filter',
-          verifyValues.filter.getWhereObj(),
-          verifyValues.filter.countAppliedFilters()
-        );
+        // log.debug(
+        //   'verifyValues.filter',
+        //   verifyValues.filter.getWhereObj(),
+        //   verifyValues.filter.countAppliedFilters()
+        // );
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
         expect(screen.getByText('1')).toBeInTheDocument();
       });

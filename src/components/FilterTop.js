@@ -8,6 +8,7 @@ import FilterModel, {
   // SPECIES_ANY_SET,
   // SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
+  ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
 } from '../models/Filter';
@@ -121,7 +122,7 @@ function Filter(props) {
     filter.endDate = endDate ? formatDate(endDate) : undefined;
     filter.status = status;
     filter.species_id = speciesId;
-    filter.tagId = tag ? tag.id : 0;
+    filter.tag_id = tag ? tag.id : undefined;
     filter.organization_id = organizationId;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
@@ -328,16 +329,25 @@ function Filter(props) {
                 }}
                 options={[
                   {
+                    id: ALL_TAGS,
+                    name: 'All',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
                     id: TAG_NOT_SET,
                     name: 'Not set',
-                    active: true,
-                    public: true,
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                   },
                   {
                     id: ANY_TAG_SET,
                     name: 'Any tag set',
-                    active: true,
-                    public: true,
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                   },
                   ...tagsContext.tagList.filter((t) =>
                     t.name
@@ -346,7 +356,7 @@ function Filter(props) {
                   ),
                 ]}
                 value={tag}
-                defaultValue={'Not set'}
+                defaultValue={'All'}
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange

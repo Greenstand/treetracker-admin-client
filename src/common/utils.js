@@ -13,28 +13,28 @@ export const getVerificationStatus = (active, approved) => {
 };
 
 export const setOrganizationFilter = (filter, orgId, orgList) => {
-  // if orgId has a value filter by orgId and sub-orgs, don't include null org ids
+  // NOTE: orgId is the id of the logged-in user's organization
+
   if (filter.organization_id === ALL_ORGANIZATIONS && orgId) {
-    // prevent it from being assigned an empty array
+    // if orgId has a value filter by orgId and sub-orgs, don't include null org ids
+    // also, prevent it from being assigned an empty array
     if (orgList.length) {
       filter.organization_id = orgList.map((org) => org.stakeholder_uuid);
     }
-  }
-
-  // don't filter if orgId is null so that we include both null and not null org ids
-  if (filter.organization_id === ALL_ORGANIZATIONS && orgId === null) {
-    // don't add to filter
+  } else if (filter.organization_id === ALL_ORGANIZATIONS && orgId === null) {
+    // don't filter if orgId is null so that we include both null and not null org ids in results
     filter.organization_id = undefined;
-  }
-
-  // if filtering by one org id, format in array for api query
-  if (filter.organization_id && typeof filter.organization_id === 'string') {
+  } else if (
+    filter.organization_id &&
+    typeof filter.organization_id === 'string'
+  ) {
+    // if filtering by one org id, format in array for api query
     filter.organization_id = [filter.organization_id];
-  }
-
-  // if filtering for items without an org id, filter for null
-  if (filter.organization_id === ORGANIZATION_NOT_SET) {
+  } else if (filter.organization_id === ORGANIZATION_NOT_SET) {
+    // if filtering for items without an org id, filter for null
     filter.organization_id = null;
+  } else {
+    filter.organization_id = undefined;
   }
 
   return filter;

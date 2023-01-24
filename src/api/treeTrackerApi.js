@@ -36,6 +36,7 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
+
       if (where.active) {
         where.status =
           STATUS_STATES[getVerificationStatus(where.active, where.approved)];
@@ -63,10 +64,10 @@ export default {
       handleError(error);
     }
   },
-  getRawCaptureCount(filter, abortController) {
+  getRawCaptureCount({ filter, ...rest }, abortController) {
     try {
       const where = filter.getWhereObj();
-      const filterObj = { ...where };
+      const filterObj = { ...where, ...rest };
 
       const query = `${QUERY_API}/raw-captures/count${
         filterObj ? `?${makeQueryString(filterObj)}` : ''
@@ -143,7 +144,7 @@ export default {
       let filterObj = { ...where, limit, offset, order };
 
       const query = `${QUERY_API}/v2/captures${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -162,7 +163,7 @@ export default {
       const filterObj = { ...where };
 
       const query = `${QUERY_API}/v2/captures/count${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -476,6 +477,7 @@ export default {
       return Promise.all(result);
     } catch (error) {
       handleError(error);
+      return Promise.reject(error);
     }
   },
   deleteCaptureTag({ captureId, tagId }) {

@@ -50,7 +50,8 @@ export const makeQueryString = (filterObj) => {
     if (
       filterObj[key] !== undefined &&
       filterObj[key] !== null &&
-      filterObj[key] !== ''
+      filterObj[key] !== '' &&
+      filterObj[key] !== 'not null'
     ) {
       const value =
         typeof filterObj[key] !== 'string'
@@ -64,7 +65,7 @@ export const makeQueryString = (filterObj) => {
     }
 
     // only include these specific values in whereNotNulls array or all the regular filters will be included as well
-    if (filterObj[key] === 'not null' || filterObj[key] === 'any') {
+    if (filterObj[key] === 'not null') {
       whereNotNulls.push(key);
     }
 
