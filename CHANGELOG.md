@@ -1,3 +1,10 @@
+## [1.121.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.1...v1.121.2) (2023-01-26)
+
+
+### Bug Fixes
+
+* growers missing information ([#1011](https://github.com/Greenstand/treetracker-admin-client/issues/1011)) ([32748e9](https://github.com/Greenstand/treetracker-admin-client/commit/32748e9f97188e381e33588fdfa1eead8c611569))
+
 ## [1.121.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.0...v1.121.1) (2023-01-14)
 
 
