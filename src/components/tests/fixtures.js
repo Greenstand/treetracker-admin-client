@@ -232,8 +232,8 @@ const GROWERS = {
   grower_accounts: [
     {
       id: 1,
-      firstName: 'testFirstName',
-      lastName: 'testLastName',
+      first_name: 'testFirstName',
+      last_name: 'testLastName',
       email: 'test@gmail.com',
       organization: null,
       phone: '123-456-7890',
@@ -261,8 +261,8 @@ const GROWERS = {
     },
     {
       id: 2,
-      firstName: 'testFirstName2',
-      lastName: 'testLastName2',
+      first_name: 'testFirstName2',
+      last_name: 'testLastName2',
       email: 'test2@gmail.com',
       organization: null,
       phone: '123-456-7890',
@@ -288,8 +288,8 @@ const GROWERS = {
     },
     {
       id: 3,
-      firstName: 'testFirstName3',
-      lastName: 'testLastName3',
+      first_name: 'testFirstName3',
+      last_name: 'testLastName3',
       email: 'test3@gmail.com',
       organization: null,
       phone: '123-456-7890',
