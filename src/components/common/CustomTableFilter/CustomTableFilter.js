@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
-
-import { ALL_ORGANIZATIONS } from '../../../models/Filter';
-import { AppContext } from '../../../context/AppContext';
-import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import FormControl from '@material-ui/core/FormControl';
+import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import Drawer from '@material-ui/core/Drawer';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from 'prop-types';
-import Select from '@material-ui/core/Select';
-import SelectOrg from '../SelectOrg';
-import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import CloseIcon from '@material-ui/icons/Close';
+import FormControl from '@material-ui/core/FormControl';
+
+import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
+import { AppContext } from '../../../context/AppContext';
+import { ALL_ORGANIZATIONS } from '../../../models/Filter';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 

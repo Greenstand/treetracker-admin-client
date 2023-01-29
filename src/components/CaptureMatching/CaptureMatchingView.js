@@ -1,50 +1,49 @@
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { getDistance } from 'geolib';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  AppBar,
-  Avatar,
-  Box,
   Button,
+  AppBar,
   Chip,
   Divider,
-  Drawer,
-  FormControl,
   Grid,
-  IconButton,
-  LinearProgress,
+  Box,
   Paper,
-  TextField,
-  Tooltip,
+  LinearProgress,
+  Drawer,
   Typography,
+  FormControl,
+  TextField,
+  Avatar,
+  Tooltip,
+  IconButton,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import { AppContext } from 'context/AppContext';
-import CandidateImages from './CandidateImages';
-import CaptureDetailDialog from 'components/CaptureDetailDialog';
-import { CaptureDetailProvider } from 'context/CaptureDetailContext';
-import CloseIcon from '@material-ui/icons/Close';
-import Country from '../common/Country';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import GrowerDetail from 'components/GrowerDetail';
-import { GrowerProvider } from 'context/GrowerContext';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import { MatchingToolContext } from 'context/MatchingToolContext';
 import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
-import Navbar from '../Navbar';
-import OptimizedImage from 'components/OptimizedImage';
-import Pagination from '@material-ui/lab/Pagination';
-import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
-import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
-import SelectOrg from '../common/SelectOrg';
+import CloseIcon from '@material-ui/icons/Close';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import api from 'api/treeTrackerApi';
+import QuestionMarkIcon from '@material-ui/icons/HelpOutlineOutlined';
+import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
+import Pagination from '@material-ui/lab/Pagination';
+
 import { documentTitle } from 'common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
+import { AppContext } from 'context/AppContext';
+import { MatchingToolContext } from 'context/MatchingToolContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
+import { GrowerProvider } from 'context/GrowerContext';
+import CaptureDetailDialog from 'components/CaptureDetailDialog';
+import OptimizedImage from 'components/OptimizedImage';
+import GrowerDetail from 'components/GrowerDetail';
+import Country from '../common/Country';
+import SelectOrg from '../common/SelectOrg';
+import CandidateImages from './CandidateImages';
+import Navbar from '../Navbar';
+import api from 'api/treeTrackerApi';
 import log from 'loglevel';
-import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles((theme) => ({
   container: {

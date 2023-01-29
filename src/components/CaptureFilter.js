@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -6,27 +7,27 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SelectOrg from './common/SelectOrg';
 import FilterModel, {
-  ALL_ORGANIZATIONS,
   ALL_SPECIES,
   SPECIES_ANY_SET,
   SPECIES_NOT_SET,
   ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
+  ALL_ORGANIZATIONS,
 } from '../models/Filter';
+import DateFnsUtils from '@date-io/date-fns';
 import {
-  KeyboardDatePicker,
   MuiPickersUtilsProvider,
+  KeyboardDatePicker,
 } from '@material-ui/pickers';
-import React, { useContext, useEffect, useState } from 'react';
 import {
-  convertDateToDefaultSqlDate,
-  getDateFormatLocale,
   getDatePickerLocale,
+  getDateFormatLocale,
+  convertDateToDefaultSqlDate,
 } from '../common/locale';
 import {
-  datePickerDefaultMinDate,
   tokenizationStates,
+  datePickerDefaultMinDate,
 } from '../common/variables';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -38,8 +39,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import SelectOrg from './common/SelectOrg';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
-import TextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
 

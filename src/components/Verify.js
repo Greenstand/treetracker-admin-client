@@ -1,41 +1,41 @@
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Paper,
-  Snackbar,
-  TablePagination,
   Typography,
+  Card,
+  Button, // replace with icons down the line
+  Grid,
+  LinearProgress,
+  IconButton,
+  Snackbar,
+  Avatar,
+  Paper,
+  Box,
+  TablePagination,
+  Divider,
+  AppBar,
 } from '@material-ui/core';
-import { Image, LocationOn, Map, Nature, Person } from '@material-ui/icons';
-import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 
-import CaptureDetailDialog from './CaptureDetailDialog';
-import { CaptureDetailProvider } from 'context/CaptureDetailContext';
-import CaptureDetailTooltip from './CaptureDetailTooltip';
-import CheckIcon from '@material-ui/icons/Check';
-import FilterTop from './FilterTop';
-import GrowerDetail from './GrowerDetail';
 import IconFilter from '@material-ui/icons/FilterList';
+import CheckIcon from '@material-ui/icons/Check';
+import { LocationOn, Person, Nature, Map, Image } from '@material-ui/icons';
 import Navbar from './Navbar';
-import OptimizedImage from './OptimizedImage';
+import GrowerDetail from './GrowerDetail';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
-import { SpeciesContext } from 'context/SpeciesContext';
+import FilterTop from './FilterTop';
+import CaptureDetailDialog from './CaptureDetailDialog';
+import OptimizedImage from './OptimizedImage';
+import CaptureDetailTooltip from './CaptureDetailTooltip';
 import Spinner from './common/Spinner';
-import { TagsContext } from 'context/TagsContext';
-import { VerifyContext } from 'context/VerifyContext';
-import clsx from 'clsx';
-import { countToLocaleString } from 'common/numbers';
 import { documentTitle } from 'common/variables';
-import { makeStyles } from '@material-ui/core/styles';
+import { countToLocaleString } from 'common/numbers';
+import { VerifyContext } from 'context/VerifyContext';
+import { SpeciesContext } from 'context/SpeciesContext';
+import { TagsContext } from 'context/TagsContext';
+import { CaptureDetailProvider } from 'context/CaptureDetailContext';
 import { pathType } from './common/LinkToWebmap';
 
 const log = require('loglevel').getLogger('components/Verify');

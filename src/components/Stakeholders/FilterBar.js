@@ -1,7 +1,7 @@
-import Add from './Add';
 import React from 'react';
-import StakeholderFilter from './Filter';
 import { makeStyles } from '@material-ui/core/styles';
+import StakeholderFilter from './Filter';
+import Add from './Add';
 
 const useStyles = makeStyles({
   flex: {

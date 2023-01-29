@@ -1,23 +1,22 @@
+import React, { useState, useContext, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
   FormControl,
   MenuItem,
-  TextField,
 } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
-
-import { ALL_ORGANIZATIONS } from 'models/Filter';
-import { AppContext } from '../../context/AppContext';
 import FilterIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FilterModel from '../../models/FilterStakeholder';
+import { AppContext } from '../../context/AppContext';
 import { StakeholdersContext } from '../../context/StakeholdersContext';
 import { localeSort } from '../../common/utils';
-import { makeStyles } from '@material-ui/core/styles';
+import { ALL_ORGANIZATIONS } from 'models/Filter';
 
 const useStyles = makeStyles({
   root: {
