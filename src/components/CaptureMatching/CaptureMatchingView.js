@@ -44,6 +44,7 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from 'api/treeTrackerApi';
 import log from 'loglevel';
+import { handleQuerySearchParams } from '../common/utils';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -484,22 +485,6 @@ function CaptureMatchingView() {
   function handleEndDateChange(e) {
     setEndDate(e.target.value);
   }
-
-  const handleQuerySearchParams = (name, value) => {
-    if (params.has(name) && value == '') {
-      url.searchParams.delete(name);
-      window.history.pushState({}, '', url.search);
-      console.log(url.search);
-    } else if (!params.has(name) && value == '') {
-      return;
-    } else if (!params.get(name)) {
-      url.searchParams.append(name, value);
-      window.history.pushState({}, '', url.search);
-    } else if (params.get(name)) {
-      url.searchParams.set(name, value);
-      window.history.pushState({}, '', url.search);
-    }
-  };
 
   function handleFilterSubmit() {
     // log.debug('filter submit -----> ', organizationId, stakeholderUUID);

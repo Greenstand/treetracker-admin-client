@@ -56,3 +56,18 @@ export const localeSort = (arr, order) => {
     return sortVal * orderVal;
   });
 };
+
+export const handleQuerySearchParams = (name, value) => {
+  if (params.has(name) && value == '') {
+    url.searchParams.delete(name);
+    window.history.pushState({}, '', url.search);
+  } else if (!params.has(name) && value == '') {
+    return;
+  } else if (!params.get(name)) {
+    url.searchParams.append(name, value);
+    window.history.pushState({}, '', url.search);
+  } else if (params.get(name)) {
+    url.searchParams.set(name, value);
+    window.history.pushState({}, '', url.search);
+  }
+};

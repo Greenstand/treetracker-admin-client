@@ -40,6 +40,7 @@ import SelectOrg from './common/SelectOrg';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';
+import { handleQuerySearchParams } from '../common/utils';
 
 export const FILTER_WIDTH = 330;
 
@@ -217,21 +218,6 @@ function Filter(props) {
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   }
-
-  const handleQuerySearchParams = (name, value) => {
-    if (params.has(name) && value == '') {
-      url.searchParams.delete(name);
-      window.history.pushState({}, '', url.search);
-    } else if (!params.has(name) && value == '') {
-      return;
-    } else if (!params.get(name)) {
-      url.searchParams.append(name, value);
-      window.history.pushState({}, '', url.search);
-    } else if (params.get(name)) {
-      url.searchParams.set(name, value);
-      window.history.pushState({}, '', url.search);
-    }
-  };
 
   return (
     <>

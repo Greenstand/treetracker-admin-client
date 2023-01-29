@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FilterModel from '../models/FilterGrower';
 import SelectOrg from './common/SelectOrg';
 import { ALL_ORGANIZATIONS } from '../models/Filter';
+import { handleQuerySearchParams } from './common/utils';
 
 export const FILTER_WIDTH = 330;
 
@@ -64,22 +65,7 @@ function FilterTopGrower(props) {
     return (url?.searchParams.get(attr) || filter?.[attr] || defaultVal);
   }
 
-  const handleQuerySearchParams = (name, value) => {
-    if (params.has(name) && value == '') {
-      url.searchParams.delete(name);
-      window.history.pushState({}, '', url.search);
-    } else if (!params.has(name) && value == '') {
-      return;
-    } else if (!params.get(name)) {
-      url.searchParams.append(name, value);
-      window.history.pushState({}, '', url.search);
-    } else if (params.get(name)) {
-      url.searchParams.set(name, value);
-      window.history.pushState({}, '', url.search);
-    }
-  };
-
-  handleAllQuerySearchParams() {
+  const handleAllQuerySearchParams = () => {
     handleQuerySearchParams(FILTER_FIELDS.id, id);
     handleQuerySearchParams(FILTER_FIELDS.personId, personId);
     handleQuerySearchParams(FILTER_FIELDS.firstName, firstName);

@@ -16,6 +16,7 @@ import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
 import { AppContext } from '../../../context/AppContext';
 import { ALL_ORGANIZATIONS } from '../../../models/Filter';
+import { handleQuerySearchParams } from '../common/utils';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -90,21 +91,6 @@ function CustomTableFilter(props) {
       mapFiltersToQueries(filtersToSubmit);
     }
   }, []);
-
-  const handleQuerySearchParams = (name, value) => {
-    if (params.has(name) && value == '') {
-      url.searchParams.delete(name);
-      window.history.pushState({}, '', url.search);
-    } else if (!params.has(name) && value == '') {
-      return;
-    } else if (!params.get(name)) {
-      url.searchParams.append(name, value);
-      window.history.pushState({}, '', url.search);
-    } else if (params.get(name)) {
-      url.searchParams.set(name, value);
-      window.history.pushState({}, '', url.search);
-    }
-  };
 
   const mapFiltersToQueries = (filter) => {
     console.log(filter);
