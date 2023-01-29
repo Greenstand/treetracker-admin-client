@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-
-import { SpeciesProvider } from '../context/SpeciesContext';
-import { TagsProvider } from '../context/TagsContext';
+import { documentTitle } from '../common/variables';
 import Verify from '../components/Verify';
 import { VerifyProvider } from '../context/VerifyContext';
-import { documentTitle } from '../common/variables';
+import { SpeciesProvider } from '../context/SpeciesContext';
+import { TagsProvider } from '../context/TagsContext';
 
 function VerifyView() {
   useEffect(() => {

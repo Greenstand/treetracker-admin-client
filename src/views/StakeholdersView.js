@@ -1,11 +1,10 @@
-import { Container, Grid } from '@material-ui/core';
-
-import FilterBar from '../components/Stakeholders/FilterBar';
-import { GrowerProvider } from '../context/GrowerContext';
-import Navbar from '../components/Navbar';
 import React from 'react';
-import StakeholderTable from '../components/Stakeholders/Table';
+import { GrowerProvider } from '../context/GrowerContext';
 import { StakeholdersProvider } from '../context/StakeholdersContext';
+import StakeholderTable from '../components/Stakeholders/Table';
+import FilterBar from '../components/Stakeholders/FilterBar';
+import Navbar from '../components/Navbar';
+import { Grid, Container } from '@material-ui/core';
 
 export default function Stakeholders() {
   return (
