@@ -58,6 +58,7 @@ export const localeSort = (arr, order) => {
 };
 
 export const handleQuerySearchParams = (name, value) => {
+  const params = new URLSearchParams(url.search);
   if (params.has(name) && value == '') {
     url.searchParams.delete(name);
     window.history.pushState({}, '', url.search);
