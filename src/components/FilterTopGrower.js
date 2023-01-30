@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import FilterModel from '../models/FilterGrower';
 import SelectOrg from './common/SelectOrg';
 import { ALL_ORGANIZATIONS } from '../models/Filter';
-import { handleQuerySearchParams } from './common/utils';
 
 export const FILTER_WIDTH = 330;
 
@@ -44,60 +43,22 @@ const styles = (theme) => {
 
 function FilterTopGrower(props) {
   const { classes, filter } = props;
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
-
-  const [id, setId] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.id));
-  const [personId, setPersonId] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.personId));
-  const [firstName, setFirstName] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.firstName));
-  const [lastName, setLastName] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.lastName));
-  const [email, setEmail] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.email));
-  const [phone, setPhone] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.phone));
-  const [wallet, setWallet] = useState(getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.wallet));
-  const [deviceIdentifier, setDeviceIdentifier] = useState(
-    getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.deviceIdentifier
-  ));
+  const [id, setId] = useState(filter?.id || '');
+  const [personId, setPersonId] = useState(filter?.personId || '');
+  const [firstName, setFirstName] = useState(filter?.firstName || '');
+  const [lastName, setLastName] = useState(filter?.lastName || '');
   const [organizationId, setOrganizationId] = useState(
-    getValueFromUrlOrFilter(url, filter, FILTER_FIELDS.organizationId, ALL_ORGANIZATIONS)
+    filter?.organizationId || ALL_ORGANIZATIONS
   );
-      
-  const getValueFromUrlOrFilter = (url, filter, attr, defaultVal = '') => {
-    return (url?.searchParams.get(attr) || filter?.[attr] || defaultVal);
-  }
-
-  const handleAllQuerySearchParams = () => {
-    handleQuerySearchParams(FILTER_FIELDS.id, id);
-    handleQuerySearchParams(FILTER_FIELDS.personId, personId);
-    handleQuerySearchParams(FILTER_FIELDS.firstName, firstName);
-    handleQuerySearchParams(FILTER_FIELDS.lastName, lastName);
-    handleQuerySearchParams(FILTER_FIELDS.organizationId, organizationId);
-    handleQuerySearchParams(FILTER_FIELDS.email, email);
-    handleQuerySearchParams(FILTER_FIELDS.phone, phone);
-    handleQuerySearchParams(FILTER_FIELDS.deviceIdentifier, deviceIdentifier);
-    handleQuerySearchParams(FILTER_FIELDS.wallet, wallet);
-  }
-
-  useEffect(() => {
-    handleAllQuerySearchParams();
-
-    const filter = new FilterModel({
-      personId,
-      id,
-      firstName,
-      lastName,
-      organizationId,
-      stakeholderUUID,
-      email,
-      phone,
-      deviceIdentifier,
-    });
-    props.onSubmit && props.onSubmit(filter);
-  }, []);
+  const [email, setEmail] = useState(filter?.email || '');
+  const [phone, setPhone] = useState(filter?.phone || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const [deviceIdentifier, setDeviceIdentifier] = useState(
+    filter?.device_identifier || ''
+  );
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleAllQuerySearchParams();
-
     const filter = new FilterModel({
       personId,
       id,
@@ -123,8 +84,6 @@ function FilterTopGrower(props) {
     setDeviceIdentifier('');
     setWallet('');
 
-    handleAllQuerySearchParams();
-
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   };
@@ -136,7 +95,7 @@ function FilterTopGrower(props) {
   return (
     <>
       {
-        <form onSubmit={handleSubmit} style={{}}>
+        <form onSubmit={handleSubmit}>
           <Grid container wrap="nowrap" direction="row">
             <Grid item className={classes.inputContainer}>
               <TextField

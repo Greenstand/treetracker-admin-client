@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -40,7 +40,6 @@ import SelectOrg from './common/SelectOrg';
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';
-import { handleQuerySearchParams } from '../common/utils';
 
 export const FILTER_WIDTH = 330;
 
@@ -81,77 +80,32 @@ const styles = (theme) => {
   };
 };
 
-const stringToDate = (string) => {
-  if (!string) {
-    return false;
-  } else {
-    return new Date(
-      parseInt(string.substring(0, 4)),
-      parseInt(string.substring(5, 7)) - 1,
-      parseInt(string.substring(8, 10))
-    );
-  }
-};
-
 function Filter(props) {
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
-
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
-  const dateStartDefault = null;
-  const dateEndDefault = null;
-
-  const [uuid, setUUID] = useState(
-    url.searchParams.get('uuid') || filter?.uuid || ''
-  );
-  const [captureId, setCaptureId] = useState(
-    url.searchParams.get('captureId') || filter?.captureId || ''
-  );
-  const [growerId, setGrowerId] = useState(
-    url.searchParams.get('growerId') || filter?.planterId || ''
-  );
-  const [deviceId, setDeviceId] = useState(
-    url.searchParams.get('deviceId') || filter?.deviceIdentifier || ''
-  );
-  const [growerIdentifier, setGrowerIdentifier] = useState(
-    url.searchParams.get('growerIdentifier') || filter?.planterIdentifier || ''
+  const startDateDefault = null;
+  const endDateDefault = null;
+  const [uuid, setUUID] = useState(filter?.uuid || '');
+  const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
+  const [startDate, setStartDate] = useState(
+    filter?.startDate || startDateDefault
   );
   const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    url.searchParams.get('organizationId') ||
-      filter.organizationId ||
-      ALL_ORGANIZATIONS
+    filter.organizationId || ALL_ORGANIZATIONS
   );
-  const [tokenId, setTokenId] = useState(
-    url.searchParams.get('tokenId') || filter?.tokenId || filterOptionAll
-  );
+  const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
-  useEffect(() => {
-    const filter = new FilterModel();
-    filter.uuid = uuid;
-    filter.captureId = captureId;
-    filter.planterId = growerId;
-    filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = growerIdentifier;
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.speciesId = speciesId;
-    filter.tagId = tag ? tag.id : 0;
-    filter.organizationId = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
-    filter.tokenId = tokenId;
-    filter.verifyStatus = verifyStatus;
-    props.onSubmit && props.onSubmit(filter);
-  }, []);
-
-  const handleDateStartChange = (date) => {
-    setDateStart(date);
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
   const handleEndDateChange = (date) => {
@@ -181,24 +135,6 @@ function Filter(props) {
     const filter = new FilterModel(test);
 
     props.onSubmit && props.onSubmit(filter);
-
-    handleQuerySearchParams('uuid', uuid);
-    handleQuerySearchParams('captureId', captureId);
-    handleQuerySearchParams('deviceId', deviceId);
-    handleQuerySearchParams('growerIdentifier', growerIdentifier);
-    handleQuerySearchParams('growerId', growerId);
-    handleQuerySearchParams(
-      'dateStart',
-      dateStart ? formatDate(dateStart) : ''
-    );
-    handleQuerySearchParams('dateEnd', dateEnd ? formatDate(dateEnd) : '');
-    handleQuerySearchParams('speciesId', speciesId);
-    handleQuerySearchParams('growerIdentifier', growerIdentifier);
-    handleQuerySearchParams('tag', tag);
-    handleQuerySearchParams('tagSearchString', tagSearchString);
-    handleQuerySearchParams('organizationId', organizationId);
-    handleQuerySearchParams('stakeholderUUID', stakeholderUUID);
-    handleQuerySearchParams('tokenId', tokenId);
   }
 
   function handleReset() {

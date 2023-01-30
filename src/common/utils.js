@@ -57,19 +57,29 @@ export const localeSort = (arr, order) => {
   });
 };
 
-export const handleQuerySearchParams = (name, value) => {
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
-  if (params.has(name) && value == '') {
-    url.searchParams.delete(name);
-    window.history.pushState({}, '', url.search);
-  } else if (!params.has(name) && value == '') {
-    return;
-  } else if (!params.get(name)) {
-    url.searchParams.append(name, value);
-    window.history.pushState({}, '', url.search);
-  } else if (params.get(name)) {
-    url.searchParams.set(name, value);
+export const handleQuerySearchParams = (newParams) => {
+  let changed = false;
+  let url = new URL(window.location.href);
+  const oldParams = url.searchParams;
+  Object.keys(newParams).forEach((key) => {
+    const value = newParams[key]?.toString();
+    if (typeof value === 'function') {
+      return;
+    }
+    if (oldParams.has(key) && (value === undefined || value === '')) {
+      url.searchParams.delete(key);
+      changed = true;
+    } else if (!oldParams.has(key) && (value === undefined || value === '')) {
+      return;
+    } else if (!oldParams.get(key)) {
+      url.searchParams.append(key, value);
+      changed = true;
+    } else if (oldParams.get(key) && oldParams.get(key) !== value) {
+      url.searchParams.set(key, value);
+      changed = true;
+    }
+  });
+  if (changed) {
     window.history.pushState({}, '', url.search);
   }
 };

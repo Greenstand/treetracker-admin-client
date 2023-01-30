@@ -5,13 +5,13 @@ import { VerifyProvider } from '../context/VerifyContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
 
-function VerifyView() {
+function VerifyView({ search }) {
   useEffect(() => {
     document.title = `Verify Captures - ${documentTitle}`;
   }, []);
 
   return (
-    <VerifyProvider>
+    <VerifyProvider search={search}>
       <SpeciesProvider>
         <TagsProvider>
           <Verify />

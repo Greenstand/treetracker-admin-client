@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, MenuItem } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -26,21 +26,12 @@ import {
   captureStatus,
   datePickerDefaultMinDate,
 } from '../common/variables';
-import { handleQuerySearchParams } from '../common/utils';
+
+// import { SpeciesContext } from '../context/SpeciesContext';
+import { TagsContext } from '../context/TagsContext';
+// import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
-
-const stringToDate = (string) => {
-  if (!string) {
-    return false;
-  } else {
-    return new Date(
-      parseInt(string.substring(0, 4)),
-      parseInt(string.substring(5, 7)) - 1,
-      parseInt(string.substring(8, 10))
-    );
-  }
-};
 
 const styles = (theme) => {
   return {
@@ -81,89 +72,29 @@ const styles = (theme) => {
 
 function Filter(props) {
   // const speciesContext = useContext(SpeciesContext);
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
   const tagsContext = useContext(TagsContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
-  const dateStartDefault = null;
-  const dateEndDefault = null;
-  const [uuid, setUUID] = useState(
-    url.searchParams.get('uuid') || filter?.uuid || ''
+  const startDateDefault = null;
+  const endDateDefault = null;
+  const [uuid, setUUID] = useState(filter?.uuid || '');
+  const [captureId, setCaptureId] = useState(filter?.captureId || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
+  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const [status, setStatus] = useState(filter?.status);
+  const [startDate, setStartDate] = useState(
+    filter?.startDate || startDateDefault
   );
-  const [captureId, setCaptureId] = useState(
-    url.searchParams.get('captureId') || filter?.captureId || ''
-  );
-  const [growerId, setGrowerId] = useState(
-    url.searchParams.get('growerId') || filter?.planterId || ''
-  );
-  const [deviceId, setDeviceId] = useState(
-    url.searchParams.get('deviceId') || filter?.deviceIdentifier || ''
-  );
-  const [growerIdentifier, setGrowerIdentifier] = useState(
-    url.searchParams.get('growerIdentifier') || filter?.planterIdentifier || ''
-  );
-  const [approved, setApproved] = useState(filter?.approved);
-  const [active, setActive] = useState(filter?.active);
-  const [dateStart, setDateStart] = useState(
-    stringToDate(url.searchParams.get('dateStart')) ||
-      filter?.dateStart ||
-      dateStartDefault
-  );
-  const [dateEnd, setDateEnd] = useState(
-    stringToDate(url.searchParams.get('dateEnd')) ||
-      filter?.dateEnd ||
-      dateEndDefault
-  );
-  const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
-  const [tag, setTag] = useState(url.searchParams.get('tag') || null);
-  const [tagSearchString, setTagSearchString] = useState(
-    url.searchParams.get('tagSearchString') || ''
-  );
+  const [endDate, setEndDate] = useState(filter?.endDate || endDateDefault);
+  const [speciesId, setSpeciesId] = useState(filter?.species_id || ALL_SPECIES);
+  const [tag, setTag] = useState(null);
+  const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    url.searchParams.get('organizationId') ||
       filter?.organizationId ||
       ALL_ORGANIZATIONS
   );
-  let open = props.open;
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
-
-  useEffect(() => {
-    handleQuerySearchParams('growerId', growerId);
-    handleQuerySearchParams('captureId', captureId);
-    handleQuerySearchParams('uuid', uuid);
-    handleQuerySearchParams('deviceId', deviceId);
-    handleQuerySearchParams(
-      'dateStart',
-      dateStart ? formatDate(dateStart) : ''
-    );
-    handleQuerySearchParams('dateEnd', dateEnd ? formatDate(dateEnd) : '');
-    handleQuerySearchParams('speciesId', speciesId);
-    handleQuerySearchParams('growerIdentifier', growerIdentifier);
-    handleQuerySearchParams('approved', approved);
-    handleQuerySearchParams('active', active);
-    handleQuerySearchParams('tag', tag);
-    handleQuerySearchParams('tagSearchString', tagSearchString);
-    handleQuerySearchParams('organizationId', organizationId);
-    handleQuerySearchParams('stakeholderUUID', stakeholderUUID);
-
-    const filter = new FilterModel();
-    filter.uuid = uuid;
-    filter.captureId = captureId;
-    filter.planterId = growerId;
-    filter.deviceIdentifier = deviceId;
-    filter.planterIdentifier = growerIdentifier;
-    filter.dateStart = dateStart ? formatDate(dateStart) : undefined;
-    filter.dateEnd = dateEnd ? formatDate(dateEnd) : undefined;
-    filter.approved = approved;
-    filter.active = active;
-    filter.speciesId = speciesId;
-    filter.tagId = tag ? tag.id : 0;
-    filter.organizationId = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
-
-    props.onSubmit && props.onSubmit(filter);
-  }, []);
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -180,31 +111,6 @@ function Filter(props) {
   function handleSubmit(e) {
     e.preventDefault();
     // save the filer to context for editing & submit
-
-    handleQuerySearchParams('growerId', growerId);
-    handleQuerySearchParams('captureId', captureId);
-    handleQuerySearchParams('uuid', uuid);
-    handleQuerySearchParams('deviceId', deviceId);
-    handleQuerySearchParams(
-      'dateStart',
-      dateStart ? formatDate(dateStart) : ''
-    );
-    handleQuerySearchParams('dateEnd', dateEnd ? formatDate(dateEnd) : '');
-    handleQuerySearchParams('speciesId', speciesId);
-    handleQuerySearchParams('growerIdentifier', growerIdentifier);
-    handleQuerySearchParams('approved', approved);
-    handleQuerySearchParams('active', active);
-    handleQuerySearchParams('tag', tag);
-    handleQuerySearchParams('tagSearchString', tagSearchString);
-    handleQuerySearchParams('organizationId', organizationId);
-    handleQuerySearchParams('stakeholderUUID', stakeholderUUID);
-    // filter.tokenId = tokenId;
-
-    handleFilter();
-  }
-
-  function handleFilter() {
-    console.log(dateStart);
     const filter = new FilterModel();
     filter.uuid = uuid;
     filter.captureId = captureId.trim();
@@ -245,53 +151,53 @@ function Filter(props) {
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: open ? 'block' : 'none' }}
-      >
-        <Grid container wrap="nowrap" direction="row">
-          <Grid item className={classes.inputContainer}>
-            <TextField
-              select
-              htmlFor="verification-status"
-              id="verification-status"
-              label="Verification Status"
-              value={
-                active === undefined && approved === undefined
-                  ? filterOptionAll
-                  : getVerificationStatus(active, approved)
-              }
-              onChange={(e) => {
-                setApproved(
-                  e.target.value === filterOptionAll
-                    ? undefined
-                    : e.target.value === verificationStates.AWAITING ||
-                      e.target.value === verificationStates.REJECTED
-                    ? false
-                    : true
-                );
-                setActive(
-                  e.target.value === filterOptionAll
-                    ? undefined
-                    : e.target.value === verificationStates.AWAITING ||
-                      e.target.value === verificationStates.APPROVED
-                    ? true
-                    : false
-                );
-              }}
-            >
-              {[
-                filterOptionAll,
-                verificationStates.APPROVED,
-                verificationStates.AWAITING,
-                verificationStates.REJECTED,
-              ].map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </TextField>
-            {/* <TextField
+      {
+        <form onSubmit={handleSubmit}>
+          <Grid
+            container
+            wrap="nowrap"
+            direction="row"
+            data-testid="filter-top"
+          >
+            <Grid item className={classes.inputContainer}>
+              <TextField
+                select
+                htmlFor="verification-status"
+                id="verification-status"
+                label="Verification Status"
+                value={
+                  status === undefined
+                    ? filterOptionAll
+                    : status === captureStatus.APPROVED
+                    ? verificationStates.APPROVED
+                    : status === captureStatus.REJECTED
+                    ? verificationStates.REJECTED
+                    : verificationStates.AWAITING
+                }
+                onChange={(e) => {
+                  setStatus(
+                    e.target.value === filterOptionAll
+                      ? undefined
+                      : e.target.value === verificationStates.APPROVED
+                      ? captureStatus.APPROVED
+                      : e.target.value === verificationStates.REJECTED
+                      ? captureStatus.REJECTED
+                      : captureStatus.UNPROCESSED
+                  );
+                }}
+              >
+                {[
+                  filterOptionAll,
+                  verificationStates.APPROVED,
+                  verificationStates.AWAITING,
+                  verificationStates.REJECTED,
+                ].map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              {/* <TextField
                 select
                 htmlFor="token-status"
                 id="token-status"
@@ -311,166 +217,166 @@ function Filter(props) {
                   </MenuItem>
                 ))}
               </TextField> */}
-            <MuiPickersUtilsProvider
-              utils={DateFnsUtils}
-              locale={getDatePickerLocale()}
-            >
-              <KeyboardDatePicker
-                margin="normal"
-                id="start-date-picker"
-                htmlFor="start-date-picker"
-                label="Start Date"
-                format={getDateFormatLocale()}
-                value={dateStart}
-                onChange={handleDateStartChange}
-                maxDate={dateEnd || Date()} // Don't allow selection after today
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
+              <MuiPickersUtilsProvider
+                utils={DateFnsUtils}
+                locale={getDatePickerLocale()}
+              >
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="start-date-picker"
+                  htmlFor="start-date-picker"
+                  label="Start Date"
+                  format={getDateFormatLocale()}
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  maxDate={endDate || Date()} // Don't allow selection after today
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="end-date-picker"
+                  htmlFor="end-date-picker"
+                  label="End Date"
+                  format={getDateFormatLocale()}
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  minDate={startDate || datePickerDefaultMinDate}
+                  maxDate={Date()} // Don't allow selection after today
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+              <TextField
+                htmlFor="grower-id"
+                id="grower-id"
+                label="Grower Account ID"
+                placeholder="e.g. 7"
+                value={growerId}
+                onChange={(e) => setGrowerId(e.target.value)}
               />
-              <KeyboardDatePicker
-                margin="normal"
-                id="end-date-picker"
-                htmlFor="end-date-picker"
-                label="End Date"
-                format={getDateFormatLocale()}
-                value={dateEnd}
-                onChange={handleDateEndChange}
-                minDate={dateStart || datePickerDefaultMinDate}
-                maxDate={Date()} // Don't allow selection after today
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
+              <TextField
+                htmlFor="capture-id"
+                id="capture-id"
+                label="Capture Reference ID"
+                placeholder="e.g. 80"
+                value={captureId}
+                onChange={(e) => setCaptureId(e.target.value)}
               />
-            </MuiPickersUtilsProvider>
-            <TextField
-              htmlFor="grower-id"
-              id="grower-id"
-              label="Grower Account ID"
-              placeholder="e.g. 7"
-              value={growerId}
-              onChange={(e) => setGrowerId(e.target.value)}
-            />
-            <TextField
-              htmlFor="capture-id"
-              id="capture-id"
-              label="Capture Reference ID"
-              placeholder="e.g. 80"
-              value={captureId}
-              onChange={(e) => setCaptureId(e.target.value)}
-            />
-            <TextField
-              htmlFor="uuid"
-              id="uuid"
-              label="Capture UUID"
-              placeholder=""
-              value={uuid}
-              onChange={(e) => setUUID(e.target.value)}
-            />
-            <TextField
-              htmlFor="device-identifier"
-              id="device-identifier"
-              label="Device Identifier"
-              placeholder="e.g. 1234abcd"
-              value={deviceId}
-              onChange={(e) => setDeviceId(e.target.value)}
-            />
-            <TextField
-              htmlFor="grower-identifier"
-              id="grower-identifier"
-              label="Wallet/Grower Identifier"
-              placeholder="e.g. grower@example.com"
-              value={growerIdentifier}
-              onChange={(e) => setGrowerIdentifier(e.target.value)}
-            />
-            {/* <TextField
-              data-testid="species-dropdown"
-              select
-              htmlFor="species"
-              id="species"
-              label="Species"
-              value={speciesId}
-              onChange={(e) => setSpeciesId(e.target.value)}
-            >
-              {speciesContext.isLoading ? (
-                <CircularProgress />
-              ) : (
-                [
-                  { id: ALL_SPECIES, name: 'All' },
-                  { id: SPECIES_ANY_SET, name: 'Any set' },
+              <TextField
+                htmlFor="uuid"
+                id="uuid"
+                label="Capture UUID"
+                placeholder=""
+                value={uuid}
+                onChange={(e) => setUUID(e.target.value)}
+              />
+              <TextField
+                htmlFor="device-identifier"
+                id="device-identifier"
+                label="Device Identifier"
+                placeholder="e.g. 1234abcd"
+                value={deviceId}
+                onChange={(e) => setDeviceId(e.target.value)}
+              />
+              <TextField
+                htmlFor="grower-identifier"
+                id="grower-identifier"
+                label="Wallet/Grower Identifier"
+                placeholder="e.g. grower@example.com"
+                value={growerIdentifier}
+                onChange={(e) => setGrowerIdentifier(e.target.value)}
+              />
+              {/* <TextField
+                data-testid="species-dropdown"
+                select
+                htmlFor="species"
+                id="species"
+                label="Species"
+                value={speciesId}
+                onChange={(e) => setSpeciesId(e.target.value)}
+              >
+                {speciesContext.isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  [
+                    { id: ALL_SPECIES, name: 'All' },
+                    { id: SPECIES_ANY_SET, name: 'Any set' },
+                    {
+                      id: SPECIES_NOT_SET,
+                      name: 'Not set',
+                    },
+                    ...speciesContext.speciesList,
+                  ].map((species) => (
+                    <MenuItem
+                      data-testid="species-item"
+                      key={species.id}
+                      value={species.id}
+                    >
+                      {species.name}
+                    </MenuItem>
+                  ))
+                  )}
+              </TextField> */}
+              <Autocomplete
+                data-testid="tag-dropdown"
+                label="Tag"
+                htmlFor="tag"
+                id="tag"
+                classes={{
+                  inputRoot: classes.autocompleteInputRoot,
+                }}
+                options={[
                   {
-                    id: SPECIES_NOT_SET,
-                    name: 'Not set',
+                    id: ALL_TAGS,
+                    name: 'All',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                   },
-                  ...speciesContext.speciesList,
-                ].map((species) => (
-                  <MenuItem
-                    data-testid="species-item"
-                    key={species.id}
-                    value={species.id}
-                  >
-                    {species.name}
-                  </MenuItem>
-                ))
-                )}
-            </TextField> */}
-            <Autocomplete
-              data-testid="tag-dropdown"
-              label="Tag"
-              htmlFor="tag"
-              id="tag"
-              classes={{
-                inputRoot: classes.autocompleteInputRoot,
-              }}
-              options={[
-                {
-                  id: ALL_TAGS,
-                  name: 'All',
-                  isPublic: true,
-                  status: 'active',
-                  owner_id: null,
+                  {
+                    id: TAG_NOT_SET,
+                    name: 'Not set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                 },
-                {
-                  id: TAG_NOT_SET,
-                  name: 'Not set',
-                  isPublic: true,
-                  status: 'active',
-                  owner_id: null,
-              },
-                {
-                  id: ANY_TAG_SET,
-                  name: 'Any tag set',
-                  isPublic: true,
-                  status: 'active',
-                  owner_id: null,
-              },
-                ...tagsContext.tagList.filter((t) =>
-                  t.name
-                    .toLowerCase()
-                    .startsWith(tagSearchString.toLowerCase())
-                ),
-              ]}
-              value={tag}
-              defaultValue={'All'}
-              getOptionLabel={(tag) => tag.name}
-              onChange={(_oldVal, newVal) => {
-                //triggered by onInputChange
-                setTag(newVal);
-              }}
-              onInputChange={(_oldVal, newVal) => {
-                setTagSearchString(newVal);
-              }}
-              renderInput={(params) => {
-                return <TextField {...params} label="Tag" />;
-              }}
-              getOptionSelected={(option, value) => option.id === value.id}
-            />
-            <SelectOrg
-              orgId={organizationId}
-              handleSelection={(org) => {
-                setOrganizationId(org.id);
-              }}
-            />
+                  {
+                    id: ANY_TAG_SET,
+                    name: 'Any tag set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                },
+                  ...tagsContext.tagList.filter((t) =>
+                    t.name
+                      .toLowerCase()
+                      .startsWith(tagSearchString.toLowerCase())
+                  ),
+                ]}
+                value={tag}
+                defaultValue={'All'}
+                getOptionLabel={(tag) => tag.name}
+                onChange={(_oldVal, newVal) => {
+                  //triggered by onInputChange
+                  setTag(newVal);
+                }}
+                onInputChange={(_oldVal, newVal) => {
+                  setTagSearchString(newVal);
+                }}
+                renderInput={(params) => {
+                  return <TextField {...params} label="Tag" />;
+                }}
+                getOptionSelected={(option, value) => option.id === value.id}
+              />
+              <SelectOrg
+                orgId={organizationId}
+                handleSelection={(org) => {
+                  setOrganizationId(org.id);
+                }}
+              />
             </Grid>
             <Grid className={classes.inputContainer}>
               <Button
@@ -494,11 +400,12 @@ function Filter(props) {
                 color="primary"
                 onClick={handleReset}
               >
-              Reset
-            </Button>
+                Reset
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      }
     </>
   );
 }

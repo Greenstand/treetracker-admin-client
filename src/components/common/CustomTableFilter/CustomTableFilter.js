@@ -16,7 +16,6 @@ import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
 import { AppContext } from '../../../context/AppContext';
 import { ALL_ORGANIZATIONS } from '../../../models/Filter';
-import { handleQuerySearchParams } from '../common/utils';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -35,17 +34,12 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  */
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
-  const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
-
   const initialFilter = {
-    organization_id: url.searchParams.get('organization_id') || '',
-    grower: url.searchParams.get('grower') || '',
-    payment_status: url.searchParams.get('payment_status') || 'all',
-    earnings_status: url.searchParams.get('earnings_status') || 'all',
-    phone: url.searchParams.get('phone') || '',
-    start_date: url.searchParams.get('start_date') || '',
-    end_date: url.searchParams.get('end_date') || '',
+    // organization_id: '',
+    grower: '',
+    payment_status: 'all',
+    earnings_status: 'all',
+    phone: '',
   };
   const [localFilter, setLocalFilter] = useState(initialFilter);
   const {
@@ -60,48 +54,8 @@ function CustomTableFilter(props) {
   const classes = useStyles();
   const { updateSelectedFilter } = useContext(AppContext);
 
-  useEffect(() => {
-    const filtersToSubmit = {
-      ...filter,
-      ...localFilter,
-    };
-    console.log(
-      'useEffect - CustomTableFilter.js:66 - localFilter --',
-      localFilter
-    );
-
-    if (filtersToSubmit.organization_id === ALL_ORGANIZATIONS) {
-      const modifiedFiltersToSubmit = {
-        ...filtersToSubmit,
-        organization_id: '',
-        sub_organization: '',
-      };
-      setFilter(modifiedFiltersToSubmit);
-      setIsFilterOpen(false);
-      console.log(modifiedFiltersToSubmit);
-      updateSelectedFilter({
-        modifiedFiltersToSubmit,
-      });
-      mapFiltersToQueries(modifiedFiltersToSubmit);
-    } else {
-      setFilter(filtersToSubmit);
-      setIsFilterOpen(false);
-      console.log(filtersToSubmit);
-      updateSelectedFilter(filtersToSubmit);
-      mapFiltersToQueries(filtersToSubmit);
-    }
-  }, []);
-
-  const mapFiltersToQueries = (filter) => {
-    console.log(filter);
-    for (var key in filter) {
-      handleQuerySearchParams(key, filter[key]);
-    }
-  };
-
   const handleOnFormControlChange = (e) => {
     let updatedFilter = { ...localFilter };
-    console.log('updatedFilter --', updatedFilter);
     if (e?.target) {
       e.preventDefault();
       const { name, value } = e.target;

@@ -66,6 +66,7 @@ export default function Routers() {
                           : undefined
                       }
                       key={`route_${i}`}
+                      search={search}
                     />
                   ))
                 ) : (
@@ -81,6 +82,7 @@ export default function Routers() {
                         : undefined
                     }
                     key={`route_${idx}`}
+                    search={search}
                   />
                 )
               )}
@@ -142,5 +144,5 @@ export default function Routers() {
         </Grid>
       </Grid>
     );
-  }, [appContext.routes, appContext.user]);
+  }, [appContext.routes, appContext.user, search]);
 }

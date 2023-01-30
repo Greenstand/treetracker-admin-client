@@ -2,7 +2,11 @@ import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 
-export default function PrivateRoute({ component: Component, ...rest }) {
+export default function PrivateRoute({
+  component: Component,
+  search,
+  ...rest
+}) {
   const appContext = useContext(AppContext);
 
   return (
@@ -10,7 +14,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
       {...rest}
       render={(props) =>
         appContext.user ? (
-          <Component {...props} />
+          <Component search={search} {...props} />
         ) : (
           <Redirect
             to={{

@@ -44,7 +44,7 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from 'api/treeTrackerApi';
 import log from 'loglevel';
-import { handleQuerySearchParams } from '../common/utils';
+import { handleQuerySearchParams } from '../../common/utils';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -312,7 +312,6 @@ function CaptureMatchingView() {
     stakeholderUUID: null,
   };
   const url = new URL(window.location.href);
-  const params = new URLSearchParams(url.search);
 
   const classes = useStyle();
   const appContext = useContext(AppContext);

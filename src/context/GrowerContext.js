@@ -2,16 +2,20 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import { AppContext } from './AppContext.js';
 import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
-import { setOrganizationFilter } from '../common/utils';
+import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
 import * as loglevel from 'loglevel';
+import { useLocation } from 'react-router-dom';
 
 const log = loglevel.getLogger('context/GrowerContext');
 
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_CURRENT_PAGE = 0;
+
 export const GrowerContext = createContext({
   growers: [],
-  pageSize: 24,
+  pageSize: DEFAULT_PAGE_SIZE,
   count: null,
-  currentPage: 0,
+  currentPage: DEFAULT_CURRENT_PAGE,
   filter: new FilterGrower(),
   isLoading: false,
   totalGrowerCount: null,
@@ -29,15 +33,27 @@ export const GrowerContext = createContext({
 
 export function GrowerProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
+  const { search } = props;
+
+  const searchParams = Object.fromEntries(new URLSearchParams(search));
+  const {
+    pageSize: pageSizeParam = undefined,
+    currentPage: currentPageParam = undefined,
+    ...filterParams
+  } = searchParams;
+
   const [growers, setGrowers] = useState([]);
-  const [pageSize, setPageSize] = useState(24);
-  const [count, setCount] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [filter, setFilter] = useState(
-    new FilterGrower({ organization_id: ALL_ORGANIZATIONS })
+  const [pageSize, setPageSize] = useState(
+    Number(pageSizeParam) || DEFAULT_PAGE_SIZE
   );
+  const [count, setCount] = useState(null);
+  const [currentPage, setCurrentPage] = useState(
+    Number(currentPageParam) || DEFAULT_CURRENT_PAGE
+  );
+  const [filter, setFilter] = useState(new FilterGrower(filterParams));
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -48,6 +64,26 @@ export function GrowerProvider(props) {
     }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage, orgId]);
+
+  useEffect(() => {
+    handleQuerySearchParams({
+      pageSize,
+      currentPage,
+      ...filter,
+    });
+  }, [filter, pageSize, currentPage]);
+
+  useEffect(() => {
+    const searchParams = Object.fromEntries(new URLSearchParams(search));
+    const {
+      pageSize: pageSizeParam = undefined,
+      currentPage: currentPageParam = undefined,
+      ...filterParams
+    } = searchParams;
+    setFilter(new FilterGrower(filterParams));
+    setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
+    setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
+  }, [search, location]);
 
   // EVENT HANDLERS
 

@@ -7,7 +7,7 @@ import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
 import GrowerFilterHeader from '../components/GrowerFilterHeader';
 
-function GrowersView() {
+function GrowersView({ search }) {
   useEffect(() => {
     document.title = `Growers - ${documentTitle}`;
   }, []);
@@ -18,7 +18,7 @@ function GrowersView() {
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
-      <GrowerProvider>
+      <GrowerProvider search={search}>
         <SpeciesProvider>
           <TagsProvider>
             <GrowerFilterHeader />
