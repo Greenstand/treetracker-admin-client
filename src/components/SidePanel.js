@@ -24,7 +24,7 @@ import { getDistance } from 'geolib';
 // const log = loglevel.getLogger('./SidePanel.js');
 
 const SIDE_PANEL_WIDTH = 315;
-const CAP_APP_TAG = [
+/*const CAP_APP_TAG = [
   { value: 'simple_leaf', label: 'Simple leaf' },
   { value: 'complex_leaf', label: 'Complex leaf' },
   { value: 'acacia_like', label: 'Acacia-like' },
@@ -33,7 +33,7 @@ const CAP_APP_TAG = [
   { value: 'mangrove', label: 'Mangrove' },
   { value: 'palm', label: 'Palm' },
   { value: 'timber', label: 'Timber' },
-];
+];*/
 const CAP_MORPH_TAG = [
   { value: 'seedling', label: 'Seedling' },
   { value: 'direct_seedling', label: 'Direct seedling' },
