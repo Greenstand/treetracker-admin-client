@@ -36,7 +36,7 @@ export const CapturesContext = createContext({
 
 export function CapturesProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams } = props;
+  const { searchParams = [] } = props;
 
   const {
     rowsPerPage: rowsPerPageParam = undefined,

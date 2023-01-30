@@ -33,7 +33,7 @@ export const GrowerContext = createContext({
 
 export function GrowerProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams } = props;
+  const { searchParams = [] } = props;
 
   const {
     pageSize: pageSizeParam = undefined,

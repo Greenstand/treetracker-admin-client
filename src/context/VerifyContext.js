@@ -39,7 +39,7 @@ export const VerifyContext = createContext({
 
 export function VerifyProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams } = props;
+  const { searchParams = [] } = props;
 
   const {
     pageSize: pageSizeParam = undefined,
