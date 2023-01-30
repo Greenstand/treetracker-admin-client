@@ -78,7 +78,7 @@ export function CapturesProvider(props) {
         rowsPerPage === DEFAULT_ROWS_PER_PAGE ? undefined : rowsPerPage,
       page: page === DEFAULT_PAGE ? undefined : page,
       order: order === DEFAULT_ORDER ? undefined : order,
-      orderBy: porderByage === DEFAULT_ORDER_BY ? undefined : orderBy,
+      orderBy: orderBy === DEFAULT_ORDER_BY ? undefined : orderBy,
       ...filter.toSearchParams(),
     });
 
