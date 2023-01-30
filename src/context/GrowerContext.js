@@ -33,14 +33,13 @@ export const GrowerContext = createContext({
 
 export function GrowerProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { search } = props;
+  const { searchParams } = props;
 
-  const searchParams = Object.fromEntries(new URLSearchParams(search));
   const {
     pageSize: pageSizeParam = undefined,
     currentPage: currentPageParam = undefined,
     ...filterParams
-  } = searchParams;
+  } = Object.fromEntries(searchParams);
 
   const [growers, setGrowers] = useState([]);
   const [pageSize, setPageSize] = useState(
@@ -50,40 +49,43 @@ export function GrowerProvider(props) {
   const [currentPage, setCurrentPage] = useState(
     Number(currentPageParam) || DEFAULT_CURRENT_PAGE
   );
-  const [filter, setFilter] = useState(new FilterGrower(filterParams));
+  const [filter, setFilter] = useState(
+    FilterGrower.fromSearchParams({
+      organization_id: ALL_ORGANIZATIONS,
+      ...filterParams
+    })
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
     const abortController = new AbortController();
+    
+    handleQuerySearchParams({
+      pageSize,
+      currentPage,
+      ...filter.toSearchParams(),
+    });
+
     // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
-      load({ signal: abortController.signal });
+      load();
       // getCount();
     }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage, orgId]);
 
   useEffect(() => {
-    handleQuerySearchParams({
-      pageSize,
-      currentPage,
-      ...filter,
-    });
-  }, [filter, pageSize, currentPage]);
-
-  useEffect(() => {
-    const searchParams = Object.fromEntries(new URLSearchParams(search));
     const {
       pageSize: pageSizeParam = undefined,
       currentPage: currentPageParam = undefined,
       ...filterParams
-    } = searchParams;
-    setFilter(new FilterGrower(filterParams));
+    } = Object.fromEntries(searchParams);
+    setFilter(FilterGrower.fromSearchParams(filterParams));
     setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
     setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
-  }, [search, location]);
+  }, [searchParams, location]);
 
   // EVENT HANDLERS
 

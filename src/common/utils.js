@@ -58,28 +58,19 @@ export const localeSort = (arr, order) => {
 };
 
 export const handleQuerySearchParams = (newParams) => {
-  let changed = false;
-  let url = new URL(window.location.href);
-  const oldParams = url.searchParams;
+  const oldSearch = window.location.search;
+  let searchParams = new URLSearchParams();
   Object.keys(newParams).forEach((key) => {
-    const value = newParams[key]?.toString();
-    if (typeof value === 'function') {
-      return;
-    }
-    if (oldParams.has(key) && (value === undefined || value === '')) {
-      url.searchParams.delete(key);
-      changed = true;
-    } else if (!oldParams.has(key) && (value === undefined || value === '')) {
-      return;
-    } else if (!oldParams.get(key)) {
-      url.searchParams.append(key, value);
-      changed = true;
-    } else if (oldParams.get(key) && oldParams.get(key) !== value) {
-      url.searchParams.set(key, value);
-      changed = true;
+    const value = newParams[key];
+    if (value) {
+      searchParams.set(key, value.toString());
     }
   });
-  if (changed) {
+
+  let url = new URL(window.location.href);
+  url.search = searchParams.toString();
+
+  if (url.search !== oldSearch) {
     window.history.pushState({}, '', url.search);
   }
 };

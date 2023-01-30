@@ -17,7 +17,7 @@ export const FILTER_FIELDS = {
 };
 // import log from 'loglevel';
 
-export default class Filter {
+class Filter {
   constructor(options) {
     Object.assign(this, options);
   }
@@ -129,4 +129,25 @@ export default class Filter {
 
     return numFilters;
   }
+
+  toSearchParams() {
+    return {
+      personId: this.personId,
+      wallet: this.wallet,
+      id: this.id,
+      grower_account_id: this.grower_account_id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      organization_id: this.organization_id,
+      device_identifier: this.device_identifier,
+      email: this.email,
+      phone: this.phone,
+    };
+  }
 }
+
+Filter.fromSearchParams = (searchParams) => {
+  return new Filter(searchParams);
+};
+
+export default Filter;

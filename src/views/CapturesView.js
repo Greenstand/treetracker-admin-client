@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { documentTitle } from '../common/variables';
 import { Grid } from '@material-ui/core';
 import CaptureTable from '../components/Captures/CaptureTable';
@@ -12,13 +13,16 @@ function CapturesView() {
     document.title = `Capture Data - ${documentTitle}`;
   }, []);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
   return (
     <Grid
       container
       direction="column"
       style={{ flexWrap: 'nowrap', height: '100%', overflow: 'hidden' }}
     >
-      <CapturesProvider>
+      <CapturesProvider searchParams={searchParams}>
         <SpeciesProvider>
           <TagsProvider>
             <CaptureFilterHeader />

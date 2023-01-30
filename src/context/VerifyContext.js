@@ -4,9 +4,12 @@ import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
 import { AppContext } from './AppContext.js';
-import { setOrganizationFilter } from '../common/utils';
+import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
+
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_CURRENT_PAGE = 0;
 
 export const VerifyContext = createContext({
   captureImages: [],
@@ -16,8 +19,8 @@ export const VerifyContext = createContext({
   isLoading: false,
   isProcessing: false,
   percentComplete: 0,
-  pageSize: 24,
-  currentPage: 0,
+  pageSize: DEFAULT_PAGE_SIZE,
+  currentPage: DEFAULT_CURRENT_PAGE,
   filter: new FilterModel(),
   invalidateCaptureCount: true,
   captureCount: null,
@@ -36,6 +39,14 @@ export const VerifyContext = createContext({
 
 export function VerifyProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
+  const { searchParams } = props;
+
+  const {
+    pageSize: pageSizeParam = undefined,
+    currentPage: currentPageParam = undefined,
+    ...filterParams
+  } = Object.fromEntries(searchParams);
+
   const [captureImages, setCaptureImages] = useState([]);
   const [captureImagesUndo, setCaptureImagesUndo] = useState([]);
   const [captureImagesSelected, setCaptureImagesSelected] = useState({});
@@ -43,12 +54,17 @@ export function VerifyProvider(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [percentComplete, setPercentComplete] = useState(0);
-  const [pageSize, setPageSize] = useState(24);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(
+    Number(pageSizeParam) || DEFAULT_PAGE_SIZE
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(currentPageParam) || DEFAULT_CURRENT_PAGE
+  );
   const [filter, setFilter] = useState(
-    new FilterModel({
-      organization_id: ALL_ORGANIZATIONS,
+    FilterModel.fromSearchParams({
       status: captureStatus.UNPROCESSED,
+      organization_id: ALL_ORGANIZATIONS,
+      ...filterParams,
     })
   );
   const [invalidateCaptureCount, setInvalidateCaptureCount] = useState(true);
@@ -60,6 +76,12 @@ export function VerifyProvider(props) {
 
   /* load captures when the page or page size changes */
   useEffect(() => {
+    handleQuerySearchParams({
+      pageSize,
+      currentPage,
+      ...filter.toSearchParams(),
+    });
+
     const abortController = new AbortController();
     // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
@@ -68,6 +90,23 @@ export function VerifyProvider(props) {
     }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage, orgId]);
+
+  useEffect(() => {
+    const {
+      pageSize: pageSizeParam = undefined,
+      currentPage: currentPageParam = undefined,
+      ...filterParams
+    } = Object.fromEntries(searchParams);
+
+    setFilter(
+      FilterModel.fromSearchParams({
+        status: captureStatus.UNPROCESSED,
+        ...filterParams,
+      })
+    );
+    setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
+    setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
+  }, [searchParams, location]);
 
   // STATE HELPER FUNCTIONS
 
