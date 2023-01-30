@@ -81,7 +81,9 @@ export function CapturesProvider(props) {
       ...filter.toSearchParams(),
     });
 
-    getCaptures();
+    const abortController = new AbortController();
+    getCaptures({ signal: abortController.signal });
+    return () => abortController.abort();
   }, [filter, rowsPerPage, page, order, orderBy]);
 
   useEffect(() => {

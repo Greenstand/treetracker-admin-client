@@ -48,7 +48,7 @@ export default {
     }
   },
 
-  getCount(filter) {
+  getCount(filter, abortController) {
     try {
       const filterObj = filter?.getWhereObj ? filter.getWhereObj() : {};
       const query = `${QUERY_API}/v2/growers/count${
@@ -59,6 +59,7 @@ export default {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

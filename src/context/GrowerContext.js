@@ -60,18 +60,16 @@ export function GrowerProvider(props) {
   const location = useLocation();
 
   useEffect(() => {
-    const abortController = new AbortController();
-    
     handleQuerySearchParams({
       pageSize,
       currentPage,
       ...filter.toSearchParams(),
     });
 
-    // orgId can be either null or an [] of uuids
+    const abortController = new AbortController();
     if (orgId !== undefined) {
-      load();
-      // getCount();
+      load({ signal: abortController.signal });
+      // getCount({ signal: abortController.signal });
     }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage, orgId]);
@@ -128,7 +126,7 @@ export function GrowerProvider(props) {
     setIsLoading(false);
   };
 
-  const getCount = async () => {
+  const getCount = async (abortController) => {
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
     const finalFilter = setOrganizationFilter(
       filter.getWhereObj(),
@@ -140,6 +138,7 @@ export function GrowerProvider(props) {
 
     const { count } = await api.getCount({
       filter: new FilterGrower(finalFilter),
+      abortController
     });
     setCount(Number(count));
   };

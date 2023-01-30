@@ -137,8 +137,7 @@ export default {
   /**
    * Captures
    */
-
-  getCaptures({ limit = 25, offset = 0, order, filter = {} }) {
+  getCaptures({ limit = 25, offset = 0, order, filter = {} }, abortController) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
       let filterObj = { ...where, limit, offset, order };
@@ -152,6 +151,7 @@ export default {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
