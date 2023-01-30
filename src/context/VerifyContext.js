@@ -78,8 +78,9 @@ export function VerifyProvider(props) {
   useEffect(() => {
     if (searchParams) {
       handleQuerySearchParams({
-        pageSize,
-        currentPage,
+        pageSize: pageSize === DEFAULT_PAGE_SIZE ? undefined : pageSize,
+        currentPage:
+          currentPage === DEFAULT_CURRENT_PAGE ? undefined : currentPage,
         ...filter.toSearchParams(),
       });
     }

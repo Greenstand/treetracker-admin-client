@@ -74,10 +74,11 @@ export function CapturesProvider(props) {
 
   useEffect(() => {
     handleQuerySearchParams({
-      rowsPerPage,
-      page,
-      order,
-      orderBy,
+      rowsPerPage:
+        rowsPerPage === DEFAULT_ROWS_PER_PAGE ? undefined : rowsPerPage,
+      page: page === DEFAULT_PAGE ? undefined : page,
+      order: order === DEFAULT_ORDER ? undefined : order,
+      orderBy: porderByage === DEFAULT_ORDER_BY ? undefined : orderBy,
       ...filter.toSearchParams(),
     });
 
