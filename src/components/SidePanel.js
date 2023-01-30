@@ -290,14 +290,14 @@ function SidePanel(props) {
               </Box>
 
               <Box mt={1}>
-                <Typography variant="h6">Additional tags</Typography>
-                <Box mt={1}>
+                <Typography variant="h6">Tags</Typography>
+                <Box mt={1} sx={{ paddingBottom: '23px' }}>
                   <CaptureTags placeholder="Add other text tags" />
-                  <Box mt={4}>
+                  {/*<Box mt={4}>
                     <RadioGroup value={captureApprovalTag}>
                       {captureApprovalTags}
                     </RadioGroup>
-                  </Box>
+                  </Box>*/}
                 </Box>
               </Box>
             </>

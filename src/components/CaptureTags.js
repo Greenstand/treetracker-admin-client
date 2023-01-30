@@ -122,6 +122,26 @@ const CaptureTags = (props) => {
     tagsContext.setTagInput(result);
   };
 
+  const mainSuggestions = [
+    { name: 'simple_leaf' },
+    { name: 'mangrove' },
+    { name: 'acacia_like' },
+    { name: 'fruit' },
+    { name: 'timber' },
+    { name: 'complex_leaf' },
+    { name: 'conifer' },
+    { name: 'palm' },
+  ];
+
+  const secondarySuggestions = tagsContext.tagList.filter((t) => {
+    const tagName = t.name.toLowerCase();
+    return (
+      (textFieldInput.length === 0 ||
+        tagName.startsWith(textFieldInput.toLowerCase())) &&
+      !tagsContext.tagInput.find((i) => i.toLowerCase() === tagName)
+    );
+  });
+
   return (
     <Autosuggest
       data-testid="tag-autosuggest"
@@ -132,19 +152,17 @@ const CaptureTags = (props) => {
         suggestion: classes.suggestion,
       }}
       renderInputComponent={renderInput}
-      suggestions={tagsContext.tagList.filter((t) => {
-        const tagName = t.name.toLowerCase();
-        return (
-          (textFieldInput.length === 0 ||
-            tagName.startsWith(textFieldInput.toLowerCase())) &&
-          !tagsContext.tagInput.find((i) => i.toLowerCase() === tagName)
-        );
-      })}
+      suggestions={
+        textFieldInput === '' ? mainSuggestions : secondarySuggestions
+      }
       onSuggestionsFetchRequested={() => {}}
       onSuggestionsClearRequested={() => {}}
       renderSuggestionsContainer={renderSuggestionsContainer}
       getSuggestionValue={getSuggestionValue}
       renderSuggestion={renderSuggestion}
+      shouldRenderSuggestions={() => {
+        return true;
+      }}
       onSuggestionSelected={(e, { suggestionValue }) => {
         handleAddChip(suggestionValue);
         e.preventDefault();
