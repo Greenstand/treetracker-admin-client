@@ -173,9 +173,9 @@ function SidePanel(props) {
     );
   };
 
-  const captureApprovalTags = CAP_APP_TAG.map((tag) => {
+  /*const captureApprovalTags = CAP_APP_TAG.map((tag) => {
     return radioPrototype(tag, setCaptureApprovalTag);
-  });
+  });*/
 
   const captureMorphologyTags = CAP_MORPH_TAG.map((tag) => {
     return radioPrototype(tag, setMorphology);
