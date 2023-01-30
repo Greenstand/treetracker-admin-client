@@ -4,7 +4,6 @@ import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
 import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
 import * as loglevel from 'loglevel';
-import { useLocation } from 'react-router-dom';
 
 const log = loglevel.getLogger('context/GrowerContext');
 
@@ -33,13 +32,13 @@ export const GrowerContext = createContext({
 
 export function GrowerProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams = [] } = props;
+  const { searchParams } = props;
 
   const {
     pageSize: pageSizeParam = undefined,
     currentPage: currentPageParam = undefined,
     ...filterParams
-  } = Object.fromEntries(searchParams);
+  } = Object.fromEntries(searchParams || []);
 
   const [growers, setGrowers] = useState([]);
   const [pageSize, setPageSize] = useState(
@@ -57,14 +56,15 @@ export function GrowerProvider(props) {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
-  const location = useLocation();
 
   useEffect(() => {
-    handleQuerySearchParams({
-      pageSize,
-      currentPage,
-      ...filter.toSearchParams(),
-    });
+    if (searchParams) {
+      handleQuerySearchParams({
+        pageSize,
+        currentPage,
+        ...filter.toSearchParams(),
+      });
+    }
 
     const abortController = new AbortController();
     if (orgId !== undefined) {
@@ -75,6 +75,10 @@ export function GrowerProvider(props) {
   }, [filter, pageSize, currentPage, orgId]);
 
   useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
     const {
       pageSize: pageSizeParam = undefined,
       currentPage: currentPageParam = undefined,
@@ -83,7 +87,7 @@ export function GrowerProvider(props) {
     setFilter(FilterGrower.fromSearchParams(filterParams));
     setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
     setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
-  }, [searchParams, location]);
+  }, [searchParams]);
 
   // EVENT HANDLERS
 

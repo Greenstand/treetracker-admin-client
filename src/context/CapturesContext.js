@@ -36,7 +36,7 @@ export const CapturesContext = createContext({
 
 export function CapturesProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams = [] } = props;
+  const { searchParams } = props;
 
   const {
     rowsPerPage: rowsPerPageParam = undefined,
@@ -44,7 +44,7 @@ export function CapturesProvider(props) {
     order: orderParam = undefined,
     orderBy: orderByParam = undefined,
     ...filterParams
-  } = Object.fromEntries(searchParams);
+  } = Object.fromEntries(searchParams || []);
 
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
@@ -87,6 +87,10 @@ export function CapturesProvider(props) {
   }, [filter, rowsPerPage, page, order, orderBy]);
 
   useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
     const {
       rowsPerPage: rowsPerPageParam = undefined,
       page: pageParam = undefined,
@@ -101,7 +105,7 @@ export function CapturesProvider(props) {
     setRowsPerPage(Number(rowsPerPageParam) || DEFAULT_ROWS_PER_PAGE);
     setOrder(orderParam || DEFAULT_ORDER);
     setOrderBy(orderByParam || DEFAULT_ORDER_BY);
-  }, [searchParams, location]);
+  }, [searchParams]);
 
   const getCaptures = async (abortController) => {
     log.debug('4 - load captures', filter);

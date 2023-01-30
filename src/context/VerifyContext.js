@@ -39,13 +39,13 @@ export const VerifyContext = createContext({
 
 export function VerifyProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
-  const { searchParams = [] } = props;
+  const { searchParams } = props;
 
   const {
     pageSize: pageSizeParam = undefined,
     currentPage: currentPageParam = undefined,
     ...filterParams
-  } = Object.fromEntries(searchParams);
+  } = Object.fromEntries(searchParams || []);
 
   const [captureImages, setCaptureImages] = useState([]);
   const [captureImagesUndo, setCaptureImagesUndo] = useState([]);
@@ -76,11 +76,13 @@ export function VerifyProvider(props) {
 
   /* load captures when the page or page size changes */
   useEffect(() => {
-    handleQuerySearchParams({
-      pageSize,
-      currentPage,
-      ...filter.toSearchParams(),
-    });
+    if (searchParams) {
+      handleQuerySearchParams({
+        pageSize,
+        currentPage,
+        ...filter.toSearchParams(),
+      });
+    }
 
     const abortController = new AbortController();
     // orgId can be either null or an [] of uuids
@@ -92,6 +94,10 @@ export function VerifyProvider(props) {
   }, [filter, pageSize, currentPage, orgId]);
 
   useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
     const {
       pageSize: pageSizeParam = undefined,
       currentPage: currentPageParam = undefined,
@@ -106,7 +112,7 @@ export function VerifyProvider(props) {
     );
     setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
     setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
-  }, [searchParams, location]);
+  }, [searchParams]);
 
   // STATE HELPER FUNCTIONS
 
