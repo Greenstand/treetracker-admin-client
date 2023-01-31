@@ -1,3 +1,10 @@
+# [1.122.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.3...v1.122.0) (2023-01-31)
+
+
+### Features
+
+* fix filtering by organizations using legacy auth and queries to microservices ([#978](https://github.com/Greenstand/treetracker-admin-client/issues/978)) ([95f751d](https://github.com/Greenstand/treetracker-admin-client/commit/95f751d0d82bc507f6f537b021e147edf361b2ba))
+
 ## [1.121.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.2...v1.121.3) (2023-01-29)
 
 
