@@ -42,10 +42,10 @@ export function getOrganizationUUID() {
 
 export const makeQueryString = (filterObj) => {
   // log.debug('makeQueryString 1 ----->', filterObj);
-  const arr = [];
-  const whereNulls = [];
-  const whereNotNulls = [];
-  const whereIns = [];
+  let arr = [];
+  let whereNulls = [];
+  let whereNotNulls = [];
+  let whereIns = [];
   for (const key in filterObj) {
     if (
       filterObj[key] !== undefined &&

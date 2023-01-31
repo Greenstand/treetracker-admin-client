@@ -12,17 +12,20 @@ export const getVerificationStatus = (active, approved) => {
   }
 };
 
-export const setOrganizationFilter = (filter, orgId, orgList) => {
-  // NOTE: orgId is the id of the logged-in user's organization
+export const setOrganizationFilter = (filter, userOrgId, orgList) => {
+  // NOTE: userOrgId is the id of the logged-in user's organization
 
-  if (filter.organization_id === ALL_ORGANIZATIONS && orgId) {
-    // if orgId has a value filter by orgId and sub-orgs, don't include null org ids
+  if (filter.organization_id === ALL_ORGANIZATIONS && userOrgId) {
+    // if userOrgId has a value filter by userOrgId and sub-orgs, don't include null org ids
     // also, prevent it from being assigned an empty array
     if (orgList.length) {
       filter.organization_id = orgList.map((org) => org.stakeholder_uuid);
     }
-  } else if (filter.organization_id === ALL_ORGANIZATIONS && orgId === null) {
-    // don't filter if orgId is null so that we include both null and not null org ids in results
+  } else if (
+    filter.organization_id === ALL_ORGANIZATIONS &&
+    userOrgId === null
+  ) {
+    // don't filter if userOrgId is null so that we include both null and not null org ids in results
     filter.organization_id = undefined;
   } else if (
     filter.organization_id &&
