@@ -207,8 +207,8 @@ describe('tags', () => {
         const tags = options.map((option) => option.textContent);
         log.debug('tags', tags);
 
-        expect(tags[0]).toBe('tag_a');
-        expect(tags[1]).toBe('tag_b');
+        expect(tags[3]).toBe('tag_a');
+        expect(tags[4]).toBe('tag_b');
         expect(screen.getByText(/tag_a/i)).toBeInTheDocument();
         expect(screen.getByText(/tag_b/i)).toBeInTheDocument();
       });

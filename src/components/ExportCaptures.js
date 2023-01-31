@@ -32,14 +32,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const ExportCaptures = (props) => {
-  const {
-    isOpen,
-    handleClose,
-    columns,
-    filter,
-    speciesLookup,
-    captureTagLookup,
-  } = props;
+  const { isOpen, handleClose, columns, filter, speciesLookup } = props;
   const classes = useStyle();
   let nameColumns = {};
   columns.forEach(({ attr, renderer }) => {
@@ -69,22 +62,21 @@ const ExportCaptures = (props) => {
 
   function processDownloadData(captures, selectedColumns) {
     return captures.map((capture) => {
-      let formatCapture = {};
+      let formattedCapture = {};
       Object.keys(selectedColumns).forEach((attr) => {
         if (['id', 'grower_account_id', 'imageUrl'].includes(attr)) {
-          formatCapture[attr] = capture[attr];
+          formattedCapture[attr] = capture[attr];
         } else {
           const renderer = selectedColumns[attr].renderer;
-          formatCapture[attr] = formatCell(
+          formattedCapture[attr] = formatCell(
             capture,
             speciesLookup,
-            captureTagLookup[capture.id] || [],
             attr,
             renderer
           );
         }
       });
-      return formatCapture;
+      return formattedCapture;
     });
   }
 

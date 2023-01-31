@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { act, render, screen, cleanup } from '@testing-library/react';
+import { act, render, screen, cleanup, waitFor } from '@testing-library/react';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
@@ -39,7 +39,7 @@ describe('growers', () => {
       render(
         <ThemeProvider theme={theme}>
           <BrowserRouter>
-            <AppProvider value={{ orgList: ORGS }}>
+            <AppProvider value={{ orgId: null, orgList: ORGS }}>
               <GrowerProvider value={growerValues}>
                 <Growers />
               </GrowerProvider>
@@ -54,26 +54,28 @@ describe('growers', () => {
 
     afterEach(cleanup);
 
-    it('renders grower page', () => {
-      expect(
-        screen.getByText(/testFirstName testLastName/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(/testFirstName2 testLastName2/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(/testFirstName3 testLastName3/i)
-      ).toBeInTheDocument();
+    it('renders grower page', async () => {
+      await waitFor(() => {
+        expect(
+          screen.getByText(/testFirstName testLastName/i)
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(/testFirstName2 testLastName2/i)
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(/testFirstName3 testLastName3/i)
+        ).toBeInTheDocument();
 
-      const ids = screen.getAllByText(/ID:/i);
-      expect(ids).toHaveLength(3);
+        const ids = screen.getAllByText(/ID:/i);
+        expect(ids).toHaveLength(3);
 
-      expect(screen.getByText('1')).toBeInTheDocument();
-      expect(screen.getByText('2')).toBeInTheDocument();
-      expect(screen.getByText('3')).toBeInTheDocument();
+        expect(screen.getByText('1')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
+        expect(screen.getByText('3')).toBeInTheDocument();
 
-      const pageSize = screen.getAllByText(/growers per page:/i);
-      expect(pageSize).toHaveLength(2);
+        const pageSize = screen.getAllByText(/growers per page:/i);
+        expect(pageSize).toHaveLength(2);
+      });
     });
   });
 });
