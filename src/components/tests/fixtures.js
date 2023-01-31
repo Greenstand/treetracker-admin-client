@@ -498,7 +498,9 @@ const verifyValues = {
   approveAllComplete: 0,
   pageSize: 12,
   currentPage: 0,
-  filter: new FilterModel({ status: 'unprocessed' }),
+  filter: new FilterModel({
+    status: captureStatus.UNPROCESSED,
+  }),
   invalidateCaptureCount: true,
   captureCount: null,
   approve: () => {},

@@ -1,19 +1,11 @@
-import { handleResponse, handleError } from './apiUtils';
+import { handleResponse, handleError, makeQueryString } from './apiUtils';
 import { session } from '../models/auth';
+// import log from 'loglevel';
 
 const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export default {
-  makeQueryString(filterObj) {
-    let arr = [];
-    for (const key in filterObj) {
-      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
-      }
-    }
-    return arr.join('&');
-  },
   // query legacy api
   getGrower(id) {
     try {
@@ -31,7 +23,7 @@ export default {
     }
   },
   // query new microservice
-  getGrowers({ skip, rowsPerPage, filter }) {
+  getGrowers({ skip, rowsPerPage, filter }, abortController) {
     try {
       const where = filter.getWhereObj ? filter.getWhereObj() : {};
       const growerFilter = {
@@ -40,15 +32,16 @@ export default {
         offset: skip,
       };
 
-      const query = `${QUERY_API}/grower-accounts?${this.makeQueryString(
-        growerFilter
-      )}`;
+      const query = `${QUERY_API}/grower-accounts${
+        growerFilter ? `?${makeQueryString(growerFilter)}` : ''
+      }`;
 
       return fetch(query, {
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
+        signal: abortController?.signal,
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
@@ -59,7 +52,7 @@ export default {
     try {
       const filterObj = filter?.getWhereObj ? filter.getWhereObj() : {};
       const query = `${QUERY_API}/grower-accounts/count${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
       return fetch(query, {
         headers: {

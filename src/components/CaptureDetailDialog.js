@@ -28,6 +28,7 @@ import { captureStatus } from '../common/variables';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
 import theme from './common/theme';
+import log from 'loglevel';
 
 const useStyles = makeStyles((theme) => ({
   chipRoot: {
@@ -182,6 +183,8 @@ function CaptureDetailDialog({
       capture.captureApprovalTag,
       capture.rejectionReason,
     ].filter((tag) => !!tag);
+
+    log.debug('OTHER TAGS', otherTags);
 
     const dateCreated = new Date(Date.parse(capture.created_at));
     function confirmCopy(label) {

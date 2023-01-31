@@ -1,8 +1,10 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useContext, useState, useEffect, createContext } from 'react';
 import api from '../api/treeTrackerApi';
-import FilterModel from '../models/Filter';
+import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
+import { AppContext } from './AppContext.js';
+import { setOrganizationFilter } from '../common/utils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -16,10 +18,7 @@ export const VerifyContext = createContext({
   percentComplete: 0,
   pageSize: 24,
   currentPage: 0,
-  filter: new FilterModel({
-    approved: false,
-    active: true,
-  }),
+  filter: new FilterModel(),
   invalidateCaptureCount: true,
   captureCount: null,
   approve: () => {},
@@ -36,6 +35,7 @@ export const VerifyContext = createContext({
 });
 
 export function VerifyProvider(props) {
+  const { orgId, orgList } = useContext(AppContext);
   const [captureImages, setCaptureImages] = useState([]);
   const [captureImagesUndo, setCaptureImagesUndo] = useState([]);
   const [captureImagesSelected, setCaptureImagesSelected] = useState({});
@@ -47,6 +47,7 @@ export function VerifyProvider(props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [filter, setFilter] = useState(
     new FilterModel({
+      organization_id: ALL_ORGANIZATIONS,
       status: captureStatus.UNPROCESSED,
     })
   );
@@ -60,10 +61,13 @@ export function VerifyProvider(props) {
   /* load captures when the page or page size changes */
   useEffect(() => {
     const abortController = new AbortController();
-    setCaptureImages([]);
-    loadCaptureImages({ signal: abortController.signal });
+    // orgId can be either null or an [] of uuids
+    if (orgId !== undefined) {
+      setCaptureImages([]);
+      loadCaptureImages({ signal: abortController.signal });
+    }
     return () => abortController.abort();
-  }, [filter, pageSize, currentPage]);
+  }, [filter, pageSize, currentPage, orgId]);
 
   // STATE HELPER FUNCTIONS
 
@@ -133,15 +137,22 @@ export function VerifyProvider(props) {
   };
 
   const loadCaptureImages = async (abortController) => {
-    log.debug('to load images');
+    log.debug('Verify to load images');
 
     //set loading status
     setIsLoading(true);
 
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
+
     const pageParams = {
       page: currentPage,
       rowsPerPage: pageSize,
-      filter,
+      filter: new FilterModel(finalFilter),
     };
 
     const result = await api.getRawCaptures(pageParams, abortController);
@@ -281,7 +292,18 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    const result = await api.getRawCaptureCount(newfilter);
+    log.debug('getCaptureCount');
+
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      newfilter.getWhereObj(),
+      orgId,
+      orgList
+    );
+    const pageParams = {
+      filter: new FilterModel(finalFilter),
+    };
+    const result = await api.getRawCaptureCount(pageParams);
     setCaptureCount(Number(result?.count));
     setInvalidateCaptureCount(false);
   };

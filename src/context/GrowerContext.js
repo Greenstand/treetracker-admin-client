@@ -1,6 +1,8 @@
-import React, { useState, useEffect, createContext } from 'react';
-import FilterGrower from 'models/FilterGrower';
+import React, { useContext, useState, useEffect, createContext } from 'react';
+import { AppContext } from './AppContext.js';
+import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
+import { setOrganizationFilter } from '../common/utils';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('context/GrowerContext');
@@ -26,18 +28,26 @@ export const GrowerContext = createContext({
 });
 
 export function GrowerProvider(props) {
+  const { orgId, orgList } = useContext(AppContext);
   const [growers, setGrowers] = useState([]);
   const [pageSize, setPageSize] = useState(24);
   const [count, setCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [filter, setFilter] = useState(new FilterGrower());
+  const [filter, setFilter] = useState(
+    new FilterGrower({ organization_id: ALL_ORGANIZATIONS })
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
-    load();
-    getCount();
-  }, [filter, pageSize, currentPage]);
+    const abortController = new AbortController();
+    // orgId can be either null or an [] of uuids
+    if (orgId !== undefined) {
+      load({ signal: abortController.signal });
+      // getCount();
+    }
+    return () => abortController.abort();
+  }, [filter, pageSize, currentPage, orgId]);
 
   // EVENT HANDLERS
 
@@ -53,22 +63,46 @@ export function GrowerProvider(props) {
     setGrowers(growers);
   };
 
-  const load = async () => {
+  const load = async (abortController) => {
     log.debug('load growers');
     setIsLoading(true);
     const pageNumber = currentPage;
-    const { total, grower_accounts } = await api.getGrowers({
-      skip: pageNumber * pageSize,
-      rowsPerPage: pageSize,
-      filter,
-    });
+
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
+
+    log.debug('load growers');
+
+    const { total, grower_accounts } = await api.getGrowers(
+      {
+        skip: pageNumber * pageSize,
+        rowsPerPage: pageSize,
+        filter: new FilterGrower(finalFilter),
+      },
+      abortController
+    );
     setCount(total);
     setGrowers(grower_accounts);
     setIsLoading(false);
   };
 
   const getCount = async () => {
-    const { count } = await api.getCount({ filter });
+    //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
+    const finalFilter = setOrganizationFilter(
+      filter.getWhereObj(),
+      orgId,
+      orgList
+    );
+
+    log.debug('load grower count', filter);
+
+    const { count } = await api.getCount({
+      filter: new FilterGrower(finalFilter),
+    });
     setCount(Number(count));
   };
 
