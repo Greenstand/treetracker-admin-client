@@ -11,6 +11,9 @@ import FilterModel, {
   SPECIES_ANY_SET,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
+  ALL_TAGS,
+  TAG_NOT_SET,
+  ANY_TAG_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -72,7 +75,7 @@ const styles = (theme) => {
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const { classes, filter = new FilterModel() } = props;
+  const { classes, filter } = props;
   const filterOptionAll = 'All';
   const startDateDefault = null;
   const endDateDefault = null;
@@ -88,12 +91,7 @@ function Filter(props) {
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
-  const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS
-  );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
-  );
+  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {
@@ -111,19 +109,20 @@ function Filter(props) {
   function handleSubmit(e) {
     e.preventDefault();
     // save the filer to context for editing & submit
-    const filter = new FilterModel();
-    filter.uuid = uuid;
-    filter.captureId = captureId;
-    filter.grower_account_id = growerId;
-    filter.device_identifier = deviceId;
-    filter.wallet = wallet;
-    filter.startDate = startDate ? formatDate(startDate) : undefined;
-    filter.endDate = endDate ? formatDate(endDate) : undefined;
-    filter.species_id = speciesId;
-    filter.tagId = tag ? tag.id : 0;
-    filter.organization_id = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
-    filter.tokenId = tokenId;
+    const test = {
+      uuid: uuid.trim(),
+      captureId: captureId.trim(),
+      grower_account_id: growerId.trim(),
+      device_identifier: deviceId.trim(),
+      wallet: wallet.trim(),
+      startDate: startDate ? formatDate(startDate) : undefined,
+      endDate: endDate ? formatDate(endDate) : undefined,
+      species_id: speciesId,
+      tag_id: tag ? tag.id : undefined,
+      organization_id: organizationId,
+      tokenId: tokenId.trim(),
+    };
+    const filter = new FilterModel(test);
 
     props.onSubmit && props.onSubmit(filter);
   }
@@ -141,7 +140,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -284,6 +282,27 @@ function Filter(props) {
                   inputRoot: classes.autocompleteInputRoot,
                 }}
                 options={[
+                  {
+                    id: ALL_TAGS,
+                    name: 'All',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
+                    id: TAG_NOT_SET,
+                    name: 'Not set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
+                    id: ANY_TAG_SET,
+                    name: 'Any tag set',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
                   ...tagsContext.tagList.filter((t) =>
                     t.name
                       .toLowerCase()
@@ -295,11 +314,7 @@ function Filter(props) {
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  if (newVal && newVal.name === 'Not set') {
-                    setTag('Not set');
-                  } else {
-                    setTag(newVal);
-                  }
+                  setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {
                   setTagSearchString(newVal);
@@ -307,17 +322,13 @@ function Filter(props) {
                 renderInput={(params) => {
                   return <TextField {...params} label="Tag" />;
                 }}
-                // selectOnFocus
-                // clearOnBlur
-                // handleHomeEndKeys
+                getOptionSelected={(option, value) => option.id === value.id}
               />
               <SelectOrg
                 orgId={organizationId}
-                handleSelection={(org) =>
-                  setOrganizationId(
-                    org?.stakeholder_uuid ? org.stakeholder_uuid : org
-                  )
-                }
+                handleSelection={(org) => {
+                  setOrganizationId(org.stakeholder_uuid);
+                }}
               />
             </Grid>
             <Grid className={classes.inputContainer}>

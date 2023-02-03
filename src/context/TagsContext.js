@@ -15,10 +15,9 @@ export const TagsContext = createContext({
 });
 
 export function TagsProvider(props) {
-  const { getOrganizationUUID } = useContext(AppContext);
+  const { orgId } = useContext(AppContext);
   const [tagList, setTagList] = useState([]);
   const [tagInput, setTagInput] = useState([]);
-  const orgId = getOrganizationUUID();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -36,7 +35,6 @@ export function TagsProvider(props) {
    * check for new tags in tagInput and add them to the database
    */
   const createTags = async () => {
-    const orgId = getOrganizationUUID();
     const newTagTemplate = {
       isPublic: orgId ? false : true,
       owner_id: orgId,
@@ -50,8 +48,8 @@ export function TagsProvider(props) {
     });
     const savedTags = await Promise.all(promises);
     log.debug('savedTags:', savedTags);
-    // Refresh the tag list
-    loadTags();
+    // Refresh the tag list to see new tag
+    loadTags(orgId);
     return savedTags;
   };
 

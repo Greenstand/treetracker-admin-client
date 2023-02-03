@@ -28,7 +28,7 @@ function DashStatTotalCaptures(props) {
       { count: unprocessedCount },
       { count: approvedCount },
     ] = await Promise.all([
-      api.getRawCaptureCount(unprocessedFilter),
+      api.getRawCaptureCount({ filter: unprocessedFilter }),
       api.getCaptureCount(approvedFilter),
     ]);
     setTotal(unprocessedCount + approvedCount);

@@ -4,6 +4,7 @@
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+// import log from 'loglevel';
 
 export default class Filter {
   constructor(options) {
@@ -38,7 +39,7 @@ export default class Filter {
 
     if (this.organization_id === ORGANIZATION_NOT_SET) {
       where.organization_id = null;
-    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
+    } else {
       where.organization_id = this.organization_id;
     }
 
@@ -61,8 +62,60 @@ export default class Filter {
    * A fn to count the number of current applied filters
    */
   countAppliedFilters() {
-    if (this.organization_id) {
-      return Object.keys(this.getWhereObj()).length;
+    let numFilters = 0;
+
+    if (this.status) {
+      numFilters += 1;
     }
+
+    if (this.personId) {
+      numFilters += 1;
+    }
+
+    if (this.wallet) {
+      numFilters += 1;
+    }
+
+    if (this.id) {
+      numFilters += 1;
+    }
+
+    if (this.grower_account_id) {
+      numFilters += 1;
+    }
+
+    if (this.firstName) {
+      numFilters += 1;
+    }
+
+    if (this.lastName) {
+      numFilters += 1;
+    }
+
+    // if there's an organization id and it's not an array of all ids
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
+      numFilters += 1;
+    }
+
+    if (this.device_identifier) {
+      numFilters += 1;
+    }
+
+    if (this.email) {
+      numFilters += 1;
+    }
+
+    if (this.phone) {
+      numFilters += 1;
+    }
+
+    // log.debug(
+    //   'Count Filters ------------------',
+    //   this.getWhereObj(),
+    //   Object.keys(this.getWhereObj()).length,
+    //   numFilters
+    // );
+
+    return numFilters;
   }
 }

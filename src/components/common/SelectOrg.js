@@ -36,6 +36,7 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
     const org = [...defaultOrgList, ...orgList].find(
       (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
     );
+
     handleSelection(org);
   };
 
@@ -47,11 +48,16 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
       id="organization"
       label="Organization"
       name="organization"
-      value={orgId}
+      // orgId could be either a uuid string or an array of uuids
+      value={Array.isArray(orgId) ? ALL_ORGANIZATIONS : orgId}
       onChange={handleChange}
     >
       {[...defaultOrgList, ...orgList].map((org) => (
-        <MenuItem data-testid="org-item" key={org.id} value={org.id}>
+        <MenuItem
+          data-testid="org-item"
+          key={org.stakeholder_uuid}
+          value={org.stakeholder_uuid}
+        >
           {org.name}
         </MenuItem>
       ))}

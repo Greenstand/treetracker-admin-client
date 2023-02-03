@@ -64,14 +64,13 @@ export function CaptureDetailProvider(props) {
   };
 
   const getCaptureTags = async (captureId) => {
-    if(!captureId) {
+    if (!captureId) {
       return null;
     }
 
     try {
       api.getCaptureTags([captureId]).then((tags) => {
-        console.log('All tags: ', tags);
-        setState({ ...state, tags: tags[0] });
+        setState({ ...state, tags });
       });
     } catch (error) {
       handleError(error);
