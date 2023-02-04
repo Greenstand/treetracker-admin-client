@@ -27,6 +27,9 @@ const Growers = (props) => {
   }
 
   function handleGrowerClick(grower) {
+    if (grower.placeholder) {
+      return;
+    }
     setDetailShown(true);
     setGrowerDetail(grower);
   }
@@ -61,7 +64,7 @@ const Growers = (props) => {
         enterNextDelay={500}
         interactive
         title={
-          enableTooltips ? (
+          enableTooltips && !grower.placeholder ? (
             <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
           ) : (
             ''
