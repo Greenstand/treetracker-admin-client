@@ -24,16 +24,6 @@ import { getDistance } from 'geolib';
 // const log = loglevel.getLogger('./SidePanel.js');
 
 const SIDE_PANEL_WIDTH = 315;
-const CAP_APP_TAG = [
-  { value: 'simple_leaf', label: 'Simple leaf' },
-  { value: 'complex_leaf', label: 'Complex leaf' },
-  { value: 'acacia_like', label: 'Acacia-like' },
-  { value: 'conifer', label: 'Conifer' },
-  { value: 'fruit', label: 'Fruit' },
-  { value: 'mangrove', label: 'Mangrove' },
-  { value: 'palm', label: 'Palm' },
-  { value: 'timber', label: 'Timber' },
-];
 const CAP_MORPH_TAG = [
   { value: 'seedling', label: 'Seedling' },
   { value: 'direct_seedling', label: 'Direct seedling' },
@@ -173,10 +163,6 @@ function SidePanel(props) {
     );
   };
 
-  const captureApprovalTags = CAP_APP_TAG.map((tag) => {
-    return radioPrototype(tag, setCaptureApprovalTag);
-  });
-
   const captureMorphologyTags = CAP_MORPH_TAG.map((tag) => {
     return radioPrototype(tag, setMorphology);
   });
@@ -290,14 +276,9 @@ function SidePanel(props) {
               </Box>
 
               <Box mt={1}>
-                <Typography variant="h6">Additional tags</Typography>
-                <Box mt={1}>
+                <Typography variant="h6">Tags</Typography>
+                <Box mt={1} sx={{ paddingBottom: '23px' }}>
                   <CaptureTags placeholder="Add other text tags" />
-                  <Box mt={4}>
-                    <RadioGroup value={captureApprovalTag}>
-                      {captureApprovalTags}
-                    </RadioGroup>
-                  </Box>
                 </Box>
               </Box>
             </>

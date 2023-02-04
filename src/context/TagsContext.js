@@ -34,12 +34,12 @@ export function TagsProvider(props) {
   /*
    * check for new tags in tagInput and add them to the database
    */
-  const createTags = async (newTag) => {
+  const createTags = async () => {
     const newTagTemplate = {
       isPublic: orgId ? false : true,
       owner_id: orgId,
     };
-    const promises = [...tagInput, newTag].map(async (t) => {
+    const promises = [...tagInput].map(async (t) => {
       const existingTag = tagList.find((tag) => tag.name === t);
       if (!existingTag) {
         return api.createTag({ ...newTagTemplate, name: t });
