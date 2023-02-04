@@ -1,3 +1,15 @@
+# [1.123.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.122.0...v1.123.0) (2023-02-04)
+
+
+### Bug Fixes
+
+* disable tooltip  & onClick for placehlderCard ([#1020](https://github.com/Greenstand/treetracker-admin-client/issues/1020)) ([bc1d74d](https://github.com/Greenstand/treetracker-admin-client/commit/bc1d74daeca9cde5c7c5916de0048d559d1ea9fd))
+
+
+### Features
+
+* refactor capture tagging UX [#995](https://github.com/Greenstand/treetracker-admin-client/issues/995) ([#1014](https://github.com/Greenstand/treetracker-admin-client/issues/1014)) ([e541c49](https://github.com/Greenstand/treetracker-admin-client/commit/e541c496cb643280fe67349185f43e8fe2df5870))
+
 # [1.122.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.3...v1.122.0) (2023-01-31)
 
 
