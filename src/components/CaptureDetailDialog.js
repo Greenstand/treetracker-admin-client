@@ -343,23 +343,24 @@ function CaptureDetailDialog({
                   <Chip key={tag} label={tag} className={classes.chip} />
                 ))}
 
-                {captureTags.map((tag) => (
-                  <Chip
-                    key={tag.tag_name}
-                    label={tag.tag_name}
-                    className={classes.chip}
-                    onDelete={
-                      hasApproveTreePermission === true
-                        ? () => {
-                            setCaptureTagDeletionTarget({
-                              capture: cdContext.capture,
-                              tag,
-                            });
-                          }
-                        : undefined
-                    }
-                  />
-                ))}
+                {captureTags.length > 0 &&
+                  captureTags[0].map((tag) => (
+                    <Chip
+                      key={tag.tag_name}
+                      label={tag.tag_name}
+                      className={classes.chip}
+                      onDelete={
+                        hasApproveTreePermission === true
+                          ? () => {
+                              setCaptureTagDeletionTarget({
+                                capture: cdContext.capture,
+                                tag,
+                              });
+                            }
+                          : undefined
+                      }
+                    />
+                  ))}
               </div>
 
               {captureTagDeletionTarget !== undefined && (
