@@ -8,6 +8,7 @@ import FilterModel, {
   // SPECIES_ANY_SET,
   // SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
+  ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
   SESSION_NOT_SET,
@@ -26,6 +27,7 @@ import {
   verificationStates,
   captureStatus,
   datePickerDefaultMinDate,
+  // tokenizationStates,
 } from '../common/variables';
 
 // import { SpeciesContext } from '../context/SpeciesContext';
@@ -73,13 +75,9 @@ const styles = (theme) => {
 };
 
 function Filter(props) {
-  // console.log('render: filter top');
   // const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const {
-    classes,
-    filter = new FilterModel({ status: captureStatus.UNPROCESSED }),
-  } = props;
+  const { classes, filter } = props;
   const filterOptionAll = 'All';
   const startDateDefault = null;
   const endDateDefault = null;
@@ -97,10 +95,7 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organization_id || ALL_ORGANIZATIONS
-  );
-  const [stakeholderUUID, setStakeholderUUID] = useState(
-    filter.stakeholderUUID || ALL_ORGANIZATIONS
+    filter?.organizationId || ALL_ORGANIZATIONS
   );
   const [sessionId, setSessionId] = useState(filter.session_id || SESSION_NOT_SET);
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
@@ -130,7 +125,7 @@ function Filter(props) {
     filter.endDate = endDate ? formatDate(endDate) : undefined;
     filter.status = status;
     filter.species_id = speciesId;
-    filter.tagId = tag ? tag.id : 0;
+    filter.tag_id = tag ? tag.id : undefined;
     filter.organization_id = organizationId;
     filter.session_id = sessionId;
     filter.stakeholderUUID = stakeholderUUID;
@@ -341,16 +336,25 @@ function Filter(props) {
                 }}
                 options={[
                   {
+                    id: ALL_TAGS,
+                    name: 'All',
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
+                  },
+                  {
                     id: TAG_NOT_SET,
                     name: 'Not set',
-                    active: true,
-                    public: true,
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                   },
                   {
                     id: ANY_TAG_SET,
                     name: 'Any tag set',
-                    active: true,
-                    public: true,
+                    isPublic: true,
+                    status: 'active',
+                    owner_id: null,
                   },
                   ...tagsContext.tagList.filter((t) =>
                     t.name
@@ -359,11 +363,10 @@ function Filter(props) {
                   ),
                 ]}
                 value={tag}
-                defaultValue={'Not set'}
+                defaultValue={'All'}
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange
-                  console.log('tag -- ', newVal);
                   setTag(newVal);
                 }}
                 onInputChange={(_oldVal, newVal) => {
@@ -377,8 +380,7 @@ function Filter(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) => {
-                  setStakeholderUUID(org.stakeholder_uuid);
-                  setOrganizationId(org.id);
+                  setOrganizationId(org.stakeholder_uuid);
                 }}
               />
               <SelectSession

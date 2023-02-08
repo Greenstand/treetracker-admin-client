@@ -8,9 +8,11 @@ export const SPECIES_NOT_SET = 'SPECIES_NOT_SET';
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const SESSION_NOT_SET = 'SESSION_NOT_SET';
+export const ALL_TAGS = 'ALL_TAGS';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 import { tokenizationStates } from '../common/variables';
+// import log from 'loglevel';
 
 export default class Filter {
   uuid;
@@ -21,7 +23,7 @@ export default class Filter {
   device_identifier;
   wallet;
   species_id;
-  tagId;
+  tag_id;
   organization_id;
   session_id;
   tokenId;
@@ -65,27 +67,29 @@ export default class Filter {
       where.wallet = this.wallet;
     }
 
-    if (this.species_id === SPECIES_NOT_SET) {
+    if (this.species_id === SPECIES_NOT_SET || this.species_id === null) {
       where.species_id = null;
+    } else if (this.species_id === SPECIES_ANY_SET) {
+      where.species_id = 'not null';
     } else if (this.species_id !== ALL_SPECIES) {
       where.species_id = this.species_id;
     }
 
-    if (this.tag) {
-      where.tag = this.tag;
+    if (this.tag_id === TAG_NOT_SET || this.tag_id === null) {
+      where.tag_id = null;
+    } else if (this.tag_id === ANY_TAG_SET) {
+      where.tag_id = 'not null';
+    } else if (this.tag_id !== ALL_TAGS) {
+      where.tag_id = this.tag_id;
     }
 
-    if (this.tagId === TAG_NOT_SET) {
-      where.tag = null;
-    } else if (this.tagId === ANY_TAG_SET) {
-      where.tag = '0';
-    } else if (this.tagId) {
-      where.tag = this.tagId;
-    }
-
-    if (this.organization_id === ORGANIZATION_NOT_SET) {
+    if (
+      this.organization_id === ORGANIZATION_NOT_SET ||
+      (Array.isArray(this.organization_id) &&
+        this.organization_id[0] === ORGANIZATION_NOT_SET)
+    ) {
       where.organization_id = null;
-    } else if (this.organization_id !== ALL_ORGANIZATIONS) {
+    } else {
       where.organization_id = this.organization_id;
     }
 
@@ -113,27 +117,7 @@ export default class Filter {
     let orCondition = false;
     const { ...restFilter } = where;
 
-    if (this.grower_account_id) {
-      const planterIds = this.grower_account_id
-        .split(',')
-        .map((item) => item.trim());
-
-      if (planterIds.length === 1) {
-        restFilter.grower_account_id = this.grower_account_id;
-      } else {
-        if (!orCondition) {
-          orCondition = true;
-          where = [];
-        }
-        planterIds.forEach((grower_account_id) => {
-          if (grower_account_id) {
-            where.push({
-              grower_account_id: grower_account_id,
-            });
-          }
-        });
-      }
-    }
+    // log.debug('FILTER MODEL', this, where);
 
     return orCondition
       ? { ...restFilter, or: where }
@@ -160,6 +144,10 @@ export default class Filter {
   countAppliedFilters() {
     let numFilters = 0;
 
+    if (this.status) {
+      numFilters += 1;
+    }
+
     if (this.uuid) {
       numFilters += 1;
     }
@@ -184,11 +172,7 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.tagId > 0) {
-      numFilters += 1;
-    }
-
-    if (this.tag > 0) {
+    if (this.tag_id) {
       numFilters += 1;
     }
 
@@ -196,6 +180,7 @@ export default class Filter {
       numFilters += 1;
     }
 
+    // if there's an organization id and it's not an array of all ids
     if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
@@ -212,13 +197,16 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.status) {
-      numFilters += 1;
-    }
-
     if (this.grower_account_id) {
       numFilters += 1;
     }
+
+    // log.debug(
+    //   'Count Filters ------------------',
+    //   this.getWhereObj(),
+    //   Object.keys(this.getWhereObj()).length,
+    //   numFilters
+    // );
 
     return numFilters;
   }

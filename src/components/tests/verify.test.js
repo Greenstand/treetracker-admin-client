@@ -14,14 +14,13 @@ import userEvent from '@testing-library/user-event';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppProvider } from '../../context/AppContext';
-import { VerifyContext, VerifyProvider } from '../../context/VerifyContext';
+import { VerifyProvider } from '../../context/VerifyContext';
 import { GrowerContext, GrowerProvider } from '../../context/GrowerContext';
 import { SpeciesProvider } from '../../context/SpeciesContext';
 import { TagsContext, TagsProvider } from '../../context/TagsContext';
-// import FilterGrower from '../../models/FilterGrower';
-// import FilterModel from '../../models/Filter';
 import Verify from '../Verify';
 import {
+  CAPTURE_TAGS,
   RAW_CAPTURE,
   RAW_CAPTURES,
   GROWER,
@@ -59,7 +58,7 @@ describe('Verify', () => {
   };
   growerApi.getGrowers = () => {
     log.debug('mock getGrower:');
-    return Promise.resolve({ grower_accounts: GROWERS });
+    return Promise.resolve(GROWERS);
   };
   growerApi.getGrowerRegistrations = () => {
     log.debug('mock getGrowerRegistrations:');
@@ -97,6 +96,10 @@ describe('Verify', () => {
     log.debug('mock getCaptureCountPerSpecies:');
     return Promise.resolve({ count: 7 });
   };
+  captureApi.getCaptureTags = () => {
+    log.debug('mock getTags:');
+    return Promise.resolve(CAPTURE_TAGS);
+  };
   captureApi.getTags = () => {
     log.debug('mock getTags:');
     return Promise.resolve(TAGS);
@@ -115,8 +118,8 @@ describe('Verify', () => {
       render(
         <ThemeProvider theme={theme}>
           <BrowserRouter>
-            <AppProvider value={{ orgList: ORGS }}>
-              <GrowerContext.Provider value={growerValues}>
+            <AppProvider value={{ orgId: null, orgList: ORGS }}>
+              <GrowerProvider value={growerValues}>
                 <VerifyProvider value={verifyValues}>
                   <SpeciesProvider value={speciesValues}>
                     <TagsContext.Provider value={tagsValues}>
@@ -124,7 +127,7 @@ describe('Verify', () => {
                     </TagsContext.Provider>
                   </SpeciesProvider>
                 </VerifyProvider>
-              </GrowerContext.Provider>
+              </GrowerProvider>
             </AppProvider>
           </BrowserRouter>
         </ThemeProvider>
@@ -168,7 +171,11 @@ describe('Verify', () => {
 
       await waitFor(() => {
         //data won't actually be filtered but filters should be selected
-        log.debug('verifyValues.filter', verifyValues.filter);
+        // log.debug(
+        //   'verifyValues.filter',
+        //   verifyValues.filter.getWhereObj(),
+        //   verifyValues.filter.countAppliedFilters()
+        // );
         expect(verifyValues.filter.countAppliedFilters()).toBe(1);
         expect(screen.getByText('1')).toBeInTheDocument();
       });
@@ -211,28 +218,42 @@ describe('Verify', () => {
       });
     });
 
-    it.skip('renders capture details', async () => {
-      const captureDetails = screen.getAllByRole('button', {
+    it('renders capture details', async () => {
+      const captureBtns = screen.getAllByRole('button', {
         name: /capture details/i,
       });
 
-      // screen.logTestingPlaygroundURL(captureDetails);
-
-      expect(captureDetails).toHaveLength(4);
-      userEvent.click(captureDetails[0]);
+      expect(captureBtns).toHaveLength(4);
+      userEvent.click(captureBtns[0]);
 
       await waitFor(() => {
-        expect(screen.getByText(/capture data/i)).toBeInTheDocument();
-        expect(screen.getByText(/grower identifier/i)).toBeInTheDocument();
-        expect(screen.getByText(/grower1@some.place/i)).toBeInTheDocument();
-        expect(screen.getByText(/device identifier/i)).toBeInTheDocument();
-        // expect(screen.getByText(/1 - abcdef123456/i)).toBeInTheDocument();
-        expect(screen.getByText(/verification status/i)).toBeInTheDocument();
-        expect(screen.getByText(/token status/i)).toBeInTheDocument();
+        const captureDetail = screen.getByRole('presentation');
+        // screen.logTestingPlaygroundURL(captureDetail);
+        expect(
+          within(captureDetail).getByText(/capture data/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/grower account id/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/grower1@some.place/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/device identifier/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/1\-abcdef123456/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/verification status/i)
+        ).toBeInTheDocument();
+        expect(
+          within(captureDetail).getByText(/capture token/i)
+        ).toBeInTheDocument();
       });
     });
 
-    it.skip('renders grower details', async () => {
+    it('renders grower details', async () => {
       const growerDetails = screen.getAllByRole('button', {
         name: /grower details/i,
       });
@@ -246,28 +267,38 @@ describe('Verify', () => {
       userEvent.click(growerDetails[0]);
 
       await waitFor(() => {
-        expect(screen.getByText(/country/i)).toBeInTheDocument();
-        expect(screen.getByText(/organization/i)).toBeInTheDocument();
-        expect(screen.getByText(/person ID/i)).toBeInTheDocument();
-        expect(screen.getByText(/ID:/i)).toBeInTheDocument();
-        expect(screen.getByText(/email address/i)).toBeInTheDocument();
-        expect(screen.getByText(/phone number/i)).toBeInTheDocument();
-        expect(screen.getByText(/registered/i)).toBeInTheDocument();
+        const drawer = screen.getByRole('presentation');
+        // screen.logTestingPlaygroundURL(drawer);
+        expect(within(drawer).getByText('Grower Detail')).toBeInTheDocument();
+        expect(within(drawer).getByText(/region/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/organization/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/person ID/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/ID:/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/email address/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/phone number/i)).toBeInTheDocument();
+        expect(within(drawer).getByText(/registered/i)).toBeInTheDocument();
       });
     });
 
-    // it.skip('renders edit planter', () => {
-    //   const planterDetails = screen.getAllByRole('button', {
-    //     name: /planter details/i,
-    //   });
-    //   userEvent.click(planterDetails[0]);
+    it.skip('renders edit planter', async () => {
+      const growerDetails = screen.getAllByRole('button', {
+        name: /grower details/i,
+      });
 
-    //   screen.logTestingPlaygroundURL();
-    //   //
-    //   const editPlanter = screen.getByTestId(/edit-planter/i);
-    //   expect(editPlanter).toBeInTheDocument();
-    //   userEvent.click(editPlanter);
-    // });
+      await waitFor(() => {
+        expect(growerDetails).toHaveLength(4);
+      });
+
+      userEvent.click(growerDetails[0]);
+
+      await waitFor(() => {
+        const drawer = screen.getByRole('presentation');
+        screen.logTestingPlaygroundURL(drawer);
+        const editPlanter = within(drawer).getByTestId(/edit-planter/i);
+        expect(editPlanter).toBeInTheDocument();
+        userEvent.click(editPlanter);
+      });
+    });
   });
 });
 

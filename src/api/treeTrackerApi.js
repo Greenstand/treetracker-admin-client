@@ -1,4 +1,9 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
+import {
+  handleResponse,
+  handleError,
+  getOrganization,
+  makeQueryString,
+} from './apiUtils';
 import { getVerificationStatus } from '../common/utils';
 import { session } from '../models/auth';
 import log from 'loglevel';
@@ -15,15 +20,6 @@ const STATUS_STATES = {
 };
 
 export default {
-  makeQueryString(filterObj) {
-    let arr = [];
-    for (const key in filterObj) {
-      if ((filterObj[key] || filterObj[key] === 0) && filterObj[key] !== '') {
-        arr.push(`${key}=${encodeURIComponent(filterObj[key])}`);
-      }
-    }
-    return arr.join('&');
-  },
   /**
    * Verify Tool
    */
@@ -40,6 +36,7 @@ export default {
   ) {
     try {
       const where = filter.getWhereObj();
+
       if (where.active) {
         where.status =
           STATUS_STATES[getVerificationStatus(where.active, where.approved)];
@@ -54,7 +51,7 @@ export default {
       };
 
       const query = `${QUERY_API}/raw-captures${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -67,13 +64,13 @@ export default {
       handleError(error);
     }
   },
-  getRawCaptureCount(filter, abortController) {
+  getRawCaptureCount({ filter, ...rest }, abortController) {
     try {
       const where = filter.getWhereObj();
-      const filterObj = { ...where };
+      const filterObj = { ...where, ...rest };
 
       const query = `${QUERY_API}/raw-captures/count${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -140,10 +137,14 @@ export default {
   /**
    * Captures
    */
-  getCaptures({ ...params }) {
+
+  getCaptures({ limit = 25, offset = 0, order, filter = {} }) {
     try {
+      const where = filter.getWhereObj ? filter.getWhereObj() : {};
+      let filterObj = { ...where, limit, offset, order };
+
       const query = `${QUERY_API}/v2/captures${
-        params ? `?${this.makeQueryString(params)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -162,7 +163,7 @@ export default {
       const filterObj = { ...where };
 
       const query = `${QUERY_API}/v2/captures/count${
-        filterObj ? `?${this.makeQueryString(filterObj)}` : ''
+        filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
 
       return fetch(query, {
@@ -476,6 +477,7 @@ export default {
       return Promise.all(result);
     } catch (error) {
       handleError(error);
+      return Promise.reject(error);
     }
   },
   deleteCaptureTag({ captureId, tagId }) {

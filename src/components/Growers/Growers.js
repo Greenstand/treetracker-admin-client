@@ -9,10 +9,10 @@ import GrowerTooltip from './GrowerTooltip';
 import { GrowerContext } from 'context/GrowerContext';
 import { useStyle } from './Growers.styles.js';
 
-// const log = require('loglevel').getLogger('../components/Growers');
+const log = require('loglevel').getLogger('../components/Growers');
 
 const Growers = (props) => {
-  // log.debug('render: Growers...');
+  log.debug('render: Growers...');
   const classes = useStyle(props);
   const growerContext = useContext(GrowerContext);
   const [isDetailShown, setDetailShown] = useState(false);
@@ -27,6 +27,9 @@ const Growers = (props) => {
   }
 
   function handleGrowerClick(grower) {
+    if (grower.placeholder) {
+      return;
+    }
     setDetailShown(true);
     setGrowerDetail(grower);
   }
@@ -61,7 +64,7 @@ const Growers = (props) => {
         enterNextDelay={500}
         interactive
         title={
-          enableTooltips ? (
+          enableTooltips && !grower.placeholder ? (
             <GrowerTooltip grower={grower} growerClick={handleGrowerClick} />
           ) : (
             ''

@@ -1,3 +1,36 @@
+# [1.123.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.122.0...v1.123.0) (2023-02-04)
+
+
+### Bug Fixes
+
+* disable tooltip  & onClick for placehlderCard ([#1020](https://github.com/Greenstand/treetracker-admin-client/issues/1020)) ([bc1d74d](https://github.com/Greenstand/treetracker-admin-client/commit/bc1d74daeca9cde5c7c5916de0048d559d1ea9fd))
+
+
+### Features
+
+* refactor capture tagging UX [#995](https://github.com/Greenstand/treetracker-admin-client/issues/995) ([#1014](https://github.com/Greenstand/treetracker-admin-client/issues/1014)) ([e541c49](https://github.com/Greenstand/treetracker-admin-client/commit/e541c496cb643280fe67349185f43e8fe2df5870))
+
+# [1.122.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.3...v1.122.0) (2023-01-31)
+
+
+### Features
+
+* fix filtering by organizations using legacy auth and queries to microservices ([#978](https://github.com/Greenstand/treetracker-admin-client/issues/978)) ([95f751d](https://github.com/Greenstand/treetracker-admin-client/commit/95f751d0d82bc507f6f537b021e147edf361b2ba))
+
+## [1.121.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.2...v1.121.3) (2023-01-29)
+
+
+### Bug Fixes
+
+* tidy handling of capture tags in Captures tool ([#1005](https://github.com/Greenstand/treetracker-admin-client/issues/1005)) ([7f4eca5](https://github.com/Greenstand/treetracker-admin-client/commit/7f4eca5c42bf538189758e4b3f29fc999cc54721))
+
+## [1.121.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.1...v1.121.2) (2023-01-26)
+
+
+### Bug Fixes
+
+* growers missing information ([#1011](https://github.com/Greenstand/treetracker-admin-client/issues/1011)) ([32748e9](https://github.com/Greenstand/treetracker-admin-client/commit/32748e9f97188e381e33588fdfa1eead8c611569))
+
 ## [1.121.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.121.0...v1.121.1) (2023-01-14)
 
 

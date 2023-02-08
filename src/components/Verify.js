@@ -318,12 +318,13 @@ const Verify = (props) => {
     }
 
     /*
-     * if approved, add captureApprovalTag to tagInput, create new tags, and return all the applied tags
+     * if approved, create new tags, and return all the applied tags
      */
     if (approveAction.isApproved) {
-      const tags = await tagsContext.createTags(
-        approveAction.captureApprovalTag
-      );
+      const tags = await tagsContext
+        .createTags
+        //approveAction.captureApprovalTag
+        ();
       approveAction.tags = tags.map((t) => t.id);
       delete approveAction.captureApprovalTag;
     }
