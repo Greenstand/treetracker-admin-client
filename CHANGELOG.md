@@ -1,3 +1,10 @@
+## [1.123.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.0...v1.123.1) (2023-02-13)
+
+
+### Bug Fixes
+
+* update growers query endpoint to reflect API change ([#1021](https://github.com/Greenstand/treetracker-admin-client/issues/1021)) ([427f37a](https://github.com/Greenstand/treetracker-admin-client/commit/427f37a5f0f5691c1ab8f387c79baf5f4458dc92))
+
 # [1.123.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.122.0...v1.123.0) (2023-02-04)
 
 
