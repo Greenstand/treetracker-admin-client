@@ -9,7 +9,7 @@ export default {
   // query legacy api
   getGrower(id) {
     try {
-      const growerQuery = `${QUERY_API}/grower-accounts/${id}`;
+      const growerQuery = `${QUERY_API}/v2/growers/${id}`;
 
       return fetch(growerQuery, {
         method: 'GET',
@@ -32,7 +32,7 @@ export default {
         offset: skip,
       };
 
-      const query = `${QUERY_API}/grower-accounts${
+      const query = `${QUERY_API}/v2/growers${
         growerFilter ? `?${makeQueryString(growerFilter)}` : ''
       }`;
 
@@ -51,7 +51,7 @@ export default {
   getCount(filter) {
     try {
       const filterObj = filter?.getWhereObj ? filter.getWhereObj() : {};
-      const query = `${QUERY_API}/grower-accounts/count${
+      const query = `${QUERY_API}/v2/growers/count${
         filterObj ? `?${makeQueryString(filterObj)}` : ''
       }`;
       return fetch(query, {
@@ -67,7 +67,7 @@ export default {
 
   getGrowerSelfies(growerId) {
     try {
-      const growerSelfiesQuery = `${QUERY_API}/grower-accounts/${growerId}/selfies`;
+      const growerSelfiesQuery = `${QUERY_API}/v2/growers/${growerId}/selfies`;
 
       return fetch(growerSelfiesQuery, {
         method: 'GET',
