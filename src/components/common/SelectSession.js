@@ -19,7 +19,7 @@ function SelectSession({ orgId, defaultSessions, handleSelection }) {
 
   const handleChange = (e) => {
     const session = [...defaultOrgList, ...sessionList].find(
-      (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
+      (o) => o.id === e.target.value
     );
     handleSelection(session);
   };
