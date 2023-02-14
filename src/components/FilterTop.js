@@ -128,7 +128,6 @@ function Filter(props) {
     filter.tag_id = tag ? tag.id : undefined;
     filter.organization_id = organizationId;
     filter.session_id = sessionId;
-    filter.stakeholderUUID = stakeholderUUID;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -146,7 +145,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     setSessionId(SESSION_NOT_SET);
     // setTokenId(filterOptionAll);
 
