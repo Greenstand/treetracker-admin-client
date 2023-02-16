@@ -25,8 +25,8 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
           value: 'All',
         },
         {
-          id: ORGANIZATION_NOT_SET,
-          stakeholder_uuid: ORGANIZATION_NOT_SET,
+          id: 'ORGANIZATION_NOT_SET',
+          stakeholder_uuid: 'ORGANIZATION_NOT_SET',
           name: 'Not set',
           value: null,
         },
