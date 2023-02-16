@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { TextField, MenuItem } from '@material-ui/core';
 import { AppContext } from 'context/AppContext';
-import { ALL_ORGANIZATIONS, ORGANIZATION_NOT_SET } from 'models/Filter';
+import { ALL_ORGANIZATIONS } from 'models/Filter';
 
 function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
   const { orgList, userHasOrg } = useContext(AppContext);
