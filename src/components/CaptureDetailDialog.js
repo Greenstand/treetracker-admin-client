@@ -343,7 +343,7 @@ function CaptureDetailDialog({
                   <Chip key={tag} label={tag} className={classes.chip} />
                 ))}
 
-                {captureTags.map((tag) => (
+                {captureTags.flat().map((tag) => (
                   <Chip
                     key={tag.tag_name}
                     label={tag.tag_name}
