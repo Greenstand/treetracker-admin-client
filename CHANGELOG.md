@@ -1,3 +1,11 @@
+## [1.123.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.1...v1.123.2) (2023-02-18)
+
+
+### Bug Fixes
+
+* tags displaying ([#1023](https://github.com/Greenstand/treetracker-admin-client/issues/1023)) ([507bd37](https://github.com/Greenstand/treetracker-admin-client/commit/507bd37f360802b5a9d50466d03c7010de6bd027))
+* untagged captures ([#1024](https://github.com/Greenstand/treetracker-admin-client/issues/1024)) ([9145981](https://github.com/Greenstand/treetracker-admin-client/commit/914598163d3290502b6dbdbe8b47f00d62d3b497))
+
 ## [1.123.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.0...v1.123.1) (2023-02-13)
 
 
