@@ -57,7 +57,9 @@ function DashStatUnprocessedCaptures(props) {
   const [totalUnprocessed, setTotalUnprocessed] = useState(null);
 
   const getTotalUnprocessed = async () => {
-    const { count } = await api.getRawCaptureCount(unprocessedFilter);
+    const { count } = await api.getRawCaptureCount({
+      filter: unprocessedFilter,
+    });
     setTotalUnprocessed(count);
   };
 
