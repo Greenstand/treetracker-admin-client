@@ -4,6 +4,7 @@
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+export const ANY_CAPTURES_AMOUNT = 'ANY_CAPTURES_AMOUNT_SET';
 // import log from 'loglevel';
 
 export default class Filter {
@@ -53,6 +54,24 @@ export default class Filter {
 
     if (this.phone) {
       where.phone = this.phone;
+    }
+
+    if (
+      !isNaN(this.capturesAmount_min) ||
+      (this.capturesAmount_range && !isNaN(this.capturesAmount_range.min))
+    ) {
+      where.capturesAmount_min = !isNaN(this.capturesAmount_min)
+        ? this.capturesAmount_min
+        : this.capturesAmount_range.min;
+    }
+
+    if (
+      !isNaN(this.capturesAmount_max) ||
+      (this.capturesAmount_range && !isNaN(this.capturesAmount_range.max))
+    ) {
+      where.capturesAmount_max = !isNaN(this.capturesAmount_max)
+        ? this.capturesAmount_max
+        : this.capturesAmount_range.max;
     }
 
     return where;
@@ -106,6 +125,13 @@ export default class Filter {
     }
 
     if (this.phone) {
+      numFilters += 1;
+    }
+
+    if (
+      this.capturesAmount_range &&
+      this.capturesAmount_range !== ANY_CAPTURES_AMOUNT
+    ) {
       numFilters += 1;
     }
 

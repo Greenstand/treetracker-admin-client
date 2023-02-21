@@ -3,9 +3,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FilterModel from '../models/FilterGrower';
+import FilterModel, { ANY_CAPTURES_AMOUNT } from '../models/FilterGrower';
 import SelectOrg from './common/SelectOrg';
 import { ALL_ORGANIZATIONS } from '../models/Filter';
+import SelectCapturesAmount from './common/SelectCapturesAmount';
 
 export const FILTER_WIDTH = 330;
 
@@ -51,6 +52,10 @@ function FilterTopGrower(props) {
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
+
+  const [capturesAmountRange, setCapturesAmountRange] = useState(
+    filter?.capturesAmountRange || ANY_CAPTURES_AMOUNT
+  );
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.device_identifier || ''
   );
@@ -67,6 +72,7 @@ function FilterTopGrower(props) {
       phone: phone.trim(),
       device_identifier: deviceIdentifier.trim(),
       wallet: wallet.trim(),
+      capturesAmount_range: capturesAmountRange.value,
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -81,6 +87,7 @@ function FilterTopGrower(props) {
     setPhone('');
     setDeviceIdentifier('');
     setWallet('');
+    setCapturesAmountRange(ANY_CAPTURES_AMOUNT);
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -181,6 +188,12 @@ function FilterTopGrower(props) {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 onKeyDown={handleEnterPress}
+              />
+              <SelectCapturesAmount
+                capturesAmountRange={capturesAmountRange}
+                handleSelection={(capturesAmountRange) => {
+                  setCapturesAmountRange(capturesAmountRange);
+                }}
               />
             </Grid>
             <Grid className={classes.inputContainer}>
