@@ -9,6 +9,7 @@ import {
   Grid,
   TextField,
   CircularProgress,
+  Box,
 } from '@material-ui/core';
 import ImageScroller from './ImageScroller';
 import SelectOrg from './common/SelectOrg';
@@ -27,6 +28,9 @@ const useStyle = makeStyles((theme) => ({
   textInput: {
     margin: theme.spacing(2, 0),
     flex: '0 0 49%',
+  },
+  aboutInput: {
+    flex: '0 0 100%',
   },
 }));
 
@@ -127,11 +131,20 @@ const EditGrower = (props) => {
             onSelectChange={handleChange}
           />
           {inputs.map((row, rowIdx) => (
-            <Grid item container direction="row" key={rowIdx}>
+            <Grid
+              item
+              container
+              direction="row"
+              justifyContent="space-between"
+              key={rowIdx}
+            >
               {row.map((input, colIdx) => (
                 <TextField
                   key={`TextField_${rowIdx}_${colIdx}`}
-                  className={classes.textInput}
+                  className={[
+                    classes.textInput,
+                    input.attr == 'about' && classes.aboutInput,
+                  ].join(' ')}
                   id={input.attr}
                   label={input.label}
                   type={input.type || 'text'}
@@ -149,12 +162,7 @@ const EditGrower = (props) => {
             </Grid>
           ))}
 
-          <TextField
-            className={classes.textInput}
-            label="Grower-entered organization"
-            value={getValue('organization')}
-            disabled
-          />
+          <Box className={classes.textInput}>Organization - FCC [example]</Box>
 
           <SelectOrg
             orgId={getValue('organizationId')}
