@@ -8,6 +8,7 @@ import FilterModel, {
   // SPECIES_ANY_SET,
   // SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
+  ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
 } from '../models/Filter';
@@ -91,8 +92,7 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-      filter?.organizationId ||
-      ALL_ORGANIZATIONS
+    filter?.organizationId || ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
@@ -123,7 +123,6 @@ function Filter(props) {
     filter.species_id = speciesId;
     filter.tag_id = tag ? tag.id : undefined;
     filter.organization_id = organizationId;
-    filter.stakeholderUUID = stakeholderUUID;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -141,7 +140,6 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setStakeholderUUID(ALL_ORGANIZATIONS);
     // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -286,8 +284,8 @@ function Filter(props) {
                 id="grower-identifier"
                 label="Wallet/Grower Identifier"
                 placeholder="e.g. grower@example.com"
-                value={growerIdentifier}
-                onChange={(e) => setGrowerIdentifier(e.target.value)}
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
               />
               {/* <TextField
                 data-testid="species-dropdown"
@@ -318,7 +316,7 @@ function Filter(props) {
                       {species.name}
                     </MenuItem>
                   ))
-                  )}
+                )}
               </TextField> */}
               <Autocomplete
                 data-testid="tag-dropdown"
@@ -342,14 +340,14 @@ function Filter(props) {
                     isPublic: true,
                     status: 'active',
                     owner_id: null,
-                },
+                  },
                   {
                     id: ANY_TAG_SET,
                     name: 'Any tag set',
                     isPublic: true,
                     status: 'active',
                     owner_id: null,
-                },
+                  },
                   ...tagsContext.tagList.filter((t) =>
                     t.name
                       .toLowerCase()
@@ -374,7 +372,7 @@ function Filter(props) {
               <SelectOrg
                 orgId={organizationId}
                 handleSelection={(org) => {
-                  setOrganizationId(org.id);
+                  setOrganizationId(org.stakeholder_uuid);
                 }}
               />
             </Grid>
