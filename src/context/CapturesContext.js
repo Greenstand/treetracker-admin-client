@@ -3,7 +3,10 @@ import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import api from '../api/treeTrackerApi';
 // import { captureStatus } from '../common/variables';
 import { AppContext } from './AppContext.js';
-import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
+import {
+  setOrganizationFilter,
+  handleQuerySearchParams,
+} from '../common/utils';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
@@ -59,18 +62,9 @@ export function CapturesProvider(props) {
   const [filter, setFilter] = useState(
     FilterModel.fromSearchParams({
       organization_id: ALL_ORGANIZATIONS,
-      ...filterParams
+      ...filterParams,
     })
   );
-
-  useEffect(() => {
-    const abortController = new AbortController();
-    // orgId can be either null or an [] of uuids
-    if (orgId !== undefined) {
-      getCaptures({ signal: abortController.signal });
-    }
-    return () => abortController.abort();
-  }, [filter, rowsPerPage, page, order, orderBy, orgId]);
 
   useEffect(() => {
     handleQuerySearchParams({
@@ -83,9 +77,12 @@ export function CapturesProvider(props) {
     });
 
     const abortController = new AbortController();
-    getCaptures({ signal: abortController.signal });
+    // orgId can be either null or an [] of uuids
+    if (orgId !== undefined) {
+      getCaptures({ signal: abortController.signal });
+    }
     return () => abortController.abort();
-  }, [filter, rowsPerPage, page, order, orderBy]);
+  }, [filter, rowsPerPage, page, order, orderBy, orgId]);
 
   useEffect(() => {
     if (!searchParams) {
