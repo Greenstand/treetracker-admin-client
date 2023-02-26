@@ -44,7 +44,6 @@ import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from 'api/treeTrackerApi';
 import log from 'loglevel';
-import { handleQuerySearchParams } from '../../common/utils';
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -311,7 +310,6 @@ function CaptureMatchingView() {
     endDate: now.toISOString().split('T')[0],
     stakeholderUUID: null,
   };
-  const url = new URL(window.location.href);
 
   const classes = useStyle();
   const appContext = useContext(AppContext);
@@ -323,13 +321,9 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState(
-    url.searchParams.get('startDate') || ''
-  );
-  const [endDate, setEndDate] = useState(url.searchParams.get('endDate') || '');
-  const [organizationId, setOrganizationId] = useState(
-    url.searchParams.get('organizationId') || null
-  );
+  const [startDate, setStartDate] = useState(initialFilter.startDate);
+  const [endDate, setEndDate] = useState(initialFilter.endDate);
+  const [organizationId, setOrganizationId] = useState(null);
   const [stakeholderUUID, setStakeholderUUID] = useState(null);
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
@@ -433,17 +427,6 @@ function CaptureMatchingView() {
     return () => abortController.abort();
   }, [captureImage]);
 
-  useEffect(() => {
-    handleQuerySearchParams('startDate', startDate);
-    handleQuerySearchParams('endDate', endDate);
-    handleQuerySearchParams('organizationId', organizationId);
-    setFilter({
-      startDate,
-      endDate,
-      stakeholderUUID,
-    });
-  }, []);
-
   // Capture Image Pagination function
   const handleChange = (e, value) => {
     setCurrentPage(value);
@@ -487,9 +470,6 @@ function CaptureMatchingView() {
 
   function handleFilterSubmit() {
     // log.debug('filter submit -----> ', organizationId, stakeholderUUID);
-    handleQuerySearchParams('startDate', startDate);
-    handleQuerySearchParams('endDate', endDate);
-    handleQuerySearchParams('organizationId', organizationId);
     setFilter({
       startDate,
       endDate,
@@ -589,17 +569,13 @@ function CaptureMatchingView() {
                     filter.endDate || 'End Date'
                   }`}
                   className={classes.currentHeaderChip}
-                  onDelete={() => {
+                  onDelete={() =>
                     setFilter({
                       ...filter,
                       startDate: undefined,
                       endDate: undefined,
-                    });
-                    handleQuerySearchParams('startDate', '');
-                    handleQuerySearchParams('endDate', '');
-                    setStartDate('');
-                    setEndDate('');
-                  }}
+                    })
+                  }
                 />
               )}
               {filter.stakeholderUUID && (
