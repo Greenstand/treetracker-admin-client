@@ -71,6 +71,6 @@ export const handleQuerySearchParams = (newParams) => {
   url.search = searchParams.toString();
 
   if (url.search !== oldSearch) {
-    window.history.pushState({}, '', url.search);
+    window.history.pushState({}, '', url.search || location.pathname);
   }
 };
