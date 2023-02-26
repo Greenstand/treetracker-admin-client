@@ -574,12 +574,13 @@ const Verify = (props) => {
               </Button>,
             ]}
           >
-            <FilterTop
-              onSubmit={verifyContext.updateFilter}
-              filter={verifyContext.filter}
-              onClose={handleFilterClick}
-              open={isFilterShown}
-            />
+            {isFilterShown && (
+              <FilterTop
+                onSubmit={verifyContext.updateFilter}
+                filter={verifyContext.filter}
+                onClose={handleFilterClick}
+              />
+            )}
           </Navbar>
 
           <Box style={{ overflow: 'hidden auto' }}>

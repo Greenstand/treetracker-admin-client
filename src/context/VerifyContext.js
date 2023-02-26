@@ -4,7 +4,10 @@ import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import * as loglevel from 'loglevel';
 import { captureStatus } from 'common/variables';
 import { AppContext } from './AppContext.js';
-import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
+import {
+  setOrganizationFilter,
+  handleQuerySearchParams,
+} from '../common/utils';
 
 const log = loglevel.getLogger('../context/VerifyContext');
 
@@ -108,6 +111,7 @@ export function VerifyProvider(props) {
     setFilter(
       FilterModel.fromSearchParams({
         status: captureStatus.UNPROCESSED,
+        organization_id: ALL_ORGANIZATIONS,
         ...filterParams,
       })
     );

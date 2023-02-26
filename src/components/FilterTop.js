@@ -26,6 +26,7 @@ import {
   verificationStates,
   captureStatus,
   datePickerDefaultMinDate,
+  // tokenizationStates,
 } from '../common/variables';
 
 // import { SpeciesContext } from '../context/SpeciesContext';

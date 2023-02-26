@@ -10,10 +10,10 @@ import FilterModel, {
   ALL_SPECIES,
   SPECIES_ANY_SET,
   SPECIES_NOT_SET,
+  ALL_ORGANIZATIONS,
   ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
-  ALL_ORGANIZATIONS,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -29,7 +29,6 @@ import {
   tokenizationStates,
   datePickerDefaultMinDate,
 } from '../common/variables';
-
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';

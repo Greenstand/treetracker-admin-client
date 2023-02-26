@@ -4,17 +4,6 @@
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
-export const FILTER_FIELDS = {
-  personId: 'personId',
-  wallet: 'wallet',
-  id: 'id',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  organizationId: 'organization_id',
-  deviceIdentifier: 'device_identifier',
-  email: 'email',
-  phone: 'phone',
-};
 // import log from 'loglevel';
 
 class Filter {

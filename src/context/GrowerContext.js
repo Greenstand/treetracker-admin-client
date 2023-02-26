@@ -2,7 +2,10 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import { AppContext } from './AppContext.js';
 import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
-import { setOrganizationFilter, handleQuerySearchParams } from '../common/utils';
+import {
+  setOrganizationFilter,
+  handleQuerySearchParams,
+} from '../common/utils';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('context/GrowerContext');
@@ -51,7 +54,7 @@ export function GrowerProvider(props) {
   const [filter, setFilter] = useState(
     FilterGrower.fromSearchParams({
       organization_id: ALL_ORGANIZATIONS,
-      ...filterParams
+      ...filterParams,
     })
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +71,7 @@ export function GrowerProvider(props) {
     }
 
     const abortController = new AbortController();
+    // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
       load({ signal: abortController.signal });
       // getCount({ signal: abortController.signal });
@@ -143,7 +147,7 @@ export function GrowerProvider(props) {
 
     const { count } = await api.getCount({
       filter: new FilterGrower(finalFilter),
-      abortController
+      abortController,
     });
     setCount(Number(count));
   };
