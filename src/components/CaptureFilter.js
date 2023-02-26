@@ -92,7 +92,7 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter.organizationId || ALL_ORGANIZATIONS
+    filter?.organization_id || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 

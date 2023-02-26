@@ -48,7 +48,7 @@ function FilterTopGrower(props) {
   const [firstName, setFirstName] = useState(filter?.firstName || '');
   const [lastName, setLastName] = useState(filter?.lastName || '');
   const [organizationId, setOrganizationId] = useState(
-    filter?.organizationId || ALL_ORGANIZATIONS
+    filter?.organization_id || ALL_ORGANIZATIONS
   );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
