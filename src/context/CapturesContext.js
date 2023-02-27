@@ -82,11 +82,7 @@ export function CapturesProvider(props) {
   const getAllCaptures = async () => {
     log.debug('load all captures for export');
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
-    const finalFilter = setOrganizationFilter(
-      filter.getWhereObj(),
-      orgId,
-      orgList
-    );
+    const finalFilter = setOrganizationFilter({ ...filter }, orgId, orgList);
 
     const filterData = {
       filter: new FilterModel(finalFilter),

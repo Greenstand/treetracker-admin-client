@@ -56,22 +56,12 @@ export default class Filter {
       where.phone = this.phone;
     }
 
-    if (
-      !isNaN(this.capturesAmount_min) ||
-      (this.capturesAmount_range && !isNaN(this.capturesAmount_range.min))
-    ) {
-      where.capturesAmount_min = !isNaN(this.capturesAmount_min)
-        ? this.capturesAmount_min
-        : this.capturesAmount_range.min;
+    if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.min)) {
+      where.capturesAmount_min = this.capturesAmount_range.min;
     }
 
-    if (
-      !isNaN(this.capturesAmount_max) ||
-      (this.capturesAmount_range && !isNaN(this.capturesAmount_range.max))
-    ) {
-      where.capturesAmount_max = !isNaN(this.capturesAmount_max)
-        ? this.capturesAmount_max
-        : this.capturesAmount_range.max;
+    if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.max)) {
+      where.capturesAmount_max = this.capturesAmount_range.max;
     }
 
     return where;
