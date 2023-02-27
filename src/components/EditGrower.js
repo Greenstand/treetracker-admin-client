@@ -9,7 +9,7 @@ import {
   Grid,
   TextField,
   CircularProgress,
-  Box,
+  Typography,
 } from '@material-ui/core';
 import ImageScroller from './ImageScroller';
 import SelectOrg from './common/SelectOrg';
@@ -23,14 +23,14 @@ const useStyle = makeStyles((theme) => ({
   textContainer: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    justifyContent: 'space-between',
+    gap: theme.spacing(2),
   },
   textInput: {
     margin: theme.spacing(2, 0),
-    flex: '0 0 49%',
+    flex: 1,
   },
-  aboutInput: {
-    flex: '0 0 100%',
+  typographyWithMargin: {
+    margin: theme.spacing(2, 0),
   },
 }));
 
@@ -135,16 +135,13 @@ const EditGrower = (props) => {
               item
               container
               direction="row"
-              justifyContent="space-between"
+              className={classes.textContainer}
               key={rowIdx}
             >
               {row.map((input, colIdx) => (
                 <TextField
                   key={`TextField_${rowIdx}_${colIdx}`}
-                  className={[
-                    classes.textInput,
-                    input.attr == 'about' && classes.aboutInput,
-                  ].join(' ')}
+                  className={classes.textInput}
                   id={input.attr}
                   label={input.label}
                   type={input.type || 'text'}
@@ -162,7 +159,9 @@ const EditGrower = (props) => {
             </Grid>
           ))}
 
-          <Box className={classes.textInput}>Organization - FCC [example]</Box>
+          <Typography variant="body1" className={classes.typographyWithMargin}>
+            Organization - {getValue('organization')}
+          </Typography>
 
           <SelectOrg
             orgId={getValue('organizationId')}
