@@ -463,4 +463,14 @@ describe('Messaging', () => {
     );
     // cy.contains("290a8323-7ebb-4ca5-934e-5801e2df1190").click();
   });
+  it('Returns an error message if the user is not registered for messaging', () => {
+    cy.visit('http://localhost:3001/login');
+    cy.get('#userName').type('test1');
+    cy.get('#password').type('EoCAyCPpW0');
+    cy.contains(/log/i).click();
+    cy.contains(/inbox/i).click();
+    cy.contains(
+      'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.'
+    );
+  });
 });
