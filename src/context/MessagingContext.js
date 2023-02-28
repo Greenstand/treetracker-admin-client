@@ -185,14 +185,14 @@ export const MessagingProvider = (props) => {
         } else {
           groupMessageByHandle(res.messages);
         }
-      } else {
-        if (res.status === 404 && res.message === 'Author handle not found') {
-          throw 'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.';
-        }
-        throw 'Sorry, there was a problem loading your messages.';
       }
     } catch (error) {
-      setErrorMessage(error);
+      if (error.status === 404 && error.message === 'Author handle not found') {
+        setErrorMessage(
+          'Your user is not yet configured for messaging access. Please contact technical support.'
+        );
+      }
+      throw 'Sorry, there was a problem loading your messages.';
     }
   };
 
