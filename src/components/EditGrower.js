@@ -38,6 +38,7 @@ const EditGrower = (props) => {
   const [growerUpdate, setGrowerUpdate] = useState(null);
   const [loadingGrowerImages, setLoadingGrowerImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
+  const [customUrl, setCustomUrl] = useState('nothing');
 
   useEffect(() => {
     async function loadGrowerImages() {
@@ -52,14 +53,14 @@ const EditGrower = (props) => {
         setGrowerImages([
           ...(grower.image_url ? [grower.image_url] : []),
           ...(notAllowNull || []).filter((img) => img != grower.image_url),
+          customUrl === '' ? null : customUrl,
         ]);
-        console.log(grower);
       }
     }
 
     setGrowerUpdate(null);
     loadGrowerImages();
-  }, [grower]);
+  }, [grower, customUrl]);
   function isImgURL(url) {
     if (typeof url === 'object') {
       return url === null
@@ -86,6 +87,7 @@ const EditGrower = (props) => {
 
   function handleCancel() {
     setGrowerUpdate(null);
+    setCustomUrl('nothing');
     onClose();
   }
 
@@ -132,7 +134,7 @@ const EditGrower = (props) => {
       <DialogContent>
         <Grid container direction="column" className={classes.container}>
           <ImageScroller
-            images={growerImages}
+            images={growerImages.filter((e) => e !== 'nothing')}
             selectedImage={growerUpdate?.imageUrl || grower.imageUrl}
             loading={loadingGrowerImages}
             blankMessage="No grower images available"
@@ -144,11 +146,11 @@ const EditGrower = (props) => {
           <TextField
             className={classes.textInput}
             label="Image Custom URl"
-            error={!isImgURL(growerUpdate)}
+            error={!isImgURL(customUrl)}
             onChange={(e) => {
-              console.log(growerUpdate);
-
-              handleChange('image_url', e.target.value);
+              if (isImgURL(e.target.value)) {
+                setCustomUrl(e.target.value);
+              } else setCustomUrl('nothing');
             }}
           />
           {inputs.map((row, rowIdx) => (
