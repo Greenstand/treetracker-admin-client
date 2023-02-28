@@ -98,9 +98,7 @@ const EditGrower = (props) => {
     const changed = Object.keys(newGrower).some((key) => {
       return newGrower[key] !== grower[key];
     });
-
     changed ? setGrowerUpdate(newGrower) : setGrowerUpdate(null);
-    console.log(growerUpdate);
   }
 
   function getValue(attr) {
