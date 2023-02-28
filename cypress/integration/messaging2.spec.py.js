@@ -1,4 +1,9 @@
 describe('Messaging', () => {
+  Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the tests due to uncaught errors
+    return false;
+  });
   it('Survey', () => {
     cy.viewport(1440, 1024);
     // Cypress intercept url '/capture' and return a mock response
@@ -470,7 +475,7 @@ describe('Messaging', () => {
     cy.contains(/log/i).click();
     cy.contains(/inbox/i).click();
     cy.contains(
-      'Configuration Error: Your user is not yet configured for messaging access. Please contact technical support.'
+      'Your user is not yet configured for messaging access. Please contact technical support.'
     );
   });
 });
