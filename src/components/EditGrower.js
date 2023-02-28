@@ -45,18 +45,32 @@ const EditGrower = (props) => {
         setLoadingGrowerImages(true);
         const selfies = await growerContext.getGrowerSelfies(grower.id);
         setLoadingGrowerImages(false);
-
+        const notAllowNull =
+          selfies !== undefined && selfies.includes(null)
+            ? selfies.filter((e) => e !== null)
+            : selfies;
         setGrowerImages([
-          ...(grower.imageUrl ? [grower.imageUrl] : []),
-          ...(selfies || []).filter((img) => img !== grower.imageUrl),
+          ...(grower.image_url ? [grower.image_url] : []),
+          ...(notAllowNull || []).filter((img) => img != grower.image_url),
         ]);
+        console.log(grower);
       }
     }
 
     setGrowerUpdate(null);
     loadGrowerImages();
   }, [grower]);
-
+  function isImgURL(url) {
+    if (typeof url === 'object') {
+      return url === null
+        ? false
+        : /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url.image_url);
+    }
+    if (url === null || url === undefined) {
+      return false;
+    }
+    return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url);
+  }
   async function handleSave() {
     if (growerUpdate) {
       setSaveInProgress(true);
@@ -84,6 +98,7 @@ const EditGrower = (props) => {
     });
 
     changed ? setGrowerUpdate(newGrower) : setGrowerUpdate(null);
+    console.log(growerUpdate);
   }
 
   function getValue(attr) {
@@ -125,6 +140,16 @@ const EditGrower = (props) => {
               growerUpdate?.imageRotation || grower.imageRotation || 0
             }
             onSelectChange={handleChange}
+          />
+          <TextField
+            className={classes.textInput}
+            label="Image Custom URl"
+            error={!isImgURL(growerUpdate)}
+            onChange={(e) => {
+              console.log(growerUpdate);
+
+              handleChange('image_url', e.target.value);
+            }}
           />
           {inputs.map((row, rowIdx) => (
             <Grid item container direction="row" key={rowIdx}>
