@@ -1,12 +1,24 @@
 import { Link } from 'react-router-dom';
 import logo from './images/logo.svg';
+import { AppContext } from '../context/AppContext';
+import { React, useContext } from 'react';
 
 /*
  * Just a logo icon
  */
-import React from 'react';
 
 export default function IconLogo() {
+  const appContext = useContext(AppContext);
+  const { user } = appContext;
+
+  if (user) {
+    const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
+    const orgID = user.policy.organization.id;
+    fetch(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
+      .then((response) => response.json())
+      .then((data) => console.log(data.stakeholders[0].logo_url));
+  }
+
   return (
     <Link to="/">
       <img
