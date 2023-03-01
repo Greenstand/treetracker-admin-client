@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import logo from './images/logo.svg';
 import { AppContext } from '../context/AppContext';
-import { React, useContext } from 'react';
+import { React, useContext, useState } from 'react';
 
 /*
  * Just a logo icon
@@ -10,6 +10,7 @@ import { React, useContext } from 'react';
 export default function IconLogo() {
   const appContext = useContext(AppContext);
   const { user } = appContext;
+  const [logoURL, setLogoURL] = useState();
 
   if (user) {
     const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
