@@ -33,8 +33,8 @@ export default function IconLogo() {
           maxHeight: 32,
           marginBottom: '-6px',
         }}
-        src={logo}
-        alt="Greenstand logo"
+        src={logoURL}
+        alt="logo"
       />
     </Link>
   );
