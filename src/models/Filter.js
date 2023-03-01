@@ -215,10 +215,10 @@ class Filter {
       status: this.status,
     };
   }
-}
 
-Filter.fromSearchParams = (searchParams) => {
-  return new Filter(searchParams);
-};
+  static fromSearchParams = (searchParams) => {
+    return new Filter(searchParams);
+  };
+}
 
 export default Filter;
