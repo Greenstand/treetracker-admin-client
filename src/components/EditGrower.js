@@ -38,39 +38,33 @@ const EditGrower = (props) => {
   const [growerUpdate, setGrowerUpdate] = useState(null);
   const [loadingGrowerImages, setLoadingGrowerImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
-  const [customUrl, setCustomUrl] = useState('nothing');
-
+  const [customImageUrl, setCustomImageUrl] = useState(null);
+  const [inputCustomImageUrlError, setInputCustomImageUrlError] = useState({
+    label: '',
+    error: false,
+  });
+  const regex = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
   useEffect(() => {
     async function loadGrowerImages() {
       if (grower?.id) {
         setLoadingGrowerImages(true);
         const selfies = await growerContext.getGrowerSelfies(grower.id);
         setLoadingGrowerImages(false);
-        const notAllowNull =
-          selfies !== undefined && selfies.includes(null)
-            ? selfies.filter((e) => e !== null)
-            : selfies;
         setGrowerImages([
+          customImageUrl === '' ? null : customImageUrl,
           ...(grower.image_url ? [grower.image_url] : []),
-          ...(notAllowNull || []).filter((img) => img != grower.image_url),
-          customUrl === '' ? null : customUrl,
+          ...(selfies || []).filter((img) => img != grower.image_url),
         ]);
       }
     }
-
     setGrowerUpdate(null);
     loadGrowerImages();
-  }, [grower, customUrl]);
+  }, [grower, customImageUrl]);
   function isImgURL(url) {
     if (typeof url === 'object') {
-      return url === null
-        ? false
-        : /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url.image_url);
+      return url === null ? false : regex.test(url.image_url);
     }
-    if (url === null || url === undefined) {
-      return false;
-    }
-    return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url);
+    return regex.test(url);
   }
   async function handleSave() {
     if (growerUpdate) {
@@ -85,9 +79,25 @@ const EditGrower = (props) => {
     onClose();
   }
 
+  function InputCustomUrlValidation(url) {
+    if (url === '' || isImgURL(url)) {
+      setInputCustomImageUrlError({
+        error: false,
+        label: '',
+      });
+
+      return;
+    }
+    if (!isImgURL(url)) {
+      setInputCustomImageUrlError({
+        error: true,
+        label: 'Please insert a valid Image URL',
+      });
+    }
+  }
   function handleCancel() {
     setGrowerUpdate(null);
-    setCustomUrl('nothing');
+    setCustomImageUrl(null);
     onClose();
   }
 
@@ -132,8 +142,8 @@ const EditGrower = (props) => {
       <DialogContent>
         <Grid container direction="column" className={classes.container}>
           <ImageScroller
-            images={growerImages.filter((e) => e !== 'nothing')}
-            selectedImage={growerUpdate?.imageUrl || grower.imageUrl}
+            images={growerImages.filter((e) => e !== null)}
+            selectedImage={growerUpdate?.image_url || grower.image_url}
             loading={loadingGrowerImages}
             blankMessage="No grower images available"
             imageRotation={
@@ -143,12 +153,15 @@ const EditGrower = (props) => {
           />
           <TextField
             className={classes.textInput}
-            label="Image Custom URl"
-            error={!isImgURL(customUrl)}
+            label="Image Custom URL"
+            helperText={inputCustomImageUrlError.label}
+            error={inputCustomImageUrlError.error}
             onChange={(e) => {
+              InputCustomUrlValidation(e.target.value);
               if (isImgURL(e.target.value)) {
-                setCustomUrl(e.target.value);
-              } else setCustomUrl('nothing');
+                setCustomImageUrl(e.target.value);
+                handleChange('image_url', e.target.value);
+              } else setCustomImageUrl(null);
             }}
           />
           {inputs.map((row, rowIdx) => (
