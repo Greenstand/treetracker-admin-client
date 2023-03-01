@@ -10,7 +10,7 @@ import { React, useContext, useState, useEffect } from 'react';
 export default function IconLogo() {
   const appContext = useContext(AppContext);
   const { user } = appContext;
-  const [logoURL, setLogoURL] = useState('');
+  const [logoURL, setLogoURL] = useState(logo);
 
   useEffect(() => {
     if (user) {
@@ -34,7 +34,7 @@ export default function IconLogo() {
           marginBottom: '-6px',
         }}
         src={logoURL}
-        alt="logo"
+        alt={logoURL === logo ? 'greenstand logo' : 'organization logo'}
       />
     </Link>
   );
