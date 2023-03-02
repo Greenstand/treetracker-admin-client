@@ -13,7 +13,7 @@ export default function IconLogo() {
   const [logoURL, setLogoURL] = useState(logo);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.policy.organization) {
       const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
       const orgID = user.policy.organization.id;
       fetch(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
