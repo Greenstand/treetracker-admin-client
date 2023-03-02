@@ -221,7 +221,7 @@ export const AppProvider = (props) => {
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
   const [orgId, setOrgId] = useState(undefined);
-  const [logoURL, setLogoURL] = useState(logo);
+  const [logoPath, setlogoPath] = useState('');
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -252,10 +252,10 @@ export const AppProvider = (props) => {
         .then((response) => response.json())
         .then((data) => {
           const orgLogo = data.stakeholders[0].logo_url;
-          orgLogo ? setLogoURL(orgLogo) : setLogoURL(logo);
+          orgLogo ? setlogoPath(orgLogo) : setlogoPath(logo);
         });
-    } else setLogoURL(logo);
-  }, [user]);
+    } else setlogoPath(logo);
+  }, [user, login]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -355,7 +355,7 @@ export const AppProvider = (props) => {
     routes,
     orgId,
     orgList,
-    logoURL,
+    logoPath,
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
