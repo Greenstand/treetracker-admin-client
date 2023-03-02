@@ -32,6 +32,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
+import logo from '../components/images/logo.svg';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
@@ -220,6 +221,7 @@ export const AppProvider = (props) => {
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
   const [orgId, setOrgId] = useState(undefined);
+  const [logoURL, setLogoURL] = useState(logo);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -240,6 +242,20 @@ export const AppProvider = (props) => {
       getOrganizationUUID();
     }
   }, [orgList]);
+
+  // Gets organization logo url from the API
+  useEffect(() => {
+    if (user && user.policy.organization) {
+      const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
+      const orgID = user.policy.organization.id;
+      fetch(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const orgLogo = data.stakeholders[0].logo_url;
+          orgLogo ? setLogoURL(orgLogo) : setLogoURL(logo);
+        });
+    } else setLogoURL(logo);
+  }, [user]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -339,6 +355,7 @@ export const AppProvider = (props) => {
     routes,
     orgId,
     orgList,
+    logoURL,
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,
