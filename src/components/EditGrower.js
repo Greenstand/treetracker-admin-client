@@ -39,7 +39,7 @@ const EditGrower = (props) => {
   const [loadingGrowerImages, setLoadingGrowerImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
   const [customImageUrl, setCustomImageUrl] = useState(null);
-  const [inputCustomImageUrlError, setInputCustomImageUrlError] = useState({
+  const [customImageUrlError, setCustomImageUrlError] = useState({
     label: '',
     error: false,
   });
@@ -79,9 +79,9 @@ const EditGrower = (props) => {
     onClose();
   }
 
-  function InputCustomUrlValidation(url) {
+  function handleCustomUrlError(url) {
     if (url === '' || isImgURL(url)) {
-      setInputCustomImageUrlError({
+      setCustomImageUrlError({
         error: false,
         label: '',
       });
@@ -89,7 +89,7 @@ const EditGrower = (props) => {
       return;
     }
     if (!isImgURL(url)) {
-      setInputCustomImageUrlError({
+      setCustomImageUrlError({
         error: true,
         label: 'Please insert a valid Image URL',
       });
@@ -154,10 +154,10 @@ const EditGrower = (props) => {
           <TextField
             className={classes.textInput}
             label="Image Custom URL"
-            helperText={inputCustomImageUrlError.label}
-            error={inputCustomImageUrlError.error}
+            helperText={customImageUrlError.label}
+            error={customImageUrlError.error}
             onChange={(e) => {
-              InputCustomUrlValidation(e.target.value);
+              handleCustomUrlError(e.target.value);
               if (isImgURL(e.target.value)) {
                 setCustomImageUrl(e.target.value);
                 handleChange('image_url', e.target.value);
