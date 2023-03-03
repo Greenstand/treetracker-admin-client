@@ -11,6 +11,8 @@ export default function IconLogo() {
   const appContext = useContext(AppContext);
   const { logoPath, user } = appContext;
 
+  // Hide logo if the logo URL hasn't been loaded or if the Greenstand logo is loaded
+  // and the user has an organization
   function isVisible() {
     if (!user) {
       return 'visible';
@@ -20,15 +22,24 @@ export default function IconLogo() {
     } else return 'visible';
   }
 
+  // Logo styling objects for both org and Greenstand logos to be applied to img
+  const greenstandLogoStyle = {
+    maxWidth: 149,
+    maxHeight: 32,
+    marginBottom: '-6px',
+    visibility: isVisible(),
+  };
+
+  const orgLogoStyle = {
+    maxHeight: 50,
+    marginBottom: '-15px',
+    visibility: isVisible(),
+  };
+
   return (
     <Link to="/">
       <img
-        style={{
-          maxWidth: 149,
-          maxHeight: 32,
-          marginBottom: '-6px',
-          visibility: isVisible(),
-        }}
+        style={logoPath === logo ? greenstandLogoStyle : orgLogoStyle}
         src={logoPath}
         alt={logoPath === logo ? 'greenstand logo' : 'organization logo'}
       />
