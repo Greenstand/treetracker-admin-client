@@ -17,7 +17,7 @@ export default function IconLogo() {
     if (!user) {
       return 'visible';
     }
-    if (logoPath === '' || (logoPath === logo && user.policy.organization)) {
+    if (logoPath === '') {
       return 'hidden';
     } else return 'visible';
   }
