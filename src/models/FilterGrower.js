@@ -57,11 +57,11 @@ export default class Filter {
     }
 
     if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.min)) {
-      where.capturesAmount_min = this.capturesAmount_range.min;
+      where.captures_amount_min = this.capturesAmount_range.min;
     }
 
     if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.max)) {
-      where.capturesAmount_max = this.capturesAmount_range.max;
+      where.captures_amount_max = this.capturesAmount_range.max;
     }
 
     return where;
