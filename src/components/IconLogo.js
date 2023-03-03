@@ -9,7 +9,13 @@ import { React, useContext } from 'react';
 
 export default function IconLogo() {
   const appContext = useContext(AppContext);
-  const { logoURL } = appContext;
+  const { logoPath } = appContext;
+
+  function isVisible() {
+    if (logoPath === '') {
+      return 'hidden';
+    } else return 'visible';
+  }
 
   return (
     <Link to="/">
@@ -18,9 +24,10 @@ export default function IconLogo() {
           maxWidth: 149,
           maxHeight: 32,
           marginBottom: '-6px',
+          visibility: isVisible(),
         }}
-        src={logoURL}
-        alt={logoURL === logo ? 'greenstand logo' : 'organization logo'}
+        src={logoPath}
+        alt={logoPath === logo ? 'greenstand logo' : 'organization logo'}
       />
     </Link>
   );
