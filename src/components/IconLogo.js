@@ -9,10 +9,13 @@ import { React, useContext } from 'react';
 
 export default function IconLogo() {
   const appContext = useContext(AppContext);
-  const { logoPath } = appContext;
+  const { logoPath, user } = appContext;
 
   function isVisible() {
-    if (logoPath === '') {
+    if (!user) {
+      return 'visible';
+    }
+    if (logoPath === '' || (logoPath === logo && user.policy.organization)) {
       return 'hidden';
     } else return 'visible';
   }
