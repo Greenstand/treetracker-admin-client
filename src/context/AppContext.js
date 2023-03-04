@@ -249,8 +249,8 @@ export const AppProvider = (props) => {
       const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
       const orgID = user.policy.organization.id;
       try {
-        axios.get(`${STAKEHOLDER_API}/stakeholders/${orgID}`).then((data) => {
-          const orgLogo = data.stakeholders[0].logo_url;
+        axios.get(`${STAKEHOLDER_API}/stakeholders/${orgID}`).then((res) => {
+          const orgLogo = res.data.stakeholders[0].logo_url;
           orgLogo ? setLogoPath(orgLogo) : setLogoPath(logo);
         });
       } catch (e) {
