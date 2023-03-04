@@ -248,12 +248,15 @@ export const AppProvider = (props) => {
     if (user && user.policy.organization) {
       const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
       const orgID = user.policy.organization.id;
-      fetch(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
-        .then((response) => response.json())
-        .then((data) => {
+      try {
+        axios.get(`${STAKEHOLDER_API}/stakeholders/${orgID}`).then((data) => {
           const orgLogo = data.stakeholders[0].logo_url;
           orgLogo ? setLogoPath(orgLogo) : setLogoPath(logo);
         });
+      } catch (e) {
+        console.error('Undefined User error:', e);
+        setLogoPath(logo);
+      }
     } else setLogoPath(logo);
   }, [user, login]);
 
