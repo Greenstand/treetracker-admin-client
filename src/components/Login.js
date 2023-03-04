@@ -142,7 +142,25 @@ const Login = (props) => {
           if (res.status === 200) {
             const token = res.data.token;
             const user = res.data.user;
-            appContext.login(user, token, isRemember);
+            // GET logo URL from API if user belongs to an organization
+            // and apply it to logoPath state before completing login
+            if (user.policy.organization) {
+              const STAKEHOLDER_API =
+                process.env.REACT_APP_STAKEHOLDER_API_ROOT;
+              const orgID = user.policy.organization.id;
+              try {
+                await axios
+                  .get(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
+                  .then((response) => {
+                    const orgLogo = response.data.stakeholders[0].logo_url;
+                    orgLogo && appContext.setLogoPath(orgLogo);
+                  });
+              } catch (e) {
+                console.error('Undefined User error:', e);
+              } finally {
+                appContext.login(user, token, isRemember);
+              }
+            } else appContext.login(user, token, isRemember);
           } else {
             setErrorMessage('Invalid username or password');
             setLoading(false);
