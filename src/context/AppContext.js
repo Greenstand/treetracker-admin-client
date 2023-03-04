@@ -258,7 +258,7 @@ export const AppProvider = (props) => {
         setLogoPath(logo);
       }
     } else setLogoPath(logo);
-  }, [user, login]);
+  }, [user]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
