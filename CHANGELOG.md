@@ -1,3 +1,10 @@
+## [1.123.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.2...v1.123.3) (2023-03-04)
+
+
+### Bug Fixes
+
+* user handle not found ([#1036](https://github.com/Greenstand/treetracker-admin-client/issues/1036)) ([402ee25](https://github.com/Greenstand/treetracker-admin-client/commit/402ee2577a44cdb4bad80b4e8bcd27ae5a46c3bd))
+
 ## [1.123.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.1...v1.123.2) (2023-02-18)
 
 
