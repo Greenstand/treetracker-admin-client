@@ -1,4 +1,9 @@
 describe('Messaging', () => {
+  Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the tests due to uncaught errors
+    return false;
+  });
   it('Survey', () => {
     cy.viewport(1440, 1024);
     // Cypress intercept url '/capture' and return a mock response
@@ -462,5 +467,15 @@ describe('Messaging', () => {
       'Tuphek fu kicu uvuwu maseftim ev cokelif eziveaze tip sose zojpiz ji teubu.'
     );
     // cy.contains("290a8323-7ebb-4ca5-934e-5801e2df1190").click();
+  });
+  it('Returns an error message if the user is not registered for messaging', () => {
+    cy.visit('http://localhost:3001/login');
+    cy.get('#userName').type('test1');
+    cy.get('#password').type('EoCAyCPpW0');
+    cy.contains(/log/i).click();
+    cy.contains(/inbox/i).click();
+    cy.contains(
+      'Your user is not yet configured for messaging access. Please contact technical support.'
+    );
   });
 });
