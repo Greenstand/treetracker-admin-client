@@ -5,6 +5,7 @@
 
 # testing
 /coverage
+/cypress.env.json
 /cypress/videos
 /cypress/screenshots
 /cypress/fixtures/login.json
