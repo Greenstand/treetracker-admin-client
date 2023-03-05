@@ -11,7 +11,7 @@ import {
   Container,
   CircularProgress,
 } from '@material-ui/core';
-import IconLogo from './IconLogo';
+import logo from './images/logo.svg';
 import { withStyles } from '@material-ui/core/styles';
 import { AppContext } from '../context/AppContext';
 import classNames from 'classnames';
@@ -185,7 +185,15 @@ const Login = (props) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <IconLogo />
+        <img
+          style={{
+            maxWidth: 149,
+            maxHeight: 32,
+            marginBottom: '-6px',
+          }}
+          src={logo}
+          alt="Greenstand logo"
+        />
         <Box m={2} />
         <Typography variant="h2">Admin Panel</Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
