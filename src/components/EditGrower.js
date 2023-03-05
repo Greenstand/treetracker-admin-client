@@ -9,6 +9,7 @@ import {
   Grid,
   TextField,
   CircularProgress,
+  Typography,
 } from '@material-ui/core';
 import ImageScroller from './ImageScroller';
 import SelectOrg from './common/SelectOrg';
@@ -22,11 +23,20 @@ const useStyle = makeStyles((theme) => ({
   textContainer: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    justifyContent: 'space-between',
+    gap: theme.spacing(2),
   },
   textInput: {
     margin: theme.spacing(2, 0),
-    flex: '0 0 49%',
+    flex: 1,
+  },
+  typography: {
+    margin: theme.spacing(2, 0),
+  },
+  span: {
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
+  warning: {
+    color: 'red',
   },
 }));
 
@@ -127,7 +137,13 @@ const EditGrower = (props) => {
             onSelectChange={handleChange}
           />
           {inputs.map((row, rowIdx) => (
-            <Grid item container direction="row" key={rowIdx}>
+            <Grid
+              item
+              container
+              direction="row"
+              className={classes.textContainer}
+              key={rowIdx}
+            >
               {row.map((input, colIdx) => (
                 <TextField
                   key={`TextField_${rowIdx}_${colIdx}`}
@@ -149,12 +165,14 @@ const EditGrower = (props) => {
             </Grid>
           ))}
 
-          <TextField
-            className={classes.textInput}
-            label="Grower-entered organization"
-            value={getValue('organization')}
-            disabled
-          />
+          <Typography variant="body1" className={classes.typography}>
+            <span className={classes.span}>Grower-entered organization:</span>{' '}
+            {getValue('organization') ? (
+              getValue('organization')
+            ) : (
+              <span className={classes.warning}>No organization entered</span>
+            )}
+          </Typography>
 
           <SelectOrg
             orgId={getValue('organizationId')}
