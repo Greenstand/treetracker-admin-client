@@ -29,8 +29,14 @@ const useStyle = makeStyles((theme) => ({
     margin: theme.spacing(2, 0),
     flex: 1,
   },
-  typographyWithMargin: {
+  typography: {
     margin: theme.spacing(2, 0),
+  },
+  span: {
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
+  warning: {
+    color: 'red',
   },
 }));
 
@@ -159,8 +165,13 @@ const EditGrower = (props) => {
             </Grid>
           ))}
 
-          <Typography variant="body1" className={classes.typographyWithMargin}>
-            Organization - {getValue('organization')}
+          <Typography variant="body1" className={classes.typography}>
+            <span className={classes.span}>Grower-entered organization:</span>{' '}
+            {getValue('organization') ? (
+              getValue('organization')
+            ) : (
+              <span className={classes.warning}>No organization entered</span>
+            )}
           </Typography>
 
           <SelectOrg
