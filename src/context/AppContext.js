@@ -36,6 +36,7 @@ import logo from '../components/images/logo.svg';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import stakeholdersAPI from '../api/stakeholders';
 import RegionsView from 'views/RegionsView';
 import log from 'loglevel';
 
@@ -246,12 +247,11 @@ export const AppProvider = (props) => {
   // Gets organization logo url from the API
   useEffect(() => {
     if (user && user.policy.organization) {
-      const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
       const orgID = user.policy.organization.id;
       try {
-        axios.get(`${STAKEHOLDER_API}/stakeholders/${orgID}`).then((res) => {
-          const orgLogo = res.data.stakeholders[0].logo_url;
-          orgLogo ? setLogoPath(orgLogo) : setLogoPath(logo);
+        stakeholdersAPI.getStakeholder(orgID).then((response) => {
+          const orgLogo = response.stakeholders[0].logo_url;
+          orgLogo && setLogoPath(orgLogo);
         });
       } catch (e) {
         console.error('Undefined User error:', e);

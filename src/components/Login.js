@@ -15,6 +15,7 @@ import logo from './images/logo.svg';
 import { withStyles } from '@material-ui/core/styles';
 import { AppContext } from '../context/AppContext';
 import classNames from 'classnames';
+import api from '../api/stakeholders';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 // import Copyright from 'components/Copyright'
@@ -145,16 +146,12 @@ const Login = (props) => {
             // GET logo URL from API if user belongs to an organization
             // and apply it to logoPath state before completing login
             if (user.policy.organization) {
-              const STAKEHOLDER_API =
-                process.env.REACT_APP_STAKEHOLDER_API_ROOT;
               const orgID = user.policy.organization.id;
               try {
-                await axios
-                  .get(`${STAKEHOLDER_API}/stakeholders/${orgID}`)
-                  .then((response) => {
-                    const orgLogo = response.data.stakeholders[0].logo_url;
-                    orgLogo && appContext.setLogoPath(orgLogo);
-                  });
+                await api.getStakeholder(orgID).then((response) => {
+                  const orgLogo = response.stakeholders[0].logo_url;
+                  orgLogo && appContext.setLogoPath(orgLogo);
+                });
               } catch (e) {
                 console.error('Undefined User error:', e);
               } finally {
