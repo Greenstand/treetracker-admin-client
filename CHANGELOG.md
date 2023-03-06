@@ -1,3 +1,10 @@
+## [1.123.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.3...v1.123.4) (2023-03-06)
+
+
+### Bug Fixes
+
+* not set org filter ([#1025](https://github.com/Greenstand/treetracker-admin-client/issues/1025)) ([3b9134d](https://github.com/Greenstand/treetracker-admin-client/commit/3b9134d25e2542041f257d0d23b1aaacfa6dadf9))
+
 ## [1.123.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.2...v1.123.3) (2023-03-04)
 
 
