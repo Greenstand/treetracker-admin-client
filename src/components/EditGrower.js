@@ -57,9 +57,10 @@ const EditGrower = (props) => {
         ]);
       }
     }
+    setCustomImageUrl(null);
     setGrowerUpdate(null);
     loadGrowerImages();
-  }, [grower, customImageUrl]);
+  }, [grower]);
   function isImgURL(url) {
     if (typeof url === 'object') {
       return url === null ? false : regex.test(url.image_url);
@@ -142,7 +143,10 @@ const EditGrower = (props) => {
       <DialogContent>
         <Grid container direction="column" className={classes.container}>
           <ImageScroller
-            images={growerImages.filter((e) => e !== null)}
+            images={[
+              customImageUrl === '' ? null : customImageUrl,
+              ...growerImages,
+            ].filter((e) => e !== null)}
             selectedImage={growerUpdate?.image_url || grower.image_url}
             loading={loadingGrowerImages}
             blankMessage="No grower images available"
