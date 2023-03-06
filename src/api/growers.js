@@ -90,7 +90,7 @@ export default {
       }
       const { id } = growerUpdate;
       const growerQuery = `${TREETRACKER_API}/grower_accounts/${id}`;
-
+      delete growerUpdate.id;
       return fetch(growerQuery, {
         method: 'PATCH',
         headers: {

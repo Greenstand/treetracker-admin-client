@@ -72,7 +72,7 @@ const EditGrower = (props) => {
       setSaveInProgress(true);
       // TODO handle errors
       await growerContext.updateGrower({
-        // id: grower.id,
+        id: grower.id,
         ...growerUpdate,
       });
       setSaveInProgress(false);
@@ -199,7 +199,7 @@ const EditGrower = (props) => {
           />
 
           <SelectOrg
-            orgId={getValue('organizationId')}
+            orgId={getValue('organization_id')}
             defaultOrgs={[
               {
                 id: ORGANIZATION_NOT_SET,
@@ -209,7 +209,7 @@ const EditGrower = (props) => {
               },
             ]}
             handleSelection={(org) => {
-              handleChange('organizationId', org?.id || null);
+              handleChange('organization_id', org?.id || null);
             }}
           />
         </Grid>
