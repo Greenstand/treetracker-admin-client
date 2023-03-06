@@ -72,7 +72,7 @@ const EditGrower = (props) => {
       setSaveInProgress(true);
       // TODO handle errors
       await growerContext.updateGrower({
-        id: grower.id,
+        // id: grower.id,
         ...growerUpdate,
       });
       setSaveInProgress(false);
@@ -120,11 +120,11 @@ const EditGrower = (props) => {
   const inputs = [
     [
       {
-        attr: 'firstName',
+        attr: 'first_name',
         label: 'First Name',
       },
       {
-        attr: 'lastName',
+        attr: 'last_name',
         label: 'Last Name',
       },
     ],
