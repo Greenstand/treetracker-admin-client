@@ -90,14 +90,16 @@ export default {
       }
       const { id } = growerUpdate;
       const growerQuery = `${TREETRACKER_API}/grower_accounts/${id}`;
-      delete growerUpdate.id;
+
+      let newBody = Object.assign({}, growerUpdate);
+      delete newBody.id;
       return fetch(growerQuery, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify(growerUpdate),
+        body: JSON.stringify(newBody),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);
