@@ -109,8 +109,6 @@ function Filter(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const org =
-      organizationId === 'ORGANIZATION_NOT_SET' ? null : organizationId;
     // save the filer to context for editing & submit
     const test = {
       uuid: uuid.trim(),
@@ -122,7 +120,7 @@ function Filter(props) {
       endDate: endDate ? formatDate(endDate) : undefined,
       species_id: speciesId,
       tag_id: tag ? tag.id : undefined,
-      organization_id: org,
+      organization_id: organizationId,
       tokenId: tokenId.trim(),
     };
     const filter = new FilterModel(test);
