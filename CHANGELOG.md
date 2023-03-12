@@ -1,3 +1,10 @@
+# [1.124.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.4...v1.124.0) (2023-03-12)
+
+
+### Features
+
+* Edit Growers: Allow user to specify Grower Image URL [#845](https://github.com/Greenstand/treetracker-admin-client/issues/845) ([#1039](https://github.com/Greenstand/treetracker-admin-client/issues/1039)) ([104fa36](https://github.com/Greenstand/treetracker-admin-client/commit/104fa36eec0cffe5d992e32033359f4deea2fe49))
+
 ## [1.123.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.3...v1.123.4) (2023-03-06)
 
 
