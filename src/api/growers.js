@@ -2,7 +2,7 @@ import { handleResponse, handleError, makeQueryString } from './apiUtils';
 import { session } from '../models/auth';
 // import log from 'loglevel';
 
-const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
+const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 
 export default {
@@ -89,15 +89,17 @@ export default {
         growerUpdate = { ...growerUpdate, organizationId: null };
       }
       const { id } = growerUpdate;
-      const growerQuery = `${FIELD_DATA_API}/grower-accounts/${id}`;
+      const growerQuery = `${TREETRACKER_API}/grower_accounts/${id}`;
 
+      let newBody = Object.assign({}, growerUpdate);
+      delete newBody.id;
       return fetch(growerQuery, {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-        body: JSON.stringify(growerUpdate),
+        body: JSON.stringify(newBody),
       }).then(handleResponse);
     } catch (error) {
       handleError(error);

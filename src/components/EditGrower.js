@@ -48,25 +48,35 @@ const EditGrower = (props) => {
   const [growerUpdate, setGrowerUpdate] = useState(null);
   const [loadingGrowerImages, setLoadingGrowerImages] = useState(false);
   const [saveInProgress, setSaveInProgress] = useState(false);
-
+  const [customImageUrl, setCustomImageUrl] = useState(null);
+  const [customImageUrlError, setCustomImageUrlError] = useState({
+    label: '',
+    error: false,
+  });
+  const regex = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
   useEffect(() => {
     async function loadGrowerImages() {
       if (grower?.id) {
         setLoadingGrowerImages(true);
         const selfies = await growerContext.getGrowerSelfies(grower.id);
         setLoadingGrowerImages(false);
-
         setGrowerImages([
-          ...(grower.imageUrl ? [grower.imageUrl] : []),
-          ...(selfies || []).filter((img) => img !== grower.imageUrl),
+          customImageUrl === '' ? null : customImageUrl,
+          ...(grower.image_url ? [grower.image_url] : []),
+          ...(selfies || []).filter((img) => img != grower.image_url),
         ]);
       }
     }
-
+    setCustomImageUrl(null);
     setGrowerUpdate(null);
     loadGrowerImages();
   }, [grower]);
-
+  function isImgURL(url) {
+    if (typeof url === 'object') {
+      return url === null ? false : regex.test(url.image_url);
+    }
+    return regex.test(url);
+  }
   async function handleSave() {
     if (growerUpdate) {
       setSaveInProgress(true);
@@ -80,8 +90,25 @@ const EditGrower = (props) => {
     onClose();
   }
 
+  function handleCustomUrlError(url) {
+    if (url === '' || isImgURL(url)) {
+      setCustomImageUrlError({
+        error: false,
+        label: '',
+      });
+
+      return;
+    }
+    if (!isImgURL(url)) {
+      setCustomImageUrlError({
+        error: true,
+        label: 'Please insert a valid Image URL',
+      });
+    }
+  }
   function handleCancel() {
     setGrowerUpdate(null);
+    setCustomImageUrl(null);
     onClose();
   }
 
@@ -92,7 +119,6 @@ const EditGrower = (props) => {
     const changed = Object.keys(newGrower).some((key) => {
       return newGrower[key] !== grower[key];
     });
-
     changed ? setGrowerUpdate(newGrower) : setGrowerUpdate(null);
   }
 
@@ -104,11 +130,11 @@ const EditGrower = (props) => {
   const inputs = [
     [
       {
-        attr: 'firstName',
+        attr: 'first_name',
         label: 'First Name',
       },
       {
-        attr: 'lastName',
+        attr: 'last_name',
         label: 'Last Name',
       },
     ],
@@ -127,14 +153,30 @@ const EditGrower = (props) => {
       <DialogContent>
         <Grid container direction="column" className={classes.container}>
           <ImageScroller
-            images={growerImages}
-            selectedImage={growerUpdate?.imageUrl || grower.imageUrl}
+            images={[
+              customImageUrl === '' ? null : customImageUrl,
+              ...growerImages,
+            ].filter((e) => e !== null)}
+            selectedImage={growerUpdate?.image_url || grower.image_url}
             loading={loadingGrowerImages}
             blankMessage="No grower images available"
             imageRotation={
               growerUpdate?.imageRotation || grower.imageRotation || 0
             }
             onSelectChange={handleChange}
+          />
+          <TextField
+            className={classes.textInput}
+            label="Image Custom URL"
+            helperText={customImageUrlError.label}
+            error={customImageUrlError.error}
+            onChange={(e) => {
+              handleCustomUrlError(e.target.value);
+              if (isImgURL(e.target.value)) {
+                setCustomImageUrl(e.target.value);
+                handleChange('image_url', e.target.value);
+              } else setCustomImageUrl(null);
+            }}
           />
           {inputs.map((row, rowIdx) => (
             <Grid
@@ -175,7 +217,7 @@ const EditGrower = (props) => {
           </Typography>
 
           <SelectOrg
-            orgId={getValue('organizationId')}
+            orgId={getValue('organization_id')}
             defaultOrgs={[
               {
                 id: ORGANIZATION_NOT_SET,
@@ -185,7 +227,7 @@ const EditGrower = (props) => {
               },
             ]}
             handleSelection={(org) => {
-              handleChange('organizationId', org?.id || null);
+              handleChange('organization_id', org?.id || null);
             }}
           />
         </Grid>
