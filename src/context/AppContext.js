@@ -5,6 +5,7 @@ import axios from 'axios';
 import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
+import ContractsView from '../views/ContractsView/ContractsView';
 import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
 import MessagingView from 'views/MessagingView';
@@ -122,6 +123,25 @@ function getRoutes(user) {
         POLICIES.MANAGE_PAYMENTS,
         POLICIES.LIST_EARNINGS,
         POLICIES.LIST_PAYMENTS,
+      ]),
+    },
+    {
+      name: 'Contracts',
+      children: [
+        {
+          name: 'Contracts',
+          linkTo: '/contracts',
+          component: ContractsView,
+          icon: AccountBalanceIcon,
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_CONTRACTS,
+          ]),
+        },
+      ],
+      disabled: !hasPermission(user, [
+        POLICIES.SUPER_PERMISSION,
+        POLICIES.MANAGE_CONTRACTS,
       ]),
     },
     {
