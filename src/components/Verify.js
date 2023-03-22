@@ -23,6 +23,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { LocationOn, Person, Nature, Map, Image } from '@material-ui/icons';
 import Navbar from './Navbar';
 import GrowerDetail from './GrowerDetail';
+import api from '../api/growers';
 // import CaptureTags from './CaptureTags';
 import SidePanel from './SidePanel';
 import FilterTop from './FilterTop';
@@ -253,6 +254,7 @@ const useStyles = makeStyles((theme) => ({
 const Verify = (props) => {
   const verifyContext = useContext(VerifyContext);
   const speciesContext = useContext(SpeciesContext);
+
   const tagsContext = useContext(TagsContext);
   const classes = useStyles(props);
   const [isFilterShown, setFilterShown] = useState(false);
@@ -265,6 +267,7 @@ const Verify = (props) => {
     isOpen: false,
     growerId: '',
   });
+
   const captureSelected = verifyContext.getCaptureSelectedArr();
   const numFilters = verifyContext.filter.countAppliedFilters();
   const cRef = useRef([]);
@@ -293,10 +296,12 @@ const Verify = (props) => {
     window.open(url, '_blank').opener = null;
   };
 
-  const handleGrowerMapClick = (growerId) => (e) => {
+  const handleGrowerMapClick = (growerId) => async (e) => {
     e.stopPropagation();
+    const grower = await api.getGrower(growerId);
+    console.log('grower', grower);
     log.debug('click on grower:', growerId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/${pathType.planter}/${growerId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/${pathType.planter}/${grower.reference_id}`;
     window.open(url, '_blank').opener = null;
   };
 
