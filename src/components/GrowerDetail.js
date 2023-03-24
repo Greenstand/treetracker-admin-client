@@ -31,7 +31,6 @@ import { captureStatus } from '../common/variables';
 import api from '../api/growers';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
-import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/GrowerContext';
 import { MessagingContext } from 'context/MessagingContext';
 import EditGrower from './EditGrower';
@@ -145,7 +144,6 @@ const useStyle = makeStyles((theme) => ({
 const GrowerDetail = ({ open, growerId, onClose }) => {
   // log.debug('render: grower detail', growerId);
   const classes = useStyle();
-  const appContext = useContext(AppContext);
   const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
   const [editDialogOpen, setEditDialogOpen] = useState(false);

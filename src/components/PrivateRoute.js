@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import { useKeycloak } from '@react-keycloak/web';
+import React /*, { useContext }*/ from 'react';
+import { Route /*, Redirect*/ } from 'react-router-dom';
+// import { AppContext } from '../context/AppContext';
+// import { useKeycloak } from '@react-keycloak/web';
 
 export default function PrivateRoute({ component: Component, ...rest }) {
   // const appContext = useContext(AppContext);
