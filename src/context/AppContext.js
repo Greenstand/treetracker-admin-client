@@ -138,6 +138,16 @@ function getRoutes(user) {
             POLICIES.MANAGE_CONTRACTS,
           ]),
         },
+        {
+          name: 'Agreements',
+          linkTo: '/agreements',
+          component: ContractsView,
+          icon: AccountBalanceIcon,
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.MANAGE_CONTRACTS,
+          ]),
+        },
       ],
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,

@@ -9,7 +9,7 @@ import {
 } from 'utilities';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import CustomTableItemDetails from 'components/common/CustomTableItemDetails/CustomTableItemDetails';
-import CreateContract from './CreateContract';
+import CreateContractAgreement from './CreateContractAgreement';
 
 const useStyles = makeStyles({
   flex: {
@@ -37,6 +37,12 @@ const useStyles = makeStyles({
  */
 const contractsTableMetaData = [
   {
+    description: 'Name',
+    name: 'name',
+    sortable: true,
+    showInfoIcon: false,
+  },
+  {
     description: 'ID',
     name: 'id',
     sortable: true,
@@ -49,27 +55,47 @@ const contractsTableMetaData = [
     showInfoIcon: false,
   },
   {
-    description: 'Organization',
-    name: 'organization',
+    description: 'Funder ID',
+    name: 'funder_id',
     sortable: true,
     showInfoIcon: false,
     // align: 'right',
   },
   {
-    description: 'Contractor',
-    name: 'contractor',
+    description: 'Owner ID',
+    name: 'owner_id',
+    sortable: true,
+    showInfoIcon: false,
+    // align: 'right',
+  },
+  {
+    description: 'Organization',
+    name: 'growing_organization_id',
+    sortable: true,
+    showInfoIcon: false,
+    // align: 'right',
+  },
+  {
+    description: 'Species Agreement ID',
+    name: 'species_agreement_id',
     sortable: false,
     showInfoIcon: false,
   },
   {
-    description: 'Total Trees',
-    name: 'total',
-    sortable: true,
+    description: 'Consolidation Rule ID',
+    name: 'consolidation_rule_id',
+    sortable: false,
     showInfoIcon: false,
-    // showInfoIcon:
-    //   'The effective data is the date on which captures were consolidated and the contracts record was created',
-    align: 'right',
   },
+  // {
+  //   description: 'Total Trees',
+  //   name: 'total',
+  //   sortable: true,
+  //   showInfoIcon: false,
+  //   // showInfoIcon:
+  //   //   'The effective data is the date on which captures were consolidated and the contracts record was created',
+  //   align: 'right',
+  // },
   {
     description: 'Status',
     name: 'status',
@@ -78,7 +104,13 @@ const contractsTableMetaData = [
   },
   {
     description: 'Last Modified',
-    name: 'last_modified',
+    name: 'updated_at',
+    sortable: true,
+    showInfoIcon: false,
+  },
+  {
+    description: 'Created At',
+    name: 'created_at',
     sortable: true,
     showInfoIcon: false,
   },
@@ -118,12 +150,12 @@ const prepareRows = (rows) =>
 
 /**
  * @function
- * @name ContractsTable
+ * @name ContractAgreementsTable
  * @description renders the contracts table
  *
  * @returns {React.Component} - contracts table component
  * */
-function ContractsTable() {
+function ContractAgreementsTable() {
   const classes = useStyles();
   // state for contracts table
   const [contracts, setContracts] = useState([]);
@@ -146,7 +178,7 @@ function ContractsTable() {
     // console.warn('getContracts with fetchAll: ', fetchAll);
     setIsLoading(true); // show loading indicator when fetching data
 
-    const { results, totalCount = 0 } = await getContractsReal(fetchAll);
+    const { results, totalCount = 0 } = await getContractAgreements(fetchAll);
     console.log('results:', results, 'totalCount:', totalCount);
     setContracts(results);
     setTotalContracts(totalCount);
@@ -154,7 +186,7 @@ function ContractsTable() {
     setIsLoading(false); // hide loading indicator when data is fetched
   }
 
-  async function getContractsReal(fetchAll = false) {
+  async function getContractAgreements(fetchAll = false) {
     // console.warn('fetchAll:', fetchAll);
     const filtersToSubmit = { ...filter };
     // filter out keys we don't want to submit
@@ -182,10 +214,10 @@ function ContractsTable() {
 
     // log.debug('queryParams', queryParams);
 
-    const response = await contractsAPI.getContracts(queryParams);
-    console.log('getContracts response: ', response);
+    const response = await contractsAPI.getContractAgreements(queryParams);
+    console.log('getContractAgreements response: ', response);
 
-    const results = prepareRows(response.contracts);
+    const results = prepareRows(response.agreements);
     return {
       results,
       totalCount: response.query.count,
@@ -212,7 +244,7 @@ function ContractsTable() {
   return (
     <>
       <div className={classes.flex}>
-        <CreateContract />
+        <CreateContractAgreement />
       </div>
 
       <CustomTable
@@ -246,7 +278,7 @@ function ContractsTable() {
               : true;
           }).length
         }
-        headerTitle="Contracts"
+        headerTitle="Contract Agreements"
         mainFilterComponent={
           <CustomTableFilter
             isFilterOpen={isMainFilterOpen}
@@ -279,10 +311,10 @@ function ContractsTable() {
           ) : null
         }
         actionButtonType="export"
-        exportDataFetch={getContracts}
+        exportDataFetch={getContractAgreements}
       />
     </>
   );
 }
 
-export default ContractsTable;
+export default ContractAgreementsTable;

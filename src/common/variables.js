@@ -21,6 +21,44 @@ export const verificationStatesArr = [
   verificationStates.REJECTED,
 ];
 
+export const CONTRACT_STATUS = {
+  // unsigned: 'unsigned', // db default state
+  signed: 'signed',
+  completed: 'completed',
+  aborted: 'aborted',
+  cancelled: 'cancelled',
+};
+
+export const COORDINATOR_ROLES = {
+  supervisor: 'supervisor',
+  area_manager: 'area_manager',
+};
+
+export const CURRENCY = {
+  USD: 'USD',
+  SLL: 'SLL',
+};
+
+export const AGREEMENT_STATUS = {
+  // planning: 'planning', // db default state
+  open: 'open',
+  closed: 'closed',
+  aborted: 'aborted',
+};
+
+export const AGREEMENT_TYPE = {
+  grower: 'grower',
+  nursury: 'nursury',
+  village_champion: 'village_champion',
+};
+
+export const SPECIES_TYPE = {
+  other: 'other',
+  any: 'any',
+  specific: 'specific',
+  genus: 'genus',
+};
+
 // These are the default min/max dates for the MUI KeyboardDatePicker component
 // See https://material-ui-pickers.dev/api/KeyboardDatePicker
 // If we set minDate or maxDate to null on this component, the fwd/back buttons are disabled

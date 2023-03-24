@@ -2,20 +2,21 @@ import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Grid,
-  MenuItem,
+  // MenuItem,
   FormControl,
-  FormControlLabel,
+  // FormControlLabel,
   FormLabel,
   TextField,
 } from '@material-ui/core';
 import { AppContext } from '../../context/AppContext';
-import DateFnsUtils from '@date-io/date-fns';
+// import DateFnsUtils from '@date-io/date-fns';
+import SelectOrg from '../common/SelectOrg';
 import contractsAPI from '../../api/contracts';
 import * as loglevel from 'loglevel';
 
@@ -39,6 +40,59 @@ const useStyles = makeStyles({
   },
 });
 
+/*
+POST https://dev-k8s.treetracker.org/contract/contract
+{
+    "agreement_id": "7bf1f932-2474-4211-8a07-a764ca95c80f",
+    "worker_id": "93a026d2-a511-404f-958c-a0a36892af0f",
+    "notes": "test contract notes"
+}
+GET https://dev-k8s.treetracker.org/contract/contract
+{
+    "id": "5de33643-2c9a-4d1c-9643-285d7a75e820",
+    "agreement_id": "7bf1f932-2474-4211-8a07-a764ca95c80f",
+    "worker_id": "93a026d2-a511-404f-958c-a0a36892af0f",
+    "status": "unsigned",
+    "notes": "test contract notes",
+    "created_at": "2023-03-05T19:57:59.555Z",
+    "updated_at": "2023-03-05T19:57:59.555Z",
+    "signed_at": null,
+    "closed_at": null,
+    "listed": true
+
+    type
+    organization
+    contractor
+    total trees
+}
+
+
+POST https://dev-k8s.treetracker.org/contract/agreement
+{
+    "type": "grower",
+    "owner_id": "08c71152-c552-42e7-b094-f510ff44e9cb",
+    "funder_id":"c558a80a-f319-4c10-95d4-4282ef745b4b",
+    "consolidation_rule_id": "6ff67c3a-e588-40e3-ba86-0df623ec6435",
+    "name": "test agreement",
+    "species_agreement_id": "e14b78c8-8f71-4c42-bb86-5a7f71996336"
+}
+
+POST https://dev-k8s.treetracker.org/contract/consolidation_rule
+{
+    "name": "test",
+    "owner_id": "af7c1fe6-d669-414e-b066-e9733f0de7a8",
+    "lambda": "something"
+}
+
+POST https://dev-k8s.treetracker.org/contract/species_agreement
+{
+    "name": "test species agreement",
+    "owner_id": "af7c1fe6-d669-414e-b066-e9733f0de7a8",
+    "description": "test species agreement description"
+}
+
+*/
+
 const initialState = {
   id: '',
   type: '',
@@ -49,20 +103,23 @@ const initialState = {
   lastModified: '',
 };
 
-// "id": "",
+// "id": "", -- from database?
 // "agreement_id": "",
-// "worker_id": "",
-// "status": "active",
+// "worker_id": "", -- ??
+// "status": "", -- from database?
 // "notes": "",
-// "type": "CBO",
-// "organization": "Freetown",
-// "contractor": "gwynn",
-// "totalTrees": "",
-// "updated_at": ""
+// // "type": "CBO",
+// // "organization": "Freetown", -- from logged in org_id
+// // "contractor": "gwynn",
+// // "totalTrees": "",
+// // "signed_at": "",
+// // "closed_at": null,
+// // "listed": true
 
-export default function CreateContract() {
+export default function CreateContractAgreement() {
   const classes = useStyles();
-  const { orgList } = useContext(AppContext);
+  const context = useContext(AppContext);
+  console.log('context', context);
   const [formData, setFormData] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
@@ -108,7 +165,7 @@ export default function CreateContract() {
 
     if (Object.keys(errors).length === 0) {
       contractsAPI
-        .createContract(formData)
+        .createContractAgreement(formData)
         .then((data) => console.log(data))
         .catch((e) => console.error(e));
     }
@@ -213,6 +270,9 @@ export default function CreateContract() {
               />
             </FormControl>
             <FormControl className={classes.root} onKeyDown={handleEnterPress}>
+              <SelectOrg />
+            </FormControl>
+            {/* <FormControl className={classes.root} onKeyDown={handleEnterPress}>
               <FormLabel text="Organization" />
               <TextField
                 placeholder="Organization"
@@ -233,7 +293,7 @@ export default function CreateContract() {
                 id="organization"
                 name="organization"
               />
-            </FormControl>
+            </FormControl> */}
             <FormControl className={classes.root} onKeyDown={handleEnterPress}>
               <FormLabel text="Areas" />
               <TextField
