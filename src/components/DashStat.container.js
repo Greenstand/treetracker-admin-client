@@ -13,7 +13,6 @@ import growersApi from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import { captureStatus } from 'common/variables';
-import { useKeycloak } from '@react-keycloak/web';
 
 function DashStatTotalCaptures(props) {
   const unprocessedFilter = new FilterModel({
@@ -34,10 +33,6 @@ function DashStatTotalCaptures(props) {
     ]);
     setTotal(unprocessedCount + approvedCount);
   };
-
-  const {
-    keycloak: { token },
-  } = useKeycloak();
 
   useEffect(() => {
     getTotal();
