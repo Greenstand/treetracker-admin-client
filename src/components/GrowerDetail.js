@@ -268,7 +268,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     setSnackbarLabel(label);
     setSnackbarOpen(true);
   }
-
+  console.log('grower', grower);
   return (
     <>
       <Drawer
@@ -382,7 +382,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   color="primary"
                   className={classes.name}
                 >
-                  {grower.firstName} {grower.lastName}
+                  {grower.first_name} {grower.last_name}
                 </Typography>
                 <Typography variant="body2">
                   ID:{' '}
@@ -469,12 +469,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 )}
               </Grid>
               <Divider />
-              <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">First Name</Typography>
-                <Typography variant="body1">
-                  {grower.first_name || '---'}
-                </Typography>
-              </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Wallet</Typography>
