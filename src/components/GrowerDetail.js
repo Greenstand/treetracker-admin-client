@@ -268,7 +268,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     setSnackbarLabel(label);
     setSnackbarOpen(true);
   }
-  console.log('grower', grower);
   return (
     <>
       <Drawer
