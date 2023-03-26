@@ -1,3 +1,10 @@
+## [1.124.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.0...v1.124.1) (2023-03-26)
+
+
+### Bug Fixes
+
+* show grower image ([#1052](https://github.com/Greenstand/treetracker-admin-client/issues/1052)) ([e19e736](https://github.com/Greenstand/treetracker-admin-client/commit/e19e7361d8a59c7d4661db962f416041eff162b8))
+
 # [1.124.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.4...v1.124.0) (2023-03-12)
 
 
