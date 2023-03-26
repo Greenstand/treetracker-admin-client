@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
+
+import { AppContext } from '../context/AppContext.js';
 import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { AppContext } from '../context/AppContext.js';
 import { getOrganizationById } from 'utilities/index.js';
 
 /**
