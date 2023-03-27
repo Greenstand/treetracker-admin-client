@@ -103,4 +103,28 @@ export default {
       handleError(error);
     }
   },
+
+  getWallets({ skip, rowsPerPage, filter }) {
+    try {
+      const where = filter.getWhereObj ? filter.getWhereObj() : {};
+      const growerFilter = {
+        ...where,
+        limit: rowsPerPage,
+        offset: skip,
+      };
+
+      const query = `${QUERY_API}/v2/growers/wallets${
+        growerFilter ? `?${makeQueryString(growerFilter)}` : ''
+      }`;
+
+      return fetch(query, {
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
 };
