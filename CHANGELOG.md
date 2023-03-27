@@ -1,3 +1,10 @@
+# [1.125.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.1...v1.125.0) (2023-03-27)
+
+
+### Features
+
+* **full name:** bring growers full name back to the top of the page … ([#1053](https://github.com/Greenstand/treetracker-admin-client/issues/1053)) ([8347c28](https://github.com/Greenstand/treetracker-admin-client/commit/8347c285c07a21c6ad4f7ca2bb5a58e8ca46fee6))
+
 ## [1.124.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.0...v1.124.1) (2023-03-26)
 
 
