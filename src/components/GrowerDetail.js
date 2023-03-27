@@ -232,7 +232,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   async function getCaptureCountGrower(status, growerId) {
     let filter = new FilterModel();
-    filter.growerAccountId = growerId?.toString();
+    filter.grower_account_id = growerId?.toString();
     filter.status = status;
     log.warn('Need to get capture count for grower:', filter.status);
     const countResponse = await treeTrackerApi.getRawCaptureCount({ filter });
