@@ -1,3 +1,15 @@
+# [1.126.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.125.0...v1.126.0) (2023-03-27)
+
+
+### Bug Fixes
+
+* Verify: Grower map link on capture card uses incorrect URL [#861](https://github.com/Greenstand/treetracker-admin-client/issues/861) ([#1045](https://github.com/Greenstand/treetracker-admin-client/issues/1045)) ([5f35f4f](https://github.com/Greenstand/treetracker-admin-client/commit/5f35f4f1a07eaa2fbb91f1068403dcfda03debe7))
+
+
+### Features
+
+* **about field:** adds an about field with the value of either grower.about or --- ([#1054](https://github.com/Greenstand/treetracker-admin-client/issues/1054)) ([4957104](https://github.com/Greenstand/treetracker-admin-client/commit/495710465f886367424dc82d0be884cb8d03018f))
+
 # [1.125.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.1...v1.125.0) (2023-03-27)
 
 
