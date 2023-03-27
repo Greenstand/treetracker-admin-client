@@ -470,6 +470,11 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 )}
               </Grid>
               <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Typography variant="subtitle1">About</Typography>
+                <Typography variant="body1">{grower.about || '---'}</Typography>
+              </Grid>
+              <Divider />
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Wallet</Typography>
