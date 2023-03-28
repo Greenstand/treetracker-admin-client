@@ -1,4 +1,5 @@
-import { handleResponse, handleError, getOrganizationId } from './apiUtils';
+import { getOrganizationId, handleError, handleResponse } from './apiUtils';
+
 import { session } from '../models/auth';
 const log = require('loglevel').getLogger('../api/stakeholders');
 
