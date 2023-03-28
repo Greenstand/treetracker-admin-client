@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,6 @@ import FilterModel, {
   ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
-  ALL_WALLETS,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -33,7 +32,7 @@ import {
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';
-import { GrowerContext } from 'context/GrowerContext';
+import SelectWallet from './common/SelectWallet';
 
 export const FILTER_WIDTH = 330;
 
@@ -77,20 +76,14 @@ const styles = (theme) => {
 function Filter(props) {
   const speciesContext = useContext(SpeciesContext);
   const tagsContext = useContext(TagsContext);
-  const growerContext = useContext(GrowerContext);
   const { classes, filter } = props;
   const filterOptionAll = 'All';
-  const filterLoadMore = 'LOAD_MORE';
   const startDateDefault = null;
   const endDateDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-
   const [wallet, setWallet] = useState(filter?.wallet || filterOptionAll);
   const [walletSearchString, setWalletSearchString] = useState('');
-  const [walletPage, setWalletPage] = useState(0);
-  const [walletsLoadedData, setWalletsLoadedData] = useState([]);
-
   const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
   const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
   const [startDate, setStartDate] = useState(
@@ -123,7 +116,7 @@ function Filter(props) {
       captureId: captureId.trim(),
       grower_account_id: growerId.trim(),
       device_identifier: deviceId.trim(),
-      wallet: wallet ? wallet.trim() : undefined,
+      wallet: wallet && wallet !== filterOptionAll ? wallet.trim() : undefined,
       startDate: startDate ? formatDate(startDate) : undefined,
       endDate: endDate ? formatDate(endDate) : undefined,
       species_id: speciesId,
@@ -154,78 +147,6 @@ function Filter(props) {
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
   }
-
-  // Is called when page loads and when user starts to type in a 'Wallet' filter
-  useEffect(() => {
-    const getWallets = async () => {
-      setWalletPage(0);
-
-      const response = await growerContext.getWallets(walletSearchString);
-
-      const total = response.total;
-      const wallets = response.wallets;
-      const addLoadMoreButton = wallets.length < total;
-
-      addLoadMoreButtonToWallets([...wallets], addLoadMoreButton);
-    };
-
-    getWallets();
-  }, [walletSearchString]);
-
-  // Is called when user click 'Load More' button in Wallet autocomplete
-  useEffect(() => {
-    const getWallets = async () => {
-      if (walletPage === 0) {
-        return;
-      }
-
-      const response = await growerContext.getWallets(
-        walletSearchString,
-        walletPage
-      );
-
-      const total = response.total;
-      const wallets = response.wallets;
-      const addLoadMoreButton =
-        wallets.length + walletsLoadedData.length < total;
-
-      addLoadMoreButtonToWallets(
-        [...walletsLoadedData, ...wallets],
-        addLoadMoreButton
-      );
-    };
-
-    getWallets();
-  }, [walletPage]);
-
-  const addLoadMoreButtonToWallets = (data, addMoreData) => {
-    const dataToShow = data;
-    if (addMoreData) {
-      dataToShow.push(filterLoadMore);
-    }
-    setWalletsLoadedData(dataToShow);
-  };
-
-  const handleWalletRenderOption = (option) => {
-    if (option === filterLoadMore) {
-      return (
-        <Button onClick={handleLoadMoreWallets} color="primary">
-          Load more
-        </Button>
-      );
-    }
-
-    return option && option.name ? option.name : option;
-  };
-
-  const handleLoadMoreWallets = async (event) => {
-    event.stopPropagation();
-    setWalletPage((page) => page + 1);
-
-    // 'Load more' button should be removed from the list of options
-    walletsLoadedData.pop();
-    setWalletsLoadedData([...walletsLoadedData]);
-  };
 
   return (
     <>
@@ -285,64 +206,15 @@ function Filter(props) {
                   }}
                 />
               </MuiPickersUtilsProvider>
-              <Autocomplete
-                data-testid="wallet-dropdown"
-                label="Wallet"
-                htmlFor="wallet"
-                id="wallet"
-                classes={{
-                  inputRoot: classes.autocompleteInputRoot,
+              <SelectWallet
+                classes={classes}
+                wallet={wallet}
+                walletSearchString={walletSearchString}
+                handleChangeWallet={(value) => {
+                  setWallet(value);
                 }}
-                options={[
-                  {
-                    id: ALL_WALLETS,
-                    name: filterOptionAll,
-                    isPublic: true,
-                    status: 'active',
-                    owner_id: null,
-                  },
-                  ...walletsLoadedData,
-                ]}
-                value={wallet}
-                defaultValue={filterOptionAll}
-                getOptionLabel={(wallet) => {
-                  if (wallet === filterLoadMore) {
-                    return walletSearchString;
-                  }
-
-                  return wallet.name !== undefined ? wallet.name : wallet;
-                }}
-                loading={walletsLoadedData.length === 1}
-                loadingText={'Loading..'}
-                onChange={(_oldVal, newVal) => {
-                  // event is triggered by onInputChange
-                  if (newVal === filterLoadMore) return;
-
-                  if (newVal && newVal.name === filterOptionAll) {
-                    return;
-                  }
-
-                  setWallet(newVal);
-                }}
-                onInputChange={(_oldVal, newVal) => {
-                  // Do not select 'LOAD_MORE' as an autocomplete value
-                  if (newVal === filterLoadMore) {
-                    setWalletSearchString(walletSearchString);
-                    return;
-                  }
-
-                  newVal === filterOptionAll
-                    ? setWalletSearchString('')
-                    : setWalletSearchString(newVal);
-                }}
-                renderInput={(params) => {
-                  return <TextField {...params} label="Wallet" />;
-                }}
-                renderOption={handleWalletRenderOption}
-                getOptionSelected={(option, value) => {
-                  return option.name !== undefined
-                    ? option.name === value
-                    : option === value;
+                handleChangeWalletSearchString={(value) => {
+                  setWalletSearchString(value);
                 }}
               />
               <TextField

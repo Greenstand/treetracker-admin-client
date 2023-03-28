@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FilterModel from '../models/FilterGrower';
 import SelectOrg from './common/SelectOrg';
 import { ALL_ORGANIZATIONS } from '../models/Filter';
+import SelectWallet from './common/SelectWallet';
 
 export const FILTER_WIDTH = 330;
 
@@ -38,11 +39,15 @@ const styles = (theme) => {
       width: 90,
       height: 36,
     },
+    autocompleteInputRoot: {
+      padding: `${theme.spacing(0, 12, 0, 1)} !important`,
+    },
   };
 };
 
 function FilterTopGrower(props) {
   const { classes, filter } = props;
+  const filterOptionAll = 'All';
   const [id, setId] = useState(filter?.id || '');
   const [personId, setPersonId] = useState(filter?.personId || '');
   const [firstName, setFirstName] = useState(filter?.firstName || '');
@@ -50,7 +55,8 @@ function FilterTopGrower(props) {
   const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
-  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const [wallet, setWallet] = useState(filter?.wallet || filterOptionAll);
+  const [walletSearchString, setWalletSearchString] = useState('');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.device_identifier || ''
   );
@@ -66,7 +72,7 @@ function FilterTopGrower(props) {
       email: email.trim(),
       phone: phone.trim(),
       device_identifier: deviceIdentifier.trim(),
-      wallet: wallet.trim(),
+      wallet: wallet && wallet !== filterOptionAll ? wallet.trim() : undefined,
     });
     props.onSubmit && props.onSubmit(filter);
   }
@@ -80,7 +86,8 @@ function FilterTopGrower(props) {
     setEmail('');
     setPhone('');
     setDeviceIdentifier('');
-    setWallet('');
+    setWallet(filterOptionAll);
+    setWalletSearchString('');
 
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -152,15 +159,16 @@ function FilterTopGrower(props) {
                 onChange={(e) => setLastName(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
-              <TextField
-                className={`${classes.textField} ${classes.filterElement}`}
-                label="Wallet"
-                htmlFor="Wallet"
-                id="Wallet"
-                placeholder="Wallet"
-                value={wallet}
-                onChange={(e) => setWallet(e.target.value)}
-                onKeyDown={handleEnterPress}
+              <SelectWallet
+                classes={classes}
+                wallet={wallet}
+                walletSearchString={walletSearchString}
+                handleChangeWallet={(value) => {
+                  setWallet(value);
+                }}
+                handleChangeWalletSearchString={(value) => {
+                  setWalletSearchString(value);
+                }}
               />
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
