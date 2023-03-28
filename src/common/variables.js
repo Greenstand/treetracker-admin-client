@@ -22,7 +22,8 @@ export const verificationStatesArr = [
 ];
 
 export const CONTRACT_STATUS = {
-  // unsigned: 'unsigned', // db default state
+  all: 'all',
+  unsigned: 'unsigned', // db default state
   signed: 'signed',
   completed: 'completed',
   aborted: 'aborted',
@@ -30,23 +31,27 @@ export const CONTRACT_STATUS = {
 };
 
 export const COORDINATOR_ROLES = {
+  all: 'all',
   supervisor: 'supervisor',
   area_manager: 'area_manager',
 };
 
 export const CURRENCY = {
+  all: 'all',
   USD: 'USD',
   SLL: 'SLL',
 };
 
 export const AGREEMENT_STATUS = {
-  // planning: 'planning', // db default state
+  all: 'all',
+  planning: 'planning', // db default state
   open: 'open',
   closed: 'closed',
   aborted: 'aborted',
 };
 
 export const AGREEMENT_TYPE = {
+  all: 'all',
   grower: 'grower',
   nursury: 'nursury',
   village_champion: 'village_champion',

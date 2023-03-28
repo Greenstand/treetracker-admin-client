@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CloseIcon from '@material-ui/icons/Close';
@@ -163,7 +163,7 @@ function CustomTableItemDetails(props) {
   const [userName, setUserName] = useState('');
   const classes = useStyles();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedItem?.status === 'paid') {
       treeTrackerApi
         .getAdminUserById(selectedItem.payment_confirmed_by)
@@ -203,43 +203,90 @@ function CustomTableItemDetails(props) {
         {/* end detail header */}
         <Grid item className={classes.itemDetailsContents}>
           <Grid container direction="column" justifyContent="space-around">
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>Grower</Typography>
-              <Typography variant="h6">{selectedItem.grower}</Typography>
-            </Grid>
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>Funder</Typography>
-              <Typography variant="h6">{selectedItem.funder}</Typography>
-            </Grid>
+            {selectedItem.grower && (
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>Grower</Typography>
+                <Typography variant="h6">{selectedItem.grower}</Typography>
+              </Grid>
+            )}
+            {selectedItem.funder && (
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>Funder</Typography>
+                <Typography variant="h6">{selectedItem.funder}</Typography>
+              </Grid>
+            )}
             <Grid item className={classes.itemGrowerDetail}>
               <Typography>Organization</Typography>
               <Typography variant="h6">
-                {selectedItem.sub_organization_name || '---'}
+                {selectedItem.sub_organization_name ||
+                  selectedItem.organization ||
+                  '---'}
               </Typography>
             </Grid>
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>Record ID</Typography>
-              <Typography variant="body2">{selectedItem.id}</Typography>
-            </Grid>
+            {selectedItem.id && (
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>Record ID</Typography>
+                <Typography variant="body2">{selectedItem.id}</Typography>
+              </Grid>
+            )}
+
+            {(selectedItem.agreement_id ||
+              selectedItem.species_agreement_id) && (
+              <>
+                <Divider className={classes.itemDetailsContentsDivider} />
+                {Object.entries(selectedItem).map(
+                  ([property, value]) =>
+                    property !== 'created_at' &&
+                    property !== 'updated_at' &&
+                    property !== 'id' &&
+                    property !== 'status' && (
+                      <Grid
+                        item
+                        className={classes.itemGrowerDetail}
+                        key={property}
+                      >
+                        <Typography>
+                          {property.replace(/_/g, ' ').toLocaleUpperCase()}
+                        </Typography>
+                        {property.includes('id') ? (
+                          <Typography variant="body2">
+                            {value || '---'}
+                          </Typography>
+                        ) : (
+                          <Typography variant="h6">{value || '---'}</Typography>
+                        )}
+                      </Grid>
+                    )
+                )}
+              </>
+            )}
           </Grid>
 
-          <Divider className={classes.itemDetailsContentsDivider} />
+          {(selectedItem.currency || selectedItem.captures_count) && (
+            <>
+              <Divider className={classes.itemDetailsContentsDivider} />
 
-          <Grid container direction="row">
-            <Grid item sm={5}>
-              <Typography>Amount</Typography>
-              <Typography variant="h6">
-                {selectedItem.amount} {selectedItem.currency}{' '}
-              </Typography>
-            </Grid>
+              <Grid container direction="row">
+                {selectedItem.currency && (
+                  <Grid item sm={5}>
+                    <Typography>Amount</Typography>
+                    <Typography variant="h6">
+                      {selectedItem.amount} {selectedItem.currency}{' '}
+                    </Typography>
+                  </Grid>
+                )}
 
-            <Grid item>
-              <Typography>Captures Count</Typography>
-              <Typography variant="h6">
-                {selectedItem.captures_count}
-              </Typography>
-            </Grid>
-          </Grid>
+                {selectedItem.captures_count && (
+                  <Grid item>
+                    <Typography>Captures Count</Typography>
+                    <Typography variant="h6">
+                      {selectedItem.captures_count || '---'}
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </>
+          )}
 
           <Divider className={classes.itemDetailsContentsDivider} />
 
@@ -249,62 +296,72 @@ function CustomTableItemDetails(props) {
               <Typography variant="h6">{selectedItem.status}</Typography>
             </Grid>
 
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>
-                Effective Date
-                <Tooltip
-                  title="Date amount was calculated"
-                  placement="right-start"
-                >
-                  <InfoOutlinedIcon
-                    fontSize="large"
-                    className={classes.infoIconOutlined}
-                  />
-                </Tooltip>
-              </Typography>
-              <Typography variant="h6">{selectedItem.calculated_at}</Typography>
-            </Grid>
+            {selectedItem.calculated_at && (
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>
+                  Effective Date
+                  <Tooltip
+                    title="Date amount was calculated"
+                    placement="right-start"
+                  >
+                    <InfoOutlinedIcon
+                      fontSize="large"
+                      className={classes.infoIconOutlined}
+                    />
+                  </Tooltip>
+                </Typography>
+                <Typography variant="h6">
+                  {selectedItem.calculated_at}
+                </Typography>
+              </Grid>
+            )}
 
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>
-                Payment Date
-                <Tooltip title="Date amount was paid" placement="right-start">
-                  <InfoOutlinedIcon
-                    fontSize="large"
-                    className={classes.infoIconOutlined}
-                  />
-                </Tooltip>
-              </Typography>
-              <Typography variant="h6">{selectedItem.paid_at}</Typography>
-            </Grid>
+            {selectedItem.paid_at && (
+              <Grid item className={classes.itemGrowerDetail}>
+                <Typography>
+                  Payment Date
+                  <Tooltip title="Date amount was paid" placement="right-start">
+                    <InfoOutlinedIcon
+                      fontSize="large"
+                      className={classes.infoIconOutlined}
+                    />
+                  </Tooltip>
+                </Typography>
+                <Typography variant="h6">{selectedItem.paid_at}</Typography>
+              </Grid>
+            )}
           </Grid>
 
-          <Divider className={classes.itemDetailsContentsDivider} />
+          {selectedItem.consolidation_period_start && (
+            <>
+              <Divider className={classes.itemDetailsContentsDivider} />
 
-          <Grid container direction="column" justifyContent="space-around">
-            <Grid item className={classes.itemGrowerDetail}>
-              <Typography>Consolidation Type</Typography>
-              <Typography variant="h6">FCC Tiered</Typography>
-            </Grid>
-
-            <Grid item className={classes.itemGrowerDetail}>
-              <Grid container direction="row">
-                <Grid item sm={5}>
-                  <Typography>Start Date</Typography>
-                  <Typography variant="h6">
-                    {selectedItem.consolidation_period_start}
-                  </Typography>
+              <Grid container direction="column" justifyContent="space-around">
+                <Grid item className={classes.itemGrowerDetail}>
+                  <Typography>Consolidation Type</Typography>
+                  <Typography variant="h6">FCC Tiered</Typography>
                 </Grid>
 
-                <Grid item>
-                  <Typography>End Date</Typography>
-                  <Typography variant="h6">
-                    {selectedItem.consolidation_period_end}
-                  </Typography>
+                <Grid item className={classes.itemGrowerDetail}>
+                  <Grid container direction="row">
+                    <Grid item sm={5}>
+                      <Typography>Start Date</Typography>
+                      <Typography variant="h6">
+                        {selectedItem.consolidation_period_start}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item>
+                      <Typography>End Date</Typography>
+                      <Typography variant="h6">
+                        {selectedItem.consolidation_period_end}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Grid>
+            </>
+          )}
 
           {showLogPaymentForm && selectedItem?.status !== 'paid' && (
             <LogPaymentForm

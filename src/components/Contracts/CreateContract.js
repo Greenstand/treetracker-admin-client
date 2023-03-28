@@ -119,7 +119,7 @@ const initialState = {
 export default function CreateContractAgreement() {
   const classes = useStyles();
   const context = useContext(AppContext);
-  console.log('context', context);
+  console.log('context.orgId', context.orgId);
   const [formData, setFormData] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});

@@ -16,6 +16,13 @@ import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
 import { AppContext } from '../../../context/AppContext';
 import { ALL_ORGANIZATIONS } from '../../../models/Filter';
+import {
+  CONTRACT_STATUS,
+  COORDINATOR_ROLES,
+  CURRENCY,
+  AGREEMENT_STATUS,
+  AGREEMENT_TYPE,
+} from 'common/variables';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -35,10 +42,12 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 function CustomTableFilter(props) {
   // console.warn('orgList', orgList);
   const initialFilter = {
-    // organization_id: '',
+    organization_id: ALL_ORGANIZATIONS,
     grower: '',
     payment_status: 'all',
     earnings_status: 'all',
+    contract_status: 'all',
+    agreement_type: 'all',
     phone: '',
   };
   const [localFilter, setLocalFilter] = useState(initialFilter);
@@ -231,6 +240,108 @@ function CustomTableFilter(props) {
     </>
   );
 
+  const renderContractFilter = () => (
+    <>
+      {
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <InputLabel id="status">Contract Status</InputLabel>
+          <Select
+            labelId="contract_status"
+            value={localFilter?.contract_status || ''}
+            id="contract_status"
+            name="contract_status"
+            label="Contract Status"
+            onChange={handleOnFormControlChange}
+          >
+            {Object.values(CONTRACT_STATUS).map((status, i) => (
+              <MenuItem key={`${status}_${i}`} value={status}>
+                <span style={{ textTransform: 'capitalize' }}>{status}</span>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      }
+
+      {
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <InputLabel id="agreement_type">Agreement Type</InputLabel>
+          <Select
+            labelId="agreement_type"
+            value={localFilter?.agreement_type || ''}
+            id="agreement_type"
+            name="agreement_type"
+            label="Agreement Type"
+            onChange={handleOnFormControlChange}
+          >
+            {Object.values(AGREEMENT_TYPE).map((type, i) => (
+              <MenuItem key={`${type}_${i}`} value={type}>
+                <span style={{ textTransform: 'capitalize' }}>{type}</span>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      }
+
+      {
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <SelectOrg
+            orgId={localFilter?.organization_id}
+            defaultOrgs={[
+              {
+                id: ALL_ORGANIZATIONS,
+                stakeholder_uuid: ALL_ORGANIZATIONS,
+                name: 'All',
+                value: 'All',
+              },
+            ]}
+            handleSelection={handleOnFormControlChange}
+          />
+        </FormControl>
+      }
+
+      <FormControl
+        variant="outlined"
+        className={classes.customTableFilterSelectFormControl}
+      >
+        <TextField
+          id="worker_id"
+          name="worker_id"
+          htmlFor="worker_id"
+          label="Contractor"
+          placeholder="Contractor"
+          value={localFilter?.phone}
+          type="text"
+          onChange={handleOnFormControlChange}
+        />
+      </FormControl>
+
+      {/* <FormControl
+        variant="outlined"
+        className={classes.customTableFilterSelectFormControl}
+      >
+        <TextField
+          id="grower"
+          name="grower"
+          htmlFor="grower"
+          label="Grower Name"
+          placeholder="Grower Name"
+          value={localFilter?.grower}
+          onChange={handleOnFormControlChange}
+          type="text"
+        />
+      </FormControl> */}
+    </>
+  );
+
   return (
     <Drawer
       anchor="right"
@@ -263,6 +374,7 @@ function CustomTableFilter(props) {
         <form onSubmit={handleOnFilterFormSubmit}>
           {filterType === 'date' && renderDateFilter()}
           {filterType === 'main' && renderMainFilter()}
+          {filterType === 'contract' && renderContractFilter()}
 
           {/* add select input */}
 

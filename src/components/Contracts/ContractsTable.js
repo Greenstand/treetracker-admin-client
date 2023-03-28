@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import contractsAPI from '../../api/contracts';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
@@ -53,11 +53,10 @@ const contractsTableMetaData = [
     name: 'organization',
     sortable: true,
     showInfoIcon: false,
-    // align: 'right',
   },
   {
     description: 'Contractor',
-    name: 'contractor',
+    name: 'worker_id',
     sortable: false,
     showInfoIcon: false,
   },
@@ -71,6 +70,12 @@ const contractsTableMetaData = [
     align: 'right',
   },
   {
+    description: 'Notes',
+    name: 'notes',
+    sortable: true,
+    showInfoIcon: false,
+  },
+  {
     description: 'Status',
     name: 'status',
     sortable: true,
@@ -78,7 +83,7 @@ const contractsTableMetaData = [
   },
   {
     description: 'Last Modified',
-    name: 'last_modified',
+    name: 'updated_at',
     sortable: true,
     showInfoIcon: false,
   },
@@ -95,24 +100,32 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
-      csv_start_date: row.consolidation_period_start,
-      csv_end_date: row.consolidation_period_end,
-      consolidation_period_start: convertDateStringToHumanReadableFormat(
-        row.consolidation_period_start,
+      created_at: convertDateStringToHumanReadableFormat(
+        row.created_at,
         'yyyy-MM-dd'
       ),
-      consolidation_period_end: convertDateStringToHumanReadableFormat(
-        row.consolidation_period_end,
+      updated_at: convertDateStringToHumanReadableFormat(
+        row.updated_at,
         'yyyy-MM-dd'
       ),
-      calculated_at: convertDateStringToHumanReadableFormat(
-        row.calculated_at,
-        'yyyy-MM-dd'
-      ),
-      payment_confirmed_at: convertDateStringToHumanReadableFormat(
-        row.payment_confirmed_at
-      ),
-      paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
+      // csv_start_date: row.consolidation_period_start,
+      // csv_end_date: row.consolidation_period_end,
+      // consolidation_period_start: convertDateStringToHumanReadableFormat(
+      //   row.consolidation_period_start,
+      //   'yyyy-MM-dd'
+      // ),
+      // consolidation_period_end: convertDateStringToHumanReadableFormat(
+      //   row.consolidation_period_end,
+      //   'yyyy-MM-dd'
+      // ),
+      // calculated_at: convertDateStringToHumanReadableFormat(
+      //   row.calculated_at,
+      //   'yyyy-MM-dd'
+      // ),
+      // payment_confirmed_at: convertDateStringToHumanReadableFormat(
+      //   row.payment_confirmed_at
+      // ),
+      // paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
     };
   });
 
@@ -139,7 +152,7 @@ function ContractsTable() {
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalContracts, setTotalContracts] = useState(0);
-  const [selectedEarning, setSelectedEarning] = useState(null);
+  const [selectedContract, setSelectedContract] = useState(null);
   const [isDetailShown, setDetailShown] = useState(false);
 
   async function getContracts(fetchAll = false) {
@@ -156,7 +169,9 @@ function ContractsTable() {
 
   async function getContractsReal(fetchAll = false) {
     // console.warn('fetchAll:', fetchAll);
-    const filtersToSubmit = { ...filter };
+    const filtersToSubmit = {
+      ...filter,
+    };
     // filter out keys we don't want to submit
     Object.keys(filtersToSubmit).forEach((k) => {
       if (k === 'grower') {
@@ -183,9 +198,10 @@ function ContractsTable() {
     // log.debug('queryParams', queryParams);
 
     const response = await contractsAPI.getContracts(queryParams);
-    console.log('getContracts response: ', response);
+    // log.debug('getContracts response ---> ', response.contracts);
 
     const results = prepareRows(response.contracts);
+    // log.debug('prepareRows --->', results);
     return {
       results,
       totalCount: response.query.count,
@@ -230,10 +246,10 @@ function ContractsTable() {
         openDateFilter={handleOpenDateFilter}
         handleGetData={getContracts}
         setSelectedRow={(value) => {
-          setSelectedEarning(value);
+          setSelectedContract(value);
           setDetailShown(true);
         }}
-        selectedRow={selectedEarning}
+        selectedRow={selectedContract}
         tableMetaData={contractsTableMetaData}
         activeFiltersCount={
           Object.keys(filter).filter((key) => {
@@ -251,7 +267,7 @@ function ContractsTable() {
           <CustomTableFilter
             isFilterOpen={isMainFilterOpen}
             filter={filter}
-            filterType="main"
+            filterType="contract"
             setFilter={setFilter}
             setIsFilterOpen={setIsMainFilterOpen}
           />
@@ -266,15 +282,16 @@ function ContractsTable() {
           />
         }
         rowDetails={
-          selectedEarning ? (
+          selectedContract ? (
             <CustomTableItemDetails
               open={isDetailShown}
-              selectedItem={selectedEarning}
+              selectedItem={selectedContract}
               refreshData={getContracts}
               onClose={() => {
                 setDetailShown(false);
-                setSelectedEarning(null);
+                setSelectedContract(null);
               }}
+              showLogPaymentForm={false}
             />
           ) : null
         }

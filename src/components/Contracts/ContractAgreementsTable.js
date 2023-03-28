@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import contractsAPI from '../../api/contracts';
 import CustomTable from '../common/CustomTable/CustomTable';
 import {
@@ -59,21 +59,18 @@ const contractsTableMetaData = [
     name: 'funder_id',
     sortable: true,
     showInfoIcon: false,
-    // align: 'right',
   },
   {
     description: 'Owner ID',
     name: 'owner_id',
     sortable: true,
     showInfoIcon: false,
-    // align: 'right',
   },
   {
     description: 'Organization',
     name: 'growing_organization_id',
     sortable: true,
     showInfoIcon: false,
-    // align: 'right',
   },
   {
     description: 'Species Agreement ID',
@@ -127,24 +124,32 @@ const prepareRows = (rows) =>
   rows.map((row) => {
     return {
       ...row,
-      csv_start_date: row.consolidation_period_start,
-      csv_end_date: row.consolidation_period_end,
-      consolidation_period_start: convertDateStringToHumanReadableFormat(
-        row.consolidation_period_start,
+      created_at: convertDateStringToHumanReadableFormat(
+        row.created_at,
         'yyyy-MM-dd'
       ),
-      consolidation_period_end: convertDateStringToHumanReadableFormat(
-        row.consolidation_period_end,
+      updated_at: convertDateStringToHumanReadableFormat(
+        row.updated_at,
         'yyyy-MM-dd'
       ),
-      calculated_at: convertDateStringToHumanReadableFormat(
-        row.calculated_at,
-        'yyyy-MM-dd'
-      ),
-      payment_confirmed_at: convertDateStringToHumanReadableFormat(
-        row.payment_confirmed_at
-      ),
-      paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
+      // csv_start_date: row.consolidation_period_start,
+      // csv_end_date: row.consolidation_period_end,
+      // consolidation_period_start: convertDateStringToHumanReadableFormat(
+      //   row.consolidation_period_start,
+      //   'yyyy-MM-dd'
+      // ),
+      // consolidation_period_end: convertDateStringToHumanReadableFormat(
+      //   row.consolidation_period_end,
+      //   'yyyy-MM-dd'
+      // ),
+      // calculated_at: convertDateStringToHumanReadableFormat(
+      //   row.calculated_at,
+      //   'yyyy-MM-dd'
+      // ),
+      // payment_confirmed_at: convertDateStringToHumanReadableFormat(
+      //   row.payment_confirmed_at
+      // ),
+      // paid_at: row.paid_at ? format(new Date(row.paid_at), 'yyyy-MM-dd') : '',
     };
   });
 
@@ -171,7 +176,9 @@ function ContractAgreementsTable() {
   const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
   const [isMainFilterOpen, setIsMainFilterOpen] = useState(false);
   const [totalContracts, setTotalContracts] = useState(0);
-  const [selectedEarning, setSelectedEarning] = useState(null);
+  const [selectedContractAgreement, setSelectedContractAgreement] = useState(
+    null
+  );
   const [isDetailShown, setDetailShown] = useState(false);
 
   async function getContracts(fetchAll = false) {
@@ -262,10 +269,10 @@ function ContractAgreementsTable() {
         openDateFilter={handleOpenDateFilter}
         handleGetData={getContracts}
         setSelectedRow={(value) => {
-          setSelectedEarning(value);
+          setSelectedContractAgreement(value);
           setDetailShown(true);
         }}
-        selectedRow={selectedEarning}
+        selectedRow={selectedContractAgreement}
         tableMetaData={contractsTableMetaData}
         activeFiltersCount={
           Object.keys(filter).filter((key) => {
@@ -283,7 +290,7 @@ function ContractAgreementsTable() {
           <CustomTableFilter
             isFilterOpen={isMainFilterOpen}
             filter={filter}
-            filterType="main"
+            filterType="contract"
             setFilter={setFilter}
             setIsFilterOpen={setIsMainFilterOpen}
           />
@@ -298,15 +305,16 @@ function ContractAgreementsTable() {
           />
         }
         rowDetails={
-          selectedEarning ? (
+          selectedContractAgreement ? (
             <CustomTableItemDetails
               open={isDetailShown}
-              selectedItem={selectedEarning}
+              selectedItem={selectedContractAgreement}
               refreshData={getContracts}
               onClose={() => {
                 setDetailShown(false);
-                setSelectedEarning(null);
+                setSelectedContractAgreement(null);
               }}
+              showLogPaymentForm={false}
             />
           ) : null
         }
