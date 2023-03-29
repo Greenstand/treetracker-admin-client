@@ -17,7 +17,7 @@ jobs:
     name: Build Client Project
     runs-on: ubuntu-latest
     if: |
-      !contains(github.event.head_commit.message, 'skip-ci') 
+      !contains(github.event.head_commit.message, 'skip-ci')
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 16.14.x
@@ -46,8 +46,7 @@ jobs:
       - name: build client project
         if: ${{ !env.ACT }}
         run: npm run build
-        working-directory:
-          ${{ env.project-directory }}
+        working-directory: ${{ env.project-directory }}
       - name: run React tests
         if: ${{ !env.ACT }}
         run: npm test
@@ -91,14 +90,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: client-bundle
-          path: build-dev
+          path:
+            build-dev
             #- name: install-aws-cli
             #uses: unfor19/install-aws-cli-action@v1
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-access-key-id: ${{ secrets.PROD_AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET }}
           aws-region: us-east-1
       - name: Copy front end resources to s3 bucket
         run: |
