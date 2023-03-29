@@ -10,7 +10,7 @@ on:
 
 env:
   project-directory: ./
-  repository: 'dadiorchen/treetracker-admin-client-test'
+  repository: 'Greenstand/treetracker-admin-client'
 
 jobs:
   client:
