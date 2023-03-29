@@ -16,13 +16,13 @@ import SelectOrg from '../SelectOrg';
 import useStyles from './CustomTableFilter.styles';
 import { AppContext } from '../../../context/AppContext';
 import { ALL_ORGANIZATIONS } from '../../../models/Filter';
-import {
-  CONTRACT_STATUS,
-  COORDINATOR_ROLES,
-  CURRENCY,
-  AGREEMENT_STATUS,
-  AGREEMENT_TYPE,
-} from 'common/variables';
+// import {
+//   CONTRACT_STATUS,
+//   COORDINATOR_ROLES,
+//   CURRENCY,
+//   AGREEMENT_STATUS,
+//   AGREEMENT_TYPE,
+// } from 'common/variables';
 
 const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
 
@@ -46,9 +46,13 @@ function CustomTableFilter(props) {
     grower: '',
     payment_status: 'all',
     earnings_status: 'all',
-    contract_status: 'all',
-    agreement_type: 'all',
     phone: '',
+    // status: 'all', // contract or agreement, filter not allowed
+    // type: 'all', // agreement, filter not allowed
+    owner_id: '', // agreement
+    name: '', // agreement
+    agreement_id: '', // contract
+    worker_id: '', // contract
   };
   const [localFilter, setLocalFilter] = useState(initialFilter);
   const {
@@ -72,18 +76,19 @@ function CustomTableFilter(props) {
     } else {
       updatedFilter = {
         ...updatedFilter,
-        organization_id: e?.id || ALL_ORGANIZATIONS,
+        organization_id: e?.stakeholder_uuid || ALL_ORGANIZATIONS,
         sub_organization: e?.stakeholder_uuid || ALL_ORGANIZATIONS,
       };
     }
-
     setLocalFilter(updatedFilter);
   };
 
   const handleOnFilterFormSubmit = (e) => {
     e.preventDefault();
+    // console.log('handleSubmit filter', filter, localFilter);
     const filtersToSubmit = {
       ...filter,
+      ...localFilter,
       grower: localFilter.grower ? localFilter.grower.trim() : undefined,
       phone: localFilter.phone ? localFilter.phone.trim() : undefined,
       payment_status: disablePaymentStatus
@@ -97,12 +102,15 @@ function CustomTableFilter(props) {
         organization_id: '',
         sub_organization: '',
       };
+
+      // console.log('handleSubmit final modified', modifiedFiltersToSubmit);
       setFilter(modifiedFiltersToSubmit);
       setIsFilterOpen(false);
       updateSelectedFilter({
         modifiedFiltersToSubmit,
       });
     } else {
+      // console.log('handleSubmit final', filtersToSubmit);
       setFilter(filtersToSubmit);
       setIsFilterOpen(false);
       updateSelectedFilter(filtersToSubmit);
@@ -240,42 +248,22 @@ function CustomTableFilter(props) {
     </>
   );
 
-  const renderContractFilter = () => (
+  const renderAgreementFilter = () => (
     <>
-      {
-        <FormControl
-          variant="outlined"
-          className={classes.customTableFilterSelectFormControl}
-        >
-          <InputLabel id="status">Contract Status</InputLabel>
-          <Select
-            labelId="contract_status"
-            value={localFilter?.contract_status || ''}
-            id="contract_status"
-            name="contract_status"
-            label="Contract Status"
-            onChange={handleOnFormControlChange}
-          >
-            {Object.values(CONTRACT_STATUS).map((status, i) => (
-              <MenuItem key={`${status}_${i}`} value={status}>
-                <span style={{ textTransform: 'capitalize' }}>{status}</span>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      }
+      <Divider className={classes.itemDetailsContentsDivider} />
+      <h3>Contract Agreements</h3>
 
-      {
+      {/* {
         <FormControl
           variant="outlined"
           className={classes.customTableFilterSelectFormControl}
         >
-          <InputLabel id="agreement_type">Agreement Type</InputLabel>
+          <InputLabel id="type">Agreement Type</InputLabel>
           <Select
-            labelId="agreement_type"
-            value={localFilter?.agreement_type || ''}
-            id="agreement_type"
-            name="agreement_type"
+            labelId="type"
+            value={localFilter?.type || ''}
+            id="type"
+            name="type"
             label="Agreement Type"
             onChange={handleOnFormControlChange}
           >
@@ -286,9 +274,32 @@ function CustomTableFilter(props) {
             ))}
           </Select>
         </FormControl>
-      }
+      } */}
 
-      {
+      {/* {
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <InputLabel id="status">Agreement Status</InputLabel>
+          <Select
+            labelId="status"
+            value={localFilter?.status || ''}
+            id="status"
+            name="status"
+            label="Agreement Status"
+            onChange={handleOnFormControlChange}
+          >
+            {Object.values(AGREEMENT_STATUS).map((status, i) => (
+              <MenuItem key={`${status}_${i}`} value={status}>
+                <span style={{ textTransform: 'capitalize' }}>{status}</span>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      } */}
+
+      {/* {
         <FormControl
           variant="outlined"
           className={classes.customTableFilterSelectFormControl}
@@ -306,7 +317,69 @@ function CustomTableFilter(props) {
             handleSelection={handleOnFormControlChange}
           />
         </FormControl>
-      }
+      } */}
+
+      <FormControl
+        variant="outlined"
+        className={classes.customTableFilterSelectFormControl}
+      >
+        <TextField
+          id="name"
+          name="name"
+          htmlFor="name"
+          label="Agreement Name"
+          placeholder="Agreement Name"
+          value={localFilter?.name}
+          onChange={handleOnFormControlChange}
+          type="text"
+        />
+      </FormControl>
+
+      <FormControl
+        variant="outlined"
+        className={classes.customTableFilterSelectFormControl}
+      >
+        <TextField
+          id="owner_id"
+          name="owner_id"
+          htmlFor="owner_id"
+          label="Owner ID"
+          placeholder="Owner ID"
+          value={localFilter?.owner_id}
+          type="text"
+          onChange={handleOnFormControlChange}
+        />
+      </FormControl>
+    </>
+  );
+
+  const renderContractFilter = () => (
+    <>
+      <Divider className={classes.itemDetailsContentsDivider} />
+      <h3>Contracts</h3>
+
+      {/* {
+        <FormControl
+          variant="outlined"
+          className={classes.customTableFilterSelectFormControl}
+        >
+          <InputLabel id="status">Contract Status</InputLabel>
+          <Select
+            labelId="status"
+            value={localFilter?.status || ''}
+            id="status"
+            name="status"
+            label="Contract Status"
+            onChange={handleOnFormControlChange}
+          >
+            {Object.values(CONTRACT_STATUS).map((status, i) => (
+              <MenuItem key={`${status}_${i}`} value={status}>
+                <span style={{ textTransform: 'capitalize' }}>{status}</span>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      } */}
 
       <FormControl
         variant="outlined"
@@ -316,29 +389,29 @@ function CustomTableFilter(props) {
           id="worker_id"
           name="worker_id"
           htmlFor="worker_id"
-          label="Contractor"
-          placeholder="Contractor"
-          value={localFilter?.phone}
+          label="Contractor (Worker ID)"
+          placeholder="Contractor (Worker ID)"
+          value={localFilter?.worker_id}
           type="text"
           onChange={handleOnFormControlChange}
         />
       </FormControl>
 
-      {/* <FormControl
+      <FormControl
         variant="outlined"
         className={classes.customTableFilterSelectFormControl}
       >
         <TextField
-          id="grower"
-          name="grower"
-          htmlFor="grower"
-          label="Grower Name"
-          placeholder="Grower Name"
-          value={localFilter?.grower}
-          onChange={handleOnFormControlChange}
+          id="agreement_id"
+          name="agreement_id"
+          htmlFor="agreement_id"
+          label="Agreement ID"
+          placeholder="Agreement ID"
+          value={localFilter?.agreement_id}
           type="text"
+          onChange={handleOnFormControlChange}
         />
-      </FormControl> */}
+      </FormControl>
     </>
   );
 
@@ -375,6 +448,7 @@ function CustomTableFilter(props) {
           {filterType === 'date' && renderDateFilter()}
           {filterType === 'main' && renderMainFilter()}
           {filterType === 'contract' && renderContractFilter()}
+          {filterType === 'agreement' && renderAgreementFilter()}
 
           {/* add select input */}
 

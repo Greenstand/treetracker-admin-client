@@ -194,20 +194,22 @@ function ContractAgreementsTable() {
   }
 
   async function getContractAgreements(fetchAll = false) {
-    // console.warn('fetchAll:', fetchAll);
     const filtersToSubmit = { ...filter };
+
+    console.log('getContractAgreements before ', filtersToSubmit);
     // filter out keys we don't want to submit
     Object.keys(filtersToSubmit).forEach((k) => {
-      if (k === 'grower') {
-        return;
-      } else {
-        if (
-          filtersToSubmit[k] === 'all' ||
-          filtersToSubmit[k] === '' ||
-          k === 'organization_id'
-        ) {
-          delete filtersToSubmit[k];
-        }
+      if (k === 'organization_id' && filtersToSubmit[k].length) {
+        filtersToSubmit['growing_organization_id'] = filtersToSubmit[k];
+        delete filtersToSubmit[k];
+        delete filtersToSubmit['sub_organization'];
+      }
+      if (
+        filtersToSubmit[k] === 'all' ||
+        filtersToSubmit[k] === '' ||
+        filtersToSubmit[k] === undefined
+      ) {
+        delete filtersToSubmit[k];
       }
     });
 
@@ -218,6 +220,8 @@ function ContractAgreementsTable() {
       // order: sortBy?.order,
       ...filtersToSubmit,
     };
+
+    console.log('getContractAgreements after', queryParams);
 
     // log.debug('queryParams', queryParams);
 
@@ -235,6 +239,7 @@ function ContractAgreementsTable() {
   const handleOpenDateFilter = () => setIsDateFilterOpen(true);
 
   useEffect(() => {
+    // console.log('contractAgreementsTable usEffect filter', filter);
     if (filter?.start_date && filter?.end_date) {
       const dateRangeString = generateActiveDateRangeFilterString(
         filter?.start_date,
@@ -275,22 +280,17 @@ function ContractAgreementsTable() {
         selectedRow={selectedContractAgreement}
         tableMetaData={contractsTableMetaData}
         activeFiltersCount={
-          Object.keys(filter).filter((key) => {
-            return key === 'start_date' ||
-              key === 'end_date' ||
-              key === 'organization_id' ||
-              filter[key] === 'all' ||
-              filter[key] === ''
-              ? false
-              : true;
-          }).length
+          Object.keys(filter).filter(
+            (k) =>
+              filter[k] !== 'all' && filter[k] !== '' && filter[k] !== undefined
+          ).length
         }
         headerTitle="Contract Agreements"
         mainFilterComponent={
           <CustomTableFilter
             isFilterOpen={isMainFilterOpen}
             filter={filter}
-            filterType="contract"
+            filterType="agreement"
             setFilter={setFilter}
             setIsFilterOpen={setIsMainFilterOpen}
           />
