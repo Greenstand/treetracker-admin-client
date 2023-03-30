@@ -22,6 +22,7 @@ import {
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
 } from '../DashStat.container';
+import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
 import ReportingCard1 from '../reportingCards/ReportingCard1';
 import ReportingCard2 from '../reportingCards/ReportingCard2';
@@ -51,6 +52,8 @@ function Home(props) {
   const appContext = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
+  const [filter, setFilter] = useState({});
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
@@ -76,10 +79,15 @@ function Home(props) {
   ];
   const [timeRangeIndex, setTimeRangeIndex] = useState(3);
   const [startDate, setStartDate] = useState('1970-01-01');
-  const [endDate /*, setEndDate*/] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const renderDateFilter = () => {
+    setAnchorEl(null);
+    setIsDateFilterOpen(true);
   };
 
   const handleTimeClose = (index) => {
@@ -87,11 +95,35 @@ function Home(props) {
     setAnchorEl(null);
     if (isNaN(index)) return;
     setTimeRangeIndex(index);
-    setStartDate(format(subDays(new Date(), timeRange[0].range), 'yyyy-MM-dd'));
+    setEndDate(format(new Date(), 'yyyy-MM-dd'));
+    setStartDate(
+      format(subDays(new Date(), timeRange[index].range), 'yyyy-MM-dd')
+    );
+  };
+
+  const handleCustomTimeClose = (e) => {
+    e.preventDefault();
+    setStartDate(filter?.start_date);
+    setEndDate(filter?.end_date);
+  };
+
+  const handleCustomTimeChange = (e) => {
+    let updatedFilter = { ...filter };
+    updatedFilter[e?.target?.id] = e?.target?.value;
+    setFilter(updatedFilter);
   };
 
   return (
     <Grid className={classes.box}>
+      <CustomTableFilter
+        isFilterOpen={isDateFilterOpen}
+        filter={filter}
+        filterType="date"
+        setFilter={setFilter}
+        setIsFilterOpen={setIsDateFilterOpen}
+        alternativeHandleChange={handleCustomTimeChange}
+        alternativeHandleOnFormSubmit={handleCustomTimeClose}
+      />
       <Grid className={classes.menuAside}>
         <Paper elevation={3} className={classes.menu}>
           <Menu variant="plain" />
@@ -141,6 +173,9 @@ function Home(props) {
                       {timeRange[index].text}
                     </MenuItem>
                   ))}
+                  <MenuItem onClick={() => renderDateFilter()}>
+                    Choose Dates
+                  </MenuItem>
                 </MenuMui>
               </Grid>
             )}

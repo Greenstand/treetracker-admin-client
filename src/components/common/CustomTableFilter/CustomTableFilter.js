@@ -30,6 +30,8 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @param {string} props.filterType -  filter type, either 'main' or 'date'
  * @param {boolean} props.isFilterOpen - flag determining if filter is open/closed
  * @param {boolean} props.disablePaymentStatus -
+ * @param {function} props.alternativeHandleChange - allows alt logic for changes in date filter
+ * @param {function} props.alternativeHandleOnFormSubmit - allows alt logic for submit in date filter form
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
@@ -49,6 +51,8 @@ function CustomTableFilter(props) {
     setFilter,
     filterType,
     disablePaymentStatus,
+    alternativeHandleChange,
+    alternativeHandleOnFormSubmit,
   } = props;
 
   const classes = useStyles();
@@ -124,7 +128,7 @@ function CustomTableFilter(props) {
           value={localFilter?.start_date}
           label="Start Date"
           type="date"
-          onChange={handleOnFormControlChange}
+          onChange={alternativeHandleChange || handleOnFormControlChange}
           InputLabelProps={{
             shrink: true,
           }}
@@ -140,7 +144,7 @@ function CustomTableFilter(props) {
           name="end_date"
           label="End Date"
           value={localFilter?.end_date}
-          onChange={handleOnFormControlChange}
+          onChange={alternativeHandleChange || handleOnFormControlChange}
           type="date"
           InputLabelProps={{
             shrink: true,
@@ -260,9 +264,12 @@ function CustomTableFilter(props) {
         {/* end   filter header */}
 
         {/* start filter body */}
-        <form onSubmit={handleOnFilterFormSubmit}>
+        <form
+          onSubmit={alternativeHandleOnFormSubmit || handleOnFilterFormSubmit}
+        >
           {filterType === 'date' && renderDateFilter()}
           {filterType === 'main' && renderMainFilter()}
+          {/* {filterType === 'homeDate' && renderHomeDateFilter()} */}
 
           {/* add select input */}
 
