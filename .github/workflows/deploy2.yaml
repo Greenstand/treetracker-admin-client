@@ -1,4 +1,4 @@
-name: Deploy to Environments
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       version:
         description: 'Version to deploy'
         required: true
-        default: 'latest'
+        default: 'e.g. v1.20.1-freetown.1'
       env:
         type: choice
         description: Environment to deploy to
