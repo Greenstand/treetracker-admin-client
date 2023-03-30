@@ -37,10 +37,12 @@ jobs:
             const s3BucketSecretNames = {
               "master": "DEV_CDN_S3_BUCKET",
               "freetown": "DEV_CDN_S3_BUCKET_FREETOWN",
+              "beta": "DEV_STAGING_CDN_S3_BUCKET",
             }
             const cdnIdSecretNames = {
               "master": "DEV_CDN_DISTRIBUTION_ID",
               "freetown": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
+              "beta": "DEV_STAGING_CDN_DISTRIBUTION_ID",
             }
             const releaseJson = require("./.releaserc.json");        
             const branches = releaseJson.branches.map(e => e.name? e.name : e);
