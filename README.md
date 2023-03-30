@@ -312,6 +312,19 @@ git push greenstand feature1
 
 The new push will trigger the first release of this branch: `v1.2.3-feature1.1`, and release to http://beta-admin.treetracker.org
 
+### How to merge feature branch to master
+
+Normal merge from `freature1` to `master` will trigger the recalculate of the version, for example: if `master` is on `v2.0.0`, then the merge will add all changes from `feature1` to add to the version of master.
+
+### Supported channels
+
+Now supported channls and domain for dev and prod respectively:
+
+* master: dev-admin.treetracker.org admin.treetracker.org
+* beta: dev-beta-admin.treetracker.org beta-admin.treetracker.org
+* alpha: dev-alpha-admin.treetracker.org alpha-admin.treetracker.org
+* next: dev-next-admin.treetracker.org next-admin.treetracker.org
+* freetown: dev-freetown-admin.treetracker.org freetown-admin.treetracker.org
 
 ## Further reading
 
