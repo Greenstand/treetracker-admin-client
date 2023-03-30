@@ -1,4 +1,4 @@
-name: Deploy to Environments
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -6,25 +6,98 @@ on:
       version:
         description: 'Version to deploy'
         required: true
-        default:
-          'latest'
-          #      env:
-          #        type: choice
-          #        description: Environment to deploy to
-          #        options:
-          #          - dev
-          #          - test
-          #          - prod
-          #        default: 'dev'
+        default: 'e.g. v1.20.1-freetown.1'
+      env:
+        type: choice
+        description: Environment to deploy to
+        options:
+          - dev
+          - test
+          - prod
+        default: 'dev'
 
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
 
+
 jobs:
+  prepare:
+    name: checking and prepare settings for jobs
+    runs-on: ubuntu-latest
+    outputs:
+      CHANNEL: ${{ steps.resolver.outputs.CHANNEL }}
+      S3_BUCKET_SECRET_NAME: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME }}
+      CDN_ID_SECRET_NAME: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME }}
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '18.x'
+      - uses: actions/checkout@v2
+        with:
+          ref: freetown
+      - run: |
+          echo "::debug:: begin preparing...";
+          echo "::debug:: version to deploy: $VERSION_TO_DEPLOY";
+          echo "::debug:: env to deploy: ${{ github.event.inputs.env }}";
+          ls -a
+          node <<EOF >> $GITHUB_OUTPUT
+            const s3BucketSecretNames = {
+              "master-dev": "DEV_CDN_S3_BUCKET",
+              "master-prod": "PROD_CDN_S3_BUCKET",
+              "freetown-dev": "DEV_CDN_S3_BUCKET_FREETOWN",
+              "freetown-prod": "PROD_CDN_S3_BUCKET_FREETOWN",
+              "beta-dev": "DEV_STAGING_CDN_S3_BUCKET",
+              "beta-prod": "STAGING_CDN_S3_BUCKET",
+            }
+            const cdnIdSecretNames = {
+              "master-dev": "DEV_CDN_DISTRIBUTION_ID",
+              "master-prod": "PROD_CDN_DISTRIBUTION_ID",
+              "freetown-dev": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
+              "freetown-prod": 'PROD_CDN_DISTRIBUTION_ID_FREETOWN"',
+              "beta-dev": "DEV_STAGING_CDN_DISTRIBUTION_ID",
+              "beta-prod": "STAGING_CDN_DISTRIBUTION_ID",
+            }
+            const releaseJson = require("./.releaserc.json");        
+            const version = process.env.VERSION_TO_DEPLOY
+            const env = process.env.ENV_TO_DEPLOY;
+            const m = version.match(/^v\d+\.\d+.\d+(-([\w-\/\.]+)\.\d+)?$/)
+            let channel;
+            let s3BucketSecretName;
+            let cdnIdSecretName;
+            if(!m){
+              throw '::error:: wrong version:' + version;
+            }else{
+              if(!m[1]){
+                channel = "master";
+              }else{
+                channel = m[2];
+              }
+            }
+            s3BucketSecretName = s3BucketSecretNames[channel + '-' + env];
+            if(!s3BucketSecretName){
+              throw '::error:: can not find s3 bucket secret name by, channel:' + channel + ' env:' + env;
+            }
+            cdnIdSecretName = cdnIdSecretNames[channel + '-' + env];
+            console.log("CHANNEL=" + channel);
+            console.log("S3_BUCKET_SECRET_NAME=" + s3BucketSecretName);
+            console.log("CDN_ID_SECRET_NAME=" + cdnIdSecretName);
+            
+          EOF
+        id: resolver
+        env:
+          VERSION_TO_DEPLOY: ${{ github.event.inputs.version }}
+          ENV_TO_DEPLOY: ${{ github.event.inputs.env }}
+      - run: |
+          echo "resolver: ${{ steps.resolver.outputs.CHANNEL}}"
+          echo "resolver: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME}}"
+          echo "resolver: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME}}"
+        name: Print resolver
+
   frontend:
     name: Build Frontend Project
     runs-on: ubuntu-latest
+    needs: prepare
     if: |
       !contains(github.event.head_commit.message, 'skip-ci')
     steps:
@@ -50,10 +123,15 @@ jobs:
   deploy:
     name: Deploy to CDN
     runs-on: ubuntu-latest
-    needs: frontend
+    needs: [frontend, prepare]
     if: |
       github.repository == ${{ github.env.repository }}
     steps:
+      - name: Print vars
+        run: |
+          echo "channel: ${{ needs.prepare.outputs.CHANNEL }}"
+          echo "s3: ${{ needs.prepare.outputs.S3_BUCKET_SECRET_NAME }}"
+          echo "cdn: ${{ needs.prepare.outputs.CDN_ID_SECRET_NAME }}"
       - name: Download bundled frontend resources
         uses: actions/download-artifact@v2
         with:
@@ -67,7 +145,7 @@ jobs:
           aws-region: us-east-1
       - name: Copy front end resources to s3 bucket
         run: |
-          aws s3 sync build s3://${{ secrets.PROD_CDN_S3_BUCKET_FREETOWN }} --delete
+          aws s3 sync build s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
       - name: Invalidate cloudfront caches
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CDN_DISTRIBUTION_ID_FREETOWN }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
