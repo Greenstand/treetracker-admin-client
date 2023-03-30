@@ -6,7 +6,8 @@ on:
       version:
         description: 'Version to deploy'
         required: true
-        default: 'latest'
+        default:
+          'latest'
           #      env:
           #        type: choice
           #        description: Environment to deploy to
@@ -19,7 +20,6 @@ on:
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
-
 
 jobs:
   frontend:
@@ -62,8 +62,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.PROD_AWS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID_DIDIOR }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_DADIOR }}
           aws-region: us-east-1
       - name: Copy front end resources to s3 bucket
         run: |
