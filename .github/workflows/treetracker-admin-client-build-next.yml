@@ -166,4 +166,4 @@ jobs:
           aws s3 sync build-dev s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
       - name: Invalidate cloudfront caches
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.frontend.needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets[prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
