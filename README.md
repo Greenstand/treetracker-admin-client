@@ -283,6 +283,36 @@ Visit this URL in the browser: http://localhost:9009
 
 All the stories are located at `./src/stories/`
 
+## How to work on new brach for new feature
+
+1. Create a new feature, for example:
+```
+git remote add greenstand git@github.com:Greenstand/treetracker-admin-client.git
+git checkout greenstand/master
+git checkout -b feature1
+```
+
+1. Modify `.releaserc.json` by adding new branch and channel into the `branches` array:
+```
+    { 
+      "name": "feature1", 
+      "prerelease": true,
+      "channel": "beta"
+    },
+```
+
+1. Push the first commit to the branch:
+```
+git add .releaserc.json
+git commit -m "fix: new feature 1"
+git push greenstand feature1
+```
+
+1. Done
+
+The new push will trigger the first release of this branch: `v1.2.3-feature1.1`, and release to http://beta-admin.treetracker.org
+
+
 ## Further reading
 
 See [Contributing to the Cause](https://github.com/Greenstand/Development-Overview#contributing-to-the-cause)
