@@ -34,6 +34,8 @@ jobs:
         with:
           node-version: '18.x'
       - uses: actions/checkout@v2
+        with:
+          ref: freetown
       - run: |
           echo "::debug:: begin preparing...";
           echo "::debug:: version to deploy: $VERSION_TO_DEPLOY";
