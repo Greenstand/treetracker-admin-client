@@ -10,7 +10,7 @@
       "channel": "freetown"
     }
     ,{
-      "name": "hotfix/v.107",
+      "name": "hotfix/v1.107",
       "prerelease": true,
       "channel": "beta"
     }
