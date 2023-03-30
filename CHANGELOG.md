@@ -1,3 +1,30 @@
+## [1.107.19-freetown.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.2...v1.107.19-freetown.3) (2023-03-30)
+
+
+### Bug Fixes
+
+* wrong name for cdn secret ([e97b03d](https://github.com/Greenstand/treetracker-admin-client/commit/e97b03d41c141dc5f05857e1a3a5e72b01e70ed3))
+* wrong name for cdn secret ([ebcb154](https://github.com/Greenstand/treetracker-admin-client/commit/ebcb154651510cfd919da913770d01ac3ca80b26))
+
+## [1.107.19-freetown.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.1...v1.107.19-freetown.2) (2023-03-30)
+
+
+### Bug Fixes
+
+* build action by parsing release rc ([ea0d17d](https://github.com/Greenstand/treetracker-admin-client/commit/ea0d17d80098236fc188616f861abb43738d47d3))
+
+## [1.107.19-freetown.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.107.19-freetown.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* remove install aws cli ([196dcce](https://github.com/Greenstand/treetracker-admin-client/commit/196dcce879ca3826c79514e26e7fd6a7b88b527b))
+* trigger release ([76e183f](https://github.com/Greenstand/treetracker-admin-client/commit/76e183f483ec2e10f571b57f43f7ca646403eb9b))
+* try dadior aws crd ([ebc9e4d](https://github.com/Greenstand/treetracker-admin-client/commit/ebc9e4d1364a516b80620489c7c47680d5f72d06))
+* try prod aws crd ([d059107](https://github.com/Greenstand/treetracker-admin-client/commit/d0591074bd93bfb90198417fda712b8d16c5c772))
+* workflow for release and deploy freetown ([fdd0ce1](https://github.com/Greenstand/treetracker-admin-client/commit/fdd0ce1b1c41616ad706071e043070cebbc5969c))
+* workflow rename from dadior the greenstand ([c4c7996](https://github.com/Greenstand/treetracker-admin-client/commit/c4c7996385a6192eb69c272415a8aff871e9bec1))
+
 ## [1.107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.2...v1.107.3) (2022-09-28)
 
 
