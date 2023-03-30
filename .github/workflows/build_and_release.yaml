@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - freetown
+      - hotfix/v1.107
 
 env:
   project-directory: ./

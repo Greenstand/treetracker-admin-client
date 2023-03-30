@@ -9,6 +9,11 @@
       "prerelease": true,
       "channel": "freetown"
     }
+    ,{
+      "name": "hotfix/v.107",
+      "prerelease": true,
+      "channel": "beta"
+    }
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",
