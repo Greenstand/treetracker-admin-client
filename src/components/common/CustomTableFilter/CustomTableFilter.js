@@ -269,7 +269,6 @@ function CustomTableFilter(props) {
         >
           {filterType === 'date' && renderDateFilter()}
           {filterType === 'main' && renderMainFilter()}
-          {/* {filterType === 'homeDate' && renderHomeDateFilter()} */}
 
           {/* add select input */}
 
