@@ -1,3 +1,10 @@
+## [1.107.19-freetown.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.1...v1.107.19-freetown.2) (2023-03-30)
+
+
+### Bug Fixes
+
+* build action by parsing release rc ([ea0d17d](https://github.com/Greenstand/treetracker-admin-client/commit/ea0d17d80098236fc188616f861abb43738d47d3))
+
 ## [1.107.19-freetown.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.107.19-freetown.1) (2023-03-30)
 
 
