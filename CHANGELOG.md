@@ -1,3 +1,11 @@
+## [1.107.19-freetown.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.2...v1.107.19-freetown.3) (2023-03-30)
+
+
+### Bug Fixes
+
+* wrong name for cdn secret ([e97b03d](https://github.com/Greenstand/treetracker-admin-client/commit/e97b03d41c141dc5f05857e1a3a5e72b01e70ed3))
+* wrong name for cdn secret ([ebcb154](https://github.com/Greenstand/treetracker-admin-client/commit/ebcb154651510cfd919da913770d01ac3ca80b26))
+
 ## [1.107.19-freetown.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.1...v1.107.19-freetown.2) (2023-03-30)
 
 
