@@ -84,73 +84,55 @@ jobs:
           echo "resolver: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME}}"
         name: Print resolver
 
+  frontend:
+    name: Build Frontend Project
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, 'skip-ci')
+    steps:
+      - name: Print chanel
+        run: |
+          echo "channel: ${{needs.prepare.steps.resolver.outputs.CHANNEL }}"
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.version }}
+      - name: Use Node.js 16.14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.14.x'
+      - name: npm clean install
+        run: npm ci --legacy-peer-deps
+        working-directory: ${{ env.project-directory }}
+      # define the endpoints for PROD in github secrets
+      - name: build frontend project
+        run: npm run build:staging
+        working-directory: ${{ env.project-directory }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: frontend-bundle
+          path: build
 
-
-
-            #  frontend:
-            #    name: Build Frontend Project
-            #    runs-on: ubuntu-latest
-            #    needs: prepare
-            #    if: |
-            #      !contains(github.event.head_commit.message, 'skip-ci')
-            #    steps:
-            #      - uses: actions/checkout@v2
-            #        with:
-            #          #TODO ref: ${{ github.event.inputs.version }}
-            #      - name: Use Node.js 16.14.x
-            #        uses: actions/setup-node@v1
-            #        with:
-            #          node-version: '16.14.x'
-            #      - run: |
-            #          echo ref name: $GITHUB_REF_NAME
-            #      - name: Resolve channl
-            #        run: echo ::set-output name=VALUE::$(echo `node -e ' process.env.GITHUB_REF_NAME === "master" ? console.log("") :console.log(require("./.releaserc.json").branches.reduce((a,c) => a || c.name === process.env.GITHUB_REF_NAME  && c.channel, false))'`)
-            #        id: channel
-            #        with:
-            #            
-            #      - name: Resolve secret name for s3
-            #        run: echo ::set-output name=VALUE::$(echo `node -e 'console.log({dev_freetown:"DEV_CDN_S3_BUCKET_FREETOWN",prod:"PRODUCTION_CLUSTER_NAME",test:"TEST_CLUSTER_NAME"}[process.env.ENV_TO_DEPLOY])'`)
-            #        id: s3_bucket_secret_name
-            #        with:
-            #          ENV_TO_DEPLOY: ${{ github.event.inputs.env }}
-            #          CHANNEL: ${{ github.steps.channel.outputs.VALUE }}
-            #      - name: Print resolver
-            #        run: |
-            #          echo ${{ steps.channel.outputs.VALUE }}
-            #          echo ${{ steps.s3_bucket_secret_name.outputs.VALUE }} 
-        #      - name: npm clean install
-        #        run: npm ci --legacy-peer-deps
-        #        working-directory: ${{ env.project-directory }}
-        #      # define the endpoints for PROD in github secrets
-        #      - name: build frontend project
-        #        run: npm run build:staging
-        #        working-directory: ${{ env.project-directory }}
-        #      - uses: actions/upload-artifact@v2
-        #        with:
-        #          name: frontend-bundle
-        #          path: build
-        #
-        #  deploy:
-        #    name: Deploy to CDN
-        #    runs-on: ubuntu-latest
-        #    needs: frontend
-        #    if: |
-        #      github.repository == ${{ github.env.repository }}
-        #    steps:
-        #      - name: Download bundled frontend resources
-        #        uses: actions/download-artifact@v2
-        #        with:
-        #          name: frontend-bundle
-        #          path: build
-        #      - name: Configure AWS credentials
-        #        uses: aws-actions/configure-aws-credentials@v1
-        #        with:
-        #          aws-access-key-id: ${{ secrets.PROD_AWS_KEY_ID }}
-        #          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET }}
-        #          aws-region: us-east-1
-        #      - name: Copy front end resources to s3 bucket
-        #        run: |
-        #          aws s3 sync build s3://${{ secrets.PROD_CDN_S3_BUCKET_FREETOWN }} --delete
-        #      - name: Invalidate cloudfront caches
-        #        run: |
-        #          aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CDN_DISTRIBUTION_ID_FREETOWN }} --paths "/*"
+  deploy:
+    name: Deploy to CDN
+    runs-on: ubuntu-latest
+    needs: frontend
+    if: |
+      github.repository == ${{ github.env.repository }}
+    steps:
+      - name: Download bundled frontend resources
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend-bundle
+          path: build
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID_DADIOR }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_DADIOR }}
+          aws-region: us-east-1
+      - name: Copy front end resources to s3 bucket
+        run: |
+          aws s3 sync build s3://${{ secrets.PROD_CDN_S3_BUCKET_FREETOWN }} --delete
+      - name: Invalidate cloudfront caches
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CDN_DISTRIBUTION_ID_FREETOWN }} --paths "/*"
