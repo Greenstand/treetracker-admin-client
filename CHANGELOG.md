@@ -1,3 +1,18 @@
+## [1.107.19-hotfix-v1-107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-hotfix-v1-107.1...v1.107.19-hotfix-v1-107.2) (2023-03-31)
+
+
+### Bug Fixes
+
+* add alpha settings [skip ci] ([2135285](https://github.com/Greenstand/treetracker-admin-client/commit/21352857b5d42a5ed810eb1213414ad07c56bc2d))
+* allow pr checking for all branches ([2fcf534](https://github.com/Greenstand/treetracker-admin-client/commit/2fcf534836d7c9f05b07ec72047c6942dbe263d8))
+* correct wayto allow for all branches ([8e372d5](https://github.com/Greenstand/treetracker-admin-client/commit/8e372d5ad0d1014ca480aca93699f09920f0b77e))
+* deploy read rc from hotfix branch[skip ci] ([56a3d01](https://github.com/Greenstand/treetracker-admin-client/commit/56a3d01551fbd54e069871bbed54ec6aea8df7c3))
+* get channel name considering release pattern [skip ci] ([e5098e0](https://github.com/Greenstand/treetracker-admin-client/commit/e5098e006ddee65821ab3ffa7f848042c8d79978))
+* node version ([afaafd2](https://github.com/Greenstand/treetracker-admin-client/commit/afaafd2e5f196cdaeea6ef38abbc721c3b5d57e9))
+* node version ([9a12c7a](https://github.com/Greenstand/treetracker-admin-client/commit/9a12c7a116c71d376b2c40dfc795eb97e431975b))
+* node version for semantic bot ([64e1f35](https://github.com/Greenstand/treetracker-admin-client/commit/64e1f35859256321de22c4fdca5dcd63992f262a))
+* typo [skip ci] ([0277bd2](https://github.com/Greenstand/treetracker-admin-client/commit/0277bd2defc2cb5ec814b5894f972e5242177cff))
+
 ## [1.107.19-hotfix-v1-107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.107.19-hotfix-v1-107.1) (2023-03-31)
 
 
