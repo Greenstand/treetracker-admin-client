@@ -71,7 +71,8 @@ jobs:
               if(!m[1]){
                 channel = "master";
               }else{
-                channel = m[2];
+                const releaseName = m[2];
+                channel = releaseJson.branches.reduce((a,c) => a || (c.prerelease === releaseName && c.channel) || (c.name === releaseName && c.channel), false);
               }
             }
             s3BucketSecretName = s3BucketSecretNames[channel + '-' + env];
