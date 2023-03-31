@@ -49,6 +49,8 @@ jobs:
               "freetown-prod": "PROD_CDN_S3_BUCKET_FREETOWN",
               "beta-dev": "DEV_STAGING_CDN_S3_BUCKET",
               "beta-prod": "STAGING_CDN_S3_BUCKET",
+              "alpha-dev": "DEV_ALPHA_CDN_S3_BUCKET",
+              "alpha-prod": "PROD_ALPHA_CDN_S3_BUCKET",
             }
             const cdnIdSecretNames = {
               "master-dev": "DEV_CDN_DISTRIBUTION_ID",
@@ -57,6 +59,8 @@ jobs:
               "freetown-prod": 'PROD_CDN_DISTRIBUTION_ID_FREETOWN"',
               "beta-dev": "DEV_STAGING_CDN_DISTRIBUTION_ID",
               "beta-prod": "STAGING_CDN_DISTRIBUTION_ID",
+              "alpha-dev": "DEV_ALPHA_CDN_DISTRIBUTION_ID",
+              "alpha-prod": "PROD_BETA_CDN_DISTRIBUTION_ID",
             }
             const releaseJson = require("./.releaserc.json");        
             const version = process.env.VERSION_TO_DEPLOY
