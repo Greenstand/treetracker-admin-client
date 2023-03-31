@@ -50,7 +50,7 @@ jobs:
               console.log("NO_NEED_TO_BUILD=true");
               process.exit(0);
             }
-            let channel = branches.reduce((a,c) => a || (c === ref && c), false);
+            let channel = releaseJson.branches.reduce((a,c) => a || (c === branch && c) || (c.name === branch && c.channel), false);
             let s3BucketSecretName;
             let cdnIdSecretName;
             s3BucketSecretName = s3BucketSecretNames[channel];
