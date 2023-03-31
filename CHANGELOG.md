@@ -1,3 +1,27 @@
+## [1.107.19-hotfix-v1-107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.107.19-hotfix-v1-107.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* build action by parsing release rc ([ea0d17d](https://github.com/Greenstand/treetracker-admin-client/commit/ea0d17d80098236fc188616f861abb43738d47d3))
+* deploy support beta [skip ci] ([67e42c0](https://github.com/Greenstand/treetracker-admin-client/commit/67e42c0c9c92101162c128e28e5798640051d870))
+* get channel name is wrong ([29ce82b](https://github.com/Greenstand/treetracker-admin-client/commit/29ce82b9b82b5a26132834f2b7b26b54eaf5a676))
+* hotfix to beta channel ([d1507c1](https://github.com/Greenstand/treetracker-admin-client/commit/d1507c13974b3dc64108429f37450bb979440602))
+* missing config for beta ([890cdf3](https://github.com/Greenstand/treetracker-admin-client/commit/890cdf3a18c6a79c789ff8bd9b179e3a1d3e830e))
+* remove install aws cli ([196dcce](https://github.com/Greenstand/treetracker-admin-client/commit/196dcce879ca3826c79514e26e7fd6a7b88b527b))
+* rename workflow name ([1eb3230](https://github.com/Greenstand/treetracker-admin-client/commit/1eb323014473f2fb616918417b533be643d98454))
+* support extra chars for version string [skip ci] ([18aaa9d](https://github.com/Greenstand/treetracker-admin-client/commit/18aaa9da1d145e89cc24c9c0c173bb3bd10bbf50))
+* trigger release ([76e183f](https://github.com/Greenstand/treetracker-admin-client/commit/76e183f483ec2e10f571b57f43f7ca646403eb9b))
+* try dadior aws crd ([ebc9e4d](https://github.com/Greenstand/treetracker-admin-client/commit/ebc9e4d1364a516b80620489c7c47680d5f72d06))
+* try prod aws crd ([d059107](https://github.com/Greenstand/treetracker-admin-client/commit/d0591074bd93bfb90198417fda712b8d16c5c772))
+* typo ([5585c19](https://github.com/Greenstand/treetracker-admin-client/commit/5585c1940f6a02187dc63e482f733c9a887aa509))
+* use correct prerelease name ([ecd1bae](https://github.com/Greenstand/treetracker-admin-client/commit/ecd1baee9c2352ce20d15df91f1229cf4f0a04a7))
+* workflow for release and deploy freetown ([fdd0ce1](https://github.com/Greenstand/treetracker-admin-client/commit/fdd0ce1b1c41616ad706071e043070cebbc5969c))
+* workflow rename from dadior the greenstand ([c4c7996](https://github.com/Greenstand/treetracker-admin-client/commit/c4c7996385a6192eb69c272415a8aff871e9bec1))
+* wrong name for cdn secret ([e97b03d](https://github.com/Greenstand/treetracker-admin-client/commit/e97b03d41c141dc5f05857e1a3a5e72b01e70ed3))
+* wrong name for cdn secret ([ebcb154](https://github.com/Greenstand/treetracker-admin-client/commit/ebcb154651510cfd919da913770d01ac3ca80b26))
+* wrong var name ([905e2cb](https://github.com/Greenstand/treetracker-admin-client/commit/905e2cb9b09036e3560b845918386348f545f2a6))
+
 ## [1.107.19-freetown.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.2...v1.107.19-freetown.3) (2023-03-30)
 
 
