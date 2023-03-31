@@ -10,7 +10,7 @@ on:
 
 env:
   project-directory: ./
-  node-version: '18'
+  node-version: '16'
 
 jobs:
   client:
