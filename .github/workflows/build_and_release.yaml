@@ -20,7 +20,7 @@ jobs:
       NO_NEED_TO_BUILD: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD }}
       
 
-    steps
+    steps:
       - uses: actions/setup-node@v1
         with:
           node-version: '18.x'
