@@ -11,7 +11,7 @@
     }
     ,{
       "name": "hotfix/v1.107",
-      "prerelease": true,
+      "prerelease": "hotfix-v1-107",
       "channel": "beta"
     }
   ],
