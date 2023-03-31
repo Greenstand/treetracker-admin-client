@@ -60,7 +60,7 @@ jobs:
               "beta-dev": "DEV_STAGING_CDN_DISTRIBUTION_ID",
               "beta-prod": "STAGING_CDN_DISTRIBUTION_ID",
               "alpha-dev": "DEV_ALPHA_CDN_DISTRIBUTION_ID",
-              "alpha-prod": "PROD_BETA_CDN_DISTRIBUTION_ID",
+              "alpha-prod": "PROD_ALPHA_CDN_DISTRIBUTION_ID",
             }
             const releaseJson = require("./.releaserc.json");        
             const version = process.env.VERSION_TO_DEPLOY
