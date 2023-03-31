@@ -285,7 +285,18 @@ All the stories are located at `./src/stories/`
 
 ## How to work on new brach for new feature
 
-1. Create a new branch, for example:
+1. Modify `.releaserc.json` by adding new branch and channel into the `branches` array:
+```
+    ...
+    { 
+      "name": "feature1", 
+      "prerelease": true,
+      "channel": "beta"
+    },
+    ...
+```
+
+2. Create a new branch, for example:
 ```
 git remote add greenstand git@github.com:Greenstand/treetracker-admin-client.git
 git checkout greenstand/master
@@ -293,25 +304,9 @@ git checkout -b feature1
 git push greenstand feature1
 ```
 
-2. Modify `.releaserc.json` by adding new branch and channel into the `branches` array:
-```
-    { 
-      "name": "feature1", 
-      "prerelease": true,
-      "channel": "beta"
-    },
-```
+3. Push commit to the branch:
 
-3. Push the first commit to the branch:
-```
-git add .releaserc.json
-git commit -m "fix: new feature 1"
-git push greenstand feature1
-```
-
-4. Done
-
-The new push will trigger the first release of this branch with tag/version: `v1.2.3-feature1.1`, and release to http://dev-beta-admin.treetracker.org
+The new push will trigger the first release of this branch with tag/version: `v1.2.3-feature1.1`, and release to http://dev-beta-admin.treetracker.org, and following commits will update/increase the last version number, which is `1` here.
 
 ### How to merge feature branch to master
 
@@ -329,3 +324,5 @@ Now supported channls and domain for dev and prod respectively:
 ## Further reading
 
 See [Contributing to the Cause](https://github.com/Greenstand/Development-Overview#contributing-to-the-cause)
+
+.
