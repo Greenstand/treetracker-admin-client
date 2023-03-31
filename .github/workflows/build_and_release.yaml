@@ -131,7 +131,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ env.node-version }}
+          node-version: 18
       # install dependencies and run semantic-release
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
       - run: semantic-release
