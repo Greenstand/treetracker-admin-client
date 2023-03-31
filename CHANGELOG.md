@@ -1,3 +1,16 @@
+## [1.126.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.0...v1.126.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* -> node 18 ([3b81159](https://github.com/Greenstand/treetracker-admin-client/commit/3b8115926cdf24f2b490808d51414af48a69e68e))
+* add settings for new release [skip ci] ([c006fdb](https://github.com/Greenstand/treetracker-admin-client/commit/c006fdb537ba379124ef1974b70655304b2fbcfd))
+* new deploy workflow [skip ci] ([b48f146](https://github.com/Greenstand/treetracker-admin-client/commit/b48f1464e9d8e567f7111e9c24113ba4e9a08517))
+* remove old deploy.yaml ([8e0933b](https://github.com/Greenstand/treetracker-admin-client/commit/8e0933b91937101dd5eccfbda8b54db20d6ba096))
+* rename build workflow ([4a04bc6](https://github.com/Greenstand/treetracker-admin-client/commit/4a04bc608cdb2153c551b4ab50ca42cb2257b247))
+* syntax error in yaml ([4bc66ea](https://github.com/Greenstand/treetracker-admin-client/commit/4bc66eaa5a5380787080948fb224fe2ed4f0ab7b))
+* update readme ([b44b6f3](https://github.com/Greenstand/treetracker-admin-client/commit/b44b6f37f39008aad5a5f0980d8ebc44413dfcb8))
+
 # [1.126.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.125.0...v1.126.0) (2023-03-27)
 
 
