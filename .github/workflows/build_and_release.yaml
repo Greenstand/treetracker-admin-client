@@ -8,6 +8,7 @@ on:
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
+  node-version: '18'
 
 jobs:
   prepare:
@@ -82,10 +83,10 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') && !contains(needs.prepare.outputs.NO_NEED_TO_BUILD, 'true')
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 16.14.x
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '16.14.x'
+          node-version: ${{ env.node-version }}
       - name: npm clean install
         if: ${{ !env.ACT }}
         run: npm ci --legacy-peer-deps
@@ -130,7 +131,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
+          node-version: ${{ env.node-version }}
       # install dependencies and run semantic-release
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
       - run: semantic-release
