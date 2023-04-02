@@ -1,3 +1,11 @@
+## [1.126.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.1...v1.126.2) (2023-04-02)
+
+
+### Bug Fixes
+
+* **capture counts:** assigns counts according to selected grower ([#1055](https://github.com/Greenstand/treetracker-admin-client/issues/1055)) ([798896b](https://github.com/Greenstand/treetracker-admin-client/commit/798896bcc1806534773f6f10119602dbc66a44b3))
+* correct wayto allow for all branches [skip ci] ([6f2c57f](https://github.com/Greenstand/treetracker-admin-client/commit/6f2c57f3affd3fdf4d0b690d1be379044035e228))
+
 ## [1.126.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.0...v1.126.1) (2023-03-31)
 
 
