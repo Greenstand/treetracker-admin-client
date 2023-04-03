@@ -76,6 +76,7 @@ function Home(props) {
     { range: 30 * 6, text: 'Last 6 Months' },
     { range: 365, text: 'Last Year' },
     { range: 365 * 100, text: 'All' },
+    { range: 1, text: 'Choose Dates' },
   ];
   const [timeRangeIndex, setTimeRangeIndex] = useState(3);
   const [startDate, setStartDate] = useState('1970-01-01');
@@ -165,17 +166,24 @@ function Home(props) {
                   onClose={handleTimeClose}
                   classes={{ paper: classes.timeMenu }}
                 >
-                  {timeRange.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      onClick={() => handleTimeClose(index)}
-                    >
-                      {timeRange[index].text}
-                    </MenuItem>
-                  ))}
-                  <MenuItem onClick={() => renderDateFilter()}>
-                    Choose Dates
-                  </MenuItem>
+                  {timeRange.map((item, index) => {
+                    if (item.text === 'Choose Dates') {
+                      return (
+                        <MenuItem onClick={() => renderDateFilter()}>
+                          {timeRange[index].text}
+                        </MenuItem>
+                      );
+                    } else {
+                      return (
+                        <MenuItem
+                          key={index}
+                          onClick={() => handleTimeClose(index)}
+                        >
+                          {timeRange[index].text}
+                        </MenuItem>
+                      );
+                    }
+                  })}
                 </MenuMui>
               </Grid>
             )}
