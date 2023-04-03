@@ -13,7 +13,7 @@ const customTableFilterStyles = (theme) => ({
   },
   customTableFilterSubmitButton: {
     marginBottom: theme.spacing(2.5),
-    color: theme.palette.stats.white,
+    color: theme.palette.stats?.white,
   },
   customTableFilterResetButton: {
     border: 'none',
