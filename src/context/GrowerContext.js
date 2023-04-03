@@ -69,7 +69,7 @@ export function GrowerProvider(props) {
     const pageNumber = currentPage;
 
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
-    const finalFilter = setOrganizationFilter({ ...filter }, orgId, orgList);
+    const finalFilter = setOrganizationFilter(filter, orgId, orgList);
 
     log.debug('load growers');
 

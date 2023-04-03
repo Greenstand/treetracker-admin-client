@@ -28,14 +28,17 @@ export const setOrganizationFilter = (filter, userOrgId, orgList) => {
     // don't filter if userOrgId is null so that we include both null and not null org ids in results
     filter.organization_id = undefined;
   } else if (
+    filter.organization_id === ORGANIZATION_NOT_SET ||
+    filter.organization_id === null
+  ) {
+    // if filtering for items without an org id, filter for null
+    filter.organization_id = null;
+  } else if (
     filter.organization_id &&
     typeof filter.organization_id === 'string'
   ) {
     // if filtering by one org id, format in array for api query
     filter.organization_id = [filter.organization_id];
-  } else if (filter.organization_id === ORGANIZATION_NOT_SET) {
-    // if filtering for items without an org id, filter for null
-    filter.organization_id = null;
   } else {
     filter.organization_id = undefined;
   }

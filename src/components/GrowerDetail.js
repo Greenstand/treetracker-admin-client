@@ -1,48 +1,50 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
+import * as loglevel from 'loglevel';
+
 import {
-  Typography,
-  CardMedia,
-  Grid,
-  IconButton,
+  Avatar,
   Box,
   Button,
+  CardMedia,
+  CircularProgress,
+  Divider,
+  Drawer,
+  Fab,
+  Grid,
+  IconButton,
+  LinearProgress,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  Avatar,
-  Drawer,
-  Divider,
-  LinearProgress,
-  CircularProgress,
-  Fab,
+  ListItemText,
+  Typography,
 } from '@material-ui/core';
 import {
-  Close,
-  Person,
-  Edit as EditIcon,
-  Done,
   Clear,
+  Close,
+  Done,
+  Edit as EditIcon,
   HourglassEmptyOutlined,
+  Person,
 } from '@material-ui/icons';
-import { captureStatus } from '../common/variables';
-import api from '../api/growers';
-import { getDateTimeStringLocale } from '../common/locale';
-import { hasPermission, POLICIES } from '../models/auth';
-import { AppContext } from '../context/AppContext';
-import { GrowerContext } from '../context/GrowerContext';
-import { MessagingContext } from 'context/MessagingContext';
-import EditGrower from './EditGrower';
-import GrowerOrganization from './GrowerOrganization';
-import OptimizedImage from './OptimizedImage';
 import LinkToWebmap, { pathType } from './common/LinkToWebmap';
+import { POLICIES, hasPermission } from '../models/auth';
+import React, { useContext, useEffect, useState } from 'react';
+
+import { AppContext } from '../context/AppContext';
 import { CopyButton } from './common/CopyButton';
 import CopyNotification from './common/CopyNotification';
+import EditGrower from './EditGrower';
 import FilterModel from '../models/Filter';
+import { GrowerContext } from '../context/GrowerContext';
+import GrowerOrganization from './GrowerOrganization';
+import { Link } from 'react-router-dom';
+import { MessagingContext } from 'context/MessagingContext';
+import OptimizedImage from './OptimizedImage';
+import api from '../api/growers';
+import { captureStatus } from '../common/variables';
+import { getDateTimeStringLocale } from '../common/locale';
+import { makeStyles } from '@material-ui/core/styles';
 import treeTrackerApi from 'api/treeTrackerApi';
-import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('../components/GrowerDetail.js');
 
@@ -230,7 +232,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   async function getCaptureCountGrower(status, growerId) {
     let filter = new FilterModel();
-    filter.growerAccountId = growerId?.toString();
+    filter.grower_account_id = growerId?.toString();
     filter.status = status;
     log.warn('Need to get capture count for grower:', filter.status);
     const countResponse = await treeTrackerApi.getRawCaptureCount({ filter });
@@ -268,7 +270,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     setSnackbarLabel(label);
     setSnackbarOpen(true);
   }
-
   return (
     <>
       <Drawer
@@ -336,12 +337,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   <CircularProgress className={classes.spinner} />
                 ) : (
                   <>
-                    {isImageLoading && grower?.imageUrl && (
+                    {isImageLoading && grower?.image_url && (
                       <CircularProgress className={classes.spinner} />
                     )}
 
                     <OptimizedImage
-                      src={grower.imageUrl}
+                      src={grower.image_url}
                       width={GROWER_IMAGE_SIZE}
                       height={GROWER_IMAGE_SIZE}
                       className={classes.cardMedia}
@@ -356,7 +357,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     />
                   </>
                 )}
-                {!grower.imageUrl && (
+                {!grower.image_url && (
                   <CardMedia className={classes.cardMedia}>
                     <Grid container className={classes.personBox}>
                       <Person className={classes.person} />
@@ -382,7 +383,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   color="primary"
                   className={classes.name}
                 >
-                  {grower.firstName} {grower.lastName}
+                  {grower.first_name} {grower.last_name}
                 </Typography>
                 <Typography variant="body2">
                   ID:{' '}
@@ -470,11 +471,10 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
               </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
-                <Typography variant="subtitle1">First Name</Typography>
-                <Typography variant="body1">
-                  {grower.first_name || '---'}
-                </Typography>
+                <Typography variant="subtitle1">About</Typography>
+                <Typography variant="body1">{grower.about || '---'}</Typography>
               </Grid>
+              <Divider />
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1">Wallet</Typography>
