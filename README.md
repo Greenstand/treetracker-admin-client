@@ -286,10 +286,11 @@ All the stories are located at `./src/stories/`
 ## How to work on new brach for new feature
 
 1. Modify `.releaserc.json` by adding new branch and channel into the `branches` array:
+
 ```
     ...
-    { 
-      "name": "feature1", 
+    {
+      "name": "feature1",
       "prerelease": true,
       "channel": "beta"
     },
@@ -297,6 +298,7 @@ All the stories are located at `./src/stories/`
 ```
 
 2. Create a new branch, for example:
+
 ```
 git remote add greenstand git@github.com:Greenstand/treetracker-admin-client.git
 git checkout greenstand/master
@@ -316,10 +318,10 @@ Normal merge from `freature1` to `master` will trigger the recalculate of the ve
 
 Now supported channls and domain for dev and prod respectively:
 
-* master: dev-admin.treetracker.org admin.treetracker.org
-* beta: dev-beta-admin.treetracker.org beta-admin.treetracker.org
-* alpha: dev-alpha-admin.treetracker.org alpha-admin.treetracker.org
-* freetown: dev-freetown-admin.treetracker.org freetown-admin.treetracker.org
+- master: dev-admin.treetracker.org admin.treetracker.org
+- beta: dev-beta-admin.treetracker.org beta-admin.treetracker.org
+- alpha: dev-alpha-admin.treetracker.org alpha-admin.treetracker.org
+- freetown: dev-freetown-admin.treetracker.org freetown-admin.treetracker.org
 
 ## Further reading
 

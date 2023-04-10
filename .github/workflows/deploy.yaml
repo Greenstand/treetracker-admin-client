@@ -20,7 +20,6 @@ env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
 
-
 jobs:
   prepare:
     name: checking and prepare settings for jobs
