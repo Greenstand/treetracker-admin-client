@@ -453,6 +453,38 @@ const REGION_COLLECTIONS = [
   },
 ];
 
+const WALLETS = {
+  total: 1288,
+  offset: '0',
+  limit: '24',
+  wallets: [
+    '-',
+    '/',
+    '0',
+    '00000000',
+    '0000000000',
+    '0022557444167',
+    '00355696433823',
+    '00385917889623',
+    '0040741944725',
+    '0060162027204',
+    '00923219410812',
+    '00923456785432',
+    '0093775190310',
+    '0094772531092',
+    '009779855063009',
+    '0107724365',
+    '011-23541945',
+    '01234567890',
+    '0123484078',
+    '0128940708',
+    '0129977742',
+    '0138494347',
+    '0162903919',
+    '01634961029',
+  ],
+};
+
 const capturesValues = {
   captures: CAPTURES.captures,
   captureCount: 4,
@@ -550,6 +582,7 @@ module.exports = {
   SPECIES,
   REGIONS,
   REGION_COLLECTIONS,
+  WALLETS,
   capturesValues,
   growerValues,
   verifyValues,

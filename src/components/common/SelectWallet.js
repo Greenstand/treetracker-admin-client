@@ -24,6 +24,10 @@ function SelectWallet({
       setWalletPage(0);
 
       const response = await growerContext.getWallets(walletSearchString);
+      if (!response) {
+        console.log('No response from getWallets');
+        return;
+      }
 
       const total = response.total;
       const wallets = response.wallets;

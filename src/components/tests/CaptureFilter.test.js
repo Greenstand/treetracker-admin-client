@@ -58,6 +58,11 @@ describe('CaptureFilter organizations', () => {
         expect(dropdown).toBeInTheDocument();
       });
 
+      it('renders Wallets dropdown ', () => {
+        const dropdown = screen.getByTestId('wallet-dropdown');
+        expect(dropdown).toBeInTheDocument();
+      });
+
       it('renders default orgList when dropdown clicked ', () => {
         const dropdown = screen.getByTestId('org-dropdown');
         expect(dropdown).toBeInTheDocument();
