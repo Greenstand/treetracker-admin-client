@@ -8,8 +8,8 @@
       "name": "freetown",
       "prerelease": true,
       "channel": "freetown"
-    }
-    ,{
+    },
+    {
       "name": "hotfix/v1.107",
       "prerelease": "hotfix-v1-107",
       "channel": "beta"

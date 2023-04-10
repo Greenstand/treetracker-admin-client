@@ -190,6 +190,10 @@ export default class Filter {
       numFilters += 1;
     }
 
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
+      numFilters += 1;
+    }
+
     // log.debug(
     //   'Count Filters ------------------',
     //   this.getWhereObj(),
