@@ -1,3 +1,71 @@
+## [1.126.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.1...v1.126.2) (2023-04-02)
+
+
+### Bug Fixes
+
+* **capture counts:** assigns counts according to selected grower ([#1055](https://github.com/Greenstand/treetracker-admin-client/issues/1055)) ([798896b](https://github.com/Greenstand/treetracker-admin-client/commit/798896bcc1806534773f6f10119602dbc66a44b3))
+* correct wayto allow for all branches [skip ci] ([6f2c57f](https://github.com/Greenstand/treetracker-admin-client/commit/6f2c57f3affd3fdf4d0b690d1be379044035e228))
+
+## [1.126.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.0...v1.126.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* -> node 18 ([3b81159](https://github.com/Greenstand/treetracker-admin-client/commit/3b8115926cdf24f2b490808d51414af48a69e68e))
+* add settings for new release [skip ci] ([c006fdb](https://github.com/Greenstand/treetracker-admin-client/commit/c006fdb537ba379124ef1974b70655304b2fbcfd))
+* new deploy workflow [skip ci] ([b48f146](https://github.com/Greenstand/treetracker-admin-client/commit/b48f1464e9d8e567f7111e9c24113ba4e9a08517))
+* remove old deploy.yaml ([8e0933b](https://github.com/Greenstand/treetracker-admin-client/commit/8e0933b91937101dd5eccfbda8b54db20d6ba096))
+* rename build workflow ([4a04bc6](https://github.com/Greenstand/treetracker-admin-client/commit/4a04bc608cdb2153c551b4ab50ca42cb2257b247))
+* syntax error in yaml ([4bc66ea](https://github.com/Greenstand/treetracker-admin-client/commit/4bc66eaa5a5380787080948fb224fe2ed4f0ab7b))
+* update readme ([b44b6f3](https://github.com/Greenstand/treetracker-admin-client/commit/b44b6f37f39008aad5a5f0980d8ebc44413dfcb8))
+
+# [1.126.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.125.0...v1.126.0) (2023-03-27)
+
+
+### Bug Fixes
+
+* Verify: Grower map link on capture card uses incorrect URL [#861](https://github.com/Greenstand/treetracker-admin-client/issues/861) ([#1045](https://github.com/Greenstand/treetracker-admin-client/issues/1045)) ([5f35f4f](https://github.com/Greenstand/treetracker-admin-client/commit/5f35f4f1a07eaa2fbb91f1068403dcfda03debe7))
+
+
+### Features
+
+* **about field:** adds an about field with the value of either grower.about or --- ([#1054](https://github.com/Greenstand/treetracker-admin-client/issues/1054)) ([4957104](https://github.com/Greenstand/treetracker-admin-client/commit/495710465f886367424dc82d0be884cb8d03018f))
+
+# [1.125.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.1...v1.125.0) (2023-03-27)
+
+
+### Features
+
+* **full name:** bring growers full name back to the top of the page … ([#1053](https://github.com/Greenstand/treetracker-admin-client/issues/1053)) ([8347c28](https://github.com/Greenstand/treetracker-admin-client/commit/8347c285c07a21c6ad4f7ca2bb5a58e8ca46fee6))
+
+## [1.124.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.124.0...v1.124.1) (2023-03-26)
+
+
+### Bug Fixes
+
+* show grower image ([#1052](https://github.com/Greenstand/treetracker-admin-client/issues/1052)) ([e19e736](https://github.com/Greenstand/treetracker-admin-client/commit/e19e7361d8a59c7d4661db962f416041eff162b8))
+
+# [1.124.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.4...v1.124.0) (2023-03-12)
+
+
+### Features
+
+* Edit Growers: Allow user to specify Grower Image URL [#845](https://github.com/Greenstand/treetracker-admin-client/issues/845) ([#1039](https://github.com/Greenstand/treetracker-admin-client/issues/1039)) ([104fa36](https://github.com/Greenstand/treetracker-admin-client/commit/104fa36eec0cffe5d992e32033359f4deea2fe49))
+
+## [1.123.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.3...v1.123.4) (2023-03-06)
+
+
+### Bug Fixes
+
+* not set org filter ([#1025](https://github.com/Greenstand/treetracker-admin-client/issues/1025)) ([3b9134d](https://github.com/Greenstand/treetracker-admin-client/commit/3b9134d25e2542041f257d0d23b1aaacfa6dadf9))
+
+## [1.123.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.2...v1.123.3) (2023-03-04)
+
+
+### Bug Fixes
+
+* user handle not found ([#1036](https://github.com/Greenstand/treetracker-admin-client/issues/1036)) ([402ee25](https://github.com/Greenstand/treetracker-admin-client/commit/402ee2577a44cdb4bad80b4e8bcd27ae5a46c3bd))
+
 ## [1.123.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.123.1...v1.123.2) (2023-02-18)
 
 

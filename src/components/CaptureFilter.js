@@ -110,6 +110,7 @@ function Filter(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+
     // save the filer to context for editing & submit
     const test = {
       uuid: uuid.trim(),

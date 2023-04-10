@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import {
   SwipeableDrawer,
   TextField,
@@ -231,7 +231,7 @@ const SurveyForm = ({ setToggleSurvey }) => {
           setToggleSurvey(false);
 
           const newSurvey = {
-            id: uuid(),
+            id: uuidv4(),
             type: 'survey',
             parent_message_id: null,
             from: payload.author_handle,

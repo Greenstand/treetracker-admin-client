@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { MessagingContext } from 'context/MessagingContext';
 import {
   FormControl,
@@ -142,7 +142,7 @@ const NewMessage = ({ openModal, handleClose, setMessageRecipient }) => {
           body: messageContent,
           composed_at: new Date().toISOString(),
           from: user.userName,
-          id: uuid(),
+          id: uuidv4(),
           recipient_organization_id: null,
           recipient_region_id: null,
           survey: null,

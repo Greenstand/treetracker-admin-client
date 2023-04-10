@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { format } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -555,7 +555,7 @@ const MessageBody = ({ messages, messageRecipient, avatar }) => {
             body: messageContent,
             composed_at: new Date().toISOString(),
             from: user.userName,
-            id: uuid(),
+            id: uuidv4(),
             recipient_organization_id: null,
             recipient_region_id: null,
             survey: null,
