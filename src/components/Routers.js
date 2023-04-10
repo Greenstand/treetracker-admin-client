@@ -4,17 +4,16 @@ import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
 // import v6 components and integrate to app. Run v5 and v6 simultaneously
 
 import Grid from '@material-ui/core/Grid';
-import Login from './Login';
 import { AppContext } from '../context/AppContext';
 import PrivateRoute from './PrivateRoute';
 import Unauthorized from './Unauthorized';
-import Page404 from './Page404';
 import ReportingCard1 from './reportingCards/ReportingCard1';
 import ReportingCard2 from './reportingCards/ReportingCard2';
 import ReportingCard3 from './reportingCards/ReportingCard3';
 import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
 import ReportingCard6 from './reportingCards/ReportingCard6';
+// import PrivateRoute from "../utilities/PrivateRoute";
 
 export default function Routers() {
   const refContainer = useRef();
@@ -39,9 +38,6 @@ export default function Routers() {
             }}
           >
             <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
               <Route path="/planters">
                 {' '}
                 {/* cater for legacy naming */}
@@ -123,20 +119,6 @@ export default function Routers() {
                   );
                 })()}
               </Route>
-              <Route
-                render={
-                  appContext.user
-                    ? Page404
-                    : ({ location }) => (
-                        <Redirect
-                          to={{
-                            pathname: '/login',
-                            state: { from: location },
-                          }}
-                        />
-                      )
-                }
-              />
             </Switch>
           </Grid>
         </Grid>

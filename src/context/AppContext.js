@@ -62,7 +62,7 @@ function getRoutes(user) {
       linkTo: '/verify',
       component: VerifyView,
       icon: IconThumbsUpDown,
-      disabled: !hasPermission(user, [
+      disabled: !hasPermission([
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
         POLICIES.APPROVE_TREE,
@@ -73,10 +73,7 @@ function getRoutes(user) {
       linkTo: '/captures',
       component: CapturesView,
       icon: IconNature,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_TREE,
-      ]),
+      disabled: !hasPermission([POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]),
     },
     {
       name: 'Capture Matching',
@@ -85,10 +82,7 @@ function getRoutes(user) {
       icon: CompareIcon,
       disabled:
         process.env.REACT_APP_ENABLE_CAPTURE_MATCHING !== 'true' ||
-        !hasPermission(user, [
-          POLICIES.SUPER_PERMISSION,
-          POLICIES.MATCH_CAPTURES,
-        ]),
+        !hasPermission([POLICIES.SUPER_PERMISSION, POLICIES.MATCH_CAPTURES]),
     },
     {
       name: 'Earnings',
@@ -129,7 +123,7 @@ function getRoutes(user) {
       linkTo: '/growers',
       component: GrowersView,
       icon: IconNaturePeople,
-      disabled: !hasPermission(user, [
+      disabled: !hasPermission([
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_GROWER,
       ]),
@@ -141,7 +135,7 @@ function getRoutes(user) {
       icon: CategoryIcon,
       //TODO this is temporary, need to add species policy
       disabled:
-        !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
+        !hasPermission([POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
         !user ||
         user.policy.organization !== undefined,
     },
@@ -171,7 +165,7 @@ function getRoutes(user) {
       linkTo: '/user-manager',
       component: Users,
       icon: IconGroup,
-      disabled: !hasPermission(user, [
+      disabled: !hasPermission([
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_USER,
         POLICIES.MANAGER_USER,
@@ -184,7 +178,7 @@ function getRoutes(user) {
       icon: MapIcon,
       disabled:
         process.env.REACT_APP_ENABLE_REGIONS !== 'true' ||
-        !hasPermission(user, [
+        !hasPermission([
           POLICIES.SUPER_PERMISSION,
           POLICIES.LIST_REGIONS,
           POLICIES.MANAGE_REGIONS,
@@ -204,7 +198,7 @@ function getRoutes(user) {
       icon: InboxRounded,
       disabled:
         process.env.REACT_APP_ENABLE_MESSAGING !== 'true' ||
-        !hasPermission(user, [
+        !hasPermission([
           POLICIES.SUPER_PERMISSION,
           POLICIES.SEND_MESSAGES,
         ]),

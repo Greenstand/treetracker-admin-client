@@ -146,7 +146,7 @@ function Home(props) {
             )}
           </Grid>
           <div className={classes.dashstatWraper}>
-            {hasPermission(appContext.user, [
+            {hasPermission([
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_TREE,
               POLICIES.APPROVE_TREE,
@@ -158,7 +158,7 @@ function Home(props) {
                   <DashStatVerifiedCaptures />
                 </>
               )}
-            {hasPermission(appContext.user, [
+            {hasPermission([
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_PLANTER,
             ]) &&
