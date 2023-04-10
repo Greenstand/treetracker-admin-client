@@ -1,3 +1,10 @@
+# [1.127.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.2...v1.127.0) (2023-04-10)
+
+
+### Features
+
+* [#888](https://github.com/Greenstand/treetracker-admin-client/issues/888) - Grower: new filter by amount of captures uploaded was added.  ([#1032](https://github.com/Greenstand/treetracker-admin-client/issues/1032)) ([3324d3b](https://github.com/Greenstand/treetracker-admin-client/commit/3324d3bfc1b85e239f639712b8ccb29d023a3dda))
+
 ## [1.126.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.1...v1.126.2) (2023-04-02)
 
 ### Bug Fixes
