@@ -1,3 +1,10 @@
+# [1.128.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.127.0...v1.128.0) (2023-04-11)
+
+
+### Features
+
+* [#1035](https://github.com/Greenstand/treetracker-admin-client/issues/1035) - Capture Filter: wallet filter is broken ([#1056](https://github.com/Greenstand/treetracker-admin-client/issues/1056)) ([f84af42](https://github.com/Greenstand/treetracker-admin-client/commit/f84af423c9da871cba78aff919fe7fbfb8899e63))
+
 # [1.127.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.126.2...v1.127.0) (2023-04-10)
 
 
