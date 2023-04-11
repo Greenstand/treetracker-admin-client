@@ -10,6 +10,7 @@ export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const ALL_TAGS = 'ALL_TAGS';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
+export const ALL_WALLETS = 'ALL_WALLETS';
 import { tokenizationStates } from '../common/variables';
 // import log from 'loglevel';
 

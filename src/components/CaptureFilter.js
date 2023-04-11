@@ -32,6 +32,7 @@ import {
 import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
 import { CircularProgress } from '@material-ui/core';
+import SelectWallet from './common/SelectWallet';
 
 export const FILTER_WIDTH = 330;
 
@@ -81,7 +82,8 @@ function Filter(props) {
   const endDateDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [wallet, setWallet] = useState(filter?.wallet || '');
+  const [wallet, setWallet] = useState(filter?.wallet || filterOptionAll);
+  const [walletSearchString, setWalletSearchString] = useState('');
   const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
   const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
   const [startDate, setStartDate] = useState(
@@ -115,7 +117,7 @@ function Filter(props) {
       captureId: captureId.trim(),
       grower_account_id: growerId.trim(),
       device_identifier: deviceId.trim(),
-      wallet: wallet.trim(),
+      wallet: wallet && wallet !== filterOptionAll ? wallet.trim() : undefined,
       startDate: startDate ? formatDate(startDate) : undefined,
       endDate: endDate ? formatDate(endDate) : undefined,
       species_id: speciesId,
@@ -134,7 +136,8 @@ function Filter(props) {
     setCaptureId('');
     setGrowerId('');
     setDeviceId('');
-    setWallet('');
+    setWallet(filterOptionAll);
+    setWalletSearchString('');
     setStartDate(startDateDefault);
     setEndDate(endDateDefault);
     setSpeciesId(ALL_SPECIES);
@@ -204,12 +207,16 @@ function Filter(props) {
                   }}
                 />
               </MuiPickersUtilsProvider>
-              <TextField
-                htmlFor="wallet"
-                id="wallet"
-                label="Wallet"
-                value={wallet}
-                onChange={(e) => setWallet(e.target.value)}
+              <SelectWallet
+                classes={classes}
+                wallet={wallet}
+                walletSearchString={walletSearchString}
+                handleChangeWallet={(value) => {
+                  setWallet(value);
+                }}
+                handleChangeWalletSearchString={(value) => {
+                  setWalletSearchString(value);
+                }}
               />
               <TextField
                 htmlFor="grower-id"
@@ -256,7 +263,7 @@ function Filter(props) {
                   <CircularProgress />
                 ) : (
                   [
-                    { id: ALL_SPECIES, name: 'All' },
+                    { id: ALL_SPECIES, name: filterOptionAll },
                     { id: SPECIES_ANY_SET, name: 'Any set' },
                     {
                       id: SPECIES_NOT_SET,
@@ -285,7 +292,7 @@ function Filter(props) {
                 options={[
                   {
                     id: ALL_TAGS,
-                    name: 'All',
+                    name: filterOptionAll,
                     isPublic: true,
                     status: 'active',
                     owner_id: null,
@@ -311,7 +318,7 @@ function Filter(props) {
                   ),
                 ]}
                 value={tag}
-                defaultValue={'All'}
+                defaultValue={filterOptionAll}
                 getOptionLabel={(tag) => tag.name}
                 onChange={(_oldVal, newVal) => {
                   //triggered by onInputChange

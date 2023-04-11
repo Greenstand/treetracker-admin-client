@@ -6,6 +6,7 @@ import { CapturesProvider } from '../context/CapturesContext';
 import { SpeciesProvider } from '../context/SpeciesContext';
 import { TagsProvider } from '../context/TagsContext';
 import CaptureFilterHeader from '../components/CaptureFilterHeader';
+import { GrowerProvider } from 'context/GrowerContext';
 
 function CapturesView() {
   useEffect(() => {
@@ -21,8 +22,10 @@ function CapturesView() {
       <CapturesProvider>
         <SpeciesProvider>
           <TagsProvider>
-            <CaptureFilterHeader />
-            <CaptureTable />
+            <GrowerProvider>
+              <CaptureFilterHeader />
+              <CaptureTable />
+            </GrowerProvider>
           </TagsProvider>
         </SpeciesProvider>
       </CapturesProvider>

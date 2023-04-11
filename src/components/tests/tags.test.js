@@ -1,5 +1,12 @@
 import React from 'react';
-import { act, render, cleanup, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  render,
+  cleanup,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import theme from '../common/theme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -196,7 +203,7 @@ describe('tags', () => {
         const dropdown = screen.getByTestId('tag-dropdown');
         expect(dropdown).toBeInTheDocument();
 
-        const open = screen.getByRole('button', { name: /open/i });
+        const open = within(dropdown).getByRole('button', { name: /open/i });
         userEvent.click(open);
 
         const optionList = await screen.findByRole('presentation');
