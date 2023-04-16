@@ -32,6 +32,7 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @param {boolean} props.disablePaymentStatus -
  * @param {function} props.alternativeHandleChange - allows alt logic for changes in date filter
  * @param {function} props.alternativeHandleOnFormSubmit - allows alt logic for submit in date filter form
+ * @param {function} props.extraResetButtonAction - allows extra functionality to be added to the reset button from parent component
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
@@ -53,6 +54,7 @@ function CustomTableFilter(props) {
     disablePaymentStatus,
     alternativeHandleChange,
     alternativeHandleOnFormSubmit,
+    extraResetButtonAction,
   } = props;
 
   const classes = useStyles();
@@ -114,6 +116,7 @@ function CustomTableFilter(props) {
       : setFilter({ ...initialFilter, grower: '' });
     setLocalFilter(initialFilter);
     setIsFilterOpen(false);
+    extraResetButtonAction ? extraResetButtonAction() : '';
   };
 
   const renderDateFilter = () => (

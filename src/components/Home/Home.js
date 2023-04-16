@@ -76,7 +76,7 @@ function Home(props) {
     { range: 30 * 6, text: 'Last 6 Months' },
     { range: 365, text: 'Last Year' },
     { range: 365 * 100, text: 'All' },
-    { range: 1, text: 'Choose Dates' },
+    { range: 1, text: 'Custom Date Range' },
   ];
   const [timeRangeIndex, setTimeRangeIndex] = useState(3);
   const [startDate, setStartDate] = useState('1970-01-01');
@@ -87,8 +87,17 @@ function Home(props) {
   };
 
   const renderDateFilter = () => {
+    setTimeRangeIndex(timeRange.length - 1);
     setAnchorEl(null);
     setIsDateFilterOpen(true);
+  };
+
+  const handleDateFilterResetButton = (index) => {
+    setEndDate(format(new Date(), 'yyyy-MM-dd'));
+    setStartDate(
+      format(subDays(new Date(), timeRange[index].range), 'yyyy-MM-dd')
+    );
+    setTimeRangeIndex(index);
   };
 
   const handleTimeClose = (index) => {
@@ -124,6 +133,9 @@ function Home(props) {
         setIsFilterOpen={setIsDateFilterOpen}
         alternativeHandleChange={handleCustomTimeChange}
         alternativeHandleOnFormSubmit={handleCustomTimeClose}
+        extraResetButtonAction={() =>
+          handleDateFilterResetButton(timeRange.length - 2)
+        }
       />
       <Grid className={classes.menuAside}>
         <Paper elevation={3} className={classes.menu}>
@@ -167,7 +179,7 @@ function Home(props) {
                   classes={{ paper: classes.timeMenu }}
                 >
                   {timeRange.map((item, index) => {
-                    if (item.text === 'Choose Dates') {
+                    if (item.text === 'Custom Date Range') {
                       return (
                         <MenuItem onClick={() => renderDateFilter()}>
                           {timeRange[index].text}
