@@ -226,8 +226,8 @@ function CaptureDetailDialog({
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Grower Account ID',
-              value: capture.grower_account_id,
+              label: 'Grower Reference ID',
+              value: capture.grower_reference_id,
               copy: true,
               link: true,
             },
