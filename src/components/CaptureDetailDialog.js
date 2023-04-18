@@ -323,10 +323,10 @@ function CaptureDetailDialog({
         <Grid item className={classes.box}>
           <Typography className={classes.subtitle}>Tags</Typography>
           <Typography variant="subtitle1">Species</Typography>
-          {species && species.name ? (
+          {species && species[0]?.name ? (
             <Chip
-              key={species && species.name}
-              label={species && species.name}
+              key={species[0]?.name}
+              label={species[0]?.name}
               className={classes.chip}
             />
           ) : (
