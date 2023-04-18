@@ -31,8 +31,8 @@ const columns = [
     label: 'Capture ID',
   },
   {
-    attr: 'grower_account_id',
-    label: 'Grower Acct. ID',
+    attr: 'grower_reference_id',
+    label: 'Grower Ref. ID',
   },
   {
     attr: 'wallet',
