@@ -339,8 +339,12 @@ function CaptureDetailDialog({
           ) : (
             <>
               <div className={classes.chipRoot}>
-                {otherTags.map((tag) => (
-                  <Chip key={tag} label={tag} className={classes.chip} />
+                {otherTags.map((tag, i) => (
+                  <Chip
+                    key={`${i}-${tag}`}
+                    label={tag}
+                    className={classes.chip}
+                  />
                 ))}
 
                 {captureTags.flat().map((tag) => (
