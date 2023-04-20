@@ -44,7 +44,6 @@ import api from '../api/growers';
 import { captureStatus } from '../common/variables';
 import { getDateTimeStringLocale } from '../common/locale';
 import { makeStyles } from '@material-ui/core/styles';
-import stakeholderApi from '../api/stakeholders.js';
 import treeTrackerApi from 'api/treeTrackerApi';
 
 const log = loglevel.getLogger('../components/GrowerDetail.js');
@@ -194,13 +193,14 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           setErrorMessage(match.message);
         }
 
+        console.log('grower', match);
+        setGrower(match);
+
         stakeholderApi
           .getStakeholders(match.organization_id, {})
           .then((data) => {
             console.log(data);
           });
-        console.log(match);
-        setGrower(match);
 
         if (match?.devices?.length) {
           const devices = formatDevices(match);
