@@ -72,8 +72,6 @@ export function GrowerProvider(props) {
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
     const finalFilter = setOrganizationFilter(filter, orgId, orgList);
 
-    log.debug('load growers');
-
     const { total, grower_accounts } = await api.getGrowers(
       {
         skip: pageNumber * pageSize,
