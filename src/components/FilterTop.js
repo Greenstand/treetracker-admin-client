@@ -251,7 +251,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower Account ID"
+                label="Grower ID"
                 placeholder="e.g. 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
