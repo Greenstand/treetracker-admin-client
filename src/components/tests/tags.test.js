@@ -184,7 +184,7 @@ describe('tags', () => {
         expect(screen.getByLabelText(/token status/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/end date/i)).toBeInTheDocument();
-        expect(screen.getByLabelText('Grower Account ID')).toBeInTheDocument();
+        expect(screen.getByLabelText('Grower ID')).toBeInTheDocument();
         expect(screen.getByLabelText(/capture id/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/device identifier/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/species/i)).toBeInTheDocument();

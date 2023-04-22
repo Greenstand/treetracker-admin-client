@@ -12,7 +12,7 @@ export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 export const ALL_WALLETS = 'ALL_WALLETS';
 import { tokenizationStates } from '../common/variables';
-import log from 'loglevel';
+// import log from 'loglevel';
 
 export default class Filter {
   uuid;
@@ -115,7 +115,7 @@ export default class Filter {
     let orCondition = false;
     const { ...restFilter } = where;
 
-    log.debug('FILTER MODEL', this, where, restFilter);
+    // log.debug('FILTER MODEL', this, where, restFilter);
 
     return orCondition
       ? { ...restFilter, or: where }
