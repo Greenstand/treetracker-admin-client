@@ -20,6 +20,7 @@ export default class Filter {
   startDate;
   endDate;
   grower_account_id;
+  grower_reference_id;
   device_identifier;
   wallet;
   species_id;
