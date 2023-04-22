@@ -23,11 +23,12 @@ export default class Filter {
     }
 
     if (this.id) {
-      where.id = this.id;
-    }
-
-    if (this.grower_account_id) {
-      where.id = this.grower_account_id;
+      // check if number or uuid to assign appropriate field
+      if (isNaN(Number(this.id))) {
+        where.id = this.id;
+      } else {
+        where.reference_id = this.id;
+      }
     }
 
     if (this.firstName) {
@@ -86,10 +87,6 @@ export default class Filter {
     }
 
     if (this.id) {
-      numFilters += 1;
-    }
-
-    if (this.grower_account_id) {
       numFilters += 1;
     }
 
