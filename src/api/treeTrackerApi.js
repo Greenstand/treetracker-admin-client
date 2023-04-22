@@ -1,16 +1,17 @@
 import {
-  handleResponse,
-  handleError,
   getOrganization,
+  handleError,
+  handleResponse,
   makeQueryString,
 } from './apiUtils';
+
 import { getVerificationStatus } from '../common/utils';
-import { session } from '../models/auth';
 import log from 'loglevel';
+import { session } from '../models/auth';
 
 // Set API as a variable
 const API_ROOT = process.env.REACT_APP_API_ROOT;
-const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_ROOT;
+const FIELD_DATA_API = process.env.REACT_APP_FIELD_DATA_API_ROOT;
 const QUERY_API = process.env.REACT_APP_QUERY_API_ROOT;
 const TREETRACKER_API = process.env.REACT_APP_TREETRACKER_API_ROOT;
 const STATUS_STATES = {
@@ -120,6 +121,7 @@ export default {
   async rejectCaptureImage(capture, rejectionReason) {
     try {
       log.debug('reject capture', capture.id, rejectionReason);
+      console.log('env url', FIELD_DATA_API);
       const query = `${FIELD_DATA_API}/raw-captures/${capture.id}/reject`;
       const data = await fetch(query, {
         method: 'PATCH',

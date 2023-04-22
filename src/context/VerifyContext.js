@@ -1,9 +1,11 @@
-import React, { useContext, useState, useEffect, createContext } from 'react';
-import api from '../api/treeTrackerApi';
-import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import * as loglevel from 'loglevel';
-import { captureStatus } from 'common/variables';
+
+import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
 import { AppContext } from './AppContext.js';
+import api from '../api/treeTrackerApi';
+import { captureStatus } from 'common/variables';
 import { setOrganizationFilter } from '../common/utils';
 
 const log = loglevel.getLogger('../context/VerifyContext');

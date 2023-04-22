@@ -1,24 +1,25 @@
-import React, { useState, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import {
   Box,
-  Divider,
-  Typography,
-  FormControlLabel,
-  Drawer,
-  RadioGroup,
-  Radio,
-  Tabs,
-  Tab,
-  TextField,
+  Button,
   Checkbox,
-  Button, // replace with icons down the line
+  Divider,
+  Drawer,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
 } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+
+import CaptureTags from './CaptureTags';
 // import { selectedHighlightColor } from '../common/variables.js';
 import Species from './Species';
-import CaptureTags from './CaptureTags';
 import { VerifyContext } from 'context/VerifyContext';
 import { getDistance } from 'geolib';
+import { makeStyles } from '@material-ui/core/styles';
 // import * as loglevel from 'loglevel';
 
 // const log = loglevel.getLogger('./SidePanel.js');
