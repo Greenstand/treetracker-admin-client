@@ -64,8 +64,10 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
+
   it('getWhereObj() should match: grower_account_id=abc1', () => {
     filter.grower_id = 'abc1';
+
     expect(filter.getWhereObj()).toEqual(
       expect.objectContaining({ grower_account_id: 'abc1' })
     );
@@ -73,6 +75,7 @@ describe('Filter, with initial values about this filter object', () => {
 
   it('getWhereObj() should match: grower_reference_id=1', () => {
     filter.grower_id = '1';
+
     expect(filter.getWhereObj()).toEqual(
       expect.objectContaining({ grower_reference_id: '1' })
     );
@@ -112,6 +115,7 @@ describe('Filter, with initial values about this filter object', () => {
       // console.error('the where:', filter.getWhereObj());
       expect(filter.getWhereObj()).not.toHaveProperty('grower_account_id');
     });
+
     it('should not match any [grower_reference_id]', () => {
       // console.error('the where:', filter.getWhereObj());
       expect(filter.getWhereObj()).not.toHaveProperty('grower_reference_id');

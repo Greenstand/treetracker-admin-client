@@ -20,6 +20,7 @@ export default class Filter {
   startDate;
   endDate;
   grower_account_id;
+  grower_reference_id;
   device_identifier;
   wallet;
   species_id;
@@ -161,14 +162,6 @@ export default class Filter {
     if (this.device_identifier) {
       numFilters += 1;
     }
-
-    // if (this.planter_id) {
-    //   numFilters += 1;
-    // }
-
-    // if (this.planter_identifier) {
-    //   numFilters += 1;
-    // }
 
     if (this.tag_id) {
       numFilters += 1;

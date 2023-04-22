@@ -1,3 +1,11 @@
+# [1.129.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.128.0...v1.129.0) (2023-04-22)
+
+
+### Features
+
+* update Grower filter by id ([#1081](https://github.com/Greenstand/treetracker-admin-client/issues/1081)) ([d07a020](https://github.com/Greenstand/treetracker-admin-client/commit/d07a02008cd6e1fc30044c25a891fd801c00034b))
+* update Verify grower id filter to allow both uuid and reference id ([#1086](https://github.com/Greenstand/treetracker-admin-client/issues/1086)) ([4cd3c1f](https://github.com/Greenstand/treetracker-admin-client/commit/4cd3c1fb9bbc7fa2887d59e242ebb9d22d6cfbb5))
+
 # [1.128.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.127.0...v1.128.0) (2023-04-11)
 
 

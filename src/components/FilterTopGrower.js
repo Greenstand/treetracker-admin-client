@@ -111,10 +111,10 @@ function FilterTopGrower(props) {
             <Grid item className={classes.inputContainer}>
               <TextField
                 className={`${classes.textField} ${classes.filterElement}`}
-                label="Grower Account ID"
-                htmlFor="Grower Account ID"
-                id="Grower Account ID"
-                placeholder="Grower Account ID"
+                label="Grower ID"
+                htmlFor="Grower ID"
+                id="Grower ID"
+                placeholder="Grower ID"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 onKeyDown={handleEnterPress}

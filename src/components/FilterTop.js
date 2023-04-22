@@ -81,7 +81,7 @@ function Filter(props) {
   const endDateDefault = null;
   const [uuid, setUUID] = useState(filter?.uuid || '');
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
-  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_id || '');
   const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
   const [status, setStatus] = useState(filter?.status);
@@ -115,7 +115,7 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.uuid = uuid;
     filter.captureId = captureId.trim();
-    filter.grower_account_id = growerId.trim();
+    filter.grower_id = growerId.trim();
     filter.device_identifier = deviceId.trim();
     filter.wallet = wallet.trim();
     filter.startDate = startDate ? formatDate(startDate) : undefined;
@@ -251,7 +251,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower Account ID"
+                label="Grower ID"
                 placeholder="e.g. 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
