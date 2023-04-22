@@ -20,6 +20,7 @@ export default class Filter {
   startDate;
   endDate;
   grower_account_id;
+  grower_reference_id;
   device_identifier;
   wallet;
   species_id;
@@ -96,8 +97,13 @@ export default class Filter {
       where.status = this.status;
     }
 
-    if (this.grower_account_id) {
-      where.grower_account_id = this.grower_account_id;
+    if (this.grower_id) {
+      // check if number or uuid to assign appropriate field
+      if (isNaN(Number(this.grower_id))) {
+        where.grower_account_id = this.grower_id;
+      } else {
+        where.grower_reference_id = this.grower_id;
+      }
     }
 
     if (this.tokenId && this.tokenId !== 'All') {
@@ -157,14 +163,6 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.planter_id) {
-      numFilters += 1;
-    }
-
-    if (this.planter_identifier) {
-      numFilters += 1;
-    }
-
     if (this.tag_id) {
       numFilters += 1;
     }
@@ -186,7 +184,7 @@ export default class Filter {
       numFilters += 1;
     }
 
-    if (this.grower_account_id) {
+    if (this.grower_id) {
       numFilters += 1;
     }
 
