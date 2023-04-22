@@ -196,12 +196,6 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         console.log('grower', match);
         setGrower(match);
 
-        stakeholderApi
-          .getStakeholders(match.organization_id, {})
-          .then((data) => {
-            console.log(data);
-          });
-
         if (match?.devices?.length) {
           const devices = formatDevices(match);
           setDeviceIdentifiers(devices);
