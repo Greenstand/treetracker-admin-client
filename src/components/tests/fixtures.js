@@ -5,7 +5,7 @@ import { captureStatus } from '../../common/variables';
 const CAPTURE = {
   reference_id: 100,
   id: '11942400-6617-4c6c-bf5e',
-  grower_account_id: 10,
+  grower_reference_id: 10,
   wallet: 'grower1@some.place',
   device_identifier: '1-abcdef123456',
   status: 'active',
@@ -33,7 +33,7 @@ const CAPTURES = {
     {
       reference_id: 100,
       id: '11942400-6617-4c6c-bf5e',
-      grower_account_id: 10,
+      grower_reference_id: 10,
       wallet: 'grower1@some.place',
       device_identifier: '1-abcdef123456',
       status: 'active',
@@ -47,7 +47,7 @@ const CAPTURES = {
     {
       reference_id: 110,
       id: 'bbf0e582-ec06-45c4-9a71-7bab679e945b',
-      grower_account_id: 11,
+      grower_reference_id: 11,
       wallet: 'grower2@some.place',
       device_identifier: '2-abcdef123456',
       status: 'active',
@@ -61,7 +61,7 @@ const CAPTURES = {
     {
       reference_id: 120,
       id: '5a91c4fd-b57b-47fe-ac99-5d95eccad91d',
-      grower_account_id: 12,
+      grower_reference_id: 12,
       wallet: 'grower3@some.place',
       device_identifier: '3-abcdef123456',
       status: 'active',
@@ -75,7 +75,7 @@ const CAPTURES = {
     {
       reference_id: 101,
       id: '6760d7bc-48b7-4105-8437-ed3b48473d9a',
-      grower_account_id: 10,
+      grower_reference_id: 10,
       wallet: 'grower3@some.place',
       device_identifier: '3-abcdef123456',
       status: 'active',
@@ -92,7 +92,7 @@ const CAPTURES = {
 const RAW_CAPTURE = {
   reference_id: 100,
   id: '11942400-6617-4c6c-bf5e',
-  grower_account_id: 10,
+  grower_reference_id: 10,
   wallet: 'grower1@some.place',
   device_identifier: '1-abcdef123456',
   status: captureStatus.UNPROCESSED,

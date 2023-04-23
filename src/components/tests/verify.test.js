@@ -233,7 +233,7 @@ describe('Verify', () => {
           within(captureDetail).getByText(/capture data/i)
         ).toBeInTheDocument();
         expect(
-          within(captureDetail).getByText(/grower account id/i)
+          within(captureDetail).getByText(/grower reference id/i)
         ).toBeInTheDocument();
         expect(
           within(captureDetail).getByText(/grower1@some.place/i)

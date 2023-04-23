@@ -226,8 +226,8 @@ function CaptureDetailDialog({
           <Typography className={classes.subtitle}>Capture Data</Typography>
           {[
             {
-              label: 'Grower Account ID',
-              value: capture.grower_account_id,
+              label: 'Grower Reference ID',
+              value: capture.grower_reference_id,
               copy: true,
               link: true,
             },
@@ -339,8 +339,12 @@ function CaptureDetailDialog({
           ) : (
             <>
               <div className={classes.chipRoot}>
-                {otherTags.map((tag) => (
-                  <Chip key={tag} label={tag} className={classes.chip} />
+                {otherTags.map((tag, i) => (
+                  <Chip
+                    key={`${i}-${tag}`}
+                    label={tag}
+                    className={classes.chip}
+                  />
                 ))}
 
                 {captureTags.flat().map((tag) => (
