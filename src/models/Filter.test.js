@@ -11,7 +11,7 @@ describe('Filter, with initial values about this filter object', () => {
     filter.startDate = '2019-07-25';
     filter.endDate = '2019-07-30';
     filter.status = 'unprocessed';
-    filter.grower_account_id = '1';
+    filter.grower_id = '1';
     filter.device_identifier = '1';
     filter.wallet = '1';
   });
@@ -64,9 +64,20 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  it('getWhereObj() should match: grower_account_id=1', () => {
+
+  it('getWhereObj() should match: grower_account_id=abc1', () => {
+    filter.grower_id = 'abc1';
+
     expect(filter.getWhereObj()).toEqual(
-      expect.objectContaining({ grower_account_id: '1' })
+      expect.objectContaining({ grower_account_id: 'abc1' })
+    );
+  });
+
+  it('getWhereObj() should match: grower_reference_id=1', () => {
+    filter.grower_id = '1';
+
+    expect(filter.getWhereObj()).toEqual(
+      expect.objectContaining({ grower_reference_id: '1' })
     );
   });
 
@@ -94,15 +105,20 @@ describe('Filter, with initial values about this filter object', () => {
     //}}}
   });
 
-  describe('set grower_account_id = ""', () => {
+  describe('set grower_id = ""', () => {
     //{{{
     beforeEach(() => {
-      filter.grower_account_id = '';
+      filter.grower_id = '';
     });
 
     it('should not match any [grower_account_id]', () => {
       // console.error('the where:', filter.getWhereObj());
       expect(filter.getWhereObj()).not.toHaveProperty('grower_account_id');
+    });
+
+    it('should not match any [grower_reference_id]', () => {
+      // console.error('the where:', filter.getWhereObj());
+      expect(filter.getWhereObj()).not.toHaveProperty('grower_reference_id');
     });
     //}}}
   });

@@ -8,7 +8,7 @@ import { AppProvider } from '../../context/AppContext';
 import { GrowerProvider } from '../../context/GrowerContext';
 import FilterTopGrower from '../FilterTopGrower';
 // import GrowersFilterHeader from '../GrowersFilterHeader';
-import { GROWER, GROWERS, ORGS, growerValues } from './fixtures';
+import { GROWER, GROWERS, ORGS, WALLETS, growerValues } from './fixtures';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/grower.test');
@@ -33,6 +33,10 @@ describe('growers', () => {
     api.getGrowers = () => {
       log.debug('mock load');
       return Promise.resolve(GROWERS);
+    };
+    api.getWallets = () => {
+      log.debug('mock wallets');
+      return Promise.resolve(WALLETS);
     };
   });
 
@@ -61,7 +65,7 @@ describe('growers', () => {
       // const filter = screen.getByRole('button', { name: /filter/i });
       // userEvent.click(filter);
 
-      expect(screen.getByLabelText(/Grower Account ID/)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Grower ID/)).toBeInTheDocument();
 
       expect(screen.getByLabelText(/Person ID/)).toBeInTheDocument();
 

@@ -5,7 +5,7 @@ import { captureStatus } from '../../common/variables';
 const CAPTURE = {
   reference_id: 100,
   id: '11942400-6617-4c6c-bf5e',
-  grower_account_id: 10,
+  grower_reference_id: 10,
   wallet: 'grower1@some.place',
   device_identifier: '1-abcdef123456',
   status: 'active',
@@ -33,7 +33,7 @@ const CAPTURES = {
     {
       reference_id: 100,
       id: '11942400-6617-4c6c-bf5e',
-      grower_account_id: 10,
+      grower_reference_id: 10,
       wallet: 'grower1@some.place',
       device_identifier: '1-abcdef123456',
       status: 'active',
@@ -47,7 +47,7 @@ const CAPTURES = {
     {
       reference_id: 110,
       id: 'bbf0e582-ec06-45c4-9a71-7bab679e945b',
-      grower_account_id: 11,
+      grower_reference_id: 11,
       wallet: 'grower2@some.place',
       device_identifier: '2-abcdef123456',
       status: 'active',
@@ -61,7 +61,7 @@ const CAPTURES = {
     {
       reference_id: 120,
       id: '5a91c4fd-b57b-47fe-ac99-5d95eccad91d',
-      grower_account_id: 12,
+      grower_reference_id: 12,
       wallet: 'grower3@some.place',
       device_identifier: '3-abcdef123456',
       status: 'active',
@@ -75,7 +75,7 @@ const CAPTURES = {
     {
       reference_id: 101,
       id: '6760d7bc-48b7-4105-8437-ed3b48473d9a',
-      grower_account_id: 10,
+      grower_reference_id: 10,
       wallet: 'grower3@some.place',
       device_identifier: '3-abcdef123456',
       status: 'active',
@@ -92,7 +92,7 @@ const CAPTURES = {
 const RAW_CAPTURE = {
   reference_id: 100,
   id: '11942400-6617-4c6c-bf5e',
-  grower_account_id: 10,
+  grower_reference_id: 10,
   wallet: 'grower1@some.place',
   device_identifier: '1-abcdef123456',
   status: captureStatus.UNPROCESSED,
@@ -453,6 +453,38 @@ const REGION_COLLECTIONS = [
   },
 ];
 
+const WALLETS = {
+  total: 1288,
+  offset: '0',
+  limit: '24',
+  wallets: [
+    '-',
+    '/',
+    '0',
+    '00000000',
+    '0000000000',
+    '0022557444167',
+    '00355696433823',
+    '00385917889623',
+    '0040741944725',
+    '0060162027204',
+    '00923219410812',
+    '00923456785432',
+    '0093775190310',
+    '0094772531092',
+    '009779855063009',
+    '0107724365',
+    '011-23541945',
+    '01234567890',
+    '0123484078',
+    '0128940708',
+    '0129977742',
+    '0138494347',
+    '0162903919',
+    '01634961029',
+  ],
+};
+
 const capturesValues = {
   captures: CAPTURES.captures,
   captureCount: 4,
@@ -550,6 +582,7 @@ module.exports = {
   SPECIES,
   REGIONS,
   REGION_COLLECTIONS,
+  WALLETS,
   capturesValues,
   growerValues,
   verifyValues,

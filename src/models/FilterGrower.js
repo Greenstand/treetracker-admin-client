@@ -4,6 +4,7 @@
 
 export const ALL_ORGANIZATIONS = 'ALL_ORGANIZATIONS';
 export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
+export const ANY_CAPTURES_AMOUNT = 'ANY_CAPTURES_AMOUNT_SET';
 // import log from 'loglevel';
 
 class Filter {
@@ -22,11 +23,12 @@ class Filter {
     }
 
     if (this.id) {
-      where.id = this.id;
-    }
-
-    if (this.grower_account_id) {
-      where.id = this.grower_account_id;
+      // check if number or uuid to assign appropriate field
+      if (isNaN(Number(this.id))) {
+        where.id = this.id;
+      } else {
+        where.reference_id = this.id;
+      }
     }
 
     if (this.firstName) {
@@ -55,6 +57,14 @@ class Filter {
       where.phone = this.phone;
     }
 
+    if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.min)) {
+      where.captures_amount_min = this.capturesAmount_range.min;
+    }
+
+    if (this.capturesAmount_range && !isNaN(this.capturesAmount_range.max)) {
+      where.captures_amount_max = this.capturesAmount_range.max;
+    }
+
     return where;
   }
 
@@ -80,10 +90,6 @@ class Filter {
       numFilters += 1;
     }
 
-    if (this.grower_account_id) {
-      numFilters += 1;
-    }
-
     if (this.firstName) {
       numFilters += 1;
     }
@@ -106,6 +112,13 @@ class Filter {
     }
 
     if (this.phone) {
+      numFilters += 1;
+    }
+
+    if (
+      this.capturesAmount_range &&
+      this.capturesAmount_range !== ANY_CAPTURES_AMOUNT
+    ) {
       numFilters += 1;
     }
 

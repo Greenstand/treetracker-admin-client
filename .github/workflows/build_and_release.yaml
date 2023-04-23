@@ -1,0 +1,169 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  project-directory: ./
+  repository: 'Greenstand/treetracker-admin-client'
+  node-version: '18'
+
+jobs:
+  prepare:
+    name: checking and prepare settings for jobs
+    runs-on: ubuntu-latest
+    outputs:
+      CHANNEL: ${{ steps.resolver.outputs.CHANNEL }}
+      S3_BUCKET_SECRET_NAME: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME }}
+      CDN_ID_SECRET_NAME: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME }}
+      NO_NEED_TO_BUILD: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD }}
+
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '18.x'
+      - uses: actions/checkout@v2
+      - run: |
+          echo "::debug:: begin preparing...";
+          echo "::debug:: branch to rlease: $GITHUB_REF_NAME"
+          node <<EOF >> $GITHUB_OUTPUT
+            const ref = process.env.GITHUB_REF_NAME
+            const s3BucketSecretNames = {
+              "master": "DEV_CDN_S3_BUCKET",
+              "freetown": "DEV_CDN_S3_BUCKET_FREETOWN",
+              "beta": "DEV_STAGING_CDN_S3_BUCKET",
+              "alpha": "DEV_ALPHA_CDN_S3_BUCKET",
+            }
+            const cdnIdSecretNames = {
+              "master": "DEV_CDN_DISTRIBUTION_ID",
+              "freetown": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
+              "beta": "DEV_STAGING_CDN_DISTRIBUTION_ID",
+              "alpha": "DEV_ALPHA_CDN_DISTRIBUTION_ID",
+            }
+            const releaseJson = require("./.releaserc.json");        
+            const branches = releaseJson.branches.map(e => e.name? e.name : e);
+            if(branches.indexOf(ref) === -1){
+              console.log("NO_NEED_TO_BUILD=true");
+              process.exit(0);
+            }
+            let channel = releaseJson.branches.reduce((a,c) => a || (c === ref && c) || (c.name === ref && c.channel), false);
+            let s3BucketSecretName;
+            let cdnIdSecretName;
+            s3BucketSecretName = s3BucketSecretNames[channel];
+            if(!s3BucketSecretName){
+              throw '::error:: can not find s3 bucket secret name by, channel:' + channel ;
+            }
+            cdnIdSecretName = cdnIdSecretNames[channel];
+            if(!cdnIdSecretName){
+              throw '::error:: can not find cdn id secret name by, channel:' + channel ;
+            }
+            console.log("CHANNEL=" + channel);
+            console.log("S3_BUCKET_SECRET_NAME=" + s3BucketSecretName);
+            console.log("CDN_ID_SECRET_NAME=" + cdnIdSecretName);
+            
+          EOF
+        id: resolver
+        env:
+          VERSION_TO_DEPLOY: ${{ github.event.inputs.version }}
+          ENV_TO_DEPLOY: ${{ github.event.inputs.env }}
+      - run: |
+          echo "channel: ${{ steps.resolver.outputs.CHANNEL}}"
+          echo "s3: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME}}"
+          echo "cdn: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME}}"
+          echo "need to deplay: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD}}"
+        name: Print resolver
+  client:
+    name: Build Client Project
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: |
+      !contains(github.event.head_commit.message, 'skip-ci') && !contains(needs.prepare.outputs.NO_NEED_TO_BUILD, 'true')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+      - name: npm clean install
+        if: ${{ !env.ACT }}
+        run: npm ci --legacy-peer-deps
+        working-directory: ${{ env.project-directory }}
+      - name: run ESLint
+        if: ${{ !env.ACT }}
+        run: npm run lint
+        working-directory: ${{ env.project-directory }}
+      - name: build client dev project
+        if: github.event_name == 'push' && github.repository == ${{ env.repository }}
+        #if: ${{ !env.ACT }}
+        run: npm run build:dev
+        working-directory: ${{ env.project-directory }}
+      - uses: actions/upload-artifact@v2
+        if: github.event_name == 'push' && github.repository == ${{ env.repository }}
+        #if: ${{ !env.ACT }}
+        with:
+          name: client-bundle
+          path: build-dev
+      - name: build client project
+        if: ${{ !env.ACT }}
+        run: npm run build
+        working-directory: ${{ env.project-directory }}
+      - name: run React tests
+        if: ${{ !env.ACT }}
+        run: npm test
+        working-directory: ${{ env.project-directory }}
+  release:
+    name: Release semantic version
+    needs: [client, prepare]
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, 'skip-ci') &&
+      github.event_name == 'push' &&
+      github.repository == ${{ github.env.repository }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node-version }}
+      # install dependencies and run semantic-release
+      - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
+      - run: semantic-release
+        if: ${{ !env.ACT }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  deploy:
+    name: Deploy to dev CDN
+    runs-on: ubuntu-latest
+    needs: [release, prepare]
+    if: |
+      !contains(github.event.head_commit.message, 'skip-ci') &&
+      github.event_name == 'push' &&
+      github.repository == ${{ github.env.repository }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download bundled client resources
+        if: ${{ !env.ACT }}
+        uses: actions/download-artifact@v2
+        with:
+          name: client-bundle
+          path: build-dev
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID_DADIOR }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_DADIOR }}
+          aws-region: us-east-1
+      - name: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+      - name: Copy front end resources to s3 bucket
+        run: |
+          aws s3 sync build-dev s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
+      - name: Invalidate cloudfront caches
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"

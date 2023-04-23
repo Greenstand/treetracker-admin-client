@@ -283,6 +283,48 @@ Visit this URL in the browser: http://localhost:9009
 
 All the stories are located at `./src/stories/`
 
+## How to work on new brach for new feature
+
+1. Modify `.releaserc.json` by adding new branch and channel into the `branches` array:
+
+```
+    ...
+    {
+      "name": "feature1",
+      "prerelease": true,
+      "channel": "beta"
+    },
+    ...
+```
+
+2. Create a new branch, for example:
+
+```
+git remote add greenstand git@github.com:Greenstand/treetracker-admin-client.git
+git checkout greenstand/master
+git checkout -b feature1
+git push greenstand feature1
+```
+
+3. Push commit to the branch:
+
+The new push will trigger the first release of this branch with tag/version: `v1.2.3-feature1.1`, and release to http://dev-beta-admin.treetracker.org, and following commits will update/increase the last version number, which is `1` here.
+
+### How to merge feature branch to master
+
+Normal merge from `freature1` to `master` will trigger the recalculate of the version, for example: if `master` is on `v2.0.0`, then the merge will add all changes from `feature1` to add to the version of master.
+
+### Supported channels
+
+Now supported channls and domain for dev and prod respectively:
+
+- master: dev-admin.treetracker.org admin.treetracker.org
+- beta: dev-beta-admin.treetracker.org beta-admin.treetracker.org
+- alpha: dev-alpha-admin.treetracker.org alpha-admin.treetracker.org
+- freetown: dev-freetown-admin.treetracker.org freetown-admin.treetracker.org
+
 ## Further reading
 
 See [Contributing to the Cause](https://github.com/Greenstand/Development-Overview#contributing-to-the-cause)
+
+.

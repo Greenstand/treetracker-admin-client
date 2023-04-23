@@ -118,11 +118,11 @@ export default function ImageScroller(props) {
       newRotation = 0;
     }
     setRotation(newRotation);
-    onSelectChange('imageRotation', newRotation);
+    onSelectChange('image_rotation', newRotation);
   }
 
   function handleImageChange(img) {
-    onSelectChange('imageUrl', img);
+    onSelectChange('image_url', img);
     if (images.length > 1) {
       setRotation(0);
     }

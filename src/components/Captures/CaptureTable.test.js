@@ -108,7 +108,7 @@ describe('Captures', () => {
         // table headers
         item = within(table).getByText(/Capture ID/i);
         expect(item).toBeInTheDocument();
-        item = within(table).getByText(/Grower Acct\. ID/i);
+        item = within(table).getByText(/Grower Ref\. ID/i);
         expect(item).toBeInTheDocument();
         item = within(table).getByText(/Wallet/i);
         expect(item).toBeInTheDocument();
@@ -142,11 +142,12 @@ describe('Captures', () => {
       });
     });
 
-    it('renders links for planter ids (10-12)', async () => {
+    it('renders links for grower reference ids (10-12)', async () => {
       const table = await screen.getByTestId('captures-table-body');
       await waitFor(() => {
         const links = within(table).getAllByRole('link');
         const arr = links.map((link) => link.textContent);
+        screen.logTestingPlaygroundURL();
         expect(arr.includes('10')).toBeTruthy();
         expect(arr.includes('11')).toBeTruthy();
         expect(arr.includes('12')).toBeTruthy();

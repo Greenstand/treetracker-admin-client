@@ -10,6 +10,7 @@ export const ORGANIZATION_NOT_SET = 'ORGANIZATION_NOT_SET';
 export const ALL_TAGS = 'ALL_TAGS';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
+export const ALL_WALLETS = 'ALL_WALLETS';
 import { tokenizationStates } from '../common/variables';
 // import log from 'loglevel';
 
@@ -19,6 +20,7 @@ class Filter {
   startDate;
   endDate;
   grower_account_id;
+  grower_reference_id;
   device_identifier;
   wallet;
   species_id;
@@ -95,8 +97,13 @@ class Filter {
       where.status = this.status;
     }
 
-    if (this.grower_account_id) {
-      where.grower_account_id = this.grower_account_id;
+    if (this.grower_id) {
+      // check if number or uuid to assign appropriate field
+      if (isNaN(Number(this.grower_id))) {
+        where.grower_account_id = this.grower_id;
+      } else {
+        where.grower_reference_id = this.grower_id;
+      }
     }
 
     if (this.tokenId && this.tokenId !== 'All') {
@@ -109,7 +116,7 @@ class Filter {
     let orCondition = false;
     const { ...restFilter } = where;
 
-    // log.debug('FILTER MODEL', this, where);
+    // log.debug('FILTER MODEL', this, where, restFilter);
 
     return orCondition
       ? { ...restFilter, or: where }
@@ -156,14 +163,6 @@ class Filter {
       numFilters += 1;
     }
 
-    if (this.planter_id) {
-      numFilters += 1;
-    }
-
-    if (this.planter_identifier) {
-      numFilters += 1;
-    }
-
     if (this.tag_id) {
       numFilters += 1;
     }
@@ -185,7 +184,11 @@ class Filter {
       numFilters += 1;
     }
 
-    if (this.grower_account_id) {
+    if (this.grower_id) {
+      numFilters += 1;
+    }
+
+    if (this.organization_id && this.organization_id !== ALL_ORGANIZATIONS) {
       numFilters += 1;
     }
 

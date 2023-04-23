@@ -63,7 +63,7 @@ function Filter(props) {
   const endDateDefault = null;
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [wallet, setWallet] = useState(filter?.wallet || '');
-  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_id || '');
   const [deviceIdentifier, setDeviceIdentifier] = useState(
     filter?.device_identifier || ''
   );
@@ -95,7 +95,7 @@ function Filter(props) {
     const filter = new FilterModel();
     filter.captureId = captureId;
     filter.wallet = wallet;
-    filter.grower_account_id = growerId;
+    filter.grower_id = growerId;
     filter.device_identifier = deviceIdentifier;
     filter.startDate = startDate ? formatDate(startDate) : undefined;
     filter.endDate = endDate ? formatDate(endDate) : undefined;
