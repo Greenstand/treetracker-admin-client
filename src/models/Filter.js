@@ -116,7 +116,7 @@ export default class Filter {
     let orCondition = false;
     const { ...restFilter } = where;
 
-    // log.debug('FILTER MODEL', this, where);
+    // log.debug('FILTER MODEL', this, where, restFilter);
 
     return orCondition
       ? { ...restFilter, or: where }

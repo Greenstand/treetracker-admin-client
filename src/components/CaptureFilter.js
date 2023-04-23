@@ -84,7 +84,7 @@ function Filter(props) {
   const [captureId, setCaptureId] = useState(filter?.captureId || '');
   const [wallet, setWallet] = useState(filter?.wallet || filterOptionAll);
   const [walletSearchString, setWalletSearchString] = useState('');
-  const [growerId, setGrowerId] = useState(filter?.grower_account_id || '');
+  const [growerId, setGrowerId] = useState(filter?.grower_id || '');
   const [deviceId, setDeviceId] = useState(filter?.device_identifier || '');
   const [startDate, setStartDate] = useState(
     filter?.startDate || startDateDefault
@@ -115,7 +115,7 @@ function Filter(props) {
     const test = {
       uuid: uuid.trim(),
       captureId: captureId.trim(),
-      grower_account_id: growerId.trim(),
+      grower_id: growerId.trim(),
       device_identifier: deviceId.trim(),
       wallet: wallet && wallet !== filterOptionAll ? wallet.trim() : undefined,
       startDate: startDate ? formatDate(startDate) : undefined,
@@ -221,7 +221,7 @@ function Filter(props) {
               <TextField
                 htmlFor="grower-id"
                 id="grower-id"
-                label="Grower Account ID"
+                label="Grower ID"
                 placeholder="e.g. 2, 7"
                 value={growerId}
                 onChange={(e) => setGrowerId(e.target.value)}
