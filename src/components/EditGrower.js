@@ -161,7 +161,7 @@ const EditGrower = (props) => {
             loading={loadingGrowerImages}
             blankMessage="No grower images available"
             imageRotation={
-              growerUpdate?.imageRotation || grower.imageRotation || 0
+              growerUpdate?.image_rotation || grower.image_rotation || 0
             }
             onSelectChange={handleChange}
           />

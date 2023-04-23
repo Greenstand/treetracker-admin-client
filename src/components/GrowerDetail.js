@@ -347,7 +347,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                       height={GROWER_IMAGE_SIZE}
                       className={classes.cardMedia}
                       fixed
-                      rotation={grower.imageRotation}
+                      rotation={grower.image_rotation}
                       alertTitleSize="1.6rem"
                       alertTextSize="1rem"
                       alertHeight="50%"
