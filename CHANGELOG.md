@@ -1,3 +1,15 @@
+# [1.130.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.129.0...v1.130.0) (2023-04-23)
+
+
+### Bug Fixes
+
+* display Grower Reference Id on Capture Table and Detail  ([#1077](https://github.com/Greenstand/treetracker-admin-client/issues/1077)) ([4d1fb7a](https://github.com/Greenstand/treetracker-admin-client/commit/4d1fb7aca836353ef3ce0b56b15714081cac745f))
+
+
+### Features
+
+* update Capture filter to allow both Grower Account ID and Grower Reference ID ([#1084](https://github.com/Greenstand/treetracker-admin-client/issues/1084)) ([d1fe940](https://github.com/Greenstand/treetracker-admin-client/commit/d1fe940e24a55ab9c83df0ef3cd5acda725a6e3e))
+
 # [1.129.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.128.0...v1.129.0) (2023-04-22)
 
 
