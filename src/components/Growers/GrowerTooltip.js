@@ -18,7 +18,7 @@ const GrowerTooltip = ({ grower, growerClick }) => {
       <Box className={classes.tooltipCardHeader}>
         {matches?.length > 1 ? (
           <OptimizedImage
-            rotation={grower.imageRotation}
+            rotation={grower.image_rotation}
             src={grower.imageUrl}
             width={SIZE}
             height={SIZE}
