@@ -1,3 +1,12 @@
+## [1.130.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.0...v1.130.1) (2023-04-23)
+
+
+### Bug Fixes
+
+* fix image rotation ([#1089](https://github.com/Greenstand/treetracker-admin-client/issues/1089)) ([e8e291e](https://github.com/Greenstand/treetracker-admin-client/commit/e8e291e03006d0d63ffc591de59ecb3da36f220e))
+* fix reject capture ([#1088](https://github.com/Greenstand/treetracker-admin-client/issues/1088)) ([af63175](https://github.com/Greenstand/treetracker-admin-client/commit/af63175e4253d24f46085cb4caa20a0c6eac73b8))
+* reroute webmap domain ([#1083](https://github.com/Greenstand/treetracker-admin-client/issues/1083)) ([c7c3f47](https://github.com/Greenstand/treetracker-admin-client/commit/c7c3f47e301594aa97d523c4c21da1a84ccc9406))
+
 # [1.130.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.129.0...v1.130.0) (2023-04-23)
 
 
