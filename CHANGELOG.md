@@ -1,3 +1,10 @@
+# [1.131.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.2...v1.131.0) (2023-04-25)
+
+
+### Features
+
+* custom date filter on homejs ([#1062](https://github.com/Greenstand/treetracker-admin-client/issues/1062)) ([0540f23](https://github.com/Greenstand/treetracker-admin-client/commit/0540f2302698dd0cf82ba4e67e47525b49432080))
+
 ## [1.130.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.1...v1.130.2) (2023-04-25)
 
 
