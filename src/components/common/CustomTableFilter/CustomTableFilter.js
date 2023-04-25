@@ -27,9 +27,14 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @param {function} props.setIsFilterOpen - toggle open  filter
  * @param {function} props.setFilter - set  filter
  * @param {object} props.filter -  filter object
+ * @param {Date} props.startDate -  startDate param so data can persist after closing filter
+ * @param {Date} props.endDate -  endDate param so data can persist after closing filter
  * @param {string} props.filterType -  filter type, either 'main' or 'date'
  * @param {boolean} props.isFilterOpen - flag determining if filter is open/closed
  * @param {boolean} props.disablePaymentStatus -
+ * @param {function} props.alternativeHandleChange - allows alt logic for changes in date filter
+ * @param {function} props.alternativeHandleOnFormSubmit - allows alt logic for submit in date filter form
+ * @param {function} props.extraResetButtonAction - allows extra functionality to be added to the reset button from parent component
  * @returns {React.Component}
  */
 function CustomTableFilter(props) {
@@ -46,9 +51,14 @@ function CustomTableFilter(props) {
     isFilterOpen,
     setIsFilterOpen,
     filter,
+    startDate,
+    endDate,
     setFilter,
     filterType,
     disablePaymentStatus,
+    alternativeHandleChange,
+    alternativeHandleOnFormSubmit,
+    extraResetButtonAction,
   } = props;
 
   const classes = useStyles();
@@ -110,6 +120,7 @@ function CustomTableFilter(props) {
       : setFilter({ ...initialFilter, grower: '' });
     setLocalFilter(initialFilter);
     setIsFilterOpen(false);
+    extraResetButtonAction ? extraResetButtonAction() : '';
   };
 
   const renderDateFilter = () => (
@@ -121,10 +132,10 @@ function CustomTableFilter(props) {
         <TextField
           id="start_date"
           name="start_date"
-          value={localFilter?.start_date}
+          value={startDate || localFilter?.start_date}
           label="Start Date"
           type="date"
-          onChange={handleOnFormControlChange}
+          onChange={alternativeHandleChange || handleOnFormControlChange}
           InputLabelProps={{
             shrink: true,
           }}
@@ -139,8 +150,8 @@ function CustomTableFilter(props) {
           id="end_date"
           name="end_date"
           label="End Date"
-          value={localFilter?.end_date}
-          onChange={handleOnFormControlChange}
+          value={endDate || localFilter?.end_date}
+          onChange={alternativeHandleChange || handleOnFormControlChange}
           type="date"
           InputLabelProps={{
             shrink: true,
@@ -260,7 +271,9 @@ function CustomTableFilter(props) {
         {/* end   filter header */}
 
         {/* start filter body */}
-        <form onSubmit={handleOnFilterFormSubmit}>
+        <form
+          onSubmit={alternativeHandleOnFormSubmit || handleOnFilterFormSubmit}
+        >
           {filterType === 'date' && renderDateFilter()}
           {filterType === 'main' && renderMainFilter()}
 

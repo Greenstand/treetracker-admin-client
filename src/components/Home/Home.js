@@ -22,6 +22,7 @@ import {
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
 } from '../DashStat.container';
+import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
 import ReportingCard1 from '../reportingCards/ReportingCard1';
 import ReportingCard2 from '../reportingCards/ReportingCard2';
@@ -51,6 +52,8 @@ function Home(props) {
   const appContext = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
+  const [filter, setFilter] = useState({});
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
 
   useEffect(() => {
     document.title = `${documentTitle}`;
@@ -73,13 +76,28 @@ function Home(props) {
     { range: 30 * 6, text: 'Last 6 Months' },
     { range: 365, text: 'Last Year' },
     { range: 365 * 100, text: 'All' },
+    { range: 1, text: 'Custom Date Range' },
   ];
   const [timeRangeIndex, setTimeRangeIndex] = useState(3);
   const [startDate, setStartDate] = useState('1970-01-01');
-  const [endDate /*, setEndDate*/] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   const handleTimeClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const renderDateFilter = () => {
+    setTimeRangeIndex(timeRange.length - 1);
+    setAnchorEl(null);
+    setIsDateFilterOpen(true);
+  };
+
+  const handleDateFilterResetButton = (index) => {
+    setEndDate(format(new Date(), 'yyyy-MM-dd'));
+    setStartDate(
+      format(subDays(new Date(), timeRange[index].range), 'yyyy-MM-dd')
+    );
+    setTimeRangeIndex(index);
   };
 
   const handleTimeClose = (index) => {
@@ -87,11 +105,40 @@ function Home(props) {
     setAnchorEl(null);
     if (isNaN(index)) return;
     setTimeRangeIndex(index);
-    setStartDate(format(subDays(new Date(), timeRange[0].range), 'yyyy-MM-dd'));
+    setEndDate(format(new Date(), 'yyyy-MM-dd'));
+    setStartDate(
+      format(subDays(new Date(), timeRange[index].range), 'yyyy-MM-dd')
+    );
+  };
+
+  const handleCustomTimeSubmit = (e) => {
+    e.preventDefault();
+    setStartDate(filter?.start_date);
+    setEndDate(filter?.end_date);
+  };
+
+  const handleCustomTimeChange = (e) => {
+    let updatedFilter = { ...filter };
+    updatedFilter[e?.target?.id] = e?.target?.value;
+    setFilter(updatedFilter);
   };
 
   return (
     <Grid className={classes.box}>
+      <CustomTableFilter
+        isFilterOpen={isDateFilterOpen}
+        filter={filter}
+        filterType="date"
+        setFilter={setFilter}
+        setIsFilterOpen={setIsDateFilterOpen}
+        alternativeHandleChange={handleCustomTimeChange}
+        alternativeHandleOnFormSubmit={handleCustomTimeSubmit}
+        startDate={filter?.start_date}
+        endDate={filter?.end_date}
+        extraResetButtonAction={() =>
+          handleDateFilterResetButton(timeRange.length - 2)
+        }
+      />
       <Grid className={classes.menuAside}>
         <Paper elevation={3} className={classes.menu}>
           <Menu variant="plain" />
@@ -133,14 +180,24 @@ function Home(props) {
                   onClose={handleTimeClose}
                   classes={{ paper: classes.timeMenu }}
                 >
-                  {timeRange.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      onClick={() => handleTimeClose(index)}
-                    >
-                      {timeRange[index].text}
-                    </MenuItem>
-                  ))}
+                  {timeRange.map((item, index) => {
+                    if (item.text === 'Custom Date Range') {
+                      return (
+                        <MenuItem onClick={() => renderDateFilter()}>
+                          {timeRange[index].text}
+                        </MenuItem>
+                      );
+                    } else {
+                      return (
+                        <MenuItem
+                          key={index}
+                          onClick={() => handleTimeClose(index)}
+                        >
+                          {timeRange[index].text}
+                        </MenuItem>
+                      );
+                    }
+                  })}
                 </MenuMui>
               </Grid>
             )}
