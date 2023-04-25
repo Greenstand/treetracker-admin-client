@@ -1,3 +1,10 @@
+## [1.130.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.1...v1.130.2) (2023-04-25)
+
+
+### Bug Fixes
+
+* switch speciesLookup from using id to uuid ([#1076](https://github.com/Greenstand/treetracker-admin-client/issues/1076)) ([f738143](https://github.com/Greenstand/treetracker-admin-client/commit/f738143de98bcd8af853f2b405b674cea2c6b271))
+
 ## [1.130.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.0...v1.130.1) (2023-04-23)
 
 
