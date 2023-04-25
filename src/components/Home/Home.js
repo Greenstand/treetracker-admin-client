@@ -111,7 +111,7 @@ function Home(props) {
     );
   };
 
-  const handleCustomTimeClose = (e) => {
+  const handleCustomTimeSubmit = (e) => {
     e.preventDefault();
     setStartDate(filter?.start_date);
     setEndDate(filter?.end_date);
@@ -132,7 +132,9 @@ function Home(props) {
         setFilter={setFilter}
         setIsFilterOpen={setIsDateFilterOpen}
         alternativeHandleChange={handleCustomTimeChange}
-        alternativeHandleOnFormSubmit={handleCustomTimeClose}
+        alternativeHandleOnFormSubmit={handleCustomTimeSubmit}
+        startDate={filter?.start_date}
+        endDate={filter?.end_date}
         extraResetButtonAction={() =>
           handleDateFilterResetButton(timeRange.length - 2)
         }

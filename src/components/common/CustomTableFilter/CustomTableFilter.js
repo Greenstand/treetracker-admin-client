@@ -27,6 +27,8 @@ const PAYMENT_STATUS = ['calculated', 'cancelled', 'paid', 'all'];
  * @param {function} props.setIsFilterOpen - toggle open  filter
  * @param {function} props.setFilter - set  filter
  * @param {object} props.filter -  filter object
+ * @param {Date} props.startDate -  startDate param so data can persist after closing filter
+ * @param {Date} props.endDate -  endDate param so data can persist after closing filter
  * @param {string} props.filterType -  filter type, either 'main' or 'date'
  * @param {boolean} props.isFilterOpen - flag determining if filter is open/closed
  * @param {boolean} props.disablePaymentStatus -
@@ -49,6 +51,8 @@ function CustomTableFilter(props) {
     isFilterOpen,
     setIsFilterOpen,
     filter,
+    startDate,
+    endDate,
     setFilter,
     filterType,
     disablePaymentStatus,
@@ -128,7 +132,7 @@ function CustomTableFilter(props) {
         <TextField
           id="start_date"
           name="start_date"
-          value={localFilter?.start_date}
+          value={startDate || localFilter?.start_date}
           label="Start Date"
           type="date"
           onChange={alternativeHandleChange || handleOnFormControlChange}
@@ -146,7 +150,7 @@ function CustomTableFilter(props) {
           id="end_date"
           name="end_date"
           label="End Date"
-          value={localFilter?.end_date}
+          value={endDate || localFilter?.end_date}
           onChange={alternativeHandleChange || handleOnFormControlChange}
           type="date"
           InputLabelProps={{
