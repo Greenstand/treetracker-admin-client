@@ -263,18 +263,18 @@ function Filter(props) {
                   <CircularProgress />
                 ) : (
                   [
-                    { id: ALL_SPECIES, name: filterOptionAll },
-                    { id: SPECIES_ANY_SET, name: 'Any set' },
+                    { uuid: ALL_SPECIES, name: filterOptionAll },
+                    { uuid: SPECIES_ANY_SET, name: 'Any set' },
                     {
-                      id: SPECIES_NOT_SET,
+                      uuid: SPECIES_NOT_SET,
                       name: 'Not set',
                     },
                     ...speciesContext.speciesList,
                   ].map((species) => (
                     <MenuItem
                       data-testid="species-item"
-                      key={species.id}
-                      value={species.id}
+                      key={species.uuid}
+                      value={species.uuid}
                     >
                       {species.name}
                     </MenuItem>

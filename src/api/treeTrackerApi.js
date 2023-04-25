@@ -291,7 +291,12 @@ export default {
           'content-type': 'application/json',
           Authorization: session.token,
         },
-      }).then(handleResponse);
+      })
+        .then(handleResponse)
+        .then((res) => {
+          // log.debug(res);
+          return res?.length ? res[0] : null;
+        });
     } catch (error) {
       handleError(error);
     }
