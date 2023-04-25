@@ -295,7 +295,7 @@ export default {
         .then(handleResponse)
         .then((res) => {
           // log.debug(res);
-          return res[0];
+          return res?.length ? res[0] : null;
         });
     } catch (error) {
       handleError(error);
