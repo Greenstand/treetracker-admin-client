@@ -85,7 +85,7 @@ const columns = [
     renderer: (val) => Number(val).toFixed(6),
   },
   {
-    attr: 'imageUrl',
+    attr: 'image_url',
     label: 'Image URL',
     renderer: (val) => (
       <Link
