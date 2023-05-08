@@ -44,6 +44,7 @@ jobs:
           node <<EOF >> $GITHUB_OUTPUT
             const s3BucketSecretNames = {
               "master-dev": "DEV_CDN_S3_BUCKET",
+              "master-test": "TEST_CDN_S3_BUCKET",
               "master-prod": "PROD_CDN_S3_BUCKET",
               "freetown-dev": "DEV_CDN_S3_BUCKET_FREETOWN",
               "freetown-prod": "PROD_CDN_S3_BUCKET_FREETOWN",
@@ -54,6 +55,7 @@ jobs:
             }
             const cdnIdSecretNames = {
               "master-dev": "DEV_CDN_DISTRIBUTION_ID",
+              "master-test": "TEST_CDN_DISTRIBUTION_ID",
               "master-prod": "PROD_CDN_DISTRIBUTION_ID",
               "freetown-dev": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
               "freetown-prod": 'PROD_CDN_DISTRIBUTION_ID_FREETOWN"',
