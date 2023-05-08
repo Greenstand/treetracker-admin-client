@@ -1,3 +1,16 @@
+# [1.132.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.131.0...v1.132.0) (2023-05-08)
+
+
+### Bug Fixes
+
+* capture attr: from imageUrl to image_url ([#1093](https://github.com/Greenstand/treetracker-admin-client/issues/1093)) ([8c82a66](https://github.com/Greenstand/treetracker-admin-client/commit/8c82a66c4049f3725f5d77fbd3600c4f30168538))
+* upgrade node for action [skip ci] ([7ee0ea2](https://github.com/Greenstand/treetracker-admin-client/commit/7ee0ea2b9c6d6891211ebfa04d3add13271e69a8))
+
+
+### Features
+
+* deploy to test env [skip ci] ([06afd4e](https://github.com/Greenstand/treetracker-admin-client/commit/06afd4ee47ec42c708174d746b1f612117e333c3))
+
 # [1.131.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.130.2...v1.131.0) (2023-04-25)
 
 
