@@ -32,7 +32,11 @@ const GrowerOrganization = (props) => {
     </Typography>
   );
   const renderGrowerAssignedOrganization = (assignedOrganization) => {
-    return <Typography>{assignedOrganization.name}</Typography>;
+    return (
+      <Typography>
+        {assignedOrganization.name} ({assignedOrganization.id})
+      </Typography>
+    );
   };
   const orgNamesMatch =
     assignedOrganizationId &&

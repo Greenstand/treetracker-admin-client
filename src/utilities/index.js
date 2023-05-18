@@ -23,7 +23,9 @@ export const stringToSearchRegExp = (value) => `/.*${value}.*/i`;
  * @returns {object} found organization
  */
 export const getOrganizationById = (organizations, organizationId) =>
-  organizations.find(({ id }) => id === organizationId);
+  organizations.find(
+    ({ stakeholder_uuid }) => stakeholder_uuid === organizationId
+  );
 
 /**
  * @function
