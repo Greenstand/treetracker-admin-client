@@ -21,16 +21,20 @@ const GrowerOrganization = (props) => {
   const appContext = useContext(AppContext);
   const { organizationName, assignedOrganizationId, compact } = props;
 
+  const assignedOrganization = getOrganizationById(
+    appContext.orgList,
+    assignedOrganizationId
+  );
+
   const renderGrowerOrganization = () => (
     <Typography style={{ color: '#C0C0C0', fontStyle: 'italic' }}>
       {organizationName}
     </Typography>
   );
-  const renderGrowerAssignedOrganization = (id) => {
-    const assignedOrganization = getOrganizationById(appContext.orgList, id);
+  const renderGrowerAssignedOrganization = (assignedOrganization) => {
     return (
       <Typography>
-        {assignedOrganization?.name} ({id})
+        {assignedOrganization.name} ({assignedOrganization.id})
       </Typography>
     );
   };
@@ -44,10 +48,10 @@ const GrowerOrganization = (props) => {
 
   return (
     <>
-      {assignedOrganizationId &&
-        renderGrowerAssignedOrganization(assignedOrganizationId)}
+      {assignedOrganization &&
+        renderGrowerAssignedOrganization(assignedOrganization)}
       {organizationName &&
-        (!compact || !assignedOrganizationId) &&
+        (!compact || !assignedOrganization) &&
         !orgNamesMatch &&
         renderGrowerOrganization()}
     </>
