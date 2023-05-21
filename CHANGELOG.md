@@ -1,3 +1,10 @@
+## [1.132.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.0...v1.132.1) (2023-05-21)
+
+
+### Bug Fixes
+
+* Grower organization info displays correctly ([#1094](https://github.com/Greenstand/treetracker-admin-client/issues/1094)) ([718b142](https://github.com/Greenstand/treetracker-admin-client/commit/718b142353fe9c7a554592db9dfd6c68019548ea))
+
 # [1.132.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.131.0...v1.132.0) (2023-05-08)
 
 
