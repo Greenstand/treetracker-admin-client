@@ -1,18 +1,19 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
 import Icon from '@material-ui/icons/Eco';
-import useLoadTreeData from './ReportingCardTree.hook';
+import useLoadData from './ReportingCard.hook';
 
 export default function ReportingCard9(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
 
-  const data = useLoadTreeData(
+  const data = useLoadData(
     startDate,
     endDate,
     'trees',
     'trees',
     undefined,
-    rows
+    rows,
+    'tree'
   );
 
   return (
