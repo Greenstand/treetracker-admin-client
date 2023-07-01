@@ -8,6 +8,7 @@ import NatureOutlinedIcon from '@material-ui/icons/NatureOutlined';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
+import EcoIcon from '@material-ui/icons/Eco';
 
 import growersApi from '../api/growers';
 import api from '../api/treeTrackerApi';
@@ -128,9 +129,35 @@ function DashStatGrowerCount(props) {
   );
 }
 
+function DashStatTotalTrees(props) {
+  const treeFilter = new FilterModel();
+
+  const [totalTreeCount, setTotalTreeCount] = useState(null);
+
+  const getTotalTreeCount = async () => {
+    const { total } = await api.getRawTrees(treeFilter);
+    setTotalTreeCount(parseInt(total));
+  };
+
+  useEffect(() => {
+    getTotalTreeCount();
+  }, []);
+
+  return (
+    <DashStat
+      color={theme.palette.stats.green}
+      Icon={EcoIcon}
+      label={'Total Trees'}
+      data={countToLocaleString(totalTreeCount)}
+      {...props}
+    />
+  );
+}
+
 export {
   DashStatGrowerCount,
   DashStatVerifiedCaptures,
   DashStatUnprocessedCaptures,
   DashStatTotalCaptures,
+  DashStatTotalTrees,
 };
