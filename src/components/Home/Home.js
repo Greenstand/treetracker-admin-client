@@ -21,6 +21,7 @@ import {
   DashStatTotalCaptures,
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
+  DashStatTotalTrees,
 } from '../DashStat.container';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
@@ -214,6 +215,7 @@ function Home(props) {
                   <DashStatTotalCaptures />
                   <DashStatUnprocessedCaptures />
                   <DashStatVerifiedCaptures />
+                  <DashStatTotalTrees />
                 </>
               )}
             {hasPermission(appContext.user, [
