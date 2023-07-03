@@ -538,23 +538,4 @@ export default {
       handleError(error);
     }
   },
-  getRawTrees(filter, abortController) {
-    try {
-      const where = filter.getWhereObj();
-      const filterObj = { ...where };
-
-      const query = `${QUERY_API}/v2/trees/${
-        filterObj ? `?${makeQueryString(filterObj)}` : ''
-      }`;
-
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-        signal: abortController?.signal,
-      }).then(handleResponse);
-    } catch (error) {
-      handleError(error);
-    }
-  },
 };
