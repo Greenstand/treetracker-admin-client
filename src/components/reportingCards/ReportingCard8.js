@@ -16,6 +16,7 @@ export default function component(props) {
   );
 
   const formatData = (data) => {
+    let formattedData = { ...data };
     if (data?.moreData) {
       const moreData = data.moreData.map((item) => {
         return {
@@ -23,16 +24,19 @@ export default function component(props) {
           name: item.name || 'Not Set',
         };
       });
-      return { ...data, moreData };
-    } else {
+      formattedData = { ...formattedData, moreData };
+    }
+    if (data.top) {
       const top = data.top.map((item) => {
         return {
           ...item,
           name: item.name || 'Not Set',
         };
       });
-      return { ...data, top };
+      formattedData = { ...formattedData, top };
     }
+
+    return formattedData;
   };
 
   return (
