@@ -209,7 +209,7 @@ function Home(props) {
               POLICIES.LIST_TREE,
               POLICIES.APPROVE_TREE,
             ]) &&
-              hasFreetownPermission(appContext.user) && (
+              !hasFreetownPermission(appContext.user) && (
                 <>
                   <DashStatTotalCaptures />
                   <DashStatUnprocessedCaptures />
@@ -220,7 +220,9 @@ function Home(props) {
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_PLANTER,
             ]) &&
-              hasFreetownPermission(appContext.user) && <DashStatGrowerCount />}
+              !hasFreetownPermission(appContext.user) && (
+                <DashStatGrowerCount />
+              )}
             {hasFreetownPermission(appContext.user) && (
               <Grid item xs={12} className={classes.statCardGrid} container>
                 <Grid item xs={4}>
