@@ -8,18 +8,18 @@ export default function useLoadData(
   field1,
   field2,
   getNum1 = (e) => e.total,
-  rows
+  rows,
+  category = 'capture'
 ) {
   const [data, setData] = useState(undefined);
 
-  async function loadMore() {
+  async function loadMore(apiUrl, createDatesParams) {
     const res = await axios({
       method: 'get',
-      url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics/card`,
+      url: apiUrl,
       params: {
         card_title: field1,
-        capture_created_start_date: startDate ? startDate : undefined,
-        capture_created_end_date: endDate ? endDate : undefined,
+        ...createDatesParams,
         // TODO optimize when data increases
         limit: 100,
       },
@@ -30,30 +30,30 @@ export default function useLoadData(
     }));
   }
 
-  async function load(startDate, endDate) {
+  async function load(apiUrl, createDatesParams) {
+    const CARD_API_URL = apiUrl + '/card';
     const res = await axios({
       method: 'get',
-      url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics`,
+      url: apiUrl,
       params: {
-        capture_created_start_date: startDate ? startDate : undefined,
-        capture_created_end_date: endDate ? endDate : undefined,
+        ...createDatesParams,
       },
     });
     const { data } = res;
-    if(!data) {
-        log.error('No data found in response');
+    if (!data) {
+      log.error('No data found in response');
     }
     log.debug('Reporting data: ', data);
 
     let top;
     if (rows !== undefined) {
       // there is rows set, use single API to load it
+
       const res = await axios({
         method: 'get',
-        url: `${process.env.REACT_APP_REPORTING_API_ROOT}/capture/statistics/card`,
+        url: CARD_API_URL,
         params: {
-          capture_created_start_date: startDate ? startDate : undefined,
-          capture_created_end_date: endDate ? endDate : undefined,
+          ...createDatesParams,
           card_title: field1,
           limit: rows,
         },
@@ -64,13 +64,24 @@ export default function useLoadData(
     setData({
       num1: getNum1(data[field1]),
       top: top || data[field1][field2],
-      loadMore,
+      loadMore: () => loadMore(CARD_API_URL, createDatesParams),
     });
   }
 
   useEffect(() => {
     setData(undefined);
-    load(startDate, endDate);
+    const API_URL = `${process.env.REACT_APP_REPORTING_API_ROOT}/${category}/statistics`;
+    const PARAM =
+      category === 'tree'
+        ? {
+            tree_created_start_date: startDate ? startDate : undefined,
+            tree_created_end_date: endDate ? endDate : undefined,
+          }
+        : {
+            capture_created_start_date: startDate ? startDate : undefined,
+            capture_created_end_date: endDate ? endDate : undefined,
+          };
+    load(API_URL, PARAM);
   }, [startDate, endDate]);
 
   return data;
