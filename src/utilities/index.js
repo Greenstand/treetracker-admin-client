@@ -68,3 +68,28 @@ export const generateActiveDateRangeFilterString = (startDate, endDate) => {
 
   return `${startDateString} - ${endDateString}`;
 };
+
+/**@function
+ * @description Formats reporting card data by filling in a default value for empty/null entries
+ * @param data
+ * @param defaultValue
+ * @return {*&{moreData: *}}
+ */
+export const formatReportingCardData = (data, defaultValue) => {
+  let formattedData = { ...data };
+  if (data?.moreData) {
+    const moreData = data.moreData.map((item) => ({
+      ...item,
+      name: item.name || defaultValue,
+    }));
+    formattedData = { ...formattedData, moreData };
+  }
+  if (data?.top) {
+    const top = data.top.map((item) => ({
+      ...item,
+      name: item.name || defaultValue,
+    }));
+    formattedData = { ...formattedData, top };
+  }
+  return formattedData;
+};
