@@ -32,6 +32,7 @@ import ReportingCard5 from '../reportingCards/ReportingCard5';
 import ReportingCard6 from '../reportingCards/ReportingCard6';
 import ReportingCard7 from '../reportingCards/ReportingCard7';
 import ReportingCard8 from '../reportingCards/ReportingCard8';
+import ReportingCard9 from '../reportingCards/ReportingCard9';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import { format, subDays, formatDistanceToNow } from 'date-fns';
@@ -248,6 +249,9 @@ function Home(props) {
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard8 startDate={startDate} endDate={endDate} />
+                </Grid>
+                <Grid item xs={4}>
+                  <ReportingCard9 startDate={startDate} endDate={endDate} />
                 </Grid>
               </Grid>
             )}
