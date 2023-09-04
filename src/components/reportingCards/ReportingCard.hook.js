@@ -58,21 +58,6 @@ export default function useLoadData(
       top = res.data.card_information;
     }
 
-    console.warn(
-      'data:',
-      data,
-      'field1:',
-      field1,
-      'field2:',
-      field2,
-      'getNum1:',
-      getNum1,
-      'top:',
-      top,
-      'loadMore:',
-      loadMore
-    );
-
     setData({
       num1: getNum1(data[field1]),
       top: top || data[field1][field2],
