@@ -173,7 +173,7 @@ function ReportingCard(props) {
           </Box>
           <Box mt={6} />
           {data ? (
-            data.top.slice(0, 4).map((item, i) => (
+            data.top?.slice(0, 4).map((item, i) => (
               <Box key={i} className={classes.box4}>
                 <Typography className={classes.name}>{item.name}</Typography>
                 <Typography className={classes.number}>
