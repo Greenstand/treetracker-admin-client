@@ -1,3 +1,15 @@
+# [1.108.0-hotfix-v1-107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-hotfix-v1-107.2...v1.108.0-hotfix-v1-107.1) (2023-09-08)
+
+
+### Bug Fixes
+
+* broken eslint ([7b1ea03](https://github.com/Greenstand/treetracker-admin-client/commit/7b1ea03e8724ca973e6ddcee2047b428ce8f3b33))
+
+
+### Features
+
+* new reporting cards ([ca74476](https://github.com/Greenstand/treetracker-admin-client/commit/ca74476372eedea5cc8f01694ff3247113e39b33))
+
 ## [1.107.19-hotfix-v1-107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-hotfix-v1-107.1...v1.107.19-hotfix-v1-107.2) (2023-03-31)
 
 
