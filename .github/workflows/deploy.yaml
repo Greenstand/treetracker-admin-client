@@ -54,7 +54,7 @@ jobs:
               "master-dev": "DEV_CDN_DISTRIBUTION_ID",
               "master-prod": "PROD_CDN_DISTRIBUTION_ID",
               "freetown-dev": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
-              "freetown-prod": 'PROD_CDN_DISTRIBUTION_ID_FREETOWN"',
+              "freetown-prod": "PROD_CDN_DISTRIBUTION_ID_FREETOWN",
               "beta-dev": "DEV_STAGING_CDN_DISTRIBUTION_ID",
               "beta-prod": "STAGING_CDN_DISTRIBUTION_ID",
             }
