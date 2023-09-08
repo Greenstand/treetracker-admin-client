@@ -1,3 +1,13 @@
+## [1.107.19-freetown.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.3...v1.107.19-freetown.4) (2023-09-08)
+
+
+### Bug Fixes
+
+* add new cards ([c536121](https://github.com/Greenstand/treetracker-admin-client/commit/c53612140794d70421962f6875b1d42f9fb4b7ec))
+* deploy support beta [skip ci] ([67e42c0](https://github.com/Greenstand/treetracker-admin-client/commit/67e42c0c9c92101162c128e28e5798640051d870))
+* rename workflow name ([1eb3230](https://github.com/Greenstand/treetracker-admin-client/commit/1eb323014473f2fb616918417b533be643d98454))
+* support extra chars for version string [skip ci] ([18aaa9d](https://github.com/Greenstand/treetracker-admin-client/commit/18aaa9da1d145e89cc24c9c0c173bb3bd10bbf50))
+
 ## [1.107.19-freetown.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.2...v1.107.19-freetown.3) (2023-03-30)
 
 
