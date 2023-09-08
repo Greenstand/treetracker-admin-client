@@ -10,7 +10,7 @@ export default function ReportingCard10(props) {
     startDate,
     endDate,
     'surviving_trees',
-    'surviving_trees',
+    'trees',
     undefined,
     rows
   );

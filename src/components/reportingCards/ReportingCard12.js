@@ -10,7 +10,7 @@ export default function ReportingCard10(props) {
     startDate,
     endDate,
     'surviving_catchments',
-    'surviving_catchments',
+    'catchments',
     (d) => d.average,
     rows
   );

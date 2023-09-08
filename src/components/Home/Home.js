@@ -201,9 +201,11 @@ function Home(props) {
                 <Grid item xs={4}>
                   <ReportingCard10 startDate={startDate} endDate={endDate} />
                 </Grid>
+                {/*
                 <Grid item xs={4}>
                   <ReportingCard11 startDate={startDate} endDate={endDate} />
                 </Grid>
+                */}
                 <Grid item xs={4}>
                   <ReportingCard12 startDate={startDate} endDate={endDate} />
                 </Grid>
