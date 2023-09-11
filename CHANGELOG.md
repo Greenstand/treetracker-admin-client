@@ -1,3 +1,10 @@
+## [1.107.19-freetown.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.4...v1.107.19-freetown.5) (2023-09-11)
+
+
+### Bug Fixes
+
+* card more, title change ([50b5f8a](https://github.com/Greenstand/treetracker-admin-client/commit/50b5f8a3fdef9752fea7996235dfca571872c47b))
+
 ## [1.107.19-freetown.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-freetown.3...v1.107.19-freetown.4) (2023-09-08)
 
 
