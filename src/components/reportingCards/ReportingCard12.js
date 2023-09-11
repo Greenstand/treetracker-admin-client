@@ -10,7 +10,7 @@ export default function ReportingCard10(props) {
     startDate,
     endDate,
     'surviving_catchments',
-    'catchments',
+    'surviving_catchments',
     (d) => d.average,
     rows
   );
@@ -18,13 +18,13 @@ export default function ReportingCard10(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Surviving Catchments',
+        title: 'Survival by Catchment',
         text1: 'Average',
       }}
       icon={NatureIcon}
       color="#76bb23"
       data={data}
-      disableSeeMore={true}
+      disableSeeMore={false}
     />
   );
 }
