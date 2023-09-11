@@ -10,7 +10,7 @@ export default function ReportingCard10(props) {
     startDate,
     endDate,
     'surviving_trees',
-    'trees',
+    'surviving_trees',
     undefined,
     rows
   );
@@ -18,13 +18,13 @@ export default function ReportingCard10(props) {
   return (
     <ReportingCard
       text={{
-        title: 'Surviving Trees',
+        title: 'Trees Survived by CBO',
         text1: 'Total',
       }}
       icon={NatureIcon}
       color="#76bb23"
       data={data}
-      disableSeeMore={true}
+      disableSeeMore={false}
     />
   );
 }
