@@ -94,6 +94,7 @@ npm start
 Visit http://localhost:3001
 
 Valid login credentials for the Admin Panel within the development environment can be found pinned to the #admin_panel_chat channel in Slack.
+Ask for channel access in `#engineering` channel
 
 ## Getting an Issue Assigned
 
