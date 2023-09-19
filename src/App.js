@@ -5,6 +5,7 @@ import Routers from './components/Routers';
 import { AppProvider } from './context/AppContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
+import { AuthProvider } from 'react-oidc-context';
 
 class App extends Component {
   componentDidMount() {
@@ -13,15 +14,30 @@ class App extends Component {
     setLocaleLanguage(navigator.language);
   }
 
+  oidcConfig = {
+    authority: 'https://dev-k8s.treetracker.org/auth/realms/treetracker/',
+    client_id: 'admin-panel',
+    // redirect_uri: 'https://dev-k8s.treetracker.org/auth',
+    redirect_uri: 'http://localhost:3001',
+    realm: 'treetracker',
+    onSigninCallback: (res) => {
+      console.log('onSigninCallback', res);
+      localStorage.setItem('res', JSON.stringify(res));
+    },
+    // to oidcConfig to remove the payload from the URL upon successful login,
+  };
+
   render() {
     return (
       <ThemeProvider theme={theme}>
         <>
-          <BrowserRouter>
-            <AppProvider>
-              <Routers />
-            </AppProvider>
-          </BrowserRouter>
+          <AuthProvider {...this.oidcConfig}>
+            <BrowserRouter>
+              <AppProvider>
+                <Routers />
+              </AppProvider>
+            </BrowserRouter>
+          </AuthProvider>
         </>
       </ThemeProvider>
     );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
-import axios from 'axios';
+// import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
 import GrowersView from '../views/GrowersView';
@@ -37,6 +37,7 @@ import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 import log from 'loglevel';
+import { useAuth } from 'react-oidc-context';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({ getOrganizationUUID: () => {} });
@@ -227,6 +228,29 @@ export const AppProvider = (props) => {
   // CustomTableFilter under components/common.
   const [selectedFilters, setSelectedFilters] = useState('');
 
+  const auth = useAuth();
+
+  console.log('AUTH -----');
+
+  // AUTH keys = [
+  //   'isLoading',
+  //   'isAuthenticated',
+  //   'settings',
+  //   'events',
+  //   'clearStaleState',
+  //   'querySessionStatus',
+  //   'revokeTokens',
+  //   'startSilentRenew',
+  //   'stopSilentRenew',
+  //   'signinPopup',
+  //   'signinSilent',
+  //   'signinRedirect',
+  //   'signoutPopup',
+  //   'signoutRedirect',
+  //   'signoutSilent',
+  //   'removeUser',
+  // ];
+
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
     if (user && token) {
@@ -242,43 +266,70 @@ export const AppProvider = (props) => {
   }, [orgList]);
 
   function checkSession() {
+    console.log('isAuthenticated', auth.isAuthenticated);
+    if (auth.isAuthenticated) {
+      // console.log('isAuth', auth.user);
+      login(auth.user.profile, auth.user.access_token);
+      return true; // don't do anything else
+    }
+
     const localToken = JSON.parse(localStorage.getItem('token'));
     const localUser = JSON.parse(localStorage.getItem('user'));
+
+    console.log('LOCAL USER', localUser);
     if (localToken && localUser) {
       // Temporarily log in with the localStorage credentials while
       // we check that the session is still valid
-      login(localUser, localToken);
 
-      axios
-        .get(
-          `${process.env.REACT_APP_API_ROOT}/auth/check_session?id=${localUser.id}`,
-          {
-            headers: {
-              Authorization: localToken,
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            if (response.data.token === undefined) {
-              //the role has not changed
-              login(localUser, localToken, true);
-            } else {
-              //role has changed, update the token
-              login(localUser, response.data.token, true);
-            }
-          } else {
-            logout();
-          }
-        });
+      // if (auth.querySessionStatus()) {
+      login(localUser, localToken);
+      // } else {
+      console.log('user is not authenticated so querySessionStatus');
+      // auth.signinSilent();
+      // auth.startSilentRenew();
+      // auth.querySessionStatus();
+      // }
+
+      // check session is valid & update session if necessary
+      // if valid then check the roles & update localStorage if necessary
+      // else logout
+
+      // .then((response) => {
+      //   if (response.status === 200) {
+      //     if (response.data.token === undefined) {
+      //       //the role has not changed
+      //       login(localUser, localToken, true);
+      //     } else {
+      //       //role has changed, update the token
+      //       login(localUser, response.data.token, true);
+      //     }
+      //   } else {
+      //     logout();
+      //   }
+      // });
       return true;
+    } else {
+      console.log('signinRedirect');
+      auth.signinRedirect();
+    }
+
+    console.log(
+      'isAuthenticated activeNavigator',
+      auth.isAuthenticated,
+      auth.activeNavigator
+    );
+
+    if (auth.error) {
+      console.log(auth.error);
     }
     return false;
   }
 
   function login(newUser, newToken, rememberDetails) {
+    console.log('login');
     // This api gets hit with identical users from multiple login calls
     if (!isEqual(session.user, newUser)) {
+      // console.log('new user', newUser);
       setUser(newUser);
       session.user = newUser;
       if (rememberDetails) {
@@ -290,6 +341,7 @@ export const AppProvider = (props) => {
     }
 
     if (session.token !== newToken) {
+      // console.log('new token', newToken);
       session.token = newToken;
       setToken(newToken);
 
