@@ -352,7 +352,6 @@ export const AppProvider = (props) => {
   }
 
   function logout() {
-    auth.removeUser();
     setUser(undefined);
     setToken(undefined);
     setRoutes(getRoutes(undefined));
@@ -360,6 +359,7 @@ export const AppProvider = (props) => {
     session.user = undefined;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    auth.signoutRedirect();
   }
 
   async function loadOrganizations() {

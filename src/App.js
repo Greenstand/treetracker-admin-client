@@ -17,14 +17,14 @@ class App extends Component {
   oidcConfig = {
     authority: 'https://dev-k8s.treetracker.org/auth/realms/treetracker/',
     client_id: 'admin-panel',
-    // redirect_uri: 'https://dev-k8s.treetracker.org/auth',
     redirect_uri: 'http://localhost:3001',
+    post_logout_redirect_uri:
+      'https://dev-k8s.treetracker.org/auth/realms/treetracker/protocol/openid-connect/auth?client_id=admin-panel&redirect_uri=http%3A%2F%2Flocalhost%3A3001&response_type=code&scope=openid&state=d4a711af5c9641a7b5ec3d885a9c006f&code_challenge=u-gYCHLbwSbHBCFpU_Jrnx7dfm7BLVvVXy3S9lfyj80&code_challenge_method=S256&response_mode=query',
     realm: 'treetracker',
     onSigninCallback: (res) => {
       console.log('onSigninCallback', res);
       // localStorage.setItem('res', JSON.stringify(res));
       window.history.replaceState({}, document.title, window.location.pathname);
-      // console.log('onSigninCallback', window.history);
     },
     // required to remove the payload from the URL upon successful login so that silentLogin will work
   };

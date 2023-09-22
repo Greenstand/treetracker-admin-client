@@ -510,7 +510,7 @@ export default {
     try {
       // const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
-      const query = `${QUERY_API}/organizations`;
+      const query = `${QUERY_API}/v2/organizations`;
 
       return fetch(query, {
         method: 'GET',
