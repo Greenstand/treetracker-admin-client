@@ -200,8 +200,6 @@ function Account(props) {
     </Typography>
   ));
 
-  console.log('USER', user);
-
   return (
     <Grid className={classes.accountContainer}>
       <Paper elevation={3}>
@@ -243,7 +241,9 @@ function Account(props) {
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Created</Typography>
                 <Typography className={classes.item}>
-                  {getDateTimeStringLocale(user.createdAt)}
+                  {user.createdAt
+                    ? getDateTimeStringLocale(user.createdAt)
+                    : 'N/A'}
                 </Typography>
               </Grid>
               <Grid className={classes.element} item>
