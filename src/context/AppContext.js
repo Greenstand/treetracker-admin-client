@@ -144,7 +144,7 @@ function getRoutes(user) {
       disabled:
         !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
         !user ||
-        user.policy.organization !== undefined,
+        user.organization_id !== undefined,
     },
     {
       name: 'Stakeholders',
@@ -256,7 +256,7 @@ export const AppProvider = (props) => {
     if (user && token) {
       loadOrganizations();
     }
-    setUserHasOrg(!!user?.policy?.organization?.id);
+    setUserHasOrg(!!user?.organization_id.length);
   }, [user, token]);
 
   useEffect(() => {
@@ -266,9 +266,21 @@ export const AppProvider = (props) => {
   }, [orgList]);
 
   function checkSession() {
+    console.log('activeNavigator', auth.activeNavigator);
+    switch (auth.activeNavigator) {
+      case 'signinSilent':
+        return <div>Signing you in...</div>;
+      case 'signoutRedirect':
+        return <div>Signing you out...</div>;
+    }
+
+    if (auth.isLoading) {
+      console.log('loading...');
+      return <div>Loading...</div>;
+    }
+
     console.log('isAuthenticated', auth.isAuthenticated);
     if (auth.isAuthenticated) {
-      // console.log('isAuth', auth.user);
       login(auth.user.profile, auth.user.access_token);
       return true; // don't do anything else
     }
@@ -276,57 +288,45 @@ export const AppProvider = (props) => {
     const localToken = JSON.parse(localStorage.getItem('token'));
     const localUser = JSON.parse(localStorage.getItem('user'));
 
-    console.log('LOCAL USER', localUser);
-    if (localToken && localUser) {
-      // Temporarily log in with the localStorage credentials while
-      // we check that the session is still valid
+    console.log('LOCAL USER', !!localUser);
 
-      // if (auth.querySessionStatus()) {
-      login(localUser, localToken);
-      // } else {
-      console.log('user is not authenticated so querySessionStatus');
-      // auth.signinSilent();
-      // auth.startSilentRenew();
-      // auth.querySessionStatus();
-      // }
+    // keycloak can't find the info it needs to login or refresh based on these stored credentials....?
 
-      // check session is valid & update session if necessary
-      // if valid then check the roles & update localStorage if necessary
-      // else logout
+    // if (localToken && localUser) {
+    //   // Temporarily log in with the localStorage credentials while
+    //   // we check that the session is still valid
 
-      // .then((response) => {
-      //   if (response.status === 200) {
-      //     if (response.data.token === undefined) {
-      //       //the role has not changed
-      //       login(localUser, localToken, true);
-      //     } else {
-      //       //role has changed, update the token
-      //       login(localUser, response.data.token, true);
-      //     }
-      //   } else {
-      //     logout();
-      //   }
-      // });
-      return true;
-    } else {
-      console.log('signinRedirect');
-      auth.signinRedirect();
-    }
+    //   // check session is valid & update session if necessary
+    //   // if (auth.querySessionStatus()) {
+    //   //   login(localUser, localToken);
+    //   // }
 
-    console.log(
-      'isAuthenticated activeNavigator',
-      auth.isAuthenticated,
-      auth.activeNavigator
-    );
+    //   // auth.signinSilent(); // get error about updating AuthProvider while rendering AppProvider
+    //   // auth.startSilentRenew(); // not sure this is doing anything but may be async
+    //   // auth.querySessionStatus(); // says login required error if not currently logged in
+
+    //   // if valid then check the user role is the same & update localStorage if necessary
+    //   // else logout
+
+    //   if (auth.error) {
+    //     console.error('Auth error', auth.error);
+    //   }
+
+    //   return true;
+    // }
+
+    console.log('signinRedirect');
+    auth.signinRedirect();
 
     if (auth.error) {
-      console.log(auth.error);
+      console.error('Auth error', auth.error);
     }
+
     return false;
   }
 
-  function login(newUser, newToken, rememberDetails) {
-    console.log('login');
+  function login(newUser, newToken, rememberDetails = true) {
+    // console.log('login', session.user, session.token);
     // This api gets hit with identical users from multiple login calls
     if (!isEqual(session.user, newUser)) {
       // console.log('new user', newUser);
@@ -352,6 +352,7 @@ export const AppProvider = (props) => {
   }
 
   function logout() {
+    auth.removeUser();
     setUser(undefined);
     setToken(undefined);
     setRoutes(getRoutes(undefined));

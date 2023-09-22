@@ -200,6 +200,8 @@ function Account(props) {
     </Typography>
   ));
 
+  console.log('USER', user);
+
   return (
     <Grid className={classes.accountContainer}>
       <Paper elevation={3}>

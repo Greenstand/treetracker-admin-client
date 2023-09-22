@@ -7,33 +7,33 @@ const PERMISSIONS = {
 const POLICIES = {
   SUPER_PERMISSION: 'super_permission',
   MANAGE_EARNINGS: 'manage_earnings',
-  MANAGE_GROWER: 'manage_planter',
+  MANAGE_GROWER: 'manage_planters',
   MANAGE_PAYMENTS: 'manage_payments',
   MANAGE_REGIONS: 'manage_regions',
   MANAGE_STAKEHOLDERS: 'manage_stakeholders',
-  MANAGER_USER: 'manager_user',
+  MANAGER_USER: 'manager_users',
   LIST_EARNINGS: 'list_earnings',
   LIST_GROWER: 'list_planter',
   LIST_PAYMENTS: 'list_payments',
   LIST_REGIONS: 'list_regions',
   LIST_STAKEHOLDERS: 'list_stakeholders',
-  LIST_TREE: 'list_tree',
-  LIST_USER: 'list_user',
-  APPROVE_TREE: 'approve_tree',
+  LIST_TREE: 'list_trees',
+  LIST_USER: 'list_users',
+  APPROVE_TREE: 'approve_trees',
   SEND_MESSAGES: 'send_messages',
   MATCH_CAPTURES: 'match_captures',
 };
 
 function hasPermission(user, p) {
   // Chris github - BirdTho 9/21 user may fail if called when logged out, as in the case in Context.js
-  // console.assert(user, "Why user fail?", user);
+  // console.log('hasPermission', user.policies, p);
   if (!user) return false;
   if (p instanceof Array) {
-    // return p.some((permission) => {
-    //   return user.policy.policies.some((r) => r.name === permission);
-    // });
+    return p.some((permission) => {
+      return user.policies.some((r) => r === permission);
+    });
   } else {
-    // return user.policy.policies.some((r) => r.name === p) ? true : false;
+    return user.policies.some((r) => r === p) ? true : false;
   }
 }
 

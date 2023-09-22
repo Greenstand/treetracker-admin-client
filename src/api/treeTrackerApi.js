@@ -508,9 +508,9 @@ export default {
    */
   getOrganizations() {
     try {
-      const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
+      // const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
 
-      log.debug('GET ORGANIZATIONS -----', query);
+      const query = `${QUERY_API}/organizations`;
 
       return fetch(query, {
         method: 'GET',

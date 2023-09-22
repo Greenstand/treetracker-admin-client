@@ -22,9 +22,11 @@ class App extends Component {
     realm: 'treetracker',
     onSigninCallback: (res) => {
       console.log('onSigninCallback', res);
-      localStorage.setItem('res', JSON.stringify(res));
+      // localStorage.setItem('res', JSON.stringify(res));
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // console.log('onSigninCallback', window.history);
     },
-    // to oidcConfig to remove the payload from the URL upon successful login,
+    // required to remove the payload from the URL upon successful login so that silentLogin will work
   };
 
   render() {
