@@ -53,11 +53,7 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
       onChange={handleChange}
     >
       {[...defaultOrgList, ...orgList].map((org) => (
-        <MenuItem
-          data-testid="org-item"
-          key={org.stakeholder_uuid}
-          value={org.stakeholder_uuid}
-        >
+        <MenuItem data-testid="org-item" key={org.id} value={org.id}>
           {org.name}
         </MenuItem>
       ))}

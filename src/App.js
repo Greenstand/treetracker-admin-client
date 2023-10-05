@@ -6,6 +6,9 @@ import { AppProvider } from './context/AppContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
 import { AuthProvider } from 'react-oidc-context';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../App.js');
 
 class App extends Component {
   componentDidMount() {
@@ -22,7 +25,7 @@ class App extends Component {
       'https://dev-k8s.treetracker.org/auth/realms/treetracker/protocol/openid-connect/auth?client_id=admin-panel&redirect_uri=http%3A%2F%2Flocalhost%3A3001&response_type=code&scope=openid&state=d4a711af5c9641a7b5ec3d885a9c006f&code_challenge=u-gYCHLbwSbHBCFpU_Jrnx7dfm7BLVvVXy3S9lfyj80&code_challenge_method=S256&response_mode=query',
     realm: 'treetracker',
     onSigninCallback: (res) => {
-      console.log('onSigninCallback', res);
+      log.debug('onSigninCallback', res);
       // localStorage.setItem('res', JSON.stringify(res));
       window.history.replaceState({}, document.title, window.location.pathname);
     },

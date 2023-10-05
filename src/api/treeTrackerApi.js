@@ -6,7 +6,9 @@ import {
 } from './apiUtils';
 import { getVerificationStatus } from '../common/utils';
 import { session } from '../models/auth';
-import log from 'loglevel';
+import * as loglevel from 'loglevel';
+
+const log = loglevel.getLogger('../src/api/treeTrackerApi.js');
 
 // Set API as a variable
 const API_ROOT = process.env.REACT_APP_API_ROOT;
@@ -508,9 +510,12 @@ export default {
    */
   getOrganizations() {
     try {
-      // const query = `${API_ROOT}/api/${getOrganization()}organizations?filter[where][type]=O&filter[order]=name`;
+      const query = `${QUERY_API}/v2/organizations`; // default for testing
+      // const query = `${QUERY_API}/v2/organizations?ids=${JSON.stringify(
+      //   session.user.organization_id
+      // )}`;
 
-      const query = `${QUERY_API}/v2/organizations`;
+      log.debug('query', query);
 
       return fetch(query, {
         method: 'GET',

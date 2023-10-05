@@ -230,26 +230,7 @@ export const AppProvider = (props) => {
 
   const auth = useAuth();
 
-  console.log('AUTH -----');
-
-  // AUTH keys = [
-  //   'isLoading',
-  //   'isAuthenticated',
-  //   'settings',
-  //   'events',
-  //   'clearStaleState',
-  //   'querySessionStatus',
-  //   'revokeTokens',
-  //   'startSilentRenew',
-  //   'stopSilentRenew',
-  //   'signinPopup',
-  //   'signinSilent',
-  //   'signinRedirect',
-  //   'signoutPopup',
-  //   'signoutRedirect',
-  //   'signoutSilent',
-  //   'removeUser',
-  // ];
+  log.debug('... render AppProvider');
 
   // check if the user has an org load organizations when the user changes
   useEffect(() => {
@@ -266,7 +247,7 @@ export const AppProvider = (props) => {
   }, [orgList]);
 
   function checkSession() {
-    console.log('activeNavigator', auth.activeNavigator);
+    log.debug('activeNavigator', auth.activeNavigator);
     switch (auth.activeNavigator) {
       case 'signinSilent':
         return <div>Signing you in...</div>;
@@ -275,11 +256,11 @@ export const AppProvider = (props) => {
     }
 
     if (auth.isLoading) {
-      console.log('loading...');
+      log.debug('loading...');
       return <div>Loading...</div>;
     }
 
-    console.log('isAuthenticated', auth.isAuthenticated);
+    log.debug('isAuthenticated', auth.isAuthenticated);
     if (auth.isAuthenticated) {
       login(auth.user.profile, auth.user.access_token);
       return true; // don't do anything else
@@ -288,7 +269,7 @@ export const AppProvider = (props) => {
     const localToken = JSON.parse(localStorage.getItem('token'));
     const localUser = JSON.parse(localStorage.getItem('user'));
 
-    console.log('LOCAL USER', !!localUser);
+    log.debug('LOCAL USER', !!localUser);
 
     // keycloak can't find the info it needs to login or refresh based on these stored credentials....?
 
@@ -315,7 +296,7 @@ export const AppProvider = (props) => {
     //   return true;
     // }
 
-    console.log('signinRedirect');
+    log.debug('signinRedirect');
     auth.signinRedirect();
 
     if (auth.error) {
@@ -326,10 +307,10 @@ export const AppProvider = (props) => {
   }
 
   function login(newUser, newToken, rememberDetails = true) {
-    // console.log('login', session.user, session.token);
+    // log.debug('login', session.user, session.token);
     // This api gets hit with identical users from multiple login calls
     if (!isEqual(session.user, newUser)) {
-      // console.log('new user', newUser);
+      // log.debug('new user', newUser);
       setUser(newUser);
       session.user = newUser;
       if (rememberDetails) {
@@ -341,7 +322,7 @@ export const AppProvider = (props) => {
     }
 
     if (session.token !== newToken) {
-      // console.log('new token', newToken);
+      // log.debug('new token', newToken);
       session.token = newToken;
       setToken(newToken);
 
@@ -364,7 +345,7 @@ export const AppProvider = (props) => {
 
   async function loadOrganizations() {
     const orgs = await api.getOrganizations();
-    setOrgList(orgs);
+    setOrgList(orgs.organizations);
   }
 
   function getOrganizationUUID() {
