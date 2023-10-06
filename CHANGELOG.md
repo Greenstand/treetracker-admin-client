@@ -1,3 +1,15 @@
+## [1.132.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.1...v1.132.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* admin user can view reporting cards in home ([e589452](https://github.com/Greenstand/treetracker-admin-client/commit/e58945219b4533ca501c0923621e3d961f32f27a))
+* null is replaced by 'no organization' on specific cards ([8c1987a](https://github.com/Greenstand/treetracker-admin-client/commit/8c1987af04755317b43f95f0a5535d49cef47d93))
+* redo change in auth.js and Home ([50eb696](https://github.com/Greenstand/treetracker-admin-client/commit/50eb696279d3ec6187eac4339983e981c609e92d))
+* refactor reporting cards to use formatReportingCardData ([8d4e94f](https://github.com/Greenstand/treetracker-admin-client/commit/8d4e94ffbc288a8a9671cf73cbfc1f43bb09bf22))
+* undo change in auth.js ([34eab86](https://github.com/Greenstand/treetracker-admin-client/commit/34eab861898cbff90548de04ee5ae03f3332bfdf))
+* undo changes in auth.js and Home ([36e5cb3](https://github.com/Greenstand/treetracker-admin-client/commit/36e5cb33ba7d57aeb2b6d0bb167440dfbcf59dbe))
+
 ## [1.132.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.0...v1.132.1) (2023-05-21)
 
 
