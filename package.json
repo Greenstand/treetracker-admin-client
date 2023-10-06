@@ -53,6 +53,7 @@
     "redux": "^4.0.5",
     "stream": "npm:stream-browserify",
     "typeface-roboto": "*",
+    "uuid": "^9.0.1",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
