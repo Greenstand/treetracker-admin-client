@@ -53,6 +53,7 @@
     "redux": "^4.0.5",
     "stream": "npm:stream-browserify",
     "typeface-roboto": "*",
+    "uuid": "^9.0.1",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
@@ -88,7 +89,7 @@
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
     "@storybook/addons": "^6.5.9",
-    "@storybook/react": "^6.5.9",
+    "@storybook/react": "^7.0.2",
     "cross-env": "^7.0.2",
     "cypress": "^9.5.0",
     "cypress-react-unit-test": "^4.3.1",
