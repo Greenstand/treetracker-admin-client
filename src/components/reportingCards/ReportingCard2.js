@@ -2,6 +2,7 @@ import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import { formatReportingCardData } from '../../utilities';
 
 export default function ReportingCard2(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -23,7 +24,7 @@ export default function ReportingCard2(props) {
       }}
       icon={PhotoCameraIcon}
       color="#76bb23"
-      data={data}
+      data={data && formatReportingCardData(data, 'No organization')}
       disableSeeMore={disableSeeMore}
     />
   );

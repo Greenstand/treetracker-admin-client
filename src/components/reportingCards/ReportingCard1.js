@@ -2,6 +2,7 @@ import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
 import PeopleIcon from '@material-ui/icons/People';
+import { formatReportingCardData } from '../../utilities';
 
 export default function ReportingCard1(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -23,7 +24,7 @@ export default function ReportingCard1(props) {
       }}
       icon={PeopleIcon}
       color="#e95839"
-      data={data}
+      data={data && formatReportingCardData(data, 'No organization')}
       disableSeeMore={disableSeeMore}
     />
   );

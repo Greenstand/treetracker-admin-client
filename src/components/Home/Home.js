@@ -69,6 +69,7 @@ function Home(props) {
       const { data } = res;
       setUpdateTime(data.last_updated_at);
     }
+
     loadUpdateTime();
   }, []);
 

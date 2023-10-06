@@ -2,6 +2,7 @@ import React from 'react';
 import ReportingCard from './ReportingCard';
 import useLoadData from './ReportingCard.hook';
 import Icon from '@material-ui/icons/LiveHelp';
+import { formatReportingCardData } from '../../utilities';
 
 export default function component(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
@@ -23,7 +24,7 @@ export default function component(props) {
       }}
       icon={Icon}
       color="#ef8031"
-      data={data}
+      data={data && formatReportingCardData(data, 'No organization')}
       disableSeeMore={disableSeeMore}
     />
   );
