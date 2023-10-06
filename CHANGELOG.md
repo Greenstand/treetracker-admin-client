@@ -1,3 +1,10 @@
+## [1.132.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.2...v1.132.3) (2023-10-06)
+
+
+### Bug Fixes
+
+* missing uuid dependency ([93467af](https://github.com/Greenstand/treetracker-admin-client/commit/93467af0dd6d4b4306e67085e6eda001eb6c75e8))
+
 ## [1.132.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.1...v1.132.2) (2023-10-06)
 
 
