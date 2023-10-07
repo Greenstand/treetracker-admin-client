@@ -185,7 +185,10 @@ function Home(props) {
                   {timeRange.map((item, index) => {
                     if (item.text === 'Custom Date Range') {
                       return (
-                        <MenuItem onClick={() => renderDateFilter()}>
+                        <MenuItem
+                          key={index}
+                          onClick={() => renderDateFilter()}
+                        >
                           {timeRange[index].text}
                         </MenuItem>
                       );
