@@ -83,7 +83,7 @@ function Filter(props) {
   };
 
   const formatDate = (date) => {
-    return convertDateToDefaultSqlDate(date);
+    return convertDateToDefaultSqlDate(new Date(date));
   };
 
   function handleCloseClick() {

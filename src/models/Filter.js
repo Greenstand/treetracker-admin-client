@@ -14,7 +14,7 @@ export const ALL_WALLETS = 'ALL_WALLETS';
 import { tokenizationStates } from '../common/variables';
 // import log from 'loglevel';
 
-export default class Filter {
+class Filter {
   uuid;
   captureId;
   startDate;
@@ -201,4 +201,27 @@ export default class Filter {
 
     return numFilters;
   }
+
+  toSearchParams() {
+    return {
+      uuid: this.uuid,
+      captureId: this.captureId,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      grower_account_id: this.grower_account_id,
+      device_identifier: this.device_identifier,
+      wallet: this.wallet,
+      species_id: this.species_id,
+      tagId: this.tagId,
+      organization_id: this.organization_id,
+      tokenId: this.tokenId,
+      status: this.status,
+    };
+  }
+
+  static fromSearchParams = (searchParams) => {
+    return new Filter(searchParams);
+  };
 }
+
+export default Filter;

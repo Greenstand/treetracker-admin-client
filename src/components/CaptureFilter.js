@@ -93,7 +93,9 @@ function Filter(props) {
   const [speciesId, setSpeciesId] = useState(filter?.speciesId || ALL_SPECIES);
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
-  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
+  const [organizationId, setOrganizationId] = useState(
+    filter?.organization_id || ALL_ORGANIZATIONS
+  );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {

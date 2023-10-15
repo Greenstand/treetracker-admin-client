@@ -2,16 +2,22 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import { AppContext } from './AppContext.js';
 import FilterGrower, { ALL_ORGANIZATIONS } from 'models/FilterGrower';
 import api from 'api/growers';
-import { setOrganizationFilter } from '../common/utils';
+import {
+  setOrganizationFilter,
+  handleQuerySearchParams,
+} from '../common/utils';
 import * as loglevel from 'loglevel';
 
 const log = loglevel.getLogger('context/GrowerContext');
 
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_CURRENT_PAGE = 0;
+
 export const GrowerContext = createContext({
   growers: [],
-  pageSize: 24,
+  pageSize: DEFAULT_PAGE_SIZE,
   count: null,
-  currentPage: 0,
+  currentPage: DEFAULT_CURRENT_PAGE,
   filter: new FilterGrower(),
   isLoading: false,
   totalGrowerCount: null,
@@ -30,25 +36,64 @@ export const GrowerContext = createContext({
 
 export function GrowerProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
+  const { searchParams } = props;
+
+  const {
+    pageSize: pageSizeParam = undefined,
+    currentPage: currentPageParam = undefined,
+    ...filterParams
+  } = Object.fromEntries(searchParams || []);
+
   const [growers, setGrowers] = useState([]);
-  const [pageSize, setPageSize] = useState(24);
+  const [pageSize, setPageSize] = useState(
+    Number(pageSizeParam) || DEFAULT_PAGE_SIZE
+  );
   const [count, setCount] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(
+    Number(currentPageParam) || DEFAULT_CURRENT_PAGE
+  );
   const [filter, setFilter] = useState(
-    new FilterGrower({ organization_id: ALL_ORGANIZATIONS })
+    FilterGrower.fromSearchParams({
+      organization_id: ALL_ORGANIZATIONS,
+      ...filterParams,
+    })
   );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
 
   useEffect(() => {
+    if (searchParams) {
+      handleQuerySearchParams({
+        pageSize: pageSize === DEFAULT_PAGE_SIZE ? undefined : pageSize,
+        currentPage:
+          currentPage === DEFAULT_CURRENT_PAGE ? undefined : currentPage,
+        ...filter.toSearchParams(),
+      });
+    }
+
     const abortController = new AbortController();
     // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
       load({ signal: abortController.signal });
-      // getCount();
+      // getCount({ signal: abortController.signal });
     }
     return () => abortController.abort();
   }, [filter, pageSize, currentPage, orgId]);
+
+  useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
+    const {
+      pageSize: pageSizeParam = undefined,
+      currentPage: currentPageParam = undefined,
+      ...filterParams
+    } = Object.fromEntries(searchParams);
+    setFilter(FilterGrower.fromSearchParams(filterParams));
+    setPageSize(Number(pageSizeParam) || DEFAULT_PAGE_SIZE);
+    setCurrentPage(Number(currentPageParam) || DEFAULT_CURRENT_PAGE);
+  }, [searchParams]);
 
   // EVENT HANDLERS
 
@@ -100,7 +145,7 @@ export function GrowerProvider(props) {
     };
   };
 
-  const getCount = async () => {
+  const getCount = async (abortController) => {
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
     const finalFilter = setOrganizationFilter(
       filter.getWhereObj(),
@@ -112,6 +157,7 @@ export function GrowerProvider(props) {
 
     const { count } = await api.getCount({
       filter: new FilterGrower(finalFilter),
+      abortController,
     });
     setCount(Number(count));
   };

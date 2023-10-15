@@ -53,7 +53,9 @@ function FilterTopGrower(props) {
   const [personId, setPersonId] = useState(filter?.personId || '');
   const [firstName, setFirstName] = useState(filter?.firstName || '');
   const [lastName, setLastName] = useState(filter?.lastName || '');
-  const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
+  const [organizationId, setOrganizationId] = useState(
+    filter?.organization_id || ALL_ORGANIZATIONS
+  );
   const [email, setEmail] = useState(filter?.email || '');
   const [phone, setPhone] = useState(filter?.phone || '');
   const [wallet, setWallet] = useState(filter?.wallet || filterOptionAll);

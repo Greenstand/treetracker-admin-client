@@ -93,7 +93,7 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(
-    filter?.organizationId || ALL_ORGANIZATIONS
+    filter?.organization_id || ALL_ORGANIZATIONS
   );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
@@ -106,7 +106,7 @@ function Filter(props) {
   };
 
   const formatDate = (date) => {
-    return convertDateToDefaultSqlDate(date);
+    return convertDateToDefaultSqlDate(new Date(date));
   };
 
   function handleSubmit(e) {

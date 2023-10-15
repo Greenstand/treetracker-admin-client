@@ -3,20 +3,28 @@ import FilterModel, { ALL_ORGANIZATIONS } from '../models/Filter';
 import api from '../api/treeTrackerApi';
 // import { captureStatus } from '../common/variables';
 import { AppContext } from './AppContext.js';
-import { setOrganizationFilter } from '../common/utils';
+import {
+  setOrganizationFilter,
+  handleQuerySearchParams,
+} from '../common/utils';
 
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../context/CapturesContext');
+
+const DEFAULT_ROWS_PER_PAGE = 25;
+const DEFAULT_PAGE = 0;
+const DEFAULT_ORDER = 'desc';
+const DEFAULT_ORDER_BY = 'created_at';
 
 export const CapturesContext = createContext({
   isLoading: false,
   captures: [],
   captureCount: 0,
   capture: {},
-  page: 0,
-  rowsPerPage: 25,
-  order: 'desc',
-  orderBy: 'timeCreated',
+  page: DEFAULT_PAGE,
+  rowsPerPage: DEFAULT_ROWS_PER_PAGE,
+  order: DEFAULT_ORDER,
+  orderBy: DEFAULT_ORDER_BY,
   filter: new FilterModel(),
   setRowsPerPage: () => {},
   setPage: () => {},
@@ -31,19 +39,43 @@ export const CapturesContext = createContext({
 
 export function CapturesProvider(props) {
   const { orgId, orgList } = useContext(AppContext);
+  const { searchParams } = props;
+
+  const {
+    rowsPerPage: rowsPerPageParam = undefined,
+    page: pageParam = undefined,
+    order: orderParam = undefined,
+    orderBy: orderByParam = undefined,
+    ...filterParams
+  } = Object.fromEntries(searchParams || []);
+
   const [captures, setCaptures] = useState([]);
   const [captureCount, setCaptureCount] = useState(0);
   const [capture, setCapture] = useState({});
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-  const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('created_at');
+  const [page, setPage] = useState(Number(pageParam) || DEFAULT_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(
+    Number(rowsPerPageParam) || DEFAULT_ROWS_PER_PAGE
+  );
+  const [order, setOrder] = useState(orderParam || DEFAULT_ORDER);
+  const [orderBy, setOrderBy] = useState(orderByParam || DEFAULT_ORDER_BY);
   const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState(
-    new FilterModel({ organization_id: ALL_ORGANIZATIONS })
+    FilterModel.fromSearchParams({
+      organization_id: ALL_ORGANIZATIONS,
+      ...filterParams,
+    })
   );
 
   useEffect(() => {
+    handleQuerySearchParams({
+      rowsPerPage:
+        rowsPerPage === DEFAULT_ROWS_PER_PAGE ? undefined : rowsPerPage,
+      page: page === DEFAULT_PAGE ? undefined : page,
+      order: order === DEFAULT_ORDER ? undefined : order,
+      orderBy: orderBy === DEFAULT_ORDER_BY ? undefined : orderBy,
+      ...filter.toSearchParams(),
+    });
+
     const abortController = new AbortController();
     // orgId can be either null or an [] of uuids
     if (orgId !== undefined) {
@@ -51,6 +83,27 @@ export function CapturesProvider(props) {
     }
     return () => abortController.abort();
   }, [filter, rowsPerPage, page, order, orderBy, orgId]);
+
+  useEffect(() => {
+    if (!searchParams) {
+      return;
+    }
+
+    const {
+      rowsPerPage: rowsPerPageParam = undefined,
+      page: pageParam = undefined,
+      order: orderParam = undefined,
+      orderBy: orderByParam = undefined,
+      ...filterParams
+    } = Object.fromEntries(searchParams);
+
+    setFilter(FilterModel.fromSearchParams(filterParams));
+
+    setPage(Number(pageParam) || DEFAULT_PAGE);
+    setRowsPerPage(Number(rowsPerPageParam) || DEFAULT_ROWS_PER_PAGE);
+    setOrder(orderParam || DEFAULT_ORDER);
+    setOrderBy(orderByParam || DEFAULT_ORDER_BY);
+  }, [searchParams]);
 
   const getCaptures = async (abortController) => {
     log.debug('4 - load captures', filter);

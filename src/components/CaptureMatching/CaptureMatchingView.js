@@ -506,8 +506,11 @@ function CaptureMatchingView() {
 
   const getGrowerRegDate = () => {
     if (Object.keys(growerAccount).length !== 0) {
-      return 'Joined at ' + getDateTimeStringLocale(
-        growerAccount.first_registration_at || growerAccount.created_at
+      return (
+        'Joined at ' +
+        getDateTimeStringLocale(
+          growerAccount.first_registration_at || growerAccount.created_at
+        )
       );
     }
     return '';

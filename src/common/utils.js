@@ -59,3 +59,21 @@ export const localeSort = (arr, order) => {
     return sortVal * orderVal;
   });
 };
+
+export const handleQuerySearchParams = (newParams) => {
+  const oldSearch = window.location.search;
+  let searchParams = new URLSearchParams();
+  Object.keys(newParams).forEach((key) => {
+    const value = newParams[key];
+    if (value) {
+      searchParams.set(key, value.toString());
+    }
+  });
+
+  let url = new URL(window.location.href);
+  url.search = searchParams.toString();
+
+  if (url.search !== oldSearch) {
+    window.history.pushState({}, '', url.search || location.pathname);
+  }
+};
