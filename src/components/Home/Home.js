@@ -21,6 +21,7 @@ import {
   DashStatTotalCaptures,
   DashStatUnprocessedCaptures,
   DashStatVerifiedCaptures,
+  DashStatMatchedCaptures,
 } from '../DashStat.container';
 import CustomTableFilter from 'components/common/CustomTableFilter/CustomTableFilter';
 import GreenStandSvgLogo from '../images/GreenStandSvgLogo';
@@ -33,6 +34,7 @@ import ReportingCard6 from '../reportingCards/ReportingCard6';
 import ReportingCard7 from '../reportingCards/ReportingCard7';
 import ReportingCard8 from '../reportingCards/ReportingCard8';
 import ReportingCard9 from '../reportingCards/ReportingCard9';
+import ReportingCard10 from '../reportingCards/ReportingCard10';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuMui from '@material-ui/core/Menu';
 import { format, subDays, formatDistanceToNow } from 'date-fns';
@@ -218,6 +220,7 @@ function Home(props) {
                   <DashStatTotalCaptures />
                   <DashStatUnprocessedCaptures />
                   <DashStatVerifiedCaptures />
+                  <DashStatMatchedCaptures />
                 </>
               )}
             {hasPermission(appContext.user, [
@@ -237,6 +240,9 @@ function Home(props) {
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard3 startDate={startDate} endDate={endDate} />
+                </Grid>
+                <Grid item xs={4}>
+                  <ReportingCard10 startDate={startDate} endDate={endDate} />
                 </Grid>
                 <Grid item xs={4}>
                   <ReportingCard4 startDate={startDate} endDate={endDate} />
