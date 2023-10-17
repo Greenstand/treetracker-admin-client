@@ -103,6 +103,32 @@ function DashStatVerifiedCaptures(props) {
   );
 }
 
+function DashStatMatchedCaptures(props) {
+  const filter = new FilterModel();
+
+  const [totalVerified, setTotalVerified] = useState(null);
+
+  const getTotalVerified = async () => {
+    const data = await api.getCaptureCount(filter);
+    console.log('data', data);
+    setTotalVerified(data.count);
+  };
+
+  useEffect(() => {
+    getTotalVerified();
+  }, []);
+
+  return (
+    <DashStat
+      color={theme.palette.stats.orange}
+      Icon={CheckCircleOutlineOutlinedIcon}
+      label={'Verified Captures'}
+      data={countToLocaleString(totalVerified)}
+      {...props}
+    />
+  );
+}
+
 function DashStatGrowerCount(props) {
   const growerFilter = new FilterModel();
 
@@ -133,4 +159,5 @@ export {
   DashStatVerifiedCaptures,
   DashStatUnprocessedCaptures,
   DashStatTotalCaptures,
+  DashStatMatchedCaptures,
 };

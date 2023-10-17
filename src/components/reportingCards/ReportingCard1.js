@@ -16,6 +16,8 @@ export default function ReportingCard1(props) {
     rows
   );
 
+  console.log('Growers', data);
+
   return (
     <ReportingCard
       text={{
