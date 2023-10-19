@@ -125,6 +125,8 @@ function Filter(props) {
       organization_id: organizationId,
       tokenId: tokenId.trim(),
     };
+
+    console.log('filter -', test);
     const filter = new FilterModel(test);
 
     props.onSubmit && props.onSubmit(filter);
