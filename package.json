@@ -54,6 +54,7 @@
     "stream": "npm:stream-browserify",
     "typeface-roboto": "*",
     "uuid": "^9.0.1",
+    "webpack": "^5.89.0",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
@@ -84,7 +85,6 @@
     "@babel/preset-react": "^7.18.6",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@cypress/react": "^6.0.0",
     "@cypress/webpack-dev-server": "^2.0.0",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
