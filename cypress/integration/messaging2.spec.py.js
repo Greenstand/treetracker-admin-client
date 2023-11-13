@@ -459,8 +459,8 @@ describe('Messaging', () => {
     );
 
     cy.visit('http://localhost:3001/login');
-    cy.get('#userName').type('admin');
-    cy.get('#password').type('8pzPdcZAG6&Q');
+    cy.get('#userName').type(Cypress.env('admin_username'));
+    cy.get('#password').type(Cypress.env('admin_password'));
     cy.contains(/log/i).click();
     cy.contains(/inbox/i).click();
     cy.contains(
@@ -470,8 +470,8 @@ describe('Messaging', () => {
   });
   it('Returns an error message if the user is not registered for messaging', () => {
     cy.visit('http://localhost:3001/login');
-    cy.get('#userName').type('test1');
-    cy.get('#password').type('EoCAyCPpW0');
+    cy.get('#userName').type(Cypress.env('test_username'));
+    cy.get('#password').type(Cypress.env('test_password'));
     cy.contains(/log/i).click();
     cy.contains(/inbox/i).click();
     cy.contains(

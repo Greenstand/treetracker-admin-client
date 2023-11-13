@@ -32,9 +32,11 @@ import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
+import logo from '../components/images/logo.svg';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
+import stakeholdersAPI from '../api/stakeholders';
 import RegionsView from 'views/RegionsView';
 import log from 'loglevel';
 
@@ -220,6 +222,7 @@ export const AppProvider = (props) => {
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
   const [orgId, setOrgId] = useState(undefined);
+  const [logoPath, setLogoPath] = useState('');
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -240,6 +243,22 @@ export const AppProvider = (props) => {
       getOrganizationUUID();
     }
   }, [orgList]);
+
+  // Gets organization logo url from the API
+  useEffect(() => {
+    if (user && user.policy.organization) {
+      const orgID = user.policy.organization.id;
+      try {
+        stakeholdersAPI.getStakeholder(orgID).then((response) => {
+          const orgLogo = response.stakeholders[0].logo_url;
+          orgLogo && setLogoPath(orgLogo);
+        });
+      } catch (e) {
+        console.error('Undefined User error:', e);
+        setLogoPath(logo);
+      }
+    } else setLogoPath(logo);
+  }, [user]);
 
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -339,6 +358,8 @@ export const AppProvider = (props) => {
     routes,
     orgId,
     orgList,
+    logoPath,
+    setLogoPath,
     userHasOrg,
     selectedFilters,
     updateSelectedFilter,

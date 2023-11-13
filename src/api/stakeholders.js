@@ -54,6 +54,24 @@ export default {
     }
   },
 
+  // Returns a single stakeholder data
+  getStakeholder(id) {
+    try {
+      const query = `${STAKEHOLDER_API}/stakeholders/${id}`;
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      };
+
+      return fetchJSON(query, options);
+    } catch (e) {
+      log.error('getStakeholder', e);
+    }
+  },
+
   deleteStakeholder(id, stakeholderData) {
     try {
       const orgId = id || getOrganizationId();

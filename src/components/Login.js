@@ -11,10 +11,11 @@ import {
   Container,
   CircularProgress,
 } from '@material-ui/core';
-import IconLogo from './IconLogo';
+import logo from './images/logo.svg';
 import { withStyles } from '@material-ui/core/styles';
 import { AppContext } from '../context/AppContext';
 import classNames from 'classnames';
+import api from '../api/stakeholders';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 // import Copyright from 'components/Copyright'
@@ -142,7 +143,21 @@ const Login = (props) => {
           if (res.status === 200) {
             const token = res.data.token;
             const user = res.data.user;
-            appContext.login(user, token, isRemember);
+            // GET logo URL from API if user belongs to an organization
+            // and apply it to logoPath state before completing login
+            if (user.policy.organization) {
+              const orgID = user.policy.organization.id;
+              try {
+                await api.getStakeholder(orgID).then((response) => {
+                  const orgLogo = response.stakeholders[0].logo_url;
+                  orgLogo && appContext.setLogoPath(orgLogo);
+                });
+              } catch (e) {
+                console.error('Undefined User error:', e);
+              } finally {
+                appContext.login(user, token, isRemember);
+              }
+            } else appContext.login(user, token, isRemember);
           } else {
             setErrorMessage('Invalid username or password');
             setLoading(false);
@@ -167,7 +182,15 @@ const Login = (props) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <IconLogo />
+        <img
+          style={{
+            maxWidth: 149,
+            maxHeight: 32,
+            marginBottom: '-6px',
+          }}
+          src={logo}
+          alt="Greenstand logo"
+        />
         <Box m={2} />
         <Typography variant="h2">Admin Panel</Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
