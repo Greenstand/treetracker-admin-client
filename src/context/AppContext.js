@@ -318,6 +318,16 @@ export const AppProvider = (props) => {
   }
 
   async function loadSessions() {
+    // Will want to limit results to the orgs/user's sessions only...
+    // Which is best field to query by?
+    // orgList &&...
+    //    device_configuration_id
+    //    originating_wallet_registration_id
+    //    target_wallet
+    //    organization
+    //    organization_id
+    //    device_identifier
+    //    grower_account_id
     const sessions = await api.getSessions();
     setSessionList(sessions);
   }

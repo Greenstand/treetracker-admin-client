@@ -11,7 +11,8 @@ import FilterModel, {
   ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
-  SESSION_NOT_SET,
+  ALL_SESSIONS,
+  // SESSION_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -97,9 +98,7 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter?.organizationId || ALL_ORGANIZATIONS
   );
-  const [sessionId, setSessionId] = useState(
-    filter.session_id || SESSION_NOT_SET
-  );
+  const [sessionId, setSessionId] = useState(filter.session_id || ALL_SESSIONS);
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {
@@ -147,7 +146,7 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
-    setSessionId(SESSION_NOT_SET);
+    setSessionId(ALL_SESSIONS);
     // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -384,7 +383,7 @@ function Filter(props) {
                 }}
               />
               <SelectSession
-                orgId={organizationId}
+                sessionId={sessionId}
                 handleSelection={(session) => {
                   setSessionId(session.id);
                 }}

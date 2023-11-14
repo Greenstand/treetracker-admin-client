@@ -1,15 +1,21 @@
 import React, { useContext } from 'react';
 import { TextField, MenuItem } from '@material-ui/core';
 import { AppContext } from 'context/AppContext';
-import { SESSION_NOT_SET } from 'models/Filter';
+import { ALL_SESSIONS, SESSION_NOT_SET } from 'models/Filter';
 
-function SelectSession({ orgId, defaultSessions, handleSelection }) {
+function SelectSession({ sessionId, defaultSessions, handleSelection }) {
   const { sessionList } = useContext(AppContext);
   console.log('Sessions--- ', sessionList);
 
-  const defaultOrgList = defaultSessions
+  const defaultList = defaultSessions
     ? defaultSessions
     : [
+        {
+          id: ALL_SESSIONS,
+          name: 'All',
+          value: 'All',
+        },
+        // all captures require a session so not sure this is needed
         {
           id: SESSION_NOT_SET,
           name: 'Not Set',
@@ -18,7 +24,7 @@ function SelectSession({ orgId, defaultSessions, handleSelection }) {
       ];
 
   const handleChange = (e) => {
-    const session = [...defaultOrgList, ...sessionList].find(
+    const session = [...defaultList, ...sessionList].find(
       (o) => o.id === e.target.value
     );
     handleSelection(session);
@@ -30,13 +36,17 @@ function SelectSession({ orgId, defaultSessions, handleSelection }) {
       data-testid="session-dropdown"
       htmlFor="session"
       id="session"
-      label="Sessionn"
+      label="Session"
       name="Session"
-      value={orgId}
+      value={sessionId}
       onChange={handleChange}
     >
-      {[...defaultOrgList, ...sessionList].map((session) => (
-        <MenuItem data-testid="org-item" key={session.id} value={session.id}>
+      {[...defaultList, ...sessionList].map((session) => (
+        <MenuItem
+          data-testid="session-item"
+          key={session.id}
+          value={session.id}
+        >
           {session.name}
         </MenuItem>
       ))}
