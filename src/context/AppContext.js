@@ -328,7 +328,7 @@ export const AppProvider = (props) => {
     //    organization_id
     //    device_identifier
     //    grower_account_id
-    const sessions = await api.getSessions();
+    const { sessions } = await api.getSessions();
     setSessionList(sessions);
   }
 

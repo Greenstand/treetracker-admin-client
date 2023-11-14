@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TextField, MenuItem } from '@material-ui/core';
 import { AppContext } from 'context/AppContext';
-import { ALL_SESSIONS, SESSION_NOT_SET } from 'models/Filter';
+import { ALL_SESSIONS /* SESSION_NOT_SET */ } from 'models/Filter';
+import { getDateTimeStringLocale } from 'common/locale';
 
 function SelectSession({ sessionId, defaultSessions, handleSelection }) {
   const { sessionList } = useContext(AppContext);
-  console.log('Sessions--- ', sessionList);
-
-  const defaultList = defaultSessions
+  const defaultList = defaultSessions?.length
     ? defaultSessions
     : [
         {
@@ -15,18 +14,23 @@ function SelectSession({ sessionId, defaultSessions, handleSelection }) {
           name: 'All',
           value: 'All',
         },
-        // all captures require a session so not sure this is needed
-        {
-          id: SESSION_NOT_SET,
-          name: 'Not Set',
-          value: 'Not Set',
-        },
       ];
+  const [sessions, setSessions] = useState(defaultList);
+
+  useEffect(() => {
+    // format the session data for the dropdown
+    const sesh = sessionList.map((s) => ({
+      id: s.id,
+      name: `${getDateTimeStringLocale(s.created_at)} : ${s.wallet} : ${
+        s.organization
+      }`,
+      value: s.id,
+    }));
+    setSessions((s) => [...s, ...sesh]);
+  }, [sessionList]);
 
   const handleChange = (e) => {
-    const session = [...defaultList, ...sessionList].find(
-      (o) => o.id === e.target.value
-    );
+    const session = [...sessions].find((o) => o.id === e.target.value);
     handleSelection(session);
   };
 
@@ -41,7 +45,7 @@ function SelectSession({ sessionId, defaultSessions, handleSelection }) {
       value={sessionId}
       onChange={handleChange}
     >
-      {[...defaultList, ...sessionList].map((session) => (
+      {[...sessions].map((session) => (
         <MenuItem
           data-testid="session-item"
           key={session.id}
