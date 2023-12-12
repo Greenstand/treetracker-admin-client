@@ -526,18 +526,6 @@ export default {
   getSessions() {
     try {
       const query = `${FIELD_DATA_API}/session`;
-      // Will want to limit results to the orgs/user's sessions only...
-      // Which is best field to query by?
-      // orgList &&...
-      //    device_configuration_id
-      //    originating_wallet_registration_id
-      //    target_wallet
-      //    organization
-      //    organization_id
-      //    device_identifier
-      //    grower_account_id
-
-      log.debug('GET SESSIONS -----', query);
 
       return fetch(query, {
         method: 'GET',

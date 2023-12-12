@@ -12,7 +12,6 @@ import FilterModel, {
   TAG_NOT_SET,
   ANY_TAG_SET,
   ALL_SESSIONS,
-  // SESSION_NOT_SET,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {

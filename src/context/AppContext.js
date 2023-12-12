@@ -221,7 +221,6 @@ export const AppProvider = (props) => {
   const [orgList, setOrgList] = useState([]);
   const [sessionList, setSessionList] = useState([]);
   const [orgId, setOrgId] = useState(undefined);
-  const [sessionList, setSessionList] = useState([]);
 
   // TODO: The below `selectedFilters` state would be better placed under a
   // separate FilterContext in the future iterations when the need to share
@@ -318,16 +317,6 @@ export const AppProvider = (props) => {
   }
 
   async function loadSessions() {
-    // Will want to limit results to the orgs/user's sessions only...
-    // Which is best field to query by?
-    // orgList &&...
-    //    device_configuration_id
-    //    originating_wallet_registration_id
-    //    target_wallet
-    //    organization
-    //    organization_id
-    //    device_identifier
-    //    grower_account_id
     const { sessions } = await api.getSessions();
     setSessionList(sessions);
   }

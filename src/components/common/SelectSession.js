@@ -21,12 +21,13 @@ function SelectSession({ sessionId, defaultSessions, handleSelection }) {
     // format the session data for the dropdown
     const sesh = sessionList.map((s) => ({
       id: s.id,
-      name: `${getDateTimeStringLocale(s.created_at)} : ${s.wallet} : ${
-        s.organization
-      }`,
+      org: s.organization,
+      name: `${s.wallet} ${s.organization ? ` / ${s.organization}  ` : ''}`,
+      date: getDateTimeStringLocale(s.created_at),
       value: s.id,
     }));
-    setSessions((s) => [...s, ...sesh]);
+
+    setSessions(() => [...defaultList, ...sesh]);
   }, [sessionList]);
 
   const handleChange = (e) => {
@@ -51,7 +52,8 @@ function SelectSession({ sessionId, defaultSessions, handleSelection }) {
           key={session.id}
           value={session.id}
         >
-          {session.name}
+          {session.date} -- {session.name}{' '}
+          {session.organization ? ` / ${session.organization}` : ''}
         </MenuItem>
       ))}
     </TextField>
