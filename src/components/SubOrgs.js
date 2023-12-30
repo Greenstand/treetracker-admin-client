@@ -16,7 +16,11 @@ const SubOrgs = ({ name, id }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const subOrganizations = ['SubOrg1', 'SubOrg2', 'SubOrg3'];
+  const subOrganizations = [
+    'Sub-organization1',
+    'Sub-organization2',
+    'Sub-organization3',
+  ];
 
   return (
     <>
@@ -29,7 +33,7 @@ const SubOrgs = ({ name, id }) => {
         <Paper
           elevation={0}
           style={{
-            width: '150px',
+            width: '200px',
           }}
         >
           <div
@@ -60,11 +64,11 @@ const SubOrgs = ({ name, id }) => {
         <div style={{ position: 'relative' }}>
           <FormControlLabel
             control={<Radio checked={expanded} onClick={handleExpandClick} />}
-            label="Show Sub-Orgs"
+            label="Sub-organization/s"
             style={{
               right: '0',
               position: 'absolute',
-              top: '20px',
+              top: '15px',
               left: '-160px',
               display: 'block',
             }}

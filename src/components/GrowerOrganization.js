@@ -19,7 +19,13 @@ import SubOrgs from './SubOrgs.js';
  */
 const GrowerOrganization = (props) => {
   const appContext = useContext(AppContext);
-  const { organizationName, assignedOrganizationId, compact } = props;
+  const {
+    organizationName,
+    assignedOrganizationId,
+    compact,
+    isCard,
+    isSidePanel,
+  } = props;
 
   const assignedOrganization = getOrganizationById(
     appContext.orgList,
@@ -29,11 +35,20 @@ const GrowerOrganization = (props) => {
   const renderGrowerOrganization = () => (
     <Typography variant="h6">{organizationName}</Typography>
   );
-  const renderGrowerAssignedOrganization = (assignedOrganization) => {
+  const renderGrowerAssignedOrganizationSide = (assignedOrganization) => {
     return (
       <SubOrgs name={assignedOrganization.name} id={assignedOrganization.id} />
     );
   };
+
+  const renderGrowerAssignedOrganizationCard = (assignedOrganization) => {
+    return (
+      <Typography variant="h6">
+        {assignedOrganization.name} ({assignedOrganization.id})
+      </Typography>
+    );
+  };
+
   const orgNamesMatch =
     assignedOrganizationId &&
     organizationName &&
@@ -45,7 +60,16 @@ const GrowerOrganization = (props) => {
   return (
     <>
       {assignedOrganization &&
-        renderGrowerAssignedOrganization(assignedOrganization)}
+        isCard &&
+        renderGrowerAssignedOrganizationCard(assignedOrganization)}
+      {organizationName &&
+        (!compact || !assignedOrganization) &&
+        !orgNamesMatch &&
+        renderGrowerOrganization()}
+
+      {assignedOrganization &&
+        isSidePanel &&
+        renderGrowerAssignedOrganizationSide(assignedOrganization)}
       {organizationName &&
         (!compact || !assignedOrganization) &&
         !orgNamesMatch &&

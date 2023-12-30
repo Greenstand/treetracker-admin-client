@@ -62,6 +62,8 @@ export const Grower = ({ grower, growerClick }) => {
               organizationName={grower?.organization}
               assignedOrganizationId={grower?.organization_id}
               compact={true}
+              isCard={true}
+              isSidePanel={false}
             />
           </Box>
         </CardActions>
