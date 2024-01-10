@@ -1,3 +1,16 @@
+# [1.133.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.4...v1.133.0) (2024-01-10)
+
+
+### Bug Fixes
+
+* fixed undefined intial filter ([e439d15](https://github.com/Greenstand/treetracker-admin-client/commit/e439d15ccd68f4c2437ec1390844ff886ee40713))
+* removed legacy fields in FilterTop ([3679108](https://github.com/Greenstand/treetracker-admin-client/commit/367910831fb0330202a9b547014f3d9b259a4f56))
+
+
+### Features
+
+* added session filter that gets a list of sessions from backend api ([1a518e1](https://github.com/Greenstand/treetracker-admin-client/commit/1a518e1ac307995a974e9d53b145746a9dde512c))
+
 ## [1.132.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.3...v1.132.4) (2023-10-07)
 
 
