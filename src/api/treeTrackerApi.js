@@ -527,8 +527,6 @@ export default {
     try {
       const query = `${FIELD_DATA_API}/session`;
 
-      log.debug('GET SESSIONS -----', query);
-
       return fetch(query, {
         method: 'GET',
         headers: {

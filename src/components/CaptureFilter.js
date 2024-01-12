@@ -6,8 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SelectOrg from './common/SelectOrg';
+import SelectSession from './common/SelectSession';
 import FilterModel, {
   ALL_SPECIES,
+  ALL_SESSIONS,
   SPECIES_ANY_SET,
   SPECIES_NOT_SET,
   ALL_ORGANIZATIONS,
@@ -94,6 +96,9 @@ function Filter(props) {
   const [tag, setTag] = useState(null);
   const [tagSearchString, setTagSearchString] = useState('');
   const [organizationId, setOrganizationId] = useState(ALL_ORGANIZATIONS);
+  const [sessionId, setSessionId] = useState(
+    filter?.session_id || ALL_SESSIONS
+  );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {
@@ -123,6 +128,7 @@ function Filter(props) {
       species_id: speciesId,
       tag_id: tag ? tag.id : undefined,
       organization_id: organizationId,
+      session_id: sessionId,
       tokenId: tokenId.trim(),
     };
     const filter = new FilterModel(test);
@@ -144,6 +150,7 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
+    setSessionId(ALL_SESSIONS);
     setTokenId(filterOptionAll);
     const filter = new FilterModel();
     props.onSubmit && props.onSubmit(filter);
@@ -336,6 +343,12 @@ function Filter(props) {
                 orgId={organizationId}
                 handleSelection={(org) => {
                   setOrganizationId(org.stakeholder_uuid);
+                }}
+              />
+              <SelectSession
+                sessionId={sessionId}
+                handleSelection={(session) => {
+                  setSessionId(session.id);
                 }}
               />
             </Grid>

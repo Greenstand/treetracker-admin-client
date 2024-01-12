@@ -317,7 +317,7 @@ export const AppProvider = (props) => {
   }
 
   async function loadSessions() {
-    const sessions = await api.getSessions();
+    const { sessions } = await api.getSessions();
     setSessionList(sessions);
   }
 
