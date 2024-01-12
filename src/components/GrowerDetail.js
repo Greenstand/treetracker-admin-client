@@ -506,6 +506,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   <GrowerOrganization
                     organizationName={grower.organization}
                     assignedOrganizationId={grower.organization_id}
+                    isSidePanel={true}
+                    isCard={false}
                   />
                 ) : (
                   <Typography variant="body1">---</Typography>

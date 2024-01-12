@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-
+import { Typography } from '@material-ui/core';
 import { AppContext } from '../context/AppContext.js';
 import PropTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
 import { getOrganizationById } from 'utilities/index.js';
+import SubOrgs from './SubOrgs.js';
 
 /**
  * @function
@@ -19,7 +19,13 @@ import { getOrganizationById } from 'utilities/index.js';
  */
 const GrowerOrganization = (props) => {
   const appContext = useContext(AppContext);
-  const { organizationName, assignedOrganizationId, compact } = props;
+  const {
+    organizationName,
+    assignedOrganizationId,
+    compact,
+    isCard,
+    isSidePanel,
+  } = props;
 
   const assignedOrganization = getOrganizationById(
     appContext.orgList,
@@ -27,17 +33,22 @@ const GrowerOrganization = (props) => {
   );
 
   const renderGrowerOrganization = () => (
-    <Typography style={{ color: '#C0C0C0', fontStyle: 'italic' }}>
-      {organizationName}
-    </Typography>
+    <Typography variant="h6">{organizationName}</Typography>
   );
-  const renderGrowerAssignedOrganization = (assignedOrganization) => {
+  const renderGrowerAssignedOrganizationSide = (assignedOrganization) => {
     return (
-      <Typography>
+      <SubOrgs name={assignedOrganization.name} id={assignedOrganization.id} />
+    );
+  };
+
+  const renderGrowerAssignedOrganizationCard = (assignedOrganization) => {
+    return (
+      <Typography variant="h6">
         {assignedOrganization.name} ({assignedOrganization.id})
       </Typography>
     );
   };
+
   const orgNamesMatch =
     assignedOrganizationId &&
     organizationName &&
@@ -49,7 +60,16 @@ const GrowerOrganization = (props) => {
   return (
     <>
       {assignedOrganization &&
-        renderGrowerAssignedOrganization(assignedOrganization)}
+        isCard &&
+        renderGrowerAssignedOrganizationCard(assignedOrganization)}
+      {organizationName &&
+        (!compact || !assignedOrganization) &&
+        !orgNamesMatch &&
+        renderGrowerOrganization()}
+
+      {assignedOrganization &&
+        isSidePanel &&
+        renderGrowerAssignedOrganizationSide(assignedOrganization)}
       {organizationName &&
         (!compact || !assignedOrganization) &&
         !orgNamesMatch &&
