@@ -1,3 +1,10 @@
+# [1.135.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.134.0...v1.135.0) (2024-01-12)
+
+
+### Features
+
+* **Grower:** showing sub organisations below organization of grower ([a727067](https://github.com/Greenstand/treetracker-admin-client/commit/a727067e72b157c748cc87555195922213a1f0c7))
+
 # [1.134.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.133.0...v1.134.0) (2024-01-12)
 
 
