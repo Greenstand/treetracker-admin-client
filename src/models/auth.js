@@ -6,6 +6,7 @@ const PERMISSIONS = {
 
 const POLICIES = {
   SUPER_PERMISSION: 'super_permission',
+  MANAGE_CONTRACTS: 'manage_contracts',
   MANAGE_EARNINGS: 'manage_earnings',
   MANAGE_GROWER: 'manage_planter',
   MANAGE_PAYMENTS: 'manage_payments',

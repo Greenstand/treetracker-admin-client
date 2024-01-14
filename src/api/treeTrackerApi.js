@@ -98,7 +98,7 @@ export default {
         lon: capture.lon,
         gps_accuracy: capture.gps_accuracy,
         captured_at: capture.captured_at,
-        note: capture.note ? capture.note : null,
+        note: capture.note ? capture.note : ' ', // temporary measure because the api requires a non-empty string, but adding notes is not in the UX yet
         age: age,
         morphology,
         species_id: speciesId,
