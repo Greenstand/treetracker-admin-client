@@ -45,6 +45,7 @@ import { captureStatus } from '../common/variables';
 import { getDateTimeStringLocale } from '../common/locale';
 import { makeStyles } from '@material-ui/core/styles';
 import treeTrackerApi from 'api/treeTrackerApi';
+import { GrowerDetailStatusContext } from 'context/GrowerDetailStatusContext';
 
 const log = loglevel.getLogger('../components/GrowerDetail.js');
 
@@ -159,7 +160,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const growerDetailStatusContext = useContext(GrowerDetailStatusContext);
 
+  const {
+    setGrowerDetailLoading,
+    setVerificationStatus_,
+  } = growerDetailStatusContext;
   function formatDevices(grower) {
     // deduplicate and format
     const devices = grower?.devices?.reduce((result, device) => {
@@ -209,6 +215,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     async function loadCaptures() {
       if (grower.id) {
         setLoading(true);
+        setGrowerDetailLoading(true);
         const [
           approvedCount,
           awaitingCount,
@@ -224,7 +231,16 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
           [captureStatus.UNPROCESSED]: awaitingCount,
           [captureStatus.REJECTED]: rejectedCount,
         });
+
+        setVerificationStatus_((prevStatus) => ({
+          ...prevStatus,
+          [captureStatus.APPROVED]: approvedCount,
+          [captureStatus.UNPROCESSED]: awaitingCount,
+          [captureStatus.REJECTED]: rejectedCount,
+        }));
+
         setLoading(false);
+        setGrowerDetailLoading(false);
       }
     }
     loadCaptures();
