@@ -17,12 +17,19 @@ import {
   Modal,
   Paper,
   Typography,
+  LinearProgress,
   CircularProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from '@material-ui/core';
+import { Clear, Done, HourglassEmptyOutlined } from '@material-ui/icons';
 import { TextInput } from './TextInput.js';
 import { MessagingContext } from 'context/MessagingContext.js';
 import SurveyCharts from './SurveyCharts.js';
 import * as loglevel from 'loglevel';
+import { GrowerDetailStatusContext } from 'context/GrowerDetailStatusContext.js';
 
 const log = loglevel.getLogger('./MessageBody.js');
 
@@ -111,6 +118,7 @@ const useStyles = makeStyles((theme) => ({
   senderInfo: {
     padding: '10px',
     borderBottom: '2px solid black',
+    position: 'relative',
   },
   messagesBody: {
     flexGrow: 1,
@@ -163,31 +171,56 @@ const useStyles = makeStyles((theme) => ({
       color: 'black',
     },
   },
-  surveyResponse: {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: 'lightGrey',
-    borderRadius: '10px',
-    padding: '1em',
-    margin: '5px',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    width: '45%',
-    outline: 'none',
-    borderRadius: '4px',
-    padding: '20px',
+  messageInbox: {
     position: 'absolute',
-    top: '30%',
-    left: '22%',
+    right: 0,
+    top: 0,
   },
-  centeredMessage: {
+  box: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
+  },
+
+  listCaptures: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '20%',
-    height: '50%',
+    justifyContent: 'space-between',
+  },
+  rejectedChip: {
+    backgroundColor: theme.palette.stats.red.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.red,
+    fontWeight: 600,
+    fontSize: '0.5em',
+  },
+  awaitingChip: {
+    backgroundColor: theme.palette.stats.orange.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.orange,
+    fontWeight: 600,
+    fontSize: '0.5em',
+  },
+  approvedChip: {
+    backgroundColor: theme.palette.stats.green.replace(/[^,]+(?=\))/, '0.2'), // Change opacity of rgba
+    color: theme.palette.stats.green,
+    fontWeight: 600,
+    fontSize: '0.5em',
+  },
+  captures: {
+    width: '100%',
+  },
+  liAvatar: {
+    minWidth: 20,
+  },
+  boxItem: {
+    borderRadius: 10,
+    border: '1px solid #ddd',
+    marginLeft: theme.spacing(1),
+    maxHeight: '4rem',
+    pading: 'auto 6px',
+  },
+  gutters: {
+    paddingLeft: 4,
+    paddingRight: 4,
   },
 }));
 
@@ -352,13 +385,102 @@ const SenderInformation = ({
   showCharts,
   setShowCharts,
 }) => {
-  const { senderInfo, senderItem, avatar, button, dataContainer } = useStyles();
+  const {
+    senderInfo,
+    senderItem,
+    avatar,
+    button,
+    dataContainer,
+    messageInbox,
+    box,
+    captures,
+    approvedChip,
+    liAvatar,
+    gutters,
+    boxItem,
+    listCaptures,
+    awaitingChip,
+    rejectedChip,
+  } = useStyles();
+
+  const growerDetailStatusContext = useContext(GrowerDetailStatusContext);
+
+  const {
+    growerDetailLoading,
+    verificationStatus_,
+  } = growerDetailStatusContext;
 
   return (
     <Grid container className={senderInfo}>
       <Grid item className={senderItem}>
         {type === 'message' ? (
-          <Avatar src={avatar_url} className={avatar}></Avatar>
+          <Grid>
+            <Avatar src={avatar_url} className={avatar}></Avatar>
+            <Grid className={messageInbox}>
+              <Grid container direction="column" className={box}>
+                <Typography variant="subtitle1" className={captures}>
+                  Captures
+                </Typography>
+                {growerDetailLoading ? (
+                  <LinearProgress color="primary" />
+                ) : (
+                  <List className={listCaptures}>
+                    <Box className={boxItem}>
+                      <ListItem classes={{ gutters: gutters }}>
+                        <ListItemAvatar className={liAvatar}>
+                          <Avatar className={approvedChip}>
+                            <Done />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus_?.approved || 0}
+                            </Typography>
+                          }
+                          secondary="Approved"
+                        />
+                      </ListItem>
+                    </Box>
+                    <Box className={boxItem}>
+                      <ListItem classes={{ gutters: gutters }}>
+                        <ListItemAvatar className={liAvatar}>
+                          <Avatar className={awaitingChip}>
+                            <HourglassEmptyOutlined />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus_?.unprocessed || 0}
+                            </Typography>
+                          }
+                          secondary="Awaiting"
+                        />
+                      </ListItem>
+                    </Box>
+                    <Box className={boxItem}>
+                      <ListItem classes={{ gutters: gutters }}>
+                        <ListItemAvatar className={liAvatar}>
+                          <Avatar className={rejectedChip}>
+                            <Clear />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Typography variant="h5">
+                              {verificationStatus_?.rejected || 0}
+                            </Typography>
+                          }
+                          secondary="Rejected"
+                        />
+                      </ListItem>
+                    </Box>
+                  </List>
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
         ) : type === 'announce' ? (
           <Announcement
             color="inherit"
@@ -420,9 +542,14 @@ const SenderInformation = ({
         )}
 
         {type === 'message' && id && (
-          <Typography align="left" color="primary">
-            ID: {id}
-          </Typography>
+          <>
+            <Typography align="left" color="secondary">
+              Recipient-Name
+            </Typography>
+            <Typography align="left" color="primary">
+              ID: {id}
+            </Typography>
+          </>
         )}
       </Grid>
       {(type === 'survey' || type === 'survey_response') && responseCount > 0 && (
