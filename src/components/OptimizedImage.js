@@ -67,6 +67,7 @@ export default function OptimizedImage(props) {
           src={cdnUrl || src}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
+            currentTarget.srcset = null;
             currentTarget.src = null;
           }}
           alt=".."

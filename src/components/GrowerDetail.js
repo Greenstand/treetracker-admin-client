@@ -16,6 +16,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Switch,
   Typography,
 } from '@material-ui/core';
 import {
@@ -148,7 +149,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   // log.debug('render: grower detail', growerId);
   const classes = useStyle();
   const appContext = useContext(AppContext);
-  const { growers } = useContext(GrowerContext);
+  const { growers, updateGrower } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
@@ -159,6 +160,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  // show in webmap
+  const [showInWebmap, setShowInWebmap] = useState(false);
 
   function formatDevices(grower) {
     // deduplicate and format
@@ -182,6 +186,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
   useEffect(() => {
     setErrorMessage(null);
+
     async function loadGrowerDetail() {
       if (grower && grower.grower_account_id !== growerId) {
         setGrower({});
@@ -194,6 +199,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         }
 
         setGrower(match);
+        setShowInWebmap(match.show_in_map);
 
         if (match?.devices?.length) {
           const devices = formatDevices(match);
@@ -201,6 +207,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         }
       }
     }
+
     loadGrowerDetail();
     // eslint-disable-next-line
   }, [growerId, growers]);
@@ -227,6 +234,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
         setLoading(false);
       }
     }
+
     loadCaptures();
   }, [grower]);
 
@@ -270,6 +278,23 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     setSnackbarLabel(label);
     setSnackbarOpen(true);
   }
+
+  async function handleSwitchChange(e) {
+    const toggle = e.target.checked;
+    setShowInWebmap(toggle);
+
+    try {
+      const updatedGrower = {
+        id: grower.id,
+        show_in_map: toggle,
+      };
+      await updateGrower(updatedGrower);
+    } catch (error) {
+      setErrorMessage('Error updating grower detail');
+      setShowInWebmap(!toggle);
+    }
+  }
+
   return (
     <>
       <Drawer
@@ -406,6 +431,19 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     </Button>
                   </Grid>
                 )}
+              <Divider />
+              <Grid
+                container
+                direction="row"
+                className={classes.box}
+                style={{
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography variant="subtitle1">Show in Web Map</Typography>
+                <Switch checked={showInWebmap} onChange={handleSwitchChange} />
+              </Grid>
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1" className={classes.captures}>
