@@ -523,6 +523,21 @@ export default {
       handleError(error);
     }
   },
+  getSessions() {
+    try {
+      const query = `${FIELD_DATA_API}/session`;
+
+      return fetch(query, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          Authorization: session.token,
+        },
+      }).then(handleResponse);
+    } catch (error) {
+      handleError(error);
+    }
+  },
   getAdminUserById(id) {
     try {
       const query = `${API_ROOT}/auth/admin_users/${id}`;

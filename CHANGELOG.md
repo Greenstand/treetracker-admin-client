@@ -1,3 +1,38 @@
+# [1.135.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.134.0...v1.135.0) (2024-01-12)
+
+
+### Features
+
+* **Grower:** showing sub organisations below organization of grower ([a727067](https://github.com/Greenstand/treetracker-admin-client/commit/a727067e72b157c748cc87555195922213a1f0c7))
+
+# [1.134.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.133.0...v1.134.0) (2024-01-12)
+
+
+### Bug Fixes
+
+* fixed undefined intial filter ([758cec0](https://github.com/Greenstand/treetracker-admin-client/commit/758cec031b649e09d2f0b3196a32ece691852eb4))
+* selection and query for session dropdown ([6250930](https://github.com/Greenstand/treetracker-admin-client/commit/6250930dbe61d15528feeb27971e8ba10b679355))
+
+
+### Features
+
+* add session filter to captures page' ([312f3da](https://github.com/Greenstand/treetracker-admin-client/commit/312f3da01839a52c59ee62094879af4772200357))
+* added session filter that gets a list of sessions from backend api ([2d09fb1](https://github.com/Greenstand/treetracker-admin-client/commit/2d09fb1451f186420889c023811e91d46c0a1e80))
+* fetch sesions and format for the dropdown ([6cd4e3c](https://github.com/Greenstand/treetracker-admin-client/commit/6cd4e3c0ac023a6b09a0d954c86f19f05a6ae2ff))
+
+# [1.133.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.4...v1.133.0) (2024-01-10)
+
+
+### Bug Fixes
+
+* fixed undefined intial filter ([e439d15](https://github.com/Greenstand/treetracker-admin-client/commit/e439d15ccd68f4c2437ec1390844ff886ee40713))
+* removed legacy fields in FilterTop ([3679108](https://github.com/Greenstand/treetracker-admin-client/commit/367910831fb0330202a9b547014f3d9b259a4f56))
+
+
+### Features
+
+* added session filter that gets a list of sessions from backend api ([1a518e1](https://github.com/Greenstand/treetracker-admin-client/commit/1a518e1ac307995a974e9d53b145746a9dde512c))
+
 ## [1.132.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.132.3...v1.132.4) (2023-10-07)
 
 

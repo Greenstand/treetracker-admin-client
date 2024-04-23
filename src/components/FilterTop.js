@@ -11,6 +11,7 @@ import FilterModel, {
   ALL_TAGS,
   TAG_NOT_SET,
   ANY_TAG_SET,
+  ALL_SESSIONS,
 } from '../models/Filter';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -31,6 +32,7 @@ import {
 
 // import { SpeciesContext } from '../context/SpeciesContext';
 import { TagsContext } from '../context/TagsContext';
+import SelectSession from './common/SelectSession';
 // import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
@@ -95,6 +97,9 @@ function Filter(props) {
   const [organizationId, setOrganizationId] = useState(
     filter?.organizationId || ALL_ORGANIZATIONS
   );
+  const [sessionId, setSessionId] = useState(
+    filter?.session_id || ALL_SESSIONS
+  );
   // const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
 
   const handleStartDateChange = (date) => {
@@ -124,6 +129,7 @@ function Filter(props) {
     filter.species_id = speciesId;
     filter.tag_id = tag ? tag.id : undefined;
     filter.organization_id = organizationId;
+    filter.session_id = sessionId;
     // filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
   }
@@ -141,6 +147,7 @@ function Filter(props) {
     setTag(null);
     setTagSearchString('');
     setOrganizationId(ALL_ORGANIZATIONS);
+    setSessionId(ALL_SESSIONS);
     // setTokenId(filterOptionAll);
 
     const filter = new FilterModel();
@@ -374,6 +381,12 @@ function Filter(props) {
                 orgId={organizationId}
                 handleSelection={(org) => {
                   setOrganizationId(org.stakeholder_uuid);
+                }}
+              />
+              <SelectSession
+                sessionId={sessionId}
+                handleSelection={(session) => {
+                  setSessionId(session.id);
                 }}
               />
             </Grid>
