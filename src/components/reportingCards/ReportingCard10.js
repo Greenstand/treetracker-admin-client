@@ -1,32 +1,29 @@
 import React from 'react';
 import ReportingCard from './ReportingCard';
+import Icon from '@material-ui/icons/Done';
 import useLoadData from './ReportingCard.hook';
-import PeopleIcon from '@material-ui/icons/People';
-import { formatReportingCardData } from '../../utilities';
 
-export default function ReportingCard1(props) {
+export default function ReportingCard10(props) {
   const { startDate, endDate, disableSeeMore, rows } = props;
 
   const data = useLoadData(
     startDate,
     endDate,
-    'planters',
-    'planters',
+    'matched_captures',
+    'matched_captures',
     undefined,
     rows
   );
 
-  console.log('Growers', data);
-
   return (
     <ReportingCard
       text={{
-        title: 'Growers',
+        title: 'Matched Captures',
         text1: 'Total',
       }}
-      icon={PeopleIcon}
-      color="#e95839"
-      data={data && formatReportingCardData(data, 'No organization')}
+      icon={Icon}
+      color="#76bb23"
+      data={data}
       disableSeeMore={disableSeeMore}
     />
   );
