@@ -157,7 +157,7 @@ export default {
       handleError(error);
     }
   },
-  getCaptureCount(filter, abortController) {
+  getCaptureCount(filter = {}, abortController) {
     try {
       const where = filter.getWhereObj();
       const filterObj = { ...where };

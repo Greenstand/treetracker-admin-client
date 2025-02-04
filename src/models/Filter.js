@@ -14,6 +14,11 @@ export const ALL_TAGS = 'ALL_TAGS';
 export const TAG_NOT_SET = 'TAG_NOT_SET';
 export const ANY_TAG_SET = 'ANY_TAG_SET';
 export const ALL_WALLETS = 'ALL_WALLETS';
+
+export const MATCHED_NOT_SET = 'MATCHED_NOT_SET';
+export const NOT_MATCHED = 'NOT_MATCHED';
+export const ANY_MATCHED = 'ANY_MATCHED';
+
 import { tokenizationStates } from '../common/variables';
 // import log from 'loglevel';
 
@@ -34,7 +39,6 @@ export default class Filter {
   status;
 
   // NEW FILTERS TO ADD
-  //  tree_associated
   //  tree_id
   //  tag
   //  token
@@ -103,6 +107,14 @@ export default class Filter {
       where.session_id = 'not null';
     } else if (this.session_id !== ALL_SESSIONS) {
       where.session_id = this.session_id;
+    }
+
+    if (this.tree_id === NOT_MATCHED) {
+      where.tree_id = null;
+    } else if (this.tree_id === ANY_MATCHED) {
+      where.tree_id = 'not null';
+    } else if (this.tree_id !== MATCHED_NOT_SET) {
+      where.tree_id = this.tree_id;
     }
 
     if (this.status) {
@@ -193,6 +205,10 @@ export default class Filter {
     }
 
     if (this.session_id && this.session_id !== SESSION_NOT_SET) {
+      numFilters += 1;
+    }
+
+    if (this.tree_id && this.tree_id !== MATCHED_NOT_SET) {
       numFilters += 1;
     }
 

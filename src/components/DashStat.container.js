@@ -13,6 +13,9 @@ import growersApi from '../api/growers';
 import api from '../api/treeTrackerApi';
 import FilterModel from '../models/Filter';
 import { captureStatus } from 'common/variables';
+const log = require('loglevel');
+
+// All Raw Captures, both unprocessed and those reviewed and verified
 
 function DashStatTotalCaptures(props) {
   const unprocessedFilter = new FilterModel({
@@ -49,6 +52,8 @@ function DashStatTotalCaptures(props) {
   );
 }
 
+// All Raw Captures that have not been reviewed and marked valid by someone designated in org
+
 function DashStatUnprocessedCaptures(props) {
   const unprocessedFilter = new FilterModel({
     status: captureStatus.UNPROCESSED,
@@ -78,6 +83,8 @@ function DashStatUnprocessedCaptures(props) {
   );
 }
 
+// Verified Raw Captures have been reviewed and verified as valid by someone designated in org
+
 function DashStatVerifiedCaptures(props) {
   const filter = new FilterModel();
 
@@ -87,6 +94,11 @@ function DashStatVerifiedCaptures(props) {
     const { count } = await api.getCaptureCount(filter);
     setTotalVerified(count);
   };
+
+  // TEST:
+  // the count from api.getCaptureCount()
+  // should match
+  // the count from api.getRawCaptureCount({ filter: new FilterModel({ status: captureStatus.APPROVED }) })
 
   useEffect(() => {
     getTotalVerified();
@@ -103,27 +115,29 @@ function DashStatVerifiedCaptures(props) {
   );
 }
 
+// Captures should all be "matched" to Tree IDs, or
+
 function DashStatMatchedCaptures(props) {
-  const filter = new FilterModel();
+  const filter = new FilterModel({ tree_id: 'not null' });
 
-  const [totalVerified, setTotalVerified] = useState(null);
+  const [totalMatched, setTotalMatched] = useState(null);
 
-  const getTotalVerified = async () => {
+  const getTotalMatched = async () => {
     const data = await api.getCaptureCount(filter);
-    console.log('data', data);
-    setTotalVerified(data.count);
+    log.debug('matched capture data', data);
+    setTotalMatched(data.count);
   };
 
   useEffect(() => {
-    getTotalVerified();
+    getTotalMatched();
   }, []);
 
   return (
     <DashStat
       color={theme.palette.stats.orange}
       Icon={CheckCircleOutlineOutlinedIcon}
-      label={'Verified Captures'}
-      data={countToLocaleString(totalVerified)}
+      label={'Matched Captures'}
+      data={countToLocaleString(totalMatched)}
       {...props}
     />
   );
