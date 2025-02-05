@@ -131,6 +131,8 @@ function Filter(props) {
       session_id: sessionId,
       tokenId: tokenId.trim(),
     };
+
+    console.log('filter -', test);
     const filter = new FilterModel(test);
 
     props.onSubmit && props.onSubmit(filter);

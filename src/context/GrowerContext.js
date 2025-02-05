@@ -39,6 +39,7 @@ export function GrowerProvider(props) {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [totalGrowerCount, setTotalGrowerCount] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -70,19 +71,27 @@ export function GrowerProvider(props) {
     const pageNumber = currentPage;
 
     //set correct values for organization_id, an array of uuids for ALL_ORGANIZATIONS or a uuid string if provided
-    const finalFilter = setOrganizationFilter(filter, orgId, orgList);
+    try {
+      const finalFilter = setOrganizationFilter(filter, orgId, orgList);
 
-    const { total, grower_accounts } = await api.getGrowers(
-      {
-        skip: pageNumber * pageSize,
-        rowsPerPage: pageSize,
-        filter: new FilterGrower(finalFilter),
-      },
-      abortController
-    );
-    setCount(total);
-    setGrowers(grower_accounts);
-    setIsLoading(false);
+      const { total, grower_accounts } = await api.getGrowers(
+        {
+          skip: pageNumber * pageSize,
+          rowsPerPage: pageSize,
+          filter: new FilterGrower(finalFilter),
+        },
+        abortController
+      );
+
+      setCount(total);
+      setGrowers(grower_accounts);
+      setIsLoading(false);
+    } catch (err) {
+      console.log('error status', err.status);
+
+      setIsError(true);
+      setIsLoading(false);
+    }
   };
 
   const getWallets = async (name, pageNumber) => {
@@ -156,6 +165,7 @@ export function GrowerProvider(props) {
   };
 
   const value = {
+    error: isError,
     growers,
     pageSize,
     count,

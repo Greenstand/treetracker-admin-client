@@ -1,7 +1,7 @@
 /*
  * Grower page
  */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { TablePagination, Typography, Tooltip, Box } from '@material-ui/core';
 import Grower from './Grower';
 import GrowerDetail from '../GrowerDetail';
@@ -17,6 +17,13 @@ const Growers = (props) => {
   const growerContext = useContext(GrowerContext);
   const [isDetailShown, setDetailShown] = useState(false);
   const [growerDetail, setGrowerDetail] = useState({});
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    if (!growerContext.isLoading && growerContext.error) {
+      setIsError(true);
+    }
+  }, [growerContext.isLoading]);
 
   function handlePageChange(e, page) {
     growerContext.changeCurrentPage(page);
@@ -98,7 +105,18 @@ const Growers = (props) => {
         <Box>{pagination}</Box>
       </Box>
 
-      <Box className={classes.items}>{growersItems}</Box>
+      <Box className={classes.items}>
+        {isError ? (
+          <Box className={classes.errorBox}>
+            <Typography>
+              Sorry, there has been an Internal Server Error. Please try again
+              later.
+            </Typography>
+          </Box>
+        ) : (
+          growersItems
+        )}
+      </Box>
 
       <Box className={classes.pagination}>{pagination}</Box>
 
