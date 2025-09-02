@@ -1,6 +1,7 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const log = loglevel.getLogger('../context/SpeciesContext');
 
@@ -9,7 +10,6 @@ export const SpeciesContext = createContext({
   speciesList: [],
   speciesInput: '',
   setSpeciesInput: () => {},
-  loadSpeciesList: () => {},
   onChange: () => {},
   isNewSpecies: () => {},
   createSpecies: () => {},
@@ -19,44 +19,26 @@ export const SpeciesContext = createContext({
   combineSpecies: () => {},
 });
 
-export function SpeciesProvider(props) {
-  const [speciesList, setSpeciesList] = useState([]);
-  const [speciesInput, setSpeciesInput] = useState(''); // only used by Species dropdown and Verify
-  const [isLoading, setIsLoading] = useState(false);
+export function SpeciesProvider({ children }) {
+  const [speciesInput, setSpeciesInput] = useState('');
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    loadSpeciesList({ signal: abortController.signal });
-    return () => abortController.abort();
-  }, []);
-
-  // EVENT HANDLERS
-
-  const loadSpeciesList = async (abortController) => {
-    setIsLoading(true);
-    const species = await api.getSpecies(abortController);
-    setSpeciesList(species);
-    setIsLoading(false);
-  };
+  // --- Query for species list ---
+  const { data: speciesList = [], isLoading } = useQuery({
+    queryKey: ['species'],
+    queryFn: () => api.getSpecies(), // api already has getSpecies
+    staleTime: 1000 * 60 * 5, // cache for 5 mins
+    refetchOnWindowFocus: false,
+  });
 
   // only used by Species dropdown
-  const onChange = async (text) => {
+  const onChange = (text) => {
     console.log('on change:"', text, '"');
     setSpeciesInput(text);
   };
 
-  // only used by Verify
   const isNewSpecies = () => {
-    //check input is valid and doesn't already exist
-    if (!speciesInput) {
-      log.debug('empty species, false');
-      return false;
-    }
-    log.debug(
-      'to find species %s in list:%d',
-      speciesInput,
-      speciesList.length
-    );
+    if (!speciesInput) return false;
     return speciesList.every(
       (c) => c.name.toLowerCase() !== speciesInput.toLowerCase()
     );
@@ -64,45 +46,35 @@ export function SpeciesProvider(props) {
 
   const createSpecies = async (payload) => {
     const species = await api.createSpecies(
-      payload || {
-        name: speciesInput,
-        desc: '',
-      }
+      payload || { name: speciesInput, desc: '' }
     );
     console.debug('created new species:', species);
-    setSpeciesList([species, ...speciesList]);
+    // update cache
+    queryClient.setQueryData(['species'], (old = []) => [species, ...old]);
   };
 
-  //to get the species id according the current speciesInput
   const getSpeciesId = () => {
     if (speciesInput) {
-      return speciesList.reduce((a, c) => {
-        if (a) {
-          return a;
-        } else if (c.name === speciesInput) {
-          return c.id;
-        } else {
-          return a;
-        }
-      }, undefined);
+      return speciesList.find((c) => c.name === speciesInput)?.id;
     }
   };
 
-  const editSpecies = async (payload) => {
-    const { id, name, desc } = payload;
+  const editSpecies = async ({ id, name, desc }) => {
     const editedSpecies = await api.editSpecies(id, name, desc);
     console.debug('edit old species:', editedSpecies);
+    // refetch species list after editing
+    queryClient.invalidateQueries(['species']);
   };
 
-  const deleteSpecies = async (payload) => {
-    const { id } = payload;
-    const deletedSpecies = await api.deleteSpecies(id);
-    console.debug('delete outdated species:', id, deletedSpecies);
+  const deleteSpecies = async ({ id }) => {
+    await api.deleteSpecies(id);
+    console.debug('delete outdated species:', id);
+    queryClient.invalidateQueries(['species']);
   };
 
-  const combineSpecies = async (payload) => {
-    const { combine, name, desc } = payload;
+  const combineSpecies = async ({ combine, name, desc }) => {
     await api.combineSpecies(combine, name, desc);
+    queryClient.invalidateQueries(['species']);
   };
 
   const value = {
@@ -110,7 +82,6 @@ export function SpeciesProvider(props) {
     speciesList,
     speciesInput,
     setSpeciesInput,
-    loadSpeciesList,
     onChange,
     isNewSpecies,
     createSpecies,
@@ -119,9 +90,8 @@ export function SpeciesProvider(props) {
     deleteSpecies,
     combineSpecies,
   };
+
   return (
-    <SpeciesContext.Provider value={value}>
-      {props.children}
-    </SpeciesContext.Provider>
+    <SpeciesContext.Provider value={value}>{children}</SpeciesContext.Provider>
   );
 }
