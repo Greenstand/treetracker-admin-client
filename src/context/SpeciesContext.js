@@ -23,12 +23,12 @@ export function SpeciesProvider({ children }) {
   const [speciesInput, setSpeciesInput] = useState('');
   const queryClient = useQueryClient();
 
-  // --- Query for species list ---
   const { data: speciesList = [], isLoading } = useQuery({
     queryKey: ['species'],
-    queryFn: () => api.getSpecies(), // api already has getSpecies
+    queryFn: () => api.getSpecies(), // API already has getSpecies
     staleTime: 1000 * 60 * 5, // cache for 5 mins
     refetchOnWindowFocus: false,
+    enabled: false, // ✅ Disable automatic fetching until Home mounts
   });
 
   // only used by Species dropdown
