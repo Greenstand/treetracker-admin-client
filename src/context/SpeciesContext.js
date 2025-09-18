@@ -23,18 +23,23 @@ export function SpeciesProvider({ children }) {
   const [speciesInput, setSpeciesInput] = useState('');
   const queryClient = useQueryClient();
 
-  // --- Query for species list ---
-  const { data: speciesList = [], isLoading } = useQuery({
+  const { data: speciesList = [], isLoading, refetch } = useQuery({
     queryKey: ['species'],
-    queryFn: () => api.getSpecies(), // api already has getSpecies
-    staleTime: 1000 * 60 * 5, // cache for 5 mins
+    queryFn: () => api.getSpecies(),
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: false, // don’t auto-fetch, rely on Home preload
   });
 
   // only used by Species dropdown
   const onChange = (text) => {
     console.log('on change:"', text, '"');
     setSpeciesInput(text);
+
+    // ✅ Fallback: if species list is empty (not prefetched yet), trigger fetch
+    if (!speciesList.length) {
+      refetch();
+    }
   };
 
   const isNewSpecies = () => {
