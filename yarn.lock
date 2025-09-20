@@ -3232,6 +3232,18 @@
     "@svgr/plugin-svgo" "^5.5.0"
     "loader-utils" "^2.0.0"
 
+"@tanstack/query-core@5.85.5":
+  "integrity" "sha512-KO0WTob4JEApv69iYp1eGvfMSUkgw//IpMnq+//cORBzXf0smyRwPLrUvEe5qtAEGjwZTXrjxg+oJNP/C00t6w=="
+  "resolved" "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.85.5.tgz"
+  "version" "5.85.5"
+
+"@tanstack/react-query@^5.85.5":
+  "integrity" "sha512-/X4EFNcnPiSs8wM2v+b6DqS5mmGeuJQvxBglmDxl6ZQb5V26ouD2SJYAcC3VjbNwqhY2zjxVD15rDA5nGbMn3A=="
+  "resolved" "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.85.5.tgz"
+  "version" "5.85.5"
+  dependencies:
+    "@tanstack/query-core" "5.85.5"
+
 "@testing-library/dom@^8.0.0":
   "integrity" "sha512-m8FOdUo77iMTwVRCyzWcqxlEIk+GnopbrRI15a0EaLbpZSCinIVI4kSQzWhkShK83GogvEFJSsHF3Ws0z1vrqA=="
   "resolved" "https://registry.npmjs.org/@testing-library/dom/-/dom-8.14.0.tgz"
@@ -15189,7 +15201,7 @@
     "node-dir" "^0.1.10"
     "strip-indent" "^3.0.0"
 
-"react-dom@^18":
+"react-dom@^18.2.0":
   "integrity" "sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
   "version" "18.2.0"
@@ -15443,7 +15455,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^18":
+"react@^18.2.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"

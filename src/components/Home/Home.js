@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-
+import { useQueryClient } from '@tanstack/react-query';
+import api from '../../api/treeTrackerApi';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -71,6 +72,15 @@ function Home(props) {
     }
     loadUpdateTime();
   }, []);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: ['species'],
+      queryFn: () => api.getSpecies(),
+      staleTime: 1000 * 60 * 5, // cache for 5 mins
+      refetchOnWindowFocus: false,
+    });
+  }, [queryClient]);
 
   const timeRange = [
     { range: 30, text: 'Last Month' },
