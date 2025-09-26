@@ -131,7 +131,7 @@ jobs:
         if: "contains(github.event.inputs.env, 'dev')"
         run: npm run build:dev
         working-directory: ${{ env.project-directory }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: frontend-bundle
           path: build
@@ -149,7 +149,7 @@ jobs:
           echo "s3: ${{ needs.prepare.outputs.S3_BUCKET_SECRET_NAME }}"
           echo "cdn: ${{ needs.prepare.outputs.CDN_ID_SECRET_NAME }}"
       - name: Download bundled frontend resources
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: frontend-bundle
           path: build
