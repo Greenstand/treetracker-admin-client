@@ -4,6 +4,7 @@ This simple tutorial explains why and how to use Rematch/Redux in our project.
 
 Some points in this tutorial might be somewhat subjective; if you have any suggestions or opinions, please feel free to correct us or contribute to this article directly.
 
+
 ## Why Redux
 
 Redux brings many benefits, one of them is that Redux gives us a universal and simple way to let components communicate with each other. For example, say we have a web app, to build all functionality on it, we created a component tree, see the picture:
