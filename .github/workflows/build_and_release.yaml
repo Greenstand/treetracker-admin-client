@@ -121,6 +121,10 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
+    permissions: 
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
