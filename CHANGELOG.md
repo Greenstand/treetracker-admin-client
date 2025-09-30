@@ -1,3 +1,17 @@
+# [1.136.0-bug-fix-workflow.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.135.0...v1.136.0-bug-fix-workflow.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* update github action workflow from v2 to v3 to avoid deprecated process ([9fe7495](https://github.com/Greenstand/treetracker-admin-client/commit/9fe749533a5cae41753e51b1dc922736fba39beb))
+* update matched caputres report card query to get correct data ([58dbb70](https://github.com/Greenstand/treetracker-admin-client/commit/58dbb701b1a5e50e317d1bed79f49bdc2f46bab6))
+
+
+### Features
+
+* added new card ([41612e7](https://github.com/Greenstand/treetracker-admin-client/commit/41612e774069b5a22f3cc14a1d45e0440f4a59ca))
+* added new card ([84839d8](https://github.com/Greenstand/treetracker-admin-client/commit/84839d83ff6b882a6bce940a596fcf2fd1e52019))
+
 # [1.135.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.134.0...v1.135.0) (2024-01-12)
 
 
