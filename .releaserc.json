@@ -15,7 +15,7 @@
       "channel": "beta"
     },
     {
-      "name": "GitHub-Action-for-CI-CD-failed-1139",
+      "name": "bug-fix-workflow",
       "prerelease": true,
       "channel": "beta"
     }
