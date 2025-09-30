@@ -13,6 +13,11 @@
       "name": "hotfix/v1.107",
       "prerelease": "hotfix-v1-107",
       "channel": "beta"
+    },
+    {
+      "name": "GitHub-Action-for-CI/CD-failed-#1139",
+      "prerelease": true,
+      "channel": "beta"
     }
   ],
   "plugins": [
