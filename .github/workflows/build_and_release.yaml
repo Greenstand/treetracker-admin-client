@@ -140,7 +140,6 @@ jobs:
         if: ${{ !env.ACT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
