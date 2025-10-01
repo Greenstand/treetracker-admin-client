@@ -16,7 +16,7 @@
     },
     {
       "name": "fix-workflow-bug",
-      "prerelease": false,
+      "prerelease": true,
       "channel": "beta"
 }
   ],
