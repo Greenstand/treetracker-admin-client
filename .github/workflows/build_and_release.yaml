@@ -137,38 +137,12 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      # install dependencies and run semantic-release
-
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
-
-      - name: Verify GITHUB_TOKEN is set
-        run: |
-          if [ -z "$GITHUB_TOKEN" ]; then
-            echo "::error::GITHUB_TOKEN is not set. Please add GITHUB_TOKEN secret to the repository." >&2
-            exit 1
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Verify GITHUB_TOKEN validity with GitHub API
-        run: |
-          status=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user)
-          echo "Token validation status: $status"
-          if [ "$status" -ne 200 ]; then
-            echo "::error::GITHUB_TOKEN is invalid or lacks permissions (HTTP $status)"
-            exit 1
-          else
-           echo "GITHUB_TOKEN is valid "
-          fi
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
       - name: Run semantic-release
         run: semantic-release
         if: ${{ !env.ACT }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           GH_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
