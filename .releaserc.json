@@ -13,7 +13,12 @@
       "name": "hotfix/v1.107",
       "prerelease": "hotfix-v1-107",
       "channel": "beta"
-    }
+    },
+    {
+      "name": "fix-workflow-bug",
+      "prerelease": false,
+      "channel": "beta"
+}
   ],
   "plugins": [
     "@semantic-release/commit-analyzer",
