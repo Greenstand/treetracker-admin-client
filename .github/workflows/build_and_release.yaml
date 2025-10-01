@@ -126,18 +126,23 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.GH_TOKEN }}
+          persist-credentials: true
+
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.node-version }}
+
       # install dependencies and run semantic-release
+
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
 
-      - name: Validate GH_TOKEN
+      - name: Verify GH_TOKEN is set
         run: |
           if [ -z "$GH_TOKEN" ]; then
             echo "::error::GH_TOKEN is not set. Please add GH_TOKEN secret to the repository." >&2
@@ -145,6 +150,21 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Verify GH_TOKEN validity with GitHub API
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token $GH_TOKEN" https://api.github.com/user)
+          echo "Token validation status: $status"
+          if [ "$status" -ne 200 ]; then
+            echo "::error::GH_TOKEN is invalid or lacks permissions (HTTP $status)"
+            exit 1
+          else
+           echo "GH_TOKEN is valid "
+          fi
+        env:
+           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+
       - name: Run semantic-release
         run: semantic-release
         if: ${{ !env.ACT }}
