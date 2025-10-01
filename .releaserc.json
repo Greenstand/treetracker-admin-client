@@ -15,7 +15,7 @@
       "channel": "beta"
     },
     {
-      "name": "fix-workflow-bug",
+      "name": "bug-workflow",
       "prerelease": true,
       "channel": "beta"
 }
