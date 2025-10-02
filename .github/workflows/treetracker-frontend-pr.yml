@@ -19,7 +19,7 @@ jobs:
     if: |
       !contains(github.event.head_commit.message, 'skip-ci')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -34,7 +34,7 @@ jobs:
         if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
         run: npm run build:dev
         working-directory: ${{ env.project-directory }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
         with:
           name: client-bundle
