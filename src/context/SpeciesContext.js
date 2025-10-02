@@ -4,6 +4,7 @@ import * as loglevel from 'loglevel';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const log = loglevel.getLogger('../context/SpeciesContext');
+console.log(log);
 
 export const SpeciesContext = createContext({
   isLoading: false,
