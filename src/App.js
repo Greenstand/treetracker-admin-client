@@ -5,6 +5,9 @@ import Routers from './components/Routers';
 import { AppProvider } from './context/AppContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 class App extends Component {
   componentDidMount() {
@@ -16,13 +19,15 @@ class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <>
-          <BrowserRouter>
-            <AppProvider>
-              <Routers />
-            </AppProvider>
-          </BrowserRouter>
-        </>
+        <QueryClientProvider client={queryClient}>
+          <>
+            <BrowserRouter>
+              <AppProvider>
+                <Routers />
+              </AppProvider>
+            </BrowserRouter>
+          </>
+        </QueryClientProvider>
       </ThemeProvider>
     );
   }

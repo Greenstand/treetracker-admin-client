@@ -3,7 +3,7 @@
  * TODO still not support show mutiple notification at the same time.
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
+
 import * as d3 from 'd3-selection';
 import theme from './theme';
 import { ThemeProvider } from '@material-ui/styles';
@@ -92,11 +92,16 @@ export default function notification(message, type = 'info', delay = 3000) {
         />
       </ThemeProvider>
     );
-    d3.select('body')
+
+    const container = d3
+      .select('body')
       .append('div')
       .classed('confirm-container', true)
       .append('div')
-      .classed('confirm-dialog', true);
-    ReactDOM.render(dialog, d3.select('.confirm-dialog').node());
+      .classed('confirm-dialog', true)
+      .node();
+
+    const root = createRoot(container);
+    root.render(dialog);
   });
 }

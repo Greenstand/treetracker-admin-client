@@ -2,7 +2,7 @@
  * A utility just like window.alert()
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -45,11 +45,16 @@ export default function alert(title, message) {
         </Dialog>
       </ThemeProvider>
     );
-    d3.select('body')
+
+    const container = d3
+      .select('body')
       .append('div')
       .classed('confirm-container', true)
       .append('div')
-      .classed('confirm-dialog', true);
-    ReactDOM.render(dialog, d3.select('.confirm-dialog').node());
+      .classed('confirm-dialog', true)
+      .node();
+
+    const root = createRoot(container);
+    root.render(dialog);
   });
 }
