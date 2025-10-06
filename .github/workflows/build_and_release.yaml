@@ -117,11 +117,15 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          persist-credentials: true
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
@@ -131,7 +135,6 @@ jobs:
       - run: semantic-release
         if: ${{ !env.ACT }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy to dev CDN
