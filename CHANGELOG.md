@@ -1,3 +1,11 @@
+# [1.108.0-hotfix-v1-107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.1...v1.108.0-hotfix-v1-107.2) (2025-10-06)
+
+
+### Features
+
+* **home:** prefetch species on Home mount to improve login performance ([61b38b3](https://github.com/Greenstand/treetracker-admin-client/commit/61b38b370394e16e407982abf7957173223bb54c))
+* integrate TanStack Query for species list caching ([c5ba541](https://github.com/Greenstand/treetracker-admin-client/commit/c5ba5416297dec36ab030f77d85b6aaedcdcc456))
+
 # [1.108.0-hotfix-v1-107.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.19-hotfix-v1-107.2...v1.108.0-hotfix-v1-107.1) (2023-09-08)
 
 
