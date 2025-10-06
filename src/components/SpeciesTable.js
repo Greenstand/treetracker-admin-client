@@ -347,7 +347,6 @@ const SpeciesTable = (props) => {
         editSpecies={
           isAdding ? speciesContext.createSpecies : speciesContext.editSpecies
         }
-        loadSpeciesList={speciesContext.loadSpeciesList}
         data={sortedSpeciesList}
       />
       <DeleteDialog
@@ -356,14 +355,12 @@ const SpeciesTable = (props) => {
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         deleteSpecies={speciesContext.deleteSpecies}
-        loadSpeciesList={speciesContext.loadSpeciesList}
       />
       <CombineModal
         show={showCombine}
         setShow={setShowCombine}
         data={sortedSpeciesList}
         combineSpecies={speciesContext.combineSpecies}
-        loadSpeciesList={speciesContext.loadSpeciesList}
         selected={selected}
         styles={{ ...classes }}
       />
@@ -377,7 +374,6 @@ const EditModal = ({
   speciesEdit,
   setSpeciesEdit,
   styles,
-  loadSpeciesList,
   editSpecies,
   data,
 }) => {
@@ -418,7 +414,6 @@ const EditModal = ({
         name: speciesEdit.name || '',
         desc: speciesEdit.desc || '', // need default value for desc to prevent error
       });
-      loadSpeciesList(true);
       setSpeciesEdit(undefined);
     }
   };
@@ -478,7 +473,6 @@ const CombineModal = ({
   selected,
   data,
   combineSpecies,
-  loadSpeciesList,
   styles,
 }) => {
   const [name, setName] = useState('');
@@ -499,7 +493,6 @@ const CombineModal = ({
 
     setShow(false);
     await combineSpecies({ combine: selected, name, desc });
-    loadSpeciesList(true);
     setName('');
     setDesc('');
   };
@@ -573,11 +566,9 @@ const DeleteDialog = ({
   openDelete,
   setOpenDelete,
   deleteSpecies,
-  loadSpeciesList,
 }) => {
   const handleDelete = async () => {
     await deleteSpecies({ id: speciesEdit.id });
-    loadSpeciesList(true);
     setOpenDelete(false);
     setSpeciesEdit(undefined);
   };
