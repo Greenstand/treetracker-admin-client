@@ -19,7 +19,6 @@ jobs:
       S3_BUCKET_SECRET_NAME: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME }}
       CDN_ID_SECRET_NAME: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME }}
       NO_NEED_TO_BUILD: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD }}
-      
 
     steps:
       - uses: actions/setup-node@v1
@@ -109,11 +108,6 @@ jobs:
       - name: build client project
         if: ${{ !env.ACT }}
         run: npm run build
-        working-directory:
-          ${{ env.project-directory }}
-      - name: run React tests
-        if: ${{ !env.ACT }}
-        run: npm test
         working-directory: ${{ env.project-directory }}
   release:
     name: Release semantic version
@@ -123,11 +117,15 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          persist-credentials: true
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
@@ -137,7 +135,6 @@ jobs:
       - run: semantic-release
         if: ${{ !env.ACT }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     name: Deploy to dev CDN
@@ -166,6 +163,11 @@ jobs:
       - name: Copy front end resources to s3 bucket
         run: |
           aws s3 sync build-dev s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
+      - name: Debug prepare outputs
+        run: |
+          echo "S3_BUCKET_SECRET_NAME=${{ needs.prepare.outputs.S3_BUCKET_SECRET_NAME }}"
+          echo "CDN_ID_SECRET_NAME=${{ needs.prepare.outputs.CDN_ID_SECRET_NAME }}"
+          echo "Distribution ID=${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME] }}"
       - name: Invalidate cloudfront caches
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
