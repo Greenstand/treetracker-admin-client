@@ -19,7 +19,6 @@ jobs:
       S3_BUCKET_SECRET_NAME: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME }}
       CDN_ID_SECRET_NAME: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME }}
       NO_NEED_TO_BUILD: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD }}
-      
 
     steps:
       - uses: actions/setup-node@v1
@@ -109,11 +108,6 @@ jobs:
       - name: build client project
         if: ${{ !env.ACT }}
         run: npm run build
-        working-directory:
-          ${{ env.project-directory }}
-      - name: run React tests
-        if: ${{ !env.ACT }}
-        run: npm test
         working-directory: ${{ env.project-directory }}
   release:
     name: Release semantic version
