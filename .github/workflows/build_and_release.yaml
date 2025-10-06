@@ -163,6 +163,11 @@ jobs:
       - name: Copy front end resources to s3 bucket
         run: |
           aws s3 sync build-dev s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
+      - name: Debug prepare outputs
+        run: |
+          echo "S3_BUCKET_SECRET_NAME=${{ needs.prepare.outputs.S3_BUCKET_SECRET_NAME }}"
+          echo "CDN_ID_SECRET_NAME=${{ needs.prepare.outputs.CDN_ID_SECRET_NAME }}"
+          echo "Distribution ID=${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME] }}"
       - name: Invalidate cloudfront caches
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
