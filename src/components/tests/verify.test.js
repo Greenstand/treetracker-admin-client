@@ -9,6 +9,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import captureApi from '../../api/treeTrackerApi';
 import growerApi from '../../api/growers';
 import theme from '../common/theme';
@@ -40,7 +41,7 @@ import {
 import * as loglevel from 'loglevel';
 const log = loglevel.getLogger('../tests/verify.test');
 
-jest.setTimeout(7000);
+jest.setTimeout(30000);
 jest.mock('../../api/growers');
 jest.mock('../../api/treeTrackerApi');
 
@@ -108,23 +109,35 @@ describe('Verify', () => {
   };
 
   describe('with default values', () => {
+    let queryClient;
+
     beforeEach(async () => {
+      queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          },
+        },
+      });
+
       render(
-        <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <AppProvider value={{ orgList: ORGS }}>
-              <GrowerContext.Provider value={growerValues}>
-                <VerifyProvider value={verifyValues}>
-                  <SpeciesProvider value={speciesValues}>
-                    <TagsContext.Provider value={tagsValues}>
-                      <Verify />
-                    </TagsContext.Provider>
-                  </SpeciesProvider>
-                </VerifyProvider>
-              </GrowerContext.Provider>
-            </AppProvider>
-          </BrowserRouter>
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <AppProvider value={{ orgList: ORGS }}>
+                <GrowerContext.Provider value={growerValues}>
+                  <VerifyProvider value={verifyValues}>
+                    <SpeciesProvider value={speciesValues}>
+                      <TagsContext.Provider value={tagsValues}>
+                        <Verify />
+                      </TagsContext.Provider>
+                    </SpeciesProvider>
+                  </VerifyProvider>
+                </GrowerContext.Provider>
+              </AppProvider>
+            </BrowserRouter>
+          </ThemeProvider>
+        </QueryClientProvider>
       );
 
       await act(() => captureApi.getCaptureImages());

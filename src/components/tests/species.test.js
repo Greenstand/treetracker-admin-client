@@ -9,9 +9,10 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { session, hasPermission, POLICIES } from '../models/auth';
 import { AppProvider } from '../../context/AppContext';
-import { SpeciesProvider } from '../../context/SpeciesContext';
+import { SpeciesContext } from '../../context/SpeciesContext';
 import SpeciesView from '../../views/SpeciesView';
 import SpeciesTable from '../SpeciesTable';
 import Species from '../Species';
@@ -50,30 +51,42 @@ describe('species management', () => {
       speciesList: SPECIES,
       speciesInput: '',
       speciesDesc: '',
-      setSpeciesInput: () => {},
-      loadSpeciesList: () => {},
-      onChange: () => {},
-      isNewSpecies: () => {},
-      createSpecies: () => {},
-      getSpeciesId: () => {},
-      editSpecies: () => {},
-      deleteSpecies: () => {},
-      combineSpecies: () => {},
+      setSpeciesInput: jest.fn(),
+      loadSpeciesList: jest.fn(),
+      onChange: jest.fn(),
+      isNewSpecies: jest.fn(),
+      createSpecies: jest.fn(),
+      getSpeciesId: jest.fn(),
+      editSpecies: jest.fn(),
+      deleteSpecies: jest.fn(),
+      combineSpecies: jest.fn(),
     };
   });
 
   afterEach(cleanup);
 
   describe('<SpeciesView /> renders page', () => {
+    let queryClient;
+
     beforeEach(async () => {
+      queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          },
+        },
+      });
+
       render(
-        <BrowserRouter>
-          <AppProvider>
-            <SpeciesProvider value={speciesValues}>
-              <SpeciesView />
-            </SpeciesProvider>
-          </AppProvider>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AppProvider>
+              <SpeciesContext.Provider value={speciesValues}>
+                <SpeciesView />
+              </SpeciesContext.Provider>
+            </AppProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
       );
       await act(() => api.getSpecies());
     });
