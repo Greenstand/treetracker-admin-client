@@ -159,9 +159,17 @@ jobs:
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
         with:
+          # Prefer assuming an IAM role via GitHub OIDC if `AWS_ROLE_ARN` is set
+          # (recommended). If not provided, fall back to static credentials
+          # stored in repository secrets.
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-access-key-id: ${{ secrets.AWS_KEY_ID_DADIOR }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_DADIOR }}
           aws-region: us-east-1
+      - name: Verify AWS identity
+        run: |
+          echo "--- AWS caller identity (should not contain secrets) ---"
+          aws sts get-caller-identity || true
       - name: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
       - name: Copy front end resources to s3 bucket
