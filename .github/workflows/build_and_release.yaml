@@ -135,7 +135,11 @@ jobs:
       - run: semantic-release
         if: ${{ !env.ACT }}
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # Use the Actions-provided GITHUB_TOKEN to authenticate with GitHub.
+          # Map it to GH_TOKEN for semantic-release compatibility. If you prefer
+          # using a personal access token, set the repository secret GH_TOKEN.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
