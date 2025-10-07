@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
       - name: npm clean install
-        run: npm ci --legacy-peer-deps
+        run: npm ci --legacy-peer-deps --ignore-engines
         working-directory: ${{ env.project-directory }}
       - name: run ESLint
         run: npm run lint
