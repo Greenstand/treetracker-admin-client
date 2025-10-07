@@ -144,10 +144,17 @@ jobs:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
     needs: [release, prepare]
+    # Only run deploy when repository and event match AND credentials are available
+    # Either provide an OIDC role ARN in secrets.AWS_ROLE_ARN or both static
+    # AWS access key secrets must be present.
     if: |
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
-      github.repository == ${{ github.env.repository }}
+      github.repository == ${{ github.env.repository }} &&
+      (
+        secrets.AWS_ROLE_ARN != '' ||
+        (secrets.AWS_KEY_ID_DADIOR != '' && secrets.AWS_SECRET_DADIOR != '')
+      )
     steps:
       - uses: actions/checkout@v4
       - name: Download bundled client resources
