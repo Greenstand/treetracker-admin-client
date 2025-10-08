@@ -1,3 +1,13 @@
+# [1.108.0-hotfix-v1-107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.2...v1.108.0-hotfix-v1-107.3) (2025-10-08)
+
+
+### Bug Fixes
+
+* node engine version ([287441c](https://github.com/Greenstand/treetracker-admin-client/commit/287441c7957c763d891d0f7339edcc6e16d1977d))
+* test deploy ([8696593](https://github.com/Greenstand/treetracker-admin-client/commit/8696593f008c9f090d1095239ee415c8239d2d4f))
+* upgrade 16 to 18 node ([0292cc5](https://github.com/Greenstand/treetracker-admin-client/commit/0292cc5e76f3da597b329b16bbd10ade7cabba72))
+* upgrade to 18 for pr github action ([83008b1](https://github.com/Greenstand/treetracker-admin-client/commit/83008b1b27b0d7a63ff8df52ee2dd40ba663a328))
+
 # [1.108.0-hotfix-v1-107.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.1...v1.108.0-hotfix-v1-107.2) (2025-10-06)
 
 
