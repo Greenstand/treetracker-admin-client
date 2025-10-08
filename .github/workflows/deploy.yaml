@@ -19,8 +19,7 @@ on:
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
-  node-version: '16.10'
-
+  node-version: '18'
 
 jobs:
   prepare:
