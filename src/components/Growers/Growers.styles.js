@@ -8,6 +8,13 @@ const useStyle = makeStyles((theme) => ({
     cursor: 'pointer',
     margin: '0.5rem',
   },
+  errorBox: {
+    width: '100%',
+    height: '70vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   cardContent: {
     padding: 0,
     height: `${GROWER_IMAGE_SIZE}px`,

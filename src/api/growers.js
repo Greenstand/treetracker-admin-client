@@ -32,6 +32,9 @@ export default {
         offset: skip,
       };
 
+      console.log('filter - ', filter);
+      console.log(makeQueryString(growerFilter));
+
       const query = `${QUERY_API}/v2/growers${
         growerFilter ? `?${makeQueryString(growerFilter)}` : ''
       }`;
