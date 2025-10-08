@@ -1,3 +1,10 @@
+## [1.136.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.136.0...v1.136.1) (2025-10-08)
+
+
+### Bug Fixes
+
+* use master for hotfix ([39d6263](https://github.com/Greenstand/treetracker-admin-client/commit/39d62639faf614ce2066a5e7fcb1c91f6b750bbb))
+
 # [1.136.0](https://github.com/Greenstand/treetracker-admin-client/compare/v1.135.0...v1.136.0) (2025-10-01)
 
 
