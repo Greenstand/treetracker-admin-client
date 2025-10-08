@@ -1,3 +1,10 @@
+# [1.108.0-hotfix-v1-107.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.3...v1.108.0-hotfix-v1-107.4) (2025-10-08)
+
+
+### Bug Fixes
+
+* try github token ([cf4fe4e](https://github.com/Greenstand/treetracker-admin-client/commit/cf4fe4e4054cea1482b0902c88c40fb8f32f81d3))
+
 # [1.108.0-hotfix-v1-107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.2...v1.108.0-hotfix-v1-107.3) (2025-10-08)
 
 
