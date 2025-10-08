@@ -7,6 +7,7 @@ This is the React web frontend of the Admin Panel, built with [create-react-app]
 The legacy Admin Panel API is managed separately under [Greenstand/treetracker-admin-api](https://github.com/Greenstand/treetracker-admin-api). The API specification is (partially) documented in OpenAPI format: [treetracker-admin.v1.yaml](https://github.com/Greenstand/treetracker-admin-api/blob/master/docs/api/spec/treetracker-admin.v1.yaml)
 
 The Admin Panel project is in the process of migrating away from a single, dedicated API to use the latest Greenstand microservices, including:
+
 - [Greenstand/treetracker-api](https://github.com/Greenstand/treetracker-api)
 - [Greenstand/treetracker-earnings-api](https://github.com/Greenstand/treetracker-earnings-api)
 - [Greenstand/treetracker-field-data](https://github.com/Greenstand/treetracker-field-data)
@@ -100,7 +101,7 @@ Valid login credentials for the Admin Panel within the development environment c
 ## Getting an Issue Assigned
 
 1. Look through the [open issues](https://github.com/Greenstand/treetracker-admin-client/issues) for one that looks interesting.
-Use labels to look for [good first issues](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), or to filter by size: you could start [small](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+small%22), or get your teeth into something more substantial ([medium](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+medium%22) or [large](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+large%22)).
+   Use labels to look for [good first issues](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), or to filter by size: you could start [small](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+small%22), or get your teeth into something more substantial ([medium](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+medium%22) or [large](https://github.com/Greenstand/treetracker-admin-client/issues?q=is%3Aissue+is%3Aopen+label%3A%22size%3A+large%22)).
 2. If you're not sure what to work on, ask in the #admin_panel_chat channel on Slack and we'll find a good issue for you.
 3. Add a comment to the selected issue to say you'd like to work on it, and ask for any clarification you need. Some of the info you need to solve the problem may be missing from the description of the issue.
 4. One of the Greenstand leads will then assign it to you and try to help with any questions.
@@ -405,5 +406,6 @@ Useful scripts are contained in /dev/scripts. Their uses are described here. Scr
 
 See [Contributing to the Cause](https://github.com/Greenstand/Development-Overview#contributing-to-the-cause)
 
+.
 .
 .
