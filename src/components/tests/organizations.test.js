@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { act, render, screen, within, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -40,8 +40,9 @@ describe('CaptureFilter organizations', () => {
 
       it('renders without crashing', () => {
         const div = document.createElement('div');
-        ReactDOM.render(component, div);
-        ReactDOM.unmountComponentAtNode(div);
+        const root = createRoot(div);
+        root.render(component);
+        root.unmount();
       });
 
       it('renders text "Verification Status" ', () => {

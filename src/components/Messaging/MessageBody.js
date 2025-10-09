@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { format } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import {

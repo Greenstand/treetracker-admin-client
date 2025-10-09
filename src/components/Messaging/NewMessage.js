@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { MessagingContext } from 'context/MessagingContext';
 import {
   FormControl,
