@@ -1,3 +1,12 @@
+# [1.108.0-hotfix-v1-107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix-v1-107.2...v1.108.0-hotfix-v1-107.3) (2025-10-09)
+
+
+### Bug Fixes
+
+* **tests:** add QueryClientProvider and update to React 18 createRoot API ([ac97f5a](https://github.com/Greenstand/treetracker-admin-client/commit/ac97f5a8ef82f4c5d0c04629beb1976c532e93ee))
+* **tests:** update uuid imports from uuid/v4 to { v4 as uuid } ([c812809](https://github.com/Greenstand/treetracker-admin-client/commit/c8128095aac5c102f7b3f844bf259f05d9d81829))
+* use hotfix branch for resolve parameters in cicd [skip ci] ([5faa762](https://github.com/Greenstand/treetracker-admin-client/commit/5faa762ee4fa722420db77a81afaeb75a04a19d0))
+
 # 1.0.0-hotfix-v1-107.1 (2025-10-08)
 
 
