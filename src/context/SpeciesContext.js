@@ -3,7 +3,6 @@ import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-const log = loglevel.getLogger('../context/SpeciesContext');
 
 export const SpeciesContext = createContext({
   isLoading: false,
