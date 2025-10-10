@@ -8,7 +8,7 @@ on:
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
-  node-version: '16.10'
+  node-version: '18'
 
 jobs:
   prepare:
@@ -19,13 +19,12 @@ jobs:
       S3_BUCKET_SECRET_NAME: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME }}
       CDN_ID_SECRET_NAME: ${{ steps.resolver.outputs.CDN_ID_SECRET_NAME }}
       NO_NEED_TO_BUILD: ${{ steps.resolver.outputs.NO_NEED_TO_BUILD }}
-      
 
     steps:
       - uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: |
           echo "::debug:: begin preparing...";
           echo "::debug:: branch to rlease: $GITHUB_REF_NAME"
@@ -82,7 +81,7 @@ jobs:
     if: |
       !contains(github.event.head_commit.message, 'skip-ci') && !contains(needs.prepare.outputs.NO_NEED_TO_BUILD, 'true')
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -100,7 +99,7 @@ jobs:
         #if: ${{ !env.ACT }}
         run: npm run build:dev
         working-directory: ${{ env.project-directory }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: github.event_name == 'push' && github.repository == ${{ env.repository }}
         #if: ${{ !env.ACT }}
         with:
@@ -109,8 +108,7 @@ jobs:
       - name: build client project
         if: ${{ !env.ACT }}
         run: npm run build
-        working-directory:
-          ${{ env.project-directory }}
+        working-directory: ${{ env.project-directory }}
       - name: run React tests
         if: ${{ !env.ACT }}
         run: npm test
@@ -123,22 +121,28 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
+    permissions: 
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
+
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          persist-credentials: true
+
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 18
-      # install dependencies and run semantic-release
+          node-version: ${{ env.node-version }}
+
       - run: npm i -g semantic-release @semantic-release/{git,exec,changelog}
-      - run: semantic-release
+      - name: Run semantic-release
+        run: semantic-release
         if: ${{ !env.ACT }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
@@ -148,10 +152,10 @@ jobs:
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Download bundled client resources
         if: ${{ !env.ACT }}
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: client-bundle
           path: build-dev
