@@ -1,3 +1,10 @@
+## [1.107.5-hotfix.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.4...v1.107.5-hotfix.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* upgrade to node 18 ([d4b4b9b](https://github.com/Greenstand/treetracker-admin-client/commit/d4b4b9b0da874768f9133d7c93d6b2888a7ade1b))
+
 ## [1.107.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.2...v1.107.3) (2022-09-28)
 
 
