@@ -1,15 +1,16 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Admin Panel Client CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   pull_request:
     branches:
-      - master
+      - '**'
 
 env:
   project-directory: ./
+  node-version: '18'
 
 jobs:
   client:
@@ -18,11 +19,11 @@ jobs:
     if: |
       !contains(github.event.head_commit.message, 'skip-ci')
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 16.14.x
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '16.14.x'
+          node-version: ${{ env.node-version }}
       - name: npm clean install
         run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}
@@ -33,7 +34,7 @@ jobs:
         if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
         run: npm run build:dev
         working-directory: ${{ env.project-directory }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: github.event_name == 'push' && github.repository == 'Greenstand/treetracker-admin-client'
         with:
           name: client-bundle
