@@ -19,6 +19,7 @@ on:
 env:
   project-directory: ./
   repository: 'Greenstand/treetracker-admin-client'
+  node-version: '18'
 
 jobs:
   prepare:
@@ -33,6 +34,8 @@ jobs:
         with:
           node-version: '18.x'
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version }}
       - run: |
           echo "::debug:: begin preparing...";
           echo "::debug:: version to deploy: $VERSION_TO_DEPLOY";
@@ -41,7 +44,6 @@ jobs:
           node <<EOF >> $GITHUB_OUTPUT
             const s3BucketSecretNames = {
               "master-dev": "DEV_CDN_S3_BUCKET",
-              "master-test": "TEST_CDN_S3_BUCKET",
               "master-prod": "PROD_CDN_S3_BUCKET",
               "freetown-dev": "DEV_CDN_S3_BUCKET_FREETOWN",
               "freetown-prod": "PROD_CDN_S3_BUCKET_FREETOWN",
@@ -52,7 +54,6 @@ jobs:
             }
             const cdnIdSecretNames = {
               "master-dev": "DEV_CDN_DISTRIBUTION_ID",
-              "master-test": "TEST_CDN_DISTRIBUTION_ID",
               "master-prod": "PROD_CDN_DISTRIBUTION_ID",
               "freetown-dev": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
               "freetown-prod": 'PROD_CDN_DISTRIBUTION_ID_FREETOWN"',
@@ -108,25 +109,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.version }}
-      - name: Use Node.js 18.x
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
+          node-version: ${{ env.node-version }}
       - name: npm clean install
         run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}
-      #if input 'env' is 'prod' then run 'npm run build'
-      - name: build for prod
-        if: "contains(github.event.inputs.env, 'prod')"
-        run: npm run build
-        working-directory: ${{ env.project-directory }}
-      - name: build for test
-        if: "contains(github.event.inputs.env, 'test')"
-        run: npm run build:test
-        working-directory: ${{ env.project-directory }}
-      - name: build for dev
-        if: "contains(github.event.inputs.env, 'dev')"
-        run: npm run build:dev
+      # define the endpoints for PROD in github secrets
+      - name: build frontend project
+        run: npm run build:staging
         working-directory: ${{ env.project-directory }}
       - uses: actions/upload-artifact@v4
         with:
