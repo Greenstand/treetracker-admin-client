@@ -1,3 +1,10 @@
+## [1.107.5-hotfix.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.5-hotfix.1...v1.107.5-hotfix.2) (2025-10-10)
+
+
+### Bug Fixes
+
+* change gh_token to github_token ([0294d40](https://github.com/Greenstand/treetracker-admin-client/commit/0294d40e3ebdec0ab740bfadea52590ac9eff65b))
+
 ## [1.107.5-hotfix.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.4...v1.107.5-hotfix.1) (2025-10-10)
 
 
