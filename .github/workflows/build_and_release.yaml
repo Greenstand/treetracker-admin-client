@@ -104,7 +104,7 @@ jobs:
         #if: ${{ !env.ACT }}
         with:
           name: client-bundle
-          path: build-dev
+          path: build
       - name: build client project
         if: ${{ !env.ACT }}
         run: npm run build
@@ -121,12 +121,11 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
-    permissions: 
+    permissions:
       contents: write
       issues: write
       pull-requests: write
     steps:
-
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
@@ -142,7 +141,7 @@ jobs:
         run: semantic-release
         if: ${{ !env.ACT }}
         env:
-           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
@@ -158,7 +157,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: client-bundle
-          path: build-dev
+          path: build
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -169,7 +168,7 @@ jobs:
         uses: unfor19/install-aws-cli-action@v1
       - name: Copy front end resources to s3 bucket
         run: |
-          aws s3 sync build-dev s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
+          aws s3 sync build s3://${{secrets[needs.prepare.outputs.S3_BUCKET_SECRET_NAME]}} --delete
       - name: Invalidate cloudfront caches
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets[needs.prepare.outputs.CDN_ID_SECRET_NAME]}} --paths "/*"
