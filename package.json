@@ -11,6 +11,7 @@
     "@material-ui/styles": "^4.3.0",
     "@material-ui/system": "^4.3.2",
     "@rematch/core": "*",
+    "@tanstack/react-query": "^5.85.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",

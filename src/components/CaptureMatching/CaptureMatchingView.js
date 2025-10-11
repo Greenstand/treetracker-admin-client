@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-
+import { getDistance } from 'geolib';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -30,7 +32,7 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import { documentTitle } from '../../common/variables';
 import { getDateTimeStringLocale } from 'common/locale';
-import { AppContext } from '../../context/AppContext';
+//import { AppContext } from '../../context/AppContext';
 import { MatchingToolContext } from '../../context/MatchingToolContext';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 import { GrowerProvider } from 'context/GrowerContext';
@@ -38,12 +40,32 @@ import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import OptimizedImage from 'components/OptimizedImage';
 import GrowerDetail from 'components/GrowerDetail';
 import Country from '../common/Country';
-import SelectOrg from '../common/SelectOrg';
+//import SelectOrg from '../common/SelectOrg';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import log from 'loglevel';
+
+const org_list = [
+  { name: 'FCCFED', id: 'e35ccdbe-3c49-447e-82b4-5fb6b172d50b' },
+  { name: 'FCCYEP', id: 'dbb3dc13-6a22-40df-bc97-c5da47b3a0f8' },
+  { name: 'FCCAFW', id: 'a0743c98-bcae-4a10-83c9-f476719dbb86' },
+  { name: 'FCCCAN', id: 'bc07b739-11f7-4d66-9df5-275746b34689' },
+  { name: 'FCCEIC', id: '997203d1-87d2-4183-9d6a-41317b263b1b' },
+  { name: 'FCCI4D', id: '58acdbcd-a3eb-4294-a908-5f1413c8ee62' },
+  { name: 'FCCGRS', id: '58e1e783-89f3-41e6-8c96-b9afd85769ae' },
+  { name: 'FCCLGF', id: '678f4871-24e4-46b6-8402-403e61683d33' },
+  { name: 'FCCYAR', id: '04f2a84f-d271-4f09-96cb-17fd81b3fdd8' },
+  { name: 'FCCEFA', id: 'bb57baa5-ece7-49f4-88f4-be76ca6a011c' },
+  { name: 'FCCNBN', id: '7b076045-7fd2-4a30-88a1-2be4766174a5' },
+  { name: 'FCCWYC', id: 'cf8e930c-14fa-4ced-87f7-5fb6185f8fb7' },
+  { name: 'FCCANS', id: '4e2a1160-9dd6-4de0-9d48-0efdc362b416' },
+  { name: 'FCCCAR', id: '031b2837-8c3e-499d-9556-eaa776858258' },
+  { name: 'FCCMDO', id: '759888de-1a07-4cfc-8e6e-cc9073a6e67e' },
+  { name: 'FCCWAA', id: 'e2124925-c973-463c-9b1c-c4c35a66e0a0' },
+  { name: 'FCCYAI', id: '4c12352e-b2d8-4adf-9a66-7ae528bcbe98' },
+];
 
 const useStyle = makeStyles((theme) => ({
   container: {
@@ -234,18 +256,78 @@ const useStyle = makeStyles((theme) => ({
   growerBox2: {},
 }));
 
+const filterTree = (trees, capture) => {
+  log.warn('capture:', capture);
+  log.warn('trees:', trees);
+  if (!capture) return [];
+  const capturedAt = new Date(capture.captured_at);
+  const filteredTrees = trees.filter((tree) => {
+    const firstCapture = tree.captures[0];
+    const firstCaptureAt = new Date(firstCapture.captured_at);
+    if (
+      capturedAt.getTime() - firstCaptureAt.getTime() >
+      1000 * 60 * 60 * 24 * 30
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  // order by distance and captutre date
+  return filteredTrees.sort((a, b) => {
+    const distance1 = getDistance(
+      {
+        latitude: Number(a.captures[0].latitude || a.captures[0].lat),
+        longitude: Number(a.captures[0].longitude || a.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    const distance2 = getDistance(
+      {
+        latitude: Number(b.captures[0].latitude || b.captures[0].lat),
+        longitude: Number(b.captures[0].longitude || b.captures[0].lon),
+      },
+      {
+        latitude: Number(capture.latitude || capture.lat),
+        longitude: Number(capture.longitude || capture.lon),
+      }
+    );
+    if (distance1 < distance2) {
+      return -1;
+    } else if (distance1 > distance2) {
+      return 1;
+    } else {
+      const firstCaptureAt1 = new Date(a.captures[0].captured_at);
+      const firstCaptureAt2 = new Date(b.captures[0].captured_at);
+      if (firstCaptureAt1 < firstCaptureAt2) {
+        return -1;
+      } else if (firstCaptureAt1 > firstCaptureAt2) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  });
+};
+
 // Set API as a variable
 const CAPTURE_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 
 function CaptureMatchingView() {
+  const now = new Date();
+  const aWeakAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7);
   const initialFilter = {
-    startDate: '',
-    endDate: '',
-    stakeholderUUID: null,
+    startDate: aWeakAgo.toISOString().split('T')[0],
+    endDate: now.toISOString().split('T')[0],
+    stakeholderUUID: 'ALL',
   };
 
   const classes = useStyle();
-  const appContext = useContext(AppContext);
+  //const appContext = useContext(AppContext);
   const matchingToolContext = useContext(MatchingToolContext);
   const [captureImage, setCaptureImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -254,10 +336,9 @@ function CaptureMatchingView() {
   const [noOfPages, setNoOfPages] = useState(null); //for pagination
   const [imgCount, setImgCount] = useState(null); //for header icon
   const [treesCount, setTreesCount] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [organizationId, setOrganizationId] = useState(null);
-  const [stakeholderUUID, setStakeholderUUID] = useState(null);
+  const [startDate, setStartDate] = useState(initialFilter.startDate);
+  const [endDate, setEndDate] = useState(initialFilter.endDate);
+  const [stakeholderUUID, setStakeholderUUID] = useState('ALL');
   const [filter, setFilter] = useState(initialFilter);
   const [growerAccount, setGrowerAccount] = useState({});
   const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
@@ -269,7 +350,7 @@ function CaptureMatchingView() {
     const data = await api.fetchCandidateTrees(captureId, abortController);
     if (data) {
       setCandidateImgData(data.matches);
-      setTreesCount(data.matches.length);
+      setTreesCount(filterTree(data.matches, captureImage).length);
       setLoading(false);
     }
   }
@@ -291,7 +372,9 @@ function CaptureMatchingView() {
     const filterParameters = {
       captured_at_start_date: filter.startDate,
       captured_at_end_date: filter.endDate,
-      'organization_ids[]': filter.stakeholderUUID && [filter.stakeholderUUID],
+      'organization_ids[]': filter.stakeholderUUID !== 'ALL' && [
+        filter.stakeholderUUID,
+      ],
     };
     // log.debug('fetchCaptures filterParameters', filterParameters);
     const data = await api.fetchCapturesToMatch(
@@ -301,9 +384,17 @@ function CaptureMatchingView() {
     );
     // log.debug('fetchCaptures data', currentPage, data);
     if (data?.captures?.length > 0) {
-      setCaptureImage(data.captures[0]);
-      setNoOfPages(data.count);
-      setImgCount(data.count);
+      const cleanup = (capture) => {
+        if (!capture) return capture;
+        return {
+          ...capture,
+          latitude: capture.lat || 0,
+          longitude: capture.lon || 0,
+        };
+      };
+      setCaptureImage(cleanup(data.captures[0]));
+      setNoOfPages(data.query.count);
+      setImgCount(data.query.count);
     } else {
       setLoading(false);
       setNoOfPages(0);
@@ -319,6 +410,7 @@ function CaptureMatchingView() {
         const data = await api.getGrowerAccountById(
           captureImage.grower_account_id
         );
+        log.warn('grower:', data);
         setGrowerAccount(data);
       } else {
         log.warn('No grower account id found');
@@ -486,18 +578,16 @@ function CaptureMatchingView() {
                   }
                 />
               )}
-              {filter.stakeholderUUID && (
+              {filter.stakeholderUUID !== 'ALL' && (
                 <Chip
-                  label={appContext.orgList.reduce((a, c) => {
-                    return c.stakeholder_uuid === filter.stakeholderUUID
-                      ? c.name
-                      : a;
+                  label={org_list.reduce((a, c) => {
+                    return c.id === filter.stakeholderUUID ? c.name : a;
                   }, '')}
                   className={classes.currentHeaderChip}
                   onDelete={() =>
                     setFilter({
                       ...filter,
-                      stakeholderUUID: undefined,
+                      stakeholderUUID: 'ALL',
                     })
                   }
                 />
@@ -557,7 +647,7 @@ function CaptureMatchingView() {
                 <Box className={classes.captureImageBox3}>
                   <AccessTimeIcon />
                   <Typography variant="body1">
-                    {getDateTimeStringLocale(captureImage.created_at)}
+                    {getDateTimeStringLocale(captureImage.captured_at)}
                   </Typography>
                 </Box>
                 <Box className={classes.captureImageBox3}>
@@ -596,11 +686,8 @@ function CaptureMatchingView() {
                   </Typography>
                   <Typography variant="body1">
                     Joined at{' '}
-                    {format(
-                      growerAccount.first_registration_at ||
-                        growerAccount.created_at,
-                      'MM/dd/yyyy'
-                    )}
+                    {growerAccount.first_registration_at ||
+                      growerAccount.created_at}
                   </Typography>
                 </Box>
               </Box>
@@ -673,14 +760,14 @@ function CaptureMatchingView() {
             {loading ? null : (
               <CandidateImages
                 capture={captureImage}
-                candidateImgData={candidateImgData}
+                candidateImgData={filterTree(candidateImgData, captureImage)}
                 sameTreeHandler={sameTreeHandler}
               />
             )}
             {!loading &&
               captureImage &&
               candidateImgData &&
-              candidateImgData.length === 0 && (
+              filterTree(candidateImgData, captureImage).length === 0 && (
                 //captureImage && treesCount === 0 && (
                 <Box className={classes.noCandidateBox}>
                   <Typography variant="h5">
@@ -763,7 +850,7 @@ function CaptureMatchingView() {
             variant="outlined"
             className={classes.customTableFilterSelectFormControl}
           >
-            <SelectOrg
+            {/* <SelectOrg
               orgId={organizationId || 'ORGANIZATION_NOT_SET'}
               defaultOrgs={[
                 {
@@ -777,7 +864,23 @@ function CaptureMatchingView() {
                 setOrganizationId(org.id);
                 setStakeholderUUID(org.stakeholder_uuid);
               }}
-            />
+            /> */}
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={stakeholderUUID}
+              onChange={(e) => {
+                log.warn('e: ', e);
+                setStakeholderUUID(e.target.value);
+              }}
+            >
+              <MenuItem value={'ALL'}>ALL</MenuItem>
+              {org_list.map((o) => (
+                <MenuItem key={o.id} value={o.id}>
+                  {o.name}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
 
           <Divider
@@ -823,7 +926,7 @@ function CaptureMatchingView() {
       <GrowerProvider>
         <GrowerDetail
           open={isGrowerDetailsOpen}
-          growerId={growerAccount.growerId}
+          growerId={growerAccount.reference_id}
           onClose={() => setGrowerDetailsOpen(false)}
         />
       </GrowerProvider>

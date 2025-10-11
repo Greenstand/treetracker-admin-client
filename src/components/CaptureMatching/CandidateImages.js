@@ -16,9 +16,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
-import { getDateStringLocale } from 'common/locale';
+// import { getDateStringLocale } from 'common/locale';
 import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
+import CaptureDetailDialog from '../../components/CaptureDetailDialog';
+import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
 
 const useStyles = makeStyles({
   containerBox: {
@@ -136,7 +138,7 @@ function DistanceTo({ lat1, lon1, lat2, lon2 }) {
 
 function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const classes = useStyles();
-
+  const [isDetailsPaneOpen, setIsDetailsPaneOpen] = useState(false);
   const [showBox, setShowBox] = useState([]);
 
   useEffect(() => {
@@ -154,159 +156,179 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   };
 
   return (
-    <Box className={classes.imageScroll}>
-      {candidateImgData &&
-        candidateImgData.map((tree, i) => {
-          return (
-            <Paper
-              elevation={4}
-              className={classes.containerBox}
-              key={`${i}-${tree.id}`}
-            >
-              <Box className={classes.headerBox}>
-                <Grid
-                  container
-                  className={classes.box2}
-                  onClick={() => {
-                    showBox.includes(tree.id)
-                      ? hideImgBox(tree.id)
-                      : showImgBox(tree.id);
+    <>
+      <Box className={classes.imageScroll}>
+        {candidateImgData &&
+          candidateImgData.map((tree, i) => {
+            return (
+              <Paper
+                elevation={4}
+                className={classes.containerBox}
+                key={`${i}-${tree.id}`}
+              >
+                <Box className={classes.headerBox}>
+                  <Grid
+                    container
+                    className={classes.box2}
+                    onClick={() => {
+                      showBox.includes(tree.id)
+                        ? hideImgBox(tree.id)
+                        : showImgBox(tree.id);
+                    }}
+                  >
+                    <Box className={classes.box3}>
+                      <Paper elevation={0} className={classes.box1}>
+                        {i + 1}
+                      </Paper>
+                      <Tooltip title={tree.id} interactive>
+                        <Typography variant="h5">
+                          Tree {(tree.id + '').substring(0, 10) + '...'}
+                        </Typography>
+                      </Tooltip>
+                    </Box>
+                    <Box>
+                      <IconButton
+                        id={`ExpandIcon_${tree.id}`}
+                        className={
+                          showBox.includes(tree.id)
+                            ? classes.showLess
+                            : classes.expandMore
+                        }
+                        onClick={(event) => {
+                          showBox.includes(tree.id)
+                            ? hideImgBox(tree.id)
+                            : showImgBox(tree.id);
+                          event.stopPropagation();
+                        }}
+                      >
+                        <ExpandMoreIcon
+                          fontSize="large"
+                          color="primary"
+                          key={`expandIcon-${i}`}
+                        />
+                      </IconButton>
+                    </Box>
+                  </Grid>
+                </Box>
+
+                <Box
+                  className={classes.candidateTreeContent}
+                  style={{
+                    maxHeight: showBox.includes(tree.id) ? '420px' : '0px',
                   }}
                 >
-                  <Box className={classes.box3}>
-                    <Paper elevation={0} className={classes.box1}>
-                      {i + 1}
-                    </Paper>
-                    <Tooltip title={tree.id}>
-                      <Typography variant="h5">
-                        Tree {(tree.id + '').substring(0, 10) + '...'}
-                      </Typography>
-                    </Tooltip>
-                  </Box>
-                  <Box>
-                    <IconButton
-                      id={`ExpandIcon_${tree.id}`}
-                      className={
-                        showBox.includes(tree.id)
-                          ? classes.showLess
-                          : classes.expandMore
-                      }
-                      onClick={(event) => {
-                        showBox.includes(tree.id)
-                          ? hideImgBox(tree.id)
-                          : showImgBox(tree.id);
-                        event.stopPropagation();
-                      }}
-                    >
-                      <ExpandMoreIcon
-                        fontSize="large"
-                        color="primary"
-                        key={`expandIcon-${i}`}
-                      />
-                    </IconButton>
-                  </Box>
-                </Grid>
-              </Box>
-
-              <Box
-                className={classes.candidateTreeContent}
-                style={{
-                  maxHeight: showBox.includes(tree.id) ? '420px' : '0px',
-                }}
-              >
-                <Box className={classes.gridList} cols={3}>
-                  {(tree.captures.length ? tree.captures : [tree]).map(
-                    (candidateCapture) => {
-                      return (
-                        <Box
-                          key={`${tree.id}_${candidateCapture.id}`}
-                          className={classes.candidateCaptureContainer}
-                        >
-                          <OptimizedImage
-                            src={candidateCapture.image_url}
-                            alt={`Candidate capture ${candidateCapture.id}`}
-                            objectFit="cover"
-                            width={250}
-                            style={{
-                              width: '250px',
-                              height: '100%',
+                  <Box className={classes.gridList} cols={3}>
+                    {(tree.captures.length ? tree.captures : [tree]).map(
+                      (candidateCapture) => {
+                        return (
+                          <Box
+                            key={`${tree.id}_${candidateCapture.id}`}
+                            className={classes.candidateCaptureContainer}
+                            onClick={() => {
+                              console.log('xxxxxx', candidateCapture);
+                              setIsDetailsPaneOpen(
+                                candidateCapture.reference_id
+                              );
                             }}
-                            alertHeight="300px"
-                            alertTextSize=".9rem"
-                            alertTitleSize="1.2rem"
-                          />
-                          <Box className={classes.captureInfo}>
-                            <Box className={classes.captureInfoDetail}>
-                              <AccessTimeIcon />
-                              <Typography variant="body1">
-                                {getDateStringLocale(
-                                  candidateCapture.created_at
-                                )}
-                              </Typography>
-                            </Box>
-                            <Box className={classes.captureInfoDetail}>
-                              <LocationOnOutlinedIcon
-                                style={{
-                                  cursor: 'pointer',
-                                }}
-                                onClick={() => {
-                                  window.open(
-                                    `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
-                                  );
-                                }}
-                              />
-                              <Typography variant="body1">
-                                {capture?.latitude && capture?.longitude && (
-                                  <DistanceTo
-                                    lat1={capture.latitude}
-                                    lon1={capture.longitude}
-                                    lat2={
-                                      candidateCapture.latitude ||
-                                      candidateCapture.lat
-                                    }
-                                    lon2={
-                                      candidateCapture.longitude ||
-                                      candidateCapture.lon
-                                    }
-                                  />
-                                )}
-                              </Typography>
+                          >
+                            <OptimizedImage
+                              src={candidateCapture.image_url}
+                              alt={`Candidate capture ${candidateCapture.id}`}
+                              objectFit="cover"
+                              width={250}
+                              style={{
+                                width: 'auto',
+                                height: '350px',
+                              }}
+                              alertHeight="300px"
+                              alertTextSize=".9rem"
+                              alertTitleSize="1.2rem"
+                            />
+                            <Box className={classes.captureInfo}>
+                              <Box className={classes.captureInfoDetail}>
+                                <AccessTimeIcon />
+                                <Typography variant="body1">
+                                  {(candidateCapture.captured_at &&
+                                    candidateCapture.captured_at.slice(
+                                      0,
+                                      10
+                                    )) ||
+                                    'Unknown'}
+                                </Typography>
+                              </Box>
+                              <Box className={classes.captureInfoDetail}>
+                                <LocationOnOutlinedIcon
+                                  style={{
+                                    cursor: 'pointer',
+                                  }}
+                                  onClick={() => {
+                                    window.open(
+                                      `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
+                                    );
+                                  }}
+                                />
+                                <Typography variant="body1">
+                                  {capture?.latitude && capture?.longitude && (
+                                    <DistanceTo
+                                      lat1={capture.latitude}
+                                      lon1={capture.longitude}
+                                      lat2={
+                                        candidateCapture.latitude ||
+                                        candidateCapture.lat
+                                      }
+                                      lon2={
+                                        candidateCapture.longitude ||
+                                        candidateCapture.lon
+                                      }
+                                    />
+                                  )}
+                                </Typography>
+                              </Box>
                             </Box>
                           </Box>
-                        </Box>
-                      );
-                    }
-                  )}
-                </Box>
+                        );
+                      }
+                    )}
+                  </Box>
 
-                <Box className={classes.candidateImgBtn}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<CheckIcon />}
-                    onClick={() => sameTreeHandler(tree.id)}
-                    style={{ color: 'white' }}
-                    className={classes.button}
-                  >
-                    Confirm Match
-                  </Button>
-                  <Button
-                    id={tree.tree_id}
-                    variant="outlined"
-                    color="primary"
-                    startIcon={<ClearIcon />}
-                    onClick={() => hideImgBox(tree.id)}
-                    className={classes.button}
-                    value={i}
-                  >
-                    Dismiss
-                  </Button>
+                  <Box className={classes.candidateImgBtn}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CheckIcon />}
+                      onClick={() => sameTreeHandler(tree.id)}
+                      style={{ color: 'white' }}
+                      className={classes.button}
+                    >
+                      Confirm Match
+                    </Button>
+                    <Button
+                      id={tree.tree_id}
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<ClearIcon />}
+                      onClick={() => hideImgBox(tree.id)}
+                      className={classes.button}
+                      value={i}
+                    >
+                      Dismiss
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
-            </Paper>
-          );
-        })}
-    </Box>
+              </Paper>
+            );
+          })}
+      </Box>
+      {isDetailsPaneOpen !== false && (
+        <CaptureDetailProvider>
+          <CaptureDetailDialog
+            open={true}
+            captureId={isDetailsPaneOpen}
+            onClose={() => setIsDetailsPaneOpen(false)}
+          />
+        </CaptureDetailProvider>
+      )}
+    </>
   );
 }
 
