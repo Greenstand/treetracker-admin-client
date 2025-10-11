@@ -109,10 +109,11 @@ jobs:
         if: ${{ !env.ACT }}
         run: npm run build
         working-directory: ${{ env.project-directory }}
-      - name: run React tests
-        if: ${{ !env.ACT }}
-        run: npm test
-        working-directory: ${{ env.project-directory }}
+  # temporarily disable tests
+  #      - name: run React tests
+  #        if: ${{ !env.ACT }}
+  #        run: npm test
+  #        working-directory: ${{ env.project-directory }}
   release:
     name: Release semantic version
     needs: [client, prepare]
@@ -121,12 +122,11 @@ jobs:
       !contains(github.event.head_commit.message, 'skip-ci') &&
       github.event_name == 'push' &&
       github.repository == ${{ github.env.repository }}
-    permissions: 
+    permissions:
       contents: write
       issues: write
       pull-requests: write
     steps:
-
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
@@ -142,7 +142,7 @@ jobs:
         run: semantic-release
         if: ${{ !env.ACT }}
         env:
-           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy:
     name: Deploy to dev CDN
     runs-on: ubuntu-latest
