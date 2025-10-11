@@ -116,9 +116,17 @@ jobs:
       - name: npm clean install
         run: npm ci --legacy-peer-deps
         working-directory: ${{ env.project-directory }}
-      # define the endpoints for PROD in github secrets
-      - name: build frontend project
-        run: npm run build:staging
+      - name: build for prod
+        if: "contains(github.event.inputs.env, 'prod')"
+        run: npm run build
+        working-directory: ${{ env.project-directory }}
+      - name: build for test
+        if: "contains(github.event.inputs.env, 'test')"
+        run: npm run build:test
+        working-directory: ${{ env.project-directory }}
+      - name: build for dev
+        if: "contains(github.event.inputs.env, 'dev')"
+        run: npm run build:dev
         working-directory: ${{ env.project-directory }}
       - uses: actions/upload-artifact@v4
         with:
