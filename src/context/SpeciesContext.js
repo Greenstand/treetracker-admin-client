@@ -1,8 +1,6 @@
 import React, { useState, createContext } from 'react';
 import api from '../api/treeTrackerApi';
-import * as loglevel from 'loglevel';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-
 
 export const SpeciesContext = createContext({
   isLoading: false,
