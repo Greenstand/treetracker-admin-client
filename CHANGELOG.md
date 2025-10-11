@@ -1,3 +1,59 @@
+# [1.108.0-hotfix.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.108.0-hotfix.1) (2025-10-11)
+
+
+### Bug Fixes
+
+* add alpha settings [skip ci] ([2135285](https://github.com/Greenstand/treetracker-admin-client/commit/21352857b5d42a5ed810eb1213414ad07c56bc2d))
+* add react query ([3d1be0c](https://github.com/Greenstand/treetracker-admin-client/commit/3d1be0c6a991e80b7cb8c8e37cd9d6030d8e72a6))
+* allow pr checking for all branches ([2fcf534](https://github.com/Greenstand/treetracker-admin-client/commit/2fcf534836d7c9f05b07ec72047c6942dbe263d8))
+* broken eslint ([7b1ea03](https://github.com/Greenstand/treetracker-admin-client/commit/7b1ea03e8724ca973e6ddcee2047b428ce8f3b33))
+* build action by parsing release rc ([ea0d17d](https://github.com/Greenstand/treetracker-admin-client/commit/ea0d17d80098236fc188616f861abb43738d47d3))
+* change build-dev to build folder for output ([9f146b0](https://github.com/Greenstand/treetracker-admin-client/commit/9f146b08819bd621c9b4e3d1c81819d1aab123c8))
+* change gh_token to github_token ([0294d40](https://github.com/Greenstand/treetracker-admin-client/commit/0294d40e3ebdec0ab740bfadea52590ac9eff65b))
+* correct wayto allow for all branches ([8e372d5](https://github.com/Greenstand/treetracker-admin-client/commit/8e372d5ad0d1014ca480aca93699f09920f0b77e))
+* deploy read rc from hotfix branch[skip ci] ([56a3d01](https://github.com/Greenstand/treetracker-admin-client/commit/56a3d01551fbd54e069871bbed54ec6aea8df7c3))
+* deploy support beta [skip ci] ([67e42c0](https://github.com/Greenstand/treetracker-admin-client/commit/67e42c0c9c92101162c128e28e5798640051d870))
+* deploy to use current branch [skip ci] ([764f126](https://github.com/Greenstand/treetracker-admin-client/commit/764f1265c3cf415ef24b355839d50d3274f3e208))
+* dev use build folder to output build file [skip ci] ([c6dec1f](https://github.com/Greenstand/treetracker-admin-client/commit/c6dec1fde996c88de98726b34f69fa759960b313))
+* failed test because of react query ([13d2556](https://github.com/Greenstand/treetracker-admin-client/commit/13d25569008d808873a543efd2e142187f9f924f))
+* get channel name considering release pattern [skip ci] ([e5098e0](https://github.com/Greenstand/treetracker-admin-client/commit/e5098e006ddee65821ab3ffa7f848042c8d79978))
+* get channel name is wrong ([29ce82b](https://github.com/Greenstand/treetracker-admin-client/commit/29ce82b9b82b5a26132834f2b7b26b54eaf5a676))
+* hotfix to beta channel ([d1507c1](https://github.com/Greenstand/treetracker-admin-client/commit/d1507c13974b3dc64108429f37450bb979440602))
+* install query lib ([4db063b](https://github.com/Greenstand/treetracker-admin-client/commit/4db063bbf1a574ea6902b5f52bd771bfb61ee51e))
+* lint ([d4de82a](https://github.com/Greenstand/treetracker-admin-client/commit/d4de82ac420e4ad328eaf444b1931fc053e476fb))
+* lint ([3bef1f2](https://github.com/Greenstand/treetracker-admin-client/commit/3bef1f2220bea22cc854c166812f74bd7a6a22a1))
+* merge from new master ([be6439e](https://github.com/Greenstand/treetracker-admin-client/commit/be6439eb30ec9dfc299df02d30a194e6ac451701))
+* missing config for beta ([890cdf3](https://github.com/Greenstand/treetracker-admin-client/commit/890cdf3a18c6a79c789ff8bd9b179e3a1d3e830e))
+* node version ([afaafd2](https://github.com/Greenstand/treetracker-admin-client/commit/afaafd2e5f196cdaeea6ef38abbc721c3b5d57e9))
+* node version ([9a12c7a](https://github.com/Greenstand/treetracker-admin-client/commit/9a12c7a116c71d376b2c40dfc795eb97e431975b))
+* node version for semantic bot ([64e1f35](https://github.com/Greenstand/treetracker-admin-client/commit/64e1f35859256321de22c4fdca5dcd63992f262a))
+* remove install aws cli ([196dcce](https://github.com/Greenstand/treetracker-admin-client/commit/196dcce879ca3826c79514e26e7fd6a7b88b527b))
+* rename workflow name ([1eb3230](https://github.com/Greenstand/treetracker-admin-client/commit/1eb323014473f2fb616918417b533be643d98454))
+* support extra chars for version string [skip ci] ([18aaa9d](https://github.com/Greenstand/treetracker-admin-client/commit/18aaa9da1d145e89cc24c9c0c173bb3bd10bbf50))
+* temp disable test ([901e460](https://github.com/Greenstand/treetracker-admin-client/commit/901e4607f971f6a59c4a31f2b8b19393ed3ef6b5))
+* trigger new release ([9070167](https://github.com/Greenstand/treetracker-admin-client/commit/9070167813e5b399ae09fda5ed2344f0b7e85c34))
+* trigger release ([76e183f](https://github.com/Greenstand/treetracker-admin-client/commit/76e183f483ec2e10f571b57f43f7ca646403eb9b))
+* try dadior aws crd ([ebc9e4d](https://github.com/Greenstand/treetracker-admin-client/commit/ebc9e4d1364a516b80620489c7c47680d5f72d06))
+* try prod aws crd ([d059107](https://github.com/Greenstand/treetracker-admin-client/commit/d0591074bd93bfb90198417fda712b8d16c5c772))
+* typo ([5585c19](https://github.com/Greenstand/treetracker-admin-client/commit/5585c1940f6a02187dc63e482f733c9a887aa509))
+* typo [skip ci] ([0277bd2](https://github.com/Greenstand/treetracker-admin-client/commit/0277bd2defc2cb5ec814b5894f972e5242177cff))
+* upgrade to node 18 ([d4b4b9b](https://github.com/Greenstand/treetracker-admin-client/commit/d4b4b9b0da874768f9133d7c93d6b2888a7ade1b))
+* use correct prerelease name ([ecd1bae](https://github.com/Greenstand/treetracker-admin-client/commit/ecd1baee9c2352ce20d15df91f1229cf4f0a04a7))
+* use different build for envs [skip ci] ([140fd4e](https://github.com/Greenstand/treetracker-admin-client/commit/140fd4e4fc74d3bebbdced98b08484457ad2d07f))
+* use hotfix v1.107 deploy file [skip ci] ([caecdf3](https://github.com/Greenstand/treetracker-admin-client/commit/caecdf3090c9da65382d19a97a55f786ef0839d4))
+* workflow for release and deploy freetown ([fdd0ce1](https://github.com/Greenstand/treetracker-admin-client/commit/fdd0ce1b1c41616ad706071e043070cebbc5969c))
+* workflow rename from dadior the greenstand ([c4c7996](https://github.com/Greenstand/treetracker-admin-client/commit/c4c7996385a6192eb69c272415a8aff871e9bec1))
+* wrong name for cdn secret ([e97b03d](https://github.com/Greenstand/treetracker-admin-client/commit/e97b03d41c141dc5f05857e1a3a5e72b01e70ed3))
+* wrong name for cdn secret ([ebcb154](https://github.com/Greenstand/treetracker-admin-client/commit/ebcb154651510cfd919da913770d01ac3ca80b26))
+* wrong var name ([905e2cb](https://github.com/Greenstand/treetracker-admin-client/commit/905e2cb9b09036e3560b845918386348f545f2a6))
+
+
+### Features
+
+* **home:** prefetch species on Home mount to improve login performance ([def8957](https://github.com/Greenstand/treetracker-admin-client/commit/def8957bc42c793093d4b061ecffe87e4b58b27e))
+* integrate TanStack Query for species list caching ([c5ba541](https://github.com/Greenstand/treetracker-admin-client/commit/c5ba5416297dec36ab030f77d85b6aaedcdcc456))
+* new reporting cards ([ca74476](https://github.com/Greenstand/treetracker-admin-client/commit/ca74476372eedea5cc8f01694ff3247113e39b33))
+
 ## [1.107.5-hotfix.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.5-hotfix.2...v1.107.5-hotfix.3) (2025-10-11)
 
 

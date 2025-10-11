@@ -5,6 +5,7 @@ import Routers from './components/Routers';
 import { AppProvider } from './context/AppContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
+import LinkToWebmap from './common/LinkToWebmap';
 
 class App extends Component {
   componentDidMount() {
@@ -20,6 +21,7 @@ class App extends Component {
           <BrowserRouter>
             <AppProvider>
               <Routers />
+              {/* 👇 temporary test link */}
             </AppProvider>
           </BrowserRouter>
         </>
