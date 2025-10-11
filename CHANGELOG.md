@@ -1,3 +1,15 @@
+## [1.107.5-hotfix.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.5-hotfix.2...v1.107.5-hotfix.3) (2025-10-11)
+
+
+### Bug Fixes
+
+* change build-dev to build folder for output ([9f146b0](https://github.com/Greenstand/treetracker-admin-client/commit/9f146b08819bd621c9b4e3d1c81819d1aab123c8))
+* deploy to use current branch [skip ci] ([764f126](https://github.com/Greenstand/treetracker-admin-client/commit/764f1265c3cf415ef24b355839d50d3274f3e208))
+* dev use build folder to output build file [skip ci] ([c6dec1f](https://github.com/Greenstand/treetracker-admin-client/commit/c6dec1fde996c88de98726b34f69fa759960b313))
+* trigger new release ([9070167](https://github.com/Greenstand/treetracker-admin-client/commit/9070167813e5b399ae09fda5ed2344f0b7e85c34))
+* use different build for envs [skip ci] ([140fd4e](https://github.com/Greenstand/treetracker-admin-client/commit/140fd4e4fc74d3bebbdced98b08484457ad2d07f))
+* use hotfix v1.107 deploy file [skip ci] ([caecdf3](https://github.com/Greenstand/treetracker-admin-client/commit/caecdf3090c9da65382d19a97a55f786ef0839d4))
+
 ## [1.107.5-hotfix.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.5-hotfix.1...v1.107.5-hotfix.2) (2025-10-10)
 
 
