@@ -82,11 +82,14 @@ REACT_APP_API_ROOT=http://localhost:3000
 
 ### Step 5: Install npm dependencies
 
+_option_
+
 ```
 npm install
-*option*
-**`npm install --legacy-peer-deps`**
 ```
+
+_For Legacy dependencies run_ -
+**`npm install --legacy-peer-deps`**
 
 ### Step 6: Start the client
 
