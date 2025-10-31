@@ -232,9 +232,25 @@ We follow the React/Jest convention for writng tests. All test file are located 
 
 Please ensure that at least all the _model_ unit tests under `./src/model/` pass.
 
-To run tests:
+Some components test are also located under _tests_ under `./src/components/tests`
 
+Contains mock data and utilities used across tests `./src/testMocks`
+
+```
+Current Test Stats
+
+Total Tests: 108
+
+Framework: Jest
+
+Environment: React 18.x / Babel-Jest
+```
+
+To run tests:
 `npm test`
+
+To run a single test:
+`npm test -- xxx.test.js`
 
 ### Cypress
 
