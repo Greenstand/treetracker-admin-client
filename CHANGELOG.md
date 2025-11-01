@@ -1,3 +1,10 @@
+# [1.108.0-hotfix.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix.2...v1.108.0-hotfix.3) (2025-11-01)
+
+
+### Bug Fixes
+
+* **ci:** align build and release workflow with deploy workflow ([fee5c61](https://github.com/Greenstand/treetracker-admin-client/commit/fee5c611abb18a05660162491be6b7a5df771d4e))
+
 # [1.108.0-hotfix.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-hotfix.1...v1.108.0-hotfix.2) (2025-10-30)
 
 

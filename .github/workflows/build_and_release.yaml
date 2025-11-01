@@ -29,45 +29,80 @@ jobs:
           echo "::debug:: begin preparing...";
           echo "::debug:: branch to rlease: $GITHUB_REF_NAME"
           node <<EOF >> $GITHUB_OUTPUT
-            const ref = process.env.GITHUB_REF_NAME
             const s3BucketSecretNames = {
-              "master": "DEV_CDN_S3_BUCKET",
-              "freetown": "DEV_CDN_S3_BUCKET_FREETOWN",
-              "beta": "DEV_STAGING_CDN_S3_BUCKET",
-              "alpha": "DEV_ALPHA_CDN_S3_BUCKET",
+              "master-dev": "DEV_CDN_S3_BUCKET",
+              "master-prod": "PROD_CDN_S3_BUCKET",
+              "freetown-dev": "DEV_CDN_S3_BUCKET_FREETOWN",
+              "freetown-prod": "PROD_CDN_S3_BUCKET_FREETOWN",
+              "beta-dev": "DEV_STAGING_CDN_S3_BUCKET",
+              "beta-prod": "STAGING_CDN_S3_BUCKET",
+              "alpha-dev": "DEV_ALPHA_CDN_S3_BUCKET",
+              "alpha-prod": "PROD_ALPHA_CDN_S3_BUCKET",
             }
+
             const cdnIdSecretNames = {
-              "master": "DEV_CDN_DISTRIBUTION_ID",
-              "freetown": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
-              "beta": "DEV_STAGING_CDN_DISTRIBUTION_ID",
-              "alpha": "DEV_ALPHA_CDN_DISTRIBUTION_ID",
+              "master-dev": "DEV_CDN_DISTRIBUTION_ID",
+              "master-prod": "PROD_CDN_DISTRIBUTION_ID",
+              "freetown-dev": "DEV_CDN_DISTRIBUTION_ID_FREETOWN",
+              "freetown-prod": "PROD_CDN_DISTRIBUTION_ID_FREETOWN",
+              "beta-dev": "DEV_STAGING_CDN_DISTRIBUTION_ID",
+              "beta-prod": "STAGING_CDN_DISTRIBUTION_ID",
+              "alpha-dev": "DEV_ALPHA_CDN_DISTRIBUTION_ID",
+              "alpha-prod": "PROD_ALPHA_CDN_DISTRIBUTION_ID",
             }
-            const releaseJson = require("./.releaserc.json");        
-            const branches = releaseJson.branches.map(e => e.name? e.name : e);
-            if(branches.indexOf(ref) === -1){
-              console.log("NO_NEED_TO_BUILD=true");
-              process.exit(0);
+
+            const releaseJson = require("./.releaserc.json");
+
+            // Try to get version from env if available
+            const version = process.env.VERSION_TO_DEPLOY || '';
+
+            const ref = process.env.GITHUB_REF_NAME || '';
+
+            // default env to dev when not explicit
+            let env = process.env.ENV_TO_DEPLOY || 'dev';
+
+            let channel = false;
+            if (version) {
+              const m = version.match(/^v\d+\.\d+\.\d+(-([\w-\/\.]+)\.\d+)?$/);
+              if (!m) {
+                throw '::error:: wrong version:' + version;
+              } else {
+                if(!m[1]) {
+                  channel = "master";
+                } else {
+                  const releaseName = m[2];
+                  channel = releaseJson.branches.reduce((a,c) => a || (c.prerelease === releaseName && c.channel) || (c.name === releaseName && c.channel), false);
+                }
+              }
             }
-            let channel = releaseJson.branches.reduce((a,c) => a || (c === ref && c) || (c.name === ref && c.channel), false);
-            let s3BucketSecretName;
-            let cdnIdSecretName;
-            s3BucketSecretName = s3BucketSecretNames[channel];
-            if(!s3BucketSecretName){
-              throw '::error:: can not find s3 bucket secret name by, channel:' + channel ;
+
+            if(!channel) {
+              const branches = releaseJson.branches.map(e => e.name ? e.name : e);
+              if (branches.indexOf(ref) === -1) {
+                console.log("NO_NEED_TO_BUILD=true");
+                process.exit(0);
+              }
+              channel = releaseJson.branches.reduce((a,c) => a || (c === ref && c) || (c.name === ref && c.channel), false);
             }
-            cdnIdSecretName = cdnIdSecretNames[channel];
-            if(!cdnIdSecretName){
-              throw '::error:: can not find cdn id secret name by, channel:' + channel ;
+
+            const key = channel + '-' + env;
+            const s3BucketSecretName = s3BucketSecretNames[key];
+            if(!s3BucketSecretName) {
+              throw '::error:: can not find s3 bucket secret name by, channel:' + channel + ' env:' + env;
             }
+            const cdnIdSecretName = cdnIdSecretNames[key];
+            if(!cdnIdSecretName) {
+              throw '::error:: can not find cdn id secret name by, channel:' + channel + ' env:' + env;
+            }
+
             console.log("CHANNEL=" + channel);
             console.log("S3_BUCKET_SECRET_NAME=" + s3BucketSecretName);
             console.log("CDN_ID_SECRET_NAME=" + cdnIdSecretName);
-            
           EOF
         id: resolver
         env:
-          VERSION_TO_DEPLOY: ${{ github.event.inputs.version }}
-          ENV_TO_DEPLOY: ${{ github.event.inputs.env }}
+          VERSION_TO_DEPLOY: ${{ github.event.inputs.version || '' }}
+          ENV_TO_DEPLOY: ${{ github.event.inputs.env || '' }}
       - run: |
           echo "channel: ${{ steps.resolver.outputs.CHANNEL}}"
           echo "s3: ${{ steps.resolver.outputs.S3_BUCKET_SECRET_NAME}}"
