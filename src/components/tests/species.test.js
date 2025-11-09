@@ -127,13 +127,13 @@ describe('species management', () => {
       });
 
       it('has inputs for name and description', () => {
-        const dialog = screen.getByRole(/dialog/i);
+        const dialog = screen.getByRole('dialog');
         const item = within(dialog).getByLabelText(/name/i);
         expect(item).toBeTruthy();
       });
 
       it('has buttons to save and cancel', () => {
-        const dialog = screen.getByRole(/dialog/i);
+        const dialog = screen.getByRole('dialog');
         expect(within(dialog).getByText(/save/i)).toBeTruthy();
       });
     });
@@ -150,7 +150,7 @@ describe('species management', () => {
       beforeEach(async () => {
         // await api.createSpecies({ name: 'water melon' });
         userEvent.click(screen.getByText(/Add New Species/i));
-        const dialog = screen.getByRole(/dialog/i);
+        const dialog = screen.getByRole('dialog');
         const inputName = screen.getByLabelText(/name/i);
         const inputDesc = screen.getByLabelText(/description/i);
         const saveBtn = screen.getByText(/Save/i);
