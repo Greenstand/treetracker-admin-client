@@ -246,11 +246,11 @@ export const AppProvider = (props) => {
   function checkSession() {
     const localToken = JSON.parse(localStorage.getItem('token'));
     const localUser = JSON.parse(localStorage.getItem('user'));
-    if (localToken && localUser) {
+
+    if (localToken && localUser && session.token) {
       // Temporarily log in with the localStorage credentials while
       // we check that the session is still valid
       login(localUser, localToken);
-
       axios
         .get(
           `${process.env.REACT_APP_API_ROOT}/auth/check_session?id=${localUser.id}`,
@@ -273,6 +273,7 @@ export const AppProvider = (props) => {
             logout();
           }
         });
+
       return true;
     }
     return false;
