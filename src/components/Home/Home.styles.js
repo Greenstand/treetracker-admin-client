@@ -71,6 +71,17 @@ const styles = (theme) => ({
     gap: '20px',
     flexWrap: 'wrap',
   },
+  orgApplicationLinkRow: {
+    marginTop: theme.spacing(1),
+  },
+  orgApplicationText: {
+    color: theme.palette.text.secondary,
+    lineHeight: 1.4,
+  },
+  orgApplicationLink: {
+    fontWeight: 600,
+    textUnderlineOffset: '0.18em',
+  },
 });
 
 export default styles;
