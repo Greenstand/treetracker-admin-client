@@ -70,6 +70,27 @@ const EditGrower = (props) => {
     }
   }
 
+  /**
+   * Issue 192 https://github.com/Greenstand/treetracker-admin-client/issues/192
+   */
+  function handleImageUpload(newImageUrl) {
+    if (!newImageUrl) {
+      return;
+    }
+
+    setGrowerImages((prevImages) => {
+      if (prevImages.includes(newImageUrl)) {
+        return prevImages;
+      }
+      return [...prevImages, newImageUrl];
+    });
+
+    setGrowerUpdate((prev) => ({
+      ...(prev || {}),
+      imageUrl: newImageUrl,
+    }));
+  }
+
   async function handleSave() {
     if (growerUpdate) {
       setSaveInProgress(true);
@@ -139,6 +160,7 @@ const EditGrower = (props) => {
               growerUpdate?.imageRotation || grower.imageRotation || 0
             }
             onSelectChange={handleChange}
+            onUpload={handleImageUpload}
           />
           {inputs.map((row, rowIdx) => (
             <Grid item container direction="row" key={rowIdx}>

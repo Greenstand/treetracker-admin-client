@@ -1,7 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, Grid, CircularProgress, Card, Button } from '@material-ui/core';
-import { ChevronLeft, ChevronRight } from '@material-ui/icons';
+import {
+  Fab,
+  Grid,
+  CircularProgress,
+  Card,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@material-ui/core';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit as EditIcon,
+} from '@material-ui/icons';
 import Rotate90DegreesCcwIcon from '@material-ui/icons/Rotate90DegreesCcw';
 import OptimizedImage from './OptimizedImage';
 
@@ -56,6 +71,18 @@ const useStyle = makeStyles((theme) => ({
   scrollRight: {
     right: `-${SCROLL_BUTTON_SIZE / 2}px`,
   },
+  editOverlay: {
+    display: 'none',
+  },
+  clickEdit: {
+    margin: 5,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: 32,
+    height: 32,
+    zIndex: 5,
+  },
   loadMore: {
     margin: theme.spacing(1.5),
   },
@@ -84,11 +111,16 @@ export default function ImageScroller(props) {
     blankMessage = '',
     imageRotation,
     onSelectChange,
+    onUpload,
   } = props;
   const classes = useStyle();
   const [maxImages, setMaxImages] = useState(MAX_IMAGES_INCREMENT);
   const imageScrollerRef = useRef(null);
   let [rotation, setRotation] = useState(imageRotation);
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [pendingUrl, setPendingUrl] = useState('');
+  const [previewUrl, setPreviewUrl] = useState('');
 
   function loadMoreImages() {
     setMaxImages(maxImages + MAX_IMAGES_INCREMENT);
@@ -129,6 +161,99 @@ export default function ImageScroller(props) {
     }
   }
 
+  function openEditDialog() {
+    setEditDialogOpen(true);
+  }
+
+  function closeEditDialog() {
+    setEditDialogOpen(false);
+    setPendingUrl('');
+    setPreviewUrl('');
+  }
+
+  function scaleToSquareImage(file, size = IMAGE_CARD_SIZE) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+
+          const aspect = img.width / img.height;
+          let sw = img.width;
+          let sh = img.height;
+          let sx = 0;
+          let sy = 0;
+
+          if (aspect > 1) {
+            // landscape
+            sw = img.height;
+            sx = (img.width - img.height) / 2;
+          } else {
+            // portrait
+            sh = img.width;
+            sy = (img.height - img.width) / 2;
+          }
+
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size, size);
+          resolve(canvas.toDataURL('image/jpeg', 0.9));
+        };
+        img.onerror = reject;
+        img.src = ev.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleFileInput(event) {
+    const file = event?.target?.files?.[0];
+    if (!file) {
+      setPreviewUrl('');
+      return;
+    }
+
+    setPendingUrl('');
+
+    try {
+      const scaledDataUrl = await scaleToSquareImage(file, IMAGE_CARD_SIZE);
+      setPreviewUrl(scaledDataUrl);
+    } catch (_) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  }
+
+  function handleUrlInput(event) {
+    setPendingUrl(event.target.value);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl('');
+    }
+  }
+
+  function handleUpload() {
+    const chosenUrl = pendingUrl?.trim() || previewUrl;
+    if (!chosenUrl) {
+      return;
+    }
+
+    if (onUpload) {
+      onUpload(chosenUrl);
+    }
+
+    onSelectChange('imageUrl', chosenUrl);
+
+    if (previewUrl && !pendingUrl) {
+      // keep preview URL for display until dialog closes
+    }
+
+    closeEditDialog();
+  }
+
   return (
     <div className={classes.container}>
       <Grid
@@ -157,18 +282,26 @@ export default function ImageScroller(props) {
                 rotation={img === selectedImage ? rotation : 0}
                 onClick={() => handleImageChange(img)}
               />
-              {img === selectedImage ? (
-                <Fab
-                  id="click-rotate"
-                  className={classes.clickRotate}
-                  onClick={handleRotationChange}
-                >
-                  <Rotate90DegreesCcwIcon
-                    style={{ transform: `rotateY(180deg)` }}
-                  />
-                </Fab>
-              ) : (
-                ''
+              {img === selectedImage && (
+                <>
+                  <Fab
+                    id="click-rotate"
+                    className={classes.clickRotate}
+                    onClick={handleRotationChange}
+                  >
+                    <Rotate90DegreesCcwIcon
+                      style={{ transform: `rotateY(180deg)` }}
+                    />
+                  </Fab>
+                  <Fab
+                    id="click-edit"
+                    className={classes.clickEdit}
+                    onClick={openEditDialog}
+                    size="small"
+                  >
+                    <EditIcon style={{ transform: 'scale(0.8)' }} />
+                  </Fab>
+                </>
               )}
             </Card>
           ))
@@ -203,6 +336,63 @@ export default function ImageScroller(props) {
           </Fab>
         </>
       )}
+
+      <Dialog
+        open={editDialogOpen}
+        onClose={closeEditDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Edit grower image</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} direction="column">
+            <Grid item>
+              <input
+                id="new-image-file"
+                type="file"
+                accept="image/*"
+                onChange={handleFileInput}
+                data-testid="image-file-input"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Or paste image URL"
+                value={pendingUrl}
+                onChange={handleUrlInput}
+                fullWidth
+                variant="outlined"
+                data-testid="image-url-input"
+              />
+            </Grid>
+            <Grid item>
+              {(previewUrl || pendingUrl) && (
+                <img
+                  src={pendingUrl || previewUrl}
+                  alt="Preview"
+                  style={{
+                    width: '100%',
+                    maxHeight: 240,
+                    objectFit: 'contain',
+                  }}
+                  data-testid="image-preview"
+                />
+              )}
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditDialog}>Cancel</Button>
+          <Button
+            onClick={handleUpload}
+            variant="contained"
+            color="primary"
+            disabled={!pendingUrl && !previewUrl}
+          >
+            Upload & use
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
