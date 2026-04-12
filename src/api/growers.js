@@ -39,6 +39,7 @@ export default {
           organizationId: true,
           imageRotation: true,
           id: true,
+          show_in_map: true,
           // growerAccountUuid: true,
         },
       };

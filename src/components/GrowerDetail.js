@@ -411,10 +411,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   </Grid>
                 )}
               <Divider />
-              <ShowInMapToggle
-                grower={grower}
-                setErrorMessage={setErrorMessage}
-              />
+              <ShowInMapToggle grower={grower} />
               <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1" className={classes.captures}>
@@ -585,19 +582,21 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
 export default GrowerDetail;
 
-const ShowInMapToggle = ({ grower, setErrorMessage }) => {
+const ShowInMapToggle = ({ grower }) => {
   const classes = useStyle();
   const { updateGrower } = useContext(GrowerContext);
+  const [showInMap, setShowInMap] = useState(!!grower?.show_in_map);
 
-  const handleSwitchChange = async (e) => {
-    const toggle = e.target.checked;
-    try {
-      const updatedGrower = { id: grower.id, show_in_map: toggle };
-      await updateGrower(updatedGrower);
-    } catch (error) {
-      setErrorMessage('Error updating grower detail');
-    }
+  React.useEffect(() => {
+    setShowInMap(!!grower?.show_in_map);
+  }, [grower?.show_in_map]);
+
+  const toggleShow = async () => {
+    const newShowState = !showInMap;
+    setShowInMap(newShowState);
+    await updateGrower({ id: grower.id, show_in_map: newShowState });
   };
+
   return (
     <Grid
       container
@@ -609,10 +608,7 @@ const ShowInMapToggle = ({ grower, setErrorMessage }) => {
       }}
     >
       <Typography variant="subtitle1">Show in map</Typography>
-      <Switch
-        checked={grower?.show_in_map || false}
-        onChange={handleSwitchChange}
-      />
+      <Switch checked={showInMap} onChange={toggleShow} />
     </Grid>
   );
 };
