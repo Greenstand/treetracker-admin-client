@@ -133,6 +133,12 @@ export function getUserFromToken() {
     tokenParsed?.resource_access?.[keycloakConfig.clientId]?.roles || [];
 
   const roleNames = [...new Set([...realmRoles, ...clientRoles])];
+  const organization =
+    tokenParsed.organization_id !== undefined
+      ? {
+          id: Number(tokenParsed.organization_id),
+        }
+      : undefined;
 
   const user = {
     id: tokenParsed.sub,
@@ -142,10 +148,13 @@ export function getUserFromToken() {
     email: tokenParsed.email || '',
     roleNames,
     policy: {
+      // legacy auth uses policy.policies
+      //  policy.policies as the compatibility layer
       policies: roleNames.map((name) => ({ name })),
-      organization: undefined,
+      organization,
     },
   };
+
   return user;
 }
 

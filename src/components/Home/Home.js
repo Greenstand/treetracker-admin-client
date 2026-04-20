@@ -56,7 +56,7 @@ import log from 'loglevel';
 function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const showOrganizationApplyLink = !appContext.user?.policy?.organization;
+  const showOrganizationApplyLink = !appContext.userHasOrg;
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import {
@@ -14,10 +14,18 @@ import { makeStyles } from '@material-ui/core/styles';
 import { z } from 'zod';
 
 import { createOrganization } from 'api/organizations';
+import { getApiErrorMessage } from 'api/apiUtils';
+import { ensureFreshToken, getUserFromToken } from 'auth/keycloak';
 import Menu from 'components/common/Menu';
 import { documentTitle } from 'common/variables';
+import { AppContext } from 'context/AppContext';
 
 const REDIRECT_DELAY_MS = 1500;
+const ERROR_MESSAGES = {
+  ORGANIZATION_ROLE_ALREADY_ASSIGNED: 'You already belong to an organization.',
+  ORGANIZATION_CLAIM_UPDATE_FAILED: 'Failed To create an organization',
+  ORGANIZATION_ROLE_ASSIGNMENT_FAILED: 'Failed To create an organization',
+};
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -127,23 +135,40 @@ function getValidationErrors(values) {
 export default function OrganizationApplicationView() {
   const classes = useStyles();
   const history = useHistory();
+  const appContext = useContext(AppContext);
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const redirectTimerRef = useRef();
   const createOrganizationMutation = useMutation({
     mutationFn: (payload) => createOrganization(payload),
-    onSuccess: () => {
+    onSuccess: async () => {
+      if (appContext.isKeycloakEnabled && appContext.login) {
+        try {
+          const refreshedToken = await ensureFreshToken(-1);
+          const refreshedUser = getUserFromToken();
+
+          if (refreshedToken && refreshedUser) {
+            appContext.login(refreshedUser, `Bearer ${refreshedToken}`);
+          }
+        } catch (error) {
+          console.error(
+            'Failed to refresh Keycloak token after org creation',
+            error
+          );
+        }
+      }
+
       redirectTimerRef.current = window.setTimeout(() => {
         history.push('/');
       }, REDIRECT_DELAY_MS);
     },
   });
   const hasErrors = Object.values(errors).some(Boolean);
-  const errorMessage =
-    // createOrganizationMutation.error?.response?.data?.error?.message ||
-    // createOrganizationMutation.error?.response?.data?.error ||
-    // createOrganizationMutation.error?.message ||
-    'Failed to create organization';
+  const errorMessage = getApiErrorMessage(
+    createOrganizationMutation.error,
+    'Failed to create organization',
+    ERROR_MESSAGES
+  );
 
   useEffect(() => {
     document.title = `Organization Application - ${documentTitle}`;

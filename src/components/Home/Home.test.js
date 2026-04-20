@@ -67,7 +67,7 @@ describe('Home', () => {
   });
 
   it('it renders home component', () => {
-    const { container } = renderHome();
+    const { container } = renderHome({ userHasOrg: false });
 
     expect(
       container.textContent.includes(
@@ -78,6 +78,7 @@ describe('Home', () => {
 
   it('hides organization apply link when user already belongs to an organization', () => {
     const { container } = renderHome({
+      userHasOrg: true,
       user: {
         policy: {
           policies: [],
@@ -93,5 +94,23 @@ describe('Home', () => {
         'Apply to become a Greenstand associated organization'
       )
     ).toBe(false);
+  });
+
+  it('shows organization apply link when userHasOrg is false', () => {
+    const { container } = renderHome({
+      userHasOrg: false,
+      user: {
+        policy: {
+          policies: [],
+          organization: undefined,
+        },
+      },
+    });
+
+    expect(
+      container.textContent.includes(
+        'Apply to become a Greenstand associated organization'
+      )
+    ).toBe(true);
   });
 });
