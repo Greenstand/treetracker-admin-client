@@ -65,6 +65,7 @@ function getRoutes(user) {
       component: VerifyView,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
+        POLICIES.ORGANIZATION,
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
         POLICIES.APPROVE_TREE,
@@ -334,6 +335,7 @@ export const AppProvider = (props) => {
   async function loadOrganizations() {
     try {
       const orgs = await api.getOrganizations();
+      console.log('orgs', orgs);
       setOrgList(orgs);
     } catch (error) {
       log.error('Failed to load organizations', error);

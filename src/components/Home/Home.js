@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { Link as RouterLink } from 'react-router-dom';
 import api from '../../api/treeTrackerApi';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -54,6 +56,7 @@ import log from 'loglevel';
 function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
+  const showOrganizationApplyLink = !appContext.userHasOrg;
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
 
@@ -119,6 +122,22 @@ function Home(props) {
               <Box display="inline" ml={2}>
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
+              {showOrganizationApplyLink ? (
+                <Box className={classes.orgApplicationLinkRow}>
+                  <Typography
+                    variant="body2"
+                    className={classes.orgApplicationText}
+                  >
+                    <Link
+                      component={RouterLink}
+                      to="/organization/apply"
+                      className={classes.orgApplicationLink}
+                    >
+                      Apply to become a Greenstand associated organization
+                    </Link>
+                  </Typography>
+                </Box>
+              ) : null}
             </Grid>
             {hasFreetownPermission(appContext.user) && (
               <Grid item xs={5} className={classes.timeBox}>

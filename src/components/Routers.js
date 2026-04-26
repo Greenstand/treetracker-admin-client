@@ -16,6 +16,7 @@ import ReportingCard3 from './reportingCards/ReportingCard3';
 import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
 import ReportingCard6 from './reportingCards/ReportingCard6';
+import OrganizationApplicationView from '../views/OrganizationApplicationView';
 
 export default function Routers() {
   const refContainer = useRef();
@@ -55,6 +56,11 @@ export default function Routers() {
                   }}
                 />
               </Route>
+              <PrivateRoute
+                path="/organization/apply"
+                component={OrganizationApplicationView}
+                exact
+              />
               {appContext.routes.map((route, idx) =>
                 route?.children ? (
                   route.children.map((child, i) => (

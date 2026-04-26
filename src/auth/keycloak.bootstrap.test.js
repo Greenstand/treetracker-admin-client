@@ -53,6 +53,30 @@ describe('keycloak bootstrap', () => {
     expect(result.user.policy.policies).toEqual([{ name: 'super_permission' }]);
   });
 
+  it('maps organization_id claim into policy.organization', async () => {
+    process.env.REACT_APP_KEYCLOAK_URL = 'https://kc.local/keycloak';
+    process.env.REACT_APP_KEYCLOAK_REALM = 'master';
+    process.env.REACT_APP_KEYCLOAK_CLIENT_ID = 'treetracker-admin-client';
+
+    mockKeycloakModule(() => ({
+      init: jest.fn().mockResolvedValue(true),
+      token: 'access-token',
+      tokenParsed: {
+        sub: 'user-1',
+        preferred_username: 'admin',
+        email: 'admin@example.com',
+        realm_access: { roles: ['org'] },
+        organization_id: '178',
+      },
+    }));
+
+    const { getBootstrapAuthState } = require('./keycloak');
+    const result = await getBootstrapAuthState();
+
+    expect(result.user.policy.policies).toEqual([{ name: 'org' }]);
+    expect(result.user.policy.organization).toEqual({ id: 178 });
+  });
+
   it('initializes keycloak only once for concurrent calls', async () => {
     process.env.REACT_APP_KEYCLOAK_URL = 'https://kc.local/keycloak';
     process.env.REACT_APP_KEYCLOAK_REALM = 'master';
