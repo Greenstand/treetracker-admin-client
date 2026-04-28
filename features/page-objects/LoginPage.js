@@ -19,6 +19,10 @@ class LoginPage {
     return $('#kc-login');
   }
 
+  get registerLink() {
+    return $('#kc-registration a');
+  }
+
   get invalidCredentialsError() {
     return $('#input-error');
   }
@@ -47,6 +51,15 @@ class LoginPage {
   async submit() {
     await this.submitButton.waitForDisplayed({ timeout: 10000 });
     await this.submitButton.click();
+  }
+
+  async openRegistrationPage() {
+    await this.waitForPage();
+    await this.registerLink.waitForDisplayed({
+      timeout: 10000,
+      timeoutMsg: 'Expected register link on the Keycloak sign-in page',
+    });
+    await this.registerLink.click();
   }
 
   async login(username, password) {

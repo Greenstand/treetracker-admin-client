@@ -1,4 +1,5 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","30727","I can register a new account by email address","","2026-04-28","passed","2026-04-28","","Registration","",""
 "","47226","Login with wrong credentials shows an error message","","2026-03-16","passed","2026-03-16","","Login","",""
 "","35603","Login with valid credentials succeeds","","2026-03-16","passed","2026-03-16","","Login","",""
-"","38507","Apply for an organization","","2026-04-06","passed","2026-04-06","","Organization Features","",""
+"","32224","Apply for an organization","","2026-04-23","passed","2026-04-23","","Organization Features","",""
