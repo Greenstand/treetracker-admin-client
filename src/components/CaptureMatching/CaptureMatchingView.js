@@ -46,6 +46,9 @@ import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
 // import { format } from 'date-fns';
 import log from 'loglevel';
+import { fetchScoredCandidates } from '../../api/captureMatchingApi';
+
+
 
 const org_list = [
   { name: 'FCCFED', id: 'e35ccdbe-3c49-447e-82b4-5fb6b172d50b' },
@@ -347,10 +350,10 @@ function CaptureMatchingView() {
   // const treesCount = candidateImgData.length;
 
   async function fetchCandidateTrees(captureId, abortController) {
-    const data = await api.fetchCandidateTrees(captureId, abortController);
-    if (data) {
-      setCandidateImgData(data.matches);
-      setTreesCount(filterTree(data.matches, captureImage).length);
+    const scored = await fetchScoredCandidates(captureImage, abortController);
+    if (scored) {
+      setCandidateImgData(scored);
+      setTreesCount(scored.length);
       setLoading(false);
     }
   }
