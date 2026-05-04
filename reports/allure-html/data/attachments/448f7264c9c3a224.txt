@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": ".alert-success.pf-m-success .kc-feedback-text"
+}
