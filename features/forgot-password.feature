@@ -1,6 +1,5 @@
 Feature: Forgot Password
 
-  @skip
   Scenario: I can reset my password by email address
     Given I am on the login page
     When I open the forgot password page

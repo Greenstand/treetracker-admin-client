@@ -23,6 +23,14 @@ class LoginPage {
     return $('#kc-registration a');
   }
 
+  get forgotPasswordLink() {
+    return $('a[href*="reset-credentials"]');
+  }
+
+  get passwordResetSuccessAlert() {
+    return $('.alert-success.pf-m-success .kc-feedback-text');
+  }
+
   get invalidCredentialsError() {
     return $('#input-error');
   }
@@ -60,6 +68,25 @@ class LoginPage {
       timeoutMsg: 'Expected register link on the Keycloak sign-in page',
     });
     await this.registerLink.click();
+  }
+
+  async openForgotPasswordPage() {
+    await this.waitForPage();
+    await this.forgotPasswordLink.waitForDisplayed({
+      timeout: 10000,
+      timeoutMsg: 'Expected forgot password link on the Keycloak sign-in page',
+    });
+    await this.forgotPasswordLink.click();
+  }
+
+  async waitForPasswordResetConfirmation() {
+    await this.waitForPage();
+
+    await this.passwordResetSuccessAlert.waitForDisplayed({
+      timeout: 10000,
+      timeoutMsg:
+        'Expected Keycloak to show a password reset confirmation message',
+    });
   }
 
   async login(username, password) {

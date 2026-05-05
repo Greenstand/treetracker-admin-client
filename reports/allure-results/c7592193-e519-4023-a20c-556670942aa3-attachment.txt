@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "#kc-reset-password-form input[type=\"submit\"]"
+}
