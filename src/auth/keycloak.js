@@ -18,6 +18,26 @@ let keycloak;
 let keycloakInitPromise;
 /** @type {Promise<string | undefined> | undefined} */
 let keycloakRefreshPromise;
+/** @type {{ status: 'success'|'cancelled'|'error', action: string|undefined }|undefined} */
+let pendingActionUpdate;
+
+const PENDING_ACTION_STORAGE_KEY = 'pendingKeycloakAction';
+
+function readPendingActionFromStorage() {
+  try {
+    return sessionStorage.getItem(PENDING_ACTION_STORAGE_KEY) || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function clearPendingActionFromStorage() {
+  try {
+    sessionStorage.removeItem(PENDING_ACTION_STORAGE_KEY);
+  } catch {
+    /* sessionStorage unavailable — nothing to clean up */
+  }
+}
 
 export function isKeycloakConfigured() {
   return Boolean(
@@ -32,9 +52,31 @@ function getKeycloak() {
 
   if (!keycloak) {
     keycloak = new Keycloak(keycloakConfig);
+    // in keyclok version 26 we get value for action as well
+    // if we upgrade to v 26 in future then we dont need the
+    // eadPendingActionFromStorage hack
+    keycloak.onActionUpdate = (status, action) => {
+      console.log('on action update', status, action);
+      pendingActionUpdate = { status, action };
+    };
   }
 
   return keycloak;
+}
+
+export function consumeKeycloakActionUpdate() {
+  const update = pendingActionUpdate;
+  pendingActionUpdate = undefined;
+
+  const fallbackAction = readPendingActionFromStorage();
+  clearPendingActionFromStorage();
+
+  if (!update) return undefined;
+
+  return {
+    status: update.status,
+    action: update.action || fallbackAction,
+  };
 }
 
 export async function initializeKeycloak() {
@@ -99,6 +141,34 @@ export async function loginToKeycloak(redirectPath = '/') {
   });
 
   return false;
+}
+
+export async function startKeycloakRequiredAction(
+  action,
+  redirectPath = '/account'
+) {
+  const instance = getKeycloak();
+
+  if (!instance) {
+    return false;
+  }
+
+  const authenticated = await initializeKeycloak();
+  if (!authenticated) {
+    return false;
+  }
+
+  try {
+    sessionStorage.setItem(PENDING_ACTION_STORAGE_KEY, action);
+  } catch {
+    /* sessionStorage unavailable — adapter's onActionUpdate(action) is the
+       primary source; we'd just lose the fallback path */
+  }
+
+  await instance.login({
+    action,
+    redirectUri: `${window.location.origin}${redirectPath}`,
+  });
 }
 
 export function logoutFromKeycloak() {
@@ -180,3 +250,8 @@ export async function ensureFreshToken(minValidity = 30) {
 
   return keycloakRefreshPromise;
 }
+
+export const KEYCLOAK_UPDATE_ACTIONS = {
+  UPDATE_PASSWORD: 'UPDATE_PASSWORD',
+  UPDATE_PROFILE: 'UPDATE_PROFILE',
+};
