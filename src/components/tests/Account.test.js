@@ -5,6 +5,12 @@ import { MemoryRouter } from 'react-router-dom';
 import Account from '../Account';
 import { AppContext } from '../../context/AppContext';
 import * as keycloak from '../../auth/keycloak';
+import notification from '../common/notification';
+
+jest.mock('../common/notification', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 
 jest.mock(
   '../common/Menu',
@@ -39,6 +45,10 @@ function renderAccount({ isKeycloakEnabled, logout = jest.fn() } = {}) {
 }
 
 describe('Account', () => {
+  beforeEach(() => {
+    notification.mockClear();
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -60,12 +70,99 @@ describe('Account', () => {
       });
     });
 
+    it('routes UPDATE ACCOUNT through the UPDATE_PROFILE required action', async () => {
+      const spy = jest
+        .spyOn(keycloak, 'startKeycloakRequiredAction')
+        .mockResolvedValue(true);
+
+      renderAccount({ isKeycloakEnabled: true });
+
+      await userEvent.click(
+        screen.getByRole('button', { name: 'UPDATE ACCOUNT' })
+      );
+
+      await waitFor(() => {
+        expect(spy).toHaveBeenCalledWith(
+          keycloak.KEYCLOAK_UPDATE_ACTIONS.UPDATE_PROFILE
+        );
+      });
+    });
+
     it('does not call startKeycloakRequiredAction on mount', () => {
       const spy = jest.spyOn(keycloak, 'startKeycloakRequiredAction');
 
       renderAccount({ isKeycloakEnabled: true });
 
       expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('renders the UPDATE ACCOUNT button', () => {
+      renderAccount({ isKeycloakEnabled: true });
+
+      expect(
+        screen.getByRole('button', { name: 'UPDATE ACCOUNT' })
+      ).toBeInTheDocument();
+    });
+
+    describe('on-mount Keycloak action confirmation', () => {
+      it('shows the profile-update toast when the adapter returned a successful UPDATE_PROFILE', () => {
+        jest
+          .spyOn(keycloak, 'consumeKeycloakActionUpdate')
+          .mockReturnValue({ status: 'success', action: 'UPDATE_PROFILE' });
+
+        renderAccount({ isKeycloakEnabled: true });
+
+        expect(notification).toHaveBeenCalledWith(
+          'Your account information has been updated.',
+          'success',
+          5000
+        );
+      });
+
+      it('shows the password-change toast when the adapter returned a successful UPDATE_PASSWORD', () => {
+        jest
+          .spyOn(keycloak, 'consumeKeycloakActionUpdate')
+          .mockReturnValue({ status: 'success', action: 'UPDATE_PASSWORD' });
+
+        renderAccount({ isKeycloakEnabled: true });
+
+        expect(notification).toHaveBeenCalledWith(
+          'Your password has been changed.',
+          'success',
+          5000
+        );
+      });
+
+      it('does not show a toast when there is no pending action update', () => {
+        jest
+          .spyOn(keycloak, 'consumeKeycloakActionUpdate')
+          .mockReturnValue(undefined);
+
+        renderAccount({ isKeycloakEnabled: true });
+
+        expect(notification).not.toHaveBeenCalled();
+      });
+
+      it('does not show a toast when the action was cancelled', () => {
+        jest
+          .spyOn(keycloak, 'consumeKeycloakActionUpdate')
+          .mockReturnValue({ status: 'cancelled', action: 'UPDATE_PROFILE' });
+
+        renderAccount({ isKeycloakEnabled: true });
+
+        expect(notification).not.toHaveBeenCalled();
+      });
+
+      it('does not show a toast when the action is success but unknown to the app', () => {
+        jest.spyOn(keycloak, 'consumeKeycloakActionUpdate').mockReturnValue({
+          status: 'success',
+          action: 'SOME_OTHER_ACTION',
+        });
+
+        renderAccount({ isKeycloakEnabled: true });
+
+        expect(notification).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -81,6 +178,14 @@ describe('Account', () => {
         await screen.findByRole('heading', { name: 'Change Password' })
       ).toBeInTheDocument();
       expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('does not render the UPDATE ACCOUNT button', () => {
+      renderAccount({ isKeycloakEnabled: false });
+
+      expect(
+        screen.queryByRole('button', { name: 'UPDATE ACCOUNT' })
+      ).not.toBeInTheDocument();
     });
   });
 });

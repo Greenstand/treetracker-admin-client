@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": "//button[normalize-space(.)=\"UPDATE ACCOUNT\"]"
+}

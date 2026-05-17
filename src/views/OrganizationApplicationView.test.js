@@ -24,6 +24,10 @@ jest.mock('api/organizations', () => ({
 jest.mock('auth/keycloak', () => ({
   ensureFreshToken: jest.fn(),
   getUserFromToken: jest.fn(),
+  KEYCLOAK_UPDATE_ACTIONS: {
+    UPDATE_PASSWORD: 'UPDATE_PASSWORD',
+    UPDATE_PROFILE: 'UPDATE_PROFILE',
+  },
 }));
 
 describe('OrganizationApplicationView', () => {
