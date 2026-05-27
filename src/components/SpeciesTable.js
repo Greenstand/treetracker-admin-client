@@ -142,6 +142,10 @@ const SpeciesTable = (props) => {
   const tableRef = useRef(null);
 
   useEffect(() => {
+    speciesContext.ensureLoaded?.();
+  }, []);
+
+  useEffect(() => {
     const sortBy = (option) => {
       let sortedSpecies;
       if (option === sortOptions.byId) {
