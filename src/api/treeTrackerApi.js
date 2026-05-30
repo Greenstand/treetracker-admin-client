@@ -1,10 +1,21 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
-import { session } from '../models/auth';
+import { handleError, getOrganization } from './apiUtils';
 import log from 'loglevel';
+import { authAxios } from './httpClient';
 
 // Set API as a variable
 const TREETRACKER_API = `${process.env.REACT_APP_TREETRACKER_API_ROOT}`;
 const API_ROOT = process.env.REACT_APP_API_ROOT;
+
+function requestApi(url, options = {}) {
+  const { method = 'GET', body, signal } = options;
+
+  return authAxios({
+    url,
+    method,
+    data: body,
+    signal,
+  }).then((res) => res.data);
+}
 
 const CAPTURE_FIELDS = {
   uuid: true,
@@ -58,12 +69,9 @@ export default {
         filterData
       )}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
+      return requestApi(query, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -74,13 +82,9 @@ export default {
 
       log.debug(query);
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           id: id,
           approved: true,
           //revise, if click approved on a rejected pic, then, should set the pic approved, AND restore to ACTIVE = true
@@ -89,8 +93,8 @@ export default {
           age,
           captureApprovalTag,
           speciesId: speciesId,
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -100,21 +104,17 @@ export default {
       console.log('reject capture', id, rejectionReason);
       const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           id: id,
           active: false,
           //revise, if click a approved pic, then, should set active = false and
           //at the same time, should set approved to false
           approved: false,
           rejectionReason,
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -125,11 +125,7 @@ export default {
         filter.getWhereObj()
       )}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -147,12 +143,9 @@ export default {
         currentPage - 1
       }&${where}&matchting_tree_distance=6&matchting_tree_time_range=30`;
 
-      return fetch(req, {
-        headers: {
-          Authorization: session.token,
-        },
+      return requestApi(req, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -161,12 +154,9 @@ export default {
     try {
       const query = `${TREETRACKER_API}/trees/potential_matches?capture_id=${captureId}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
+      return requestApi(query, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -175,11 +165,7 @@ export default {
     try {
       const query = `${TREETRACKER_API}/grower_accounts/${id}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -188,11 +174,7 @@ export default {
     try {
       const query = `${API_ROOT}/api/${getOrganization()}trees/${id}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -208,13 +190,7 @@ export default {
     try {
       const query = `earnings.json`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -226,14 +202,9 @@ export default {
     try {
       const query = `${API_ROOT}/api/species?filter[order]=name`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
+      return requestApi(query, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -242,13 +213,7 @@ export default {
     try {
       const query = `${API_ROOT}/api/species/${id}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -257,19 +222,15 @@ export default {
     try {
       const query = `${API_ROOT}/api/species`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           name: payload.name,
           desc: payload.desc,
           active: true,
           valueFactor: 0,
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -278,20 +239,16 @@ export default {
     try {
       const query = `${API_ROOT}/api/species/${id}`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           id: id,
           name: name,
           desc: desc,
           active: true,
           valueFactor: 0,
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -300,13 +257,9 @@ export default {
     try {
       const query = `${API_ROOT}/api/species/${id}`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'DELETE',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -315,13 +268,9 @@ export default {
     try {
       const query = `${API_ROOT}/api/species/combine`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           combine,
           species: {
             name,
@@ -329,8 +278,8 @@ export default {
             active: true,
             valueFactor: 0,
           },
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -339,12 +288,9 @@ export default {
     try {
       const query = `${API_ROOT}/api/${getOrganization()}trees/count?&where[speciesId]=${speciesId}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
+      return requestApi(query, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -357,14 +303,9 @@ export default {
       const filterString = `filter[order]=tagName`;
       const query = `${API_ROOT}/api/tags?${filterString}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
+      return requestApi(query, {
         signal: abortController?.signal,
-      }).then(handleResponse);
+      });
     } catch (error) {
       handleError(error);
     }
@@ -373,13 +314,7 @@ export default {
     try {
       const query = `${API_ROOT}/api/tags/${id}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -388,18 +323,14 @@ export default {
     try {
       const query = `${API_ROOT}/api/tags`;
 
-      return fetch(query, {
+      return requestApi(query, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+        body: {
           tagName,
           active: true,
           public: true,
-        }),
-      }).then(handleResponse);
+        },
+      });
     } catch (error) {
       handleError(error);
     }
@@ -412,17 +343,13 @@ export default {
       return tags.map((t) => {
         const query = `${API_ROOT}/api/tree_tags`;
 
-        return fetch(query, {
+        return requestApi(query, {
           method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            Authorization: session.token,
-          },
-          body: JSON.stringify({
+          body: {
             treeId: captureId,
             tagId: t.id,
-          }),
-        }).then(handleResponse);
+          },
+        });
       });
     } catch (error) {
       handleError(error);
@@ -445,13 +372,7 @@ export default {
       const filterString = [...captureIdClauses, ...tagIdClauses].join('&');
       const query = `${API_ROOT}/api/tree_tags?${filterString}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -465,13 +386,7 @@ export default {
 
       log.debug('GET ORGANIZATIONS -----', query);
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }
@@ -480,13 +395,7 @@ export default {
     try {
       const query = `${API_ROOT}/auth/admin_users/${id}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return requestApi(query);
     } catch (error) {
       handleError(error);
     }

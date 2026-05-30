@@ -1,5 +1,5 @@
-import { handleResponse, handleError } from './apiUtils';
-import { session } from '../models/auth';
+import { handleError } from './apiUtils';
+import { authAxios, publicAxios } from './httpClient';
 
 export default {
   getRegions(organizationId) {
@@ -9,13 +9,7 @@ export default {
         query = `${query}?owner_id=${organizationId}`;
       }
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -27,13 +21,7 @@ export default {
         query = `${query}&organization_id=${organizationId}`;
       }
 
-      const res = await fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      const res = await authAxios.get(query).then((response) => response.data);
 
       if (res.grower_accounts) {
         const authors = await res.grower_accounts.map((author) => {
@@ -51,14 +39,9 @@ export default {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region`;
       const { id, name, description, created_at } = payload;
 
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({ id, name, description, created_at }),
-      }).then(handleResponse);
+      return authAxios
+        .post(query, { id, name, description, created_at })
+        .then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -67,11 +50,7 @@ export default {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/region/${region_id}`;
 
-      return fetch(query, {
-        headers: {
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -80,7 +59,7 @@ export default {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message?handle=${handle}&limit=500`;
 
-      return fetch(query).then(handleResponse);
+      return publicAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -89,14 +68,7 @@ export default {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({ ...payload }),
-      }).then(handleResponse);
+      return authAxios.post(query, { ...payload }).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -105,14 +77,7 @@ export default {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/message`;
 
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(payload),
-      }).then(handleResponse);
+      return authAxios.post(query, payload).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -121,14 +86,7 @@ export default {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/bulk_message`;
 
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(payload),
-      }).then(handleResponse);
+      return authAxios.post(query, payload).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -136,7 +94,7 @@ export default {
   getSurvey(surveyId) {
     try {
       const query = `${process.env.REACT_APP_MESSAGING_ROOT}/survey/${surveyId}`;
-      return fetch(query).then(handleResponse);
+      return publicAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }

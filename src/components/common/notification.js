@@ -97,6 +97,7 @@ export default function notification(message, type = 'info', delay = 3000) {
       .classed('confirm-container', true)
       .append('div')
       .classed('confirm-dialog', true);
+    // eslint-disable-next-line react/no-deprecated
     ReactDOM.render(dialog, d3.select('.confirm-dialog').node());
   });
 }

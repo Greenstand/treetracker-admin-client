@@ -18,7 +18,7 @@ class App extends Component {
       <ThemeProvider theme={theme}>
         <>
           <BrowserRouter>
-            <AppProvider>
+            <AppProvider initialAuth={this.props.initialAuth}>
               <Routers />
             </AppProvider>
           </BrowserRouter>

@@ -17,6 +17,7 @@ import { AppContext } from '../context/AppContext';
 import classNames from 'classnames';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { isKeycloakConfigured } from '../auth/keycloak';
 // import Copyright from 'components/Copyright'
 
 const styles = (theme) => ({
@@ -67,7 +68,7 @@ const Login = (props) => {
   const history = useHistory();
   const location = useLocation();
   const { from } = location.state || { from: { pathname: '/' } };
-
+  const isKeycloakEnabled = isKeycloakConfigured();
   useEffect(() => {
     return () => {
       setLoading(false);
@@ -161,6 +162,23 @@ const Login = (props) => {
       })();
     }
     return false;
+  }
+
+  if (isKeycloakEnabled) {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <IconLogo />
+          <Box m={2} />
+          <Typography variant="h2">Admin Panel</Typography>
+          <Box m={2} />
+          <Typography variant="subtitle1">Redirecting to sign in...</Typography>
+          <Box m={2} />
+          <CircularProgress size={24} className={classes.buttonProgress} />
+        </div>
+      </Container>
+    );
   }
 
   return (

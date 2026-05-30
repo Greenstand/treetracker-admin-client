@@ -235,6 +235,50 @@ To run tests:
 
 Make your own `/cypress/fixtures/login.json` file containing the actual credentials in order to run the cypress tests.
 
+### BDD Tests (WebdriverIO + Cucumber)
+
+Feature specs live in `features/` and are written in Gherkin. They run against the live dev server, so start it first:
+
+```bash
+npm start
+```
+
+#### Run BDD tests
+
+In a separate terminal:
+
+```bash
+npm run wdio
+```
+
+Chrome will open visibly and execute each scenario. Results are printed to the terminal. A video of the run is saved to `reports/video/test-run.mp4`.
+
+#### Generate the HTML report
+
+After the test run, convert the raw Allure results into a browsable HTML report:
+
+```bash
+npx allure generate ./reports/allure-results --clean -o ./reports/allure-html
+```
+
+#### Open the report server
+
+The report uses XHR requests to load data, so it must be served over HTTP — opening `index.html` directly in a browser will not work.
+
+Run the built-in Allure server:
+
+```bash
+npx allure open ./reports/allure-html
+```
+
+This starts a local HTTP server and opens the report in your browser automatically (default port 4321).
+
+Alternatively, run both steps in one command:
+
+```bash
+npm run wdio:report
+```
+
 ## How to log
 
 We use [loglevel](<(https://github.com/pimterry/loglevel)>) for logging, with some conventions. Using loglevel, we will be able to open/close a single file's log by chaining the level of log on the fly, even in production env.

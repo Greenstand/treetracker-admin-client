@@ -16,7 +16,7 @@ import React, { Suspense, lazy, useContext, useEffect, useState } from 'react';
 import AccountIcon from '@material-ui/icons/Person';
 import { AppContext } from '../context/AppContext';
 import Menu from './common/Menu';
-import axios from 'axios';
+import { authAxios } from '../api/httpClient';
 import { documentTitle } from '../common/variables';
 import { getDateTimeStringLocale } from '../common/locale';
 import { useHistory } from 'react-router-dom';
@@ -85,7 +85,7 @@ const renderLoader = () => (
 function Account(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const { user, token } = appContext;
+  const { user } = appContext;
   const [openPwdForm, setOpenPwdForm] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -129,13 +129,10 @@ function Account(props) {
     const result1 = await isOldPwdReal(oldPassword);
     const result2 = await doesNewPwdMatch(newPassword, confirmedPassword);
     if (result1 && result2) {
-      let res = await axios.put(
+      let res = await authAxios.put(
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${user.id}/password`,
         {
           password: newPassword,
-        },
-        {
-          headers: { Authorization: token },
         }
       );
       if (res.status === 200) {
@@ -166,13 +163,10 @@ function Account(props) {
     let result;
 
     try {
-      const res = await axios.post(
+      const res = await authAxios.post(
         `${process.env.REACT_APP_API_ROOT}/auth/validate`,
         {
           password: oldPassword,
-        },
-        {
-          headers: { Authorization: token },
         }
       );
       if (res.status === 200) {
@@ -240,9 +234,11 @@ function Account(props) {
               </Grid>
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Created</Typography>
-                <Typography className={classes.item}>
-                  {getDateTimeStringLocale(user.createdAt)}
-                </Typography>
+                {user?.createdAt ? (
+                  <Typography className={classes.item}>
+                    {getDateTimeStringLocale(user?.createdAt)}
+                  </Typography>
+                ) : null}
               </Grid>
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Password</Typography>

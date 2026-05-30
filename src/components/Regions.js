@@ -33,6 +33,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { RegionContext } from '../context/RegionContext';
 import { AppContext } from '../context/AppContext';
 import { getOrganizationUUID } from '../api/apiUtils';
+import { publicAxios } from '../api/httpClient';
 import Menu from './common/Menu';
 import Spinner from './common/Spinner';
 
@@ -184,21 +185,14 @@ const RegionTable = (props) => {
 
   const handleDownload = async (item) => {
     const query = `${process.env.REACT_APP_REGION_API_ROOT}/${item.shape}`;
-    console.log('item', item);
-    const result = await fetch(query, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-        // Authorization: session.token,
-      },
-    });
-    if (!result.ok) {
+    try {
+      const result = await publicAxios.get(query);
+      location.replace(result.request.responseURL || query);
+    } catch (error) {
       console.error(
-        `There has been an error status ${result.status} on a fetch request to ${query}`
+        `There has been an error status ${error?.response?.status} on a request to ${query}`
       );
-      return;
     }
-    location.replace(result.url);
   };
 
   const handleSnackbarClose = (event, reason) => {
