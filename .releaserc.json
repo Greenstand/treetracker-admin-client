@@ -13,6 +13,11 @@
       "name": "hotfix/new-master",
       "prerelease": "hotfix",
       "channel": "master"
+    },
+    {
+      "name": "keycloak",
+      "prerelease": "keycloak",
+      "channel": "beta"
     }
   ],
   "plugins": [
