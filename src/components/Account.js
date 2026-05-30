@@ -15,6 +15,10 @@ import React, { Suspense, lazy, useContext, useEffect, useState } from 'react';
 
 import AccountIcon from '@material-ui/icons/Person';
 import { AppContext } from '../context/AppContext';
+import {
+  startKeycloakRequiredAction,
+  KEYCLOAK_UPDATE_ACTIONS,
+} from '../auth/keycloak';
 import Menu from './common/Menu';
 import { authAxios } from '../api/httpClient';
 import { documentTitle } from '../common/variables';
@@ -85,7 +89,7 @@ const renderLoader = () => (
 function Account(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const { user } = appContext;
+  const { user, isKeycloakEnabled } = appContext;
   const [openPwdForm, setOpenPwdForm] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -98,7 +102,14 @@ function Account(props) {
     appContext.logout();
   }
 
-  const handleClickOpen = () => {
+  const handleChangePassword = async () => {
+    if (isKeycloakEnabled) {
+      await startKeycloakRequiredAction(
+        KEYCLOAK_UPDATE_ACTIONS.UPDATE_PASSWORD
+      );
+      return;
+    }
+
     setOpenPwdForm(true);
   };
 
@@ -243,7 +254,7 @@ function Account(props) {
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Password</Typography>
                 <Button
-                  onClick={handleClickOpen}
+                  onClick={handleChangePassword}
                   color="primary"
                   className={classes.logout}
                 >
@@ -267,68 +278,70 @@ function Account(props) {
         </Grid>
       </Grid>
 
-      <Dialog
-        open={openPwdForm}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <Suspense fallback={renderLoader()}>
-          <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
-          <DialogContent>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="old password"
-              type="password"
-              id="password"
-              onChange={onChangeOldPwd}
-              value={oldPassword}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="new password"
-              type="password"
-              id="password"
-              onChange={onChangeNewPwd}
-              value={newPassword}
-            />
-            <PasswordStrengthMeter password={newPassword} />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="confirm password"
-              type="password"
-              id="password"
-              onChange={onChangeConfirmedPwd}
-              value={confirmedPassword}
-            />
-            <Typography variant="subtitle2" color="error">
-              {errorMessage}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button
-              onClick={handleConfirm}
-              variant="contained"
-              color="primary"
-              disabled={!oldPassword || !newPassword || !confirmedPassword}
-            >
-              Save
-            </Button>
-          </DialogActions>
-        </Suspense>
-      </Dialog>
+      {!isKeycloakEnabled ? (
+        <Dialog
+          open={openPwdForm}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <Suspense fallback={renderLoader()}>
+            <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
+            <DialogContent>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="old password"
+                type="password"
+                id="password"
+                onChange={onChangeOldPwd}
+                value={oldPassword}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="new password"
+                type="password"
+                id="password"
+                onChange={onChangeNewPwd}
+                value={newPassword}
+              />
+              <PasswordStrengthMeter password={newPassword} />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="confirm password"
+                type="password"
+                id="password"
+                onChange={onChangeConfirmedPwd}
+                value={confirmedPassword}
+              />
+              <Typography variant="subtitle2" color="error">
+                {errorMessage}
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button
+                onClick={handleConfirm}
+                variant="contained"
+                color="primary"
+                disabled={!oldPassword || !newPassword || !confirmedPassword}
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Suspense>
+        </Dialog>
+      ) : null}
     </Grid>
   );
 }
