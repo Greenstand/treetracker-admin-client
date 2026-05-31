@@ -17,6 +17,7 @@ import {
   Divider,
   LinearProgress,
   Fab,
+  Switch,
 } from '@material-ui/core';
 import {
   Close,
@@ -410,6 +411,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   </Grid>
                 )}
               <Divider />
+              <ShowInMapToggle grower={grower} />
+              <Divider />
               <Grid container direction="column" className={classes.box}>
                 <Typography variant="subtitle1" className={classes.captures}>
                   Captures
@@ -578,3 +581,34 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 };
 
 export default GrowerDetail;
+
+const ShowInMapToggle = ({ grower }) => {
+  const classes = useStyle();
+  const { updateGrower } = useContext(GrowerContext);
+  const [showInMap, setShowInMap] = useState(!!grower?.show_in_map);
+
+  React.useEffect(() => {
+    setShowInMap(!!grower?.show_in_map);
+  }, [grower?.show_in_map]);
+
+  const toggleShow = async () => {
+    const newShowState = !showInMap;
+    setShowInMap(newShowState);
+    await updateGrower({ id: grower.id, show_in_map: newShowState });
+  };
+
+  return (
+    <Grid
+      container
+      direction="row"
+      className={classes.box}
+      style={{
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <Typography variant="subtitle1">Show in map</Typography>
+      <Switch checked={showInMap} onChange={toggleShow} />
+    </Grid>
+  );
+};
