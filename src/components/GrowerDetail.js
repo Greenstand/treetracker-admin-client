@@ -133,6 +133,91 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
+const CAPTURE_DEVICE_LOOKUP_LIMIT = 100;
+
+const isPresentDeviceIdentifier = (value) => {
+  if (value == null) return false;
+  return String(value).trim().length > 0;
+};
+
+const getRegistrationDeviceIdentifier = (reg) => {
+  if (!reg) return undefined;
+  const candidates = [
+    reg.device_identifier,
+    reg.deviceIdentifier,
+    reg.field_data?.device_identifier,
+    reg.field_data?.deviceIdentifier,
+    reg.fieldData?.device_identifier,
+    reg.fieldData?.deviceIdentifier,
+  ];
+  return candidates.find(isPresentDeviceIdentifier);
+};
+
+const getRegistrationManufacturer = (reg) => {
+  if (!reg) return undefined;
+  return (
+    reg.manufacturer ??
+    reg.field_data?.manufacturer ??
+    reg.fieldData?.manufacturer
+  );
+};
+
+const inferOsLabelFromDeviceIdentifier = (deviceIdentifier) => {
+  if (!deviceIdentifier) return 'Unknown';
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(deviceIdentifier)) {
+    return 'iOS';
+  }
+  if (/^[0-9a-f]{16}$/i.test(deviceIdentifier)) {
+    return 'Android';
+  }
+  return 'Unknown';
+};
+
+const buildDeviceIdentifiersFromRegistrations = (registrations) => {
+  const uniqueDevices = {};
+  return registrations.reduce((result, reg) => {
+    const deviceIdentifier = getRegistrationDeviceIdentifier(reg);
+    if (
+      !isPresentDeviceIdentifier(deviceIdentifier) ||
+      uniqueDevices[deviceIdentifier]
+    ) {
+      return result;
+    }
+    uniqueDevices[deviceIdentifier] = true;
+    const manufacturer = getRegistrationManufacturer(reg);
+    const os =
+      manufacturer?.toLowerCase() === 'apple'
+        ? 'iOS'
+        : manufacturer
+        ? 'Android'
+        : inferOsLabelFromDeviceIdentifier(deviceIdentifier);
+    result.push({
+      id: deviceIdentifier,
+      os,
+    });
+    return result;
+  }, []);
+};
+
+const buildDeviceIdentifiersFromCaptures = (captures) => {
+  const uniqueDevices = {};
+  return captures.reduce((result, capture) => {
+    const deviceIdentifier = capture.deviceIdentifier;
+    if (
+      !isPresentDeviceIdentifier(deviceIdentifier) ||
+      uniqueDevices[deviceIdentifier]
+    ) {
+      return result;
+    }
+    uniqueDevices[deviceIdentifier] = true;
+    result.push({
+      id: deviceIdentifier,
+      os: inferOsLabelFromDeviceIdentifier(deviceIdentifier),
+    });
+    return result;
+  }, []);
+};
+
 const GrowerDetail = ({ open, growerId, onClose }) => {
   // console.log('render: grower detail');
   const classes = useStyle();
@@ -140,6 +225,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const { growers } = useContext(GrowerContext);
   const { sendMessageFromGrower } = useContext(MessagingContext);
   const [growerRegistrations, setGrowerRegistrations] = useState(null);
+  const [registrationsPlanterId, setRegistrationsPlanterId] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [grower, setGrower] = useState({});
   const [deviceIdentifiers, setDeviceIdentifiers] = useState([]);
@@ -148,6 +234,19 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  async function loadDeviceIdentifiersFromCaptures(planterId) {
+    const filter = new FilterModel();
+    filter.planterId = planterId?.toString();
+    const captures = await treeTrackerApi.getCaptureImages({
+      skip: 0,
+      rowsPerPage: CAPTURE_DEVICE_LOOKUP_LIMIT,
+      orderBy: 'timeCreated',
+      order: 'desc',
+      filter,
+    });
+    return buildDeviceIdentifiersFromCaptures(captures || []);
+  }
 
   useEffect(() => {
     setErrorMessage(null);
@@ -176,41 +275,34 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
 
         setGrower(match);
 
-        if (
-          match.id &&
-          (!growerRegistrations ||
-            (growerRegistrations.length > 0 &&
-              growerRegistrations[0].planter_id !== match.id))
-        ) {
+        const planterId = match.id;
+        if (planterId && Number(registrationsPlanterId) !== Number(planterId)) {
           setGrowerRegistrations(null);
-          api.getGrowerRegistrations(match.id).then((registrations) => {
-            if (registrations && registrations.length) {
-              const sortedReg = registrations.sort((a, b) =>
-                a.created_at > b.created_at ? 1 : -1
-              );
-              const uniqueDevices = {};
-              const devices = sortedReg.reduce((result, reg) => {
-                if (!reg.device_identifier) {
-                  return result;
-                }
-                if (!uniqueDevices[reg.device_identifier]) {
-                  uniqueDevices[reg.device_identifier] = true;
-                  // if manufacturer isn't 'apple' it's an android phone
-                  result.push({
-                    id: reg.device_identifier,
-                    os:
-                      reg.manufacturer?.toLowerCase() === 'apple'
-                        ? 'iOS'
-                        : 'Android',
-                  });
-                }
-                return result;
-              }, []);
+          setDeviceIdentifiers([]);
+          api
+            .getGrowerRegistrations(planterId)
+            .then(async (registrations) => {
+              const sortedReg =
+                registrations && registrations.length
+                  ? [...registrations].sort((a, b) =>
+                      a.created_at > b.created_at ? 1 : -1
+                    )
+                  : [];
 
-              setDeviceIdentifiers(devices);
+              let devices = buildDeviceIdentifiersFromRegistrations(sortedReg);
+              if (!devices.length) {
+                devices = await loadDeviceIdentifiersFromCaptures(planterId);
+              }
+
+              setRegistrationsPlanterId(planterId);
               setGrowerRegistrations(sortedReg);
-            }
-          });
+              setDeviceIdentifiers(devices);
+            })
+            .catch(() => {
+              setRegistrationsPlanterId(planterId);
+              setGrowerRegistrations([]);
+              setDeviceIdentifiers([]);
+            });
         }
       }
     }
