@@ -36,6 +36,7 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
+import OrganizationsView from 'views/OrganizationsView';
 import log from 'loglevel';
 import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
 import { parseStoredToken, parseStoredUser } from '../auth/util';
@@ -168,6 +169,13 @@ function getRoutes(user) {
       component: Unauthorized,
       icon: IconSettings,
       disabled: true,
+    },
+    {
+      name: 'Organization management',
+      linkTo: '/organization-management',
+      component: OrganizationsView,
+      icon: IconGroup,
+      disabled: !hasPermission(user, [POLICIES.ADMIN]),
     },
     {
       name: 'User Manager',
