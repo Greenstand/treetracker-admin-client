@@ -15,7 +15,13 @@ import React, { Suspense, lazy, useContext, useEffect, useState } from 'react';
 
 import AccountIcon from '@material-ui/icons/Person';
 import { AppContext } from '../context/AppContext';
+import {
+  consumeKeycloakActionUpdate,
+  startKeycloakRequiredAction,
+  KEYCLOAK_UPDATE_ACTIONS,
+} from '../auth/keycloak';
 import Menu from './common/Menu';
+import notification from './common/notification';
 import { authAxios } from '../api/httpClient';
 import { documentTitle } from '../common/variables';
 import { getDateTimeStringLocale } from '../common/locale';
@@ -69,10 +75,35 @@ const style = (theme) => ({
     fontSize: '1rem',
     marginTop: theme.spacing(2),
   },
+  updateAccountWrap: {
+    marginLeft: 'auto',
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+      width: '100%',
+      marginTop: theme.spacing(2),
+    },
+  },
+  updateAccount: {
+    fontSize: '1rem',
+    fontWeight: 600,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      paddingTop: theme.spacing(2.5),
+      paddingBottom: theme.spacing(2.5),
+    },
+  },
   border: {
     borderBottom: '1px solid #ddd',
   },
 });
+
+const ACTION_CONFIRMATIONS = {
+  [KEYCLOAK_UPDATE_ACTIONS.UPDATE_PASSWORD]: 'Your password has been changed.',
+  [KEYCLOAK_UPDATE_ACTIONS.UPDATE_PROFILE]:
+    'Your account information has been updated.',
+};
 
 const PasswordStrengthMeter = lazy(() => import('./PasswordStrengthMeter'));
 const renderLoader = () => (
@@ -85,7 +116,7 @@ const renderLoader = () => (
 function Account(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const { user } = appContext;
+  const { user, isKeycloakEnabled } = appContext;
   const [openPwdForm, setOpenPwdForm] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -98,8 +129,20 @@ function Account(props) {
     appContext.logout();
   }
 
-  const handleClickOpen = () => {
+  const handleChangePassword = async () => {
+    if (isKeycloakEnabled) {
+      await startKeycloakRequiredAction(
+        KEYCLOAK_UPDATE_ACTIONS.UPDATE_PASSWORD
+      );
+      return;
+    }
+
     setOpenPwdForm(true);
+  };
+
+  const handleUpdateAccount = async () => {
+    if (!isKeycloakEnabled) return;
+    await startKeycloakRequiredAction(KEYCLOAK_UPDATE_ACTIONS.UPDATE_PROFILE);
   };
 
   const handleClose = () => {
@@ -188,6 +231,13 @@ function Account(props) {
     document.title = `Account - ${documentTitle}`;
   });
 
+  useEffect(() => {
+    const update = consumeKeycloakActionUpdate();
+    if (!update || update.status !== 'success') return;
+    const message = ACTION_CONFIRMATIONS[update.action];
+    if (message) notification(message, 'success', 5000);
+  }, []);
+
   const roles = user.roleNames?.map((name, idx) => (
     <Typography key={`role_${idx}`} className={classes.item}>
       {name}
@@ -203,11 +253,30 @@ function Account(props) {
       <Grid item style={{ flexGrow: 1 }}>
         <Grid container className={classes.rightBox}>
           <Grid item xs={12}>
-            <Grid container className={classes.titleBox}>
-              <Grid container alignItems="center" item>
-                <AccountIcon className={classes.accountIcon} />
-                <Typography variant="h3">Account</Typography>
+            <Grid
+              container
+              className={classes.titleBox}
+              alignItems="center"
+              justifyContent="space-between"
+              wrap="wrap"
+            >
+              <Grid item>
+                <Grid container alignItems="center">
+                  <AccountIcon className={classes.accountIcon} />
+                  <Typography variant="h3">Account</Typography>
+                </Grid>
               </Grid>
+              {isKeycloakEnabled ? (
+                <Grid item className={classes.updateAccountWrap}>
+                  <Button
+                    onClick={handleUpdateAccount}
+                    color="primary"
+                    className={classes.updateAccount}
+                  >
+                    UPDATE ACCOUNT
+                  </Button>
+                </Grid>
+              ) : null}
             </Grid>
             <Box className={classes.border} />
             <Box height={12} />
@@ -243,7 +312,7 @@ function Account(props) {
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Password</Typography>
                 <Button
-                  onClick={handleClickOpen}
+                  onClick={handleChangePassword}
                   color="primary"
                   className={classes.logout}
                 >
@@ -267,68 +336,70 @@ function Account(props) {
         </Grid>
       </Grid>
 
-      <Dialog
-        open={openPwdForm}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <Suspense fallback={renderLoader()}>
-          <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
-          <DialogContent>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="old password"
-              type="password"
-              id="password"
-              onChange={onChangeOldPwd}
-              value={oldPassword}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="new password"
-              type="password"
-              id="password"
-              onChange={onChangeNewPwd}
-              value={newPassword}
-            />
-            <PasswordStrengthMeter password={newPassword} />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="confirm password"
-              type="password"
-              id="password"
-              onChange={onChangeConfirmedPwd}
-              value={confirmedPassword}
-            />
-            <Typography variant="subtitle2" color="error">
-              {errorMessage}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button
-              onClick={handleConfirm}
-              variant="contained"
-              color="primary"
-              disabled={!oldPassword || !newPassword || !confirmedPassword}
-            >
-              Save
-            </Button>
-          </DialogActions>
-        </Suspense>
-      </Dialog>
+      {!isKeycloakEnabled ? (
+        <Dialog
+          open={openPwdForm}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <Suspense fallback={renderLoader()}>
+            <DialogTitle id="form-dialog-title">Change Password</DialogTitle>
+            <DialogContent>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="old password"
+                type="password"
+                id="password"
+                onChange={onChangeOldPwd}
+                value={oldPassword}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="new password"
+                type="password"
+                id="password"
+                onChange={onChangeNewPwd}
+                value={newPassword}
+              />
+              <PasswordStrengthMeter password={newPassword} />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="confirm password"
+                type="password"
+                id="password"
+                onChange={onChangeConfirmedPwd}
+                value={confirmedPassword}
+              />
+              <Typography variant="subtitle2" color="error">
+                {errorMessage}
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button
+                onClick={handleConfirm}
+                variant="contained"
+                color="primary"
+                disabled={!oldPassword || !newPassword || !confirmedPassword}
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Suspense>
+        </Dialog>
+      ) : null}
     </Grid>
   );
 }
