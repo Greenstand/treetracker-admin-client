@@ -6,6 +6,7 @@ const PERMISSIONS = {
 
 const POLICIES = {
   ORGANIZATION: 'org',
+  ADMIN: 'greenstand-admin',
   SUPER_PERMISSION: 'super_permission',
   MANAGE_EARNINGS: 'manage_earnings',
   MANAGE_GROWER: 'manage_planter',
@@ -25,9 +26,12 @@ const POLICIES = {
   MATCH_CAPTURES: 'match_captures',
 };
 
+// eslint-disable-next-line no-unused-vars
 function hasPermission(user, p) {
   // Chris github - BirdTho 9/21 user may fail if called when logged out, as in the case in Context.js
   // console.assert(user, "Why user fail?", user);
+  // TODO: temporarily bypassed while admin-role work is in progress
+  // return true;
   if (!user) return false;
   const policies = user.policy?.policies || [];
   if (p instanceof Array) {
