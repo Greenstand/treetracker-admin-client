@@ -101,6 +101,27 @@ export async function loginToKeycloak(redirectPath = '/') {
   return false;
 }
 
+export async function startKeycloakRequiredAction(
+  action,
+  redirectPath = '/account'
+) {
+  const instance = getKeycloak();
+
+  if (!instance) {
+    return false;
+  }
+
+  const authenticated = await initializeKeycloak();
+  if (!authenticated) {
+    return false;
+  }
+
+  await instance.login({
+    action,
+    redirectUri: `${window.location.origin}${redirectPath}`,
+  });
+}
+
 export function logoutFromKeycloak() {
   const instance = getKeycloak();
 
@@ -180,3 +201,7 @@ export async function ensureFreshToken(minValidity = 30) {
 
   return keycloakRefreshPromise;
 }
+
+export const KEYCLOAK_UPDATE_ACTIONS = {
+  UPDATE_PASSWORD: 'UPDATE_PASSWORD',
+};
