@@ -37,10 +37,10 @@ When('I fill in my current password', async () => {
     await ReauthenticatePage.enterPassword(CURRENT_PASSWORD);
     await ReauthenticatePage.submit();
   }
-  await UpdatePasswordPage.waitForPage();
 });
 
 When('I fill in a new password', async () => {
+  await UpdatePasswordPage.waitForPage();
   await UpdatePasswordPage.fillNewPassword(NEW_PASSWORD);
 });
 
@@ -56,5 +56,6 @@ Then(
   'I should see a confirmation message that my password has been changed',
   async () => {
     await AccountPage.waitForPage();
+    await AccountPage.waitForConfirmation('Your password has been changed.');
   }
 );
