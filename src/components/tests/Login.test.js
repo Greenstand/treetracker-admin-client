@@ -11,8 +11,7 @@ describe('Login Page', () => {
       expect(logo).toBeInTheDocument();
     });
     it('has "Admin Panel" header', () => {
-      const { container } = render(<Login />, { wrapper: MemoryRouter });
-      console.log(container.querySelector('div > h2').innerHTML);
+      render(<Login />, { wrapper: MemoryRouter });
       const header = screen.queryByRole('heading', { name: 'Admin Panel' });
       expect(header).toBeInTheDocument();
     });

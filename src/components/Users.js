@@ -47,9 +47,9 @@ import {
 } from '@material-ui/icons';
 import EmojiObjects from '@material-ui/icons/EmojiObjects';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
+import { authAxios } from '../api/httpClient';
 import { AppContext } from '../context/AppContext';
-import pwdGenerator from 'generate-password';
+import pwdGenerator from 'generate-password-browser';
 import { getDateTimeStringLocale } from '../common/locale';
 import { documentTitle } from '../common/variables';
 import Menu from './common/Menu';
@@ -139,7 +139,7 @@ function intersection(a, b) {
 function Users(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const { user, token } = appContext;
+  const { user } = appContext;
 
   const [userEditing, setUserEditing] = useState(undefined);
   const [userPassword, setUserPassword] = useState(undefined);
@@ -161,11 +161,8 @@ function Users(props) {
   const DISABLED = 'Disabled';
 
   const load = useCallback(async () => {
-    let res = await axios.get(
-      `${process.env.REACT_APP_API_ROOT}/auth/permissions`,
-      {
-        headers: { Authorization: token },
-      }
+    let res = await authAxios.get(
+      `${process.env.REACT_APP_API_ROOT}/auth/permissions`
     );
     if (res.status === 200) {
       setPermissions(res.data);
@@ -173,11 +170,8 @@ function Users(props) {
       console.error('load fail:', res);
       return;
     }
-    res = await axios.get(
-      `${process.env.REACT_APP_API_ROOT}/auth/admin_users`,
-      {
-        headers: { Authorization: token },
-      }
+    res = await authAxios.get(
+      `${process.env.REACT_APP_API_ROOT}/auth/admin_users`
     );
     if (res.status === 200) {
       setUsers(res.data);
@@ -186,7 +180,7 @@ function Users(props) {
       return;
     }
     setUsersLoaded(true);
-  }, [token]);
+  }, []);
 
   React.useEffect(() => {
     load();
@@ -213,11 +207,8 @@ function Users(props) {
     }
     try {
       setSaveInProgress(true);
-      const res = await axios.delete(
-        `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userDelete.id}`,
-        {
-          headers: { Authorization: token },
-        }
+      const res = await authAxios.delete(
+        `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userDelete.id}`
       );
       setSaveInProgress(false);
       if (res.status === 204) {
@@ -356,14 +347,11 @@ function Users(props) {
 
     setSaveInProgress(true);
     if (userEditing.id === undefined) {
-      let res = await axios.post(
+      let res = await authAxios.post(
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/`,
         {
           ...userEditing,
           role: right.map((e) => e.id),
-        },
-        {
-          headers: { Authorization: token },
         }
       );
       setSaveInProgress(false);
@@ -377,14 +365,11 @@ function Users(props) {
         return;
       }
     } else {
-      let res = await axios.patch(
+      let res = await authAxios.patch(
         `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userEditing.id}`,
         {
           ...userEditing,
           role: right.map((e) => e.id),
-        },
-        {
-          headers: { Authorization: token },
         }
       );
       setSaveInProgress(false);
@@ -411,13 +396,10 @@ function Users(props) {
 
   async function handleSavePassword() {
     setSaveInProgress(true);
-    let res = await axios.put(
+    let res = await authAxios.put(
       `${process.env.REACT_APP_API_ROOT}/auth/admin_users/${userPassword.id}/password`,
       {
         password: newPassword,
-      },
-      {
-        headers: { Authorization: token },
       }
     );
     setSaveInProgress(false);

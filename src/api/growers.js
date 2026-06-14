@@ -1,5 +1,5 @@
-import { handleResponse, handleError, getOrganization } from './apiUtils';
-import { session } from '../models/auth';
+import { handleError, getOrganization } from './apiUtils';
+import { authAxios } from './httpClient';
 
 export default {
   getGrower(id) {
@@ -8,13 +8,7 @@ export default {
         process.env.REACT_APP_API_ROOT
       }/api/${getOrganization()}planter/${id}`;
 
-      return fetch(growerQuery, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(growerQuery).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -46,12 +40,7 @@ export default {
         process.env.REACT_APP_API_ROOT
       }/api/${getOrganization()}planter?filter=${JSON.stringify(growerFilter)}`;
 
-      return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -65,12 +54,7 @@ export default {
       }/api/${getOrganization()}planter/count?where=${JSON.stringify(
         filterObj
       )}`;
-      return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -81,13 +65,7 @@ export default {
       const registrationQuery = `${
         process.env.REACT_APP_API_ROOT
       }/api/${getOrganization()}planter-registration?filter[where][planterId]=${growerId}`;
-      return fetch(registrationQuery, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(registrationQuery).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -107,14 +85,9 @@ export default {
         filter
       )}`;
 
-      return fetch(growerSelfiesQuery, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      })
-        .then(handleResponse)
+      return authAxios
+        .get(growerSelfiesQuery)
+        .then((res) => res.data)
         .then((items) => {
           // Remove duplicates
           return [
@@ -140,14 +113,7 @@ export default {
         process.env.REACT_APP_API_ROOT
       }/api/${getOrganization()}planter/${id}`;
 
-      return fetch(growerQuery, {
-        method: 'PATCH',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(growerUpdate),
-      }).then(handleResponse);
+      return authAxios.patch(growerQuery, growerUpdate).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }

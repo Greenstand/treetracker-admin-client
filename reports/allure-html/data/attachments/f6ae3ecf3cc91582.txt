@@ -1,0 +1,4 @@
+{
+  "script": "return (() => {\n    window.localStorage.clear();\n    window.sessionStorage.clear();\n  }).apply(null, arguments)",
+  "args": []
+}

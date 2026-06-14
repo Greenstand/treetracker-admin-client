@@ -36,6 +36,10 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
+import OrganizationsView from 'views/OrganizationsView';
+import log from 'loglevel';
+import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
+import { parseStoredToken, parseStoredUser } from '../auth/util';
 
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({});
@@ -62,6 +66,7 @@ function getRoutes(user) {
       component: VerifyView,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
+        POLICIES.ORGANIZATION,
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
         POLICIES.APPROVE_TREE,
@@ -166,6 +171,13 @@ function getRoutes(user) {
       disabled: true,
     },
     {
+      name: 'Organization management',
+      linkTo: '/organization-management',
+      component: OrganizationsView,
+      icon: IconGroup,
+      disabled: !hasPermission(user, [POLICIES.ADMIN]),
+    },
+    {
       name: 'User Manager',
       linkTo: '/user-manager',
       component: Users,
@@ -212,10 +224,19 @@ function getRoutes(user) {
 }
 
 export const AppProvider = (props) => {
-  const localUser = JSON.parse(localStorage.getItem('user'));
-  const [user, setUser] = useState(undefined);
-  const [token, setToken] = useState(undefined);
-  const [routes, setRoutes] = useState(getRoutes(localUser));
+  const bootstrapUser = props.initialAuth?.user;
+  const bootstrapToken = props.initialAuth?.token;
+  const isKeycloakEnabled = isKeycloakConfigured();
+  const localUser = isKeycloakEnabled ? undefined : parseStoredUser();
+  const localToken = isKeycloakEnabled ? undefined : parseStoredToken();
+  const initialUser = bootstrapUser || localUser;
+  const initialToken = bootstrapToken || localToken;
+  const [user, setUser] = useState(initialUser);
+  const [token, setToken] = useState(initialToken);
+  const [authStatus, setAuthStatus] = useState(
+    initialUser && initialToken ? 'authenticated' : 'unauthenticated'
+  );
+  const [routes, setRoutes] = useState(getRoutes(initialUser));
   const [userHasOrg, setUserHasOrg] = useState(false);
   const [orgList, setOrgList] = useState([]);
 
@@ -225,11 +246,15 @@ export const AppProvider = (props) => {
   // CustomTableFilter under components/common.
   const [selectedFilters, setSelectedFilters] = useState('');
 
-  // check if the user has an org load organizations when the user changes
   useEffect(() => {
     if (user && token) {
       loadOrganizations();
     }
+
+    if (!user || !token) {
+      setOrgList([]);
+    }
+
     setUserHasOrg(!!user?.policy?.organization?.id);
   }, [user, token]);
 
@@ -273,7 +298,7 @@ export const AppProvider = (props) => {
     if (!isEqual(session.user, newUser)) {
       setUser(newUser);
       session.user = newUser;
-      if (rememberDetails) {
+      if (rememberDetails && !isKeycloakEnabled) {
         localStorage.setItem('user', JSON.stringify(newUser));
       }
 
@@ -285,11 +310,18 @@ export const AppProvider = (props) => {
       session.token = newToken;
       setToken(newToken);
 
-      if (rememberDetails) {
+      if (rememberDetails && !isKeycloakEnabled) {
         localStorage.setItem('token', JSON.stringify(newToken));
       }
     }
+
+    setAuthStatus(newUser && newToken ? 'authenticated' : 'unauthenticated');
   }
+
+  useEffect(() => {
+    session.user = user;
+    session.token = token;
+  }, [user, token]);
 
   function logout() {
     setUser(undefined);
@@ -297,13 +329,25 @@ export const AppProvider = (props) => {
     setRoutes(getRoutes(undefined));
     session.token = undefined;
     session.user = undefined;
+    setOrgList([]);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+
+    if (isKeycloakEnabled) {
+      logoutFromKeycloak();
+    }
+
+    setAuthStatus('unauthenticated');
   }
 
   async function loadOrganizations() {
-    const orgs = await api.getOrganizations();
-    setOrgList(orgs);
+    try {
+      const orgs = await api.getOrganizations();
+      console.log('orgs', orgs);
+      setOrgList(orgs);
+    } catch (error) {
+      log.error('Failed to load organizations', error);
+    }
   }
 
   async function updateSelectedFilter(filters) {
@@ -318,12 +362,14 @@ export const AppProvider = (props) => {
     routes,
     orgList,
     userHasOrg,
+    authStatus,
     selectedFilters,
     updateSelectedFilter,
+    isKeycloakEnabled,
     ...props.value,
   };
 
-  if (!user || !token) {
+  if (!isKeycloakEnabled && (!user || !token)) {
     checkSession();
   }
 

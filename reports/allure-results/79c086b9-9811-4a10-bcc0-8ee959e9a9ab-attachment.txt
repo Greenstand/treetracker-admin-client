@@ -1,0 +1,5 @@
+{
+  "error": "no such element",
+  "message": "no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\".//div[normalize-space(text()) = \"Organization created successfully.\"] | .//div[not(.//div[normalize-space(text()) = \"Organization created successfully.\"]) and normalize-space() = \"Organization created successfully.\"]\"}\n  (Session info: chrome=137.0.7151.68)",
+  "stacktrace": "#0 0x588ab11e8c4a <unknown>\n#1 0x588ab0c8e6e0 <unknown>\n#2 0x588ab0ce0117 <unknown>\n#3 0x588ab0ce0311 <unknown>\n#4 0x588ab0d2eec4 <unknown>\n#5 0x588ab0d05e5d <unknown>\n#6 0x588ab0d2c2cc <unknown>\n#7 0x588ab0d05c03 <unknown>\n#8 0x588ab0cd247b <unknown>\n#9 0x588ab0cd30e1 <unknown>\n#10 0x588ab11ad3fb <unknown>\n#11 0x588ab11b132f <unknown>\n#12 0x588ab1194f39 <unknown>\n#13 0x588ab11b1ec8 <unknown>\n#14 0x588ab117968f <unknown>\n#15 0x588ab11d62b8 <unknown>\n#16 0x588ab11d6496 <unknown>\n#17 0x588ab11e7b26 <unknown>\n#18 0x7d4ff029caa4 <unknown>\n#19 0x7d4ff0329c6c <unknown>\n"
+}

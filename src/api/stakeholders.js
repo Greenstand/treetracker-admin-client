@@ -1,11 +1,19 @@
-import { handleResponse, handleError, getOrganizationId } from './apiUtils';
-import { session } from '../models/auth';
+import { handleError, getOrganizationId } from './apiUtils';
+import { authAxios } from './httpClient';
 const log = require('loglevel').getLogger('../api/stakeholders');
 
 const STAKEHOLDER_API = process.env.REACT_APP_STAKEHOLDER_API_ROOT;
 
 async function fetchJSON(query, options) {
-  return fetch(query, options).then(handleResponse).catch(handleError);
+  return authAxios({
+    url: query,
+    method: options.method,
+    headers: options.headers,
+    data: options.body,
+    signal: options.signal,
+  })
+    .then((res) => res.data)
+    .catch(handleError);
 }
 
 function removeEmptyValues(obj) {
@@ -44,7 +52,6 @@ export default {
         method: 'GET',
         headers: {
           'content-type': 'application/json',
-          Authorization: session.token,
         },
       };
 
@@ -69,9 +76,8 @@ export default {
         method: 'DELETE',
         headers: {
           'content-type': 'application/json',
-          Authorization: session.token,
         },
-        body: JSON.stringify(stakeholderData),
+        body: stakeholderData,
       };
 
       return fetchJSON(query, options);
@@ -96,9 +102,8 @@ export default {
         method: 'PATCH',
         headers: {
           'content-type': 'application/json',
-          Authorization: session.token,
         },
-        body: JSON.stringify(updated),
+        body: updated,
       };
 
       return fetchJSON(query, options);
@@ -122,9 +127,8 @@ export default {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          Authorization: session.token,
         },
-        body: JSON.stringify(created),
+        body: created,
       };
 
       return fetchJSON(query, options);

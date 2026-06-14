@@ -1,8 +1,6 @@
-import axios from 'axios';
-import { session } from '../models/auth';
+import { authAxios } from './httpClient';
 
 const apiUrl = `${process.env.REACT_APP_EARNINGS_ROOT}`;
-const Axios = axios.create({ baseURL: apiUrl });
 
 export default {
   /**
@@ -11,12 +9,9 @@ export default {
    * @returns {Promise}
    */
   async getEarnings(params) {
-    const headers = {
-      'content-type': 'application/json',
-      Authorization: session.token,
-    };
-
-    return Axios.get(`earnings`, { params, headers }).then((res) => res.data);
+    return authAxios
+      .get(`${apiUrl}/earnings`, { params })
+      .then((res) => res.data);
   },
 
   /**
@@ -27,14 +22,9 @@ export default {
    * @returns {Promise}
    */
   async patchEarning(earning) {
-    const headers = {
-      'content-type': 'application/json',
-      Authorization: session.token,
-    };
-
-    return Axios.patch(`earnings`, earning, { headers }).then(
-      (res) => res.data
-    );
+    return authAxios
+      .patch(`${apiUrl}/earnings`, earning)
+      .then((res) => res.data);
   },
 
   /**
@@ -46,12 +36,13 @@ export default {
   async batchPatchEarnings(file) {
     const formData = new FormData();
     formData.append('csv', file);
-    const headers = {
-      accept: 'multipart/form-data',
-      Authorization: session.token,
-    };
 
-    return Axios.patch(`earnings/batch`, formData, { headers })
+    return authAxios
+      .patch(`${apiUrl}/earnings/batch`, formData, {
+        headers: {
+          accept: 'multipart/form-data',
+        },
+      })
       .then((res) => res.data)
       .catch((error) => {
         throw new Error('Payments Batch Upload Failed!', { cause: error });

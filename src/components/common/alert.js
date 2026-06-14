@@ -50,6 +50,7 @@ export default function alert(title, message) {
       .classed('confirm-container', true)
       .append('div')
       .classed('confirm-dialog', true);
+    // eslint-disable-next-line react/no-deprecated
     ReactDOM.render(dialog, d3.select('.confirm-dialog').node());
   });
 }

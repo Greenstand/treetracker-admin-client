@@ -1,18 +1,12 @@
-import { handleResponse, handleError } from './apiUtils';
-import { session } from '../models/auth';
+import { handleError } from './apiUtils';
+import { authAxios } from './httpClient';
 
 export default {
   getItem(type, id) {
     try {
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
 
-      return fetch(query, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -46,12 +40,7 @@ export default {
         process.env.REACT_APP_REGION_API_ROOT
       }/${type}?${searchParams.toString()}`;
 
-      return fetch(query, {
-        headers: {
-          'content-type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.get(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -68,14 +57,7 @@ export default {
   upload(payload) {
     try {
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/upload`;
-      return fetch(query, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify(payload),
-      }).then(handleResponse);
+      return authAxios.post(query, payload).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -84,17 +66,12 @@ export default {
   updateitem(type, payload, id) {
     try {
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
-      return fetch(query, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: session.token,
-        },
-        body: JSON.stringify({
+      return authAxios
+        .patch(query, {
           ...payload,
           id: undefined,
-        }),
-      }).then(handleResponse);
+        })
+        .then((res) => res.data);
     } catch (error) {
       handleError(error);
     }
@@ -111,13 +88,7 @@ export default {
   deleteItem(type, id) {
     try {
       const query = `${process.env.REACT_APP_REGION_API_ROOT}/${type}/${id}`;
-      return fetch(query, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: session.token,
-        },
-      }).then(handleResponse);
+      return authAxios.delete(query).then((res) => res.data);
     } catch (error) {
       handleError(error);
     }

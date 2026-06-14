@@ -44,6 +44,7 @@ import Country from '../common/Country';
 import CandidateImages from './CandidateImages';
 import Navbar from '../Navbar';
 import api from '../../api/treeTrackerApi';
+import { publicAxios } from '../../api/httpClient';
 // import { format } from 'date-fns';
 import log from 'loglevel';
 
@@ -454,15 +455,8 @@ function CaptureMatchingView() {
   const sameTreeHandler = async (treeId) => {
     const captureId = captureImage.id;
     // log.debug('captureId treeId', captureId, treeId);
-    await fetch(`${CAPTURE_API}/captures/${captureId}`, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        // Authorization: session.token,
-      },
-      body: JSON.stringify({
-        tree_id: treeId,
-      }),
+    await publicAxios.patch(`${CAPTURE_API}/captures/${captureId}`, {
+      tree_id: treeId,
     });
 
     // make sure new captures are loaded by updating page or if it's the first page reloading directly

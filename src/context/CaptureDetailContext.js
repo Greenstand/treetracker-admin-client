@@ -1,8 +1,8 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { handleResponse, handleError, getOrganization } from '../api/apiUtils';
-import { session } from '../models/auth';
+import { handleError, getOrganization } from '../api/apiUtils';
 import api from '../api/treeTrackerApi';
 import * as loglevel from 'loglevel';
+import { authAxios } from '../api/httpClient';
 
 const log = loglevel.getLogger('../context/CaptureDetailContext');
 
@@ -57,12 +57,9 @@ export function CaptureDetailProvider(props) {
           BASE_URL[typeof id !== 'number' ? 'CAPTURE_MATCH' : 'LEGACY']
         }${id}`;
 
-        return fetch(query, {
-          headers: {
-            Authorization: session.token,
-          },
-        })
-          .then(handleResponse)
+        return authAxios
+          .get(query)
+          .then((response) => response.data)
           .then((data) => {
             if (data.captures) {
               log.debug('data', data);

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
-import axios from 'axios';
+import { authAxios } from '../api/httpClient';
 import { getOrganization } from '../api/apiUtils';
-import { session } from '../models/auth';
 import FilterModel from '../models/Filter';
 
 import * as loglevel from 'loglevel';
@@ -61,12 +60,7 @@ export function CapturesProvider(props) {
       id != null ? '/' + id : ''
     }${paramString ? '?' + paramString : ''}`;
 
-    return axios.get(query, {
-      headers: {
-        'content-type': 'application/json',
-        Authorization: session.token,
-      },
-    });
+    return authAxios.get(query);
   };
 
   const getCaptureCount = async () => {
