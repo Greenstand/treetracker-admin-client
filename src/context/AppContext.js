@@ -14,6 +14,7 @@ import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
+import Subscription from '../components/SubscriptionPlan/Subscription';
 import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
@@ -30,6 +31,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
+import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -194,6 +196,13 @@ function getRoutes(user) {
       linkTo: '/account',
       component: Account,
       icon: IconPermIdentity,
+      disabled: false,
+    },
+    {
+      name: 'Subscription',
+      linkTo: '/subscription',
+      component: Subscription,
+      icon: SubscriptionsIcon,
       disabled: false,
     },
     {
