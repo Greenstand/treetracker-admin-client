@@ -93,7 +93,12 @@ const useStyles = makeStyles((theme) => ({
   card: { marginBottom: theme.spacing(2) },
   cardValue: { overflowWrap: 'anywhere' },
   cardLabel: { color: theme.palette.text.secondary },
-  cardActions: { marginTop: theme.spacing(1) },
+  cardHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1),
+  },
   pagination: { marginTop: theme.spacing(2) },
   paginationToolbar: {
     paddingLeft: 0,
@@ -260,9 +265,10 @@ function OrgContent() {
               variant="outlined"
             >
               <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {org.name || '—'}
-                </Typography>
+                <Box className={classes.cardHeader}>
+                  <Typography variant="h6">{org.name || '—'}</Typography>
+                  {renderOrgActions(org)}
+                </Box>
                 {COLUMNS.filter((c) => c.field !== 'name').map((column) => (
                   <Grid container spacing={1} key={column.field}>
                     <Grid item>
@@ -277,9 +283,6 @@ function OrgContent() {
                     </Grid>
                   </Grid>
                 ))}
-                <Box className={classes.cardActions}>
-                  {renderOrgActions(org)}
-                </Box>
               </CardContent>
             </Card>
           ))}
