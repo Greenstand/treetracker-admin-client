@@ -3,19 +3,24 @@ import { Redirect, useLocation } from 'react-router-dom';
 import Login from './Login';
 import { AppContext } from '../context/AppContext';
 import { loginToKeycloak } from '../auth/keycloak';
+import {
+  AUTH_CALLBACK_PATH,
+  LOGIN_PATH,
+  POST_LOGIN_PATH_KEY,
+} from '../auth/constants';
 
-export default function LoginRoute() {
-  const appContext = useContext(AppContext);
+function useKeycloakLoginRedirect() {
+  const { authStatus, isKeycloakEnabled, user } = useContext(AppContext);
   const location = useLocation();
   const redirectAttemptedRef = useRef(false);
 
   useEffect(() => {
-    if (!appContext.isKeycloakEnabled || appContext.user) {
+    if (!isKeycloakEnabled || user) {
       redirectAttemptedRef.current = false;
       return;
     }
 
-    if (appContext.authStatus !== 'unauthenticated') {
+    if (authStatus !== 'unauthenticated') {
       return;
     }
 
@@ -25,27 +30,39 @@ export default function LoginRoute() {
 
     redirectAttemptedRef.current = true;
 
-    const pathname =
-      location?.state?.from?.pathname &&
-      location.state.from.pathname !== '/login' &&
-      location.state.from.pathname !== '/auth/callback'
-        ? location.state.from.pathname
-        : '/';
-    const search = location?.state?.from?.search || '';
-    const hash = location?.state?.from?.hash || '';
-    const redirectPath = `${pathname}${search}${hash}`;
-    sessionStorage.setItem('post_login_path', redirectPath);
+    //  location.state.from is set by PrivateRoute when it bounces an unauthenticated user to /login —
+    //  it carries the original URL they tried to visit.
+    //  If that's available, use it. If not (e.g. after a check-sso redirect where state was lost), fall back to what initializeKeycloak() saved in
+    //  sessionStorage before the page unloaded. This is the path AuthCallback will navigate to after login succeeds.
 
-    Promise.resolve(loginToKeycloak('/auth/callback')).catch((error) => {
+    const fromPathname = location?.state?.from?.pathname;
+    const hasValidFrom =
+      fromPathname &&
+      fromPathname !== LOGIN_PATH &&
+      fromPathname !== AUTH_CALLBACK_PATH;
+
+    let redirectPath;
+    if (hasValidFrom) {
+      const search = location.state.from.search || '';
+      const hash = location.state.from.hash || '';
+      redirectPath = `${fromPathname}${search}${hash}`;
+    } else {
+      redirectPath = sessionStorage.getItem(POST_LOGIN_PATH_KEY) || '/';
+    }
+    sessionStorage.setItem(POST_LOGIN_PATH_KEY, redirectPath);
+
+    Promise.resolve(loginToKeycloak(AUTH_CALLBACK_PATH)).catch((error) => {
       console.error('Keycloak login redirect failed', error);
       redirectAttemptedRef.current = false;
     });
-  }, [
-    appContext.authStatus,
-    appContext.isKeycloakEnabled,
-    appContext.user,
-    location,
-  ]);
+  }, [authStatus, isKeycloakEnabled, user, location]);
+}
+
+export default function LoginRoute() {
+  const appContext = useContext(AppContext);
+  const location = useLocation();
+
+  useKeycloakLoginRedirect();
 
   if (appContext.user) {
     const from = location?.state?.from || { pathname: '/' };

@@ -1,5 +1,7 @@
 import {
+  act,
   cleanup,
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -7,9 +9,10 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
 
 import OrganizationsView from './OrganizationsView';
-import { getOrganizations } from 'api/organizations';
+import { getOrganizations, updateOrganization } from 'api/organizations';
 
 const mockMenu = jest.fn(() => null);
 const mockNavbar = jest.fn(() => null);
@@ -32,6 +35,8 @@ jest.mock(
 
 jest.mock('api/organizations', () => ({
   getOrganizations: jest.fn(),
+  updateOrganization: jest.fn(),
+  deleteOrganization: jest.fn(),
 }));
 
 const ORGS = [
@@ -54,11 +59,13 @@ const ORGS = [
 describe('OrganizationsView', () => {
   let queryClient;
 
-  function renderView() {
+  function renderView(initialUrl = '/') {
     return render(
-      <QueryClientProvider client={queryClient}>
-        <OrganizationsView />
-      </QueryClientProvider>
+      <MemoryRouter initialEntries={[initialUrl]}>
+        <QueryClientProvider client={queryClient}>
+          <OrganizationsView />
+        </QueryClientProvider>
+      </MemoryRouter>
     );
   }
 
@@ -96,7 +103,9 @@ describe('OrganizationsView', () => {
 
     expect(await screen.findByText('Alpha Org')).toBeInTheDocument();
     expect(screen.getByText('beta@example.com')).toBeInTheDocument();
-    expect(getOrganizations).toHaveBeenCalledWith({ skip: 0, rowsPerPage: 25 });
+    expect(getOrganizations).toHaveBeenCalledWith(
+      expect.objectContaining({ skip: 0, rowsPerPage: 25, search: '' })
+    );
   });
 
   it('shows an empty state when there are no organizations', async () => {
@@ -118,10 +127,9 @@ describe('OrganizationsView', () => {
     await userEvent.click(screen.getByRole('button', { name: /next page/i }));
 
     await waitFor(() =>
-      expect(getOrganizations).toHaveBeenCalledWith({
-        skip: 25,
-        rowsPerPage: 25,
-      })
+      expect(getOrganizations).toHaveBeenCalledWith(
+        expect.objectContaining({ skip: 25, rowsPerPage: 25 })
+      )
     );
   });
 
@@ -132,6 +140,115 @@ describe('OrganizationsView', () => {
 
     const alert = await screen.findByRole('alert');
     expect(within(alert).getByText('Network error')).toBeInTheDocument();
+  });
+
+  it('refetches with search term after debounce', async () => {
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 2 });
+
+    renderView();
+    await screen.findByText('Alpha Org');
+
+    const input = screen.getByPlaceholderText(/search by name or phone/i);
+    fireEvent.change(input, { target: { value: 'free' } });
+
+    // Flush React's state update from the change event, then wait for the
+    // 300 ms debounce + React Query to fire.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
+
+    expect(getOrganizations).toHaveBeenCalledWith(
+      expect.objectContaining({ search: 'free', skip: 0 })
+    );
+  });
+
+  it('resets to page 0 when the search term changes', async () => {
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 100 });
+
+    renderView();
+    await screen.findByText('Alpha Org');
+
+    // Advance to page 1.
+    await userEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await waitFor(() =>
+      expect(getOrganizations).toHaveBeenCalledWith(
+        expect.objectContaining({ skip: 25 })
+      )
+    );
+
+    // Typing a new search term should reset skip to 0.
+    fireEvent.change(screen.getByPlaceholderText(/search by name or phone/i), {
+      target: { value: 'free' },
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
+
+    expect(getOrganizations).toHaveBeenCalledWith(
+      expect.objectContaining({ search: 'free', skip: 0 })
+    );
+  });
+
+  it('refetches with the selected sort order and resets to page 0', async () => {
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 2 });
+
+    renderView();
+    await screen.findByText('Alpha Org');
+
+    // Open the Sort select and choose "Name Z→A".
+    await userEvent.click(screen.getByLabelText(/sort/i));
+    const listbox = await screen.findByRole('listbox');
+    await userEvent.click(within(listbox).getByText('Name Z→A'));
+
+    await waitFor(() =>
+      expect(getOrganizations).toHaveBeenCalledWith(
+        expect.objectContaining({ order: ['name DESC'], skip: 0 })
+      )
+    );
+  });
+
+  it('pre-populates search and sort from URL params on mount', async () => {
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 2 });
+
+    renderView('/?search=free&sort=newest');
+
+    // Search input should be pre-filled.
+    expect(screen.getByPlaceholderText(/search by name or phone/i).value).toBe(
+      'free'
+    );
+
+    // API should be called with the URL-derived values.
+    await waitFor(() =>
+      expect(getOrganizations).toHaveBeenCalledWith(
+        expect.objectContaining({ search: 'free', order: ['id DESC'] })
+      )
+    );
+  });
+
+  it('edits an existing organization', async () => {
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 2 });
+    updateOrganization.mockResolvedValueOnce({ id: 1, name: 'Alpha Renamed' });
+
+    renderView();
+    await screen.findByText('Alpha Org');
+
+    await userEvent.click(screen.getAllByRole('button', { name: /edit/i })[0]);
+
+    const dialog = await screen.findByRole('dialog');
+    const nameField = within(dialog).getByLabelText(/organization name/i);
+    await userEvent.clear(nameField);
+    await userEvent.type(nameField, 'Alpha Renamed');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: /save/i })
+    );
+
+    await waitFor(() =>
+      expect(updateOrganization).toHaveBeenCalledWith(
+        1,
+        expect.objectContaining({ name: 'Alpha Renamed' })
+      )
+    );
   });
 
   it('renders the mobile card layout and navbar on small screens', async () => {

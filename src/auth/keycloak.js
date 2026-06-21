@@ -1,5 +1,11 @@
 import Keycloak from 'keycloak-js';
 import { session } from '../models/auth';
+import {
+  AUTH_CALLBACK_PATH,
+  AUTH_REDIRECT_SKIP_PATHS,
+  LOGIN_PATH,
+  POST_LOGIN_PATH_KEY,
+} from './constants';
 
 /** @typedef {import('keycloak-js').KeycloakConfig} KeycloakConfig */
 /** @typedef {import('keycloak-js').KeycloakInitOptions} KeycloakInitOptions */
@@ -90,11 +96,23 @@ export async function initializeKeycloak() {
     return keycloakInitPromise;
   }
 
+  // check-sso with PKCE performs a full-page redirect to Keycloak before React
+  // renders, so LoginRoute never gets a chance to save the path. Preserve it
+  // here so AuthCallback can restore it after the round-trip.
+  if (!sessionStorage.getItem(POST_LOGIN_PATH_KEY)) {
+    const currentPath =
+      window.location.pathname + window.location.search + window.location.hash;
+    if (!AUTH_REDIRECT_SKIP_PATHS.some((p) => currentPath.startsWith(p))) {
+      sessionStorage.setItem(POST_LOGIN_PATH_KEY, currentPath);
+    }
+  }
+
   /** @type {KeycloakInitOptions} */
   const initOptions = {
     onLoad: 'check-sso',
     pkceMethod: 'S256',
     checkLoginIframe: false,
+    redirectUri: `${window.location.origin}${AUTH_CALLBACK_PATH}`,
   };
 
   keycloakInitPromise = instance.init(initOptions).catch((error) => {
@@ -160,6 +178,10 @@ export async function startKeycloakRequiredAction(
 
   try {
     sessionStorage.setItem(PENDING_ACTION_STORAGE_KEY, action);
+    // Store where to land after the action so AuthCallback can navigate there.
+    // Must use AUTH_CALLBACK_PATH as the redirectUri — Keycloak only accepts
+    // URIs registered in the client config, and /account is not one of them.
+    sessionStorage.setItem(POST_LOGIN_PATH_KEY, redirectPath);
   } catch {
     /* sessionStorage unavailable — adapter's onActionUpdate(action) is the
        primary source; we'd just lose the fallback path */
@@ -167,7 +189,7 @@ export async function startKeycloakRequiredAction(
 
   await instance.login({
     action,
-    redirectUri: `${window.location.origin}${redirectPath}`,
+    redirectUri: `${window.location.origin}${AUTH_CALLBACK_PATH}`,
   });
 }
 
@@ -179,7 +201,7 @@ export function logoutFromKeycloak() {
   }
 
   instance.logout({
-    redirectUri: `${window.location.origin}/login`,
+    redirectUri: `${window.location.origin}${LOGIN_PATH}`,
   });
 }
 

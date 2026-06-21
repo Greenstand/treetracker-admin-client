@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
-import { z } from 'zod';
 
 import { createOrganization } from 'api/organizations';
 import { getApiErrorMessage } from 'api/apiUtils';
@@ -19,6 +18,12 @@ import { ensureFreshToken, getUserFromToken } from 'auth/keycloak';
 import Menu from 'components/common/Menu';
 import { documentTitle } from 'common/variables';
 import { AppContext } from 'context/AppContext';
+import {
+  INITIAL_ORGANIZATION_FORM,
+  organizationSchema,
+  mapOrganizationValidationErrors,
+  getOrganizationValidationErrors,
+} from 'models/organizationSchema';
 
 const REDIRECT_DELAY_MS = 1500;
 const ERROR_MESSAGES = {
@@ -63,80 +68,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const INITIAL_FORM = {
-  name: '',
-  email: '',
-  phone: '',
-  website: '',
-  logoUrl: '',
-  mapName: '',
-};
-
-const PHONE_REGEX = /^[+()\-.\s\d]{10,20}$/;
-
-const trimmedString = z.string().trim();
-const emptyString = z.literal('');
-const requiredEmail = trimmedString
-  .min(1, { error: 'Email is required' })
-  .pipe(z.email({ error: 'Enter a valid email address' }));
-
-const optionalPhone = trimmedString.pipe(
-  emptyString.or(
-    z.string().regex(PHONE_REGEX, { error: 'Enter a valid phone number' })
-  )
-);
-
-const optionalHttpUrl = (message) =>
-  trimmedString.pipe(
-    emptyString.or(
-      z.url({
-        protocol: /^https?$/,
-        error: message,
-      })
-    )
-  );
-
-const organizationApplicationSchema = z.object({
-  name: trimmedString.min(1, { error: 'Organization name is required' }),
-  email: requiredEmail,
-  phone: optionalPhone,
-  website: optionalHttpUrl('Enter a valid website URL'),
-  logoUrl: optionalHttpUrl('Enter a valid logo URL'),
-  mapName: trimmedString,
-});
-
-function mapValidationErrors(error) {
-  const properties = z.treeifyError(error).properties || {};
-
-  return Object.keys(INITIAL_FORM).reduce((allErrors, fieldName) => {
-    const fieldError = properties[fieldName]?.errors?.[0];
-
-    if (!fieldError) {
-      return allErrors;
-    }
-
-    return {
-      ...allErrors,
-      [fieldName]: fieldError,
-    };
-  }, {});
-}
-
-function getValidationErrors(values) {
-  const result = organizationApplicationSchema.safeParse(values);
-
-  if (result.success) {
-    return {};
-  }
-
-  return mapValidationErrors(result.error);
-}
-
 export default function OrganizationApplicationView() {
   const classes = useStyles();
   const history = useHistory();
   const appContext = useContext(AppContext);
-  const [form, setForm] = useState(INITIAL_FORM);
+  const [form, setForm] = useState(INITIAL_ORGANIZATION_FORM);
   const [errors, setErrors] = useState({});
   const redirectTimerRef = useRef();
   const createOrganizationMutation = useMutation({
@@ -188,7 +124,7 @@ export default function OrganizationApplicationView() {
       ...form,
       [name]: value,
     };
-    const nextErrors = getValidationErrors(nextForm);
+    const nextErrors = getOrganizationValidationErrors(nextForm);
 
     setForm(nextForm);
     createOrganizationMutation.reset();
@@ -202,10 +138,10 @@ export default function OrganizationApplicationView() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    const result = organizationApplicationSchema.safeParse(form);
+    const result = organizationSchema.safeParse(form);
 
     if (!result.success) {
-      setErrors(mapValidationErrors(result.error));
+      setErrors(mapOrganizationValidationErrors(result.error));
       return;
     }
 
@@ -226,11 +162,6 @@ export default function OrganizationApplicationView() {
             <Typography variant="h3" gutterBottom>
               Apply for an organization
             </Typography>
-            {/* <Typography variant="body1" className={classes.intro}>
-              Start by filling in the basic organization details. This first
-              pass captures the form experience and validation while backend
-              submission is still being wired.
-            </Typography> */}
           </Box>
 
           {createOrganizationMutation.isSuccess ? (
