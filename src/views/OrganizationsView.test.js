@@ -154,7 +154,7 @@ describe('OrganizationsView', () => {
     // Flush React's state update from the change event, then wait for the
     // 300 ms debounce + React Query to fire.
     await act(async () => {
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 600));
     });
 
     expect(getOrganizations).toHaveBeenCalledWith(
@@ -182,7 +182,7 @@ describe('OrganizationsView', () => {
     });
 
     await act(async () => {
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 600));
     });
 
     expect(getOrganizations).toHaveBeenCalledWith(

@@ -8,7 +8,7 @@ import {
   getUserFromToken,
   initializeKeycloak,
 } from '../auth/keycloak';
-import { LOGIN_PATH, POST_LOGIN_PATH_KEY } from '../auth/constants';
+import { LOGIN_PATH } from '../auth/constants';
 
 export default function AuthCallback() {
   const appContext = useContext(AppContext);
@@ -48,13 +48,7 @@ export default function AuthCallback() {
         const user = getUserFromToken();
         login(user, `Bearer ${accessToken}`, true);
 
-        // Restore the page the user originally tried to visit before auth.
-        // The path was saved to sessionStorage either by initializeKeycloak()
-        // (before the check-sso redirect unloaded the page) or by LoginRoute
-        // (when PrivateRoute bounced them to /login with location.state.from).
-        const targetPath = sessionStorage.getItem(POST_LOGIN_PATH_KEY) || '/';
-        sessionStorage.removeItem(POST_LOGIN_PATH_KEY);
-        history.replace(targetPath);
+        history.replace('/');
       } catch (error) {
         // Token exchange or user-info fetch failed — clean up and fall back to login.
         clearAuthState();

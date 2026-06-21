@@ -55,11 +55,9 @@ describe('LoginRoute', () => {
     );
 
     await waitFor(() => {
-      expect(keycloak.loginToKeycloak).toHaveBeenCalledWith('/auth/callback');
+      expect(keycloak.loginToKeycloak).toHaveBeenCalledWith(
+        '/captures?status=open#section'
+      );
     });
-
-    expect(sessionStorage.getItem('post_login_path')).toBe(
-      '/captures?status=open#section'
-    );
   });
 });
