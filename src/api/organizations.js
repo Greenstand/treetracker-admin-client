@@ -10,26 +10,47 @@ export async function createOrganization(payload) {
   return data;
 }
 
+export async function updateOrganization(id, payload) {
+  const { data } = await authAxios.patch(
+    `${API_ROOT}/api/organizations/${id}`,
+    payload
+  );
+  return data;
+}
+
+export async function deleteOrganization(id) {
+  await authAxios.delete(`${API_ROOT}/api/organizations/${id}`);
+}
+
+// Tiebreaker appended to every sort so paging is stable.
+const TIEBREAKER = 'id ASC';
+
 export async function getOrganizations({
   skip = 0,
   rowsPerPage = 25,
-  orderBy = 'name',
-  order = 'ASC',
+  order = ['name ASC'],
+  search = '',
 } = {}) {
+  const orderWithTiebreaker = order.includes(TIEBREAKER)
+    ? order
+    : [...order, TIEBREAKER];
+
+  const filter = {
+    where: { type: 'O' },
+    order: orderWithTiebreaker,
+    skip,
+    ...(rowsPerPage > 0 && { limit: rowsPerPage }),
+  };
+
   const params = new URLSearchParams();
-  params.append('filter[order]', `${orderBy} ${order}`);
-  params.append('filter[where][type]', 'O');
-  params.append('filter[skip]', skip);
-  // rowsPerPage <= 0 means "All" (MUI uses -1), so omit the limit to fetch all.
-  if (rowsPerPage > 0) {
-    params.append('filter[limit]', rowsPerPage);
+  params.append('filter', JSON.stringify(filter));
+  if (search && search.trim()) {
+    params.append('search', search.trim());
   }
 
   const { data } = await authAxios.get(
     `${API_ROOT}/api/organizations/paginated?${params.toString()}`
   );
-  // Dedicated endpoint returns `{ organizations, total }`; `total` reflects the
-  // same `where` filter (ignoring skip/limit) for pagination.
   return {
     organizations: data?.organizations ?? [],
     total: data?.total ?? 0,
