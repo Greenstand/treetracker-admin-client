@@ -1,3 +1,0 @@
-{
-  "text": "Organization BDD 1776968254402"
-}

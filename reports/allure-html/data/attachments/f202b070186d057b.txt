@@ -1,4 +1,0 @@
-{
-  "using": "css selector",
-  "value": "a[href*=\"reset-credentials\"]"
-}

@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": "//td[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'm')]"
+}
