@@ -238,7 +238,7 @@ const Verify = (props) => {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on capture pin:%d', captureId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${captureId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/trees/${captureId}`;
     window.open(url, '_blank').opener = null;
   }
 
@@ -246,7 +246,7 @@ const Verify = (props) => {
     e.stopPropagation();
     e.preventDefault();
     log.debug('click on grower:%d', growerId);
-    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${growerId}`;
+    const url = `${process.env.REACT_APP_WEBMAP_DOMAIN}/planters/${growerId}`;
     window.open(url, '_blank').opener = null;
   }
 
@@ -480,7 +480,8 @@ const Verify = (props) => {
                     </IconButton>
                     <IconButton
                       variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
+                      rel="noopener noreferrer"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/trees/${capture.id}`}
                       target="_blank"
                       onClick={(e) => handleCapturePinClick(e, capture.id)}
                       aria-label={`Capture location`}
@@ -490,7 +491,8 @@ const Verify = (props) => {
                     </IconButton>
                     <IconButton
                       variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
+                      rel="noopener noreferrer"
+                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/planters/${capture.planterId}`}
                       target="_blank"
                       onClick={(e) =>
                         handleGrowerMapClick(e, capture.planterId)
