@@ -33,7 +33,7 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import { session, hasPermission, POLICIES } from '../models/auth';
+import { session, hasPermission, isSuperAdmin, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 
@@ -138,11 +138,8 @@ function getRoutes(user) {
       linkTo: '/species',
       component: SpeciesView,
       icon: CategoryIcon,
-      //TODO this is temporary, need to add species policy
-      disabled:
-        !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
-        !user ||
-        user.policy.organization !== undefined,
+      // Global species pool is managed by super admins only.
+      disabled: !isSuperAdmin(user),
     },
     {
       name: 'Stakeholders',

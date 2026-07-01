@@ -15,6 +15,7 @@ export const SpeciesContext = createContext({
   deleteSpecies: () => {},
   combineSpecies: () => {},
   ensureLoaded: () => {},
+  loadSpeciesList: () => {},
 });
 
 export function SpeciesProvider({ children }) {
@@ -35,6 +36,13 @@ export function SpeciesProvider({ children }) {
     if (!cached || cached.length === 0) {
       await refetch();
     }
+  };
+
+  // Force a reload of the species list. The query is disabled by default, so
+  // invalidateQueries alone won't refetch it — callers (add/edit/delete/combine)
+  // rely on this to refresh the table after a mutation.
+  const loadSpeciesList = async () => {
+    await refetch();
   };
 
   // only used by Species dropdown
@@ -96,6 +104,7 @@ export function SpeciesProvider({ children }) {
     deleteSpecies,
     combineSpecies,
     ensureLoaded, // expose to components
+    loadSpeciesList,
   };
 
   return (

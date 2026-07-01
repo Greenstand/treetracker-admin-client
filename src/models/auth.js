@@ -37,6 +37,19 @@ function hasPermission(user, p) {
   }
 }
 
+/*
+ * A super admin has the global SUPER_PERMISSION policy and is not scoped to a
+ * single organization. Used to gate global/platform-wide tools such as the
+ * global species pool.
+ */
+function isSuperAdmin(user) {
+  if (!user) return false;
+  return (
+    hasPermission(user, POLICIES.SUPER_PERMISSION) &&
+    user.policy?.organization === undefined
+  );
+}
+
 function hasFreetownPermission(user) {
   if (!user) return false;
   // // super admin has freetown permission
@@ -57,4 +70,11 @@ const session = () => {
   };
 };
 
-export { PERMISSIONS, POLICIES, hasPermission, hasFreetownPermission, session };
+export {
+  PERMISSIONS,
+  POLICIES,
+  hasPermission,
+  isSuperAdmin,
+  hasFreetownPermission,
+  session,
+};
