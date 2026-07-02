@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Capture Matching — Greenstand</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-900: #0d2b1a;
+      --green-800: #1a3a2a;
+      --green-700: #1e5631;
+      --green-600: #2e7d32;
+      --green-400: #4caf50;
+      --green-200: #a5d6b5;
+      --green-100: #e8f5e9;
+      --green-50:  #f0faf4;
+      --amber:     #f59e0b;
+      --amber-bg:  #fffbeb;
+      --red:       #dc2626;
+      --red-bg:    #fef2f2;
+      --text:      #1a2e1e;
+      --muted:     #6b7f6e;
+      --border:    #d1e7d8;
+      --surface:   #ffffff;
+      --bg:        #f4f8f5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--green-800);
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--green-700);
+    }
+    .navbar-brand {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      color: var(--green-200);
+      letter-spacing: 0.3px;
+    }
+    .navbar-brand span { color: var(--green-400); }
+    .navbar-meta {
+      font-size: 13px;
+      color: var(--green-200);
+      opacity: 0.7;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      height: calc(100vh - 56px);
+      overflow: hidden;
+    }
+
+    /* ── Left Panel — New Capture ── */
+    .left-panel {
+      background: #eef4f0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      width: 50%;
+      flex-shrink: 0;
+      height: 100%;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-family: 'Fraunces', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .capture-count {
+      background: var(--green-800);
+      color: var(--green-200);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .capture-card {
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .capture-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .capture-id {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--green-800);
+    }
+
+    .capture-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .meta-item svg {
+      width: 13px;
+      height: 13px;
+      opacity: 0.7;
+    }
+
+    .grower-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-50);
+      border: 1px solid var(--green-200);
+      border-radius: 24px;
+      padding: 5px 12px 5px 5px;
+    }
+
+    .grower-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--green-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .grower-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green-700);
+    }
+
+    .capture-image-area {
+      flex: 1;
+      background: #1a2e1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.4;
+    }
+
+    .image-placeholder svg {
+      width: 48px;
+      height: 48px;
+      color: white;
+    }
+
+    .image-placeholder span {
+      color: white;
+      font-size: 13px;
+    }
+
+    /* Simulated tree image */
+    .tree-image-sim {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #1a3a2a 0%, #0d2b1a 40%, #2e4a2a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      min-height: 280px;
+    }
+
+    .capture-footer {
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .skip-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .skip-btn:hover { background: var(--bg); color: var(--text); }
+
+    .pagination {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Right Panel — Candidates ── */
+    .right-panel {
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--green-200) transparent;
+      width: 50%;
+      flex-shrink: 0;
+      height: 100%;
+    }
+    .right-panel::-webkit-scrollbar { width: 6px; }
+    .right-panel::-webkit-scrollbar-thumb { background: var(--green-200); border-radius: 3px; }
+
+    .candidates-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── Match Strength Badge ── */
+    .strength-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .strength-badge.strong {
+      background: var(--green-100);
+      color: var(--green-700);
+      border: 1px solid var(--green-200);
+    }
+
+    .strength-badge.moderate {
+      background: var(--amber-bg);
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .strength-badge.weak {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid #fca5a5;
+    }
+
+    .strength-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .strong .strength-dot  { background: var(--green-600); }
+    .moderate .strength-dot { background: var(--amber); }
+    .weak .strength-dot    { background: var(--red); }
+
+    /* ── GPS Distance Badge ── */
+    .gps-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .gps-badge.close  { background: var(--green-100); color: var(--green-700); }
+    .gps-badge.medium { background: var(--amber-bg);  color: #92400e; }
+    .gps-badge.far    { background: var(--red-bg);    color: var(--red); }
+
+    /* ── Candidate Card ── */
+    .candidate-card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: slideIn 0.3s ease both;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .candidate-card:nth-child(2) { animation-delay: 0.1s; }
+    .candidate-card:nth-child(3) { animation-delay: 0.2s; }
+
+    .candidate-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+    }
+
+    .candidate-header {
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .candidate-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .candidate-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .candidate-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--green-600);
+      color: var(--green-700);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .candidate-id {
+      font-family: 'Fraunces', serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--green-800);
+    }
+
+    .candidate-signals {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .signal-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .signal-pill.same-grower {
+      background: var(--green-50);
+      border-color: var(--green-200);
+      color: var(--green-700);
+    }
+
+    /* capture history summary */
+    .capture-summary {
+      display: flex;
+      gap: 16px;
+      padding: 10px 18px;
+      background: var(--green-50);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .summary-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green-800);
+      margin-bottom: 1px;
+    }
+
+    /* Score breakdown bar */
+    .score-breakdown {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .score-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-name {
+      font-size: 12px;
+      color: var(--text);
+      width: 100px;
+      flex-shrink: 0;
+    }
+
+    .score-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    .score-bar-fill.gps    { background: var(--green-600); }
+    .score-bar-fill.grower { background: #059669; }
+    .score-bar-fill.time   { background: #0891b2; }
+
+    .score-pct {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      width: 30px;
+      text-align: right;
+    }
+
+    /* Images strip */
+    .images-strip {
+      display: flex;
+      gap: 10px;
+      padding: 10px 18px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .thumb-wrap {
+      position: relative;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .thumb-wrap:hover { border-color: var(--green-400); }
+
+    .thumb-sim {
+      width: 80px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .thumb-sim.t1 { background: linear-gradient(160deg,#1a3a2a,#0d2b1a); }
+    .thumb-sim.t2 { background: linear-gradient(160deg,#2e4a2a,#1a3a2a); }
+    .thumb-sim.t3 { background: linear-gradient(160deg,#0d3320,#1a4a2a); }
+
+    .thumb-date {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      font-size: 10px;
+      padding: 4px 6px;
+      text-align: center;
+    }
+
+    /* Actions */
+    .candidate-actions {
+      padding: 12px 18px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-confirm {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-600);
+      color: white;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-confirm:hover { background: var(--green-700); transform: scale(1.02); }
+
+    .btn-dismiss {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .btn-dismiss:hover { background: var(--red-bg); color: var(--red); border-color: #fca5a5; }
+
+    /* No candidates */
+    .no-candidates {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .no-candidates p { font-size: 15px; margin-top: 8px; }
+
+    /* Toggle expand */
+    .expand-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--green-600);
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      transition: transform 0.25s;
+    }
+
+    .expand-btn.open { transform: rotate(180deg); }
+
+    .collapsible {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
+    }
+
+    .collapsible.open { max-height: 2000px; }
+
+    /* Legend */
+    .legend {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 18px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .legend-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-right: 4px;
+    }
+
+    .legend-items {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-brand">
+    <img src="https://raw.githubusercontent.com/KeziaMinni/treetracker-admin-client/hotfix/new-master/public/logo_192x192.png" alt="Greenstand" style="height:32px; width:32px; border-radius:6px; margin-right:10px; vertical-align:middle;"/>
+    <span>Tree</span>tracker — Capture Matching
+  </div>
+  <div class="navbar-meta">Greenstand Admin · UI Mockup</div>
+</nav>
+
+<div class="layout">
+
+  <!-- ── Left: New Capture ── -->
+  <div class="left-panel">
+    <div class="panel-header">
+      <span class="panel-title">📷 Unmatched Capture</span>
+      <span class="capture-count">247 remaining</span>
+    </div>
+
+    <div class="capture-card">
+      <div class="capture-card-header">
+        <div>
+          <div class="capture-id">Capture #cap_004821...</div>
+          <div class="capture-meta">
+            <div class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              14 Feb 2026 · 09:42
+            </div>
+            <div class="meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Tanzania · -6.3690°, 34.8888°
+            </div>
+          </div>
+        </div>
+        <div class="grower-pill">
+          <div class="grower-avatar">AM</div>
+          <div>
+            <div class="grower-name">Amara Mwangi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tree-image-sim">🌳</div>
+
+      <div class="capture-footer">
+        <button class="skip-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          Skip
+        </button>
+        <div class="pagination">1 of 247</div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <span class="legend-title">Match Strength</span>
+      <div class="legend-items">
+        <span class="strength-badge strong"><span class="strength-dot"></span> Strong · &lt; 5m, same grower</span>
+        <span class="strength-badge moderate"><span class="strength-dot"></span> Moderate · 5–15m</span>
+        <span class="strength-badge weak"><span class="strength-dot"></span> Weak · &gt; 15m</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Right: Candidates ── -->
+  <div class="right-panel">
+    <div class="candidates-header">
+      <span class="panel-title">🌿 Candidate Matches</span>
+      <span class="capture-count">3 found within 6m</span>
+    </div>
+
+    <!-- New Tree Button -->
+    <button onclick="newTree()" style="
+      width: 100%;
+      padding: 15px;
+      background: var(--green-700);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(30,86,49,0.35);
+      letter-spacing: 0.2px;
+    " onmouseover="this.style.background='var(--green-800)'; this.style.transform='scale(1.01)'" onmouseout="this.style.background='var(--green-700)'; this.style.transform='scale(1)'">
+      🌱 None of these match — This is a New Tree
+    </button>
+
+    <!-- Candidate 1 — Strong -->
+    <div class="candidate-card" id="card1">
+      <div class="candidate-header" onclick="toggleCard('card1')">
+        <div class="candidate-header-left">
+          <div class="candidate-title-row">
+            <div class="candidate-number">1</div>
+            <div class="candidate-id">Tree #tree_00821...</div>
+            <span class="strength-badge strong"><span class="strength-dot"></span> Strong Match</span>
+          </div>
+          <div class="candidate-signals">
+            <span class="gps-badge close">📍 2.3m away</span>
+            <span class="signal-pill same-grower">✓ Same grower</span>
+            <span class="signal-pill">🕐 Last seen 45 days ago</span>
+          </div>
+        </div>
+        <button class="expand-btn open" id="btn1">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <div class="collapsible open" id="col1">
+        <!-- Capture summary -->
+        <div class="capture-summary">
+          <div class="summary-item"><strong>4</strong>total captures</div>
+          <div class="summary-item"><strong>Mar 2024</strong>first seen</div>
+          <div class="summary-item"><strong>Dec 2025</strong>last capture</div>
+          <div class="summary-item"><strong>45 days</strong>since last photo</div>
+        </div>
+
+        <!-- Score breakdown -->
+        <div class="score-breakdown">
+          <div class="score-label">Match Score Breakdown</div>
+          <div class="score-row">
+            <span class="score-name">📍 GPS Distance</span>
+            <div class="score-bar-track"><div class="score-bar-fill gps" style="width:92%"></div></div>
+            <span class="score-pct">92%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">👤 Same Grower</span>
+            <div class="score-bar-track"><div class="score-bar-fill grower" style="width:100%"></div></div>
+            <span class="score-pct">100%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">🕐 Time Gap</span>
+            <div class="score-bar-track"><div class="score-bar-fill time" style="width:80%"></div></div>
+            <span class="score-pct">80%</span>
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div class="images-strip">
+          <div class="thumb-wrap">
+            <div class="thumb-sim t1">🌱</div>
+            <div class="thumb-date">Mar 2024 · First</div>
+          </div>
+          <div class="thumb-wrap">
+            <div class="thumb-sim t2">🌿</div>
+            <div class="thumb-date">Aug 2024</div>
+          </div>
+          <div class="thumb-wrap">
+            <div class="thumb-sim t3">🌳</div>
+            <div class="thumb-date">Dec 2025 · Latest</div>
+          </div>
+        </div>
+
+        <div class="candidate-actions">
+          <button class="btn-confirm" onclick="confirmMatch(1)">✓ Confirm Match</button>
+          <button class="btn-dismiss" onclick="dismissCard('card1')">✕ Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate 2 — Moderate -->
+    <div class="candidate-card" id="card2">
+      <div class="candidate-header" onclick="toggleCard('card2')">
+        <div class="candidate-header-left">
+          <div class="candidate-title-row">
+            <div class="candidate-number">2</div>
+            <div class="candidate-id">Tree #tree_00634...</div>
+            <span class="strength-badge moderate"><span class="strength-dot"></span> Moderate Match</span>
+          </div>
+          <div class="candidate-signals">
+            <span class="gps-badge medium">📍 5.8m away</span>
+            <span class="signal-pill">✕ Different grower</span>
+            <span class="signal-pill">🕐 Last seen 120 days ago</span>
+          </div>
+        </div>
+        <button class="expand-btn" id="btn2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <div class="collapsible" id="col2">
+        <div class="capture-summary">
+          <div class="summary-item"><strong>2</strong>total captures</div>
+          <div class="summary-item"><strong>Jan 2025</strong>first seen</div>
+          <div class="summary-item"><strong>Oct 2025</strong>last capture</div>
+          <div class="summary-item"><strong>120 days</strong>since last photo</div>
+        </div>
+
+        <div class="score-breakdown">
+          <div class="score-label">Match Score Breakdown</div>
+          <div class="score-row">
+            <span class="score-name">📍 GPS Distance</span>
+            <div class="score-bar-track"><div class="score-bar-fill gps" style="width:58%"></div></div>
+            <span class="score-pct">58%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">👤 Same Grower</span>
+            <div class="score-bar-track"><div class="score-bar-fill grower" style="width:0%"></div></div>
+            <span class="score-pct">0%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">🕐 Time Gap</span>
+            <div class="score-bar-track"><div class="score-bar-fill time" style="width:45%"></div></div>
+            <span class="score-pct">45%</span>
+          </div>
+        </div>
+
+        <div class="images-strip">
+          <div class="thumb-wrap">
+            <div class="thumb-sim t2">🌿</div>
+            <div class="thumb-date">Jan 2025 · First</div>
+          </div>
+          <div class="thumb-wrap">
+            <div class="thumb-sim t3">🌳</div>
+            <div class="thumb-date">Oct 2025 · Latest</div>
+          </div>
+        </div>
+
+        <div class="candidate-actions">
+          <button class="btn-confirm" onclick="confirmMatch(2)">✓ Confirm Match</button>
+          <button class="btn-dismiss" onclick="dismissCard('card2')">✕ Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate 3 — Weak -->
+    <div class="candidate-card" id="card3">
+      <div class="candidate-header" onclick="toggleCard('card3')">
+        <div class="candidate-header-left">
+          <div class="candidate-title-row">
+            <div class="candidate-number">3</div>
+            <div class="candidate-id">Tree #tree_00512...</div>
+            <span class="strength-badge weak"><span class="strength-dot"></span> Weak Match</span>
+          </div>
+          <div class="candidate-signals">
+            <span class="gps-badge far">📍 5.9m away</span>
+            <span class="signal-pill">✕ Different grower</span>
+            <span class="signal-pill">🕐 Last seen 210 days ago</span>
+          </div>
+        </div>
+        <button class="expand-btn" id="btn3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <div class="collapsible" id="col3">
+        <div class="capture-summary">
+          <div class="summary-item"><strong>1</strong>total capture</div>
+          <div class="summary-item"><strong>Aug 2025</strong>first seen</div>
+          <div class="summary-item"><strong>Aug 2025</strong>last capture</div>
+          <div class="summary-item"><strong>210 days</strong>since last photo</div>
+        </div>
+
+        <div class="score-breakdown">
+          <div class="score-label">Match Score Breakdown</div>
+          <div class="score-row">
+            <span class="score-name">📍 GPS Distance</span>
+            <div class="score-bar-track"><div class="score-bar-fill gps" style="width:55%"></div></div>
+            <span class="score-pct">55%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">👤 Same Grower</span>
+            <div class="score-bar-track"><div class="score-bar-fill grower" style="width:0%"></div></div>
+            <span class="score-pct">0%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-name">🕐 Time Gap</span>
+            <div class="score-bar-track"><div class="score-bar-fill time" style="width:20%"></div></div>
+            <span class="score-pct">20%</span>
+          </div>
+        </div>
+
+        <div class="images-strip">
+          <div class="thumb-wrap">
+            <div class="thumb-sim t1">🌱</div>
+            <div class="thumb-date">Aug 2025 · Only capture</div>
+          </div>
+        </div>
+
+        <div class="candidate-actions">
+          <button class="btn-confirm" onclick="confirmMatch(3)">✓ Confirm Match</button>
+          <button class="btn-dismiss" onclick="dismissCard('card3')">✕ Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function newTree() {
+    alert("🌱 Marked as New Tree!\n\nIn the real app this would create a new tree record and move to the next unmatched capture.");
+  }
+
+  function toggleCard(cardId) {
+    const num = cardId.replace('card','');
+    const col = document.getElementById('col' + num);
+    const btn = document.getElementById('btn' + num);
+    col.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  function dismissCard(cardId) {
+    const card = document.getElementById(cardId);
+    card.style.transition = 'opacity 0.3s, transform 0.3s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(20px)';
+    setTimeout(() => card.remove(), 300);
+  }
+
+  function confirmMatch(num) {
+    alert(`✓ Match confirmed! Capture linked to Tree #${num}.\n\nIn the real app this would PATCH /captures/{id} with the tree_id.`);
+  }
+</script>
+</body>
+</html>
