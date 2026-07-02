@@ -25,34 +25,47 @@ export default function OptimizedImage(props) {
   if (!src) return null;
 
   const cdnPath = `${process.env.REACT_APP_IMAGES_API_ROOT}/img`;
-  const matches = src.match(/\/\/(.*?)\/(.*)/);
+  const isDataUrl = src.startsWith('data:');
+  const isAbsoluteUrl = /^(https?:)?\/\//.test(src);
 
-  let cdnUrl, sizes, srcSet;
+  let cdnUrl;
+  let sizes;
+  let srcSet;
 
-  if (matches?.length > 1) {
-    const domain = matches[1];
-    const imagePath = matches[2];
-    const params =
-      (width ? `w=${Math.floor(width)},` : '') +
-      (height ? `h=${Math.floor(height)},` : '') +
-      (quality ? `q=${quality},` : '') +
-      (rotation ? `r=${rotation}` : '');
+  if (!isDataUrl && isAbsoluteUrl) {
+    const matches = src.match(/\/\/(.*?)\/(.*)/);
+    if (matches?.length > 1) {
+      const domain = matches[1];
+      const imagePath = matches[2];
+      const params =
+        (width ? `w=${Math.floor(width)},` : '') +
+        (height ? `h=${Math.floor(height)},` : '') +
+        (quality ? `q=${quality},` : '') +
+        (rotation ? `r=${rotation}` : '');
 
-    cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
+      cdnUrl = `${cdnPath}/${domain}/${params}/${imagePath}`;
 
-    if (!fixed && screenWidths.length === imageSizes.length) {
-      sizes = screenWidths
-        .map((size, i) => `(width: ${size}px) ${imageSizes[i]}px`)
-        .join(', ');
-      srcSet = imageSizes
-        .map((size) => `${cdnPath}/${domain}/${params}/${imagePath} ${size}w`)
-        .join(', ');
+      if (!fixed && screenWidths.length === imageSizes.length) {
+        sizes = screenWidths
+          .map((size, i) => `(width: ${size}px) ${imageSizes[i]}px`)
+          .join(', ');
+        srcSet = imageSizes
+          .map((size) => `${cdnPath}/${domain}/${params}/${imagePath} ${size}w`)
+          .join(', ');
+      }
     }
   }
 
+  const imageSrc = cdnUrl || src;
+
+  const useCssRotation = !cdnUrl && rotation;
+  const rotationTransform = useCssRotation
+    ? `rotate(${rotation}deg)`
+    : undefined;
+
   return (
     <>
-      {!cdnUrl || !src ? (
+      {!imageSrc ? (
         <ImageErrorAlert
           alertHeight={alertHeight}
           alertWidth={alertWidth}
@@ -63,7 +76,7 @@ export default function OptimizedImage(props) {
         />
       ) : (
         <img
-          src={cdnUrl || src}
+          src={imageSrc}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
             currentTarget.src = null;
@@ -81,6 +94,7 @@ export default function OptimizedImage(props) {
             objectFit,
             maxWidth: '100%',
             maxHeight: '100%',
+            transform: rotationTransform,
           }}
           {...rest}
         />
