@@ -33,6 +33,14 @@ import { CircularProgress } from '@material-ui/core';
 
 export const FILTER_WIDTH = 330;
 
+const isNumericValue = (value) => {
+  return !value.trim() || /^\d+$/.test(value.trim());
+};
+
+const isNumericList = (value) => {
+  return !value.trim() || /^\d+(\s*,\s*\d+)*$/.test(value.trim());
+};
+
 const styles = (theme) => {
   return {
     root: {},
@@ -101,6 +109,7 @@ function Filter(props) {
     filter.stakeholderUUID || ALL_ORGANIZATIONS
   );
   const [tokenId, setTokenId] = useState(filter?.tokenId || filterOptionAll);
+  const [filterErrors, setFilterErrors] = useState({});
 
   const handleDateStartChange = (date) => {
     setDateStart(date);
@@ -116,6 +125,17 @@ function Filter(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const errors = {
+      captureId: isNumericValue(captureId) ? '' : 'Enter a numeric Capture ID',
+      growerId: isNumericList(growerId)
+        ? ''
+        : 'Enter numeric Grower IDs separated by commas',
+    };
+    setFilterErrors(errors);
+    if (errors.captureId || errors.growerId) {
+      return;
+    }
+
     // save the filer to context for editing & submit
     const filter = new FilterModel();
     filter.uuid = uuid;
@@ -150,6 +170,7 @@ function Filter(props) {
     setOrganizationId(ALL_ORGANIZATIONS);
     setStakeholderUUID(ALL_ORGANIZATIONS);
     setTokenId(filterOptionAll);
+    setFilterErrors({});
 
     const filter = new FilterModel();
     filter.approved = approved; // keeps last value set
@@ -261,7 +282,16 @@ function Filter(props) {
                 label="Grower ID"
                 placeholder="e.g. 7"
                 value={growerId}
-                onChange={(e) => setGrowerId(e.target.value)}
+                error={Boolean(filterErrors.growerId)}
+                helperText={filterErrors.growerId}
+                inputProps={{ inputMode: 'numeric' }}
+                onChange={(e) => {
+                  setGrowerId(e.target.value);
+                  setFilterErrors({
+                    ...filterErrors,
+                    growerId: '',
+                  });
+                }}
               />
               <TextField
                 htmlFor="capture-id"
@@ -269,7 +299,16 @@ function Filter(props) {
                 label="Capture ID"
                 placeholder="e.g. 80"
                 value={captureId}
-                onChange={(e) => setCaptureId(e.target.value)}
+                error={Boolean(filterErrors.captureId)}
+                helperText={filterErrors.captureId}
+                inputProps={{ inputMode: 'numeric' }}
+                onChange={(e) => {
+                  setCaptureId(e.target.value);
+                  setFilterErrors({
+                    ...filterErrors,
+                    captureId: '',
+                  });
+                }}
               />
               <TextField
                 htmlFor="uuid"
