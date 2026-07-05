@@ -1,3 +1,18 @@
+# [1.108.0-keycloak.2](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.1...v1.108.0-keycloak.2) (2026-07-05)
+
+
+### Bug Fixes
+
+* move edit icon on top right for mobiles ([819be82](https://github.com/Greenstand/treetracker-admin-client/commit/819be82988e94e0aa13da30d75a0a013d24ee47f))
+
+
+### Features
+
+* add  org edit feature ([278a5da](https://github.com/Greenstand/treetracker-admin-client/commit/278a5da4264038732bb0f4a4dfc13d70783513bd))
+* add bdd related files ([2a4c86d](https://github.com/Greenstand/treetracker-admin-client/commit/2a4c86d8fe744562c8db9001ea1812e024c54c1d))
+* add org edit feature ([3f60166](https://github.com/Greenstand/treetracker-admin-client/commit/3f601667af9c5cb05977d87ea99c29427c2899c9))
+* simplify code by moving auth callback to domain/* from domain/auth/callbacl ([5162a10](https://github.com/Greenstand/treetracker-admin-client/commit/5162a10f3c3b3be138a690be4af5806e05998304))
+
 # [1.108.0-keycloak.1](https://github.com/Greenstand/treetracker-admin-client/compare/v1.107.18...v1.108.0-keycloak.1) (2026-06-14)
 
 
