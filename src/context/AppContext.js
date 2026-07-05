@@ -171,7 +171,7 @@ function getRoutes(user) {
       disabled: true,
     },
     {
-      name: 'Organization management',
+      name: 'Organizations',
       linkTo: '/organization-management',
       component: OrganizationsView,
       icon: IconGroup,

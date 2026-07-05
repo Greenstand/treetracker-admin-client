@@ -7,7 +7,7 @@ const { openKeycloakLoginPage } = require('../support/auth');
 const USERS_BY_ROLE = {
   'greenstand-admin': {
     username: 'org-manager',
-    password: '*Szhq#J#8O8w@#gg',
+    password: 'fIM1&miRS$Qs0^ST',
   },
 };
 
@@ -33,22 +33,33 @@ When('I login', async () => {
 Then(
   'I should be able to see the {string} menu item',
   async (menuItemLabel) => {
-    if (menuItemLabel.toLowerCase() !== 'organization management') {
-      throw new Error(`Unsupported menu item assertion: ${menuItemLabel}`);
-    }
-
-    await AdminPage.waitForOrganizationManagementMenuItem();
+    await AdminPage.waitForMenuItem(menuItemLabel);
   }
 );
 
 When('I click on the {string} menu item', async (menuItemLabel) => {
-  if (menuItemLabel.toLowerCase() !== 'organization management') {
-    throw new Error(`Unsupported menu item click: ${menuItemLabel}`);
-  }
-
-  await AdminPage.openOrganizationManagement();
+  await AdminPage.clickMenuItem(menuItemLabel);
 });
 
 Then('I should be able to see the organization list page', async () => {
   await AdminPage.waitForOrganizationListPage();
 });
+
+When('I search for organizations with {string}', async (term) => {
+  await AdminPage.searchOrganizations(term);
+});
+
+Then('I should see organizations matching {string}', async (term) => {
+  await AdminPage.waitForSearchResults(term);
+});
+
+When('I sort organizations by {string}', async (sortLabel) => {
+  await AdminPage.sortOrganizationsBy(sortLabel);
+});
+
+Then(
+  'the organization list should update with the new sort order',
+  async () => {
+    await AdminPage.waitForSortApplied();
+  }
+);

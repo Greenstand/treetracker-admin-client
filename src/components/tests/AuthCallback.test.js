@@ -19,9 +19,8 @@ describe('AuthCallback', () => {
     jest.restoreAllMocks();
   });
 
-  it('logs in and redirects to saved post login path', async () => {
+  it('logs in and redirects to /', async () => {
     const login = jest.fn();
-    sessionStorage.setItem('post_login_path', '/verify?foo=bar');
     const history = createMemoryHistory({
       initialEntries: ['/auth/callback'],
     });
@@ -52,8 +51,6 @@ describe('AuthCallback', () => {
       true
     );
 
-    expect(history.location.pathname).toBe('/verify');
-    expect(history.location.search).toBe('?foo=bar');
-    expect(sessionStorage.getItem('post_login_path')).toBeNull();
+    expect(history.location.pathname).toBe('/');
   });
 });

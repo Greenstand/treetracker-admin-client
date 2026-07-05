@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useDebounce } from 'hooks/useDebounce';
+import {
+  useQuery,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import {
   Box,
   Card,
   CardContent,
+  FormControl,
   Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   Link,
+  MenuItem,
   Paper,
+  Select,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -14,20 +26,31 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
   Typography,
   useMediaQuery,
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import {
+  Edit,
+  Close as CloseIcon,
+  Search as SearchIcon,
+} from '@material-ui/icons';
 
 import { getOrganizations } from 'api/organizations';
+import {
+  OrgQueryProvider,
+  SORT_OPTIONS,
+  useOrgQueryState,
+  useOrgQueryDispatch,
+} from 'context/OrganizationsContext';
 import Menu from 'components/common/Menu';
 import Navbar from 'components/Navbar';
+import OrganizationFormDialog from 'components/OrganizationFormDialog';
 import Spinner from 'components/common/Spinner';
 import { documentTitle } from 'common/variables';
 
-const DEFAULT_ROWS_PER_PAGE = 25;
 const ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
 
 const useStyles = makeStyles((theme) => ({
@@ -36,70 +59,57 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-    },
+    [theme.breakpoints.down('sm')]: { flexDirection: 'column' },
   },
-  sidebar: {
-    height: '100%',
-  },
+  sidebar: { height: '100%' },
   content: {
     flexGrow: 1,
     padding: theme.spacing(8),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(3),
-    },
+    [theme.breakpoints.down('sm')]: { padding: theme.spacing(3) },
   },
-  mobileNav: {
-    width: '100%',
-  },
-  titleBox: {
-    marginBottom: theme.spacing(4),
-  },
+  mobileNav: { width: '100%' },
+  titleBox: { marginBottom: theme.spacing(4) },
   titleIcon: {
     fontSize: 67,
     marginRight: 11,
     color: 'gray',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 44,
-    },
+    [theme.breakpoints.down('sm')]: { fontSize: 44 },
   },
+  addButton: { color: 'white' },
+  toolbar: {
+    display: 'flex',
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: { flexDirection: 'column' },
+  },
+  searchBox: { flexGrow: 1 },
+  sortSelect: { minWidth: 160 },
   emptyState: {
     padding: theme.spacing(6),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
-  cardList: {
-    width: '100%',
+  cardList: { width: '100%' },
+  card: { marginBottom: theme.spacing(2) },
+  cardValue: { overflowWrap: 'anywhere' },
+  cardLabel: { color: theme.palette.text.secondary },
+  cardHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1),
   },
-  card: {
-    marginBottom: theme.spacing(2),
-  },
-  cardValue: {
-    overflowWrap: 'anywhere',
-  },
-  cardLabel: {
-    color: theme.palette.text.secondary,
-  },
-  pagination: {
-    marginTop: theme.spacing(2),
-  },
+  pagination: { marginTop: theme.spacing(2) },
   paginationToolbar: {
     paddingLeft: 0,
     paddingRight: 0,
-    [theme.breakpoints.down('sm')]: {
-      minHeight: 'auto',
-    },
+    [theme.breakpoints.down('sm')]: { minHeight: 'auto' },
   },
   paginationSpacer: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
+    [theme.breakpoints.down('sm')]: { display: 'none' },
   },
   paginationCaption: {
-    [theme.breakpoints.down('sm')]: {
-      flexShrink: 0,
-    },
+    [theme.breakpoints.down('sm')]: { flexShrink: 0 },
   },
 }));
 
@@ -112,11 +122,7 @@ const COLUMNS = [
 
 function renderValue(org, column) {
   const value = org[column.field];
-
-  if (!value) {
-    return '—';
-  }
-
+  if (!value) return '—';
   if (column.isLink) {
     return (
       <Link href={value} target="_blank" rel="noopener noreferrer">
@@ -124,25 +130,61 @@ function renderValue(org, column) {
       </Link>
     );
   }
-
   return value;
 }
 
+function getOrgId(org) {
+  return org?.id;
+}
+
 function getRowKey(org, index) {
-  return org.id ?? org.stakeholder_uuid ?? index;
+  return getOrgId(org) ?? index;
 }
 
 export default function OrganizationsView() {
+  return (
+    <OrgQueryProvider>
+      <OrgContent />
+    </OrgQueryProvider>
+  );
+}
+
+function OrgContent() {
   const classes = useStyles();
   const theme = useTheme();
+  const queryClient = useQueryClient();
   const isCompactLayout = useMediaQuery(theme.breakpoints.down('sm'), {
     noSsr: true,
   });
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
+  const {
+    page,
+    rowsPerPage,
+    searchInput,
+    search,
+    sortValue,
+  } = useOrgQueryState();
+  const dispatch = useOrgQueryDispatch();
+
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingOrg, setEditingOrg] = useState(undefined);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const skip = rowsPerPage > 0 ? page * rowsPerPage : 0;
+
+  const commitSearch = useDebounce(
+    (value) => dispatch({ type: 'COMMIT_SEARCH', payload: value }),
+    500
+  );
+
+  useEffect(() => {
+    document.title = `Organization Management - ${documentTitle}`;
+  }, []);
+
+  const order =
+    SORT_OPTIONS.find((o) => o.value === sortValue)?.order ??
+    SORT_OPTIONS[0].order;
 
   const {
     data: { organizations, total: count } = { organizations: [], total: 0 },
@@ -150,34 +192,49 @@ export default function OrganizationsView() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['organizations', { skip, rowsPerPage }],
-    queryFn: () => getOrganizations({ skip, rowsPerPage }),
-    // Keep the current page visible while the next page loads.
+    queryKey: ['organizations', { skip, rowsPerPage, search, sortValue }],
+    queryFn: () => getOrganizations({ skip, rowsPerPage, search, order }),
     placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-    document.title = `Organization Management - ${documentTitle}`;
-  }, []);
+  function handleOpenEdit(org) {
+    setEditingOrg(org);
+    setFormOpen(true);
+  }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  function handleCloseForm() {
+    setFormOpen(false);
+    setEditingOrg(undefined);
+  }
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  function handleSaved() {
+    queryClient.invalidateQueries({ queryKey: ['organizations'] });
+    setSnackbarMessage('Organization updated');
+    setSnackbarOpen(true);
+    handleCloseForm();
+  }
+
+  function handleSnackbarClose(event, reason) {
+    if (reason === 'clickaway') return;
+    setSnackbarOpen(false);
+  }
 
   const rowsPerPageOptions = isCompactLayout ? [] : ROWS_PER_PAGE_OPTIONS;
 
   const labelDisplayedRows = ({ from, to, count: totalCount }) => {
     const visibleCount = totalCount === -1 ? `>${to}` : totalCount;
-
     return isCompactLayout
       ? `${from}-${to}/${visibleCount}`
       : `${from}-${to} of ${visibleCount}`;
   };
+
+  function renderOrgActions(org) {
+    return (
+      <IconButton title="edit" onClick={() => handleOpenEdit(org)}>
+        <Edit />
+      </IconButton>
+    );
+  }
 
   function renderBody() {
     if (isError) {
@@ -188,9 +245,7 @@ export default function OrganizationsView() {
       );
     }
 
-    if (isLoading) {
-      return <Spinner />;
-    }
+    if (isLoading) return <Spinner />;
 
     if (organizations.length === 0) {
       return (
@@ -210,31 +265,24 @@ export default function OrganizationsView() {
               variant="outlined"
             >
               <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {org.name || '—'}
-                </Typography>
-                {COLUMNS.filter((column) => column.field !== 'name').map(
-                  (column) => (
-                    <Grid container spacing={1} key={column.field}>
-                      <Grid item>
-                        <Typography
-                          variant="body2"
-                          className={classes.cardLabel}
-                        >
-                          {column.label}:
-                        </Typography>
-                      </Grid>
-                      <Grid item xs zeroMinWidth>
-                        <Typography
-                          variant="body2"
-                          className={classes.cardValue}
-                        >
-                          {renderValue(org, column)}
-                        </Typography>
-                      </Grid>
+                <Box className={classes.cardHeader}>
+                  <Typography variant="h6">{org.name || '—'}</Typography>
+                  {renderOrgActions(org)}
+                </Box>
+                {COLUMNS.filter((c) => c.field !== 'name').map((column) => (
+                  <Grid container spacing={1} key={column.field}>
+                    <Grid item>
+                      <Typography variant="body2" className={classes.cardLabel}>
+                        {column.label}:
+                      </Typography>
                     </Grid>
-                  )
-                )}
+                    <Grid item xs zeroMinWidth>
+                      <Typography variant="body2" className={classes.cardValue}>
+                        {renderValue(org, column)}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ))}
               </CardContent>
             </Card>
           ))}
@@ -250,6 +298,7 @@ export default function OrganizationsView() {
               {COLUMNS.map((column) => (
                 <TableCell key={column.field}>{column.label}</TableCell>
               ))}
+              <TableCell>Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -260,6 +309,9 @@ export default function OrganizationsView() {
                     {renderValue(org, column)}
                   </TableCell>
                 ))}
+                <TableCell style={{ minWidth: '110px' }}>
+                  {renderOrgActions(org)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -282,16 +334,72 @@ export default function OrganizationsView() {
 
       <Grid item container className={classes.content}>
         <Grid item xs={12}>
-          <Grid container alignItems="center" className={classes.titleBox}>
+          <Grid
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            className={classes.titleBox}
+          >
             <Grid item>
-              <AccountTreeIcon className={classes.titleIcon} />
-            </Grid>
-            <Grid item>
-              <Typography variant={isCompactLayout ? 'h4' : 'h2'}>
-                Organization Management
-              </Typography>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Typography variant={isCompactLayout ? 'h4' : 'h2'}>
+                    Organization Management
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
+
+          <Box className={classes.toolbar}>
+            <TextField
+              className={classes.searchBox}
+              variant="outlined"
+              placeholder="Search by name or phone"
+              value={searchInput}
+              onChange={(e) => {
+                dispatch({ type: 'SET_SEARCH_INPUT', payload: e.target.value });
+                commitSearch(e.target.value);
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: searchInput && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        dispatch({ type: 'SET_SEARCH_INPUT', payload: '' });
+                        commitSearch('');
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <FormControl variant="outlined" className={classes.sortSelect}>
+              <InputLabel id="org-sort-label">Sort</InputLabel>
+              <Select
+                labelId="org-sort-label"
+                label="Sort"
+                value={sortValue}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_SORT', payload: e.target.value })
+                }
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
 
           {renderBody()}
 
@@ -308,8 +416,15 @@ export default function OrganizationsView() {
               rowsPerPageOptions={rowsPerPageOptions}
               page={page}
               rowsPerPage={rowsPerPage}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              onPageChange={(_, newPage) =>
+                dispatch({ type: 'SET_PAGE', payload: newPage })
+              }
+              onRowsPerPageChange={(e) =>
+                dispatch({
+                  type: 'SET_ROWS_PER_PAGE',
+                  payload: parseInt(e.target.value, 10),
+                })
+              }
               labelDisplayedRows={labelDisplayedRows}
               SelectProps={{
                 inputProps: { 'aria-label': 'rows per page' },
@@ -319,6 +434,31 @@ export default function OrganizationsView() {
           )}
         </Grid>
       </Grid>
+
+      {formOpen && (
+        <OrganizationFormDialog
+          organization={editingOrg}
+          onClose={handleCloseForm}
+          onSaved={handleSaved}
+        />
+      )}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleSnackbarClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
     </Grid>
   );
 }

@@ -8,6 +8,7 @@ import {
   getUserFromToken,
   initializeKeycloak,
 } from '../auth/keycloak';
+import { LOGIN_PATH } from '../auth/constants';
 
 export default function AuthCallback() {
   const appContext = useContext(AppContext);
@@ -19,32 +20,39 @@ export default function AuthCallback() {
 
     async function processCallback() {
       if (!isKeycloakEnabled) {
-        history.replace('/login');
+        history.replace(LOGIN_PATH);
         return;
       }
 
       try {
+        // initializeKeycloak() is idempotent — if it already ran (e.g. during
+        // the bootstrap in index.js), it returns the cached promise. When this
+        // component mounts at /auth/callback Keycloak has just redirected back
+        // with an auth code, so the adapter exchanges the code for tokens here.
         const authenticated = await initializeKeycloak();
+
         if (!isMounted) {
           return;
         }
 
+        // No valid session after the code exchange — wipe any stale state and
+        // send the user back to the login page to try again.
         const accessToken = getAccessToken();
         if (!authenticated || !accessToken) {
           clearAuthState();
-          history.replace('/login');
+          history.replace(LOGIN_PATH);
           return;
         }
 
+        // Auth succeeded — persist the user and token into app context.
         const user = getUserFromToken();
         login(user, `Bearer ${accessToken}`, true);
 
-        const targetPath = sessionStorage.getItem('post_login_path') || '/';
-        sessionStorage.removeItem('post_login_path');
-        history.replace(targetPath);
+        history.replace('/');
       } catch (error) {
+        // Token exchange or user-info fetch failed — clean up and fall back to login.
         clearAuthState();
-        history.replace('/login');
+        history.replace(LOGIN_PATH);
       }
     }
 

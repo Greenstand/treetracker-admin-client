@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "input[placeholder*=\"Search by name\"]"
+}

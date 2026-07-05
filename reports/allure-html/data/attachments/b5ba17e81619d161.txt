@@ -1,3 +1,0 @@
-{
-  "text": "organization-bdd-1776968254402@example.com"
-}

@@ -1,5 +1,6 @@
 import Keycloak from 'keycloak-js';
 import { session } from '../models/auth';
+import { LOGIN_PATH } from './constants';
 
 /** @typedef {import('keycloak-js').KeycloakConfig} KeycloakConfig */
 /** @typedef {import('keycloak-js').KeycloakInitOptions} KeycloakInitOptions */
@@ -95,6 +96,9 @@ export async function initializeKeycloak() {
     onLoad: 'check-sso',
     pkceMethod: 'S256',
     checkLoginIframe: false,
+    // Redirect back to the current page — Keycloak accepts any path under
+    // the registered wildcard (domain/*) so no callback route is needed.
+    redirectUri: window.location.href,
   };
 
   keycloakInitPromise = instance.init(initOptions).catch((error) => {
@@ -161,8 +165,7 @@ export async function startKeycloakRequiredAction(
   try {
     sessionStorage.setItem(PENDING_ACTION_STORAGE_KEY, action);
   } catch {
-    /* sessionStorage unavailable — adapter's onActionUpdate(action) is the
-       primary source; we'd just lose the fallback path */
+    /* sessionStorage unavailable — onActionUpdate is the primary source */
   }
 
   await instance.login({
@@ -179,7 +182,7 @@ export function logoutFromKeycloak() {
   }
 
   instance.logout({
-    redirectUri: `${window.location.origin}/login`,
+    redirectUri: `${window.location.origin}${LOGIN_PATH}`,
   });
 }
 

@@ -3,19 +3,20 @@ import { Redirect, useLocation } from 'react-router-dom';
 import Login from './Login';
 import { AppContext } from '../context/AppContext';
 import { loginToKeycloak } from '../auth/keycloak';
+import { LOGIN_PATH } from '../auth/constants';
 
-export default function LoginRoute() {
-  const appContext = useContext(AppContext);
+function useKeycloakLoginRedirect() {
+  const { authStatus, isKeycloakEnabled, user } = useContext(AppContext);
   const location = useLocation();
   const redirectAttemptedRef = useRef(false);
 
   useEffect(() => {
-    if (!appContext.isKeycloakEnabled || appContext.user) {
+    if (!isKeycloakEnabled || user) {
       redirectAttemptedRef.current = false;
       return;
     }
 
-    if (appContext.authStatus !== 'unauthenticated') {
+    if (authStatus !== 'unauthenticated') {
       return;
     }
 
@@ -25,27 +26,30 @@ export default function LoginRoute() {
 
     redirectAttemptedRef.current = true;
 
-    const pathname =
-      location?.state?.from?.pathname &&
-      location.state.from.pathname !== '/login' &&
-      location.state.from.pathname !== '/auth/callback'
-        ? location.state.from.pathname
-        : '/';
-    const search = location?.state?.from?.search || '';
-    const hash = location?.state?.from?.hash || '';
-    const redirectPath = `${pathname}${search}${hash}`;
-    sessionStorage.setItem('post_login_path', redirectPath);
+    const fromPathname = location?.state?.from?.pathname;
+    const hasValidFrom = fromPathname && fromPathname !== LOGIN_PATH;
 
-    Promise.resolve(loginToKeycloak('/auth/callback')).catch((error) => {
+    let redirectPath;
+    if (hasValidFrom) {
+      const search = location.state.from.search || '';
+      const hash = location.state.from.hash || '';
+      redirectPath = `${fromPathname}${search}${hash}`;
+    } else {
+      redirectPath = '/';
+    }
+
+    Promise.resolve(loginToKeycloak(redirectPath)).catch((error) => {
       console.error('Keycloak login redirect failed', error);
       redirectAttemptedRef.current = false;
     });
-  }, [
-    appContext.authStatus,
-    appContext.isKeycloakEnabled,
-    appContext.user,
-    location,
-  ]);
+  }, [authStatus, isKeycloakEnabled, user, location]);
+}
+
+export default function LoginRoute() {
+  const appContext = useContext(AppContext);
+  const location = useLocation();
+
+  useKeycloakLoginRedirect();
 
   if (appContext.user) {
     const from = location?.state?.from || { pathname: '/' };
