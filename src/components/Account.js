@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Paper,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -20,7 +19,7 @@ import {
   startKeycloakRequiredAction,
   KEYCLOAK_UPDATE_ACTIONS,
 } from '../auth/keycloak';
-import Menu from './common/Menu';
+import AppLayout from './common/AppLayout';
 import notification from './common/notification';
 import { authAxios } from '../api/httpClient';
 import { documentTitle } from '../common/variables';
@@ -29,18 +28,6 @@ import { useHistory } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 const style = (theme) => ({
-  accountContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-  },
-  box: {
-    height: '100%',
-  },
-  menu: {
-    height: '100%',
-  },
   rightBox: {
     height: '100%',
     padding: theme.spacing(8),
@@ -245,11 +232,7 @@ function Account(props) {
   ));
 
   return (
-    <Grid className={classes.accountContainer}>
-      <Paper elevation={3}>
-        <Menu variant="plain" />
-      </Paper>
-
+    <AppLayout>
       <Grid item style={{ flexGrow: 1 }}>
         <Grid container className={classes.rightBox}>
           <Grid item xs={12}>
@@ -400,7 +383,7 @@ function Account(props) {
           </Suspense>
         </Dialog>
       ) : null}
-    </Grid>
+    </AppLayout>
   );
 }
 
