@@ -90,9 +90,12 @@ export function CapturesProvider(props) {
     };
     const paramString = `filter=${JSON.stringify(filterData)}`;
     setIsLoading(true);
-    const response = await queryCapturesApi({ paramString });
-    setIsLoading(false);
-    setCaptures(response.data);
+    try {
+      const response = await queryCapturesApi({ paramString });
+      setCaptures(response.data);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // GET CAPTURES FOR EXPORT
