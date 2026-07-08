@@ -586,7 +586,7 @@ const Verify = (props) => {
                 </Button>,
               ]}
             >
-              {isFilterShown && (
+              <div style={{ display: isFilterShown ? 'block' : 'none' }}>
                 <FilterTop
                   isOpen={isFilterShown}
                   onSubmit={(filter) => {
@@ -595,7 +595,7 @@ const Verify = (props) => {
                   filter={verifyContext.filter}
                   onClose={handleFilterClick}
                 />
-              )}
+              </div>
             </Navbar>
           </Grid>
           <Grid

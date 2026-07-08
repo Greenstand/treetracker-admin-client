@@ -133,6 +133,7 @@ function Filter(props) {
     filter.stakeholderUUID = stakeholderUUID;
     filter.tokenId = tokenId;
     props.onSubmit && props.onSubmit(filter);
+    props.onClose && props.onClose();
   }
 
   function handleReset() {

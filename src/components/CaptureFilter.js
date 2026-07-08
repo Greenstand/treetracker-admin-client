@@ -172,6 +172,7 @@ function Filter(props) {
     filter.tokenId = tokenId;
     filter.verifyStatus = verifyStatus;
     props.onSubmit && props.onSubmit(filter);
+    props.onClick && props.onClick();
   }
 
   function handleReset() {

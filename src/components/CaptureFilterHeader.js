@@ -50,14 +50,14 @@ function CaptureFilterHeader(props) {
           </Button>,
         ]}
       >
-        {isFilterShown && (
+        <div style={{ display: isFilterShown ? 'block' : 'none' }}>
           <CaptureFilter
             isOpen={isFilterShown}
             onSubmit={handleFilterSubmit}
             filter={capturesContext.filter}
             onClick={handleFilterClick}
           />
-        )}
+        </div>
       </Navbar>
     </Grid>
   );

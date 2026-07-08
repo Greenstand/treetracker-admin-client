@@ -73,6 +73,7 @@ function FilterTopGrower(props) {
       deviceIdentifier,
     });
     props.onSubmit && props.onSubmit(filter);
+    props.onClick && props.onClick();
   }
 
   const handleReset = () => {
