@@ -178,7 +178,10 @@ const EditGrower = (props) => {
               },
             ]}
             handleSelection={(org) => {
-              handleChange('organizationId', org?.id || null);
+              handleChange(
+                'organizationId',
+                org?.id === ORGANIZATION_NOT_SET ? null : org?.id || null
+              );
             }}
           />
         </Grid>
