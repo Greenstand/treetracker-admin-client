@@ -63,7 +63,6 @@ function getRoutes(user) {
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_TREE,
         POLICIES.APPROVE_TREE,
       ]),
     },
