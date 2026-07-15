@@ -1,0 +1,7 @@
+node_modules
+build
+coverage
+.git
+.env.local
+.env.development.local
+npm-debug.log*
