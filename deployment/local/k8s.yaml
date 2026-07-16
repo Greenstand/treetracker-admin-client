@@ -37,3 +37,16 @@ spec:
   ports:
     - port: 80
       targetPort: 80
+---
+# admin-client has no shipped Mapping (static-hosted on S3/CloudFront in prod). For the
+# local single-origin gateway, route the catch-all `/` (SPA + static assets) here. The
+# more-specific service prefixes (/api/admin/, /images/, …) win by precedence.
+apiVersion: getambassador.io/v3alpha1
+kind: Mapping
+metadata:
+  name: admin-client
+  namespace: admin-client
+spec:
+  hostname: '*'
+  prefix: /
+  service: treetracker-admin-client.admin-client:80

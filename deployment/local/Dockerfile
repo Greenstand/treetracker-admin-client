@@ -1,14 +1,15 @@
 # Local e2e image for the admin-client /verify UI.
-# Stage 1: CRA production build. REACT_APP_API_ROOT="" ⇒ the app makes RELATIVE calls
-#   (/auth/login, /api/trees), which nginx (stage 2) reverse-proxies to admin-api in-cluster.
-#   Same-origin ⇒ no CORS, and the browser needs only ONE host port-forward (to this pod).
+# Stage 1: CRA production build. Roots match the shipped Ambassador Mappings so Emissary
+#   (not nginx) does the routing: REACT_APP_API_ROOT=/api/admin (→ admin-api, rewrite /),
+#   REACT_APP_IMAGES_API_ROOT=/images (→ images-api, rewrite /). Single origin via the
+#   k3d LB (localhost:8088) ⇒ no CORS. nginx here only serves the static SPA (no proxy).
 FROM node:18-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm install --no-audit --no-fund --legacy-peer-deps
 COPY . .
-ENV REACT_APP_API_ROOT="" \
-    REACT_APP_TREETRACKER_API_ROOT="" \
+ENV REACT_APP_API_ROOT="/api/admin" \
+    REACT_APP_TREETRACKER_API_ROOT="/treetracker" \
     REACT_APP_QUERY_API_ROOT="/query" \
     REACT_APP_GROWER_QUERY_API_ROOT="/grower" \
     REACT_APP_IMAGES_API_ROOT="/images" \
@@ -23,7 +24,7 @@ ENV REACT_APP_API_ROOT="" \
     CI=false
 RUN npm run build
 
-# Stage 2: nginx serves the static build + proxies API traffic to admin-api.
+# Stage 2: nginx serves ONLY the static SPA build (Ambassador handles all API routing).
 FROM nginx:1.27-alpine
 COPY deployment/local/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
