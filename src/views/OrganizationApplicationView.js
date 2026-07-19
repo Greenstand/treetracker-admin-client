@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { createOrganization } from 'api/organizations';
 import { getApiErrorMessage } from 'api/apiUtils';
 import { ensureFreshToken, getUserFromToken } from 'auth/keycloak';
-import Menu from 'components/common/Menu';
+import AppLayout from 'components/common/AppLayout';
 import { documentTitle } from 'common/variables';
 import { AppContext } from 'context/AppContext';
 import {
@@ -33,15 +33,6 @@ const ERROR_MESSAGES = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  page: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-  },
-  sidebar: {
-    height: '100%',
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(6),
@@ -151,11 +142,7 @@ export default function OrganizationApplicationView() {
   }
 
   return (
-    <Grid className={classes.page}>
-      <Paper elevation={3} className={classes.sidebar}>
-        <Menu variant="plain" />
-      </Paper>
-
+    <AppLayout>
       <Grid item className={classes.content}>
         <Paper elevation={2} className={classes.card}>
           <Box className={classes.header}>
@@ -280,6 +267,6 @@ export default function OrganizationApplicationView() {
           </form>
         </Paper>
       </Grid>
-    </Grid>
+    </AppLayout>
   );
 }

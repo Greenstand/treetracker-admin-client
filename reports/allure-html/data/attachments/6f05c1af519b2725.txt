@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": "//*[contains(normalize-space(.), \"Here is your QR code to present to your planter\")]"
+}

@@ -37,6 +37,8 @@ import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 import OrganizationsView from 'views/OrganizationsView';
+import ShareAppView from 'views/ShareAppView';
+import IconShare from '@material-ui/icons/Share';
 import log from 'loglevel';
 import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
 import { parseStoredToken, parseStoredUser } from '../auth/util';
@@ -176,6 +178,14 @@ function getRoutes(user) {
       component: OrganizationsView,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.ADMIN]),
+    },
+    {
+      name: 'Share App',
+      linkTo: '/share-app',
+      component: ShareAppView,
+      icon: IconShare,
+      // Shown to organization users — the deeplink carries their org id/name.
+      disabled: !user?.policy?.organization?.id,
     },
     {
       name: 'User Manager',
