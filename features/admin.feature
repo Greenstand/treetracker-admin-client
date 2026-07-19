@@ -13,3 +13,9 @@ Feature: Admin
     Then the organization list should update with the new sort order
 
 
+  Scenario: Admin can verify all trees
+    Given I am the user with role "greenstand-admin"
+    And I login
+    And I am on the verify page
+    Then There should be trees/captures on the list
+    And I should be able to verify the first tree
