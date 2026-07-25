@@ -45,8 +45,7 @@ import {
   useOrgQueryState,
   useOrgQueryDispatch,
 } from 'context/OrganizationsContext';
-import Menu from 'components/common/Menu';
-import Navbar from 'components/Navbar';
+import AppLayout from 'components/common/AppLayout';
 import OrganizationFormDialog from 'components/OrganizationFormDialog';
 import Spinner from 'components/common/Spinner';
 import { documentTitle } from 'common/variables';
@@ -54,20 +53,11 @@ import { documentTitle } from 'common/variables';
 const ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
 
 const useStyles = makeStyles((theme) => ({
-  page: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    [theme.breakpoints.down('sm')]: { flexDirection: 'column' },
-  },
-  sidebar: { height: '100%' },
   content: {
     flexGrow: 1,
     padding: theme.spacing(8),
     [theme.breakpoints.down('sm')]: { padding: theme.spacing(3) },
   },
-  mobileNav: { width: '100%' },
   titleBox: { marginBottom: theme.spacing(4) },
   titleIcon: {
     fontSize: 67,
@@ -321,17 +311,7 @@ function OrgContent() {
   }
 
   return (
-    <Grid className={classes.page}>
-      {isCompactLayout ? (
-        <Grid item className={classes.mobileNav}>
-          <Navbar />
-        </Grid>
-      ) : (
-        <Paper elevation={3} className={classes.sidebar}>
-          <Menu variant="plain" />
-        </Paper>
-      )}
-
+    <AppLayout>
       <Grid item container className={classes.content}>
         <Grid item xs={12}>
           <Grid
@@ -459,6 +439,6 @@ function OrgContent() {
           </IconButton>
         }
       />
-    </Grid>
+    </AppLayout>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "treetracker-admin-client",
-  "version": "1.108.0-keycloak.2",
+  "version": "1.108.0-keycloak.3",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
@@ -38,6 +38,7 @@
     "mdi-svg": "*",
     "os": "npm:os-browserify",
     "prop-types": "*",
+    "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-autosuggest": "^10.0.2",
     "react-chartjs-2": "^4.0.1",

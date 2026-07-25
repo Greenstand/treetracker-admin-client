@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": "//*[contains(normalize-space(.), \"Here is your link to share with your planter\")]"
+}

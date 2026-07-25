@@ -22,6 +22,11 @@ export async function deleteOrganization(id) {
   await authAxios.delete(`${API_ROOT}/api/organizations/${id}`);
 }
 
+export async function getOrganizationById(id) {
+  const { data } = await authAxios.get(`${API_ROOT}/api/organizations/${id}`);
+  return data;
+}
+
 // Tiebreaker appended to every sort so paging is stable.
 const TIEBREAKER = 'id ASC';
 
