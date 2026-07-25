@@ -43,13 +43,19 @@ jobs:
             sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
           fi
 
-      - name: Start admin client dev server
+      - name: Build admin client (dev environment config)
+        run: npm run build:dev
+
+      - name: Serve the production build
         run: |
-          BROWSER=none npm run start:dev > devserver.log 2>&1 &
+          # Serve the optimized build instead of the slow dev server, so page
+          # loads take ~1-2s rather than 20-40s. -s = single-page fallback so
+          # client-side routes (/login, /account, /auth/callback) resolve.
+          npx --yes serve -s build -l 3001 > server.log 2>&1 &
           echo "Waiting for http://localhost:3001 ..."
-          if ! timeout 300 bash -c 'until curl -sf -o /dev/null http://localhost:3001; do sleep 5; done'; then
-            echo "Dev server failed to start in time. Log:"
-            cat devserver.log
+          if ! timeout 120 bash -c 'until curl -sf -o /dev/null http://localhost:3001; do sleep 2; done'; then
+            echo "Static server failed to start in time. Log:"
+            cat server.log
             exit 1
           fi
 

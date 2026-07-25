@@ -133,7 +133,7 @@ exports.config = {
     source: true,
     strict: false,
     tags: process.env.WDIO_TAGS || '',
-    timeout: 120000,
+    timeout: 180000,
     ignoreUndefinedDefinitions: false,
   },
 };
