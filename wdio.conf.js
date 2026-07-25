@@ -4,8 +4,10 @@ const fs = require('fs');
 
 const SCREENSHOT_DIR = path.resolve('./reports/video/.frames');
 const VIDEO_OUTPUT = path.resolve('./reports/video/test-run.mp4');
-const CHROMEDRIVER_PATH = path.resolve('./.drivers/chromedriver');
+const CHROMEDRIVER_PATH =
+  process.env.CHROMEDRIVER_PATH || path.resolve('./.drivers/chromedriver');
 const FFMPEG_PATH = process.env.FFMPEG_PATH || 'ffmpeg';
+const HEADLESS = process.env.WDIO_HEADLESS === 'true';
 let screenshotInterval = null;
 let frameCount = 0;
 
@@ -56,7 +58,10 @@ function stopCapture() {
   if (result.status === 0) {
     console.log(`\nVideo saved: ${VIDEO_OUTPUT}`);
   } else {
-    console.error('\nffmpeg error:', result.stderr.toString().slice(-300));
+    const details = result.stderr
+      ? result.stderr.toString().slice(-300)
+      : String(result.error || 'ffmpeg not available');
+    console.error('\nffmpeg error:', details);
   }
 }
 
@@ -70,7 +75,17 @@ exports.config = {
       maxInstances: 1,
       browserName: 'chrome',
       'goog:chromeOptions': {
-        args: ['--disable-gpu', '--no-sandbox'],
+        args: [
+          '--disable-gpu',
+          '--no-sandbox',
+          ...(HEADLESS
+            ? [
+                '--headless=new',
+                '--window-size=1920,1080',
+                '--disable-dev-shm-usage',
+              ]
+            : []),
+        ],
       },
     },
   ],
@@ -95,7 +110,7 @@ exports.config = {
       'allure',
       {
         outputDir: './reports/allure-results',
-        disableWebdriverStepsReporting: false,
+        disableWebdriverStepsReporting: true,
         useCucumberStepReporter: true,
       },
     ],

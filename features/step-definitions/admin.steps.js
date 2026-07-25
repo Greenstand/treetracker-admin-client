@@ -4,12 +4,18 @@ const AdminPage = require('../page-objects/AdminPage');
 const LoginPage = require('../page-objects/LoginPage');
 const { openKeycloakLoginPage } = require('../support/auth');
 
-const USERS_BY_ROLE = {
-  'greenstand-admin': {
-    username: 'org-manager',
-    password: 'fIM1&miRS$Qs0^ST',
-  },
-};
+const adminUsername = process.env.BDD_GREENSTAND_ADMIN_USERNAME;
+const adminPassword = process.env.BDD_GREENSTAND_ADMIN_PASSWORD;
+
+const USERS_BY_ROLE =
+  adminUsername && adminPassword
+    ? {
+        'greenstand-admin': {
+          username: adminUsername,
+          password: adminPassword,
+        },
+      }
+    : {};
 
 let currentUser;
 
@@ -21,7 +27,11 @@ Given('I am the user with role {string}', async (role) => {
   currentUser = USERS_BY_ROLE[role];
 
   if (!currentUser) {
-    throw new Error(`No BDD credentials configured for role: ${role}`);
+    console.warn(
+      `No BDD credentials configured for role "${role}" ` +
+        '(set BDD_GREENSTAND_ADMIN_USERNAME / BDD_GREENSTAND_ADMIN_PASSWORD) — skipping scenario'
+    );
+    return 'skipped';
   }
 });
 
