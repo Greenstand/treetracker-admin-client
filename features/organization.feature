@@ -16,6 +16,11 @@ Feature: Organization Features
     # for a new organzation without new coming tree, the verify list is empty, the request to admin api should filter by organization, tree not belongs to current organization is not shown here.
 
 
+  # TODO(follow-up): requires a pre-provisioned "organization" account whose
+  # password is supplied via a secret (like the admin scenario). It can't run
+  # with an auto-generated signup user, so it is skipped until that account
+  # is set up. See features/step-definitions/share-org-via-link.steps.js.
+  @skip
   Scenario: Organization shares the Treetracker app deeplink
     As an organization on Greenstand, I can share the Treetracker app with people
     through a deeplink that carries my organization info (name + DB id) into the
