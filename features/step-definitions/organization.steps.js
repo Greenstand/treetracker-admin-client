@@ -1,11 +1,7 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
 
-const LoginPage = require('../page-objects/LoginPage');
 const OrganizationPage = require('../page-objects/OrganizationPage');
-const { openKeycloakLoginPage } = require('../support/auth');
-
-const USERNAME = 'user-test-treetracker-admin-client';
-const PASSWORD = 'LjyxVk4t5^yx&!Gl';
+const { registerNewUser } = require('../support/testUser');
 
 function buildOrganizationDetails() {
   const timestamp = Date.now();
@@ -21,9 +17,8 @@ function buildOrganizationDetails() {
 }
 
 Given('I am registered user', async () => {
-  await openKeycloakLoginPage();
-  await LoginPage.login(USERNAME, PASSWORD);
-  await LoginPage.waitForSuccessfulRedirect();
+  // Registers (and thereby logs in) a fresh unique user for this scenario.
+  await registerNewUser();
 });
 
 Given('I am on the organization application page', async () => {

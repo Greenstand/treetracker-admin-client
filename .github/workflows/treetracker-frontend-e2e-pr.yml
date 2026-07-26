@@ -1,0 +1,86 @@
+# Runs the WebdriverIO + Cucumber E2E suite on every pull request.
+
+name: E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'features/**'
+      - 'wdio.conf.js'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.env.development'
+      - '.github/workflows/treetracker-frontend-e2e-pr.yml'
+  workflow_dispatch:
+
+env:
+  node-version: '18'
+
+jobs:
+  e2e:
+    name: WebdriverIO E2E (Chrome, headless)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ env.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node-version }}
+          cache: npm
+
+      - name: npm clean install
+        run: npm ci --legacy-peer-deps
+
+      - name: Install ffmpeg (used for the test run video recording)
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
+
+      - name: Build admin client (dev environment config)
+        run: npm run build:dev
+
+      - name: Serve the production build
+        run: |
+          # Serve the optimized build instead of the slow dev server, so page
+          # loads take ~1-2s rather than 20-40s. -s = single-page fallback so
+          # client-side routes (/login, /account, /auth/callback) resolve.
+          npx --yes serve -s build -l 3001 > server.log 2>&1 &
+          echo "Waiting for http://localhost:3001 ..."
+          if ! timeout 120 bash -c 'until curl -sf -o /dev/null http://localhost:3001; do sleep 2; done'; then
+            echo "Static server failed to start in time. Log:"
+            cat server.log
+            exit 1
+          fi
+
+      - name: Run E2E tests
+        run: |
+          # CHROMEWEBDRIVER is set by the runner image and points to the
+          # chromedriver matching the pre-installed Chrome.
+          export CHROMEDRIVER_PATH="$CHROMEWEBDRIVER/chromedriver"
+          npm run wdio
+        env:
+          WDIO_HEADLESS: 'true'
+          WDIO_TAGS: 'not @skip and not @manual'
+          BDD_GREENSTAND_ADMIN_USERNAME: ${{ secrets.BDD_GREENSTAND_ADMIN_USERNAME }}
+          BDD_GREENSTAND_ADMIN_PASSWORD: ${{ secrets.BDD_GREENSTAND_ADMIN_PASSWORD }}
+
+      - name: Generate Allure HTML report
+        if: always()
+        run: npm run wdio:report:ci
+
+      - name: Upload E2E report and video
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: |
+            reports/allure-html
+            reports/video/test-run.mp4
+          if-no-files-found: ignore

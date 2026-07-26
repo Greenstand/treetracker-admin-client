@@ -1,18 +1,16 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
 
-const LoginPage = require('../page-objects/LoginPage');
 const AccountPage = require('../page-objects/AccountPage');
 const ReauthenticatePage = require('../page-objects/ReauthenticatePage');
 const UpdatePasswordPage = require('../page-objects/UpdatePasswordPage');
+const { registerNewUser, getRegisteredUser } = require('../support/testUser');
 
-const TEST_USERNAME = 'user-test-treetracker-admin-client';
-const CURRENT_PASSWORD = 'LjyxVk4t5^yx&!Gl';
-
-const NEW_PASSWORD = CURRENT_PASSWORD;
+const NEW_PASSWORD = 'TreeTrackerBdd!54321';
 
 Given('I am logged in', async () => {
-  await LoginPage.login(TEST_USERNAME, CURRENT_PASSWORD);
-  await LoginPage.waitForSuccessfulRedirect();
+  // Registering a new unique user through Keycloak also logs it in,
+  // so every scenario runs against its own disposable account.
+  await registerNewUser();
 });
 
 When('I open the change password page', async () => {
@@ -34,7 +32,7 @@ When('I open the change password page', async () => {
 
 When('I fill in my current password', async () => {
   if (await ReauthenticatePage.isOpen()) {
-    await ReauthenticatePage.enterPassword(CURRENT_PASSWORD);
+    await ReauthenticatePage.enterPassword(getRegisteredUser().password);
     await ReauthenticatePage.submit();
   }
 });

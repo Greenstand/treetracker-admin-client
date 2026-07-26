@@ -279,6 +279,28 @@ Alternatively, run both steps in one command:
 npm run wdio:report
 ```
 
+#### Continuous Integration
+
+The BDD suite runs automatically on every pull request via the
+`E2E Tests` GitHub Actions workflow
+(`.github/workflows/treetracker-frontend-e2e-pr.yml`). Each run registers a
+brand-new unique test user through the Keycloak registration page
+(`features/support/testUser.js`), so most scenarios need no shared test
+credentials. The one exception is `admin.feature`, which requires a
+pre-provisioned account holding the `greenstand-admin` realm role; its
+scenario is skipped when the credentials are not configured.
+The Allure HTML report and the run video are uploaded as workflow artifacts.
+
+Environment variables used by the suite:
+
+- `WDIO_HEADLESS=true` — run Chrome headless (CI sets this).
+- `CHROMEDRIVER_PATH` — path to a chromedriver binary (defaults to
+  `./.drivers/chromedriver` for local runs).
+- `WDIO_TAGS` — Cucumber tag filter (CI sets `not @skip and not @manual`).
+- `BDD_GREENSTAND_ADMIN_USERNAME` / `BDD_GREENSTAND_ADMIN_PASSWORD` —
+  credentials of the pre-provisioned admin account used by `admin.feature`
+  (repo secrets in CI). Never commit these values.
+
 ## How to log
 
 We use [loglevel](<(https://github.com/pimterry/loglevel)>) for logging, with some conventions. Using loglevel, we will be able to open/close a single file's log by chaining the level of log on the fly, even in production env.
