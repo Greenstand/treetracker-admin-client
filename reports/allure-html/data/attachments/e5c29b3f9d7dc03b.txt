@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": ".//button[contains(., \"download your QR code\") and not(.//button)]"
+}

@@ -1,0 +1,5 @@
+{
+  "error": "no such element",
+  "message": "no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//*[contains(normalize-space(.), \"Here is your link to share with your planter\")]\"}\n  (Session info: chrome=137.0.7151.68)",
+  "stacktrace": "#0 0x648d846e7c4a <unknown>\n#1 0x648d8418d6e0 <unknown>\n#2 0x648d841df117 <unknown>\n#3 0x648d841df311 <unknown>\n#4 0x648d8422dec4 <unknown>\n#5 0x648d84204e5d <unknown>\n#6 0x648d8422b2cc <unknown>\n#7 0x648d84204c03 <unknown>\n#8 0x648d841d147b <unknown>\n#9 0x648d841d20e1 <unknown>\n#10 0x648d846ac3fb <unknown>\n#11 0x648d846b032f <unknown>\n#12 0x648d84693f39 <unknown>\n#13 0x648d846b0ec8 <unknown>\n#14 0x648d8467868f <unknown>\n#15 0x648d846d52b8 <unknown>\n#16 0x648d846d5496 <unknown>\n#17 0x648d846e6b26 <unknown>\n#18 0x79cbaf29caa4 <unknown>\n#19 0x79cbaf329c6c <unknown>\n"
+}
