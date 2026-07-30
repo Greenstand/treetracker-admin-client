@@ -2,6 +2,7 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 
 const AdminPage = require('../page-objects/AdminPage');
 const LoginPage = require('../page-objects/LoginPage');
+const VerifyPage = require('../page-objects/VerifyPage');
 const { openKeycloakLoginPage } = require('../support/auth');
 
 const USERS_BY_ROLE = {
@@ -63,3 +64,17 @@ Then(
     await AdminPage.waitForSortApplied();
   }
 );
+
+Given('I am on the verify page', async () => {
+  await VerifyPage.open();
+});
+
+// The slash is escaped because Cucumber expressions read "trees/captures" as
+// alternative text rather than a literal slash.
+Then('There should be trees\\/captures on the list', async () => {
+  await VerifyPage.waitForCaptures();
+});
+
+Then('I should be able to verify the first tree', async () => {
+  await VerifyPage.verifyFirstCapture();
+});

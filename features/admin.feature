@@ -13,7 +13,6 @@ Feature: Admin
     Then the organization list should update with the new sort order
 
 
-  @skip
   Scenario: Admin can verify all trees
     Given I am the user with role "greenstand-admin"
     And I login

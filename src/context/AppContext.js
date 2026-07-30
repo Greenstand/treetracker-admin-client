@@ -68,6 +68,7 @@ function getRoutes(user) {
       component: VerifyView,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
+        POLICIES.ADMIN,
         POLICIES.ORGANIZATION,
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
