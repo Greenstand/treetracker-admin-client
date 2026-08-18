@@ -116,6 +116,32 @@ class VerifyPage {
     );
   }
 
+  async waitForNoCaptures() {
+    await this.waitForListLoaded();
+
+    await browser.waitUntil(
+      async () => {
+        const heading = await this.captureCountHeading.getText();
+        return /^0\s+captures$/.test(heading.trim());
+      },
+      {
+        timeout: 30000,
+        interval: 500,
+        timeoutMsg:
+          'Expected the verify page to report 0 captures for this organization',
+      }
+    );
+
+    const cards = await this.captureCards();
+
+    if (cards.length > 0) {
+      throw new Error(
+        `Expected an empty verify list but found ${cards.length} capture(s); ` +
+          'captures from other organizations are leaking into this list'
+      );
+    }
+  }
+
   async selectedCapturesCount() {
     const label = await this.selectedCapturesLabel.getText();
     const match = label.match(/:\s*(\d+)\s*\//);

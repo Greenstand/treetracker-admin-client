@@ -2,6 +2,7 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 
 const LoginPage = require('../page-objects/LoginPage');
 const OrganizationPage = require('../page-objects/OrganizationPage');
+const VerifyPage = require('../page-objects/VerifyPage');
 const { openKeycloakLoginPage } = require('../support/auth');
 
 const USERNAME = 'user-test-treetracker-admin-client';
@@ -54,3 +55,11 @@ Then(
     await OrganizationPage.waitForVerifyMenuItem();
   }
 );
+
+When('I click `vierfy`', async () => {
+  await VerifyPage.open();
+});
+
+Then('I see the verify page with no tree on the list', async () => {
+  await VerifyPage.waitForNoCaptures();
+});
