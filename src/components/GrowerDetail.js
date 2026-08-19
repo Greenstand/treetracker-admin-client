@@ -17,6 +17,9 @@ import {
   Divider,
   LinearProgress,
   Fab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@material-ui/core';
 import {
   Close,
@@ -25,8 +28,10 @@ import {
   Done,
   Clear,
   HourglassEmptyOutlined,
+  ExpandMore,
 } from '@material-ui/icons';
 import api from '../api/growers';
+import fieldDataApi from '../api/fieldData';
 import { getDateTimeStringLocale } from '../common/locale';
 import { hasPermission, POLICIES } from '../models/auth';
 import { AppContext } from '../context/AppContext';
@@ -131,6 +136,16 @@ const useStyle = makeStyles((theme) => ({
   paper: {
     width: GROWER_IMAGE_SIZE,
   },
+  sessionsAccordion: {
+    width: '100%',
+  },
+  sessionAvatar: {
+    width: 56,
+    height: 56,
+  },
+  sessionDetailLine: {
+    display: 'block',
+  },
 }));
 
 const GrowerDetail = ({ open, growerId, onClose }) => {
@@ -148,6 +163,9 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
   const [verificationStatus, setVerificationStatus] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [sessionsError, setSessionsError] = useState(null);
 
   useEffect(() => {
     setErrorMessage(null);
@@ -241,6 +259,78 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
     }
     loadCaptures();
   }, [grower]);
+
+  useEffect(() => {
+    async function loadSessions() {
+      if (!grower.growerAccountUuid && !grower.email && !grower.phone) {
+        setSessions([]);
+        return;
+      }
+      setSessionsLoading(true);
+      setSessionsError(null);
+      try {
+        const growerSessions = await fieldDataApi.getSessionsForGrower({
+          growerAccountUuid: grower.growerAccountUuid,
+          email: grower.email,
+          phone: grower.phone,
+        });
+        const sorted = (growerSessions || []).sort(
+          (a, b) =>
+            new Date(b.created_at || 0).getTime() -
+            new Date(a.created_at || 0).getTime()
+        );
+
+        const deviceConfigurationIds = [
+          ...new Set(
+            sorted.map((s) => s.device_configuration_id).filter(Boolean)
+          ),
+        ];
+        const walletRegistrationIds = [
+          ...new Set(
+            sorted
+              .map((s) => s.originating_wallet_registration_id)
+              .filter(Boolean)
+          ),
+        ];
+
+        const [deviceConfigurations, walletRegistrations] = await Promise.all([
+          Promise.all(
+            deviceConfigurationIds.map((id) =>
+              fieldDataApi.getDeviceConfiguration(id)
+            )
+          ),
+          Promise.all(
+            walletRegistrationIds.map((id) =>
+              fieldDataApi.getWalletRegistration(id)
+            )
+          ),
+        ]);
+
+        const deviceConfigurationById = Object.fromEntries(
+          deviceConfigurations.filter(Boolean).map((dc) => [dc.id, dc])
+        );
+        const walletRegistrationById = Object.fromEntries(
+          walletRegistrations.filter(Boolean).map((wr) => [wr.id, wr])
+        );
+
+        setSessions(
+          sorted.map((s) => ({
+            ...s,
+            deviceConfiguration:
+              deviceConfigurationById[s.device_configuration_id] || null,
+            walletRegistration:
+              walletRegistrationById[s.originating_wallet_registration_id] ||
+              null,
+          }))
+        );
+      } catch (error) {
+        setSessionsError(`Unable to load sessions: ${error?.message || error}`);
+      } finally {
+        setSessionsLoading(false);
+      }
+    }
+    loadSessions();
+  }, [grower.growerAccountUuid, grower.email, grower.phone]);
 
   async function getCaptureCountGrower(active, approved, growerId) {
     let filter = new FilterModel();
@@ -558,6 +648,112 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                     </tbody>
                   </table>
                 )) || <Typography variant="body1">---</Typography>}
+              </Grid>
+              <Divider />
+              <Grid container direction="column" className={classes.box}>
+                <Accordion className={classes.sessionsAccordion} elevation={0}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMore />}
+                    aria-controls="sessions-content"
+                    id="sessions-header"
+                  >
+                    <Typography variant="subtitle1">
+                      Sessions{sessions.length ? ` (${sessions.length})` : ''}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    {sessionsLoading ? (
+                      <LinearProgress
+                        color="primary"
+                        className={classes.captures}
+                      />
+                    ) : sessionsError ? (
+                      <Typography variant="body1" color="error">
+                        {sessionsError}
+                      </Typography>
+                    ) : sessions.length === 0 ? (
+                      <Typography variant="body1">---</Typography>
+                    ) : (
+                      <List className={classes.captures}>
+                        {sessions.map((session, i) => (
+                          <React.Fragment key={session.id}>
+                            {i > 0 && <Divider component="li" />}
+                            <ListItem
+                              alignItems="flex-start"
+                              classes={{ gutters: classes.gutters }}
+                            >
+                              {session.check_in_photo_url && (
+                                <ListItemAvatar>
+                                  <Avatar
+                                    variant="rounded"
+                                    src={session.check_in_photo_url}
+                                    className={classes.sessionAvatar}
+                                  />
+                                </ListItemAvatar>
+                              )}
+                              <ListItemText
+                                primary={
+                                  (session.created_at &&
+                                    getDateTimeStringLocale(
+                                      session.created_at
+                                    )) ||
+                                  (session.start_time &&
+                                    getDateTimeStringLocale(
+                                      session.start_time
+                                    )) ||
+                                  '---'
+                                }
+                                secondary={
+                                  <>
+                                    <Typography
+                                      component="span"
+                                      variant="body2"
+                                      className={classes.sessionDetailLine}
+                                    >
+                                      Organization:{' '}
+                                      {session.organization || '---'}
+                                    </Typography>
+                                    <Typography
+                                      component="span"
+                                      variant="body2"
+                                      className={classes.sessionDetailLine}
+                                    >
+                                      Device:{' '}
+                                      {(session.deviceConfiguration &&
+                                        `${
+                                          session.deviceConfiguration.brand ||
+                                          ''
+                                        } ${
+                                          session.deviceConfiguration.model ||
+                                          ''
+                                        }`.trim()) ||
+                                        session.device_identifier ||
+                                        '---'}
+                                      {session.deviceConfiguration
+                                        ?.app_version &&
+                                        ` (app v${session.deviceConfiguration.app_version})`}
+                                    </Typography>
+                                    <Typography
+                                      component="span"
+                                      variant="body2"
+                                      className={classes.sessionDetailLine}
+                                    >
+                                      Wallet:{' '}
+                                      {session.walletRegistration?.email ||
+                                        session.walletRegistration?.phone ||
+                                        session.wallet ||
+                                        '---'}
+                                    </Typography>
+                                  </>
+                                }
+                              />
+                            </ListItem>
+                          </React.Fragment>
+                        ))}
+                      </List>
+                    )}
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             </Grid>
           )}
