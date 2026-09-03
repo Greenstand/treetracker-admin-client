@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "div[class*=\"cardWrapper\"]:not([class*=\"placeholderCard\"]) > [id^=\"card_\"]"
+}

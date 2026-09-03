@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "[data-testid=\"share-app-notification\"]"
+}

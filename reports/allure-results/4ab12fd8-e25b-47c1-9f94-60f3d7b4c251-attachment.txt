@@ -1,0 +1,5 @@
+{
+  "error": "no such element",
+  "message": "no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\".//a[normalize-space(text()) = \"Verify\"] | .//a[not(.//a[normalize-space(text()) = \"Verify\"]) and normalize-space() = \"Verify\"]\"}\n  (Session info: chrome=137.0.7151.68)",
+  "stacktrace": "#0 0x6321d89d0c4a <unknown>\n#1 0x6321d84766e0 <unknown>\n#2 0x6321d84c8117 <unknown>\n#3 0x6321d84c8311 <unknown>\n#4 0x6321d8516ec4 <unknown>\n#5 0x6321d84ede5d <unknown>\n#6 0x6321d85142cc <unknown>\n#7 0x6321d84edc03 <unknown>\n#8 0x6321d84ba47b <unknown>\n#9 0x6321d84bb0e1 <unknown>\n#10 0x6321d89953fb <unknown>\n#11 0x6321d899932f <unknown>\n#12 0x6321d897cf39 <unknown>\n#13 0x6321d8999ec8 <unknown>\n#14 0x6321d896168f <unknown>\n#15 0x6321d89be2b8 <unknown>\n#16 0x6321d89be496 <unknown>\n#17 0x6321d89cfb26 <unknown>\n#18 0x7eeffde9caa4 <unknown>\n#19 0x7eeffdf29c6c <unknown>\n"
+}

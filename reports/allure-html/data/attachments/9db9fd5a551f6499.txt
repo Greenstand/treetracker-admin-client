@@ -1,0 +1,4 @@
+{
+  "using": "xpath",
+  "value": "//*[contains(text(), \"Quantity of selected Captures\")]"
+}
