@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.3...v1.108.0-keycloak.4) (2026-09-03)
+
+
+### Features
+
+* allow "greenstand-admin" to verify trees ([26b0462](https://github.com/Greenstand/treetracker-admin-client/commit/26b04622bc18caed76f9c736df86b6ef3efa1586))
+
 # [1.108.0-keycloak.3](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.2...v1.108.0-keycloak.3) (2026-07-19)
 
 
