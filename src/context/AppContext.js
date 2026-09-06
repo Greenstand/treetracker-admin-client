@@ -3,6 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
+import VerificationDashboardView from '../views/VerificationDashboardView';
 import GrowersView from '../views/GrowersView';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
@@ -28,6 +29,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import IconPermIdentity from '@material-ui/icons/PermIdentity';
 import CategoryIcon from '@material-ui/icons/Category';
 import HomeIcon from '@material-ui/icons/Home';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import CompareIcon from '@material-ui/icons/Compare';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
@@ -58,9 +60,31 @@ function getRoutes(user) {
     },
     {
       name: 'Verify',
-      linkTo: '/verify',
-      component: VerifyView,
-      icon: IconThumbsUpDown,
+      children: [
+        {
+          name: 'Dashboard',
+          linkTo: '/verify',
+          exact: true,
+          component: VerificationDashboardView,
+          icon: DashboardIcon,
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.LIST_TREE,
+            POLICIES.APPROVE_TREE,
+          ]),
+        },
+        {
+          name: 'Captures',
+          linkTo: '/verify/captures',
+          component: VerifyView,
+          icon: IconThumbsUpDown,
+          disabled: !hasPermission(user, [
+            POLICIES.SUPER_PERMISSION,
+            POLICIES.LIST_TREE,
+            POLICIES.APPROVE_TREE,
+          ]),
+        },
+      ],
       disabled: !hasPermission(user, [
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
