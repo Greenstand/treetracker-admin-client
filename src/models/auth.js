@@ -24,6 +24,7 @@ const POLICIES = {
   APPROVE_TREE: 'approve_tree',
   SEND_MESSAGES: 'send_messages',
   MATCH_CAPTURES: 'match_captures',
+  WALLET_ADMIN: 'wallet-admin',
 };
 
 // eslint-disable-next-line no-unused-vars
