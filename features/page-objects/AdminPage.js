@@ -56,6 +56,44 @@ class AdminPage {
     });
   }
 
+  get walletsHeading() {
+    return $('[data-test="wallets-title"]');
+  }
+
+  async waitForWalletListPage() {
+    const baseUrl = browser.options.baseUrl;
+
+    await browser.waitUntil(
+      async () => {
+        const currentUrl = await browser.getUrl();
+
+        if (!baseUrl || !currentUrl.startsWith(baseUrl)) {
+          return false;
+        }
+
+        return new URL(currentUrl).pathname === '/wallets';
+      },
+      {
+        timeout: 60000,
+        interval: 500,
+        timeoutMsg: 'Expected navigation to the wallet list page',
+      }
+    );
+
+    await this.walletsHeading.waitForDisplayed({
+      timeout: 10000,
+      timeoutMsg: 'Expected the Wallets page heading to appear',
+    });
+
+    // The list renders a table, cards or an empty state, so assert on the
+    // container rather than on rows: an admin panel with no wallets still
+    // reached the page.
+    await $('[data-test="wallets-list"]').waitForDisplayed({
+      timeout: 30000,
+      timeoutMsg: 'Expected the wallet list to render',
+    });
+  }
+
   async searchOrganizations(term) {
     await this.searchInput.waitForDisplayed({ timeout: 10000 });
     await this.searchInput.setValue(term);

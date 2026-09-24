@@ -33,10 +33,12 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import InboxRounded from '@material-ui/icons/InboxRounded';
 import MapIcon from '@material-ui/icons/Map';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 import OrganizationsView from 'views/OrganizationsView';
+import WalletsView from 'views/WalletsView';
 import ShareAppView from 'views/ShareAppView';
 import IconShare from '@material-ui/icons/Share';
 import log from 'loglevel';
@@ -179,6 +181,13 @@ function getRoutes(user) {
       component: OrganizationsView,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.ADMIN]),
+    },
+    {
+      name: 'Wallets',
+      linkTo: '/wallets',
+      component: WalletsView,
+      icon: AccountBalanceWalletIcon,
+      disabled: !hasPermission(user, [POLICIES.WALLET_ADMIN]),
     },
     {
       name: 'Share App',
