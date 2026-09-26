@@ -36,7 +36,7 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
 
   const handleChange = (e) => {
     e.preventDefault();
-    const org = orgList.find(
+    const org = [...defaultOrgList, ...orgList].find(
       (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
     );
     // console.log('handleChange', e);
