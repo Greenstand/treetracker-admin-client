@@ -145,10 +145,17 @@ export function VerifyProvider(props) {
       filter: filter,
     };
     log.debug('load page with params:', pageParams);
-    const result = await api.getCaptureImages(pageParams, abortController);
-    setCaptureImages(result || []);
-    //restore loading status
-    setIsLoading(false);
+    try {
+      const result = await api.getCaptureImages(pageParams, abortController);
+      setCaptureImages(result || []);
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        log.warn('get error:', e);
+      }
+      setCaptureImages([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCaptureSelectedArr = () => {
@@ -286,11 +293,18 @@ export function VerifyProvider(props) {
   };
 
   const getCaptureCount = async (newfilter = filter) => {
-    // console.log('-- verify getCaptureCount');
-    // setInvalidateCaptureCount(false);
-    const result = await api.getCaptureCount(newfilter);
-    setCaptureCount(Number(result.count));
-    setInvalidateCaptureCount(false);
+    try {
+      // console.log('-- verify getCaptureCount');
+      // setInvalidateCaptureCount(false);
+      const result = await api.getCaptureCount(newfilter);
+      setCaptureCount(Number(result.count));
+      setInvalidateCaptureCount(false);
+    } catch (e) {
+      log.warn('get capture count error:', e);
+      setCaptureCount(0);
+    } finally {
+      setInvalidateCaptureCount(false);
+    }
   };
 
   const value = {

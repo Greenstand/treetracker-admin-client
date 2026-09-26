@@ -72,12 +72,17 @@ export function CapturesProvider(props) {
   const getCaptureCount = async () => {
     log.debug('load capture count');
     const paramString = `where=${JSON.stringify(filter.getWhereObj())}`;
-    const response = await queryCapturesApi({
-      count: true,
-      paramString,
-    });
-    const { count } = response.data;
-    setCaptureCount(Number(count));
+    try {
+      const response = await queryCapturesApi({
+        count: true,
+        paramString,
+      });
+      const { count } = response.data;
+      setCaptureCount(Number(count));
+    } catch (e) {
+      log.warn('load capture count error:', e);
+      setCaptureCount(0);
+    }
   };
 
   const getCapturesAsync = async () => {
@@ -90,9 +95,15 @@ export function CapturesProvider(props) {
     };
     const paramString = `filter=${JSON.stringify(filterData)}`;
     setIsLoading(true);
-    const response = await queryCapturesApi({ paramString });
-    setIsLoading(false);
-    setCaptures(response.data);
+    try {
+      const response = await queryCapturesApi({ paramString });
+      setCaptures(response.data);
+    } catch (e) {
+      log.warn('load captures error:', e);
+      setCaptures([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // GET CAPTURES FOR EXPORT
