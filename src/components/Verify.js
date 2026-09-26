@@ -394,120 +394,119 @@ const Verify = (props) => {
     return false;
   });
 
-  const captureImageItems = captureImages
-    .concat(placeholderImages)
-    .map((capture) => {
-      return (
-        <Grid
-          item
-          key={capture.id}
-          style={{
-            width: `calc(100% / ${capturesPerRow})`,
-          }}
+  const captureImageItems = (verifyContext.isLoading
+    ? placeholderImages
+    : captureImages
+  ).map((capture) => {
+    return (
+      <Grid
+        item
+        key={capture.id}
+        style={{
+          width: `calc(100% / ${capturesPerRow})`,
+        }}
+      >
+        <div
+          className={clsx(
+            classes.cardWrapper,
+            verifyContext.captureImagesSelected[capture.id]
+              ? classes.cardSelected
+              : undefined,
+            capture.placeholder && classes.placeholderCard
+          )}
         >
-          <div
-            className={clsx(
-              classes.cardWrapper,
-              verifyContext.captureImagesSelected[capture.id]
-                ? classes.cardSelected
-                : undefined,
-              capture.placeholder && classes.placeholderCard
-            )}
+          <Tooltip
+            key={capture.id}
+            placement="top"
+            arrow={true}
+            interactive
+            enterDelay={500}
+            enterNextDelay={500}
+            onMouseEnter={() => setDisableHoverListener(false)}
+            disableHoverListener={disableHoverListener}
+            classes={{
+              tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
+            }}
+            title={
+              <CaptureDetailTooltip
+                capture={capture}
+                showCaptureClick={handleShowCaptureDetail}
+              />
+            }
           >
-            <Tooltip
-              key={capture.id}
-              placement="top"
-              arrow={true}
-              interactive
-              enterDelay={500}
-              enterNextDelay={500}
-              onMouseEnter={() => setDisableHoverListener(false)}
-              disableHoverListener={disableHoverListener}
-              classes={{
-                tooltipPlacementTop: tooltipPositionStyles.tooltipTop,
-              }}
-              title={
-                <CaptureDetailTooltip
-                  capture={capture}
-                  showCaptureClick={handleShowCaptureDetail}
-                />
-              }
+            <Card
+              onClick={(e) => handleCaptureClick(e, capture.id)}
+              id={`card_${capture.id}`}
+              className={classes.card}
+              elevation={capture.placeholder ? 0 : 3}
             >
-              <Card
-                onClick={(e) => handleCaptureClick(e, capture.id)}
-                id={`card_${capture.id}`}
-                className={classes.card}
-                elevation={capture.placeholder ? 0 : 3}
-              >
-                <CardContent className={classes.cardContent}>
-                  <Paper className={classes.cardCheckbox} elevation={4}>
-                    {verifyContext.captureImagesSelected[capture.id] && (
-                      <CheckIcon />
-                    )}
-                  </Paper>
-                  <OptimizedImage
-                    src={capture.imageUrl}
-                    width={isImagesLarge ? 400 : 250}
-                    className={classes.cardMedia}
-                    alertWidth="100%"
-                    alertHeight="200%"
-                    alertPosition="absolute"
-                    alertPadding="5rem 0 0 1rem"
-                    alertTitleSize="1.6rem"
-                    alertTextSize="1rem"
-                  />
-                </CardContent>
+              <CardContent className={classes.cardContent}>
+                <Paper className={classes.cardCheckbox} elevation={4}>
+                  {verifyContext.captureImagesSelected[capture.id] && (
+                    <CheckIcon />
+                  )}
+                </Paper>
+                <OptimizedImage
+                  src={capture.imageUrl}
+                  width={isImagesLarge ? 400 : 250}
+                  className={classes.cardMedia}
+                  alertWidth="100%"
+                  alertHeight="200%"
+                  alertPosition="absolute"
+                  alertPadding="5rem 0 0 1rem"
+                  alertTitleSize="1.6rem"
+                  alertTextSize="1rem"
+                />
+              </CardContent>
 
-                <Grid
-                  justifyContent="center"
-                  container
-                  className={classes.cardActions}
-                >
-                  <Grid item>
-                    <IconButton
-                      onClick={(e) => handleShowGrowerDetail(e, capture)}
-                      aria-label={`Grower details`}
-                      title={`Grower details`}
-                    >
-                      <Person color="primary" />
-                    </IconButton>
-                    <IconButton
-                      onClick={(e) => handleShowCaptureDetail(e, capture)}
-                      aria-label={`Capture details`}
-                      title={`Capture details`}
-                    >
-                      <Nature color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
-                      target="_blank"
-                      onClick={(e) => handleCapturePinClick(e, capture.id)}
-                      aria-label={`Capture location`}
-                      title={`Capture location`}
-                    >
-                      <LocationOn color="primary" />
-                    </IconButton>
-                    <IconButton
-                      variant="link"
-                      href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
-                      target="_blank"
-                      onClick={(e) =>
-                        handleGrowerMapClick(e, capture.planterId)
-                      }
-                      aria-label={`Grower map`}
-                      title={`Grower map`}
-                    >
-                      <Map color="primary" />
-                    </IconButton>
-                  </Grid>
+              <Grid
+                justifyContent="center"
+                container
+                className={classes.cardActions}
+              >
+                <Grid item>
+                  <IconButton
+                    onClick={(e) => handleShowGrowerDetail(e, capture)}
+                    aria-label={`Grower details`}
+                    title={`Grower details`}
+                  >
+                    <Person color="primary" />
+                  </IconButton>
+                  <IconButton
+                    onClick={(e) => handleShowCaptureDetail(e, capture)}
+                    aria-label={`Capture details`}
+                    title={`Capture details`}
+                  >
+                    <Nature color="primary" />
+                  </IconButton>
+                  <IconButton
+                    variant="link"
+                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?treeid=${capture.id}`}
+                    target="_blank"
+                    onClick={(e) => handleCapturePinClick(e, capture.id)}
+                    aria-label={`Capture location`}
+                    title={`Capture location`}
+                  >
+                    <LocationOn color="primary" />
+                  </IconButton>
+                  <IconButton
+                    variant="link"
+                    href={`${process.env.REACT_APP_WEBMAP_DOMAIN}/?userid=${capture.planterId}`}
+                    target="_blank"
+                    onClick={(e) => handleGrowerMapClick(e, capture.planterId)}
+                    aria-label={`Grower map`}
+                    title={`Grower map`}
+                  >
+                    <Map color="primary" />
+                  </IconButton>
                 </Grid>
-              </Card>
-            </Tooltip>
-          </div>
-        </Grid>
-      );
-    });
+              </Grid>
+            </Card>
+          </Tooltip>
+        </div>
+      </Grid>
+    );
+  });
 
   /*=============================================================*/
 

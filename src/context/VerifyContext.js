@@ -145,10 +145,12 @@ export function VerifyProvider(props) {
       filter: filter,
     };
     log.debug('load page with params:', pageParams);
-    const result = await api.getCaptureImages(pageParams, abortController);
-    setCaptureImages(result || []);
-    //restore loading status
-    setIsLoading(false);
+    try {
+      const result = await api.getCaptureImages(pageParams, abortController);
+      setCaptureImages(result || []);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCaptureSelectedArr = () => {
