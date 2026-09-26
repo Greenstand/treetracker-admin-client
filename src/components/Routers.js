@@ -15,6 +15,7 @@ import ReportingCard3 from './reportingCards/ReportingCard3';
 import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
 import ReportingCard6 from './reportingCards/ReportingCard6';
+import Subscription from './SubscriptionPlan/Subscription';
 
 export default function Routers() {
   const refContainer = useRef();
@@ -50,6 +51,9 @@ export default function Routers() {
                     pathname: '/growers',
                   }}
                 />
+              </Route>
+              <Route path="/subscription">
+                <Subscription />
               </Route>
               {appContext.routes.map((route, idx) =>
                 route?.children ? (
