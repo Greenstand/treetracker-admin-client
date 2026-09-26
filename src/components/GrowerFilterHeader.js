@@ -50,14 +50,14 @@ function GrowersFilterHeader(props) {
           </Button>,
         ]}
       >
-        {isFilterShown && (
+        <div style={{ display: isFilterShown ? 'block' : 'none' }}>
           <FilterTopGrower
             isOpen={isFilterShown}
             onSubmit={handleFilterSubmit}
             filter={growerContext.filter}
             onClick={handleFilterClick}
           />
-        )}
+        </div>
       </Navbar>
     </Grid>
   );
