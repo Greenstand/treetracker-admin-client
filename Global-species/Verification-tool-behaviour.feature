@@ -34,13 +34,20 @@ Feature: Species Dropdown in Verification
     When I open the species dropdown
     Then I should not see "Mangifera indica"
 
-  @optional
+@skip
+  Scenario: Deactivated species stays in historical records
+    Given a capture was verified as "Mangifera indica"
+    When an Org Admin deactivates "Mangifera indica"
+    Then the capture should still show "Mangifera indica" as its species
+    And "Mangifera indica" should not appear in the verification dropdown
+  
+@optional
   Scenario: Verifier searches the dropdown
     Given project "Mango Coast" has "Mangifera indica" and "Persea americana" saved
     When I type "mang" in the species dropdown
     Then I should only see "Mangifera indica"
 
-  @optional
+@optional
   Scenario: Dropdown is sorted by how often species are used
     Given "Persea americana" has been selected more often than "Mangifera indica"
     When I open the species dropdown
