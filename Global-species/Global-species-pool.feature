@@ -36,6 +36,7 @@ Scenario: Super Admin hides a species instead of deleting it
     Given the global pool contains species "Mangifera indica" and "Persea americana"
     When I search for "mango"
     Then I should only see "Mangifera indica" in the results
+
 @skip
 Scenario: Non-Super-Admin cannot access Species Management
     Given I am logged in as a regular Org Admin
