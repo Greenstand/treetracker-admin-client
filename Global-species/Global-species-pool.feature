@@ -30,6 +30,12 @@ Scenario: Super Admin hides a species instead of deleting it
     Given "Persea americana" has status "Hidden"
     When I toggle "Show hidden" on
     Then I should see "Persea americana" listed with status "Hidden"
+
+@skip
+Scenario: Hiding a species globally keeps historical records intact
+  Given a capture was verified as "Persea americana"
+  When a Super Admin hides "Persea americana" in the global pool
+  Then the capture should still show "Persea americana" as its species
     
 @skip
   Scenario: Super Admin searches the species list
@@ -41,3 +47,8 @@ Scenario: Super Admin hides a species instead of deleting it
 Scenario: Non-Super-Admin cannot access Species Management
     Given I am logged in as a regular Org Admin
     Then I should not see "Species management" in the navigation
+
+@skip
+Scenario: Org Admin cannot change the global species list
+  Given I am logged in as an Org Admin
+  Then I should not be able to add, edit or hide species in the global pool
