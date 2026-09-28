@@ -11,8 +11,14 @@ let frameCount = 0;
 
 function startCapture() {
   frameCount = 0;
+  let capturing = false;
   fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
   screenshotInterval = setInterval(async () => {
+    // Skip the tick if the previous screenshot is still in flight. Without
+    // this they queue up on a slow page until the renderer dies with
+    // "target window already closed".
+    if (capturing) return;
+    capturing = true;
     try {
       const img = await browser.takeScreenshot();
       const file = path.join(
@@ -22,6 +28,8 @@ function startCapture() {
       fs.writeFileSync(file, img, 'base64');
     } catch (_) {
       // browser may not be ready yet
+    } finally {
+      capturing = false;
     }
   }, 500); // 2 fps
 }
