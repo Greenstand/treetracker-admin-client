@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.4...v1.108.0-keycloak.5) (2026-09-29)
+
+
+### Bug Fixes
+
+* **bdd:** stop the screen capture from killing the browser ([bd28fa8](https://github.com/Greenstand/treetracker-admin-client/commit/bd28fa89f3655e2bb76915f35831e216ffc7119e))
+
 # [1.108.0-keycloak.4](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.3...v1.108.0-keycloak.4) (2026-09-03)
 
 
