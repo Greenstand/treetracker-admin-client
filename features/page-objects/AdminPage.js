@@ -85,13 +85,28 @@ class AdminPage {
       timeoutMsg: 'Expected the Wallets page heading to appear',
     });
 
-    // The list renders a table, cards or an empty state, so assert on the
-    // container rather than on rows: an admin panel with no wallets still
-    // reached the page.
     await $('[data-test="wallets-list"]').waitForDisplayed({
       timeout: 30000,
       timeoutMsg: 'Expected the wallet list to render',
     });
+
+    await browser.waitUntil(
+      async () => {
+        const loaded = await $$(
+          '[data-test="wallets-list"] tbody tr, [data-test="wallets-list"] .MuiCard-root'
+        );
+        if (loaded.length > 0) return true;
+        return $('[data-test="wallets-list"]')
+          .getText()
+          .then((text) => /no wallets found/i.test(text))
+          .catch(() => false);
+      },
+      {
+        timeout: 30000,
+        interval: 500,
+        timeoutMsg: 'Expected the wallet list to finish loading',
+      }
+    );
   }
 
   async searchOrganizations(term) {

@@ -10,14 +10,10 @@ const USERS_BY_ROLE = {
     username: 'org-manager',
     password: 'fIM1&miRS$Qs0^ST',
   },
-  // From the environment: no wallet-admin account exists on dev yet, so there
-  // is nothing to hardcode. Set both to run features/wallet/admin.feature.
-  'wallet-admin': process.env.BDD_WALLET_ADMIN_USERNAME
-    ? {
-        username: process.env.BDD_WALLET_ADMIN_USERNAME,
-        password: process.env.BDD_WALLET_ADMIN_PASSWORD,
-      }
-    : undefined,
+  'wallet-admin': {
+    username: 'bdd-wallet-admin',
+    password: 'bdd@wallet@admin123',
+  },
 };
 
 let currentUser;
