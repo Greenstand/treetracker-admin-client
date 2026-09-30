@@ -2,29 +2,50 @@ const { execSync, spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const SCREENSHOT_DIR = path.resolve('./reports/video/.frames');
-const VIDEO_OUTPUT = path.resolve('./reports/video/test-run.mp4');
+const VIDEO_ROOT = path.resolve('./reports/video');
 const CHROMEDRIVER_PATH = path.resolve('./.drivers/chromedriver');
 const FFMPEG_PATH = process.env.FFMPEG_PATH || 'ffmpeg';
 let screenshotInterval = null;
 let frameCount = 0;
+let framesDir = path.join(VIDEO_ROOT, '.frames');
+let videoOutput = path.join(VIDEO_ROOT, 'test-run.mp4');
 
-function startCapture() {
+// features/wallet/admin.feature -> wallet-admin, so one feature's video never
+// overwrites another's.
+function specSlug(specPath) {
+  if (!specPath) return 'test-run';
+  const relative = path
+    .relative(path.resolve('./features'), specPath.replace('file://', ''))
+    .replace(/\.feature$/, '');
+  return relative.split(path.sep).filter(Boolean).join('-') || 'test-run';
+}
+
+async function captureFrame() {
+  try {
+    const img = await browser.takeScreenshot();
+    const file = path.join(
+      framesDir,
+      `frame-${String(frameCount++).padStart(5, '0')}.png`
+    );
+    fs.writeFileSync(file, img, 'base64');
+  } catch (_) {
+    // browser may not be ready yet
+  }
+}
+
+function startCapture(specPath) {
+  const slug = specSlug(specPath);
+  framesDir = path.join(VIDEO_ROOT, slug, '.frames');
+  videoOutput = path.join(VIDEO_ROOT, slug, 'run.mp4');
   frameCount = 0;
   let capturing = false;
-  fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
+  fs.rmSync(framesDir, { recursive: true, force: true });
+  fs.mkdirSync(framesDir, { recursive: true });
   screenshotInterval = setInterval(async () => {
     if (capturing) return;
     capturing = true;
     try {
-      const img = await browser.takeScreenshot();
-      const file = path.join(
-        SCREENSHOT_DIR,
-        `frame-${String(frameCount++).padStart(5, '0')}.png`
-      );
-      fs.writeFileSync(file, img, 'base64');
-    } catch (_) {
-      // browser may not be ready yet
+      await captureFrame();
     } finally {
       capturing = false;
     }
@@ -45,7 +66,7 @@ function stopCapture() {
       '-framerate',
       '2',
       '-i',
-      path.join(SCREENSHOT_DIR, 'frame-%05d.png'),
+      path.join(framesDir, 'frame-%05d.png'),
       '-vf',
       'scale=trunc(iw/2)*2:trunc(ih/2)*2',
       '-vcodec',
@@ -54,12 +75,12 @@ function stopCapture() {
       'fast',
       '-pix_fmt',
       'yuv420p',
-      VIDEO_OUTPUT,
+      videoOutput,
     ],
     { stdio: 'pipe' }
   );
   if (result.status === 0) {
-    console.log(`\nVideo saved: ${VIDEO_OUTPUT}`);
+    console.log(`\nVideo saved: ${videoOutput}`);
   } else {
     console.error('\nffmpeg error:', result.stderr.toString().slice(-300));
   }
@@ -105,8 +126,13 @@ exports.config = {
       },
     ],
   ],
-  before() {
-    startCapture();
+  before(capabilities, specs) {
+    startCapture(specs && specs[0]);
+  },
+  // One guaranteed frame per step. The interval below samples on a wall clock,
+  // which on a slow machine can miss the very screens the test proves.
+  async afterStep() {
+    await captureFrame();
   },
   async after() {
     // hold capture for 3s so the final page state (e.g. post-login redirect) is recorded
