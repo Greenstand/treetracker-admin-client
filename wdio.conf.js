@@ -10,8 +10,6 @@ let frameCount = 0;
 let framesDir = path.join(VIDEO_ROOT, '.frames');
 let videoOutput = path.join(VIDEO_ROOT, 'test-run.mp4');
 
-// features/wallet/admin.feature -> wallet-admin, so one feature's video never
-// overwrites another's.
 function specSlug(specPath) {
   if (!specPath) return 'test-run';
   const relative = path
@@ -129,8 +127,6 @@ exports.config = {
   before(capabilities, specs) {
     startCapture(specs && specs[0]);
   },
-  // One guaranteed frame per step. The interval below samples on a wall clock,
-  // which on a slow machine can miss the very screens the test proves.
   async afterStep() {
     await captureFrame();
   },
