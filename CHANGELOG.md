@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.5...v1.108.0-keycloak.6) (2026-10-01)
+
+
+### Bug Fixes
+
+* **bdd:** make the recorded video show the run it belongs to ([e1ffb0e](https://github.com/Greenstand/treetracker-admin-client/commit/e1ffb0ebce1d4c24dee68fdcd8c120debcb85ad4)), closes [#1243](https://github.com/Greenstand/treetracker-admin-client/issues/1243)
+
 # [1.108.0-keycloak.5](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.4...v1.108.0-keycloak.5) (2026-09-29)
 
 
