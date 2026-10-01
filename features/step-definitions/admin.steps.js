@@ -10,6 +10,10 @@ const USERS_BY_ROLE = {
     username: 'org-manager',
     password: 'fIM1&miRS$Qs0^ST',
   },
+  'wallet-admin': {
+    username: 'bdd-wallet-admin',
+    password: 'bdd@wallet@admin123',
+  },
 };
 
 let currentUser;
@@ -44,6 +48,10 @@ When('I click on the {string} menu item', async (menuItemLabel) => {
 
 Then('I should be able to see the organization list page', async () => {
   await AdminPage.waitForOrganizationListPage();
+});
+
+Then('I should be able to see the wallet list page', async () => {
+  await AdminPage.waitForWalletListPage();
 });
 
 When('I search for organizations with {string}', async (term) => {

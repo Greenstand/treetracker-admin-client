@@ -56,6 +56,59 @@ class AdminPage {
     });
   }
 
+  get walletsHeading() {
+    return $('[data-test="wallets-title"]');
+  }
+
+  async waitForWalletListPage() {
+    const baseUrl = browser.options.baseUrl;
+
+    await browser.waitUntil(
+      async () => {
+        const currentUrl = await browser.getUrl();
+
+        if (!baseUrl || !currentUrl.startsWith(baseUrl)) {
+          return false;
+        }
+
+        return new URL(currentUrl).pathname === '/wallets';
+      },
+      {
+        timeout: 60000,
+        interval: 500,
+        timeoutMsg: 'Expected navigation to the wallet list page',
+      }
+    );
+
+    await this.walletsHeading.waitForDisplayed({
+      timeout: 10000,
+      timeoutMsg: 'Expected the Wallets page heading to appear',
+    });
+
+    await $('[data-test="wallets-list"]').waitForDisplayed({
+      timeout: 30000,
+      timeoutMsg: 'Expected the wallet list to render',
+    });
+
+    await browser.waitUntil(
+      async () => {
+        const loaded = await $$(
+          '[data-test="wallets-list"] tbody tr, [data-test="wallets-list"] .MuiCard-root'
+        );
+        if (loaded.length > 0) return true;
+        return $('[data-test="wallets-list"]')
+          .getText()
+          .then((text) => /no wallets found/i.test(text))
+          .catch(() => false);
+      },
+      {
+        timeout: 30000,
+        interval: 500,
+        timeoutMsg: 'Expected the wallet list to finish loading',
+      }
+    );
+  }
+
   async searchOrganizations(term) {
     await this.searchInput.waitForDisplayed({ timeout: 10000 });
     await this.searchInput.setValue(term);

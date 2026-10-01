@@ -1,0 +1,3 @@
+{
+  "text": "bdd@wallet@admin123"
+}

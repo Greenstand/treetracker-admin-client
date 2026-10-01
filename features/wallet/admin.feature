@@ -1,6 +1,5 @@
 Feature: Wallet Admin
 
-  @skip
   Scenario: Can list all wallets
     Given I am on the admin login page
     And I am the user with role "wallet-admin"
