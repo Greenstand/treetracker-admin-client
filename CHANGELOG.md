@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.6...v1.108.0-keycloak.7) (2026-10-01)
+
+
+### Features
+
+* **wallets:** add a wallet list for wallet-admin users ([9f460af](https://github.com/Greenstand/treetracker-admin-client/commit/9f460afa645879293cccc627b8f54ee1646e785d)), closes [#1239](https://github.com/Greenstand/treetracker-admin-client/issues/1239)
+
 # [1.108.0-keycloak.6](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.5...v1.108.0-keycloak.6) (2026-10-01)
 
 
