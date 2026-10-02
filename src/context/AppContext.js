@@ -46,7 +46,7 @@ import { parseStoredToken, parseStoredUser } from '../auth/util';
 // no initial context here because we want login values to be 'undefined' until they are confirmed
 export const AppContext = createContext({});
 
-function getRoutes(user) {
+export function getRoutes(user) {
   return [
     {
       name: 'Home',
@@ -136,10 +136,11 @@ function getRoutes(user) {
       linkTo: '/growers',
       component: GrowersView,
       icon: IconNaturePeople,
-      disabled: !hasPermission(user, [
-        POLICIES.SUPER_PERMISSION,
-        POLICIES.LIST_GROWER,
-      ]),
+      disabled:
+        !hasPermission(user, [
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.LIST_GROWER,
+        ]) && !user?.policy?.organization?.id,
     },
     {
       name: 'Species',
