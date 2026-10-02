@@ -1,6 +1,6 @@
-const CARD_WRAPPER = 'div[class*="cardWrapper"]';
-const PLACEHOLDER_WRAPPER = `${CARD_WRAPPER}[class*="placeholderCard"]`;
-const REAL_CARD = `${CARD_WRAPPER}:not([class*="placeholderCard"]) > [id^="card_"]`;
+const CARD = '[id^="card_"]';
+const PLACEHOLDER_CARD = `${CARD}[class*="placeholderCard"]`;
+const REAL_CARD = `${CARD}:not([class*="placeholderCard"])`;
 
 class GrowersPage {
   get heading() {
@@ -12,7 +12,7 @@ class GrowersPage {
   }
 
   placeholderCards() {
-    return $$(PLACEHOLDER_WRAPPER);
+    return $$(PLACEHOLDER_CARD);
   }
 
   async waitForListPage() {
@@ -55,7 +55,7 @@ class GrowersPage {
 
     await browser.waitUntil(
       async () => {
-        const cards = await this.growerCards();
+        const cards = Array.from(await this.growerCards());
         const names = await Promise.all(
           cards.map((card) => card.getText().catch(() => ''))
         );
