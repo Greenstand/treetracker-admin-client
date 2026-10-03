@@ -7,7 +7,7 @@ import { SpeciesProvider } from '../context/SpeciesContext';
 const SpeciesView = () => {
   /* to update html document title */
   useEffect(() => {
-    document.title = `Species - ${documentTitle}`;
+    document.title = `Global Species Pool - ${documentTitle}`;
   }, []);
 
   return (
