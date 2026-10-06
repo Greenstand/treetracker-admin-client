@@ -1,6 +1,6 @@
 Feature: Global Species Pool 
 
-@skip
+
 Scenario: Super Admin adds a new species to the global pool
     Given I am logged in as a Super Admin
     And I am on the Species Management page
@@ -10,7 +10,7 @@ Scenario: Super Admin adds a new species to the global pool
     And I click "Save"
     Then I should see "Acacia tortilis" listed with status "Visible"
     
-@skip
+
  Scenario: Super Admin edits an existing species
     Given the global pool contains species "Mangifera indica"
     When I click the edit icon for "Mangifera indica"
