@@ -1,0 +1,56 @@
+Background:
+    Given I am logged in as a Platform Administrator
+    And I am on the User management page
+
+@skip
+  Scenario: Platform Administrator searches and filters users
+    When I filter by role "Verifier"
+    Then I should only see users with the role "Verifier"
+
+@skip
+  Scenario: Platform Administrator filters users by organization
+    When I filter by organization "Trees 4 Hope"
+    Then I should only see users belonging to "Trees 4 Hope"
+
+@skip
+  Scenario: Platform Administrator invites a new user
+    When I click "Invite user"
+    And I enter an email 
+    Then the user should appear with status "Pending invite"
+
+@skip
+  Scenario: Platform Administrator changes a user's role
+    Given I have selected user "Jane Mwanga"
+    When I change her role to "Org manager"
+    Then her role badge should update to "Org manager"
+
+@skip
+  Scenario: Platform Administrator suspends a user
+    Given I have selected user "Lilian Kato" with status "Active"
+    When I change her status to "Suspended"
+    Then she should no longer be able to log in
+    And her status should show "Suspended"
+
+@skip
+  Scenario: Platform Administrator reactivates a suspended user
+    Given I have selected user "Lilian Kato" with status "Suspended"
+    When I change her status to "Active"
+    Then she should regain access
+    And her status should show "Active"
+
+@skip
+  Scenario: Platform Administrator edits organization membership
+    Given I have selected user "Jane Mwanga"
+    When I check the "ECOTRUST" organization membership box
+    Then "Jane Mwanga" should be added as a member of "ECOTRUST"
+
+@skip
+  Scenario: Platform Administrator views a user's recent activity
+    Given I have selected user "Jane Mwanga"
+    Then I should see her recent activity log
+
+@skip
+  Scenario: Platform Administrator impersonates a user
+    Given I have selected user "Samuel Okello"
+    When I click "Impersonate"
+    Then I should be logged in as "Samuel Okello"
