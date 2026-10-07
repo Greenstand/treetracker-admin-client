@@ -1,3 +1,15 @@
+# [1.108.0-keycloak.8](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.7...v1.108.0-keycloak.8) (2026-10-07)
+
+
+### Bug Fixes
+
+* **bdd:** match grower placeholder cards on the card, not the wrapper ([b01bfe1](https://github.com/Greenstand/treetracker-admin-client/commit/b01bfe154a5592b5e64367d4966c8554ef019eb4))
+
+
+### Features
+
+* **growers:** let an organization see its own growers ([bd56941](https://github.com/Greenstand/treetracker-admin-client/commit/bd56941077bd3d521c8d9cd659758ccd61d7c098))
+
 # [1.108.0-keycloak.7](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.6...v1.108.0-keycloak.7) (2026-10-01)
 
 
