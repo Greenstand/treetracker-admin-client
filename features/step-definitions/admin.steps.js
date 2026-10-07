@@ -14,6 +14,10 @@ const USERS_BY_ROLE = {
     username: 'bdd-wallet-admin',
     password: 'bdd@wallet@admin123',
   },
+  organization: {
+    username: process.env.BDD_ORG_USERNAME,
+    password: process.env.BDD_ORG_PASSWORD,
+  },
 };
 
 let currentUser;
@@ -25,7 +29,7 @@ Given('I am on the admin login page', async () => {
 Given('I am the user with role {string}', async (role) => {
   currentUser = USERS_BY_ROLE[role];
 
-  if (!currentUser) {
+  if (!currentUser?.username || !currentUser?.password) {
     throw new Error(`No BDD credentials configured for role: ${role}`);
   }
 });

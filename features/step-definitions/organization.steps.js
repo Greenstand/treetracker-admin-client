@@ -1,9 +1,12 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
 
+const GrowersPage = require('../page-objects/GrowersPage');
 const LoginPage = require('../page-objects/LoginPage');
 const OrganizationPage = require('../page-objects/OrganizationPage');
 const VerifyPage = require('../page-objects/VerifyPage');
 const { openKeycloakLoginPage } = require('../support/auth');
+
+let expectedGrower;
 
 const USERNAME = 'user-test-treetracker-admin-client';
 const PASSWORD = 'LjyxVk4t5^yx&!Gl';
@@ -63,3 +66,19 @@ When('I click `vierfy`', async () => {
 Then('I see the verify page with no tree on the list', async () => {
   await VerifyPage.waitForNoCaptures();
 });
+
+Given('the grower {string} belongs to this organization', (growerName) => {
+  // A fixture of the dev environment, not something the UI can set up.
+  expectedGrower = growerName;
+});
+
+Then('I should be able to see the grower list page', async () => {
+  await GrowersPage.waitForListPage();
+});
+
+Then(
+  'on the growers page, there is the grower {string}',
+  async (growerName) => {
+    await GrowersPage.waitForGrower(growerName || expectedGrower);
+  }
+);
