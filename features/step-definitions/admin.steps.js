@@ -3,6 +3,7 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 const AdminPage = require('../page-objects/AdminPage');
 const LoginPage = require('../page-objects/LoginPage');
 const VerifyPage = require('../page-objects/VerifyPage');
+const WalletDetailPage = require('../page-objects/WalletDetailPage');
 const { openKeycloakLoginPage } = require('../support/auth');
 
 const USERS_BY_ROLE = {
@@ -16,7 +17,12 @@ const USERS_BY_ROLE = {
   },
 };
 
+// The term the bind dialog searches for. Any account on the realm will do,
+// so point it at one that exists in the environment under test.
+const KEYCLOAK_ACCOUNT_SEARCH = process.env.BDD_KEYCLOAK_SEARCH || 'bdd';
+
 let currentUser;
+let legacyWallet;
 
 Given('I am on the admin login page', async () => {
   await openKeycloakLoginPage();
@@ -86,3 +92,35 @@ Then('There should be trees\\/captures on the list', async () => {
 Then('I should be able to verify the first tree', async () => {
   await VerifyPage.verifyFirstCapture();
 });
+
+Given('there is a wallet {string} with no keycloak binding', (walletName) => {
+  // A fixture of the dev environment, not something the UI can set up.
+  legacyWallet = walletName;
+});
+
+When('I click the name of the wallet {string}', async (walletName) => {
+  await WalletDetailPage.openWallet(walletName || legacyWallet);
+});
+
+Then('I should see the wallet detail page for {string}', async (walletName) => {
+  await WalletDetailPage.waitForPage(walletName || legacyWallet);
+});
+
+Then('the keycloak id is empty', async () => {
+  await WalletDetailPage.waitForEmptyKeycloakId();
+});
+
+When('I open the bind keycloak account dialog', async () => {
+  await WalletDetailPage.openBindDialog();
+});
+
+When('I search for a keycloak account and pick the first match', async () => {
+  await WalletDetailPage.searchAndPickFirst(KEYCLOAK_ACCOUNT_SEARCH);
+});
+
+Then(
+  'the detail page shows the keycloak id and the account behind it',
+  async () => {
+    await WalletDetailPage.waitForBoundAccount();
+  }
+);
