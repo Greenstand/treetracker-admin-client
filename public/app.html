@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open Treetracker</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        color: #222;
+      }
+      p {
+        text-align: center;
+        padding: 0 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="status">Opening Treetracker&hellip;</p>
+    <script>
+      (function () {
+        var PACKAGE = 'org.greenstand.android.TreeTracker';
+        var APP_SCHEME = 'app://mobile.treetracker.org/org';
+        var STORE = 'https://play.google.com/store/apps/details';
+        var FALLBACK_DELAY_MS = 1500;
+
+        var params = new URLSearchParams(window.location.search);
+        var orgId = params.get('org_id') || '';
+        var orgName = params.get('org_name') || '';
+
+        function appUrl() {
+          var q = new URLSearchParams();
+          if (orgId) q.append('id', orgId);
+          if (orgName) q.append('name', orgName);
+          var query = q.toString();
+          return query ? APP_SCHEME + '?' + query : APP_SCHEME;
+        }
+
+        function storeUrl() {
+          // referrer is encoded once; Play decodes it before the app reads it
+          var parts = [];
+          if (orgId) parts.push('org_id=' + encodeURIComponent(orgId));
+          if (orgName) parts.push('org_name=' + encodeURIComponent(orgName));
+          var url = STORE + '?id=' + encodeURIComponent(PACKAGE);
+          if (parts.length) {
+            url += '&referrer=' + encodeURIComponent(parts.join('&'));
+          }
+          return url;
+        }
+
+        window.treetrackerLinks = { appUrl: appUrl, storeUrl: storeUrl };
+
+        var store = storeUrl();
+
+        if (!/android/i.test(navigator.userAgent)) {
+          window.location.replace(store);
+          return;
+        }
+
+        var fallback = setTimeout(function () {
+          document.getElementById('status').textContent =
+            'Taking you to Google Play…';
+          window.location.replace(store);
+        }, FALLBACK_DELAY_MS);
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') clearTimeout(fallback);
+        });
+        window.addEventListener('pagehide', function () {
+          clearTimeout(fallback);
+        });
+
+        window.location.replace(appUrl());
+      })();
+    </script>
+  </body>
+</html>
