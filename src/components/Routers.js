@@ -17,11 +17,15 @@ import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
 import ReportingCard6 from './reportingCards/ReportingCard6';
 import OrganizationApplicationView from '../views/OrganizationApplicationView';
+import WalletDetailView from '../views/WalletDetailView';
 
 export default function Routers() {
   const refContainer = useRef();
   const appContext = useContext(AppContext);
   const { search } = useLocation();
+  const walletsDisabled = appContext.routes.find(
+    (route) => route?.name === 'Wallets'
+  )?.disabled;
 
   return useMemo(() => {
     return (
@@ -59,6 +63,11 @@ export default function Routers() {
               <PrivateRoute
                 path="/organization/apply"
                 component={OrganizationApplicationView}
+                exact
+              />
+              <PrivateRoute
+                path="/wallets/:walletId"
+                component={walletsDisabled ? Unauthorized : WalletDetailView}
                 exact
               />
               {appContext.routes.map((route, idx) =>
@@ -152,5 +161,5 @@ export default function Routers() {
         </Grid>
       </Grid>
     );
-  }, [appContext.routes, appContext.user]);
+  }, [appContext.routes, appContext.user, walletsDisabled]);
 }

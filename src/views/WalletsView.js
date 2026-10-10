@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useDebounce } from 'hooks/useDebounce';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import {
@@ -95,6 +96,13 @@ function renderValue(wallet, column) {
   const value = wallet[column.field];
   if (!value) return '—';
   if (column.isDate) return new Date(value).toLocaleDateString();
+  if (column.field === 'name') {
+    return (
+      <Link to={`/wallets/${wallet.id}`} data-test="wallet-name-link">
+        {value}
+      </Link>
+    );
+  }
   return value;
 }
 

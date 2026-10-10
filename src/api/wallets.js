@@ -30,3 +30,20 @@ export async function getWallets({
     total: data?.total ?? 0,
   };
 }
+
+export async function getWallet(walletId) {
+  const { data } = await authAxios.get(
+    `${WALLET_API_ROOT}/admin/wallets/${walletId}`
+  );
+  return data;
+}
+
+export async function bindKeycloakAccount(walletId, keycloakAccountId) {
+  const {
+    data,
+  } = await authAxios.post(
+    `${WALLET_API_ROOT}/admin/wallets/${walletId}/keycloak-account`,
+    { keycloak_account_id: keycloakAccountId }
+  );
+  return data;
+}
