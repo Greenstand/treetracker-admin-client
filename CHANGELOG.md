@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.9](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.8...v1.108.0-keycloak.9) (2026-10-10)
+
+
+### Features
+
+* **wallets:** bind a legacy wallet to a keycloak account ([349892d](https://github.com/Greenstand/treetracker-admin-client/commit/349892dc550a1d501e3becfa9b66f2f440803297))
+
 # [1.108.0-keycloak.8](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.7...v1.108.0-keycloak.8) (2026-10-07)
 
 
