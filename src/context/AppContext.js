@@ -151,7 +151,11 @@ export function getRoutes(user) {
       icon: CategoryIcon,
       //TODO this is temporary, need to add species policy
       disabled:
-        !hasPermission(user, [POLICIES.SUPER_PERMISSION, POLICIES.LIST_TREE]) ||
+        !hasPermission(user, [
+          POLICIES.ADMIN,
+          POLICIES.SUPER_PERMISSION,
+          POLICIES.LIST_TREE,
+        ]) ||
         !user ||
         user.policy.organization !== undefined,
     },
