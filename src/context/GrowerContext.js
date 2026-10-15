@@ -86,10 +86,10 @@ export function GrowerProvider(props) {
     const updatedGrower = await api.getGrower(payload.id);
     const index = growers.findIndex((p) => p.id === updatedGrower.id);
     if (index >= 0) {
-      const growers = Object.assign([], growers, {
+      const newGrowers = Object.assign([], growers, {
         [index]: updatedGrower,
       });
-      setGrowers(growers);
+      setGrowers(newGrowers);
     }
   };
 
