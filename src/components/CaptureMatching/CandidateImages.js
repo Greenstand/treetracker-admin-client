@@ -16,11 +16,24 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import theme from '../common/theme';
-// import { getDateStringLocale } from 'common/locale';
-import { getDistance } from 'geolib';
 import OptimizedImage from 'components/OptimizedImage';
 import CaptureDetailDialog from '../../components/CaptureDetailDialog';
 import { CaptureDetailProvider } from '../../context/CaptureDetailContext';
+import { Chip } from '@material-ui/core';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import { distanceBadge } from '../../api/captureMatchingApi';
+
+const LABEL_COLORS = {
+  Strong:   { bg: '#E1F5EE', color: '#0F6E56', border: '#5DCAA5' },
+  Moderate: { bg: '#FAEEDA', color: '#854F0B', border: '#EF9F27' },
+  Weak:     { bg: '#FCEBEB', color: '#A32D2D', border: '#E24B4A' },
+};
+ 
+const DIST_COLORS = {
+  strong:   { bg: '#E1F5EE', color: '#0F6E56' },
+  moderate: { bg: '#FAEEDA', color: '#854F0B' },
+  weak:     { bg: '#FCEBEB', color: '#A32D2D' },
+};
 
 const useStyles = makeStyles({
   containerBox: {
@@ -106,34 +119,139 @@ const useStyles = makeStyles({
   candidateTreeContent: {
     transition: 'max-height 250ms ease-in-out',
   },
+  scoreSection: {
+    padding: theme.spacing(1, 4, 0),
+  },
+  scoreRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(0.5),
+  },
+  scoreLabel: {
+    fontSize: '11px',
+    color: '#6E6E6E',
+    width: '72px',
+    flexShrink: 0,
+  },
+  barBg: {
+    flex: 1,
+    height: '4px',
+    background: '#E5E5E5',
+    borderRadius: '2px',
+    overflow: 'hidden',
+  },
+  scorePct: {
+    fontSize: '11px',
+    color: '#6E6E6E',
+    width: '32px',
+    textAlign: 'right',
+  },
+  historyRow: {
+    display: 'flex',
+    gap: theme.spacing(3),
+    padding: theme.spacing(1, 4),
+    borderTop: '1px solid #F0F0F0',
+    flexWrap: 'wrap',
+  },
+  histItem: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  histLabel: {
+    fontSize: '10px',
+    color: '#9E9E9E',
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em',
+  },
+  histValue: {
+    fontSize: '12px',
+    fontWeight: 600,
+    color: '#333',
+  },
 });
 
-function DistanceTo({ lat1, lon1, lat2, lon2 }) {
-  const [content, setContent] = useState('');
-  if (
-    lat1 === undefined ||
-    lon1 === undefined ||
-    lat2 === undefined ||
-    lon2 === undefined
-  ) {
-    setContent('');
-  }
 
-  useEffect(() => {
-    const distance = getDistance(
-      {
-        latitude: Number(lat1),
-        longitude: Number(lon1),
-      },
-      {
-        latitude: Number(lat2),
-        longitude: Number(lon2),
-      }
-    );
-    setContent(`${distance}m away`);
-  }, []);
-
-  return <span>{content}</span>;
+function MatchLabel({ label }) {
+  const c = LABEL_COLORS[label] || LABEL_COLORS.Weak;
+  return (
+    <Chip
+      size="small"
+      label={`${label} match`}
+      style={{
+        background: c.bg,
+        color: c.color,
+        border: `1px solid ${c.border}`,
+        fontWeight: 600,
+        fontSize: '11px',
+        height: '22px',
+      }}
+    />
+  );
+}
+ 
+function DistanceBadge({ distanceM }) {
+  const badge = distanceBadge(distanceM);
+  const c = DIST_COLORS[badge.level];
+  return (
+    <Chip
+      size="small"
+      icon={<LocationOnOutlinedIcon style={{ fontSize: '13px', color: c.color }} />}
+      label={badge.text}
+      style={{ background: c.bg, color: c.color, fontSize: '11px', height: '22px' }}
+    />
+  );
+}
+ 
+function ScoreBar({ value, label }) {
+  const classes = useStyles();
+  const pct = Math.round(value * 100);
+  const fill = pct >= 70 ? '#1D9E75' : pct >= 40 ? '#EF9F27' : '#E24B4A';
+  return (
+    <div className={classes.scoreRow}>
+      <span className={classes.scoreLabel}>{label}</span>
+      <div className={classes.barBg}>
+        <div style={{ width: `${pct}%`, height: '100%', background: fill, borderRadius: '2px' }} />
+      </div>
+      <span className={classes.scorePct}>{pct}%</span>
+    </div>
+  );
+}
+ 
+function CaptureHistory({ tree }) {
+  const classes = useStyles();
+  const dates = (tree.captures || [])
+    .map((c) => c.captured_at)
+    .filter(Boolean)
+    .map((d) => new Date(d))
+    .sort((a, b) => a - b);
+ 
+  const daysSinceLast = dates.length
+    ? Math.round((Date.now() - dates[dates.length - 1]) / (1000 * 60 * 60 * 24))
+    : null;
+ 
+  return (
+    <div className={classes.historyRow}>
+      <div className={classes.histItem}>
+        <span className={classes.histLabel}>Captures</span>
+        <span className={classes.histValue}>{(tree.captures || []).length}</span>
+      </div>
+      <div className={classes.histItem}>
+        <span className={classes.histLabel}>First seen</span>
+        <span className={classes.histValue}>{dates[0]?.toISOString().slice(0, 7) ?? '—'}</span>
+      </div>
+      <div className={classes.histItem}>
+        <span className={classes.histLabel}>Latest</span>
+        <span className={classes.histValue}>{dates[dates.length - 1]?.toISOString().slice(0, 7) ?? '—'}</span>
+      </div>
+      {daysSinceLast !== null && (
+        <div className={classes.histItem}>
+          <span className={classes.histLabel}>Days since last</span>
+          <span className={classes.histValue}>{daysSinceLast} days</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
@@ -142,8 +260,12 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
   const [showBox, setShowBox] = useState([]);
 
   useEffect(() => {
-    const initialCandidateData = candidateImgData.map((tree) => tree.id);
-    setShowBox(initialCandidateData);
+    if (!candidateImgData?.length) return;
+    // Auto-expand Strong matches; fall back to first candidate
+    const autoOpen = candidateImgData
+      .filter((t) => t.matchScoreData?.label === 'Strong')
+      .map((t) => t.id);
+    setShowBox(autoOpen.length ? autoOpen : [candidateImgData[0].id]);
   }, [candidateImgData]);
 
   const hideImgBox = (i) => {
@@ -160,11 +282,16 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
       <Box className={classes.imageScroll}>
         {candidateImgData &&
           candidateImgData.map((tree, i) => {
+            const score = tree.matchScoreData;
+            const labelColor = LABEL_COLORS[score?.label] || LABEL_COLORS.Weak;
+            const isSameGrower = score?.growerScore === 1.0;
+
             return (
               <Paper
                 elevation={4}
                 className={classes.containerBox}
                 key={`${i}-${tree.id}`}
+                style={score?.label === 'Strong' ? { borderLeft: `3px solid ${labelColor.border}` } : {}}
               >
                 <Box className={classes.headerBox}>
                   <Grid
@@ -185,8 +312,18 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           Tree {(tree.id + '').substring(0, 10) + '...'}
                         </Typography>
                       </Tooltip>
+                      {isSameGrower && (
+                        <Chip
+                          size="small"
+                          icon={<PersonOutlineIcon style={{ fontSize: '13px' }} />}
+                          label="Same grower"
+                          style={{ fontSize: '11px', height: '20px', background: '#E1F5EE', color: '#0F6E56' }}
+                        />
+                      )}
                     </Box>
-                    <Box>
+                    <Box style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {score && <DistanceBadge distanceM={score.distanceM} />}
+                      {score && <MatchLabel label={score.label} />}
                       <IconButton
                         id={`ExpandIcon_${tree.id}`}
                         className={
@@ -214,9 +351,19 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                 <Box
                   className={classes.candidateTreeContent}
                   style={{
-                    maxHeight: showBox.includes(tree.id) ? '420px' : '0px',
+                    maxHeight: showBox.includes(tree.id) ? '600px' : '0px',
                   }}
                 >
+                  <CaptureHistory tree={tree} />
+
+                  {score && (
+                    <div className={classes.scoreSection}>
+                      <ScoreBar value={score.gpsScore}    label="GPS dist" />
+                      <ScoreBar value={score.growerScore} label="Grower"   />
+                      <ScoreBar value={score.timeScore}   label="Time gap" />
+                    </div>
+                  )}
+
                   <Box className={classes.gridList} cols={3}>
                     {(tree.captures.length ? tree.captures : [tree]).map(
                       (candidateCapture) => {
@@ -224,12 +371,7 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                           <Box
                             key={`${tree.id}_${candidateCapture.id}`}
                             className={classes.candidateCaptureContainer}
-                            onClick={() => {
-                              console.log('xxxxxx', candidateCapture);
-                              setIsDetailsPaneOpen(
-                                candidateCapture.reference_id
-                              );
-                            }}
+                            onClick={() => setIsDetailsPaneOpen(candidateCapture.reference_id)}
                           >
                             <OptimizedImage
                               src={candidateCapture.image_url}
@@ -249,39 +391,8 @@ function CandidateImages({ capture, candidateImgData, sameTreeHandler }) {
                                 <AccessTimeIcon />
                                 <Typography variant="body1">
                                   {(candidateCapture.captured_at &&
-                                    candidateCapture.captured_at.slice(
-                                      0,
-                                      10
-                                    )) ||
+                                    candidateCapture.captured_at.slice(0, 10)) ||
                                     'Unknown'}
-                                </Typography>
-                              </Box>
-                              <Box className={classes.captureInfoDetail}>
-                                <LocationOnOutlinedIcon
-                                  style={{
-                                    cursor: 'pointer',
-                                  }}
-                                  onClick={() => {
-                                    window.open(
-                                      `https://www.google.com/maps/search/?api=1&query=${capture.latitude},${capture.longitude}`
-                                    );
-                                  }}
-                                />
-                                <Typography variant="body1">
-                                  {capture?.latitude && capture?.longitude && (
-                                    <DistanceTo
-                                      lat1={capture.latitude}
-                                      lon1={capture.longitude}
-                                      lat2={
-                                        candidateCapture.latitude ||
-                                        candidateCapture.lat
-                                      }
-                                      lon2={
-                                        candidateCapture.longitude ||
-                                        candidateCapture.lon
-                                      }
-                                    />
-                                  )}
                                 </Typography>
                               </Box>
                             </Box>
