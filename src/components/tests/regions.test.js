@@ -141,7 +141,7 @@ describe('region management', () => {
       });
 
       it('has inputs for owner and region name property', () => {
-        const dialog = screen.getByRole(/dialog/i);
+        const dialog = screen.getByRole('dialog');
         expect(within(dialog).getByLabelText(/owner/i)).toBeTruthy();
         expect(
           within(dialog).getByLabelText(/region name property/i)
@@ -149,7 +149,7 @@ describe('region management', () => {
       });
 
       it('has buttons to upload and cancel', () => {
-        const dialog = screen.getByRole(/dialog/i);
+        const dialog = screen.getByRole('dialog');
         expect(
           within(dialog).getByRole('button', { name: /upload/i })
         ).toBeTruthy();
@@ -158,7 +158,7 @@ describe('region management', () => {
 
     describe('regions table', () => {
       it('shows the table header', () => {
-        const table = screen.getByRole(/table/i);
+        const table = screen.getByRole('table');
         expect(within(table).getByText(/name/i)).toBeTruthy();
         expect(within(table).getByText(/owner/i)).toBeTruthy();
         expect(within(table).getByText(/collection/i)).toBeTruthy();
@@ -168,7 +168,7 @@ describe('region management', () => {
       });
 
       it('shows a region record', () => {
-        const table = screen.getByRole(/table/i);
+        const table = screen.getByRole('table');
         expect(within(table).getByText(REGIONS[0].name)).toBeTruthy();
         expect(within(table).getAllByText(ORGS[0].name)).toBeTruthy();
         expect(

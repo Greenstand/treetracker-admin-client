@@ -13,7 +13,7 @@
     "@rematch/core": "*",
     "@tanstack/react-query": "^5.85.5",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.2.1",
     "assert": "npm:assert",
     "axios": "*",
@@ -45,13 +45,11 @@
     "react-csv": "^2.0.3",
     "react-dom": "^18.2.0",
     "react-fast-compare": "^3.2.0",
-    "react-infinite": "*",
-    "react-redux": "*",
+    "react-redux": "^7.2.9",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-router-dom-v5-compat": "^6.3.0",
     "react-scripts": "*",
-    "recompose": "*",
     "redux": "^4.0.5",
     "stream": "npm:stream-browserify",
     "typeface-roboto": "*",
@@ -101,8 +99,7 @@
     "husky": "^4.3.5",
     "postcss": "^8.4.14",
     "prettier": "2.0.5",
-    "pretty-quick": "^3.1.0",
-    "react-inspector": "^3.0.2"
+    "pretty-quick": "^3.1.0"
   },
   "engines": {
     "node": ">= 18.0.0"
