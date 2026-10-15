@@ -1,8 +1,12 @@
 import { buildShareAppLink } from './shareLink';
 
-const BASE = 'https://greenstand.org';
+const BASE = `${window.location.origin}/app.html`;
 
 describe('buildShareAppLink', () => {
+  afterEach(() => {
+    delete process.env.REACT_APP_SHARE_APP_BASE;
+  });
+
   it('builds a link with org_name and org_id', () => {
     expect(buildShareAppLink({ name: 'Acme', id: 42 })).toBe(
       `${BASE}?org_name=Acme&org_id=42`
@@ -35,5 +39,12 @@ describe('buildShareAppLink', () => {
 
   it('returns the base url when neither name nor id is provided', () => {
     expect(buildShareAppLink({ name: '', id: undefined })).toBe(BASE);
+  });
+
+  it('uses REACT_APP_SHARE_APP_BASE when set', () => {
+    process.env.REACT_APP_SHARE_APP_BASE = 'https://greenstand.org/app';
+    expect(buildShareAppLink({ name: 'Acme', id: 42 })).toBe(
+      'https://greenstand.org/app?org_name=Acme&org_id=42'
+    );
   });
 });
