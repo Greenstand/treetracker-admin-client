@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.10](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.9...v1.108.0-keycloak.10) (2026-10-15)
+
+
+### Bug Fixes
+
+* **species:** let Greenstand admins reach species management ([307c1b3](https://github.com/Greenstand/treetracker-admin-client/commit/307c1b370b6ce3742cb4802b5d6ac6a16ce89d90))
+
 # [1.108.0-keycloak.9](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.8...v1.108.0-keycloak.9) (2026-10-10)
 
 
