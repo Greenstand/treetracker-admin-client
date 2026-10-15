@@ -33,6 +33,7 @@ import { AppContext } from '../context/AppContext';
 import { GrowerContext } from '../context/GrowerContext';
 import { MessagingContext } from 'context/MessagingContext';
 import EditGrower from './EditGrower';
+import GrowerNotes from './GrowerNotes';
 import GrowerOrganization from './GrowerOrganization';
 import OptimizedImage from './OptimizedImage';
 import LinkToWebmap from './common/LinkToWebmap';
@@ -559,6 +560,7 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   </table>
                 )) || <Typography variant="body1">---</Typography>}
               </Grid>
+              <GrowerNotes growerId={grower.id} />
             </Grid>
           )}
         </Grid>
