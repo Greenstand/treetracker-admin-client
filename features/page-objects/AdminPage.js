@@ -24,6 +24,15 @@ class AdminPage {
     });
   }
 
+  // Waiting on an item every role sees proves the menu rendered before asserting absence.
+  async expectMenuItemAbsent(label, anchorLabel) {
+    await this.waitForMenuItem(anchorLabel);
+
+    if (await this.menuItem(label).isExisting()) {
+      throw new Error(`Expected the "${label}" menu item to be absent`);
+    }
+  }
+
   async clickMenuItem(label) {
     await this.waitForMenuItem(label);
     await this.menuItem(label).click();
