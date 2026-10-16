@@ -1,9 +1,10 @@
 const { execSync, spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const chromedriver = require('chromedriver');
 
 const VIDEO_ROOT = path.resolve('./reports/video');
-const CHROMEDRIVER_PATH = path.resolve('./.drivers/chromedriver');
+const CHROMEDRIVER_PATH = process.env.CHROMEDRIVER_PATH || chromedriver.path;
 const FFMPEG_PATH = process.env.FFMPEG_PATH || 'ffmpeg';
 let screenshotInterval = null;
 let frameCount = 0;
