@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 
 const VIDEO_ROOT = path.resolve('./reports/video');
-const CHROMEDRIVER_PATH = path.resolve('./.drivers/chromedriver');
 const FFMPEG_PATH = process.env.FFMPEG_PATH || 'ffmpeg';
 let screenshotInterval = null;
 let frameCount = 0;
@@ -104,14 +103,6 @@ exports.config = {
   waitforTimeout: 10000,
   connectionRetryTimeout: 120000,
   connectionRetryCount: 3,
-  services: [
-    [
-      'chromedriver',
-      {
-        chromedriverCustomPath: CHROMEDRIVER_PATH,
-      },
-    ],
-  ],
   framework: '@wdio/cucumber-framework',
   reporters: [
     'spec',
