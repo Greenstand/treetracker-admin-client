@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import api from '../../api/treeTrackerApi';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -14,6 +14,11 @@ import styles from './Home.styles';
 import { documentTitle } from '../../common/variables';
 import Menu from '../common/Menu';
 import { AppContext } from '../../context/AppContext';
+import { getSubscription } from '../../api/subscription';
+import {
+  formatRenewalDate,
+  isSubscriptionActive,
+} from '../../common/subscription';
 import {
   hasFreetownPermission,
   hasPermission,
@@ -57,6 +62,14 @@ function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
   const showOrganizationApplyLink = !appContext.userHasOrg;
+  const organizationId = appContext.user?.policy?.organization?.id;
+  const { data: subscription } = useQuery({
+    queryKey: ['subscription', organizationId],
+    queryFn: () => getSubscription(organizationId),
+    enabled: Boolean(organizationId),
+  });
+  const isPremium = isSubscriptionActive(subscription);
+  const renewsOn = formatRenewalDate(subscription);
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
 
@@ -139,6 +152,31 @@ function Home(props) {
                 </Box>
               ) : null}
             </Grid>
+            {organizationId ? (
+              <Grid item>
+                {isPremium ? (
+                  <Typography
+                    variant="subtitle1"
+                    color="primary"
+                    className={classes.subscriptionActive}
+                    data-testid="home-subscription-active"
+                  >
+                    You are now subscribed to our organization premium
+                    {renewsOn ? `, it renews on ${renewsOn}` : ''}
+                  </Typography>
+                ) : (
+                  <Button
+                    component={RouterLink}
+                    to="/subscription"
+                    variant="contained"
+                    color="primary"
+                    data-testid="home-upgrade"
+                  >
+                    Upgrade
+                  </Button>
+                )}
+              </Grid>
+            ) : null}
             {hasFreetownPermission(appContext.user) && (
               <Grid item xs={5} className={classes.timeBox}>
                 {updateTime && (
