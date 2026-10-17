@@ -63,10 +63,11 @@ function Home(props) {
   const appContext = useContext(AppContext);
   const showOrganizationApplyLink = !appContext.userHasOrg;
   const organizationId = appContext.user?.policy?.organization?.id;
-  const { data: subscription } = useQuery({
+  const { data: subscription, isLoading: isSubscriptionLoading } = useQuery({
     queryKey: ['subscription', organizationId],
     queryFn: () => getSubscription(organizationId),
     enabled: Boolean(organizationId),
+    staleTime: 60000,
   });
   const isPremium = isSubscriptionActive(subscription);
   const renewsOn = formatRenewalDate(subscription);
@@ -152,7 +153,7 @@ function Home(props) {
                 </Box>
               ) : null}
             </Grid>
-            {organizationId ? (
+            {organizationId && !isSubscriptionLoading ? (
               <Grid item>
                 {isPremium ? (
                   <Typography

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Box,
   Button,
@@ -109,6 +109,7 @@ function SubscriptionView() {
     noSsr: true,
   });
 
+  const queryClient = useQueryClient();
   const { user } = useContext(AppContext);
   const organizationId = user?.policy?.organization?.id;
   const [sessionId] = useState(sessionIdFromUrl);
@@ -124,6 +125,14 @@ function SubscriptionView() {
     queryFn: () => getSubscription(organizationId, sessionId),
     enabled: organizationId !== undefined && organizationId !== null,
   });
+
+  // Stripe's search index lags, so share what the session told us with the
+  // home page rather than letting it search and still see nothing.
+  useEffect(() => {
+    if (subscription) {
+      queryClient.setQueryData(['subscription', organizationId], subscription);
+    }
+  }, [subscription, organizationId, queryClient]);
 
   async function handleSubscribe() {
     setError('');
