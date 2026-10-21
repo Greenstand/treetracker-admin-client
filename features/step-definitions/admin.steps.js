@@ -8,8 +8,8 @@ const { openKeycloakLoginPage } = require('../support/auth');
 
 const USERS_BY_ROLE = {
   'greenstand-admin': {
-    username: 'org-manager',
-    password: 'fIM1&miRS$Qs0^ST',
+    username: process.env.BDD_ADMIN_USERNAME || 'org-manager',
+    password: process.env.BDD_ADMIN_PASSWORD || 'fIM1&miRS$Qs0^ST',
   },
   'wallet-admin': {
     username: 'bdd-wallet-admin',
@@ -18,6 +18,11 @@ const USERS_BY_ROLE = {
   organization: {
     username: process.env.BDD_ORG_USERNAME,
     password: process.env.BDD_ORG_PASSWORD,
+  },
+  // A registered user who belongs to no organization yet.
+  'registered-user': {
+    username: process.env.BDD_USER_USERNAME,
+    password: process.env.BDD_USER_PASSWORD,
   },
 };
 

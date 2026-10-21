@@ -19,11 +19,13 @@ import {
   Paper,
   Select,
   Snackbar,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  Tabs,
   TablePagination,
   TableRow,
   TextField,
@@ -46,6 +48,7 @@ import {
   useOrgQueryDispatch,
 } from 'context/OrganizationsContext';
 import AppLayout from 'components/common/AppLayout';
+import OrganizationBindingRequests from 'components/OrganizationBindingRequests';
 import OrganizationFormDialog from 'components/OrganizationFormDialog';
 import Spinner from 'components/common/Spinner';
 import { documentTitle } from 'common/variables';
@@ -131,6 +134,9 @@ function getRowKey(org, index) {
   return getOrgId(org) ?? index;
 }
 
+const BINDING_TAB = 'binding-requests';
+const ORGANIZATIONS_TAB = 'organizations';
+
 export default function OrganizationsView() {
   return (
     <OrgQueryProvider>
@@ -156,6 +162,7 @@ function OrgContent() {
   } = useOrgQueryState();
   const dispatch = useOrgQueryDispatch();
 
+  const [tab, setTab] = useState(ORGANIZATIONS_TAB);
   const [formOpen, setFormOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState(undefined);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -331,86 +338,113 @@ function OrgContent() {
             </Grid>
           </Grid>
 
-          <Box className={classes.toolbar}>
-            <TextField
-              className={classes.searchBox}
-              variant="outlined"
-              placeholder="Search by name or phone"
-              value={searchInput}
-              onChange={(e) => {
-                dispatch({ type: 'SET_SEARCH_INPUT', payload: e.target.value });
-                commitSearch(e.target.value);
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                endAdornment: searchInput && (
-                  <InputAdornment position="end">
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        dispatch({ type: 'SET_SEARCH_INPUT', payload: '' });
-                        commitSearch('');
-                      }}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+          <Tabs
+            value={tab}
+            onChange={(e, value) => setTab(value)}
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <Tab
+              value={BINDING_TAB}
+              label="Users requesting to bind to an organization"
+              data-testid="tab-binding-requests"
             />
-            <FormControl variant="outlined" className={classes.sortSelect}>
-              <InputLabel id="org-sort-label">Sort</InputLabel>
-              <Select
-                labelId="org-sort-label"
-                label="Sort"
-                value={sortValue}
-                onChange={(e) =>
-                  dispatch({ type: 'SET_SORT', payload: e.target.value })
-                }
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-
-          {renderBody()}
-
-          {!isError && !isLoading && organizations.length > 0 && (
-            <TablePagination
-              classes={{
-                root: classes.pagination,
-                toolbar: classes.paginationToolbar,
-                spacer: classes.paginationSpacer,
-                caption: classes.paginationCaption,
-              }}
-              component="div"
-              count={Number(count)}
-              rowsPerPageOptions={rowsPerPageOptions}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={(_, newPage) =>
-                dispatch({ type: 'SET_PAGE', payload: newPage })
-              }
-              onRowsPerPageChange={(e) =>
-                dispatch({
-                  type: 'SET_ROWS_PER_PAGE',
-                  payload: parseInt(e.target.value, 10),
-                })
-              }
-              labelDisplayedRows={labelDisplayedRows}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
+            <Tab
+              value={ORGANIZATIONS_TAB}
+              label="Organizations"
+              data-testid="tab-organizations"
             />
+          </Tabs>
+
+          {tab === BINDING_TAB ? (
+            <OrganizationBindingRequests organizations={organizations} />
+          ) : (
+            <>
+              <Box className={classes.toolbar}>
+                <TextField
+                  className={classes.searchBox}
+                  variant="outlined"
+                  placeholder="Search by name or phone"
+                  value={searchInput}
+                  onChange={(e) => {
+                    dispatch({
+                      type: 'SET_SEARCH_INPUT',
+                      payload: e.target.value,
+                    });
+                    commitSearch(e.target.value);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: searchInput && (
+                      <InputAdornment position="end">
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            dispatch({ type: 'SET_SEARCH_INPUT', payload: '' });
+                            commitSearch('');
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <FormControl variant="outlined" className={classes.sortSelect}>
+                  <InputLabel id="org-sort-label">Sort</InputLabel>
+                  <Select
+                    labelId="org-sort-label"
+                    label="Sort"
+                    value={sortValue}
+                    onChange={(e) =>
+                      dispatch({ type: 'SET_SORT', payload: e.target.value })
+                    }
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
+              {renderBody()}
+
+              {!isError && !isLoading && organizations.length > 0 && (
+                <TablePagination
+                  classes={{
+                    root: classes.pagination,
+                    toolbar: classes.paginationToolbar,
+                    spacer: classes.paginationSpacer,
+                    caption: classes.paginationCaption,
+                  }}
+                  component="div"
+                  count={Number(count)}
+                  rowsPerPageOptions={rowsPerPageOptions}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  onPageChange={(_, newPage) =>
+                    dispatch({ type: 'SET_PAGE', payload: newPage })
+                  }
+                  onRowsPerPageChange={(e) =>
+                    dispatch({
+                      type: 'SET_ROWS_PER_PAGE',
+                      payload: parseInt(e.target.value, 10),
+                    })
+                  }
+                  labelDisplayedRows={labelDisplayedRows}
+                  SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                  }}
+                />
+              )}
+            </>
           )}
         </Grid>
       </Grid>
