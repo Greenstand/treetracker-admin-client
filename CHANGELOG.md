@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.11](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.10...v1.108.0-keycloak.11) (2026-10-21)
+
+
+### Features
+
+* **deeplink:** route the share link through an install referrer page ([f2ba302](https://github.com/Greenstand/treetracker-admin-client/commit/f2ba302774f7912017d0ab79ad36054f43b5baab))
+
 # [1.108.0-keycloak.10](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.9...v1.108.0-keycloak.10) (2026-10-15)
 
 
