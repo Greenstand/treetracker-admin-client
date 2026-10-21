@@ -4,8 +4,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import Home from './Home';
 import { AppContext } from '../../context/AppContext';
+import { getSubscription } from '../../api/subscription';
 
 jest.mock('axios');
+
+jest.mock('../../api/subscription', () => ({
+  getSubscription: jest.fn(),
+}));
 
 jest.mock('../../api/treeTrackerApi', () => ({
   __esModule: true,
@@ -94,6 +99,41 @@ describe('Home', () => {
         'Apply to become a Greenstand associated organization'
       )
     ).toBe(false);
+  });
+
+  it('offers Upgrade to an organization without a subscription', async () => {
+    getSubscription.mockResolvedValue({
+      status: 'none',
+      currentPeriodEnd: null,
+    });
+
+    const { findByTestId } = renderHome({
+      userHasOrg: true,
+      user: {
+        policy: { policies: [], organization: { id: 178 } },
+      },
+    });
+
+    expect(await findByTestId('home-upgrade')).toBeTruthy();
+  });
+
+  it('states the premium membership once subscribed', async () => {
+    getSubscription.mockResolvedValue({
+      status: 'active',
+      currentPeriodEnd: '2026-11-14T00:00:00.000Z',
+    });
+
+    const { findByTestId } = renderHome({
+      userHasOrg: true,
+      user: {
+        policy: { policies: [], organization: { id: 178 } },
+      },
+    });
+
+    const banner = await findByTestId('home-subscription-active');
+    expect(banner.textContent).toContain(
+      'You are now subscribed to our organization premium'
+    );
   });
 
   it('shows organization apply link when userHasOrg is false', () => {

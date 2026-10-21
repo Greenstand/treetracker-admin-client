@@ -14,6 +14,7 @@ import Account from '../components/Account';
 import Home from '../components/Home/Home';
 import Users from '../components/Users';
 import SpeciesView from '../views/SpeciesView';
+import SubscriptionView from '../views/SubscriptionView';
 import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
@@ -41,6 +42,7 @@ import OrganizationsView from 'views/OrganizationsView';
 import WalletsView from 'views/WalletsView';
 import ShareAppView from 'views/ShareAppView';
 import IconShare from '@material-ui/icons/Share';
+import IconStar from '@material-ui/icons/Star';
 import log from 'loglevel';
 import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
 import { parseStoredToken, parseStoredUser } from '../auth/util';
@@ -200,6 +202,14 @@ export function getRoutes(user) {
       component: ShareAppView,
       icon: IconShare,
       // Shown to organization users — the deeplink carries their org id/name.
+      disabled: !user?.policy?.organization?.id,
+    },
+    {
+      name: 'Subscription',
+      linkTo: '/subscription',
+      component: SubscriptionView,
+      icon: IconStar,
+      // An organization subscribes for itself, so only org users see it.
       disabled: !user?.policy?.organization?.id,
     },
     {

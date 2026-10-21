@@ -71,6 +71,9 @@ const styles = (theme) => ({
     gap: '20px',
     flexWrap: 'wrap',
   },
+  subscriptionActive: {
+    fontWeight: 700,
+  },
   orgApplicationLinkRow: {
     marginTop: theme.spacing(1),
   },
