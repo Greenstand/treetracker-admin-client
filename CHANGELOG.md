@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.12](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.11...v1.108.0-keycloak.12) (2026-10-27)
+
+
+### Features
+
+* **organizations:** request to bind to an existing organization ([c58a94e](https://github.com/Greenstand/treetracker-admin-client/commit/c58a94e4b2ac5a0b04d5d78a097734fbbb899e3e))
+
 # [1.108.0-keycloak.11](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.10...v1.108.0-keycloak.11) (2026-10-21)
 
 
