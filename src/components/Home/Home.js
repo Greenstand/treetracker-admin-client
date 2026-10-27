@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link as RouterLink } from 'react-router-dom';
 import api from '../../api/treeTrackerApi';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -43,6 +43,8 @@ import MenuMui from '@material-ui/core/Menu';
 import { format, subDays, formatDistanceToNow } from 'date-fns';
 import axios from 'axios';
 import log from 'loglevel';
+import { getMyBinding } from '../../api/organizationBinding';
+import { getOrganizationById } from '../../api/organizations';
 
 /**
  * @function
@@ -56,7 +58,20 @@ import log from 'loglevel';
 function Home(props) {
   const { classes } = props;
   const appContext = useContext(AppContext);
-  const showOrganizationApplyLink = !appContext.userHasOrg;
+  const organizationId = appContext.user?.policy?.organization?.id;
+  const { data: binding } = useQuery({
+    queryKey: ['organizationBinding'],
+    queryFn: getMyBinding,
+    enabled: !appContext.userHasOrg,
+  });
+  const { data: organization } = useQuery({
+    queryKey: ['organization', organizationId],
+    queryFn: () => getOrganizationById(organizationId),
+    enabled: Boolean(organizationId),
+  });
+  const isBindingPending = binding?.status === 'pending';
+  // A user who already belongs or is waiting has nothing to apply for.
+  const showOrganizationApplyLink = !appContext.userHasOrg && !isBindingPending;
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateTime, setUpdateTime] = useState(undefined);
 
@@ -123,18 +138,57 @@ function Home(props) {
                 Version: {`${process.env.REACT_APP_VERSION}`}
               </Box>
               {showOrganizationApplyLink ? (
+                <>
+                  <Box className={classes.orgApplicationLinkRow}>
+                    <Typography
+                      variant="body2"
+                      className={classes.orgApplicationText}
+                    >
+                      <Link
+                        component={RouterLink}
+                        to="/organization/apply"
+                        className={classes.orgApplicationLink}
+                      >
+                        Apply to become a Greenstand associated organization
+                      </Link>
+                    </Typography>
+                  </Box>
+                  <Box className={classes.orgApplicationLinkRow}>
+                    <Typography
+                      variant="body2"
+                      className={classes.orgApplicationText}
+                    >
+                      <Link
+                        component={RouterLink}
+                        to="/organization/bind"
+                        className={classes.orgApplicationLink}
+                        data-testid="home-bind-organization"
+                      >
+                        Request to bind to an existing organization
+                      </Link>
+                    </Typography>
+                  </Box>
+                </>
+              ) : null}
+              {isBindingPending ? (
                 <Box className={classes.orgApplicationLinkRow}>
                   <Typography
                     variant="body2"
                     className={classes.orgApplicationText}
+                    data-testid="home-binding-pending"
                   >
-                    <Link
-                      component={RouterLink}
-                      to="/organization/apply"
-                      className={classes.orgApplicationLink}
-                    >
-                      Apply to become a Greenstand associated organization
-                    </Link>
+                    You are waiting for approval of organization binding
+                  </Typography>
+                </Box>
+              ) : null}
+              {organization ? (
+                <Box className={classes.orgApplicationLinkRow}>
+                  <Typography
+                    variant="body2"
+                    className={classes.orgApplicationText}
+                    data-testid="home-organization-member"
+                  >
+                    {`You are the member of organization: ${organization.name}`}
                   </Typography>
                 </Box>
               ) : null}

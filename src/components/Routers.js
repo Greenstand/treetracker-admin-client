@@ -17,6 +17,7 @@ import ReportingCard4 from './reportingCards/ReportingCard4';
 import ReportingCard5 from './reportingCards/ReportingCard5';
 import ReportingCard6 from './reportingCards/ReportingCard6';
 import OrganizationApplicationView from '../views/OrganizationApplicationView';
+import OrganizationBindingView from '../views/OrganizationBindingView';
 import WalletDetailView from '../views/WalletDetailView';
 
 export default function Routers() {
@@ -63,6 +64,11 @@ export default function Routers() {
               <PrivateRoute
                 path="/organization/apply"
                 component={OrganizationApplicationView}
+                exact
+              />
+              <PrivateRoute
+                path="/organization/bind"
+                component={OrganizationBindingView}
                 exact
               />
               <PrivateRoute
