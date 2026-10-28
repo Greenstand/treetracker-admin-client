@@ -36,12 +36,14 @@ function SelectOrg({ orgId, defaultOrgs, handleSelection }) {
 
   const handleChange = (e) => {
     e.preventDefault();
-    const org = orgList.find(
+    // 'All' and 'Not set' live in defaultOrgList, so search both lists or the
+    // handler gets a bare string and reads undefined off it.
+    const org = [...defaultOrgList, ...orgList].find(
       (o) => o.id === e.target.value || o.stakeholder_uuid === e.target.value
     );
     // console.log('handleChange', e);
     setOrganizationId(e.target.value); // set value for UI
-    handleSelection(org || e.target.value); // pass on the org if found, or the chosen value to handler for filter
+    handleSelection(org);
   };
 
   return (
