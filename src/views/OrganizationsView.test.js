@@ -133,6 +133,26 @@ describe('OrganizationsView', () => {
     );
   });
 
+  it('scrolls back to the top of the list when the page changes', async () => {
+    // MUI scrolls its own elements too, so record which element was scrolled.
+    const scrolled = [];
+    const scrollIntoView = jest
+      .spyOn(window.HTMLElement.prototype, 'scrollIntoView')
+      .mockImplementation(function scrollSpy() {
+        scrolled.push(this);
+      });
+    getOrganizations.mockResolvedValue({ organizations: ORGS, total: 100 });
+
+    renderView();
+    await screen.findByText('Alpha Org');
+    const search = screen.getByPlaceholderText('Search by name or phone');
+
+    await userEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+    expect(scrolled.some((el) => el.contains(search))).toBe(true);
+    scrollIntoView.mockRestore();
+  });
+
   it('shows an error alert when the request fails', async () => {
     getOrganizations.mockRejectedValueOnce(new Error('Network error'));
 
