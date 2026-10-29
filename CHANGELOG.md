@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.13](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.12...v1.108.0-keycloak.13) (2026-10-29)
+
+
+### Bug Fixes
+
+* **verify:** make selected captures panel responsive ([da0509a](https://github.com/Greenstand/treetracker-admin-client/commit/da0509a01434dceb9688523dbb9cc593a4bf9696))
+
 # [1.108.0-keycloak.12](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.11...v1.108.0-keycloak.12) (2026-10-27)
 
 
