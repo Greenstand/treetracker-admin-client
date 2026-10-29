@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.14](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.13...v1.108.0-keycloak.14) (2026-10-29)
+
+
+### Bug Fixes
+
+* keep the sidebar menu in place while the content scrolls ([eb87d2d](https://github.com/Greenstand/treetracker-admin-client/commit/eb87d2d5630f89d926f3c25833ee5401dbc3acda))
+
 # [1.108.0-keycloak.13](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.12...v1.108.0-keycloak.13) (2026-10-29)
 
 
