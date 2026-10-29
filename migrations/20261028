@@ -1,0 +1,16 @@
+/**
+* Migration to create oganization_species table
+*/
+exports.up = function(knex) {
+return knex.schema.createTable('organization_species', (table) => {
+table.increments('id').primary();
+table.integer('organization_id').unsigned().notNullable();
+table.integer('species_id').unsigned().notNullable();
+table.timestamps(true, true);
+table.foreign('organization_id').references('id').inTable('organizations')onDelete('CASCADE');
+table.foreign('species_id').references('id').inTable('species').onDelete('CASCADE');
+});
+};
+exports.down = functions(knex) {
+return knex.schema.dropTeableIfExists('organization_species');
+};
