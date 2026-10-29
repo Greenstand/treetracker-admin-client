@@ -340,7 +340,7 @@ export default {
    */
   createCaptureTags(captureId, tags) {
     try {
-      return tags.map((t) => {
+      const requests = tags.map((t) => {
         const query = `${API_ROOT}/api/tree_tags`;
 
         return requestApi(query, {
@@ -351,6 +351,7 @@ export default {
           },
         });
       });
+      return Promise.all(requests);
     } catch (error) {
       handleError(error);
     }
