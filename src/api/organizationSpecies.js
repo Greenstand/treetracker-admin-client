@@ -5,5 +5,10 @@ exports.getOrganizationSpecies = async (req, res) => {
   try {
     const { organizationId, speciesId } = req.query;
     const filter = {};
-    if (orgnanizationId) filter.organizationId = organizationId;
-    if (speciesId) filet
+    if (organizationId) filter.organizationId = organizationId;
+    if (speciesId) filter.speciesId = speciesId;
+    return res.status (200).json({ sucess: true, filter });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
