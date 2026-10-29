@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
   menuContainer: {
     width: MENU_WIDTH,
+    position: 'sticky',
+    top: 0,
+    height: '100vh',
+    overflowY: 'auto',
   },
   menuTitle: {
     letterSpacing: '.05em',
