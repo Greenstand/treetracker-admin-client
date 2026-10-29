@@ -1,5 +1,5 @@
 /**
-* Migration to create oganization_species table
+* Migration to create organization_species table
 */
 exports.up = function(knex) {
 return knex.schema.createTable('organization_species', (table) => {
