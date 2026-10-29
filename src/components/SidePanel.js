@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'; // replace with icons down the line
 // import { selectedHighlightColor } from '../common/variables.js';
@@ -12,6 +12,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CloseIcon from '@material-ui/icons/Close';
 import Species from './Species';
 import CaptureTags from './CaptureTags';
 import { VerifyContext } from 'context/VerifyContext';
@@ -52,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
+  mobilePanelButton: {
+    position: 'fixed',
+    right: theme.spacing(2),
+    bottom: theme.spacing(2),
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
 function SidePanel(props) {
@@ -63,8 +72,13 @@ function SidePanel(props) {
   const DEFAULT_REJECTION_REASON = 'not_tree';
 
   const classes = useStyles(props);
+  const theme = useTheme();
+  const isCompactLayout = useMediaQuery(theme.breakpoints.down('sm'), {
+    noSsr: true,
+  });
   const verifyContext = useContext(VerifyContext);
   const captureSelected = verifyContext.getCaptureSelectedArr();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [switchApprove, setSwitchApprove] = useState(DEFAULT_SWITCH_APPROVE);
   const [morphology, setMorphology] = useState(DEFAULT_MORPHOLOGY);
   const [age, setAge] = useState(DEFAULT_AGE);
@@ -117,14 +131,17 @@ function SidePanel(props) {
     }
   }
 
-  return (
+  const drawer = (
     <Drawer
-      variant="permanent"
+      variant={isCompactLayout ? 'temporary' : 'permanent'}
+      open={!isCompactLayout || mobileOpen}
+      onClose={() => setMobileOpen(false)}
       anchor="right"
       className={classes.sidePanel}
       classes={{
         paper: classes.drawerPaper,
       }}
+      ModalProps={{ keepMounted: true }}
       elevation={11}
     >
       <Grid
@@ -132,6 +149,16 @@ function SidePanel(props) {
         direction={'column'}
         className={classes.sidePanelContainer}
       >
+        {isCompactLayout && (
+          <Grid container justifyContent="flex-end">
+            <IconButton
+              aria-label="Close selected captures panel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        )}
         <Grid className={classes.sidePanelItem}>
           <Typography variant="h6">Selected Captures</Typography>
           <Typography className={classes.subtitle}>
@@ -397,6 +424,23 @@ function SidePanel(props) {
         </Grid>
       </Grid>
     </Drawer>
+  );
+
+  return (
+    <>
+      {isCompactLayout && !mobileOpen && (
+        <Button
+          color="primary"
+          variant="contained"
+          className={classes.mobilePanelButton}
+          onClick={() => setMobileOpen(true)}
+          aria-label="Open selected captures panel"
+        >
+          Selected Captures ({captureSelected?.length || 0})
+        </Button>
+      )}
+      {drawer}
+    </>
   );
 }
 
