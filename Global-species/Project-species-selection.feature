@@ -3,34 +3,34 @@ Feature: Project Species Selection
     Given I am logged in as an Org Admin
     And I am on the Species page
 
-@skip
+
   Scenario: Org Admin views the global species list
     Then I should see species "Persea americana" and "Mangifera indica"
     And each species should show its ID, Latin name and common name
     And each species should have its "Use" toggle off by default
 
-@skip
+
   Scenario: Org Admin enables a species for a project
     Given I have selected project "Mango Coast"
     When I turn on "Use" for "Mangifera indica"
     Then I should see "1 selected"
     And the "Save Project Species" button should be enabled
 
-@skip
+
   Scenario: Save is unavailable when no species are selected
     Given I have selected project "Mango Coast"
     And no species are selected
     Then I should see "0 selected"
     And the "Save Project Species" button should be disabled
 
-@skip
+
   Scenario: Org Admin saves the species for a project
     Given I have selected project "Mango Coast"
     And I turn on "Use" for "Mangifera indica"
     When I click "Save Project Species"
     Then "Mangifera indica" should be saved as a species for "Mango Coast"
 
-@skip
+
   Scenario: Org Admin sets a local name for a species in a project
     Given I have selected project "Mango Coast"
     And I turn on "Use" for "Mangifera indica"
@@ -38,7 +38,7 @@ Feature: Project Species Selection
     And I click "Save Project Species"
     Then "Mangifera indica" should show local name "Embe" for "Mango Coast"
 
-@skip
+
   Scenario: Org Admin clears the current selection
     Given I have selected project "Mango Coast"
     And I turn on "Use" for "Mangifera indica"
@@ -46,23 +46,23 @@ Feature: Project Species Selection
     Then I should see "0 selected"
     And all "Use" toggles should be off
 
-@skip
+
   Scenario: Species selections are kept separate for each project
     Given "Mangifera indica" is saved for project "Mango Coast"
     When I switch to a different project
     Then "Mangifera indica" should not be selected for that project
 
-@skip
+
   Scenario: Org Admin searches the species list
     When I search for "avocado"
     Then I should only see "Persea americana" in the list
 
-@skip
+
   Scenario: Species statistics show how often each species is used in verification
     Given "Mangifera indica" has been selected 3 times during verification
     Then the Species statistics panel should show "Mango" with 3 uses
 
-@skip
+
   Scenario: Verification dropdown only lists the project's selected species
     Given "Mangifera indica" is saved for project "Mango Coast"
     And "Persea americana" is not saved for project "Mango Coast"

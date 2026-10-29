@@ -5,18 +5,17 @@ Feature: Species Dropdown in Verification
     And "Persea americana" exists in the global pool but is not saved for "Mango Coast"
     And I am verifying a capture in project "Mango Coast"
 
-@skip
+
   Scenario: Dropdown only shows species activated for the project
     When I open the species dropdown
     Then I should see "Mangifera indica"
     And I should not see "Persea americana"
 
-@skip
+
   Scenario: Dropdown does not show the full global list
     When I open the species dropdown
     Then I should only see the species saved for "Mango Coast"
 
-@skip
   Scenario: Project with no saved species does not fall back to the global list
     Given project "Mango Coast" has no species saved
     When I open the species dropdown
