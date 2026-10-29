@@ -101,6 +101,7 @@
     "@wdio/spec-reporter": "8.41.0",
     "ajv": "^8.18.0",
     "allure-commandline": "2.37.0",
+    "chromedriver": "^154.0.1",
     "cross-env": "^7.0.2",
     "cypress": "^9.5.0",
     "cypress-react-unit-test": "^4.3.1",
