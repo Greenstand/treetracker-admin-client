@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   Box,
   Button,
@@ -23,6 +28,7 @@ import {
   getPendingBindings,
   rejectBinding,
 } from '../api/organizationBinding';
+import { getOrganizationById } from '../api/organizations';
 import { getApiErrorMessage } from '../api/apiUtils';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 25, 50];
@@ -63,6 +69,24 @@ function OrganizationBindingRequests({ organizations = [] }) {
       getPendingBindings({ skip: page * rowsPerPage, limit: rowsPerPage }),
   });
 
+  const knownOrganizationIds = new Set(
+    organizations.map((organization) => String(organization.id))
+  );
+  const missingOrganizationIds = [
+    ...new Set(
+      requests
+        .map((request) => request.organizationId)
+        .filter((id) => id != null && !knownOrganizationIds.has(String(id)))
+    ),
+  ];
+  // Cache each lookup by organization ID so repeated requests reuse the result.
+  const organizationQueries = useQueries({
+    queries: missingOrganizationIds.map((id) => ({
+      queryKey: ['organization', id],
+      queryFn: () => getOrganizationById(id),
+    })),
+  });
+
   const decide = useMutation({
     mutationFn: ({ userId, approved }) =>
       approved ? approveBinding(userId) : rejectBinding(userId),
@@ -95,8 +119,27 @@ function OrganizationBindingRequests({ organizations = [] }) {
     );
   }
 
-  const organizationName = (id) =>
-    organizations.find((organization) => organization.id === id)?.name ?? id;
+  const organizationsById = new Map(
+    [
+      ...organizations,
+      ...organizationQueries.map((query) => query.data).filter(Boolean),
+    ].map((organization) => [String(organization.id), organization])
+  );
+  const loadingOrganizationIds = new Set(
+    organizationQueries
+      .map((query, index) =>
+        query.isPending ? missingOrganizationIds[index] : null
+      )
+      .filter((id) => id != null)
+      .map(String)
+  );
+
+  const organizationName = (id) => {
+    const organization = organizationsById.get(String(id));
+    if (organization?.name) return organization.name;
+    if (loadingOrganizationIds.has(String(id))) return 'Loading…';
+    return id;
+  };
 
   return (
     <Box className={classes.wrapper} data-testid="binding-requests">
