@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import OrganizationBindingRequests from './OrganizationBindingRequests';
+import { AppContext } from '../context/AppContext';
 import { getPendingBindings } from '../api/organizationBinding';
 
 jest.mock('../api/organizationBinding', () => ({
@@ -13,15 +14,16 @@ jest.mock('../api/organizationBinding', () => ({
 
 describe('OrganizationBindingRequests', () => {
   function renderRequests() {
+    const orgList = [{ id: 7, name: 'test-org-01' }];
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
 
     return render(
       <QueryClientProvider client={queryClient}>
-        <OrganizationBindingRequests
-          organizations={[{ id: 7, name: 'test-org-01' }]}
-        />
+        <AppContext.Provider value={{ orgList }}>
+          <OrganizationBindingRequests />
+        </AppContext.Provider>
       </QueryClientProvider>
     );
   }

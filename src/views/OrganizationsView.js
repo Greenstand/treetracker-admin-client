@@ -357,7 +357,7 @@ function OrgContent() {
           </Tabs>
 
           {tab === BINDING_TAB ? (
-            <OrganizationBindingRequests organizations={organizations} />
+            <OrganizationBindingRequests />
           ) : (
             <>
               <Box className={classes.toolbar}>
