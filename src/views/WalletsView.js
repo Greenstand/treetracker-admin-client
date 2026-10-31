@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'hooks/useDebounce';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import {
@@ -39,6 +39,7 @@ import Spinner from 'components/common/Spinner';
 import { documentTitle } from 'common/variables';
 
 const ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
+const DEFAULT_ROWS_PER_PAGE = ROWS_PER_PAGE_OPTIONS[0];
 
 const SORT_OPTIONS = [
   { label: 'Newest', value: 'newest', sortBy: 'created_at', order: 'desc' },
@@ -46,6 +47,27 @@ const SORT_OPTIONS = [
   { label: 'Name A→Z', value: 'name_asc', sortBy: 'name', order: 'asc' },
   { label: 'Name Z→A', value: 'name_desc', sortBy: 'name', order: 'desc' },
 ];
+
+const DEFAULT_SORT = SORT_OPTIONS[0].value;
+
+// Only values the UI can produce are accepted; anything else falls back.
+function readParams(locationSearch) {
+  const params = new URLSearchParams(locationSearch);
+  const page = Number(params.get('page'));
+  const rowsPerPage = Number(params.get('rowsPerPage'));
+  const sortValue = params.get('sort');
+
+  return {
+    page: Number.isInteger(page) && page > 0 ? page : 0,
+    rowsPerPage: ROWS_PER_PAGE_OPTIONS.includes(rowsPerPage)
+      ? rowsPerPage
+      : DEFAULT_ROWS_PER_PAGE,
+    search: params.get('search') ?? '',
+    sortValue: SORT_OPTIONS.some((o) => o.value === sortValue)
+      ? sortValue
+      : DEFAULT_SORT,
+  };
+}
 
 const COLUMNS = [
   { label: 'Name', field: 'name' },
@@ -111,16 +133,31 @@ export default function WalletsView() {
   const theme = useTheme();
   const isCompactLayout = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
+  const history = useHistory();
+  const { search: locationSearch } = useLocation();
+
+  const [initial] = useState(() => readParams(locationSearch));
+  const [page, setPage] = useState(initial.page);
+  const [rowsPerPage, setRowsPerPage] = useState(initial.rowsPerPage);
   // searchInput is what is typed; search is the debounced value the query uses.
-  const [searchInput, setSearchInput] = useState('');
-  const [search, setSearch] = useState('');
-  const [sortValue, setSortValue] = useState(SORT_OPTIONS[0].value);
+  const [searchInput, setSearchInput] = useState(initial.search);
+  const [search, setSearch] = useState(initial.search);
+  const [sortValue, setSortValue] = useState(initial.sortValue);
 
   useEffect(() => {
     document.title = `Wallets - ${documentTitle}`;
   }, []);
+
+  // Keep the list addressable so Back from a wallet returns to the same page.
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (page > 0) params.set('page', page);
+    if (rowsPerPage !== DEFAULT_ROWS_PER_PAGE)
+      params.set('rowsPerPage', rowsPerPage);
+    if (search) params.set('search', search);
+    if (sortValue !== DEFAULT_SORT) params.set('sort', sortValue);
+    history.replace({ search: params.toString() });
+  }, [page, rowsPerPage, search, sortValue]);
 
   const commitSearch = useDebounce((value) => {
     setSearch(value);

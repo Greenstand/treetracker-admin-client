@@ -1,7 +1,7 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import WalletsView from './WalletsView';
 import { getWallets } from 'api/wallets';
@@ -49,14 +49,24 @@ const WALLETS = [
 describe('WalletsView', () => {
   let queryClient;
 
-  function renderView() {
-    return render(
-      <MemoryRouter initialEntries={['/wallets']}>
+  // Returns a getter for the current location, so tests can assert the url.
+  function renderView(entry = '/wallets') {
+    let location;
+    render(
+      <MemoryRouter initialEntries={[entry]}>
         <QueryClientProvider client={queryClient}>
           <WalletsView />
+          <Route
+            path="*"
+            render={({ location: l }) => {
+              location = l;
+              return null;
+            }}
+          />
         </QueryClientProvider>
       </MemoryRouter>
     );
+    return () => location;
   }
 
   function setMatchMedia(matches) {
@@ -130,5 +140,60 @@ describe('WalletsView', () => {
         expect.objectContaining({ search: 'alpha', skip: 0 })
       )
     );
+  });
+
+  describe('URL state', () => {
+    it('starts on the page named by the url', async () => {
+      getWallets.mockResolvedValue({ wallets: WALLETS, total: 200 });
+
+      renderView('/wallets?page=3&rowsPerPage=50&search=alpha&sort=oldest');
+
+      await waitFor(() =>
+        expect(getWallets).toHaveBeenCalledWith(
+          expect.objectContaining({
+            skip: 150,
+            rowsPerPage: 50,
+            search: 'alpha',
+            order: 'asc',
+          })
+        )
+      );
+    });
+
+    it('writes the page into the url when it changes', async () => {
+      getWallets.mockResolvedValue({ wallets: WALLETS, total: 200 });
+      const location = renderView();
+
+      await screen.findByText('alpha-wallet');
+      await userEvent.click(screen.getByTitle('Next page'));
+
+      await waitFor(() => expect(location().search).toBe('?page=1'));
+    });
+
+    it('keeps defaults out of the url', async () => {
+      getWallets.mockResolvedValue({ wallets: WALLETS, total: 2 });
+      const location = renderView();
+
+      await screen.findByText('alpha-wallet');
+
+      expect(location().search).toBe('');
+    });
+
+    it('ignores url values the ui cannot produce', async () => {
+      getWallets.mockResolvedValue({ wallets: WALLETS, total: 2 });
+
+      renderView('/wallets?page=-4&rowsPerPage=7&sort=sideways');
+
+      await waitFor(() =>
+        expect(getWallets).toHaveBeenCalledWith(
+          expect.objectContaining({
+            skip: 0,
+            rowsPerPage: 25,
+            sortBy: 'created_at',
+            order: 'desc',
+          })
+        )
+      );
+    });
   });
 });
