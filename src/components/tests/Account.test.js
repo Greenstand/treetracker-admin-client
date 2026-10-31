@@ -2,10 +2,17 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Account from '../Account';
 import { AppContext } from '../../context/AppContext';
 import * as keycloak from '../../auth/keycloak';
 import notification from '../common/notification';
+import { getDateTimeStringLocale } from '../../common/locale';
+import { getMyKeycloakUser } from '../../api/keycloakUsers';
+
+jest.mock('../../api/keycloakUsers', () => ({
+  getMyKeycloakUser: jest.fn(),
+}));
 
 jest.mock('../common/notification', () => ({
   __esModule: true,
@@ -28,25 +35,37 @@ const baseUser = {
   roleNames: ['super_permission'],
 };
 
-function renderAccount({ isKeycloakEnabled, logout = jest.fn() } = {}) {
+function renderAccount({
+  isKeycloakEnabled,
+  logout = jest.fn(),
+  user = baseUser,
+} = {}) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
   return render(
-    <AppContext.Provider
-      value={{
-        isKeycloakEnabled,
-        user: baseUser,
-        logout,
-      }}
-    >
-      <MemoryRouter>
-        <Account />
-      </MemoryRouter>
-    </AppContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <AppContext.Provider
+        value={{
+          isKeycloakEnabled,
+          user,
+          logout,
+        }}
+      >
+        <MemoryRouter>
+          <Account />
+        </MemoryRouter>
+      </AppContext.Provider>
+    </QueryClientProvider>
   );
 }
 
 describe('Account', () => {
   beforeEach(() => {
     notification.mockClear();
+    getMyKeycloakUser.mockReset();
+    getMyKeycloakUser.mockResolvedValue({});
   });
 
   afterEach(() => {
@@ -186,6 +205,39 @@ describe('Account', () => {
       expect(
         screen.queryByRole('button', { name: 'UPDATE ACCOUNT' })
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('the Created date', () => {
+    const CREATED = Date.UTC(2024, 0, 15, 12, 0, 0);
+    // The locale helper emits U+202F before AM/PM; the DOM matcher sees a space.
+    const shown = getDateTimeStringLocale(CREATED).replace(/\s/g, ' ');
+
+    it('shows the keycloak creation timestamp', async () => {
+      getMyKeycloakUser.mockResolvedValue({ createdTimestamp: CREATED });
+
+      renderAccount({ isKeycloakEnabled: true });
+
+      expect(await screen.findByText(shown)).toBeInTheDocument();
+    });
+
+    it('hides the label when no date is available', async () => {
+      getMyKeycloakUser.mockResolvedValue({});
+
+      renderAccount({ isKeycloakEnabled: true });
+
+      await waitFor(() => expect(getMyKeycloakUser).toHaveBeenCalled());
+      expect(screen.queryByText('Created')).not.toBeInTheDocument();
+    });
+
+    it('falls back to the legacy createdAt when keycloak is off', () => {
+      renderAccount({
+        isKeycloakEnabled: false,
+        user: { ...baseUser, createdAt: new Date(CREATED).toISOString() },
+      });
+
+      expect(screen.getByText(shown)).toBeInTheDocument();
+      expect(getMyKeycloakUser).not.toHaveBeenCalled();
     });
   });
 });
