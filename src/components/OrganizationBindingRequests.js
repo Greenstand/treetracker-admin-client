@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Box,
@@ -17,7 +17,7 @@ import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Spinner from './common/Spinner';
-
+import { AppContext } from '../context/AppContext';
 import {
   approveBinding,
   getPendingBindings,
@@ -45,8 +45,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function OrganizationBindingRequests({ organizations = [] }) {
+function OrganizationBindingRequests() {
   const classes = useStyles();
+  // Full list, not the Organizations tab's page: a request can name any org.
+  const { orgList } = useContext(AppContext);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
@@ -96,7 +98,7 @@ function OrganizationBindingRequests({ organizations = [] }) {
   }
 
   const organizationName = (id) =>
-    organizations.find((organization) => organization.id === id)?.name ?? id;
+    orgList.find((organization) => organization.id === id)?.name ?? id;
 
   return (
     <Box className={classes.wrapper} data-testid="binding-requests">
