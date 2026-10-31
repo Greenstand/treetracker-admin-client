@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'hooks/useDebounce';
 import {
   useQuery,
@@ -161,6 +161,8 @@ function OrgContent() {
     sortValue,
   } = useOrgQueryState();
   const dispatch = useOrgQueryDispatch();
+  // The page scrolls inside a container, so window.scrollTo would not move it.
+  const listTopRef = useRef(null);
 
   const [tab, setTab] = useState(ORGANIZATIONS_TAB);
   const [formOpen, setFormOpen] = useState(false);
@@ -360,7 +362,7 @@ function OrgContent() {
             <OrganizationBindingRequests />
           ) : (
             <>
-              <Box className={classes.toolbar}>
+              <Box className={classes.toolbar} ref={listTopRef}>
                 <TextField
                   className={classes.searchBox}
                   variant="outlined"
@@ -428,15 +430,17 @@ function OrgContent() {
                   rowsPerPageOptions={rowsPerPageOptions}
                   page={page}
                   rowsPerPage={rowsPerPage}
-                  onPageChange={(_, newPage) =>
-                    dispatch({ type: 'SET_PAGE', payload: newPage })
-                  }
-                  onRowsPerPageChange={(e) =>
+                  onPageChange={(_, newPage) => {
+                    listTopRef.current?.scrollIntoView();
+                    dispatch({ type: 'SET_PAGE', payload: newPage });
+                  }}
+                  onRowsPerPageChange={(e) => {
+                    listTopRef.current?.scrollIntoView();
                     dispatch({
                       type: 'SET_ROWS_PER_PAGE',
                       payload: parseInt(e.target.value, 10),
-                    })
-                  }
+                    });
+                  }}
                   labelDisplayedRows={labelDisplayedRows}
                   SelectProps={{
                     inputProps: { 'aria-label': 'rows per page' },
