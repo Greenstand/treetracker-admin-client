@@ -1,10 +1,18 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { act, render, screen, within, cleanup } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  within,
+  cleanup,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AppProvider } from '../../context/AppContext';
 import FilterTop from '../FilterTop';
 import Verify from '../Verify';
+import { ORGANIZATION_NOT_SET } from '../../models/Filter';
 import { ORGS } from './fixtures';
 
 import * as loglevel from 'loglevel';
@@ -147,6 +155,30 @@ describe('FilterTop organizations', () => {
 
         // two default options + two orgs
         expect(orgs).toHaveLength(4);
+      });
+
+      it('submits organizationId null when "Not set" is chosen ', async () => {
+        const onSubmit = jest.fn();
+        render(
+          <AppProvider value={{ orgList: orgs }}>
+            <FilterTop onSubmit={onSubmit} />
+          </AppProvider>
+        );
+
+        const dropdown = screen.getByTestId('org-dropdown');
+        userEvent.click(within(dropdown).getByRole('button', { name: /all/i }));
+
+        const orglist = screen.getByRole('listbox');
+        userEvent.click(within(orglist).getByText(/not set/i));
+        userEvent.click(screen.getByText(/apply/i));
+
+        await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+
+        const filter = onSubmit.mock.calls[0][0];
+        expect(filter.organizationId).toBe(ORGANIZATION_NOT_SET);
+        expect(filter.getWhereObj()).toEqual(
+          expect.objectContaining({ organizationId: null })
+        );
       });
     });
 
