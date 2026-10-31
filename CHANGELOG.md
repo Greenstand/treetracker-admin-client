@@ -1,3 +1,11 @@
+# [1.108.0-keycloak.15](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.14...v1.108.0-keycloak.15) (2026-10-31)
+
+
+### Bug Fixes
+
+* **organizations:** name the organization on every binding request ([2c54d31](https://github.com/Greenstand/treetracker-admin-client/commit/2c54d31c095db5a01d45e1605e3086e036197a48)), closes [#1288](https://github.com/Greenstand/treetracker-admin-client/issues/1288)
+* send organizationId null when the org filter is "Not set" ([ae406a1](https://github.com/Greenstand/treetracker-admin-client/commit/ae406a151814345c9a3acc888e246b36201fbdee))
+
 # [1.108.0-keycloak.14](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.13...v1.108.0-keycloak.14) (2026-10-29)
 
 
