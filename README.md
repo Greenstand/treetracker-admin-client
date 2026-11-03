@@ -20,6 +20,33 @@ The spec for each of these APIs can be found in the docs/api/spec directory of e
 
 Please add any missing content to this readme as a pull request.
 
+## Branches, authentication, and environments
+
+This repository currently has two application lines. They share the Admin Panel
+codebase but use different authentication and API configurations.
+
+| Branch     | Admin API configuration                    | Authentication                      | Wallet API configuration                                                    |
+| ---------- | ------------------------------------------ | ----------------------------------- | --------------------------------------------------------------------------- |
+| `master`   | Legacy Admin API (`/api/admin`)            | Admin API login token (legacy flow) | No Keycloak Wallet API configuration in the default development environment |
+| `keycloak` | Keycloak Admin API (`/api/keycloak-admin`) | Keycloak access token               | Keycloak Wallet API (`/wallet/keycloak`)                                    |
+
+The `keycloak` branch is the current application line for Keycloak-enabled wallet
+and organization features. Its development environment uses:
+
+- `REACT_APP_API_ROOT` for the Keycloak-enabled Admin API.
+- `REACT_APP_WALLET_API_ROOT` for the Keycloak Wallet API.
+- `REACT_APP_KEYCLOAK_URL` for the Keycloak server.
+- `REACT_APP_KEYCLOAK_REALM` for the Keycloak realm.
+- `REACT_APP_KEYCLOAK_CLIENT_ID` for the browser client.
+
+Development credentials and Keycloak account access must be obtained from the
+maintainers. Do not commit credentials or secret values to the repository.
+
+Before starting work, confirm the target branch with the maintainers. Keycloak
+features and fixes normally use `keycloak`; changes intended for the legacy
+application line use `master`. Changes to shared API contracts or database-backed
+features should be reviewed for compatibility with both lines.
+
 ## Development Environment Quick Start
 
 There are three main options for development in the Admin Panel:
@@ -112,7 +139,7 @@ There are lots of opportunities to offer ideas and take ownership of larger piec
 
 1. Create a branch for the issue in your local repo
 2. Make your changes and test everything works locally
-3. Push your changes to your fork on GitHub and create a pull request into Greenstand/master
+3. Push your changes to your fork on GitHub and create a pull request into the appropriate Greenstand branch (`keycloak` for Keycloak work or `master` for legacy work)
 4. Fill in as much info as you can in the PR, including screenshots or videos of the change to help the reviewer understand what you've done
 5. A member of the review team will review your changes (it can take a little while, since lots of us are volunteers) and may request changes
 6. Make the requested changes, asking for clarification in the PR if necessary, and push the updated code
