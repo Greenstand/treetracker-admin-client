@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.16](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.15...v1.108.0-keycloak.16) (2026-11-09)
+
+
+### Bug Fixes
+
+* resolve species page reload failed error ([f146615](https://github.com/Greenstand/treetracker-admin-client/commit/f1466158221e535d039cadaa94e75638e19c6e32))
+
 # [1.108.0-keycloak.15](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.14...v1.108.0-keycloak.15) (2026-10-31)
 
 
