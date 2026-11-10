@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.17](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.16...v1.108.0-keycloak.17) (2026-11-10)
+
+
+### Bug Fixes
+
+* **config:** point the production build at Keycloak and the keycloak admin API ([#1297](https://github.com/Greenstand/treetracker-admin-client/issues/1297)) ([427d291](https://github.com/Greenstand/treetracker-admin-client/commit/427d291462b16900cbe9cc8df05a5982aa472a9d))
+
 # [1.108.0-keycloak.16](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.15...v1.108.0-keycloak.16) (2026-11-09)
 
 
