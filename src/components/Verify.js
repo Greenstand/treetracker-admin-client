@@ -114,6 +114,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     padding: theme.spacing(2, 8),
   },
+  bottomPagination: {
+    [theme.breakpoints.down('sm')]: {
+      paddingBottom: 64,
+    },
+  },
   snackbar: {
     bottom: 20,
   },
@@ -663,7 +668,7 @@ const Verify = (props) => {
                 item
                 container
                 justifyContent="flex-end"
-                className={classes.title}
+                className={clsx(classes.title, classes.bottomPagination)}
               >
                 {imagePagination}
               </Grid>
