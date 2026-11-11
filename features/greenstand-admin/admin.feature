@@ -1,4 +1,4 @@
-Feature: Admin
+Feature: Admin Login and Basic Operations
 
   Scenario: Admin can log in
     Given I am on the admin login page
