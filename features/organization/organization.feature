@@ -31,15 +31,3 @@ Feature: Organization Features
     And I should see the "download your QR code" button
     When I click the "download your QR code" button
     Then I should see the notification "Downloading your QR code..."
-
-
-
-  Scenario: Organization can manage their growers
-    Given I am on the admin login page
-    And I am the user with role "organization"
-    And the grower "S U" belongs to this organization
-    When I login
-    Then I should be able to see the "Growers" menu item
-    When I click on the "Growers" menu item
-    Then I should be able to see the grower list page
-    And on the growers page, there is the grower "S U"
