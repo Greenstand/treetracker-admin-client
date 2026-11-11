@@ -3,15 +3,13 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 const ShareAppPage = require('../page-objects/ShareAppPage');
 const LoginPage = require('../page-objects/LoginPage');
 const { openKeycloakLoginPage } = require('../support/auth');
-
-const ORG_USER = {
-  username: 'user-test-treetracker-admin-client',
-  password: 'LjyxVk4t5^yx&!Gl',
-};
+const { userForRole } = require('../support/users');
 
 Given('I am logged in as an organization', async () => {
+  const user = userForRole('organization');
+
   await openKeycloakLoginPage();
-  await LoginPage.login(ORG_USER.username, ORG_USER.password);
+  await LoginPage.login(user.username, user.password);
   await LoginPage.waitForSuccessfulRedirect();
 });
 
