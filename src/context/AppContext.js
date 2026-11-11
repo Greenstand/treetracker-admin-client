@@ -83,6 +83,8 @@ export function getRoutes(user) {
       component: CapturesView,
       icon: IconNature,
       disabled: !hasPermission(user, [
+        POLICIES.ADMIN,
+        POLICIES.ORGANIZATION,
         POLICIES.SUPER_PERMISSION,
         POLICIES.LIST_TREE,
       ]),
