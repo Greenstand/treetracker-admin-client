@@ -140,11 +140,7 @@ export function getRoutes(user) {
       linkTo: '/growers',
       component: GrowersView,
       icon: IconNaturePeople,
-      disabled:
-        !hasPermission(user, [
-          POLICIES.SUPER_PERMISSION,
-          POLICIES.LIST_GROWER,
-        ]) && !user?.policy?.organization?.id,
+      disabled: !hasPermission(user, [POLICIES.ADMIN, POLICIES.ORGANIZATION]),
     },
     {
       name: 'Species',

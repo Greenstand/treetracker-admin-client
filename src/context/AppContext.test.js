@@ -5,7 +5,7 @@ function growersRoute(user) {
 }
 
 describe('Growers route access', () => {
-  it('is enabled for an organization user with no grower policy', () => {
+  it('is enabled for an organization user', () => {
     const user = {
       policy: { policies: [{ name: 'org' }], organization: { id: 178 } },
     };
@@ -13,16 +13,16 @@ describe('Growers route access', () => {
     expect(growersRoute(user).disabled).toBe(false);
   });
 
-  it('stays disabled for a user with neither a grower policy nor an organization', () => {
+  it('is enabled for a greenstand admin', () => {
     const user = { policy: { policies: [{ name: 'greenstand-admin' }] } };
 
-    expect(growersRoute(user).disabled).toBe(true);
+    expect(growersRoute(user).disabled).toBe(false);
   });
 
-  it('is enabled for a user holding list_planter', () => {
-    const user = { policy: { policies: [{ name: 'list_planter' }] } };
+  it('stays disabled for a user with no accepted role', () => {
+    const user = { policy: { policies: [] } };
 
-    expect(growersRoute(user).disabled).toBe(false);
+    expect(growersRoute(user).disabled).toBe(true);
   });
 });
 
