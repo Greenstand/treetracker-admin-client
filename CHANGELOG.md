@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.20](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.19...v1.108.0-keycloak.20) (2026-11-12)
+
+
+### Bug Fixes
+
+* **growers:** gate the grower page on the keycloak roles ([b5b54ee](https://github.com/Greenstand/treetracker-admin-client/commit/b5b54eee03a28e18b27f8125054aa0d759f16409)), closes [#1302](https://github.com/Greenstand/treetracker-admin-client/issues/1302)
+
 # [1.108.0-keycloak.19](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.18...v1.108.0-keycloak.19) (2026-11-12)
 
 
