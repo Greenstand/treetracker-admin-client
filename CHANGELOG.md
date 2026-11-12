@@ -1,3 +1,11 @@
+# [1.108.0-keycloak.18](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.17...v1.108.0-keycloak.18) (2026-11-12)
+
+
+### Bug Fixes
+
+* **captures:** show the capture menu to keycloak users ([c529b85](https://github.com/Greenstand/treetracker-admin-client/commit/c529b85dc250dae36db492a0077cf11dc698b7fa)), closes [#1301](https://github.com/Greenstand/treetracker-admin-client/issues/1301)
+* **home:** show the count cards to keycloak users ([3f33c60](https://github.com/Greenstand/treetracker-admin-client/commit/3f33c60311985d50454e38c56a1eaf9192654fc0)), closes [#1300](https://github.com/Greenstand/treetracker-admin-client/issues/1300)
+
 # [1.108.0-keycloak.17](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.16...v1.108.0-keycloak.17) (2026-11-10)
 
 
