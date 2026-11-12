@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.19](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.18...v1.108.0-keycloak.19) (2026-11-12)
+
+
+### Bug Fixes
+
+* scroll back to the top of the list when the page changes ([0bb6e37](https://github.com/Greenstand/treetracker-admin-client/commit/0bb6e3706dcd1dec88fe081db9adf2b130c87021)), closes [#1274](https://github.com/Greenstand/treetracker-admin-client/issues/1274)
+
 # [1.108.0-keycloak.18](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.17...v1.108.0-keycloak.18) (2026-11-12)
 
 
