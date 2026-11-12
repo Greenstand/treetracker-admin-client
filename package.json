@@ -94,11 +94,12 @@
     "@storybook/addon-links": "^6.5.9",
     "@storybook/addons": "^6.5.9",
     "@storybook/react": "^6.5.9",
-    "@wdio/allure-reporter": "8.41.0",
-    "@wdio/cli": "8.41.0",
-    "@wdio/cucumber-framework": "8.41.0",
-    "@wdio/local-runner": "8.41.0",
-    "@wdio/spec-reporter": "8.41.0",
+    "@wdio/allure-reporter": "9.32.0",
+    "@wdio/cli": "9.32.0",
+    "@wdio/cucumber-framework": "9.32.0",
+    "@wdio/local-runner": "9.32.0",
+    "@wdio/logger": "9.29.1",
+    "@wdio/spec-reporter": "9.32.0",
     "ajv": "^8.18.0",
     "allure-commandline": "2.37.0",
     "cross-env": "^7.0.2",
@@ -113,11 +114,10 @@
     "prettier": "2.0.5",
     "pretty-quick": "^3.1.0",
     "react-inspector": "^3.0.2",
-    "wdio-chromedriver-service": "8.1.1",
-    "webdriverio": "8.41.0"
+    "webdriverio": "9.32.0"
   },
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 18.20.0"
   },
   "overrides": {
     "@puppeteer/browsers": "2.12.0"
