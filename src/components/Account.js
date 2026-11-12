@@ -24,6 +24,8 @@ import notification from './common/notification';
 import { authAxios } from '../api/httpClient';
 import { documentTitle } from '../common/variables';
 import { getDateTimeStringLocale } from '../common/locale';
+import { getMyKeycloakUser } from '../api/keycloakUsers';
+import { useQuery } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -110,6 +112,13 @@ function Account(props) {
   const [confirmedPassword, setConfirmedPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
+  const { data: keycloakUser } = useQuery({
+    queryKey: ['keycloakUser', 'me'],
+    queryFn: getMyKeycloakUser,
+    enabled: isKeycloakEnabled,
+  });
+  // Keycloak reports it as createdTimestamp; legacy auth put it on the user.
+  const createdAt = keycloakUser?.createdTimestamp ?? user?.createdAt;
 
   function handleLogout() {
     history.push('/');
@@ -284,14 +293,14 @@ function Account(props) {
                 <Typography className={classes.title}>Roles</Typography>
                 {roles}
               </Grid>
-              <Grid className={classes.element} item>
-                <Typography className={classes.title}>Created</Typography>
-                {user?.createdAt ? (
+              {createdAt ? (
+                <Grid className={classes.element} item>
+                  <Typography className={classes.title}>Created</Typography>
                   <Typography className={classes.item}>
-                    {getDateTimeStringLocale(user?.createdAt)}
+                    {getDateTimeStringLocale(createdAt)}
                   </Typography>
-                ) : null}
-              </Grid>
+                </Grid>
+              ) : null}
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Password</Typography>
                 <Button
