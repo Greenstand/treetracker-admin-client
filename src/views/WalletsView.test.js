@@ -131,4 +131,24 @@ describe('WalletsView', () => {
       )
     );
   });
+
+  it('scrolls back to the top of the list when the page changes', async () => {
+    // MUI scrolls its own elements too, so record which element was scrolled.
+    const scrolled = [];
+    const scrollIntoView = jest
+      .spyOn(window.HTMLElement.prototype, 'scrollIntoView')
+      .mockImplementation(function scrollSpy() {
+        scrolled.push(this);
+      });
+    getWallets.mockResolvedValue({ wallets: WALLETS, total: 200 });
+
+    renderView();
+    await screen.findByText('alpha-wallet');
+    const search = document.querySelector('#wallets-search');
+
+    await userEvent.click(screen.getByTitle('Next page'));
+
+    expect(scrolled.some((el) => el.contains(search))).toBe(true);
+    scrollIntoView.mockRestore();
+  });
 });

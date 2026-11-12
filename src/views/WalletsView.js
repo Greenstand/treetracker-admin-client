@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDebounce } from 'hooks/useDebounce';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
@@ -111,6 +111,8 @@ export default function WalletsView() {
   const theme = useTheme();
   const isCompactLayout = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // The page scrolls inside a container, so window.scrollTo would not move it.
+  const listTopRef = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
   // searchInput is what is typed; search is the debounced value the query uses.
@@ -231,7 +233,7 @@ export default function WalletsView() {
             </Typography>
           </Box>
 
-          <Box className={classes.toolbar}>
+          <Box className={classes.toolbar} ref={listTopRef}>
             <TextField
               id="wallets-search"
               className={classes.searchBox}
@@ -291,8 +293,12 @@ export default function WalletsView() {
               rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
               page={page}
               rowsPerPage={rowsPerPage}
-              onPageChange={(_, newPage) => setPage(newPage)}
+              onPageChange={(_, newPage) => {
+                listTopRef.current?.scrollIntoView();
+                setPage(newPage);
+              }}
               onRowsPerPageChange={(e) => {
+                listTopRef.current?.scrollIntoView();
                 setRowsPerPage(parseInt(e.target.value, 10));
                 setPage(0);
               }}
