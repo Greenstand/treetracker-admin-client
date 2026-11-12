@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.22](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.21...v1.108.0-keycloak.22) (2026-11-12)
+
+
+### Bug Fixes
+
+* keep the wallets list state in the url ([7a8b477](https://github.com/Greenstand/treetracker-admin-client/commit/7a8b4770235994188832e6b9e7b64afa24758767)), closes [#1275](https://github.com/Greenstand/treetracker-admin-client/issues/1275)
+
 # [1.108.0-keycloak.21](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.20...v1.108.0-keycloak.21) (2026-11-12)
 
 
