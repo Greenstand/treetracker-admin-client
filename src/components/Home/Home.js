@@ -234,6 +234,8 @@ function Home(props) {
           </Grid>
           <div className={classes.dashstatWraper}>
             {hasPermission(appContext.user, [
+              POLICIES.ADMIN,
+              POLICIES.ORGANIZATION,
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_TREE,
               POLICIES.APPROVE_TREE,
@@ -246,6 +248,8 @@ function Home(props) {
                 </>
               )}
             {hasPermission(appContext.user, [
+              POLICIES.ADMIN,
+              POLICIES.ORGANIZATION,
               POLICIES.SUPER_PERMISSION,
               POLICIES.LIST_PLANTER,
             ]) &&

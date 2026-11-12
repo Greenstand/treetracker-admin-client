@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import Home from './Home';
 import { AppContext } from '../../context/AppContext';
+import { POLICIES } from '../../models/auth';
 
 jest.mock('axios');
 
@@ -14,11 +15,13 @@ jest.mock('../../api/treeTrackerApi', () => ({
   },
 }));
 
+// Stand in for each card with its own label, so the tests below can tell
+// which cards the permission gate let through.
 jest.mock('../DashStat.container', () => ({
-  DashStatGrowerCount: () => null,
-  DashStatTotalCaptures: () => null,
-  DashStatUnprocessedCaptures: () => null,
-  DashStatVerifiedCaptures: () => null,
+  DashStatGrowerCount: () => 'Growers',
+  DashStatTotalCaptures: () => 'Total Captures',
+  DashStatUnprocessedCaptures: () => 'Untagged Captures',
+  DashStatVerifiedCaptures: () => 'Verified Captures',
 }));
 
 jest.mock('../reportingCards/ReportingCard1', () => () => null);
@@ -112,5 +115,53 @@ describe('Home', () => {
         'Apply to become a Greenstand associated organization'
       )
     ).toBe(true);
+  });
+  const CARD_LABELS = [
+    'Total Captures',
+    'Untagged Captures',
+    'Verified Captures',
+    'Growers',
+  ];
+
+  function userWithRole(role, organization) {
+    return {
+      policy: {
+        policies: role ? [{ name: role }] : [],
+        organization,
+      },
+    };
+  }
+
+  it('shows all four cards to a greenstand admin', () => {
+    const { container } = renderHome({
+      userHasOrg: false,
+      user: userWithRole(POLICIES.ADMIN, undefined),
+    });
+
+    CARD_LABELS.forEach((label) => {
+      expect(container.textContent).toContain(label);
+    });
+  });
+
+  it('shows all four cards to an organization user', () => {
+    const { container } = renderHome({
+      userHasOrg: true,
+      user: userWithRole(POLICIES.ORGANIZATION, { id: 178 }),
+    });
+
+    CARD_LABELS.forEach((label) => {
+      expect(container.textContent).toContain(label);
+    });
+  });
+
+  it('shows no cards to a user with no accepted role', () => {
+    const { container } = renderHome({
+      userHasOrg: false,
+      user: userWithRole(undefined, undefined),
+    });
+
+    CARD_LABELS.forEach((label) => {
+      expect(container.textContent).not.toContain(label);
+    });
   });
 });

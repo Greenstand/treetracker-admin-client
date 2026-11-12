@@ -70,6 +70,7 @@ const styles = (theme) => ({
     flexDirection: 'row',
     gap: '20px',
     flexWrap: 'wrap',
+    marginTop: theme.spacing(3),
   },
   orgApplicationLinkRow: {
     marginTop: theme.spacing(1),
