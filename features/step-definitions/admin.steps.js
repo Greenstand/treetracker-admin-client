@@ -1,4 +1,4 @@
-const { Given, When, Then } = require('@cucumber/cucumber');
+const { AfterAll, Given, When, Then } = require('@cucumber/cucumber');
 
 const AdminPage = require('../page-objects/AdminPage');
 const LoginPage = require('../page-objects/LoginPage');
@@ -6,6 +6,7 @@ const VerifyPage = require('../page-objects/VerifyPage');
 const WalletDetailPage = require('../page-objects/WalletDetailPage');
 const { openKeycloakLoginPage } = require('../support/auth');
 const { userForRole } = require('../support/users');
+const { seedUnboundWallet, deleteWallet } = require('../support/walletDb');
 
 // The term the bind dialog searches for. Any account on the realm will do,
 // so point it at one that exists in the environment under test.
@@ -79,9 +80,17 @@ Then('I should be able to verify the first tree', async () => {
   await VerifyPage.verifyFirstCapture();
 });
 
-Given('there is a wallet {string} with no keycloak binding', (walletName) => {
-  // A fixture of the dev environment, not something the UI can set up.
-  legacyWallet = walletName;
+Given(
+  'there is a wallet {string} with no keycloak binding',
+  async (walletName) => {
+    legacyWallet = walletName;
+    await seedUnboundWallet(walletName);
+  }
+);
+
+// The scenario binds an account to the wallet, so leave nothing behind.
+AfterAll(async () => {
+  if (legacyWallet) await deleteWallet(legacyWallet);
 });
 
 When('I click the name of the wallet {string}', async (walletName) => {

@@ -243,6 +243,17 @@ Feature specs live in `features/` and are written in Gherkin. They run against t
 npm start
 ```
 
+#### Environment
+
+The wallet binding scenario seeds an unbound wallet straight into the wallet database, because the wallet API stamps the caller's keycloak account on everything it creates. Point it at the wallet database of the environment under test:
+
+```bash
+export WALLET_DATABASE_URL=postgresql://user:password@host:5432/wallet
+export WALLET_DATABASE_SCHEMA=wallet   # optional, defaults to wallet
+```
+
+The seeded wallet is named in the feature file and is deleted when the run ends. Never point this at production.
+
 #### Run BDD tests
 
 In a separate terminal:
