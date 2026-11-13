@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.23](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.22...v1.108.0-keycloak.23) (2026-11-13)
+
+
+### Bug Fixes
+
+* **bdd:** seed the legacy wallet instead of assuming it exists ([1ac179f](https://github.com/Greenstand/treetracker-admin-client/commit/1ac179f76b08a08baa25deebad39c0ae5a5c8b80))
+
 # [1.108.0-keycloak.22](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.21...v1.108.0-keycloak.22) (2026-11-12)
 
 
