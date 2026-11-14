@@ -1,3 +1,10 @@
+# [1.108.0-keycloak.24](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.23...v1.108.0-keycloak.24) (2026-11-14)
+
+
+### Bug Fixes
+
+* **permissions:** show grower actions for authorized roles ([4ce5872](https://github.com/Greenstand/treetracker-admin-client/commit/4ce587276b10dc4429eb73cdb97f5a970fa27603))
+
 # [1.108.0-keycloak.23](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.22...v1.108.0-keycloak.23) (2026-11-13)
 
 
