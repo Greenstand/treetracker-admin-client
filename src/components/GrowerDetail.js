@@ -372,6 +372,8 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                   </CardMedia>
                 )}
                 {hasPermission(appContext.user, [
+                  POLICIES.ADMIN,
+                  POLICIES.ORGANIZATION,
                   POLICIES.SUPER_PERMISSION,
                   POLICIES.MANAGE_GROWER,
                 ]) && (
@@ -397,7 +399,12 @@ const GrowerDetail = ({ open, growerId, onClose }) => {
                 </Typography>
               </Grid>
               {process.env.REACT_APP_ENABLE_MESSAGING === 'true' &&
-                hasPermission(appContext.user, [POLICIES.SUPER_PERMISSION]) && (
+                hasPermission(appContext.user, [
+                  POLICIES.ADMIN,
+                  POLICIES.ORGANIZATION,
+                  POLICIES.SUPER_PERMISSION,
+                  POLICIES.SEND_MESSAGES,
+                ]) && (
                   <Grid item>
                     <Button
                       className={classes.messageButton}
