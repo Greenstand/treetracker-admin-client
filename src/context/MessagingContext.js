@@ -27,7 +27,8 @@ export const MessagingProvider = (props) => {
   const [growerMessage, setGrowerMessage] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const user = JSON.parse(localStorage.getItem('user'));
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const user = props.user || storedUser;
 
   useEffect(() => {
     log.debug('...add avatars to threads');
@@ -163,6 +164,10 @@ export const MessagingProvider = (props) => {
   };
 
   const sendMessageFromGrower = (grower) => {
+    if (!user?.userName || !grower) {
+      return;
+    }
+
     const payload = {
       body: '',
       from: user.userName,
@@ -175,6 +180,11 @@ export const MessagingProvider = (props) => {
   };
 
   const loadMessages = async () => {
+    if (!user?.userName) {
+      setErrorMessage('Unable to load messages: no authenticated user found.');
+      return;
+    }
+
     try {
       log.debug('...load messages');
       const res = await api.getMessages(user.userName);
@@ -192,7 +202,7 @@ export const MessagingProvider = (props) => {
         throw 'Sorry, there was a problem loading your messages.';
       }
     } catch (error) {
-      setErrorMessage(error);
+      setErrorMessage(error instanceof Error ? error.message : String(error));
     }
   };
 

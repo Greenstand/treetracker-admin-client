@@ -239,6 +239,8 @@ export function getRoutes(user) {
       disabled:
         process.env.REACT_APP_ENABLE_MESSAGING !== 'true' ||
         !hasPermission(user, [
+          POLICIES.ADMIN,
+          POLICIES.ORGANIZATION,
           POLICIES.SUPER_PERMISSION,
           POLICIES.SEND_MESSAGES,
         ]),
@@ -399,7 +401,7 @@ export const AppProvider = (props) => {
   // VerifyProvider and GrowerProvider need to wrap children here so that they are available when needed
   return (
     <AppContext.Provider value={value}>
-      <MessagingProvider>{props.children}</MessagingProvider>
+      <MessagingProvider user={user}>{props.children}</MessagingProvider>
     </AppContext.Provider>
   );
 };
