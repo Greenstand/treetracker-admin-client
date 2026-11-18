@@ -40,6 +40,9 @@ describe('keycloak bootstrap', () => {
         sub: 'user-1',
         preferred_username: 'admin',
         email: 'admin@example.com',
+        email_verified: false,
+        auth_time: 1700000000,
+        iat: 1700000300,
         realm_access: { roles: ['super_permission'] },
       },
     }));
@@ -50,6 +53,8 @@ describe('keycloak bootstrap', () => {
     expect(result.authenticated).toBe(true);
     expect(result.token).toBe('Bearer access-token');
     expect(result.user.userName).toBe('admin');
+    expect(result.user.emailVerified).toBe(false);
+    expect(result.user.signedInAt).toBe(1700000000);
     expect(result.user.policy.policies).toEqual([{ name: 'super_permission' }]);
   });
 
