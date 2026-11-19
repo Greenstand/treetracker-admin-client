@@ -8,6 +8,9 @@
 /cypress/videos
 /cypress/screenshots
 /cypress/fixtures/login.json
+/reports/allure-results/
+/reports/allure-html/
+/reports/video/
 # production
 /build
 
