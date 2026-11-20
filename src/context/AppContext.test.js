@@ -57,3 +57,37 @@ describe('Captures route access', () => {
     expect(capturesRoute(user).disabled).toBe(true);
   });
 });
+
+describe('Domain view permissions', () => {
+  const organization = {
+    policy: { policies: [{ name: 'org' }], organization: { id: 3414 } },
+  };
+  const platform = { policy: { policies: [{ name: 'greenstand-admin' }] } };
+  it('offers projects, sessions, contracts and organization species to org members', () => {
+    const routes = getRoutes(organization);
+    for (const path of [
+      '/projects',
+      '/tracking-sessions',
+      '/contracts',
+      '/organization-species',
+    ]) {
+      expect(routes.find((route) => route.linkTo === path).disabled).toBe(
+        false
+      );
+    }
+  });
+  it('keeps SaaS routes disabled for organization members and enabled for platform admins', () => {
+    expect(
+      getRoutes(organization).find((route) => route.name === 'SaaS').disabled
+    ).toBe(true);
+    const saas = getRoutes(platform).find((route) => route.name === 'SaaS');
+    expect(saas.disabled).toBe(false);
+    expect(saas.children.every((route) => !route.disabled)).toBe(true);
+  });
+  it('keeps domain organization routes disabled for unrelated users', () => {
+    const routes = getRoutes({ policy: { policies: [{ name: 'planter' }] } });
+    expect(routes.find((route) => route.linkTo === '/projects').disabled).toBe(
+      true
+    );
+  });
+});
