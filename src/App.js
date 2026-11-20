@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './components/common/theme';
 import Routers from './components/Routers';
-import { AppProvider } from './context/AppContext';
+import { AppProvider, AppContext } from './context/AppContext';
+import { DomainProvider } from './features/domain/DomainContext';
 import { BrowserRouter } from 'react-router-dom';
 import { setLocaleLanguage } from './common/locale';
+
+function DomainRoutes() {
+  const { user } = useContext(AppContext);
+  return (
+    <DomainProvider user={user}>
+      <Routers />
+    </DomainProvider>
+  );
+}
 
 class App extends Component {
   componentDidMount() {
@@ -19,7 +29,7 @@ class App extends Component {
         <>
           <BrowserRouter>
             <AppProvider initialAuth={this.props.initialAuth}>
-              <Routers />
+              <DomainRoutes />
             </AppProvider>
           </BrowserRouter>
         </>

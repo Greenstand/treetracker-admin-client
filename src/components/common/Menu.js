@@ -86,7 +86,7 @@ export default function GSMenu(props) {
         () =>
           appContext.routes &&
           appContext.routes
-            .filter(({ disabled }) => !disabled)
+            .filter(({ disabled, menuHidden }) => !disabled && !menuHidden)
             .map((item, i) =>
               item?.children ? (
                 <div
@@ -97,7 +97,9 @@ export default function GSMenu(props) {
                     {item.name}
                   </Typography>
                   {item.children
-                    .filter(({ disabled }) => !disabled)
+                    .filter(
+                      ({ disabled, menuHidden }) => !disabled && !menuHidden
+                    )
                     .map((child, i) => (
                       <Link
                         key={`menu_${i}`}
