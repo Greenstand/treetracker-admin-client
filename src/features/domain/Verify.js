@@ -27,6 +27,7 @@ import LocationIcon from '@material-ui/icons/LocationOn';
 import MapIcon from '@material-ui/icons/Map';
 import { useQueryClient } from '@tanstack/react-query';
 import GrowerAccount from './GrowerAccount';
+import CaptureTagPicker from './CaptureTagPicker';
 import SessionMap from './SessionMap';
 import {
   VerificationSessionPicker,
@@ -71,7 +72,8 @@ export default function Verify() {
     [age, setAge] = useState(0);
   const [species, setSpecies] = useState(null),
     [speciesSearch, setSpeciesSearch] = useState(''),
-    [tags, setTags] = useState(''),
+    [tags, setTags] = useState([]),
+    [pendingTag, setPendingTag] = useState(''),
     [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false),
     [error, setError] = useState(''),
@@ -97,6 +99,18 @@ export default function Verify() {
   useEffect(() => setSelected({}), [query.data]);
   const rows = query.data?.rows || [],
     chosen = Object.values(selected);
+  const tagRows = chosen.length ? chosen : rows;
+  const tagOrgs = [
+    ...new Set(tagRows.map((row) => row.organization_id).filter(Boolean)),
+  ];
+  const tagOrganizationId =
+    domain.organizationId || (tagOrgs.length === 1 ? tagOrgs[0] : null);
+  const tagProjects = [...new Set(tagRows.map((row) => row.project_id))];
+  const tagProjectId = tagProjects.length === 1 ? tagProjects[0] : null;
+  useEffect(() => {
+    setTags([]);
+    setPendingTag('');
+  }, [tagOrganizationId]);
   const allowed = domain.permissions?.includes('verify_captures');
   const toggle = (row, checked, shiftKey = false) =>
     setSelected((current) => {
@@ -130,10 +144,7 @@ export default function Verify() {
       morphology,
       age,
       species_id: species?.id,
-      tags: tags
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean),
+      tags: [...tags, pendingTag].map((x) => x.trim()).filter(Boolean),
       rejection_reason: decision === 'rejected' ? reason : undefined,
     };
     const key = JSON.stringify(payload);
@@ -159,12 +170,15 @@ export default function Verify() {
       setAge(0);
       setSpecies(null);
       setSpeciesSearch('');
-      setTags('');
+      setTags([]);
+      setPendingTag('');
       setReason('');
-      await query.refetch();
-      await cache.invalidateQueries({
+      void query.refetch();
+      void cache.invalidateQueries({
         queryKey: ['admin-domain'],
-        predicate: (item) => item.queryKey.includes('/sessions'),
+        predicate: (item) =>
+          item.queryKey.includes('/sessions') ||
+          item.queryKey.includes('/capture-tags'),
       });
     } catch (failure) {
       setError(errorMessage(failure));
@@ -623,14 +637,12 @@ export default function Verify() {
                       )}
                     />
                     <Box mt={2}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        variant="outlined"
-                        label="Additional tags"
-                        helperText="Separate tags with commas"
+                      <CaptureTagPicker
+                        organizationId={tagOrganizationId}
+                        projectId={tagProjectId}
                         value={tags}
-                        onChange={(e) => setTags(e.target.value)}
+                        onChange={setTags}
+                        onPendingChange={setPendingTag}
                         disabled={saving}
                       />
                     </Box>

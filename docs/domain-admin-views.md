@@ -67,3 +67,9 @@ Tracking sessions → Project opens Session project allocation; unassigned rows 
 Automatic app-selected allocation still requires the Field Data upload contract and mobile client to send/validate `project_id`; the current upstream upload schema does not accept it. A grower having several projects must not cause an arbitrary automatic choice.
 
 NDM verification does not offer legacy leaf/tree classification categories or remembered form choices. New submissions send only explicitly entered optional text tags; no classification tag is added automatically. The form resets after successful review.
+
+### Organization capture tags and verification performance
+
+Additional tags is a searchable multi-select with free text creation. Suggestions use only the current organization (or the single organization represented by the selection/page). With mixed organizations and no explicit scope, the picker is disabled rather than listing everyone's tags. Changing organization clears selected/pending tags. Already-used names are suggested, including legacy unowned public names only where the scoped API proves NDM usage by this organization. Optional Suggest tags used in this project narrows suggestions; it does not change tag ownership. Another organization's public flag does not make its tags visible.
+
+Tags are created/reused when approval succeeds; selecting/type-ahead does not write data. Uncommitted text is included at submission. No hidden classification tags are added. After the API confirms the transaction, form reset/success feedback is immediate and queue/session/tag refreshes run in the background. The API's batched writes reduced the dev 25-capture/two-tag test from 74.49 seconds to 4.12 seconds. Tree matching publication remains a separate dependency.

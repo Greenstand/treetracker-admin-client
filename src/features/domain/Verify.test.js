@@ -65,6 +65,9 @@ it('retires legacy classification and remembered choices without adding hidden t
   expect(
     screen.queryByLabelText('Remember form choices')
   ).not.toBeInTheDocument();
+  fireEvent.change(screen.getByRole('textbox', { name: 'Additional tags' }), {
+    target: { value: 'Field audit' },
+  });
   fireEvent.click(screen.getByLabelText('Select capture capture'));
   fireEvent.click(screen.getByLabelText('Direct seeding'));
   fireEvent.click(screen.getByText('Submit approval'));
@@ -74,7 +77,7 @@ it('retires legacy classification and remembered choices without adding hidden t
       expect.objectContaining({
         data: expect.objectContaining({
           morphology: 'direct_seeding',
-          tags: [],
+          tags: ['Field audit'],
         }),
       })
     )
