@@ -4,6 +4,7 @@ import { domainRequest } from './api';
 const DomainContext = createContext({});
 export function DomainProvider({ user, children }) {
   const [selection, setSelection] = useState(null);
+  const [viewMode, setViewMode] = useState('admin');
   const platform = user?.policy?.policies?.some(
     (role) => role.name === 'greenstand-admin'
   );
@@ -32,6 +33,8 @@ export function DomainProvider({ user, children }) {
       value={{
         userId: user?.id,
         platform,
+        viewMode,
+        setViewMode,
         canManageBilling: administrator,
         organizationId,
         ready,

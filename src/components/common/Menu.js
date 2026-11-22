@@ -6,6 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Box from '@material-ui/core/Box';
 import IconLogo from '../IconLogo';
+import { useDomain } from '../../features/domain/DomainContext';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
@@ -75,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 export default function GSMenu(props) {
   const classes = useStyles();
   const appContext = useContext(AppContext);
+  const { viewMode } = useDomain();
 
   const menu = (
     <>
@@ -86,7 +88,15 @@ export default function GSMenu(props) {
         () =>
           appContext.routes &&
           appContext.routes
-            .filter(({ disabled, menuHidden }) => !disabled && !menuHidden)
+            .filter(
+              ({ disabled, menuHidden, name }) =>
+                !disabled &&
+                !menuHidden &&
+                !(
+                  viewMode === 'organization' &&
+                  ['SaaS', 'Org binding'].includes(name)
+                )
+            )
             .map((item, i) =>
               item?.children ? (
                 <div

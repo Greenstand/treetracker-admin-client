@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ import { useDomain, useDomainData } from './DomainContext';
 import { domainRequest, errorMessage } from './api';
 import { DomainPage, DataTable, QueryState, Status } from './shared';
 import SpeciesSources from './SpeciesSources';
+import LocalNamePicker from './LocalNamePicker';
 function SpeciesEditor({ species, onClose, onSaved }) {
   const [draft, setDraft] = useState({
     scientific_name: '',
@@ -244,6 +245,9 @@ export function OrganizationSpecies() {
   const [search, setSearch] = useState(''),
     [page, setPage] = useState(0),
     [size, setSize] = useState(25);
+  const bulkController = useRef(null);
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [newNames, setNewNames] = useState([]);
   const [selected, setSelected] = useState({}),
     [dirty, setDirty] = useState(false),
     [error, setError] = useState(''),
@@ -268,6 +272,9 @@ export function OrganizationSpecies() {
     setProjectId(new URLSearchParams(location.search).get('projectId') || '');
   }, [location.search]);
   useEffect(() => {
+    bulkController.current?.abort();
+    setBulkLoading(false);
+    setNewNames([]);
     setDirty(false);
     setNotice('');
     setError('');
@@ -286,6 +293,47 @@ export function OrganizationSpecies() {
       setDirty(false);
     }
   }, [selection.data]);
+  useEffect(() => () => bulkController.current?.abort(), []);
+  const editable =
+    memberPermissions?.includes('manage_species') &&
+    !saving &&
+    !bulkLoading &&
+    !selection.isError &&
+    Boolean(selection.data);
+  const selectAll = async () => {
+    const controller = new AbortController();
+    bulkController.current = controller;
+    setBulkLoading(true);
+    setError('');
+    try {
+      const ids = [];
+      let next = true,
+        pageNumber = 0;
+      while (next) {
+        const result = await domainRequest('/species', {
+          params: { search, page: pageNumber++, size: 100 },
+          signal: controller.signal,
+        });
+        ids.push(...result.rows.map((row) => row.id));
+        if (ids.length > 1000)
+          throw new Error(
+            'Choose at most 1,000 species. Narrow the search first.'
+          );
+        next = result.hasNext;
+      }
+      if (controller.signal.aborted) return;
+      setSelected((current) => ({
+        ...current,
+        ...Object.fromEntries(ids.map((id) => [id, current[id] || ''])),
+      }));
+      setDirty(true);
+      setNotice('');
+    } catch (failure) {
+      if (!controller.signal.aborted) setError(errorMessage(failure));
+    } finally {
+      if (!controller.signal.aborted) setBulkLoading(false);
+    }
+  };
   const change = (id, value) => {
     setSelected((current) => ({ ...current, [id]: value }));
     setDirty(true);
@@ -311,6 +359,8 @@ export function OrganizationSpecies() {
         data: {
           organizationId,
           projectId: projectId || undefined,
+          inherit,
+          localNames: newNames,
           species: inherit
             ? []
             : Object.entries(selected).map(([species_id, local_name]) => ({
@@ -319,6 +369,7 @@ export function OrganizationSpecies() {
               })),
         },
       });
+      setNewNames([]);
       await selection.refetch();
       setNotice(
         inherit ? 'Inherited list restored.' : 'Species selection saved.'
@@ -337,6 +388,7 @@ export function OrganizationSpecies() {
         <Checkbox
           color="primary"
           inputProps={{ 'aria-label': 'Select ' + row.scientific_name }}
+          disabled={!editable}
           checked={Object.prototype.hasOwnProperty.call(selected, row.id)}
           onChange={(event) => toggle(row.id, event.target.checked)}
         />
@@ -353,14 +405,29 @@ export function OrganizationSpecies() {
       field: 'local_name',
       label: 'Local name',
       render: (row) => (
-        <TextField
-          variant="outlined"
-          size="small"
-          disabled={!Object.prototype.hasOwnProperty.call(selected, row.id)}
-          label={'Local name for ' + row.scientific_name}
+        <LocalNamePicker
+          species={row}
           value={selected[row.id] || ''}
-          inputProps={{ maxLength: 255 }}
-          onChange={(event) => change(row.id, event.target.value)}
+          disabled={
+            !editable || !Object.prototype.hasOwnProperty.call(selected, row.id)
+          }
+          names={[
+            ...(row.common_name || '').split(', ').filter(Boolean),
+            ...(selection.data?.localNames || [])
+              .filter((name) => name.species_id === row.id)
+              .map((name) => name.name),
+            ...newNames
+              .filter((name) => name.species_id === row.id)
+              .map((name) => name.name),
+          ]}
+          onChange={(value) => change(row.id, value)}
+          onAdd={(name) => {
+            setNewNames((current) => [
+              ...current,
+              { species_id: row.id, name },
+            ]);
+            change(row.id, name);
+          }}
         />
       ),
     },
@@ -385,6 +452,8 @@ export function OrganizationSpecies() {
               variant="outlined"
               size="small"
               label="Selection scope"
+              SelectProps={{ displayEmpty: true }}
+              InputLabelProps={{ shrink: true }}
               value={projectId}
               style={{ minWidth: 260 }}
               onChange={(event) => setProjectId(event.target.value)}
@@ -404,6 +473,7 @@ export function OrganizationSpecies() {
               color="primary"
               variant="contained"
               disabled={
+                bulkLoading ||
                 saving ||
                 !dirty ||
                 selection.isError ||
@@ -415,6 +485,7 @@ export function OrganizationSpecies() {
             </Button>
             <Button
               disabled={
+                bulkLoading ||
                 saving ||
                 selection.isError ||
                 !memberPermissions?.includes('manage_species')
@@ -423,6 +494,37 @@ export function OrganizationSpecies() {
             >
               {projectId ? 'Use organization/default list' : 'Use default list'}
             </Button>
+          </Box>
+          <Box
+            mb={3}
+            display="flex"
+            alignItems="center"
+            flexWrap="wrap"
+            style={{ gap: 12 }}
+          >
+            <Button
+              variant="outlined"
+              color="primary"
+              disabled={!editable}
+              onClick={selectAll}
+            >
+              {bulkLoading ? 'Selecting…' : 'Select all'}
+            </Button>
+            <Button
+              variant="outlined"
+              disabled={!editable || !Object.keys(selected).length}
+              onClick={() => {
+                setSelected({});
+                setDirty(true);
+                setNotice('');
+              }}
+            >
+              Unselect all
+            </Button>
+            <Typography variant="caption" color="textSecondary">
+              Select all includes every search match across pages. Unselect all
+              clears this scope. Save to apply changes.
+            </Typography>
           </Box>
           <QueryState query={selection} />
           {error && (

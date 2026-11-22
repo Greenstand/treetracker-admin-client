@@ -37,3 +37,9 @@ Deploy the matching API and migrations before release. Routes outside these view
 The subscription table reads amounts, currency and intervals from Stripe through the API. Choose buttons open Stripe Checkout for a first subscription or the customer portal for an existing one. The organization must be selected for platform-admin billing actions. Ordinary members can review plans; billing actions require an organization administrator or platform administrator.
 
 The API requires STRIPE_RETURN_URL and the documented Stripe permissions and portal configuration. A tier role manually assigned in Keycloak does not create a Stripe subscription.
+
+## Species selection and context toolbar
+
+Select all includes all matching catalog pages; Unselect all clears the complete current scope. Both remain drafts until Save selection. A saved empty selection is distinct from Use default list / inheritance. Local-name dropdowns combine catalog common names with the organization name library; + Add local name creates a draft option below the picker. Save persists the selected alias plus new options through existing NDM common_name / organization_species relationships.
+
+The shared layout includes Org user / Admin, settings, account and sign-out controls. Platform admins choose an organization before entering organization preview; platform navigation is hidden there. This is a UI workspace preview, not impersonation or a reduced-privilege security session. The real user and server authorization remain unchanged. Organization users cannot gain platform access through the control.

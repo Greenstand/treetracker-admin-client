@@ -85,7 +85,9 @@ export function DomainPage({
                   domain.setOrganizationId(event.target.value || null)
                 }
               >
-                <MenuItem value="">All organizations</MenuItem>
+                {domain.viewMode !== 'organization' && (
+                  <MenuItem value="">All organizations</MenuItem>
+                )}
                 {(organizations.data?.rows || []).map((org) => (
                   <MenuItem key={org.id} value={org.id}>
                     {org.name}
