@@ -52,3 +52,12 @@ Feature: Organization and project species selections
     Given a user lacks manage_species or supplies a foreign project or stale scope version
     When the selection API is called directly
     Then the change is rejected without a partial selection or name-library update
+
+  @UC-SP-099 @implemented
+  Scenario: Verification offers only effective allocated species
+    Given an organization or project has a saved species allocation
+    When a verifier opens the species dropdown
+    Then it offers only the effective project, organization or default allocation
+    And an explicitly empty custom allocation offers no species
+    And a mixed-project batch offers only species allowed in every scope
+    And the server rejects an out-of-allocation species submitted directly

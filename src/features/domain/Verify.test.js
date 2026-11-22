@@ -29,16 +29,21 @@ jest.mock('./DomainContext', () => {
       ],
     },
     catalog = { rows: [] };
+  const queries = jest.fn();
   return {
+    _queries: queries,
     useDomain: () => ({
       permissions: ['verify_captures'],
       organizationId: 'org',
     }),
-    useDomainData: (path) => ({
-      isSuccess: true,
-      refetch: jest.fn().mockResolvedValue(),
-      data: path === '/verification' ? queue : catalog,
-    }),
+    useDomainData: (path, ...args) => {
+      queries(path, ...args);
+      return {
+        isSuccess: true,
+        refetch: jest.fn().mockResolvedValue(),
+        data: path === '/verification' ? queue : catalog,
+      };
+    },
   };
 });
 jest.mock('./shared', () => ({
@@ -83,4 +88,23 @@ it('retires legacy classification and remembered choices without adding hidden t
     )
   );
   await waitFor(() => expect(screen.getByLabelText('Seedling')).toBeChecked());
+});
+
+it('loads effective organization species rather than the global catalogue', () => {
+  const { _queries: useDomainData } = require('./DomainContext');
+  useDomainData.mockClear();
+  render(
+    <MemoryRouter>
+      <Verify />
+    </MemoryRouter>
+  );
+  expect(useDomainData).toHaveBeenCalledWith(
+    '/species-choices',
+    expect.objectContaining({ organizationId: 'org', projectIds: 'none' }),
+    true,
+    true
+  );
+  expect(useDomainData.mock.calls.some(([path]) => path === '/species')).toBe(
+    false
+  );
 });

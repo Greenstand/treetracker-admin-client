@@ -6,8 +6,9 @@ Feature: Organization binding requests
   @UC-BIND-001 @legacy_contract
   Scenario: Review and decide retained organization binding requests
     Given a platform administrator has pending binding requests
-    When Org binding opens
-    Then usernames and requested organizations are listed with pagination
+    When Org binding or the retained organization-management URL opens
+    Then request and NDM Organizations tabs are available
+    And usernames and requested organizations are listed with pagination
     And approving or rejecting a request uses the existing binding service
     And success refreshes the pending list while failure is reported
 

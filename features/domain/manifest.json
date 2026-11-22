@@ -235,7 +235,8 @@
       ],
       "tests": [
         "src/features/domain/LocalNamePicker.test.js",
-        "api:src/domain/service.test.ts"
+        "api:src/domain/service.test.ts",
+        "api:src/domain/speciesChoices.test.ts"
       ]
     },
     {
@@ -391,7 +392,8 @@
         "src/components/OrganizationBindingRequests.js"
       ],
       "tests": [
-        "features/organization/org-binding.feature"
+        "features/organization/org-binding.feature",
+        "src/features/domain/BindingRequests.test.js"
       ]
     },
     {

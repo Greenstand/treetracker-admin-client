@@ -97,3 +97,11 @@ Validation: 20 tests pass across the reused view, domain adapter, link builder a
 The global Herbarium and scoped Species tables display `herbarium_name` (eight uppercase letters) separately from `scientific_name` (full Latin name). The editor offers an explicit first-four-genus plus first-four-species suggestion when possible. Historical codes remain unchanged when taxonomy is edited. Missing botanical names show Not recorded; imported labels remain read-only provenance. Search and verification choices support both names. Deploy the Herbarium name-split migration before this client/API change.
 
 BDD acceptance specifications and traceability: [features/domain](../features/domain/README.md). The new specifications have syntax validation, not browser step automation.
+
+## Allocated verification species and binding compatibility
+
+Verify reads `/species-choices`, not the global catalogue used by catalogue allocation screens. It follows each capture's project override, organization allocation and default fallback; saved empty scopes remain empty. Mixed-project selections use the intersection of permitted species. Scope changes clear the draft species. The server revalidates submitted species against the actual selected capture contexts.
+
+Org binding retains the existing request component and approve/reject service, with Requests and Organizations tabs. The Organizations tab uses the NDM Stakeholder view. Both the retained `/organization-management` URL and Org binding open the workflow. Binding requests use `REACT_APP_DOMAIN_API_ROOT` when configured, falling back to the existing API root, so local login tokens are sent to the matching local API. Runtime local settings must point both API roots at the same matching API when testing retained legacy views too.
+
+Read-only browser validation: authenticated binding screen showed No pending requests, NDM organizations loaded, and ESEA verification choices displayed its single allocated species. No real binding decisions or capture approvals were made during this check.

@@ -111,7 +111,7 @@ function OrganizationEditor({ organization, onClose, onSaved }) {
     </Dialog>
   );
 }
-export default function Organizations() {
+export default function Organizations({ navigation }) {
   const [search, setSearch] = useState(''),
     [page, setPage] = useState(0),
     [size, setSize] = useState(25);
@@ -170,6 +170,7 @@ export default function Organizations() {
         </Button>
       }
     >
+      {navigation}
       {notice && (
         <Box mb={3}>
           <Alert severity="success" onClose={() => setNotice('')}>

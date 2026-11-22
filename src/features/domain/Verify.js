@@ -87,11 +87,6 @@ export default function Verify() {
     page,
     size,
   });
-  const catalog = useDomainData(
-    '/species',
-    { search: speciesSearch, size: 100 },
-    decision === 'approved'
-  );
   useEffect(() => {
     setPage(0);
     setSelected({});
@@ -112,6 +107,25 @@ export default function Verify() {
     setTags([]);
     setPendingTag('');
   }, [tagOrganizationId]);
+  const speciesProjects = [
+    ...new Set(tagRows.map((row) => row.project_id || 'none')),
+  ]
+    .sort()
+    .join(',');
+  const catalog = useDomainData(
+    '/species-choices',
+    {
+      organizationId: tagOrganizationId,
+      projectIds: speciesProjects || undefined,
+      search: speciesSearch,
+    },
+    decision === 'approved' && Boolean(tagOrganizationId),
+    true
+  );
+  useEffect(() => {
+    setSpecies(null);
+    setSpeciesSearch('');
+  }, [tagOrganizationId, speciesProjects]);
   const allowed = domain.permissions?.includes('verify_captures');
   const toggle = (row, checked, shiftKey = false) =>
     setSelected((current) => {
@@ -620,19 +634,27 @@ export default function Verify() {
                     </RadioGroup>
                     <Autocomplete
                       options={catalog.data?.rows || []}
+                      noOptionsText="No allocated species match this selection"
                       value={species}
                       loading={catalog.isFetching}
                       getOptionSelected={(a, b) => a.id === b.id}
                       getOptionLabel={speciesLabel}
                       onInputChange={(event, value) => setSpeciesSearch(value)}
                       onChange={(event, value) => setSpecies(value)}
-                      disabled={saving}
+                      disabled={saving || !tagOrganizationId || catalog.isError}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           variant="outlined"
                           label="Species (if known)"
-                          helperText="Type to search the catalog"
+                          error={catalog.isError}
+                          helperText={
+                            catalog.isError
+                              ? errorMessage(catalog.error)
+                              : !tagOrganizationId
+                              ? 'Choose one organization to select a species.'
+                              : 'Only species allocated to these captures are available.'
+                          }
                           size="small"
                         />
                       )}

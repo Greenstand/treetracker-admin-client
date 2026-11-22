@@ -268,7 +268,7 @@ export function getRoutes(user) {
     {
       name: 'Organizations',
       linkTo: '/organization-management',
-      component: DomainOrganizations,
+      component: BindingRequests,
       menuHidden: true,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.ADMIN]),
