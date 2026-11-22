@@ -165,7 +165,7 @@ export function AdminSpecies() {
   ];
   return (
     <DomainPage
-      title="Admin species management"
+      title="Herbarium"
       selectOrganization={false}
       actions={
         <Button

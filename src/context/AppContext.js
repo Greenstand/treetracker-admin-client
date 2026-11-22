@@ -136,7 +136,7 @@ export function getRoutes(user) {
           disabled: !platformAccess,
         },
         {
-          name: 'Admin species management',
+          name: 'Herbarium',
           linkTo: '/admin-species',
           component: AdminSpecies,
           icon: CategoryIcon,
