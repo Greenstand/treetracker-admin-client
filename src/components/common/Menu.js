@@ -20,12 +20,14 @@ const navigationOrder = {
   '/verify': 30,
   '/tracking-sessions': 40,
   '/captures': 50,
+  '/organization-binding-requests': 51,
+  '/wallets': 52,
   '/contracts': 60,
   '/organization-species': 70,
   '/organization-users': 80,
   '/subscription-plans': 90,
-  '/organization-binding-requests': 110,
-  '/account': 120,
+  '/share-app': 95,
+  '/account': 1000,
 };
 const menuPosition = (item) =>
   navigationOrder[item.linkTo] ?? (item.name === 'SaaS' ? 100 : 105);
@@ -116,7 +118,9 @@ export default function GSMenu(props) {
             .sort((a, b) => menuPosition(a) - menuPosition(b))
             .map((item, i) => (
               <React.Fragment key={item.linkTo || item.name}>
-                {item.linkTo === '/contracts' && (
+                {(item.linkTo === '/contracts' ||
+                  item.name === 'SaaS' ||
+                  item.linkTo === '/account') && (
                   <Divider style={{ margin: '16px 20px' }} />
                 )}
                 {item?.children ? (
@@ -125,7 +129,7 @@ export default function GSMenu(props) {
                     className={classes.menuItemWithChildren}
                   >
                     <Typography className={classes.menuTitle}>
-                      {item.name}
+                      {item.name === 'SaaS' ? 'Greenstand Admin' : item.name}
                     </Typography>
                     {item.children
                       .filter(
