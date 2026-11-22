@@ -155,6 +155,7 @@ const useStyles = makeStyles((theme) => ({
       borderColor: theme.palette.primary.main,
     },
   },
+  embeddedContent: { width: '100%', minWidth: 0 },
   spinnerWrap: {
     display: 'flex',
     justifyContent: 'center',
@@ -163,7 +164,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ShareAppView() {
+export default function ShareAppView({
+  organization: suppliedOrganization,
+  embedded = false,
+} = {}) {
   const classes = useStyles();
   const theme = useTheme();
   const isCompactLayout = useMediaQuery(theme.breakpoints.down('sm'), {
@@ -171,7 +175,10 @@ export default function ShareAppView() {
   });
 
   const { user } = useContext(AppContext);
-  const organizationId = user?.policy?.organization?.id;
+  const supplied = suppliedOrganization !== undefined;
+  const organizationId = supplied
+    ? suppliedOrganization?.id
+    : user?.policy?.organization?.id;
 
   const qrRef = useRef(null);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -181,19 +188,21 @@ export default function ShareAppView() {
     document.title = `Share App - ${documentTitle}`;
   }, []);
 
-  const { data: organization, isLoading } = useQuery({
+  const { data: legacyOrganization, isLoading } = useQuery({
     queryKey: ['organization', organizationId],
     queryFn: () => getOrganizationById(organizationId),
-    enabled: organizationId !== undefined && organizationId !== null,
+    enabled:
+      !supplied && organizationId !== undefined && organizationId !== null,
   });
 
+  const organization = supplied ? suppliedOrganization : legacyOrganization;
   const organizationName = organization?.name || '';
   const shareLink = useMemo(() => {
     return buildShareAppLink({
       name: organizationName,
       id: organizationId,
     });
-  }, [organizationName]);
+  }, [organizationName, organizationId]);
 
   function showSnackbar(message) {
     setSnackbarMessage(message);
@@ -239,16 +248,24 @@ export default function ShareAppView() {
     setSnackbarOpen(false);
   }
 
+  const Layout = embedded ? React.Fragment : AppLayout;
   return (
-    <AppLayout className={classes.page}>
-      <Grid item container direction="column" className={classes.content}>
+    <Layout {...(embedded ? {} : { className: classes.page })}>
+      <Grid
+        item
+        container
+        direction="column"
+        className={embedded ? classes.embeddedContent : classes.content}
+      >
         <Grid item className={classes.pageHeader}>
-          <Typography
-            variant={isCompactLayout ? 'h4' : 'h3'}
-            className={classes.pageTitle}
-          >
-            Share App
-          </Typography>
+          {!embedded && (
+            <Typography
+              variant={isCompactLayout ? 'h4' : 'h3'}
+              className={classes.pageTitle}
+            >
+              Share App
+            </Typography>
+          )}
           <Typography variant="body1" className={classes.pageSubtitle}>
             Invite planters to your organization by sharing a direct link or
             letting them scan your QR code.
@@ -257,7 +274,7 @@ export default function ShareAppView() {
 
         <Grid item>
           <Card elevation={4} className={classes.card}>
-            {isLoading ? (
+            {!supplied && isLoading ? (
               <Box className={classes.spinnerWrap}>
                 <Spinner />
               </Box>
@@ -358,6 +375,6 @@ export default function ShareAppView() {
           </IconButton>
         }
       />
-    </AppLayout>
+    </Layout>
   );
 }

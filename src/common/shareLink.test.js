@@ -47,4 +47,7 @@ describe('buildShareAppLink', () => {
       'https://greenstand.org/app?org_name=Acme&org_id=42'
     );
   });
+  it('handles an omitted organization without inventing a link identity', () => {
+    expect(buildShareAppLink()).toBe(BASE);
+  });
 });

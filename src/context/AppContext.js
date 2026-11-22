@@ -50,7 +50,7 @@ import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
 import BindingRequests from '../features/domain/BindingRequests';
 import WalletsView from 'views/WalletsView';
-import ShareAppView from 'views/ShareAppView';
+import ShareAppView from 'features/domain/ShareApp';
 import IconShare from '@material-ui/icons/Share';
 import log from 'loglevel';
 import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
@@ -292,8 +292,8 @@ export function getRoutes(user) {
       linkTo: '/share-app',
       component: ShareAppView,
       icon: IconShare,
-      // Shown to organization users — the deeplink carries their org id/name.
-      disabled: !user?.policy?.organization?.id,
+      // The domain view resolves membership or a platform-selected organization.
+      disabled: !organizationAccess,
     },
     {
       name: 'User Manager',

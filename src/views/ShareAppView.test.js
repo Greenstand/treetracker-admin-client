@@ -35,7 +35,11 @@ jest.mock('qrcode.react', () => {
   const React = require('react');
   return {
     QRCodeCanvas: React.forwardRef(function QRCodeCanvas(props, ref) {
-      return React.createElement('canvas', { ref, 'data-testid': 'qr-canvas' });
+      return React.createElement('canvas', {
+        ref,
+        'data-testid': 'qr-canvas',
+        'data-value': props.value,
+      });
     }),
   };
 });
@@ -143,5 +147,42 @@ describe('ShareAppView', () => {
       'image/png'
     );
     expect(HTMLAnchorElement.prototype.click).toHaveBeenCalled();
+  });
+  it('reuses the existing QR screen with supplied NDM organization mapping and refreshes its link when the ID changes', async () => {
+    const wrap = (id) => (
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <AppContext.Provider value={{ user: {} }}>
+            <ShareAppView
+              embedded
+              organization={{ id, name: 'Same organization name' }}
+            />
+          </AppContext.Provider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    );
+    const { rerender } = render(wrap(3488));
+    expect(await screen.findByTestId('share-app-link')).toHaveAttribute(
+      'href',
+      buildShareAppLink({ name: 'Same organization name', id: 3488 })
+    );
+    expect(getOrganizationById).not.toHaveBeenCalled();
+    rerender(wrap(3414));
+    const updated = buildShareAppLink({
+      name: 'Same organization name',
+      id: 3414,
+    });
+    expect(await screen.findByTestId('share-app-link')).toHaveAttribute(
+      'href',
+      updated
+    );
+    expect(screen.getByTestId('qr-canvas')).toHaveAttribute(
+      'data-value',
+      updated
+    );
+    userEvent.click(screen.getByRole('button', { name: /copy/i }));
+    await waitFor(() =>
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(updated)
+    );
   });
 });
