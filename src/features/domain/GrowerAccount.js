@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -16,11 +16,24 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useDomainData } from './DomainContext';
+import { useDomain, useDomainData } from './DomainContext';
+import GrowerTransfer from './GrowerTransfer';
 import { QueryState, Status, dateTime, safeUrl } from './shared';
-export default function GrowerAccount({ growerId, onClose }) {
-  const query = useDomainData('/growers/' + growerId);
-  const sessions = useDomainData('/sessions', { growerId, size: 25 });
+export default function GrowerAccount({ growerId, organizationId, onClose }) {
+  const domain = useDomain();
+  const [moving, setMoving] = useState(false);
+  const query = useDomainData(
+    '/growers/' + growerId,
+    { organizationId },
+    true,
+    Boolean(organizationId)
+  );
+  const sessions = useDomainData(
+    '/sessions',
+    { growerId, size: 25, organizationId },
+    true,
+    Boolean(organizationId)
+  );
   const grower = query.data;
   const name =
     grower && [grower.first_name, grower.last_name].filter(Boolean).join(' ');
@@ -169,7 +182,22 @@ export default function GrowerAccount({ growerId, onClose }) {
           </>
         )}
       </DialogContent>
+      {moving && grower && (
+        <GrowerTransfer
+          grower={grower}
+          onClose={() => setMoving(false)}
+          onMoved={() => {
+            setMoving(false);
+            onClose();
+          }}
+        />
+      )}
       <DialogActions>
+        {grower && domain.platform && domain.viewMode !== 'organization' && (
+          <Button color="primary" onClick={() => setMoving(true)}>
+            Move organization / history
+          </Button>
+        )}
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
     </Dialog>

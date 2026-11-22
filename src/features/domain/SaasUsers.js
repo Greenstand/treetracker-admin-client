@@ -10,7 +10,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useDomainData } from './DomainContext';
-import { DomainPage, DataTable, Status, dateTime } from './shared';
+import { DomainPage, DataTable, QueryState, Status, dateTime } from './shared';
+import { Alert } from '@material-ui/lab';
 export default function SaasUsers() {
   const [page, setPage] = useState(0),
     [size, setSize] = useState(25),
@@ -81,10 +82,24 @@ export default function SaasUsers() {
           onChange={(event) => setSearch(event.target.value)}
         />
       </Box>
-      <DataTable
-        query={filtered}
-        {...{ columns, page, setPage, size, setSize }}
-      />
+      {query.isError ? (
+        <QueryState query={query} />
+      ) : (
+        <>
+          {query.isSuccess && !query.data?.rows.length && (
+            <Box mb={3}>
+              <Alert severity="info">
+                No users are currently assigned the org-admin-saas role. This is
+                the organization-admin directory, not the grower list.
+              </Alert>
+            </Box>
+          )}
+          <DataTable
+            query={filtered}
+            {...{ columns, page, setPage, size, setSize }}
+          />
+        </>
+      )}
       {selected && (
         <Dialog open fullWidth maxWidth="sm" onClose={() => setSelected(null)}>
           <DialogTitle>{selected.name || selected.username}</DialogTitle>

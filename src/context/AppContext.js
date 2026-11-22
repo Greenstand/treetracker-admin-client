@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
-import VerifyView from '../views/VerifyView';
+import DomainVerify from '../features/domain/Verify';
 import DomainGrowers from '../features/domain/Growers';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
@@ -153,7 +153,7 @@ export function getRoutes(user) {
     {
       name: 'Verify',
       linkTo: '/verify',
-      component: VerifyView,
+      component: DomainVerify,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.ADMIN,

@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import ProjectGrowers from './ProjectGrowers';
 import { useHistory } from 'react-router-dom';
 import { domainRequest, errorMessage } from './api';
 import { useDomain, useDomainData } from './DomainContext';
@@ -32,6 +33,7 @@ const emptyProject = {
   hero_image_url: '',
 };
 function ProjectEditor({ project, onClose, onSaved }) {
+  const [managingGrowers, setManagingGrowers] = useState(false);
   const { organizationId, platform } = useDomain();
   const organizations = useDomainData(
     '/organizations',
@@ -80,6 +82,16 @@ function ProjectEditor({ project, onClose, onSaved }) {
           {error && (
             <Box mb={3}>
               <Alert severity="error">{error}</Alert>
+            </Box>
+          )}
+          {project?.id && (
+            <Box mb={3}>
+              <Button
+                variant="outlined"
+                onClick={() => setManagingGrowers(true)}
+              >
+                Manage project growers
+              </Button>
             </Box>
           )}
           <Grid container spacing={4}>
@@ -229,6 +241,12 @@ function ProjectEditor({ project, onClose, onSaved }) {
           </Button>
         </DialogActions>
       </form>
+      {managingGrowers && (
+        <ProjectGrowers
+          project={project}
+          onClose={() => setManagingGrowers(false)}
+        />
+      )}
     </Dialog>
   );
 }
@@ -242,6 +260,7 @@ export default function Projects() {
   const [search, setSearch] = useState(''),
     [editor, setEditor] = useState(null),
     [notice, setNotice] = useState('');
+  const [growersProject, setGrowersProject] = useState(null);
   const query = useDomainData('/projects', {
     page,
     size,
@@ -269,6 +288,16 @@ export default function Projects() {
       field: 'status',
       label: 'Status',
       render: (row) => <Status value={row.status} />,
+    },
+    {
+      field: 'growers',
+      label: 'Growers',
+      sortable: false,
+      render: (row) => (
+        <Button onClick={() => setGrowersProject(row)}>
+          {row.growers} · Manage growers
+        </Button>
+      ),
     },
     { field: 'target_trees', label: 'Tree target' },
     { field: 'target_captures', label: 'Capture target' },
@@ -341,6 +370,12 @@ export default function Projects() {
           Project image URLs can be changed in the editor.
         </Typography>
       </Box>
+      {growersProject && (
+        <ProjectGrowers
+          project={growersProject}
+          onClose={() => setGrowersProject(null)}
+        />
+      )}
       {editor && (
         <ProjectEditor
           key={editor.id || 'new'}

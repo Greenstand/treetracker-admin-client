@@ -10,6 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import OrganizationGrowers from './OrganizationGrowers';
 import { useDomainData } from './DomainContext';
 import { domainRequest, errorMessage } from './api';
 import {
@@ -49,7 +50,7 @@ function OrganizationEditor({ organization, onClose, onSaved }) {
     }
   };
   return (
-    <Dialog open fullWidth maxWidth="sm" onClose={saving ? undefined : onClose}>
+    <Dialog open fullWidth maxWidth="md" onClose={saving ? undefined : onClose}>
       <form onSubmit={save}>
         <DialogTitle>
           {organization?.id ? 'Edit organization' : 'Add organization'}
@@ -89,6 +90,9 @@ function OrganizationEditor({ organization, onClose, onSaved }) {
               </Grid>
             ))}
           </Grid>
+          {organization?.id && (
+            <OrganizationGrowers organizationId={organization.id} />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} disabled={saving}>

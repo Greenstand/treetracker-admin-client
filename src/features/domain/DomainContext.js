@@ -61,7 +61,10 @@ export function useDomainData(
     queryFn: ({ signal }) =>
       domainRequest(path, {
         signal,
-        params: { ...params, organizationId: scope || undefined },
+        params: {
+          ...params,
+          organizationId: unscoped ? params.organizationId : scope || undefined,
+        },
       }),
     enabled: ready && enabled,
     retry: false,

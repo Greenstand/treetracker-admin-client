@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -188,7 +189,14 @@ export default function TrackingSessions() {
       label: 'Verification',
       sortable: false,
       render: (row) => (
-        <Button onClick={() => setSelected(row)}>Review captures</Button>
+        <Box>
+          <Button component={Link} to={'/verify?sessionId=' + row.id}>
+            Verify session
+          </Button>
+          <Button size="small" onClick={() => setSelected(row)}>
+            View captures
+          </Button>
+        </Box>
       ),
     },
   ];
