@@ -121,7 +121,7 @@ export default function GSMenu(props) {
                 {(item.linkTo === '/contracts' ||
                   item.name === 'SaaS' ||
                   item.linkTo === '/account') && (
-                  <Divider style={{ margin: '16px 20px' }} />
+                  <Divider style={{ margin: '8px 20px' }} />
                 )}
                 {item?.children ? (
                   <div
