@@ -10,9 +10,25 @@ import { useDomain } from '../../features/domain/DomainContext';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import { Divider, Typography } from '@material-ui/core';
 
 export const MENU_WIDTH = 232;
+const navigationOrder = {
+  '/': 0,
+  '/projects': 10,
+  '/growers': 20,
+  '/verify': 30,
+  '/tracking-sessions': 40,
+  '/captures': 50,
+  '/contracts': 60,
+  '/organization-species': 70,
+  '/organization-users': 80,
+  '/subscription-plans': 90,
+  '/organization-binding-requests': 110,
+  '/account': 120,
+};
+const menuPosition = (item) =>
+  navigationOrder[item.linkTo] ?? (item.name === 'SaaS' ? 100 : 105);
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -97,72 +113,82 @@ export default function GSMenu(props) {
                   ['SaaS', 'Org binding'].includes(name)
                 )
             )
-            .map((item, i) =>
-              item?.children ? (
-                <div
-                  key={`${item.name}-${i}`}
-                  className={classes.menuItemWithChildren}
-                >
-                  <Typography className={classes.menuTitle}>
-                    {item.name}
-                  </Typography>
-                  {item.children
-                    .filter(
-                      ({ disabled, menuHidden }) => !disabled && !menuHidden
-                    )
-                    .map((child, i) => (
-                      <Link
-                        key={`menu_${i}`}
-                        className={classes.linkItemText}
-                        to={child.linkTo}
-                      >
-                        <MenuItem
-                          className={classes.menuItem}
-                          selected={props.active === item.name}
-                        >
-                          <Grid container direction="row" alignItems="flex-end">
-                            <Grid item>
-                              <ListItemIcon className={classes.listItemIcon}>
-                                {child.icon && <child.icon />}
-                              </ListItemIcon>
-                            </Grid>
-                            <Grid item>
-                              <ListItemText className={classes.listItemText}>
-                                {child.name}
-                              </ListItemText>
-                            </Grid>
-                          </Grid>
-                        </MenuItem>
-                      </Link>
-                    ))}
-                </div>
-              ) : (
-                <Link
-                  key={`menu_${i}`}
-                  className={classes.linkItemText}
-                  to={item.linkTo}
-                >
-                  <MenuItem
-                    className={classes.menuItem}
-                    selected={props.active === item.name}
+            .sort((a, b) => menuPosition(a) - menuPosition(b))
+            .map((item, i) => (
+              <React.Fragment key={item.linkTo || item.name}>
+                {item.linkTo === '/contracts' && (
+                  <Divider style={{ margin: '16px 20px' }} />
+                )}
+                {item?.children ? (
+                  <div
+                    key={`${item.name}-${i}`}
+                    className={classes.menuItemWithChildren}
                   >
-                    <Grid container direction="row" alignItems="flex-end">
-                      <Grid item>
-                        <ListItemIcon className={classes.listItemIcon}>
-                          {item.icon && <item.icon />}
-                        </ListItemIcon>
+                    <Typography className={classes.menuTitle}>
+                      {item.name}
+                    </Typography>
+                    {item.children
+                      .filter(
+                        ({ disabled, menuHidden }) => !disabled && !menuHidden
+                      )
+                      .map((child, i) => (
+                        <Link
+                          key={`menu_${i}`}
+                          className={classes.linkItemText}
+                          to={child.linkTo}
+                        >
+                          <MenuItem
+                            className={classes.menuItem}
+                            selected={props.active === item.name}
+                          >
+                            <Grid
+                              container
+                              direction="row"
+                              alignItems="flex-end"
+                            >
+                              <Grid item>
+                                <ListItemIcon className={classes.listItemIcon}>
+                                  {child.icon && <child.icon />}
+                                </ListItemIcon>
+                              </Grid>
+                              <Grid item>
+                                <ListItemText className={classes.listItemText}>
+                                  {child.name}
+                                </ListItemText>
+                              </Grid>
+                            </Grid>
+                          </MenuItem>
+                        </Link>
+                      ))}
+                  </div>
+                ) : (
+                  <Link
+                    key={`menu_${i}`}
+                    className={classes.linkItemText}
+                    to={item.linkTo}
+                  >
+                    <MenuItem
+                      className={classes.menuItem}
+                      selected={props.active === item.name}
+                    >
+                      <Grid container direction="row" alignItems="flex-end">
+                        <Grid item>
+                          <ListItemIcon className={classes.listItemIcon}>
+                            {item.icon && <item.icon />}
+                          </ListItemIcon>
+                        </Grid>
+                        <Grid item>
+                          <ListItemText className={classes.listItemText}>
+                            {item.name}
+                          </ListItemText>
+                        </Grid>
                       </Grid>
-                      <Grid item>
-                        <ListItemText className={classes.listItemText}>
-                          {item.name}
-                        </ListItemText>
-                      </Grid>
-                    </Grid>
-                  </MenuItem>
-                </Link>
-              )
-            ),
-        [appContext.routes, props.active, classes]
+                    </MenuItem>
+                  </Link>
+                )}
+              </React.Fragment>
+            )),
+        [appContext.routes, props.active, classes, viewMode]
       )}
     </>
   );
