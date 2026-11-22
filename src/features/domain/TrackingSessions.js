@@ -7,11 +7,16 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Tooltip,
   Paper,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import MapIcon from '@material-ui/icons/Map';
+import SessionMap from './SessionMap';
+import GrowerAccount from './GrowerAccount';
 import { useDomainData } from './DomainContext';
 import {
   DomainPage,
@@ -103,6 +108,8 @@ export default function TrackingSessions() {
     [size, setSize] = useState(25),
     [sort, setSort] = useState('start_time'),
     [direction, setDirection] = useState('desc');
+  const [growerId, setGrowerId] = useState(null);
+  const [mapSession, setMapSession] = useState(null);
   const [search, setSearch] = useState(''),
     [selected, setSelected] = useState(null);
   const query = useDomainData('/sessions', {
@@ -114,13 +121,32 @@ export default function TrackingSessions() {
   });
   const columns = [
     {
+      field: 'map',
+      label: 'Map',
+      sortable: false,
+      render: (row) => (
+        <Tooltip title="Preview session area">
+          <IconButton
+            aria-label={'Preview map for session ' + row.id}
+            size="small"
+            onClick={() => setMapSession(row)}
+          >
+            <MapIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+    {
       field: 'grower_name',
       label: 'Grower',
-      render: (row) => (
-        <Button onClick={() => setSelected(row)}>
-          {row.grower_name || shortId(row.id)}
-        </Button>
-      ),
+      render: (row) =>
+        row.grower_account_id ? (
+          <Button onClick={() => setGrowerId(row.grower_account_id)}>
+            {row.grower_name || 'View grower account'}
+          </Button>
+        ) : (
+          <Typography color="textSecondary">Grower unavailable</Typography>
+        ),
     },
     { field: 'organization_name', label: 'Organization' },
     { field: 'project_name', label: 'Project', sortable: false },
@@ -201,6 +227,12 @@ export default function TrackingSessions() {
           shown as unavailable.
         </Typography>
       </Box>
+      {growerId && (
+        <GrowerAccount growerId={growerId} onClose={() => setGrowerId(null)} />
+      )}
+      {mapSession && (
+        <SessionMap session={mapSession} onClose={() => setMapSession(null)} />
+      )}
       {selected && (
         <SessionDetail session={selected} onClose={() => setSelected(null)} />
       )}

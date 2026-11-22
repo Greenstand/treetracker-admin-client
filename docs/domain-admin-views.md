@@ -43,3 +43,11 @@ The API requires STRIPE_RETURN_URL and the documented Stripe permissions and por
 Select all includes all matching catalog pages; Unselect all clears the complete current scope. Both remain drafts until Save selection. A saved empty selection is distinct from Use default list / inheritance. Local-name dropdowns combine catalog common names with the organization name library; + Add local name creates a draft option below the picker. Save persists the selected alias plus new options through existing NDM common_name / organization_species relationships.
 
 The shared layout includes Org user / Admin, settings, account and sign-out controls. Platform admins choose an organization before entering organization preview; platform navigation is hidden there. This is a UI workspace preview, not impersonation or a reduced-privilege security session. The real user and server authorization remain unchanged. Organization users cannot gain platform access through the control.
+
+## Session map preview
+
+Tracking Sessions has a map icon that opens an on-demand Leaflet preview. Only the server-generated outer envelope is rendered; individual capture markers/photos are not loaded. The preview is approximate and is not the recorded segment-area measurement shown in the list. Missing coordinates and unavailable background tiles have explicit UI states. Leaflet is lazy-loaded, and each map is disposed when closed.
+
+Basemap defaults to OpenStreetMap with visible attribution and normal browser caching. Configure REACT_APP_MAP_TILE_URL and REACT_APP_MAP_ATTRIBUTION for another tile provider. No tile prefetching or bulk download is performed. See https://operations.osmfoundation.org/policies/tiles/ and https://leafletjs.com/reference-1.9.4.html .
+
+Grower names in Tracking Sessions open a scoped NDM grower account dialog with mugshot, contact/account fields, last-uploaded app version and associated projects. Explicit and former project assignments are distinguished from project session activity. Missing grower links are shown as unavailable. Review captures remains a separate action.
