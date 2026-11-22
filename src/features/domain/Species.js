@@ -19,9 +19,11 @@ import { useDomain, useDomainData } from './DomainContext';
 import { domainRequest, errorMessage } from './api';
 import { DomainPage, DataTable, QueryState, Status } from './shared';
 import SpeciesSources from './SpeciesSources';
+import { speciesLabel, suggestHerbariumName } from './speciesNames';
 import LocalNamePicker from './LocalNamePicker';
-function SpeciesEditor({ species, onClose, onSaved }) {
+export function SpeciesEditor({ species, onClose, onSaved }) {
   const [draft, setDraft] = useState({
+    herbarium_name: '',
     scientific_name: '',
     description: '',
     morphology: '',
@@ -36,6 +38,7 @@ function SpeciesEditor({ species, onClose, onSaved }) {
     value: draft[key] ?? '',
     onChange: (event) => setDraft({ ...draft, [key]: event.target.value }),
   });
+  const suggestedName = suggestHerbariumName(draft.scientific_name);
   const save = async (event) => {
     event.preventDefault();
     setSaving(true);
@@ -65,7 +68,8 @@ function SpeciesEditor({ species, onClose, onSaved }) {
           )}
           <Grid container spacing={4}>
             {[
-              ['scientific_name', 'Scientific name'],
+              ['herbarium_name', 'Herbarium name'],
+              ['scientific_name', 'Latin name'],
               ['morphology', 'Morphology'],
               ['reference_url', 'Reference URL'],
             ].map(([key, label]) => (
@@ -74,12 +78,40 @@ function SpeciesEditor({ species, onClose, onSaved }) {
                   fullWidth
                   variant="outlined"
                   label={label}
-                  required={key === 'scientific_name'}
+                  id={'species-' + key}
+                  helperText={
+                    key === 'herbarium_name'
+                      ? '8 letters. The Latin name is stored separately.'
+                      : key === 'scientific_name'
+                      ? 'Full Latin name, when known.'
+                      : ''
+                  }
+                  inputProps={
+                    key === 'herbarium_name' ? { maxLength: 8 } : undefined
+                  }
                   type={key === 'reference_url' ? 'url' : 'text'}
                   {...field(key)}
                 />
               </Grid>
             ))}
+            {suggestedName && suggestedName !== draft.herbarium_name && (
+              <Grid item xs={12}>
+                <Button
+                  onClick={() =>
+                    setDraft({ ...draft, herbarium_name: suggestedName })
+                  }
+                >
+                  Use suggested name {suggestedName}
+                </Button>
+              </Grid>
+            )}
+            {species?.legacy_catalogue_name && (
+              <Grid item xs={12}>
+                <Typography variant="caption" color="textSecondary">
+                  Imported label: {species.legacy_catalogue_name}
+                </Typography>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -149,7 +181,12 @@ export function AdminSpecies() {
     includeHidden: String(includeHidden),
   });
   const columns = [
-    { field: 'scientific_name', label: 'Scientific name' },
+    { field: 'herbarium_name', label: 'Herbarium name' },
+    {
+      field: 'scientific_name',
+      label: 'Latin name',
+      render: (row) => row.scientific_name || 'Not recorded',
+    },
     { field: 'common_name', label: 'Common names' },
     {
       field: 'sources',
@@ -196,7 +233,7 @@ export function AdminSpecies() {
           fullWidth
           variant="outlined"
           size="small"
-          label="Search scientific or common name"
+          label="Search herbarium, Latin or common name"
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
@@ -387,14 +424,19 @@ export function OrganizationSpecies() {
       render: (row) => (
         <Checkbox
           color="primary"
-          inputProps={{ 'aria-label': 'Select ' + row.scientific_name }}
+          inputProps={{ 'aria-label': 'Select ' + speciesLabel(row) }}
           disabled={!editable}
           checked={Object.prototype.hasOwnProperty.call(selected, row.id)}
           onChange={(event) => toggle(row.id, event.target.checked)}
         />
       ),
     },
-    { field: 'scientific_name', label: 'Scientific name' },
+    { field: 'herbarium_name', label: 'Herbarium name' },
+    {
+      field: 'scientific_name',
+      label: 'Latin name',
+      render: (row) => row.scientific_name || 'Not recorded',
+    },
     { field: 'common_name', label: 'Common names' },
     {
       field: 'sources',

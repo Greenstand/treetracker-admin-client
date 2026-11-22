@@ -27,6 +27,7 @@ import LocationIcon from '@material-ui/icons/LocationOn';
 import MapIcon from '@material-ui/icons/Map';
 import { useQueryClient } from '@tanstack/react-query';
 import GrowerAccount from './GrowerAccount';
+import { speciesLabel } from './speciesNames';
 import CaptureTagPicker from './CaptureTagPicker';
 import SessionMap from './SessionMap';
 import {
@@ -622,7 +623,7 @@ export default function Verify() {
                       value={species}
                       loading={catalog.isFetching}
                       getOptionSelected={(a, b) => a.id === b.id}
-                      getOptionLabel={(option) => option.scientific_name || ''}
+                      getOptionLabel={speciesLabel}
                       onInputChange={(event, value) => setSpeciesSearch(value)}
                       onChange={(event, value) => setSpecies(value)}
                       disabled={saving}

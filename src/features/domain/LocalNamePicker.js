@@ -1,3 +1,4 @@
+import { speciesLabel } from './speciesNames';
 import React, { useState } from 'react';
 import { Box, Button, MenuItem, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -33,7 +34,7 @@ export default function LocalNamePicker({
         SelectProps={{ displayEmpty: true }}
         InputLabelProps={{ shrink: true }}
         inputProps={{
-          'aria-label': 'Local name for ' + species.scientific_name,
+          'aria-label': 'Local name for ' + speciesLabel(species),
         }}
         onChange={(event) => onChange(event.target.value)}
       >

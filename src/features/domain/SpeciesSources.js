@@ -1,3 +1,4 @@
+import { speciesLabel } from './speciesNames';
 import React from 'react';
 import { Box, IconButton, Tooltip } from '@material-ui/core';
 import PublicIcon from '@material-ui/icons/Public';
@@ -41,7 +42,7 @@ export default function SpeciesSources({ species }) {
             rel="noopener noreferrer"
             size="small"
             aria-label={
-              'Open ' + source.label + ' for ' + species.scientific_name
+              'Open ' + source.label + ' for ' + speciesLabel(species)
             }
             onClick={(event) => event.stopPropagation()}
           >

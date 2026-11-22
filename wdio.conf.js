@@ -144,7 +144,8 @@ exports.config = {
     snippets: true,
     source: true,
     strict: false,
-    tags: process.env.WDIO_TAGS || '',
+    // Domain acceptance specifications are reviewed Gherkin, not bound browser steps.
+    tags: process.env.WDIO_TAGS || 'not @acceptance_spec',
     timeout: 120000,
     ignoreUndefinedDefinitions: false,
   },

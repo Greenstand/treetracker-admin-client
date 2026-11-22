@@ -24,7 +24,7 @@ Keep database and service secrets outside the tracked upstream .env. The compari
 
 Projects support search, column sorting, create/edit, description, geography, targets and image URLs. Blank project logos inherit the organization logo. Species navigation carries project scope.
 
-Sessions show compact UTC dates, grower and organization names, counts, review states, duration and recorded polygon area. Review captures opens details and location links. Verification submission still needs its domain-service workflow.
+Sessions show compact UTC dates, grower and organization names, counts, review states, duration and recorded polygon area. Review captures opens details and location links. Verification writes use the NDM review workflow; matching queue publication remains a deployment dependency.
 
 Contracts show actual agreements, workers, capture payment rates and linked documents. Contract signing, payouts and creation continue through their owning workflows.
 
@@ -52,7 +52,7 @@ Basemap defaults to OpenStreetMap with visible attribution and normal browser ca
 
 Grower names in Tracking Sessions open a scoped NDM grower account dialog with mugshot, contact/account fields, last-uploaded app version and associated projects. Explicit and former project assignments are distinguished from project session activity. Missing grower links are shown as unavailable. Review captures remains a separate action.
 
-The /growers route now opens the domain Growers module instead of mounting the legacy GrowerProvider and /planter requests. It includes server-side search, organization scope, mugshots, date-only registration, capture review counts and the shared account dialog with projects and linked session history. The new account view is read-only; legacy editing endpoints are not invoked.
+The /growers route now opens the domain Growers module instead of mounting the legacy GrowerProvider and /planter requests. It includes server-side search, organization scope, mugshots, date-only registration, capture review counts and the shared account dialog with projects and linked session history. The account view uses audited domain actions for transfers and project assignments; legacy editing endpoints are not invoked.
 
 ### Verify and project grower membership
 
@@ -91,3 +91,9 @@ The current mobile link contract is `app.html?org_name=...&org_id=<numeric ID>`.
 `REACT_APP_SHARE_APP_BASE` can point to a publicly reachable existing app redirect page. Local dev is configured privately to use `https://dev-beta-admin.treetracker.org/app.html` (HTTP 200 verified); this avoids phone invites pointing to localhost. Deployment defaults to its own origin's existing `/app.html`. Local-only URLs show a warning. No database, Keycloak or mobile application changes were made. Physical device installation/join behavior remains the upstream app contract.
 
 Validation: 20 tests pass across the reused view, domain adapter, link builder and redirect page; changed-source lint and production build pass. Tests cover copy, PNG export, no legacy lookup with supplied Stakeholder data, ID changes with unchanged names, missing selection/mapping, URL encoding, app deep link and Play install referrer. The browser preview reaches the existing Keycloak sign-in page; authenticated visual verification requires sign-in.
+
+## Independent Herbarium names
+
+The global Herbarium and scoped Species tables display `herbarium_name` (eight uppercase letters) separately from `scientific_name` (full Latin name). The editor offers an explicit first-four-genus plus first-four-species suggestion when possible. Historical codes remain unchanged when taxonomy is edited. Missing botanical names show Not recorded; imported labels remain read-only provenance. Search and verification choices support both names. Deploy the Herbarium name-split migration before this client/API change.
+
+BDD acceptance specifications and traceability: [features/domain](../features/domain/README.md). The new specifications have syntax validation, not browser step automation.

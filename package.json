@@ -77,7 +77,8 @@
     "lint:fix": "eslint src --fix",
     "prettier:fix": "prettier src/ --write || true",
     "wdio": "wdio run wdio.conf.js",
-    "wdio:report": "allure generate ./reports/allure-results --clean -o ./reports/allure-html && allure open ./reports/allure-html"
+    "wdio:report": "allure generate ./reports/allure-results --clean -o ./reports/allure-html && allure open ./reports/allure-html",
+    "bdd:check": "node scripts/check-domain-bdd.cjs"
   },
   "browserslist": [
     ">0.2%",
@@ -116,7 +117,9 @@
     "pretty-quick": "^3.1.0",
     "react-inspector": "^3.0.2",
     "wdio-chromedriver-service": "8.1.1",
-    "webdriverio": "8.41.0"
+    "webdriverio": "8.41.0",
+    "@cucumber/gherkin": "29.0.0",
+    "@cucumber/messages": "26.0.0"
   },
   "engines": {
     "node": ">= 18.0.0"
