@@ -20,6 +20,7 @@ import { useDomainData } from './DomainContext';
 import { QueryState, Status, dateTime, safeUrl } from './shared';
 export default function GrowerAccount({ growerId, onClose }) {
   const query = useDomainData('/growers/' + growerId);
+  const sessions = useDomainData('/sessions', { growerId, size: 25 });
   const grower = query.data;
   const name =
     grower && [grower.first_name, grower.last_name].filter(Boolean).join(' ');
@@ -118,6 +119,51 @@ export default function GrowerAccount({ growerId, onClose }) {
                 <Alert severity="info">
                   Showing the first 100 project associations.
                 </Alert>
+              )}
+            </Box>
+            <Box mt={4}>
+              <Typography variant="h6">Tracking sessions</Typography>
+              <QueryState query={sessions} />
+              {sessions.data?.rows.length === 0 && (
+                <Typography color="textSecondary">
+                  No linked sessions recorded in this scope.
+                </Typography>
+              )}
+              {Boolean(sessions.data?.rows.length) && (
+                <Table size="small" aria-label="Grower sessions">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Start (UTC)</TableCell>
+                      <TableCell>Project</TableCell>
+                      <TableCell>Captures</TableCell>
+                      <TableCell>Review</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {sessions.data.rows.map((session) => (
+                      <TableRow key={session.id}>
+                        <TableCell>
+                          {dateTime(
+                            session.start_time || session.first_capture
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {session.project_name || 'No project'}
+                        </TableCell>
+                        <TableCell>{session.capture_count}</TableCell>
+                        <TableCell>
+                          <Status value={session.review_status} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+              {sessions.data?.hasNext && (
+                <Typography variant="caption">
+                  Showing the first 25 sessions. Use Tracking Sessions to browse
+                  more.
+                </Typography>
               )}
             </Box>
           </>

@@ -51,3 +51,5 @@ Tracking Sessions has a map icon that opens an on-demand Leaflet preview. Only t
 Basemap defaults to OpenStreetMap with visible attribution and normal browser caching. Configure REACT_APP_MAP_TILE_URL and REACT_APP_MAP_ATTRIBUTION for another tile provider. No tile prefetching or bulk download is performed. See https://operations.osmfoundation.org/policies/tiles/ and https://leafletjs.com/reference-1.9.4.html .
 
 Grower names in Tracking Sessions open a scoped NDM grower account dialog with mugshot, contact/account fields, last-uploaded app version and associated projects. Explicit and former project assignments are distinguished from project session activity. Missing grower links are shown as unavailable. Review captures remains a separate action.
+
+The /growers route now opens the domain Growers module instead of mounting the legacy GrowerProvider and /planter requests. It includes server-side search, organization scope, mugshots, date-only registration, capture review counts and the shared account dialog with projects and linked session history. The new account view is read-only; legacy editing endpoints are not invoked.

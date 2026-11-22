@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
 import VerifyView from '../views/VerifyView';
-import GrowersView from '../views/GrowersView';
+import DomainGrowers from '../features/domain/Growers';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
@@ -224,7 +224,7 @@ export function getRoutes(user) {
     {
       name: 'Growers',
       linkTo: '/growers',
-      component: GrowersView,
+      component: DomainGrowers,
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [POLICIES.ADMIN, POLICIES.ORGANIZATION]),
     },
