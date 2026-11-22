@@ -274,7 +274,7 @@ export function getRoutes(user) {
       disabled: !hasPermission(user, [POLICIES.ADMIN]),
     },
     {
-      name: 'Organization binding requests',
+      name: 'Org binding',
       linkTo: '/organization-binding-requests',
       component: BindingRequests,
       icon: IconGroup,

@@ -4,7 +4,7 @@ import { DomainPage } from './shared';
 export default function BindingRequests() {
   return (
     <DomainPage
-      title="Organization binding requests"
+      title="Org binding"
       selectOrganization={false}
     >
       <OrganizationBindingRequests />

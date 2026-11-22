@@ -18,6 +18,7 @@ import { useLocation } from 'react-router-dom';
 import { useDomain, useDomainData } from './DomainContext';
 import { domainRequest, errorMessage } from './api';
 import { DomainPage, DataTable, QueryState, Status } from './shared';
+import SpeciesSources from './SpeciesSources';
 function SpeciesEditor({ species, onClose, onSaved }) {
   const [draft, setDraft] = useState({
     scientific_name: '',
@@ -149,6 +150,11 @@ export function AdminSpecies() {
   const columns = [
     { field: 'scientific_name', label: 'Scientific name' },
     { field: 'common_name', label: 'Common names' },
+    {
+      field: 'sources',
+      label: 'Sources',
+      render: (row) => <SpeciesSources species={row} />,
+    },
     { field: 'morphology', label: 'Morphology' },
     {
       field: 'is_default',
@@ -338,6 +344,11 @@ export function OrganizationSpecies() {
     },
     { field: 'scientific_name', label: 'Scientific name' },
     { field: 'common_name', label: 'Common names' },
+    {
+      field: 'sources',
+      label: 'Sources',
+      render: (row) => <SpeciesSources species={row} />,
+    },
     {
       field: 'local_name',
       label: 'Local name',
