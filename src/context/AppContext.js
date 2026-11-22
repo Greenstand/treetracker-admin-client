@@ -97,7 +97,7 @@ export function getRoutes(user) {
       disabled: !organizationAccess,
     },
     {
-      name: 'Organization species',
+      name: 'Species',
       linkTo: '/organization-species',
       component: OrganizationSpecies,
       icon: CategoryIcon,

@@ -433,7 +433,7 @@ export function OrganizationSpecies() {
     },
   ];
   return (
-    <DomainPage title="Organization species management">
+    <DomainPage title="Species">
       {!organizationId ? (
         <Alert severity="info">
           Choose an organization to manage its species selection.
