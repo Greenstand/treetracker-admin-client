@@ -49,7 +49,6 @@ export default function Verify() {
   const [largeImages, setLargeImages] = useState(false),
     [grower, setGrower] = useState(null),
     [mapSession, setMapSession] = useState(null);
-  const [classification, setClassification] = useState('simple_leaf');
   const anchor = useRef(null);
   const domain = useDomain(),
     location = useLocation();
@@ -73,8 +72,7 @@ export default function Verify() {
   const [species, setSpecies] = useState(null),
     [speciesSearch, setSpeciesSearch] = useState(''),
     [tags, setTags] = useState(''),
-    [reason, setReason] = useState(''),
-    [remember, setRemember] = useState(false);
+    [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false),
     [error, setError] = useState(''),
     [notice, setNotice] = useState('');
@@ -132,10 +130,7 @@ export default function Verify() {
       morphology,
       age,
       species_id: species?.id,
-      tags: (decision === 'approved' && classification
-        ? classification + ',' + tags
-        : tags
-      )
+      tags: tags
         .split(',')
         .map((x) => x.trim())
         .filter(Boolean),
@@ -160,15 +155,12 @@ export default function Verify() {
             ? ' Saved in the new model; tree matching is pending.'
             : '')
       );
-      if (!remember) {
-        setClassification('simple_leaf');
-        setMorphology('seedling');
-        setAge(0);
-        setSpecies(null);
-        setSpeciesSearch('');
-        setTags('');
-        setReason('');
-      }
+      setMorphology('seedling');
+      setAge(0);
+      setSpecies(null);
+      setSpeciesSearch('');
+      setTags('');
+      setReason('');
       await query.refetch();
       await cache.invalidateQueries({
         queryKey: ['admin-domain'],
@@ -642,31 +634,6 @@ export default function Verify() {
                         disabled={saving}
                       />
                     </Box>
-                    <Typography>Classification</Typography>
-                    <RadioGroup
-                      value={classification}
-                      onChange={(e) => setClassification(e.target.value)}
-                    >
-                      {[
-                        ['', 'None'],
-                        ['simple_leaf', 'Simple leaf'],
-                        ['complex_leaf', 'Complex leaf'],
-                        ['acacia_like', 'Acacia-like'],
-                        ['conifer', 'Conifer'],
-                        ['fruit', 'Fruit'],
-                        ['mangrove', 'Mangrove'],
-                        ['palm', 'Palm'],
-                        ['timber', 'Timber'],
-                      ].map(([value, label]) => (
-                        <FormControlLabel
-                          key={value}
-                          value={value}
-                          control={<Radio size="small" />}
-                          label={label}
-                          disabled={saving}
-                        />
-                      ))}
-                    </RadioGroup>
                     {chosen.some((row) => !row.can_approve) && (
                       <Alert severity="info">
                         Some selected captures lack the metadata required for
@@ -710,15 +677,6 @@ export default function Verify() {
                     />
                   </Box>
                 )}
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={remember}
-                      onChange={(e) => setRemember(e.target.checked)}
-                    />
-                  }
-                  label="Remember form choices"
-                />
                 <Button
                   fullWidth
                   variant="contained"

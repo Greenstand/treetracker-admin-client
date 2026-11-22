@@ -15,6 +15,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useDomainData } from './DomainContext';
 import { QueryState, dateTime, Status } from './shared';
 import SessionMap from './SessionMap';
+import SessionProject from './SessionProject';
 
 export function VerificationSessionPicker({ sessionId, disabled }) {
   const history = useHistory(),
@@ -121,7 +122,8 @@ export function VerificationSessionSummary({ sessionId }) {
     { sessionId, size: 25 },
     Boolean(sessionId)
   );
-  const [map, setMap] = useState(false);
+  const [map, setMap] = useState(false),
+    [project, setProject] = useState(false);
   if (!sessionId) return null;
   const row = query.data?.rows?.[0];
   const total = Number(row?.capture_count || 0),
@@ -198,6 +200,12 @@ export function VerificationSessionSummary({ sessionId }) {
                   Number(row.area_acres).toFixed(2) +
                   ' acres'}
             </Typography>
+            <Button size="small" onClick={() => setProject(true)}>
+              Manage session project
+            </Button>
+            {project && (
+              <SessionProject session={row} onClose={() => setProject(false)} />
+            )}
             <Button size="small" onClick={() => setMap(true)}>
               Preview session map
             </Button>

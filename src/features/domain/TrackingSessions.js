@@ -17,6 +17,7 @@ import {
 import { Alert } from '@material-ui/lab';
 import MapIcon from '@material-ui/icons/Map';
 import SessionMap from './SessionMap';
+import SessionProject from './SessionProject';
 import GrowerAccount from './GrowerAccount';
 import { useDomainData } from './DomainContext';
 import {
@@ -111,6 +112,7 @@ export default function TrackingSessions() {
     [direction, setDirection] = useState('desc');
   const [growerId, setGrowerId] = useState(null);
   const [mapSession, setMapSession] = useState(null);
+  const [projectSession, setProjectSession] = useState(null);
   const [search, setSearch] = useState(''),
     [selected, setSelected] = useState(null);
   const query = useDomainData('/sessions', {
@@ -150,7 +152,16 @@ export default function TrackingSessions() {
         ),
     },
     { field: 'organization_name', label: 'Organization' },
-    { field: 'project_name', label: 'Project', sortable: false },
+    {
+      field: 'project_name',
+      label: 'Project',
+      sortable: false,
+      render: (row) => (
+        <Button onClick={() => setProjectSession(row)}>
+          {row.project_name || 'Assign project'}
+        </Button>
+      ),
+    },
     {
       field: 'start_time',
       label: 'Start (UTC)',
@@ -237,6 +248,12 @@ export default function TrackingSessions() {
       </Box>
       {growerId && (
         <GrowerAccount growerId={growerId} onClose={() => setGrowerId(null)} />
+      )}
+      {projectSession && (
+        <SessionProject
+          session={projectSession}
+          onClose={() => setProjectSession(null)}
+        />
       )}
       {mapSession && (
         <SessionMap session={mapSession} onClose={() => setMapSession(null)} />
