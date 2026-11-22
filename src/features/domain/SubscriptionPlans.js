@@ -14,10 +14,16 @@ import {
 import { Alert } from '@material-ui/lab';
 import { useDomain, useDomainData } from './DomainContext';
 import { DomainPage, QueryState } from './shared';
+import SubscriptionUsage from './SubscriptionUsage';
 import { domainRequest, errorMessage } from './api';
 export default function SubscriptionPlans() {
   const domain = useDomain();
   const query = useDomainData('/subscription-plans');
+  const usage = useDomainData(
+    '/subscription-usage',
+    {},
+    Boolean(domain.organizationId)
+  );
   const billing = useDomainData(
     '/billing',
     {},
@@ -62,9 +68,31 @@ export default function SubscriptionPlans() {
               {billing.data.status}
             </Typography>
           )}
-          <Button onClick={() => billing.refetch()}>
-            Refresh subscription
+          <Button
+            disabled={billing.isFetching || usage.isFetching}
+            onClick={() => {
+              billing.refetch();
+              usage.refetch();
+            }}
+          >
+            Refresh subscription and usage
           </Button>
+        </Box>
+      )}
+      {domain.organizationId ? (
+        <SubscriptionUsage
+          query={usage}
+          plans={query.data?.plans || []}
+          planName={billing.data?.plan}
+          canManageBilling={domain.canManageBilling}
+          opening={opening}
+          onUpgrade={choose}
+        />
+      ) : (
+        <Box mb={3}>
+          <Alert severity="info">
+            Select an organization to see its quota usage.
+          </Alert>
         </Box>
       )}
       {error && (
