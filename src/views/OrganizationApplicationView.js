@@ -16,6 +16,7 @@ import { createOrganization } from 'api/organizations';
 import { getApiErrorMessage } from 'api/apiUtils';
 import { ensureFreshToken, getUserFromToken } from 'auth/keycloak';
 import AppLayout from 'components/common/AppLayout';
+import CountrySelect from 'components/common/CountrySelect';
 import { documentTitle } from 'common/variables';
 import { AppContext } from 'context/AppContext';
 import {
@@ -220,6 +221,15 @@ export default function OrganizationApplicationView() {
                   value={form.mapName}
                   onChange={handleChange}
                   onBlur={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <CountrySelect
+                  id="organization-location"
+                  name="location"
+                  label="Country"
+                  value={form.location}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>

@@ -9,6 +9,7 @@ export const INITIAL_ORGANIZATION_FORM = {
   website: '',
   logoUrl: '',
   mapName: '',
+  location: '',
 };
 
 // Mirrors the admin API's phone validation: 10-20 chars of phone punctuation
@@ -44,6 +45,7 @@ export const organizationSchema = z.object({
   website: optionalHttpUrl('Enter a valid website URL'),
   logoUrl: optionalHttpUrl('Enter a valid logo URL'),
   mapName: trimmedString,
+  location: trimmedString,
 });
 
 export function mapOrganizationValidationErrors(error) {
