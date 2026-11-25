@@ -23,6 +23,10 @@ class BindingPage {
     return $('[data-testid="binding-organization"]');
   }
 
+  get locationInput() {
+    return $('#binding-location');
+  }
+
   get submitButton() {
     return $('[data-testid="binding-submit"]');
   }
@@ -56,6 +60,14 @@ class BindingPage {
     const option = await $(`li=${name}`);
     await option.waitForDisplayed({ timeout: 30000 });
     await option.click();
+  }
+
+  // The country field is an Autocomplete, so Enter commits the typed option.
+  async proposeCountry(country) {
+    const input = await this.locationInput;
+    await input.waitForDisplayed({ timeout: 30000 });
+    await input.setValue(country);
+    await browser.keys('Enter');
   }
 
   async submit() {
@@ -110,8 +122,18 @@ class BindingPage {
       timeoutMsg: 'Expected the binding requests table',
     });
 
-    const row = await $(`//td[normalize-space(.)="${username}"]`);
+    const row = await $(`[data-testid="binding-user-${username}"]`);
     await row.waitForDisplayed({ timeout: 30000 });
+  }
+
+  async waitForProposedChange(username, text) {
+    const cell = await $(`[data-testid="binding-changes-${username}"]`);
+    await cell.waitForDisplayed({ timeout: 30000 });
+
+    await browser.waitUntil(async () => (await cell.getText()).includes(text), {
+      timeout: 10000,
+      timeoutMsg: `Expected the request to show "${text}"`,
+    });
   }
 
   async decide(username, approved) {

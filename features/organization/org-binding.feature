@@ -6,13 +6,16 @@ Feature: Org Binding
     And I login
     Then I should see the request to bind link on the home page
     When I click the request to bind link
-    And I choose the organization "test-org-01" and submit
+    And I choose the organization "test-org-01"
+    And I propose the country "Sierra Leone"
+    And I submit the binding request
     Then I should see that the request is pending
     Given I log out
     And I am the user with role "greenstand-admin"
     And I login
     When I open the organization management page
     Then I should see the binding request from the user
+    And I should see the proposed country "Sierra Leone"
     When I approve the binding request
     Given I log out
     And I am the user with role "registered-user"
@@ -23,7 +26,8 @@ Feature: Org Binding
     Given I am the user with role "registered-user"
     And I login
     When I click the request to bind link
-    And I choose the organization "test-org-01" and submit
+    And I choose the organization "test-org-01"
+    And I submit the binding request
     Then I should see that the request is pending
     Given I log out
     And I am the user with role "greenstand-admin"

@@ -16,8 +16,15 @@ When('I click the request to bind link', async () => {
   await BindingPage.clickBindLink();
 });
 
-When('I choose the organization {string} and submit', async (name) => {
+When('I choose the organization {string}', async (name) => {
   await BindingPage.chooseOrganization(name);
+});
+
+When('I propose the country {string}', async (country) => {
+  await BindingPage.proposeCountry(country);
+});
+
+When('I submit the binding request', async () => {
   await BindingPage.submit();
 });
 
@@ -48,6 +55,13 @@ When('I open the organization management page', async () => {
 
 Then('I should see the binding request from the user', async () => {
   await BindingPage.waitForRequestFrom(bindingUser());
+});
+
+Then('I should see the proposed country {string}', async (country) => {
+  await BindingPage.waitForProposedChange(
+    bindingUser(),
+    `Location: ${country}`
+  );
 });
 
 When('I approve the binding request', async () => {
