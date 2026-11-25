@@ -1,3 +1,13 @@
+# [1.108.0-keycloak.25](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.24...v1.108.0-keycloak.25) (2026-11-25)
+
+
+### Features
+
+* **binding:** propose organization field changes when requesting a binding ([1408755](https://github.com/Greenstand/treetracker-admin-client/commit/140875530d82fe854aa32479002308ee0975f73a))
+* **binding:** show proposed changes beside current values ([cee71e4](https://github.com/Greenstand/treetracker-admin-client/commit/cee71e479f94ba11eb88121fa438a49b6072c2e2))
+* **organizations:** add a country picker ([fd15a38](https://github.com/Greenstand/treetracker-admin-client/commit/fd15a387bd1153a4ad7ef5b398d923c3b4cd7948))
+* **organizations:** collect the country on the apply and edit forms ([7eef098](https://github.com/Greenstand/treetracker-admin-client/commit/7eef098875fa6c598fdde462c90c0a051fb9d344))
+
 # [1.108.0-keycloak.24](https://github.com/Greenstand/treetracker-admin-client/compare/v1.108.0-keycloak.23...v1.108.0-keycloak.24) (2026-11-14)
 
 
