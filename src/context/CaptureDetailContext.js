@@ -82,7 +82,7 @@ export function CaptureDetailProvider(props) {
     }
 
     return api.getSpeciesById(speciesId).then((species) => {
-      setState({ ...state, species });
+      setState((current) => ({ ...current, species }));
       return species;
     });
   };
@@ -97,7 +97,7 @@ export function CaptureDetailProvider(props) {
         return api.getTagById(tag.tagId);
       })
     ).then((tags) => {
-      setState({ ...state, tags });
+      setState((current) => ({ ...current, tags }));
       return tags;
     });
   };
