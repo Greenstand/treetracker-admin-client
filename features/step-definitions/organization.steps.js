@@ -21,6 +21,7 @@ function buildOrganizationDetails() {
     website: `https://example.com/organization-bdd-${timestamp}`,
     logoUrl: 'https://example.com/logo.png',
     mapName: `freetown-${timestamp}`,
+    location: 'Sierra Leone',
   };
 }
 

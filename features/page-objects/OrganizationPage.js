@@ -23,6 +23,10 @@ class OrganizationPage {
     return $('#organization-map-name');
   }
 
+  get locationInput() {
+    return $('#organization-location');
+  }
+
   get submitButton() {
     return $('button[type="submit"]');
   }
@@ -49,6 +53,12 @@ class OrganizationPage {
     await this.websiteInput.setValue(details.website);
     await this.logoUrlInput.setValue(details.logoUrl);
     await this.mapNameInput.setValue(details.mapName);
+    await this.selectLocation(details.location);
+  }
+
+  async selectLocation(country) {
+    await this.locationInput.setValue(country);
+    await browser.keys('Enter');
   }
 
   async submit() {

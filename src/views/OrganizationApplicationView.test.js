@@ -90,6 +90,7 @@ describe('OrganizationApplicationView', () => {
         website: '',
         logoUrl: '',
         mapName: '',
+        location: '',
       });
     });
 
@@ -103,6 +104,30 @@ describe('OrganizationApplicationView', () => {
       },
       { timeout: 2000 }
     );
+  });
+
+  it('submits the country picked in the location field', async () => {
+    createOrganization.mockResolvedValueOnce({ id: 178, name: 'FCC' });
+
+    renderView();
+
+    await userEvent.type(screen.getByLabelText(/organization name/i), 'FCC');
+    await userEvent.type(
+      screen.getByLabelText(/email/i, { selector: 'input' }),
+      'fcc@example.com'
+    );
+    await userEvent.type(screen.getByLabelText(/country/i), 'Sierra Leo');
+    await userEvent.click(await screen.findByText('Sierra Leone'));
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /create organization/i })
+    );
+
+    await waitFor(() => {
+      expect(createOrganization).toHaveBeenCalledWith(
+        expect.objectContaining({ location: 'Sierra Leone' })
+      );
+    });
   });
 
   it('refreshes keycloak auth state after successful organization creation', async () => {

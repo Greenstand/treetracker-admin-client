@@ -12,6 +12,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
 
+import CountrySelect from 'components/common/CountrySelect';
 import { updateOrganization } from 'api/organizations';
 import { getApiErrorMessage } from 'api/apiUtils';
 import {
@@ -31,6 +32,7 @@ const FORM_FIELDS = [
   { name: 'email', label: 'Email', type: 'email', required: true },
   { name: 'phone', label: 'Phone Number' },
   { name: 'mapName', label: 'Map Name' },
+  { name: 'location', label: 'Country', type: 'country' },
   {
     name: 'website',
     label: 'Website',
@@ -55,6 +57,7 @@ function orgToForm(org) {
     website: org.website ?? '',
     logoUrl: org.logoUrl ?? org.logo_url ?? '',
     mapName: org.mapName ?? org.map_name ?? '',
+    location: org.location ?? '',
   };
 }
 
@@ -67,7 +70,7 @@ export default function OrganizationFormDialog({
   const classes = useStyles();
   const editingId = getOrgId(organization);
 
-  // The values the org was loaded with — used to send only changed fields on
+  // The values the org was loaded with, used to send only changed fields on
   // save. Captured once on mount (the dialog remounts per open).
   const initialForm = useRef(orgToForm(organization)).current;
   const [form, setForm] = useState(initialForm);
@@ -114,7 +117,7 @@ export default function OrganizationFormDialog({
       )
     );
 
-    // Nothing changed — skip the request and just close.
+    // Nothing changed, so skip the request and just close.
     if (Object.keys(changedFields).length === 0) {
       onClose();
       return;
@@ -144,25 +147,37 @@ export default function OrganizationFormDialog({
               {formErrorMessage}
             </Alert>
           )}
-          {FORM_FIELDS.map((field) => (
-            <TextField
-              key={field.name}
-              id={`organization-${field.name}`}
-              name={field.name}
-              label={field.label}
-              type={field.type || 'text'}
-              required={field.required}
-              variant="outlined"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              value={form[field.name] || ''}
-              onChange={handleFieldChange}
-              onBlur={handleFieldChange}
-              error={Boolean(errors[field.name])}
-              helperText={errors[field.name] || field.helperText}
-              className={classes.input}
-            />
-          ))}
+          {FORM_FIELDS.map((field) =>
+            field.type === 'country' ? (
+              <CountrySelect
+                key={field.name}
+                id={`organization-${field.name}`}
+                name={field.name}
+                label={field.label}
+                value={form[field.name]}
+                onChange={handleFieldChange}
+                className={classes.input}
+              />
+            ) : (
+              <TextField
+                key={field.name}
+                id={`organization-${field.name}`}
+                name={field.name}
+                label={field.label}
+                type={field.type || 'text'}
+                required={field.required}
+                variant="outlined"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={form[field.name] || ''}
+                onChange={handleFieldChange}
+                onBlur={handleFieldChange}
+                error={Boolean(errors[field.name])}
+                helperText={errors[field.name] || field.helperText}
+                className={classes.input}
+              />
+            )
+          )}
           {children && <div className={classes.input}>{children}</div>}
         </DialogContent>
         <DialogActions>
