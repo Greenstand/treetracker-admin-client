@@ -14,7 +14,7 @@ jest.mock('../api/organizationBinding', () => ({
 
 describe('OrganizationBindingRequests', () => {
   function renderRequests() {
-    const orgList = [{ id: 7, name: 'test-org-01' }];
+    const orgList = [{ id: 7, name: 'test-org-01', location: 'Sierra Leone' }];
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
@@ -47,6 +47,55 @@ describe('OrganizationBindingRequests', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Network error');
     expect(screen.queryByText('No pending requests.')).not.toBeInTheDocument();
+  });
+
+  it('shows each proposed change beside the current value', async () => {
+    getPendingBindings.mockResolvedValue({
+      total: 1,
+      requests: [
+        {
+          userId: 'u-1',
+          username: 'joiner',
+          email: 'joiner@example.org',
+          firstName: 'Jo',
+          lastName: 'Iner',
+          organizationId: 7,
+          status: 'pending',
+          proposed: { location: 'Kenya', phone: '+1 555 0100' },
+        },
+      ],
+    });
+
+    renderRequests();
+
+    expect(
+      await screen.findByText('Location: Kenya (was Sierra Leone)')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Phone: +1 555 0100 (was not set)')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Jo Iner - joiner@example.org')
+    ).toBeInTheDocument();
+  });
+
+  it('says so when a request proposes no changes', async () => {
+    getPendingBindings.mockResolvedValue({
+      total: 1,
+      requests: [
+        {
+          userId: 'u-1',
+          username: 'joiner',
+          organizationId: 7,
+          status: 'pending',
+          proposed: {},
+        },
+      ],
+    });
+
+    renderRequests();
+
+    expect(await screen.findByText('No changes')).toBeInTheDocument();
   });
 
   it('names the organization of each request', async () => {

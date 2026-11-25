@@ -48,6 +48,28 @@ export const organizationSchema = z.object({
   location: trimmedString,
 });
 
+export const INITIAL_BINDING_FIELDS = {
+  phone: '',
+  email: '',
+  location: '',
+};
+
+const bindingFieldsSchema = organizationSchema
+  .pick({
+    phone: true,
+    email: true,
+    location: true,
+  })
+  // Partial, so stored values that predate these rules cannot block a request
+  // that leaves them alone.
+  .partial();
+
+export function getBindingFieldValidationErrors(values) {
+  const result = bindingFieldsSchema.safeParse(values);
+
+  return result.success ? {} : mapOrganizationValidationErrors(result.error);
+}
+
 export function mapOrganizationValidationErrors(error) {
   const properties = z.treeifyError(error).properties || {};
 
