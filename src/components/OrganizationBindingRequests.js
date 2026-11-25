@@ -27,6 +27,12 @@ import { getApiErrorMessage } from '../api/apiUtils';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 25, 50];
 
+const PROPOSED_FIELD_LABELS = {
+  phone: 'Phone',
+  email: 'Email',
+  location: 'Location',
+};
+
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     width: '100%',
@@ -34,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   actions: {
     display: 'flex',
     gap: theme.spacing(2),
+  },
+  account: {
+    color: theme.palette.text.secondary,
   },
   emptyState: {
     padding: theme.spacing(6),
@@ -97,8 +106,19 @@ function OrganizationBindingRequests() {
     );
   }
 
-  const organizationName = (id) =>
-    orgList.find((organization) => organization.id === id)?.name ?? id;
+  const findOrganization = (id) =>
+    orgList.find((organization) => organization.id === id);
+
+  const proposedChanges = (request) => {
+    const organization = findOrganization(request.organizationId);
+
+    return Object.entries(request.proposed ?? {}).map(([field, value]) => ({
+      field,
+      text: `${PROPOSED_FIELD_LABELS[field] ?? field}: ${value} (was ${
+        organization?.[field] || 'not set'
+      })`,
+    }));
+  };
 
   return (
     <Box className={classes.wrapper} data-testid="binding-requests">
@@ -113,51 +133,84 @@ function OrganizationBindingRequests() {
             <TableRow>
               <TableCell>User</TableCell>
               <TableCell>Organization</TableCell>
+              <TableCell>Proposed changes</TableCell>
               <TableCell>Decision</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {requests.map((request) => (
-              <TableRow key={request.userId} role="listitem">
-                <TableCell>{request.username}</TableCell>
-                <TableCell>
-                  {organizationName(request.organizationId)}
-                </TableCell>
-                <TableCell>
-                  <Box className={classes.actions}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      disabled={decide.isPending}
-                      data-testid={`binding-approve-${request.username}`}
-                      onClick={() =>
-                        decide.mutate({
-                          userId: request.userId,
-                          approved: true,
-                        })
-                      }
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      disabled={decide.isPending}
-                      data-testid={`binding-reject-${request.username}`}
-                      onClick={() =>
-                        decide.mutate({
-                          userId: request.userId,
-                          approved: false,
-                        })
-                      }
-                    >
-                      Reject
-                    </Button>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+            {requests.map((request) => {
+              const changes = proposedChanges(request);
+
+              return (
+                <TableRow key={request.userId} role="listitem">
+                  <TableCell data-testid={`binding-user-${request.username}`}>
+                    <Typography variant="body2">{request.username}</Typography>
+                    <Typography variant="caption" className={classes.account}>
+                      {[
+                        `${request.firstName ?? ''} ${
+                          request.lastName ?? ''
+                        }`.trim(),
+                        request.email,
+                      ]
+                        .filter(Boolean)
+                        .join(' - ')}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {findOrganization(request.organizationId)?.name ??
+                      request.organizationId}
+                  </TableCell>
+                  <TableCell
+                    data-testid={`binding-changes-${request.username}`}
+                  >
+                    {changes.length === 0 ? (
+                      <Typography variant="body2" className={classes.account}>
+                        No changes
+                      </Typography>
+                    ) : (
+                      changes.map((change) => (
+                        <Typography key={change.field} variant="body2">
+                          {change.text}
+                        </Typography>
+                      ))
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Box className={classes.actions}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        disabled={decide.isPending}
+                        data-testid={`binding-approve-${request.username}`}
+                        onClick={() =>
+                          decide.mutate({
+                            userId: request.userId,
+                            approved: true,
+                          })
+                        }
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        disabled={decide.isPending}
+                        data-testid={`binding-reject-${request.username}`}
+                        onClick={() =>
+                          decide.mutate({
+                            userId: request.userId,
+                            approved: false,
+                          })
+                        }
+                      >
+                        Reject
+                      </Button>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
