@@ -16,8 +16,13 @@ import { AppContext } from 'context/AppContext';
 import { getMyBinding, requestBinding } from 'api/organizationBinding';
 import { getApiErrorMessage } from 'api/apiUtils';
 import AppLayout from 'components/common/AppLayout';
+import CountrySelect from 'components/common/CountrySelect';
 import Spinner from 'components/common/Spinner';
 import { documentTitle } from 'common/variables';
+import {
+  INITIAL_BINDING_FIELDS,
+  getBindingFieldValidationErrors,
+} from 'models/organizationSchema';
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -76,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 420,
     marginBottom: theme.spacing(4),
   },
+  fields: {
+    maxWidth: 860,
+    marginBottom: theme.spacing(4),
+  },
   submitButton: {
     alignSelf: 'flex-start',
     borderRadius: theme.spacing(2),
@@ -106,6 +115,8 @@ function OrganizationBindingView() {
 
   const queryClient = useQueryClient();
   const [organizationId, setOrganizationId] = useState('');
+  const [fields, setFields] = useState(INITIAL_BINDING_FIELDS);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -123,12 +134,54 @@ function OrganizationBindingView() {
   const requestedOrganization = organizationList.find(
     (organization) => organization.id === binding?.organizationId
   );
+  const selectedOrganization = organizationList.find(
+    (organization) => organization.id === organizationId
+  );
+
+  function handleOrganizationChange(event) {
+    const selectedId = event.target.value;
+    const organization = organizationList.find(
+      (candidate) => candidate.id === selectedId
+    );
+
+    setOrganizationId(selectedId);
+    setFieldErrors({});
+    setFields({
+      phone: organization?.phone ?? '',
+      email: organization?.email ?? '',
+      location: organization?.location ?? '',
+    });
+  }
+
+  function handleFieldChange(event) {
+    const { name, value } = event.target;
+    setFields((current) => ({ ...current, [name]: value }));
+  }
+
+  // An emptied field counts as untouched: it never clears the organization.
+  function changedFields() {
+    return Object.entries(fields).reduce((changed, [name, value]) => {
+      const trimmed = value.trim();
+      const current = (selectedOrganization?.[name] ?? '').trim();
+
+      return trimmed && trimmed !== current
+        ? { ...changed, [name]: trimmed }
+        : changed;
+    }, {});
+  }
 
   async function handleSubmit() {
+    const proposed = changedFields();
+    const errors = getBindingFieldValidationErrors(proposed);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     setError('');
     setIsSubmitting(true);
     try {
-      const result = await requestBinding(organizationId);
+      const result = await requestBinding(organizationId, proposed);
       queryClient.setQueryData(['organizationBinding'], result);
     } catch (e) {
       setError(getApiErrorMessage(e));
@@ -191,8 +244,9 @@ function OrganizationBindingView() {
                       </Typography>
                     ) : null}
                     <Typography variant="body2" className={classes.helperText}>
-                      Choose your organization and submit. A Greenstand admin
-                      approves the request.
+                      Choose your organization and submit. You can also propose
+                      updates to its contact details, which take effect when a
+                      Greenstand admin approves the request.
                     </Typography>
                     <TextField
                       select
@@ -200,7 +254,7 @@ function OrganizationBindingView() {
                       variant="outlined"
                       label="Organization"
                       value={organizationId}
-                      onChange={(e) => setOrganizationId(e.target.value)}
+                      onChange={handleOrganizationChange}
                       className={classes.select}
                       SelectProps={{ 'data-testid': 'binding-organization' }}
                     >
@@ -210,6 +264,50 @@ function OrganizationBindingView() {
                         </MenuItem>
                       ))}
                     </TextField>
+                    {organizationId ? (
+                      <Grid
+                        container
+                        spacing={4}
+                        className={classes.fields}
+                        data-testid="binding-fields"
+                      >
+                        <Grid item xs={12} md={6}>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            id="binding-phone"
+                            name="phone"
+                            label="Phone"
+                            value={fields.phone}
+                            onChange={handleFieldChange}
+                            error={Boolean(fieldErrors.phone)}
+                            helperText={fieldErrors.phone}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            id="binding-email"
+                            name="email"
+                            label="Email"
+                            value={fields.email}
+                            onChange={handleFieldChange}
+                            error={Boolean(fieldErrors.email)}
+                            helperText={fieldErrors.email}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <CountrySelect
+                            id="binding-location"
+                            name="location"
+                            label="Country"
+                            value={fields.location}
+                            onChange={handleFieldChange}
+                          />
+                        </Grid>
+                      </Grid>
+                    ) : null}
                     <Button
                       variant="contained"
                       color="primary"
