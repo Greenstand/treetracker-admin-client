@@ -219,6 +219,8 @@ export function getUserFromToken() {
     firstName: tokenParsed.given_name || '',
     lastName: tokenParsed.family_name || '',
     email: tokenParsed.email || '',
+    emailVerified: tokenParsed.email_verified ?? instance?.idTokenParsed?.email_verified,
+    signedInAt: tokenParsed.auth_time ?? instance?.idTokenParsed?.auth_time,
     roleNames,
     policy: {
       // legacy auth uses policy.policies

@@ -119,6 +119,10 @@ function Account(props) {
   });
   // Keycloak reports it as createdTimestamp; legacy auth put it on the user.
   const createdAt = keycloakUser?.createdTimestamp ?? user?.createdAt;
+  const username = isKeycloakEnabled ? keycloakUser?.username || user.userName : user.userName;
+  const emailVerified = keycloakUser?.emailVerified ?? user?.emailVerified;
+  const signedInAt = Number(user?.signedInAt);
+  const hasSignInTime = Number.isFinite(signedInAt) && signedInAt > 0;
 
   function handleLogout() {
     history.push('/');
@@ -276,7 +280,7 @@ function Account(props) {
               <Grid className={classes.element} item>
                 <Typography className={classes.title}>Username</Typography>
                 <Typography className={classes.item}>
-                  {user.userName}
+                  {username}
                 </Typography>
               </Grid>
               <Grid className={classes.element} item>
@@ -293,6 +297,22 @@ function Account(props) {
                 <Typography className={classes.title}>Roles</Typography>
                 {roles}
               </Grid>
+              {isKeycloakEnabled && typeof emailVerified === 'boolean' ? (
+                <Grid className={classes.element} item>
+                  <Typography className={classes.title}>Email verification</Typography>
+                  <Typography className={classes.item}>
+                    {emailVerified ? 'Verified' : 'Unverified'}
+                  </Typography>
+                </Grid>
+              ) : null}
+              {isKeycloakEnabled && hasSignInTime ? (
+                <Grid className={classes.element} item>
+                  <Typography className={classes.title}>Session signed in</Typography>
+                  <Typography className={classes.item}>
+                    {getDateTimeStringLocale(signedInAt * 1000)}
+                  </Typography>
+                </Grid>
+              ) : null}
               {createdAt ? (
                 <Grid className={classes.element} item>
                   <Typography className={classes.title}>Created</Typography>
