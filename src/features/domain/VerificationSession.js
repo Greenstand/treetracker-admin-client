@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Alert, Autocomplete } from '@material-ui/lab';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDomainData } from './DomainContext';
 import { QueryState, dateTime, Status } from './shared';
@@ -151,6 +151,12 @@ export function VerificationSessionSummary({ sessionId }) {
         )}
         {row && (
           <>
+            {!row.organization_id && (
+              <Alert severity="warning">
+                This session is unassigned. Allocate it to an organization from
+                the grower profile before approving its captures.
+              </Alert>
+            )}
             <Box mt={2}>
               <Typography>{row.grower_name || 'Grower unavailable'}</Typography>
               <Typography variant="body2">

@@ -45,3 +45,11 @@ Feature: Grower directory and account details
     When Organization A reviews its historical grower/session association
     Then historical ownership is retained
     And the transfer is not presented as rewriting past captures
+
+  @UC-GR-007 @implemented
+  Scenario: Open session verification from the grower profile
+    Given a grower profile lists a session containing captures
+    And the viewer can verify captures
+    When the viewer selects Verify session next to its review status
+    Then the profile closes and Verify opens with that exact session UUID selected
+    And an unassigned session explains that organization allocation is required before approval

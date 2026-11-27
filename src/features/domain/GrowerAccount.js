@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -21,6 +22,8 @@ import GrowerTransfer from './GrowerTransfer';
 import { QueryState, Status, dateTime, safeUrl } from './shared';
 export default function GrowerAccount({ growerId, organizationId, onClose }) {
   const domain = useDomain();
+  const canVerify =
+    domain.platform || domain.permissions?.includes('verify_captures');
   const wholeProfile = domain.platform && domain.viewMode !== 'organization';
   const profileOrganization = wholeProfile ? undefined : organizationId;
   const [moving, setMoving] = useState(false);
@@ -155,6 +158,7 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
                       <TableCell>Project</TableCell>
                       <TableCell>Captures</TableCell>
                       <TableCell>Review</TableCell>
+                      <TableCell>Verification</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -174,6 +178,24 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
                         <TableCell>{session.capture_count}</TableCell>
                         <TableCell>
                           <Status value={session.review_status} />
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            component={Link}
+                            size="small"
+                            color="primary"
+                            to={
+                              '/verify?sessionId=' +
+                              encodeURIComponent(session.id)
+                            }
+                            aria-label={'Verify session ' + session.id}
+                            disabled={
+                              !canVerify || Number(session.capture_count) === 0
+                            }
+                            onClick={onClose}
+                          >
+                            Verify session
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
