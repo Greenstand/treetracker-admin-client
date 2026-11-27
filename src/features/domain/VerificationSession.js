@@ -16,6 +16,7 @@ import { useDomainData } from './DomainContext';
 import { QueryState, dateTime, Status } from './shared';
 import SessionMap from './SessionMap';
 import SessionProject from './SessionProject';
+import GrowerAccount from './GrowerAccount';
 
 export function VerificationSessionPicker({ sessionId, disabled }) {
   const history = useHistory(),
@@ -123,7 +124,9 @@ export function VerificationSessionSummary({ sessionId }) {
     Boolean(sessionId)
   );
   const [map, setMap] = useState(false),
-    [project, setProject] = useState(false);
+    [project, setProject] = useState(false),
+    [profile, setProfile] = useState(false);
+  useEffect(() => setProfile(false), [sessionId]);
   if (!sessionId) return null;
   const row = query.data?.rows?.[0];
   const total = Number(row?.capture_count || 0),
@@ -158,7 +161,32 @@ export function VerificationSessionSummary({ sessionId }) {
               </Alert>
             )}
             <Box mt={2}>
-              <Typography>{row.grower_name || 'Grower unavailable'}</Typography>
+              <Box
+                display="flex"
+                alignItems="center"
+                flexWrap="wrap"
+                style={{ gap: 8 }}
+              >
+                <Typography>
+                  {row.grower_name || 'Grower unavailable'}
+                </Typography>
+                {row.grower_account_id && (
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => setProfile(true)}
+                  >
+                    Grower profile
+                  </Button>
+                )}
+              </Box>
+              {profile && row.grower_account_id && (
+                <GrowerAccount
+                  growerId={row.grower_account_id}
+                  organizationId={row.organization_id || undefined}
+                  onClose={() => setProfile(false)}
+                />
+              )}
               <Typography variant="body2">
                 {row.organization_name} · {row.project_name || 'No project'}
               </Typography>

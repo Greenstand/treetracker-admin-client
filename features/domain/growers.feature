@@ -53,3 +53,11 @@ Feature: Grower directory and account details
     When the viewer selects Verify session next to its review status
     Then the profile closes and Verify opens with that exact session UUID selected
     And an unassigned session explains that organization allocation is required before approval
+
+  @UC-GR-008 @implemented
+  Scenario: Open the grower profile from session verification
+    Given a verification session has a linked grower account
+    When the viewer selects Grower profile next to the grower name
+    Then the linked account opens without losing the selected verification session
+    And closing the profile returns to that session
+    And a session without a linked grower does not offer a broken profile link
