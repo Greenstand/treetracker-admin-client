@@ -21,6 +21,7 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
     [target, setTarget] = useState(null),
     [reason, setReason] = useState(''),
     [allocate, setAllocate] = useState(false),
+    [includeExisting, setIncludeExisting] = useState(false),
     [project, setProject] = useState(null),
     [saving, setSaving] = useState(false),
     [error, setError] = useState('');
@@ -46,7 +47,11 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
   );
   const preview = useDomainData(
     '/growers/' + grower.id + '/allocation-preview',
-    { organizationId: target?.id, projectId: project?.id },
+    {
+      organizationId: target?.id,
+      projectId: project?.id,
+      includeExisting: String(includeExisting),
+    },
     Boolean(target),
     true
   );
@@ -59,6 +64,7 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
       updated_at: grower.updated_at,
       reason: reason.trim(),
       allocate_unassigned: allocate,
+      reallocate_existing: allocate && includeExisting,
       project_id: allocate ? project?.id || null : null,
       expected_allocation: allocate ? preview.data?.version : undefined,
     };
@@ -89,8 +95,9 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
           This changes current membership and ends active project assignments in
           the previous organization. Existing organization/project ownership is
           never silently changed. Only a Greenstand admin can correct existing
-          allocations. Ownerless data can be explicitly allocated below;
-          contracts and payments stay unchanged. Every change is logged.
+          allocations. Select whether to allocate only ownerless data or
+          explicitly reassign existing observations below; contracts and
+          payments stay unchanged. Every change is logged.
         </Alert>
         {error && (
           <Box mt={2}>
@@ -110,6 +117,7 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
               setTarget(value);
               setProject(null);
               setAllocate(false);
+              setIncludeExisting(false);
             }}
             disabled={saving}
             renderInput={(params) => (
@@ -127,16 +135,32 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
             <QueryState query={preview} />
             {preview.data && (
               <Alert severity="warning">
-                {preview.data.sessions} unassigned sessions,{' '}
+                {preview.data.sessions} eligible sessions,{' '}
                 {preview.data.rawCaptures} raw captures and{' '}
                 {preview.data.processedCaptures} processed captures are
                 eligible. Raw and processed counts may describe the same
-                observations. Already allocated data and tree/token-linked
-                assets are excluded. Confirming below transfers this ownerless
-                data to {target.name}
+                observations.{' '}
+                {includeExisting
+                  ? 'Existing allocations are included by explicit choice.'
+                  : 'Already allocated data is excluded.'}{' '}
+                Tree/token-linked assets are always excluded. Confirming below
+                transfers the previewed data to {target.name}
                 {project ? ` / ${project.name}` : ''}.
               </Alert>
             )}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={includeExisting}
+                  disabled={saving}
+                  onChange={(e) => {
+                    setIncludeExisting(e.target.checked);
+                    setAllocate(false);
+                  }}
+                />
+              }
+              label="Also reassign existing organization/project allocations (Greenstand admin)"
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -150,7 +174,7 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
                   onChange={(e) => setAllocate(e.target.checked)}
                 />
               }
-              label="Allocate eligible unassigned captures and sessions"
+              label="Confirm transfer of the previewed captures and sessions"
             />
             <Autocomplete
               options={(projects.data?.rows || []).filter(
@@ -169,7 +193,7 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
                   {...params}
                   variant="outlined"
                   label="Destination project (optional)"
-                  helperText="Only unassigned data is allocated. Clear to keep it at organization level. Changing this choice requires confirmation again."
+                  helperText="Clear to allocate at organization level. Existing allocations change only if explicitly included above. Changing this choice requires confirmation again."
                 />
               )}
             />

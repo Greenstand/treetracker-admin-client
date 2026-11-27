@@ -53,10 +53,14 @@ it('keeps capture allocation explicit and submits the exact preview after confir
   );
   await selectDestination();
   expect(
-    screen.getByLabelText('Allocate eligible unassigned captures and sessions')
+    screen.getByLabelText(
+      'Confirm transfer of the previewed captures and sessions'
+    )
   ).not.toBeChecked();
   fireEvent.click(
-    screen.getByLabelText('Allocate eligible unassigned captures and sessions')
+    screen.getByLabelText(
+      'Confirm transfer of the previewed captures and sessions'
+    )
   );
   fireEvent.click(screen.getByText('Save and allocate captures'));
   await waitFor(() =>
@@ -90,6 +94,49 @@ it('a membership-only save does not adopt historical captures', async () => {
         data: expect.objectContaining({
           allocate_unassigned: false,
           expected_allocation: undefined,
+        }),
+      })
+    )
+  );
+});
+
+it('requires confirmation again when existing allocations are included', async () => {
+  render(
+    <GrowerTransfer
+      grower={{ id: 'grower', updated_at: 'version' }}
+      onClose={jest.fn()}
+      onMoved={jest.fn()}
+    />
+  );
+  await selectDestination();
+  fireEvent.click(
+    screen.getByLabelText(
+      'Confirm transfer of the previewed captures and sessions'
+    )
+  );
+  fireEvent.click(
+    screen.getByLabelText(
+      'Also reassign existing organization/project allocations (Greenstand admin)'
+    )
+  );
+  expect(
+    screen.getByLabelText(
+      'Confirm transfer of the previewed captures and sessions'
+    )
+  ).not.toBeChecked();
+  fireEvent.click(
+    screen.getByLabelText(
+      'Confirm transfer of the previewed captures and sessions'
+    )
+  );
+  fireEvent.click(screen.getByText('Save and allocate captures'));
+  await waitFor(() =>
+    expect(domainRequest).toHaveBeenCalledWith(
+      '/growers/grower/organization',
+      expect.objectContaining({
+        data: expect.objectContaining({
+          reallocate_existing: true,
+          allocate_unassigned: true,
         }),
       })
     )

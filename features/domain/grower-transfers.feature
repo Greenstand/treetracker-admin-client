@@ -54,3 +54,11 @@ Feature: Platform grower organization transfers
     When they request an allocation preview or submit an allocation directly
     Then the API refuses access
     And no ownership is changed
+
+  @UC-MOVE-008 @implemented
+  Scenario: Explicitly reassign existing observations as a Greenstand administrator
+    Given a grower has observations allocated to an organization or project
+    When a Greenstand administrator explicitly includes existing allocations in the preview and confirms a destination with a reason
+    Then eligible observations are reassigned atomically and previous ownership is recorded
+    And changing the destination or inclusion mode clears the confirmation
+    And organization administrators cannot perform this correction
