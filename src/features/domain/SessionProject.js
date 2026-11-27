@@ -35,10 +35,14 @@ export default function SessionProject({ session, onClose }) {
   const projects = useDomainData(
     '/projects',
     { organizationId: row?.organization_id, search, size: 100 },
-    Boolean(row),
+    Boolean(row?.organization_id),
     true
   );
-  const canManage = domain.platform && domain.viewMode !== 'organization';
+  const canManage = Boolean(
+    domain.platform &&
+      domain.viewMode !== 'organization' &&
+      row?.organization_id
+  );
   const currentProjectId = row?.project_id,
     currentProjectName = row?.project_name,
     allocationVersion = row?.allocation_event_id;
@@ -105,6 +109,12 @@ export default function SessionProject({ session, onClose }) {
                 {row.project_name || row.project_id || 'Unassigned'}
               </Typography>
             </Box>
+            {!row.organization_id && (
+              <Alert severity="warning">
+                Allocate this session to an organization from the grower profile
+                before choosing a project.
+              </Alert>
+            )}
             <Alert severity="info">
               Only a Greenstand administrator can correct an existing session
               allocation here. This changes project reporting for this session

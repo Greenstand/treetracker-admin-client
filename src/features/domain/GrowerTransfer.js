@@ -72,12 +72,15 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
     if (request.current.key !== key)
       request.current = { key, id: crypto.randomUUID() };
     try {
-      await domainRequest('/growers/' + grower.id + '/organization', {
-        method: 'POST',
-        data: { ...body, requestId: request.current.id },
-      });
+      const result = await domainRequest(
+        '/growers/' + grower.id + '/organization',
+        {
+          method: 'POST',
+          data: { ...body, requestId: request.current.id },
+        }
+      );
       await client.invalidateQueries({ queryKey: ['admin-domain'] });
-      onMoved();
+      onMoved({ ...result, membershipOnly: !allocate });
     } catch (failure) {
       setError(errorMessage(failure));
     } finally {
@@ -199,6 +202,12 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
             />
           </Box>
         )}
+        {includeExisting && !allocate && (
+          <Alert severity="warning">
+            Confirm the previewed transfer before saving. Selecting “also
+            reassign” alone does not transfer sessions or captures.
+          </Alert>
+        )}
         <Box mt={3}>
           <TextField
             fullWidth
@@ -262,6 +271,8 @@ export default function GrowerTransfer({ grower, onClose, onMoved }) {
             !target ||
             !reason.trim() ||
             (target.id === grower.organization_id && !allocate) ||
+            (includeExisting && !allocate) ||
+            (project && !allocate) ||
             (allocate &&
               (!preview.data || preview.isFetching || preview.isError))
           }

@@ -62,3 +62,17 @@ Feature: Platform grower organization transfers
     Then eligible observations are reassigned atomically and previous ownership is recorded
     And changing the destination or inclusion mode clears the confirmation
     And organization administrators cannot perform this correction
+
+  @UC-MOVE-009 @implemented
+  Scenario: Show unassigned sessions in the platform grower profile
+    Given a grower has linked sessions with no organization
+    When a Greenstand administrator opens the profile in Admin view
+    Then the linked sessions are listed with an Unassigned organization label
+    And an organization user cannot see another scope's unassigned sessions
+
+  @UC-MOVE-010 @implemented
+  Scenario: Do not mistake inclusion scope for transfer confirmation
+    Given a Greenstand administrator includes existing allocations in the preview
+    When the transfer confirmation has not been checked
+    Then saving is disabled and the missing confirmation is explained
+    And a membership-only outcome explicitly states that no captures or sessions moved

@@ -21,18 +21,21 @@ import GrowerTransfer from './GrowerTransfer';
 import { QueryState, Status, dateTime, safeUrl } from './shared';
 export default function GrowerAccount({ growerId, organizationId, onClose }) {
   const domain = useDomain();
+  const wholeProfile = domain.platform && domain.viewMode !== 'organization';
+  const profileOrganization = wholeProfile ? undefined : organizationId;
   const [moving, setMoving] = useState(false);
+  const [notice, setNotice] = useState('');
   const query = useDomainData(
     '/growers/' + growerId,
-    { organizationId },
+    { organizationId: profileOrganization },
     true,
-    Boolean(organizationId)
+    wholeProfile || Boolean(organizationId)
   );
   const sessions = useDomainData(
     '/sessions',
-    { growerId, size: 25, organizationId },
+    { growerId, size: 25, organizationId: profileOrganization },
     true,
-    Boolean(organizationId)
+    wholeProfile || Boolean(organizationId)
   );
   const grower = query.data;
   const name =
@@ -42,6 +45,7 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
       <DialogTitle>{name || 'Grower account'}</DialogTitle>
       <DialogContent dividers>
         <QueryState query={query} />
+        {notice && <Alert severity="success">{notice}</Alert>}
         {grower && (
           <>
             <Box display="flex" alignItems="center" mb={3} style={{ gap: 16 }}>
@@ -147,6 +151,7 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
                   <TableHead>
                     <TableRow>
                       <TableCell>Start (UTC)</TableCell>
+                      <TableCell>Organization</TableCell>
                       <TableCell>Project</TableCell>
                       <TableCell>Captures</TableCell>
                       <TableCell>Review</TableCell>
@@ -159,6 +164,9 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
                           {dateTime(
                             session.start_time || session.first_capture
                           )}
+                        </TableCell>
+                        <TableCell>
+                          {session.organization_name || 'Unassigned'}
                         </TableCell>
                         <TableCell>
                           {session.project_name || 'No project'}
@@ -186,9 +194,19 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
         <GrowerTransfer
           grower={grower}
           onClose={() => setMoving(false)}
-          onMoved={() => {
+          onMoved={(result) => {
             setMoving(false);
-            onClose();
+            setNotice(
+              result.membershipOnly
+                ? 'Membership saved. No sessions or captures were transferred.'
+                : `Allocation saved: ${
+                    result.allocatedSessions || 0
+                  } sessions, ${
+                    result.allocatedRawCaptures || 0
+                  } raw captures and ${
+                    result.allocatedCaptures || 0
+                  } processed captures. Raw and processed counts may overlap.`
+            );
           }}
         />
       )}
