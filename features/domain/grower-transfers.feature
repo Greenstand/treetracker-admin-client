@@ -31,3 +31,26 @@ Feature: Platform grower organization transfers
     When the old profile version is submitted
     Then the transfer is rejected without partial updates
     But retrying an identical successful request returns the original audit outcome once
+
+  @UC-MOVE-005 @implemented
+  Scenario: Explicitly allocate ownerless observations with a grower
+    Given a Greenstand administrator selects a destination organization and optional active project
+    And a preview identifies the grower's ownerless and projectless sessions and captures
+    When the administrator confirms allocation and supplies a reason
+    Then the eligible sessions and processed capture ownership are updated in the membership transaction
+    And the transfer audit records their exact IDs and previous ownership
+    And captures already owned by another organization or linked to tree or token assets are not claimed
+
+  @UC-MOVE-006 @implemented
+  Scenario: Refuse a stale allocation preview
+    Given eligible observations changed after the allocation preview
+    When the administrator confirms the old preview
+    Then membership and observation allocation both roll back
+    And a refreshed preview is required
+
+  @UC-MOVE-007 @implemented
+  Scenario: Keep first allocation restricted to Greenstand admins
+    Given an organization administrator finds an unassigned grower
+    When they request an allocation preview or submit an allocation directly
+    Then the API refuses access
+    And no ownership is changed

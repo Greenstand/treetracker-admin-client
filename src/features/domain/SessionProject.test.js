@@ -1,4 +1,5 @@
 import React from 'react';
+import '@testing-library/jest-dom/extend-expect';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SessionProject from './SessionProject';
 import { useDomain, useDomainData } from './DomainContext';
@@ -36,7 +37,11 @@ beforeEach(() => {
     organization_name: 'ESEA',
     history: [],
   };
-  useDomain.mockReturnValue({ permissions: ['manage_projects'] });
+  useDomain.mockReturnValue({
+    platform: true,
+    viewMode: 'admin',
+    permissions: ['manage_projects'],
+  });
   useDomainData.mockImplementation((path) => ({
     isSuccess: true,
     data: path === '/projects' ? { rows: [project] } : allocation,
@@ -95,4 +100,13 @@ it('allows verification-only staff to view the trail but disables allocation wri
   ).toBeDisabled();
   expect(screen.getByText('Save allocation').closest('button')).toBeDisabled();
   expect(domainRequest).not.toHaveBeenCalled();
+});
+
+it('blocks organization administrators from changing an existing allocation', () => {
+  useDomain.mockReturnValue({
+    platform: false,
+    permissions: ['manage_projects'],
+  });
+  render(<SessionProject session={session} onClose={jest.fn()} />);
+  expect(screen.getByText('Save allocation').closest('button')).toBeDisabled();
 });

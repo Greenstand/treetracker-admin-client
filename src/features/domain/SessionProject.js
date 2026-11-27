@@ -38,7 +38,7 @@ export default function SessionProject({ session, onClose }) {
     Boolean(row),
     true
   );
-  const canManage = domain.permissions?.includes('manage_projects');
+  const canManage = domain.platform && domain.viewMode !== 'organization';
   const currentProjectId = row?.project_id,
     currentProjectName = row?.project_name,
     allocationVersion = row?.allocation_event_id;
@@ -106,9 +106,10 @@ export default function SessionProject({ session, onClose }) {
               </Typography>
             </Box>
             <Alert severity="info">
-              Correct the app’s session allocation here. This changes project
-              reporting for this session and its captures. Grower project
-              memberships and capture verification remain unchanged.
+              Only a Greenstand administrator can correct an existing session
+              allocation here. This changes project reporting for this session
+              and its captures. Grower project memberships and capture
+              verification remain unchanged.
             </Alert>
             <Box my={3}>
               <QueryState query={projects} />

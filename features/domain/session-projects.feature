@@ -5,8 +5,8 @@ Feature: Correcting a session project allocation
 
   @UC-ALLOC-001 @implemented
   Scenario: Assign or correct a session project
-    Given a project manager views a session in Organization A
-    When the manager opens its project allocation, chooses an active project in Organization A and enters a reason
+    Given a Greenstand administrator views a session in Organization A
+    When the administrator opens its project allocation, chooses an active project in Organization A and enters a reason
     Then the session's project is saved
     And its session-based capture reporting uses that project
     And the trail records previous and new project, actor, time and reason
@@ -14,13 +14,13 @@ Feature: Correcting a session project allocation
   @UC-ALLOC-002 @implemented
   Scenario: Clear the project allocation
     Given a session currently belongs to a project
-    When an authorized manager clears the allocation and supplies a reason
+    When a Greenstand administrator clears the allocation and supplies a reason
     Then the session becomes unassigned
     And the previous project remains in its trail
 
   @UC-ALLOC-003 @implemented
   Scenario: Reject cross-organization and stale allocation changes
-    Given another manager has changed a session allocation
+    Given another Greenstand administrator has changed a session allocation
     When a stale expected project or audit-event version is submitted
     Then no correction is saved
     And changing away from and back to the original project still invalidates the old version
@@ -47,3 +47,10 @@ Feature: Correcting a session project allocation
     Then the Field Data contract accepts and validates the selected project against its organization
     And session creation retries preserve later administrative corrections
     And the backend does not choose an arbitrary project from grower memberships
+
+  @UC-ALLOC-007 @implemented
+  Scenario: Organization administrators cannot correct existing allocations
+    Given an organization administrator has manage_projects
+    When they submit a session allocation correction directly to the API
+    Then the change is refused before any write
+    And the allocation controls remain read-only
