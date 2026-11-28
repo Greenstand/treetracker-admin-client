@@ -1,3 +1,4 @@
+import Agreements from './Agreements';
 import {
   ContractCreate,
   ContractStatus,
@@ -6,6 +7,8 @@ import {
 import React, { useState } from 'react';
 import {
   Box,
+  Tabs,
+  Tab,
   Button,
   Dialog,
   DialogActions,
@@ -116,6 +119,7 @@ export default function Contracts() {
     [selected, setSelected] = useState(null),
     [creating, setCreating] = useState(false);
   const domain = useDomain();
+  const [tab, setTab] = useState('contracts');
   const query = useDomainData('/contracts', { search, page, size });
   const columns = [
     { field: 'project_name', label: 'Project' },
@@ -151,43 +155,62 @@ export default function Contracts() {
   ];
   return (
     <DomainPage title="Contracts">
-      {domain.canManageBilling && (
-        <Box mb={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!domain.organizationId}
-            onClick={() => setCreating(true)}
-          >
-            New contract
-          </Button>
-          {!domain.organizationId && (
-            <Typography>
-              Select an organization to create a contract.
-            </Typography>
+      <Tabs
+        value={tab}
+        onChange={(_, value) => setTab(value)}
+        indicatorColor="primary"
+        textColor="primary"
+        aria-label="Contracts and shared agreements"
+      >
+        <Tab value="contracts" label="Contracts" />
+        <Tab value="agreements" label="Agreements" />
+      </Tabs>
+      {tab === 'agreements' ? (
+        <Agreements />
+      ) : (
+        <>
+          {domain.canManageBilling && (
+            <Box mb={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!domain.organizationId}
+                onClick={() => setCreating(true)}
+              >
+                New contract
+              </Button>
+              {!domain.organizationId && (
+                <Typography>
+                  Select an organization to create a contract.
+                </Typography>
+              )}
+            </Box>
           )}
-        </Box>
-      )}
-      {creating && <ContractCreate onClose={() => setCreating(false)} />}
-      <Box mb={4}>
-        <TextField
-          label="Search agreement, grower, organization or notes"
-          variant="outlined"
-          fullWidth
-          size="small"
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(0);
-          }}
-        />
-      </Box>
-      <DataTable
-        {...{ query, columns, page, setPage, size, setSize }}
-        onRow={setSelected}
-      />
-      {selected && (
-        <ContractDetail contract={selected} onClose={() => setSelected(null)} />
+          {creating && <ContractCreate onClose={() => setCreating(false)} />}
+          <Box mb={4}>
+            <TextField
+              label="Search agreement, grower, organization or notes"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setPage(0);
+              }}
+            />
+          </Box>
+          <DataTable
+            {...{ query, columns, page, setPage, size, setSize }}
+            onRow={setSelected}
+          />
+          {selected && (
+            <ContractDetail
+              contract={selected}
+              onClose={() => setSelected(null)}
+            />
+          )}
+        </>
       )}
     </DomainPage>
   );

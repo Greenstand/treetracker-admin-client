@@ -220,7 +220,8 @@
       "sources": [
         "src/features/domain/Contracts.js",
         "src/features/domain/ContractActions.js",
-        "api:src/domain/contracts.ts"
+        "api:src/domain/contracts.ts",
+        "src/features/domain/Agreements.js"
       ],
       "tests": [
         "api:src/domain/contracts.test.ts"

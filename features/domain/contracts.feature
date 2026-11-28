@@ -58,3 +58,11 @@ Feature: Contracts and authorized documents
     And unsigned contracts can alternatively become aborted
     And stale status updates are refused without changing the contract
     And every successful status change records its actor and reason atomically
+
+  @UC-CON-008 @implemented
+  Scenario: Browse shared agreements separately from individual contracts
+    Given a user has view_contracts for their organization
+    When they switch to the Agreements tab
+    Then agreements show shared payment terms, default quota, status and individual contract count
+    And the detail view shows the earnings calculation rule and lifecycle dates
+    And no agreement is opened or contract signed by browsing
