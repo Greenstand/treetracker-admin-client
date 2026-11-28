@@ -2,8 +2,8 @@ import React, { useState, useEffect, createContext } from 'react';
 import isEqual from 'react-fast-compare';
 import axios from 'axios';
 
-import VerifyView from '../views/VerifyView';
-import GrowersView from '../views/GrowersView';
+import DomainVerify from '../features/domain/Verify';
+import DomainGrowers from '../features/domain/Growers';
 import CapturesView from '../views/CapturesView';
 import EarningsView from '../views/EarningsView/EarningsView';
 import PaymentsView from '../views/PaymentsView/PaymentsView';
@@ -12,8 +12,19 @@ import MatchingToolView from '../views/MatchingToolView';
 import Stakeholder from '../views/StakeholdersView';
 import Account from '../components/Account';
 import Home from '../components/Home/Home';
+import OrganizationUsers from '../features/domain/OrganizationUsers';
+import SubscriptionPlans from '../features/domain/SubscriptionPlans';
+import DomainDashboard from '../features/domain/Dashboard';
+import Projects from '../features/domain/Projects';
+import TrackingSessions from '../features/domain/TrackingSessions';
+import Contracts from '../features/domain/Contracts';
+import DomainOrganizations from '../features/domain/Organizations';
+import SaasUsers from '../features/domain/SaasUsers';
+import { AdminSpecies, OrganizationSpecies } from '../features/domain/Species';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import DescriptionIcon from '@material-ui/icons/Description';
+import TimelineIcon from '@material-ui/icons/Timeline';
 import Users from '../components/Users';
-import SpeciesView from '../views/SpeciesView';
 import { MessagingProvider } from './MessagingContext';
 import Unauthorized from '../components/Unauthorized';
 
@@ -37,9 +48,9 @@ import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { session, hasPermission, POLICIES } from '../models/auth';
 import api from '../api/treeTrackerApi';
 import RegionsView from 'views/RegionsView';
-import OrganizationsView from 'views/OrganizationsView';
+import BindingRequests from '../features/domain/BindingRequests';
 import WalletsView from 'views/WalletsView';
-import ShareAppView from 'views/ShareAppView';
+import ShareAppView from 'features/domain/ShareApp';
 import IconShare from '@material-ui/icons/Share';
 import log from 'loglevel';
 import { isKeycloakConfigured, logoutFromKeycloak } from '../auth/keycloak';
@@ -49,14 +60,89 @@ import { parseStoredToken, parseStoredUser } from '../auth/util';
 export const AppContext = createContext({});
 
 export function getRoutes(user) {
+  const organizationAccess = hasPermission(user, [
+    POLICIES.ADMIN,
+    POLICIES.ORGANIZATION,
+    'org-admin-saas',
+  ]);
+  const platformAccess = hasPermission(user, [POLICIES.ADMIN]);
   return [
     {
-      name: 'Home',
+      name: 'Dashboard',
       linkTo: '/',
       exact: true,
-      component: Home,
+      component: organizationAccess ? DomainDashboard : Home,
       icon: HomeIcon,
       disabled: false,
+    },
+    {
+      name: 'Projects',
+      linkTo: '/projects',
+      component: Projects,
+      icon: FolderOpenIcon,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'Tracking sessions',
+      linkTo: '/tracking-sessions',
+      component: TrackingSessions,
+      icon: TimelineIcon,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'Contracts',
+      linkTo: '/contracts',
+      component: Contracts,
+      icon: DescriptionIcon,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'Species',
+      linkTo: '/organization-species',
+      component: OrganizationSpecies,
+      icon: CategoryIcon,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'Organization users',
+      linkTo: '/organization-users',
+      component: OrganizationUsers,
+      icon: IconGroup,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'Subscription plans',
+      linkTo: '/subscription-plans',
+      component: SubscriptionPlans,
+      icon: CreditCardIcon,
+      disabled: !organizationAccess,
+    },
+    {
+      name: 'SaaS',
+      disabled: !platformAccess,
+      children: [
+        {
+          name: 'Users',
+          linkTo: '/saas/users',
+          component: SaasUsers,
+          icon: IconGroup,
+          disabled: !platformAccess,
+        },
+        {
+          name: 'Organizations',
+          linkTo: '/organizations',
+          component: DomainOrganizations,
+          icon: AccountTreeIcon,
+          disabled: !platformAccess,
+        },
+        {
+          name: 'Herbarium',
+          linkTo: '/admin-species',
+          component: AdminSpecies,
+          icon: CategoryIcon,
+          disabled: !platformAccess,
+        },
+      ],
     },
     {
       name: 'Monitor',
@@ -67,7 +153,7 @@ export function getRoutes(user) {
     {
       name: 'Verify',
       linkTo: '/verify',
-      component: VerifyView,
+      component: DomainVerify,
       icon: IconThumbsUpDown,
       disabled: !hasPermission(user, [
         POLICIES.ADMIN,
@@ -138,14 +224,15 @@ export function getRoutes(user) {
     {
       name: 'Growers',
       linkTo: '/growers',
-      component: GrowersView,
+      component: DomainGrowers,
       icon: IconNaturePeople,
       disabled: !hasPermission(user, [POLICIES.ADMIN, POLICIES.ORGANIZATION]),
     },
     {
       name: 'Species',
       linkTo: '/species',
-      component: SpeciesView,
+      component: AdminSpecies,
+      menuHidden: true,
       icon: CategoryIcon,
       //TODO this is temporary, need to add species policy
       disabled:
@@ -181,9 +268,17 @@ export function getRoutes(user) {
     {
       name: 'Organizations',
       linkTo: '/organization-management',
-      component: OrganizationsView,
+      component: BindingRequests,
+      menuHidden: true,
       icon: IconGroup,
       disabled: !hasPermission(user, [POLICIES.ADMIN]),
+    },
+    {
+      name: 'Org binding',
+      linkTo: '/organization-binding-requests',
+      component: BindingRequests,
+      icon: IconGroup,
+      disabled: !platformAccess,
     },
     {
       name: 'Wallets',
@@ -197,8 +292,8 @@ export function getRoutes(user) {
       linkTo: '/share-app',
       component: ShareAppView,
       icon: IconShare,
-      // Shown to organization users — the deeplink carries their org id/name.
-      disabled: !user?.policy?.organization?.id,
+      // The domain view resolves membership or a platform-selected organization.
+      disabled: !organizationAccess,
     },
     {
       name: 'User Manager',

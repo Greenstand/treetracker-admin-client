@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, Paper, useMediaQuery } from '@material-ui/core';
+import { Box, Grid, Paper, useMediaQuery } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import Menu from 'components/common/Menu';
 import Navbar from 'components/Navbar';
+import UserToolbar from '../../features/domain/UserToolbar';
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -48,7 +49,10 @@ export default function AppLayout({ children, className }) {
           <Menu variant="plain" />
         </Paper>
       )}
-      {children}
+      <Box style={{ flex: 1, minWidth: 0 }}>
+        <UserToolbar />
+        {children}
+      </Box>
     </Grid>
   );
 }

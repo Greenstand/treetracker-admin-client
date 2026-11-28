@@ -1,6 +1,7 @@
 import { authAxios } from './httpClient';
 
-const API_ROOT = process.env.REACT_APP_API_ROOT;
+const API_ROOT =
+  process.env.REACT_APP_DOMAIN_API_ROOT || process.env.REACT_APP_API_ROOT;
 
 export async function requestBinding(organizationId, proposed = {}) {
   const { data } = await authAxios.post(

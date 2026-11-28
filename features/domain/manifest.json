@@ -1,0 +1,438 @@
+{
+  "version": 1,
+  "automation": "acceptance specifications; not browser step automation",
+  "features": [
+    {
+      "file": "access-and-navigation.feature",
+      "title": "Access, organization context and navigation",
+      "prefix": "ACC",
+      "routes": [
+        "all domain views"
+      ],
+      "sources": [
+        "src/features/domain/DomainContext.js",
+        "src/features/domain/UserToolbar.js",
+        "src/context/AppContext.js",
+        "src/components/common/Menu.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts",
+        "api:src/domain/router.test.ts"
+      ]
+    },
+    {
+      "file": "dashboard.feature",
+      "title": "Organization and platform dashboard",
+      "prefix": "DASH",
+      "routes": [
+        "/"
+      ],
+      "sources": [
+        "src/features/domain/Dashboard.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "projects.feature",
+      "title": "Project directory and project editor",
+      "prefix": "PROJ",
+      "routes": [
+        "/projects"
+      ],
+      "sources": [
+        "src/features/domain/Projects.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "project-growers.feature",
+      "title": "Grower assignment to projects and its trail",
+      "prefix": "PG",
+      "routes": [
+        "/projects"
+      ],
+      "sources": [
+        "src/features/domain/ProjectGrowers.js"
+      ],
+      "tests": [
+        "api:src/domain/projectGrowers.test.ts"
+      ]
+    },
+    {
+      "file": "growers.feature",
+      "title": "Grower directory and account details",
+      "prefix": "GR",
+      "routes": [
+        "/growers"
+      ],
+      "sources": [
+        "src/features/domain/Growers.js",
+        "src/features/domain/GrowerAccount.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "grower-transfers.feature",
+      "title": "Platform grower organization transfers",
+      "prefix": "MOVE",
+      "routes": [
+        "/growers",
+        "/organizations"
+      ],
+      "sources": [
+        "src/features/domain/GrowerTransfer.js"
+      ],
+      "tests": [
+        "api:src/domain/verification.test.ts"
+      ]
+    },
+    {
+      "file": "tracking-sessions.feature",
+      "title": "Tracking session directory and review navigation",
+      "prefix": "SES",
+      "routes": [
+        "/tracking-sessions"
+      ],
+      "sources": [
+        "src/features/domain/TrackingSessions.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "session-map.feature",
+      "title": "Session map preview and recorded area",
+      "prefix": "MAP",
+      "routes": [
+        "/tracking-sessions",
+        "/verify"
+      ],
+      "sources": [
+        "src/features/domain/SessionMap.js"
+      ],
+      "tests": []
+    },
+    {
+      "file": "session-projects.feature",
+      "title": "Correcting a session project allocation",
+      "prefix": "ALLOC",
+      "routes": [
+        "/tracking-sessions",
+        "/verify"
+      ],
+      "sources": [
+        "src/features/domain/SessionProject.js"
+      ],
+      "tests": [
+        "src/features/domain/SessionProject.test.js",
+        "api:src/domain/sessionProject.test.ts"
+      ]
+    },
+    {
+      "file": "verification.feature",
+      "title": "NDM capture approval and rejection",
+      "prefix": "VER",
+      "routes": [
+        "/verify"
+      ],
+      "sources": [
+        "src/features/domain/Verify.js"
+      ],
+      "tests": [
+        "src/features/domain/Verify.test.js",
+        "api:src/domain/verification.test.ts"
+      ]
+    },
+    {
+      "file": "session-verification.feature",
+      "title": "Session selection and verification statistics",
+      "prefix": "VS",
+      "routes": [
+        "/verify"
+      ],
+      "sources": [
+        "src/features/domain/VerificationSession.js"
+      ],
+      "tests": [
+        "src/features/domain/VerificationSession.test.js",
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "capture-tags.feature",
+      "title": "Organization capture tags and project suggestions",
+      "prefix": "TAG",
+      "routes": [
+        "/verify"
+      ],
+      "sources": [
+        "src/features/domain/CaptureTagPicker.js"
+      ],
+      "tests": [
+        "src/features/domain/CaptureTagPicker.test.js",
+        "api:src/domain/captureTags.test.ts"
+      ]
+    },
+    {
+      "file": "capture-matching.feature",
+      "title": "Capture matching handoff",
+      "prefix": "MATCH",
+      "routes": [
+        "/verify",
+        "/tracking-sessions"
+      ],
+      "sources": [
+        "api:src/domain/verification.ts"
+      ],
+      "tests": [
+        "api:src/domain/verification.test.ts"
+      ]
+    },
+    {
+      "file": "captures-and-export.feature",
+      "title": "Capture search and export",
+      "prefix": "CAP",
+      "routes": [
+        "/captures"
+      ],
+      "sources": [
+        "src/views/CapturesView.js",
+        "src/components/Captures/CaptureTable.js"
+      ],
+      "tests": [
+        "features/capture.feature"
+      ]
+    },
+    {
+      "file": "contracts.feature",
+      "title": "Contracts and authorized documents",
+      "prefix": "CON",
+      "routes": [
+        "/contracts"
+      ],
+      "sources": [
+        "src/features/domain/Contracts.js",
+        "src/features/domain/ContractActions.js",
+        "api:src/domain/contracts.ts",
+        "src/features/domain/Agreements.js",
+        "src/features/domain/AgreementEditor.js"
+      ],
+      "tests": [
+        "api:src/domain/contracts.test.ts",
+        "api:src/domain/contractAccess.test.ts"
+      ]
+    },
+    {
+      "file": "organization-species.feature",
+      "title": "Organization and project species selections",
+      "prefix": "SP",
+      "routes": [
+        "/organization-species"
+      ],
+      "sources": [
+        "src/features/domain/Species.js",
+        "src/features/domain/LocalNamePicker.js"
+      ],
+      "tests": [
+        "src/features/domain/LocalNamePicker.test.js",
+        "api:src/domain/service.test.ts",
+        "api:src/domain/speciesChoices.test.ts"
+      ]
+    },
+    {
+      "file": "herbarium.feature",
+      "title": "Platform Herbarium catalogue and botanical identity",
+      "prefix": "HERB",
+      "routes": [
+        "/admin-species"
+      ],
+      "sources": [
+        "src/features/domain/Species.js",
+        "src/features/domain/SpeciesSources.js"
+      ],
+      "tests": [
+        "src/features/domain/SpeciesSources.test.js",
+        "api:src/domain/service.test.ts",
+        "src/features/domain/speciesNames.test.js",
+        "src/features/domain/SpeciesEditor.test.js",
+        "api:src/domain/speciesNames.test.ts"
+      ]
+    },
+    {
+      "file": "organization-users.feature",
+      "title": "Organization users and permission grants",
+      "prefix": "MEM",
+      "routes": [
+        "/organization-users"
+      ],
+      "sources": [
+        "src/features/domain/OrganizationUsers.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "organizations.feature",
+      "title": "Platform organization management",
+      "prefix": "ORG",
+      "routes": [
+        "/organizations"
+      ],
+      "sources": [
+        "src/features/domain/Organizations.js",
+        "src/features/domain/OrganizationGrowers.js"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts"
+      ]
+    },
+    {
+      "file": "platform-users.feature",
+      "title": "Platform SaaS organization-admin directory",
+      "prefix": "SAAS",
+      "routes": [
+        "/saas/users"
+      ],
+      "sources": [
+        "src/features/domain/SaasUsers.js"
+      ],
+      "tests": [
+        "api:src/domain/router.test.ts"
+      ]
+    },
+    {
+      "file": "subscription-plans.feature",
+      "title": "Subscription plans and quota usage",
+      "prefix": "QUOTA",
+      "routes": [
+        "/subscription-plans"
+      ],
+      "sources": [
+        "src/features/domain/SubscriptionPlans.js",
+        "src/features/domain/SubscriptionUsage.js"
+      ],
+      "tests": [
+        "src/features/domain/SubscriptionUsage.test.js",
+        "api:src/domain/subscriptionUsage.test.ts",
+        "api:src/domain/plans.test.ts"
+      ]
+    },
+    {
+      "file": "hosted-billing.feature",
+      "title": "Hosted Stripe Checkout and billing portal",
+      "prefix": "BILL",
+      "routes": [
+        "/subscription-plans"
+      ],
+      "sources": [
+        "src/features/domain/SubscriptionPlans.js",
+        "api:src/domain/checkout.ts"
+      ],
+      "tests": [
+        "api:src/domain/checkout.test.ts"
+      ]
+    },
+    {
+      "file": "stripe-webhook.feature",
+      "title": "Stripe webhook reconciliation and identity linking",
+      "prefix": "HOOK",
+      "routes": [
+        "external PHP webhook"
+      ],
+      "sources": [
+        "api:examples/stripe-keycloak-webhook.php"
+      ],
+      "tests": []
+    },
+    {
+      "file": "share-app.feature",
+      "title": "Share App organization invitations",
+      "prefix": "SHARE",
+      "routes": [
+        "/share-app"
+      ],
+      "sources": [
+        "src/features/domain/ShareApp.js",
+        "src/views/ShareAppView.js",
+        "src/common/shareLink.js",
+        "public/app.html"
+      ],
+      "tests": [
+        "src/features/domain/ShareApp.test.js",
+        "src/views/ShareAppView.test.js",
+        "src/common/shareLink.test.js",
+        "src/common/appRedirectPage.test.js"
+      ]
+    },
+    {
+      "file": "account.feature",
+      "title": "Account identity and authentication details",
+      "prefix": "ACCT",
+      "routes": [
+        "/account"
+      ],
+      "sources": [
+        "src/components/Account.js"
+      ],
+      "tests": [
+        "features/account/update-account.feature",
+        "features/account/change-password.feature"
+      ]
+    },
+    {
+      "file": "org-binding.feature",
+      "title": "Organization binding requests",
+      "prefix": "BIND",
+      "routes": [
+        "/organization-binding-requests"
+      ],
+      "sources": [
+        "src/features/domain/BindingRequests.js",
+        "src/components/OrganizationBindingRequests.js"
+      ],
+      "tests": [
+        "features/organization/org-binding.feature",
+        "src/features/domain/BindingRequests.test.js"
+      ]
+    },
+    {
+      "file": "wallet-access.feature",
+      "title": "Wallet entry points and subscription integration",
+      "prefix": "WAL",
+      "routes": [
+        "/wallets"
+      ],
+      "sources": [
+        "src/context/AppContext.js",
+        "src/views/WalletsView.js"
+      ],
+      "tests": [
+        "features/wallet/admin.feature"
+      ]
+    },
+    {
+      "file": "ndm-integrity.feature",
+      "title": "NDM migrations, references and audit integrity",
+      "prefix": "NDM",
+      "routes": [
+        "all domain writes"
+      ],
+      "sources": [
+        "api:docs/domain-admin-api.md",
+        "docs/domain-admin-views.md"
+      ],
+      "tests": [
+        "api:src/domain/service.test.ts",
+        "api:src/domain/verification.test.ts"
+      ]
+    }
+  ]
+}
