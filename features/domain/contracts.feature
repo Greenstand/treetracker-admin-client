@@ -66,3 +66,12 @@ Feature: Contracts and authorized documents
     Then agreements show shared payment terms, default quota, status and individual contract count
     And the detail view shows the earnings calculation rule and lifecycle dates
     And no agreement is opened or contract signed by browsing
+
+  @UC-CON-009 @implemented
+  Scenario: Create and open reusable agreement terms
+    Given an organization administrator selects their organization
+    When they provide shared terms, a funding organization, an authorized calculation rule, payment rate, currency, default quota and reason
+    Then a planning agreement is created with an audited snapshot
+    And it is unavailable for new contracts until explicitly opened
+    And opening or closing requires a current expected status and reason
+    And closing prevents new contracts without cancelling existing individual contracts

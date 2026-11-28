@@ -221,7 +221,8 @@
         "src/features/domain/Contracts.js",
         "src/features/domain/ContractActions.js",
         "api:src/domain/contracts.ts",
-        "src/features/domain/Agreements.js"
+        "src/features/domain/Agreements.js",
+        "src/features/domain/AgreementEditor.js"
       ],
       "tests": [
         "api:src/domain/contracts.test.ts"

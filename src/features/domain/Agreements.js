@@ -1,3 +1,4 @@
+import { AgreementCreate, AgreementLifecycle } from './AgreementEditor';
 import React, { useState } from 'react';
 import {
   Box,
@@ -10,9 +11,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useDomainData } from './DomainContext';
+import { useDomain, useDomainData } from './DomainContext';
 import { DataTable, Status, dateTime } from './shared';
 export default function Agreements() {
+  const domain = useDomain(),
+    [creating, setCreating] = useState(false);
   const [search, setSearch] = useState(''),
     [page, setPage] = useState(0),
     [size, setSize] = useState(25),
@@ -46,12 +49,30 @@ export default function Agreements() {
   ];
   return (
     <>
+      {domain.canManageBilling && (
+        <Box my={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!domain.organizationId}
+            onClick={() => setCreating(true)}
+          >
+            New agreement
+          </Button>
+          {!domain.organizationId && (
+            <Typography>
+              Select an organization to create an agreement.
+            </Typography>
+          )}
+        </Box>
+      )}
+      {creating && <AgreementCreate onClose={() => setCreating(false)} />}
       <Box my={2}>
         <Alert severity="info">
           One agreement holds shared terms for many individual contracts.
           Planning → Open → Closed, or Planning → Aborted. Only open agreements
-          can be selected for new contracts. Agreement authoring and opening
-          remain in the contracts service.
+          can be selected for new contracts. Save a planning draft, then open it
+          when the shared terms are ready.
         </Alert>
       </Box>
       <Box mb={3}>
@@ -103,6 +124,10 @@ export default function Agreements() {
               </Typography>
             </Box>
             <Typography>{selected.description}</Typography>
+            <AgreementLifecycle
+              agreement={selected}
+              onClose={() => setSelected(null)}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setSelected(null)}>Close</Button>

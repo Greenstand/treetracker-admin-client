@@ -129,8 +129,8 @@ export function ContractCreate({ onClose }) {
         </TextField>
         {options.isSuccess && !options.data?.agreements?.length && (
           <Alert severity="warning">
-            No open agreement is available for this organization. An agreement
-            must be opened in the contracts service first.
+            No open agreement is available for this organization. Create and
+            open an agreement in the Agreements tab first.
           </Alert>
         )}
         <TextField
