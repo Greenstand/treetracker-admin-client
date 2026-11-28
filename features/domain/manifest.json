@@ -218,9 +218,13 @@
         "/contracts"
       ],
       "sources": [
-        "src/features/domain/Contracts.js"
+        "src/features/domain/Contracts.js",
+        "src/features/domain/ContractActions.js",
+        "api:src/domain/contracts.ts"
       ],
-      "tests": []
+      "tests": [
+        "api:src/domain/contracts.test.ts"
+      ]
     },
     {
       "file": "organization-species.feature",

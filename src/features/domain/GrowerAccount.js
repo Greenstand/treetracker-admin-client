@@ -1,3 +1,4 @@
+import { WorkerVerification } from './ContractActions';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -95,6 +96,7 @@ export default function GrowerAccount({ growerId, organizationId, onClose }) {
               </Box>
             )}
             <Box mt={4}>
+              {wholeProfile && <WorkerVerification growerId={grower.id} />}
               <Typography variant="h6">Projects</Typography>
               {!grower.projects.length ? (
                 <Typography color="textSecondary">

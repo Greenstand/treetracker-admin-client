@@ -1,3 +1,8 @@
+import {
+  ContractCreate,
+  ContractStatus,
+  WorkerVerification,
+} from './ContractActions';
 import React, { useState } from 'react';
 import {
   Box,
@@ -12,7 +17,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { useDomainData } from './DomainContext';
+import { useDomain, useDomainData } from './DomainContext';
 import {
   DomainPage,
   DataTable,
@@ -23,6 +28,7 @@ import {
   safeUrl,
 } from './shared';
 function ContractDetail({ contract, onClose }) {
+  const domain = useDomain();
   const documents = useDomainData('/contracts/' + contract.id + '/documents');
   return (
     <Dialog open fullWidth maxWidth="md" onClose={onClose}>
@@ -33,15 +39,36 @@ function ContractDetail({ contract, onClose }) {
         <Status value={contract.status} />
         <Box my={3}>
           <Typography>
-            {contract.worker_name || 'Worker name unavailable'} ·{' '}
+            {contract.worker_name || 'Grower name unavailable'} ·{' '}
             {contract.organization_name || 'Organization unavailable'}
           </Typography>
           <Typography>Signed {dateTime(contract.signed_at)} UTC</Typography>
+          <Typography>
+            Capture quota:{' '}
+            {contract.capture_quota == null
+              ? 'Not set'
+              : Number(contract.capture_quota).toLocaleString()}
+          </Typography>
+          <Typography color="textSecondary">
+            Quota progress counts approved captures only. Progress is not
+            connected yet.
+          </Typography>
           <Typography>
             {contract.capture_payment ?? '—'}{' '}
             {contract.capture_payment_currency} per capture
           </Typography>
         </Box>
+        <Typography>
+          Project: {contract.project_name || 'Not linked (beta contract)'}
+        </Typography>
+        {domain.platform &&
+          domain.viewMode !== 'organization' &&
+          contract.grower_account_id && (
+            <WorkerVerification growerId={contract.grower_account_id} />
+          )}
+        {domain.canManageBilling && (
+          <ContractStatus contract={contract} onClose={onClose} />
+        )}
         <Typography paragraph>{contract.description}</Typography>
         <Typography paragraph>{contract.notes}</Typography>
         <Typography component="h2" variant="h6">
@@ -86,12 +113,23 @@ export default function Contracts() {
   const [search, setSearch] = useState(''),
     [page, setPage] = useState(0),
     [size, setSize] = useState(25),
-    [selected, setSelected] = useState(null);
+    [selected, setSelected] = useState(null),
+    [creating, setCreating] = useState(false);
+  const domain = useDomain();
   const query = useDomainData('/contracts', { search, page, size });
   const columns = [
+    { field: 'project_name', label: 'Project' },
     { field: 'agreement_name', label: 'Agreement' },
-    { field: 'worker_name', label: 'Worker' },
+    { field: 'worker_name', label: 'Grower' },
     { field: 'organization_name', label: 'Organization' },
+    {
+      field: 'capture_quota',
+      label: 'Capture quota',
+      render: (row) =>
+        row.capture_quota == null
+          ? 'Not set'
+          : Number(row.capture_quota).toLocaleString(),
+    },
     {
       field: 'status',
       label: 'Status',
@@ -113,9 +151,27 @@ export default function Contracts() {
   ];
   return (
     <DomainPage title="Contracts">
+      {domain.canManageBilling && (
+        <Box mb={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!domain.organizationId}
+            onClick={() => setCreating(true)}
+          >
+            New contract
+          </Button>
+          {!domain.organizationId && (
+            <Typography>
+              Select an organization to create a contract.
+            </Typography>
+          )}
+        </Box>
+      )}
+      {creating && <ContractCreate onClose={() => setCreating(false)} />}
       <Box mb={4}>
         <TextField
-          label="Search agreement, worker, organization or notes"
+          label="Search agreement, grower, organization or notes"
           variant="outlined"
           fullWidth
           size="small"
