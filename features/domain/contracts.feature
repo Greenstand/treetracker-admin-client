@@ -75,3 +75,12 @@ Feature: Contracts and authorized documents
     And it is unavailable for new contracts until explicitly opened
     And opening or closing requires a current expected status and reason
     And closing prevents new contracts without cancelling existing individual contracts
+
+  @UC-CON-010 @implemented
+  Scenario: Restrict the complete feature to Base and Crown subscriptions
+    Given an organization has a Seed or Root subscription or no eligible subscription
+    When a user opens Contracts or calls a contract or agreement API directly
+    Then contract and agreement records and write operations are unavailable
+    And the view offers subscription upgrade guidance
+    And Base and Crown access still requires the user's organization permissions
+    And Greenstand platform administrators retain operational access

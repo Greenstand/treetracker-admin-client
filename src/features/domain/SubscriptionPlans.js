@@ -122,6 +122,7 @@ export default function SubscriptionPlans() {
                 'Growers',
                 'Projects',
                 'Wallet access',
+                'Contracts and agreements',
                 'Subscription',
               ].map((label) => (
                 <TableCell key={label}>{label}</TableCell>
@@ -166,6 +167,9 @@ export default function SubscriptionPlans() {
                   >
                     Proposed wallet access
                   </Typography>
+                </TableCell>
+                <TableCell>
+                  {plan.contracts ? 'Included' : 'Unavailable'}
                 </TableCell>
                 <TableCell>
                   <Button

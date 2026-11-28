@@ -1,3 +1,5 @@
+import { Alert } from '@material-ui/lab';
+import { Link } from 'react-router-dom';
 import Agreements from './Agreements';
 import {
   ContractCreate,
@@ -120,7 +122,27 @@ export default function Contracts() {
     [creating, setCreating] = useState(false);
   const domain = useDomain();
   const [tab, setTab] = useState('contracts');
-  const query = useDomainData('/contracts', { search, page, size });
+  const access = useDomainData('/contract-access');
+  const query = useDomainData(
+    '/contracts',
+    { search, page, size },
+    access.data?.allowed === true
+  );
+  if (!access.data?.allowed)
+    return (
+      <DomainPage title="Contracts">
+        <QueryState query={access} />
+        {access.data && (
+          <Alert severity="info">
+            Contracts and Agreements are included in Base and Crown
+            subscriptions.{' '}
+            <Button component={Link} to="/subscription-plans" color="primary">
+              View upgrade options
+            </Button>
+          </Alert>
+        )}
+      </DomainPage>
+    );
   const columns = [
     { field: 'project_name', label: 'Project' },
     { field: 'agreement_name', label: 'Agreement' },

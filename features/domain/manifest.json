@@ -225,7 +225,8 @@
         "src/features/domain/AgreementEditor.js"
       ],
       "tests": [
-        "api:src/domain/contracts.test.ts"
+        "api:src/domain/contracts.test.ts",
+        "api:src/domain/contractAccess.test.ts"
       ]
     },
     {
